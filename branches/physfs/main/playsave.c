@@ -1,4 +1,4 @@
-/* $Id: playsave.c,v 1.12.2.1 2003-05-17 04:48:50 btb Exp $ */
+/* $Id: playsave.c,v 1.12.2.2 2003-05-30 09:25:42 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -536,7 +536,6 @@ int read_player_file()
 	char filename[FILENAME_LEN];
 	#endif
 	PHYSFS_file *file;
-	int errno_ret = EZERO;
 	int id,player_file_version,i;
 	int rewrite_it=0;
 	int swap = 0;
@@ -546,8 +545,12 @@ int read_player_file()
 #ifndef MACINTOSH
 	sprintf(filename,"%.8s.plr",Players[Player_num].callsign);
 #else
-	sprintf(filename, ":Players:%.8s.plr",Players[Player_num].callsign);
+	sprintf(filename, "Players/%.8s.plr",Players[Player_num].callsign);
 #endif
+
+	if (!PHYSFS_exists(filename))
+		return ENOENT;
+
 	file = PHYSFS_openRead(filename);
 
 #if 0
@@ -562,9 +565,8 @@ int read_player_file()
 #endif
 #endif
 
-	if (!file) {
-		return errno;
-	}
+	if (!file)
+		goto read_player_file_failed;
 
 	PHYSFS_readULE32(file, &id);
 
@@ -576,6 +578,7 @@ int read_player_file()
 		return -1;
 	}
 
+	player_file_version = 0;
 	PHYSFS_readULE16(file, (short *)&player_file_version);
 
 	if (player_file_version > 255) // bigendian file?
@@ -590,6 +593,7 @@ int read_player_file()
 		return -1;
 	}
 
+	Game_window_w = Game_window_h = 0;
 	PHYSFS_readULE16(file, (short *)&Game_window_w);
 	PHYSFS_readULE16(file, (short *)&Game_window_h);
 
@@ -612,7 +616,7 @@ int read_player_file()
 		}
 	 #endif
 	#endif
- 
+
 	PHYSFSX_readU8(file, &Default_display_mode);
 	PHYSFSX_readU8(file, &Missile_view_enabled);
 	PHYSFSX_readU8(file, &Headlight_active_default);
@@ -620,21 +624,18 @@ int read_player_file()
 
 	if (player_file_version >= 19)
 		PHYSFSX_readU8(file, &Automap_always_hires);
-          
+
 	Auto_leveling_on = Default_leveling_on;
 
 	//read new highest level info
 
+	n_highest_levels = 0;
 	PHYSFS_readULE16(file, (short *)&n_highest_levels);
 	if (swap)
 		n_highest_levels = SWAPSHORT(n_highest_levels);
 
 	if (PHYSFS_read(file, highest_levels, sizeof(hli), n_highest_levels) != n_highest_levels)
-	{
-		errno_ret = errno;
-		PHYSFS_close(file);
-		return errno_ret;
-	}
+		goto read_player_file_failed;
 
 	//read taunt macros
 	{
@@ -645,10 +646,7 @@ int read_player_file()
 
 		for (i = 0; i < 4; i++)
 			if (PHYSFS_read(file, Network_message_macro[i], len, 1) != 1)
-			{
-				errno_ret = errno;
-				break;
-			}
+				goto read_player_file_failed;
 #else
 		char dummy[4][MAX_MESSAGE_LEN];
 		PHYSFS_read(file, dummy, MAX_MESSAGE_LEN, 4);
@@ -661,13 +659,13 @@ int read_player_file()
 		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
 
 		if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
-			errno_ret=errno;
+			goto read_player_file_failed;
 		else if (PHYSFS_read(file, (ubyte *)&control_type_dos, sizeof(ubyte), 1) != 1)
-			errno_ret=errno;
+			goto read_player_file_failed;
 		else if (player_file_version >= 21 && PHYSFS_read(file, (ubyte *)&control_type_win, sizeof(ubyte), 1) != 1)
-			errno_ret=errno;
+			goto read_player_file_failed;
 		else if (PHYSFS_read(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) !=1 )
-			errno_ret=errno;
+			goto read_player_file_failed;
 
 		#ifdef WINDOWS
 		Config_control_type = control_type_win;
@@ -680,25 +678,23 @@ int read_player_file()
 		#endif
 
 		for (i=0;i<11;i++)
-		 {
+		{
 			PHYSFSX_readU8(file, &PrimaryOrder[i]);
 			PHYSFSX_readU8(file, &SecondaryOrder[i]);
-		 }
+		}
 
 		if (player_file_version>=16)
-		 {
-		  PHYSFS_readULE32(file, &Cockpit_3d_view[0]);
-		  PHYSFS_readULE32(file, &Cockpit_3d_view[1]);
-		  if (swap) {
-			  Cockpit_3d_view[0] = SWAPINT(Cockpit_3d_view[0]);
-			  Cockpit_3d_view[1] = SWAPINT(Cockpit_3d_view[1]);
-		  }
-		 }	
-		
-                  
-		if (errno_ret==EZERO)	{
-			kc_set_controls();
+		{
+			PHYSFS_readULE32(file, &Cockpit_3d_view[0]);
+			PHYSFS_readULE32(file, &Cockpit_3d_view[1]);
+			if (swap)
+			{
+				Cockpit_3d_view[0] = SWAPINT(Cockpit_3d_view[0]);
+				Cockpit_3d_view[1] = SWAPINT(Cockpit_3d_view[1]);
+			}
 		}
+
+		kc_set_controls();
 
 	}
 
@@ -780,14 +776,20 @@ int read_player_file()
 		for(i=0; i < MAX_D2X_CONTROLS; i++)
 			kconfig_d2x_settings[i] = default_kconfig_d2x_settings[i];
 
-	if (PHYSFS_close(file) && errno_ret==EZERO)
-		errno_ret			= errno;
+	if (!PHYSFS_close(file))
+		goto read_player_file_failed;
 
 	if (rewrite_it)
-	 write_player_file();
+		write_player_file();
 
-	return errno_ret;
+	return EZERO;
 
+ read_player_file_failed:
+	nm_messagebox(TXT_ERROR, 1, TXT_OK, "%s\n\n%s", "Error reading PLR file", PHYSFS_getLastError());
+	if (file)
+		PHYSFS_close(file);
+
+	return -1;
 }
 
 
@@ -863,13 +865,13 @@ int write_player_file()
 	char filename[FILENAME_LEN];		// because of ":Players:" path
 	#endif
 	PHYSFS_file *file;
-	int errno_ret,i;
+	int i;
 
 //	#ifdef APPLE_DEMO		// no saving of player files in Apple OEM version
 //	return 0;
 //	#endif
 
-	errno_ret = WriteConfigFile();
+	WriteConfigFile();
 
 #ifndef MACINTOSH
 	sprintf(filename,"%s.plr",Players[Player_num].callsign);
@@ -892,8 +894,6 @@ int write_player_file()
 
 	if (!file)
 		return -1;
-
-	errno_ret = EZERO;
 
 	//Write out player's info
 	PHYSFS_writeULE32(file, SAVE_FILE_ID);
@@ -997,10 +997,9 @@ int write_player_file()
 	}
 	#endif
 
-	return 0;
+	return EZERO;
 
  write_player_file_failed:
-	errno_ret = -1;
 	nm_messagebox(TXT_ERROR, 1, TXT_OK, "%s\n\n%s", TXT_ERROR_WRITING_PLR, PHYSFS_getLastError());
 	if (file)
 	{
