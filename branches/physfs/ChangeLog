@@ -1,5 +1,7 @@
 2003-05-22  Bradley Bell  <btb@icculus.org>
 
+	* include/physfsx.h: added PHYSFSX_rename function
+
 	* libmve/mveplay.c: syntax error
 
 2003-05-21  Bradley Bell  <btb@icculus.org>
