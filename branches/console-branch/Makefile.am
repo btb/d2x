@@ -1,0 +1,119 @@
+SUBDIRS = 2d 3d maths mem cfile iff texmap misc arch main libmve utilities
+
+EXTRA_SUBDIRS = include unused debian rpm
+
+if BUILD_MACOSX_BUNDLE
+bundle_contents = @PACKAGE@.app/Contents
+else
+if BUILD_SIMPLE_BUNDLE
+bundle_contents = @PACKAGE@
+endif
+endif
+
+bin_PROGRAMS = @TARGETS@
+
+EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga d2x-ggi
+
+ARCH_LIBS = $(foreach subdir,${D2X_ARCH_SUBDIRS},arch/${subdir}/libarch_${subdir}.a)
+
+if MINGW32
+LD_KLUDGE = main/inferno.o
+endif
+
+if MACOSX
+AM_LDFLAGS = -all_load
+endif
+
+if EDITOR
+EDITOR_LIBS = main/editor/libeditor.a
+endif
+
+d2x_SOURCES =
+d2x_sdl_SOURCES =
+d2x_gl_SOURCES =
+d2x_svga_SOURCES =
+d2x_ggi_SOURCES =
+
+d2x_LDADD = ${LD_KLUDGE} main/libmain.a ${EDITOR_LIBS} 3d/lib3d.a 2d/lib2d.a ${ARCH_LIBS} libmve/libmve.a mem/libmem.a cfile/libcfile.a iff/libiff.a texmap/libtexmap.a misc/libmisc.a maths/libmaths.a
+
+if MINGW32
+if USE_NETWORK
+d2x_sdl_LDADD = ${d2x_LDADD} -lwsock32
+else
+d2x_sdl_LDADD = ${d2x_LDADD}
+endif
+else
+d2x_sdl_LDADD = ${d2x_LDADD} -lm
+endif
+d2x_gl_LDADD = ${d2x_sdl_LDADD} ${OGL_LIBS}
+d2x_svga_LDADD = ${d2x_sdl_LDADD} ${SVGA_LIBS}
+d2x_ggi_LDADD = ${d2x_sdl_LDADD} ${GGI_LIBS}
+
+dist-hook:
+	rm -rf `find $(distdir) -name CVS`
+#	rm -f `find $(distdir) -name Makefile`
+
+pkgdatadir = @sharepath@
+missiondir = ${pkgdatadir}/missions
+
+CLEANFILES = @TARGETS@ Info.plist
+
+if BUILD_MACOSX_BUNDLE
+
+@PACKAGE@_bundle: @TARGETS@
+	mkdir -p $(bundle_contents)/MacOS
+	echo "APPL????" > $(bundle_contents)/PkgInfo
+	$(INSTALL_DATA) Info.plist $(bundle_contents)
+	$(INSTALL_PROGRAM) @TARGETS@ $(bundle_contents)/MacOS/
+
+install-exec-hook: @PACKAGE@_bundle
+	rm -rf $(DESTDIR)$(prefix)/@PACKAGE@.app
+	mkdir -p $(DESTDIR)$(prefix)/
+	cp -r @PACKAGE@.app $(DESTDIR)$(prefix)/
+
+clean-local:
+	rm -rf $(bundle_contents)
+
+else
+
+if BUILD_SIMPLE_BUNDLE
+
+@PACKAGE@_bundle: @TARGETS@
+	$(INSTALL_PROGRAM) @TARGETS@ $(bundle_contents)/
+
+install-exec-hook: @PACKAGE@_bundle
+	rm -rf $(DESTDIR)/$(prefix)/@PACKAGE@
+	mkdir -p $(DESTDIR)/$(prefix)/
+	cp COPYING @PACKAGE@/COPYING.txt
+	cp COPYING.LIB @PACKAGE@/COPYING_LIB.txt
+	cp ChangeLog @PACKAGE@/ChangeLog.txt
+	cp TODO @PACKAGE@/TODO.txt
+	cp README @PACKAGE@/README.txt
+	cp README.jp @PACKAGE@/README_jp.txt
+	cp README.sfont @PACKAGE@/sfont.txt
+	cp README.xkobo @PACKAGE@/xkobo.txt
+	cp README.xkobo.jp @PACKAGE@/xkobo_jp.txt
+	cp 501 @PACKAGE@/scores/42
+	cp -r @PACKAGE@	 $(DESTDIR)/$(prefix)/
+
+clean-local:
+	rm -rf $(bundle_contents)
+
+else
+@PACKAGE@_bundle:
+
+install-exec-hook:
+
+clean-local:
+
+endif
+
+endif
+
+EXTRA_DIST = ${EXTRA_SUBDIRS} \
+ChangeLog \
+README.utils \
+djgpp.bat djgpp.sh \
+autogen.sh cygconf \
+cvshowto.txt readme.txt installation.txt compilerdefs.txt \
+d2x-sdl.sh d2x-gl.sh
