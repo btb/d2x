@@ -1,4 +1,4 @@
-/* $Id: gameseq.c,v 1.25.2.2 2003-05-30 09:17:48 btb Exp $ */
+/* $Id: gameseq.c,v 1.25.2.3 2003-05-30 23:09:59 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25.2.2 2003-05-30 09:17:48 btb Exp $";
+char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25.2.3 2003-05-30 23:09:59 btb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -770,19 +770,8 @@ int RegisterPlayer()
 do_menu_again:
 	;
 
-#ifndef MACINTOSH
-	if (!newmenu_get_filename( TXT_SELECT_PILOT, "*.plr", filename, allow_abort_flag ))	{
+	if (!newmenu_get_filename(TXT_SELECT_PILOT, "plr", filename, allow_abort_flag))
 		goto do_menu_again; //return 0;		// They hit Esc in file selector
-	}
-#else
-	#ifndef APPLE_DEMO
-	if (!newmenu_get_filename( TXT_SELECT_PILOT, ".\\Players\\*.plr", filename, allow_abort_flag ))	{
-		goto do_menu_again;		// They hit Esc in file selector
-	}
-	#else
-	newmenu_get_filename( "Select Pilot", ".\\Players\\*.plr", filename, 0 );		// no abort allowed ever -- and change title of menubox
-	#endif
-#endif
 
 	if ( filename[0] == '<' )	{
 		// They selected 'create new pilot'

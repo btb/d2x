@@ -1,4 +1,4 @@
-/* $Id: newmenu.c,v 1.19.2.3 2003-05-30 09:17:48 btb Exp $ */
+/* $Id: newmenu.c,v 1.19.2.4 2003-05-30 23:09:59 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2580,32 +2580,33 @@ void delete_player_saved_games(char * name)
 
 #define MAX_FILES 300
 
-int newmenu_get_filename( char * title, char * filespec, char * filename, int allow_abort_flag )
+int newmenu_get_filename(char *title, char *type, char *filename, int allow_abort_flag)
 {
 	int i;
-	FILEFINDSTRUCT find;
-	int NumFiles=0, key,done, citem, ocitem;
-	char * filenames = NULL;
-	char real_filespec[PATH_MAX + FILENAME_LEN];
+	char **find;
+	char **f;
+	char *ext;
+	int NumFiles = 0, key,done, citem, ocitem;
+	char *filenames = NULL;
 	int NumFiles_displayed = 8;
 	int first_item = -1, ofirst_item;
 	int old_keyd_repeat = keyd_repeat;
-	int player_mode=0;
-	int demo_mode=0;
-	int demos_deleted=0;
+	int player_mode = 0;
+	int demo_mode = 0;
+	int demos_deleted = 0;
 	int initialized = 0;
 	int exit_value = 0;
 	int w_x, w_y, w_w, w_h, title_height;
 	int box_x, box_y, box_w, box_h;
-	bkg bg;		// background under listbox
+	bkg bg; // background under listbox
 #if defined(MACINTOSH) || defined(WINDOWS)
 	int mx, my, x1, x2, y1, y2, mouse_state, omouse_state;
 	int mouse2_state, omouse2_state;
-	int dblclick_flag=0;
-   int simukey=0;
-	int show_up_arrow=0,show_down_arrow=0;
+	int dblclick_flag = 0;
+	int simukey = 0;
+	int show_up_arrow = 0, show_down_arrow = 0;
 #endif
-WIN(int win_redraw=0);
+	WIN(int win_redraw = 0);
 
 	w_x=w_y=w_w=w_h=title_height=0;
 	box_x=box_y=box_w=box_h=0;
@@ -2618,9 +2619,9 @@ WIN(int win_redraw=0);
 
 	WIN(mouse_set_mode(0));				//disable centering mode
 
-	if (strstr( filespec, "*.plr" ))
+	if (!stricmp(type, "plr"))
 		player_mode = 1;
-	else if (strstr( filespec, "*.dem" ))
+	else if (!stricmp(type, "dem"))
 		demo_mode = 1;
 
 ReadFileNames:
@@ -2634,47 +2635,31 @@ ReadFileNames:
 	}
 #endif
 
-	strcpy(real_filespec, PHYSFS_getWriteDir());
-	strcat(real_filespec, "/");
-	strcat(real_filespec, filespec);
-
-	if(!FileFindFirst(real_filespec, &find))
+	find = PHYSFS_enumerateFiles(demo_mode?DEMO_DIR:"");
+	for (f = find; *f != NULL; f++)
 	{
-		do	{
-			if (NumFiles<MAX_FILES)	{
-                                strncpy( &filenames[NumFiles*14], find.name, FILENAME_LEN );
-				if ( player_mode )	{
-					char * p;
-					p = strchr(&filenames[NumFiles*14],'.');
-					if (p) *p = '\0';
-				}
-				NumFiles++;
-			} else {
-				break;
+		if (player_mode)
+		{
+			ext = strrchr(*f, '.');
+			if (!ext || strnicmp(ext, ".plr", 4))
+				continue;
+		}
+		if (NumFiles < MAX_FILES)
+		{
+			strncpy(&filenames[NumFiles*14], *f, FILENAME_LEN );
+			if (player_mode)
+			{
+				char *p;
+				p = strchr(&filenames[NumFiles*14], '.');
+				if (p) *p = '\0';
 			}
-		} while( !FileFindNext( &find ) );
-		FileFindClose();
+			NumFiles++;
+		}
+		else
+			break;
 	}
 
-#if 0
-	if (demo_mode && AltHogdir_initialized) {
-		char filespec2[PATH_MAX + FILENAME_LEN];
-		strcpy(filespec2, AltHogDir);
-		strcat(filespec2, "/");
-		strcat(filespec2, filespec);
-		if ( !FileFindFirst( filespec2, &find ) ) {
-			do {
-				if (NumFiles<MAX_FILES)	{
-					strncpy( &filenames[NumFiles*14], find.name, FILENAME_LEN );
-					NumFiles++;
-				} else {
-					break;
-				}
-			} while( !FileFindNext( &find ) );
-			FileFindClose();
-		}
-	}
-#endif
+	PHYSFS_freeList(find);
 
 	if ( (NumFiles < 1) && demos_deleted )	{
 		exit_value = 0;
@@ -2696,7 +2681,7 @@ ReadFileNames:
 
 	if ( NumFiles<1 )	{
 		#ifndef APPLE_DEMO
-			nm_messagebox( NULL, 1, "Ok", "%s\n '%s' %s", TXT_NO_FILES_MATCHING, filespec, TXT_WERE_FOUND);
+			nm_messagebox(NULL, 1, "Ok", "%s\n '%s' %s", TXT_NO_FILES_MATCHING, type, TXT_WERE_FOUND);
 		#endif
 		exit_value = 0;
 		goto ExitFileMenu;
@@ -2914,14 +2899,13 @@ RePaintNewmenuFile:
  				if (x==0)	{
 					char * p;
 					int ret;
-					char name[_MAX_PATH],dir[_MAX_DIR];
+					char name[_MAX_PATH];
 
 					p = &filenames[(citem*14)+strlen(&filenames[citem*14])];
 					if (player_mode)
 						*p = '.';
 
-					_splitpath(filespec,name,dir,NULL,NULL);
-					strcat(name,dir);
+					strcat(name, demo_mode?DEMO_DIR:"");
 					strcat(name,&filenames[citem*14]);
 					
 					#ifdef MACINTOSH
@@ -3793,6 +3777,7 @@ RePaintNewmenuListbox:
 	return citem;
 }
 
+#if 0
 int newmenu_filelist( char * title, char * filespec, char * filename )
 {
 	int i, NumFiles;
@@ -3821,6 +3806,7 @@ int newmenu_filelist( char * title, char * filespec, char * filename )
 	} 
 	return 0;
 }
+#endif
 
 //added on 10/14/98 by Victor Rachels to attempt a fixedwidth font messagebox
 int nm_messagebox_fixedfont( char *title, int nchoices, ... )
