@@ -1,5 +1,7 @@
 2003-06-06  Bradley Bell  <btb@icculus.org>
 
+	* main/gauges.c: force cockpit redraw in opengl
+
 	* main/gamerend.c: move ogl swap, so cockpit and console get
 	rendered properly
 
