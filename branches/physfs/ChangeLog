@@ -1,5 +1,7 @@
 2003-05-22  Bradley Bell  <btb@icculus.org>
 
+	* main/newdemo.c: use physfs for demos
+
 	* include/physfsx.h: added PHYSFSX_rename function
 
 	* libmve/mveplay.c: syntax error
