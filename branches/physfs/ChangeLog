@@ -1,5 +1,7 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* include/physfsx.h: added my physfs extensions
+
 	* main/inferno.c: physfs initialization stuff
 
 	* main/polyobj.c: use cfilelength instead of file->size
