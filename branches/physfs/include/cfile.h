@@ -1,4 +1,4 @@
-/* $Id: cfile.h,v 1.8.2.1 2003-05-17 04:35:51 btb Exp $ */
+/* $Id: cfile.h,v 1.8.2.2 2003-05-17 10:29:06 btb Exp $ */
 
 /*
  *
@@ -19,8 +19,6 @@
 #define cfclose          PHYSFS_close
 #define cftell           PHYSFS_tell
 #define cfexist          PHYSFS_exists
-#define cfile_use_alternate_hogfile(n) PHYSFS_addToSearchPath(n,1)
-#define cfile_use_descent1_hogfile(n)  PHYSFS_addToSearchPath(n,1)
 #define cfilelength      PHYSFS_fileLength
 
 //Specify the name of the hogfile.  Returns 1 if hogfile found & had files
@@ -103,7 +101,7 @@ static inline int cfseek(PHYSFS_file *fp, long int offset, int where)
 		return 1;
 	}
 	c = PHYSFS_seek(fp, goal_position);
-	return c;
+	return !c;
 }
 
 
