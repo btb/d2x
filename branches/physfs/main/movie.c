@@ -1,4 +1,4 @@
-/* $Id: movie.c,v 1.25.2.3 2003-05-22 07:36:11 btb Exp $ */
+/* $Id: movie.c,v 1.25.2.4 2003-05-30 09:24:44 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: movie.c,v 1.25.2.3 2003-05-22 07:36:11 btb Exp $";
+static char rcsid[] = "$Id: movie.c,v 1.25.2.4 2003-05-30 09:24:44 btb Exp $";
 #endif
 
 #define DEBUG_LEVEL CON_NORMAL
@@ -73,13 +73,13 @@ int Num_subtitles;
 // Movielib data
 
 #ifdef D2_OEM
-char movielib_files[][FILENAME_LEN] = {"intro","other","robots","oem"};
+char movielib_files[5][FILENAME_LEN] = {"intro","other","robots","oem"};
 #else
-char movielib_files[][FILENAME_LEN] = {"intro","other","robots"};
+char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 #endif
 
-#define N_BUILTIN_MOVIE_LIBS (sizeof(movielib_files)/sizeof(*movielib_files))
-#define N_MOVIE_LIBS (N_BUILTIN_MOVIE_LIBS+1)
+#define N_MOVIE_LIBS (sizeof(movielib_files)/sizeof(*movielib_files))
+#define N_BUILTIN_MOVIE_LIBS (N_MOVIE_LIBS - 1)
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 
 int MovieHires = 1;   //default is highres
@@ -767,13 +767,15 @@ void init_movies()
 
 void close_extra_robot_movie(void)
 {
-	if (!cfile_close(movielib_files[EXTRA_ROBOT_LIB]))
-		Error("couldn't remove robot lib: %s\n", PHYSFS_getLastError());
+	if (strlen(movielib_files[EXTRA_ROBOT_LIB]))
+		if (!cfile_close(movielib_files[EXTRA_ROBOT_LIB]))
+			Error("couldn't remove robot lib: %s\n", PHYSFS_getLastError());
 }
 
 void init_extra_robot_movie(char *movielib)
 {
 	close_extra_robot_movie();
 	init_movie(movielib, 1, 0);
+	strcpy(movielib_files[EXTRA_ROBOT_LIB], movielib);
 	atexit(close_extra_robot_movie);
 }
