@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.9.2.4 2003-06-06 03:35:41 btb Exp $ */
+/* $Id: console.c,v 1.9.2.5 2003-06-06 09:57:06 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -148,7 +148,8 @@ void con_printf(int priority, char *fmt, ...)
 			printf(buffer);
 
 #ifdef CONSOLE
-		CON_Out(Console, buffer);
+		if (con_initialized)
+			CON_Out(Console, buffer);
 #endif
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)

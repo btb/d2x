@@ -1,3 +1,7 @@
+2003-06-06  Bradley Bell  <btb@icculus.org>
+
+	* main/console.c: can't write to console after it's closed
+
 2003-06-05  Bradley Bell  <btb@icculus.org>
 
 	* arch/sdl/event.c, console/CON_console.c, console/Makefile.am,
