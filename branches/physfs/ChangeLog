@@ -1,5 +1,8 @@
 2003-05-21  Bradley Bell  <btb@icculus.org>
 
+	* include/fileutil.h, misc/Makefile.am, misc/fileutil.c: remove
+	old fileutil functions
+
 	* main/gameseq.c, main/mission.c, main/movie.c: make movies use
 	physfs/rwops, add libmve callbacks
 
