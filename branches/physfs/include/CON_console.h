@@ -31,6 +31,8 @@ Have Fun!
 #define CON_BLINK_RATE       500
 //! Border in pixels from the most left to the first letter
 #define CON_CHAR_BORDER      4
+//! Spacing in pixels between lines
+#define CON_LINE_SPACE       1
 //! Default prompt used at the commandline
 #define CON_DEFAULT_PROMPT	"]"
 //! Scroll this many lines at a time (when pressing PGUP or PGDOWN)
@@ -70,7 +72,6 @@ extern "C" {
 		int TotalCommands;		//! Number of commands in the Back Commands
 		int LineBuffer;			//! The number of visible lines in the console (autocalculated)
 		int VChars;			//! The number of visible characters in one console line (autocalculated)
-		int BackX, BackY;		//! Background images x and y coords
 		char* Prompt;			//! Prompt displayed in command line
 		char Command[CON_CHARS_PER_LINE];	//! current command in command line = lcommand + rcommand
 		char RCommand[CON_CHARS_PER_LINE];	//! left hand side of cursor
@@ -79,11 +80,10 @@ extern "C" {
 		int CursorPos;			//! Current cursor position in CurrentCommand
 		int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
 		int InsMode;			//! Insert or Overwrite characters?
-		SDL_Surface *ConsoleSurface;	//! Surface of the console
-		grs_canvas *ConsoleCanvas;	//! Canvas of the console
-		SDL_Surface *OutputScreen;	//! This is the screen to draw the console to
-		SDL_Surface *BackgroundImage;	//! Background image for the console
-		SDL_Surface *InputBackground;	//! Dirty rectangle to draw over behind the users background
+		grs_canvas *ConsoleSurface;	//! Canvas of the console
+		grs_screen *OutputScreen;	//! This is the screen to draw the console to
+		grs_bitmap *BackgroundImage;	//! Background image for the console
+		grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
 		int DispX, DispY;		//! The top left x and y coords of the console on the display screen
 		unsigned char ConsoleAlpha;	//! The consoles alpha level
 		int CommandScrollBack;		//! How much the users scrolled back in the command lines
@@ -107,7 +107,7 @@ extern "C" {
 	/*! Draws the console to the screen if it isVisible()*/
 	void CON_DrawConsole(ConsoleInformation *console);
 	/*! Initializes a new console */
-	ConsoleInformation *CON_Init(grs_font *Font, SDL_Surface *DisplayScreen, int lines, SDL_Rect rect);
+	ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, SDL_Rect rect);
 	/*! Calls CON_Free */
 	void CON_Destroy(ConsoleInformation *console);
 	/*! Frees all the memory loaded by the console */
@@ -121,14 +121,16 @@ extern "C" {
 		Preconditions: the surface in question is RGBA. 0 <= a <= 255, where 0 is transparent and 255 opaque */
 	void CON_AlphaGL(SDL_Surface *s, int alpha);
 	/*! Sets a background image for the console */
-	int CON_Background(ConsoleInformation *console, const char *image, int x, int y);
+	int CON_Background(ConsoleInformation *console, grs_bitmap *image);
+	/*! Sets font info for the console */
+	void CON_Font(ConsoleInformation *console, grs_font *font, int fg, int bg);
 	/*! Changes current position of the console */
 	void CON_Position(ConsoleInformation *console, int x, int y);
 	/*! Changes the size of the console */
 	int CON_Resize(ConsoleInformation *console, SDL_Rect rect);
 	/*! Beams a console to another screen surface. Needed if you want to make a Video restart in your program. This
 		function first changes the OutputScreen Pointer then calls CON_Resize to adjust the new size. */
-	int CON_Transfer(ConsoleInformation* console, SDL_Surface* new_outputscreen, SDL_Rect rect);
+	int CON_Transfer(ConsoleInformation* console, grs_screen* new_outputscreen, SDL_Rect rect);
 	/*! Give focus to a console. Make it the "topmost" console. This console will receive events
 		sent with CON_Events() */
 	void CON_Topmost(ConsoleInformation *console);

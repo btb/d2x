@@ -1,4 +1,4 @@
-/* $Id: game.c,v 1.20.2.1 2003-06-02 21:43:14 btb Exp $ */
+/* $Id: game.c,v 1.20.2.2 2003-06-05 01:55:42 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char game_rcsid[] = "$Id: game.c,v 1.20.2.1 2003-06-02 21:43:14 btb Exp $";
+char game_rcsid[] = "$Id: game.c,v 1.20.2.2 2003-06-05 01:55:42 btb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -1039,6 +1039,7 @@ WIN(static int saved_window_h);
 			else
 				FontHires = 0;
 		}
+		con_resize();
 
 		break;
 	#ifdef EDITOR

@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.9.2.2 2003-06-03 20:58:39 btb Exp $ */
+/* $Id: console.c,v 1.9.2.3 2003-06-05 01:55:42 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -28,6 +28,8 @@
 #include "cmd.h"
 #include "gr.h"
 #include "gamefont.h"
+#include "pcx.h"
+#include "cfile.h"
 
 #ifndef __MSDOS__
 int text_console_enabled = 1;
@@ -44,8 +46,8 @@ cvar_t con_threshold = {"con_threshold", "0",};
 
 /* Private console stuff */
 #define CON_NUM_LINES 40
-#define CON_LINE_LEN 40
 #if 0
+#define CON_LINE_LEN 40
 static char con_display[40][40];
 static int  con_line; /* Current display line */
 #endif
@@ -54,11 +56,21 @@ static int  con_line; /* Current display line */
 static int con_initialized;
 
 ConsoleInformation *Console;
-extern SDL_Surface *screen;
 
 void con_parse(ConsoleInformation *console, char *command);
 #endif
 
+
+/* ======
+ * con_free - Free the console.
+ * ======
+ */
+void con_free(void)
+{
+	if (con_initialized)
+		CON_Free(Console);
+	con_initialized = 0;
+}
 
 /* ======
  * con_init - Initialise the console.
@@ -72,22 +84,60 @@ int con_init(void)
 }
 
 #ifdef CONSOLE
-void real_con_init(void)
+
+#define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
+#define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
+#define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
+
+void con_background(char *filename)
+{
+	int pcx_error;
+	grs_bitmap bmp;
+	ubyte pal[256*3];
+
+	gr_init_bitmap_data(&bmp);
+	pcx_error = pcx_read_bitmap(filename, &bmp, BM_LINEAR, pal);
+	Assert(pcx_error == PCX_ERROR_NONE);
+	gr_remap_bitmap_good(&bmp, pal, -1, -1);
+	CON_Background(Console, &bmp);
+	gr_free_bitmap_data(&bmp);
+}
+
+
+void con_init_real(void)
 {
 	SDL_Rect Con_rect;
 
 	Con_rect.x = Con_rect.y = 0;
-	Con_rect.w = 320;
-	Con_rect.h = 200;
+	Con_rect.w = SWIDTH;
+	Con_rect.h = SHEIGHT / 2;
 
-	Console = CON_Init(Gamefonts[GFONT_MEDIUM_2], screen, CON_NUM_LINES, Con_rect);
+	//Console = CON_Init(Gamefonts[GFONT_MEDIUM_2], grd_curscreen, CON_NUM_LINES, Con_rect);
+	Console = CON_Init(SMALL_FONT, grd_curscreen, CON_NUM_LINES, Con_rect);
 
 	Assert(Console);
 
 	CON_SetExecuteFunction(Console, con_parse);
-	CON_Background(Console, "scores.pcx", 0, 0);
+
+	con_background(CON_BG);
 
 	con_initialized = 1;
+
+	atexit(con_free);
+}
+
+void con_resize(void)
+{
+	SDL_Rect Con_rect;
+
+	if (!con_initialized)
+		con_init_real();
+	Con_rect.x = Con_rect.y = 0;
+	Con_rect.w = SWIDTH;
+	Con_rect.h = SHEIGHT / 2;
+	CON_Font(Console, SMALL_FONT, gr_getcolor(63, 63, 63), -1);
+	CON_Resize(Console, Con_rect);
+	con_background(CON_BG);
 }
 #endif
 
@@ -105,11 +155,8 @@ void con_printf(int priority, char *fmt, ...)
 		va_start (arglist, fmt);
 		vsprintf (buffer,  fmt, arglist);
 		va_end (arglist);
-		if (text_console_enabled) {
-			va_start (arglist, fmt);
-			vprintf(fmt, arglist);
-			va_end (arglist);
-		}
+		if (text_console_enabled)
+			printf(buffer);
 
 #ifdef CONSOLE
 		CON_Out(Console, buffer);
@@ -222,7 +269,7 @@ void con_show(void)
 {
 #ifdef CONSOLE
 	if (!con_initialized)
-		real_con_init();
+		con_init_real();
 
 	CON_Show(Console);
 	CON_Topmost(Console);

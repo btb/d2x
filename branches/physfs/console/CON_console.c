@@ -11,11 +11,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include "SDL.h"
-#include "SDL_image.h"
 #include "CON_console.h"
 #include "internal.h"
 #include "physfsrwops.h"
 
+#include "u_mem.h"
 #include "gr.h"
 
 /* This contains a pointer to the "topmost" console. The console that
@@ -238,7 +238,6 @@ void CON_UpdateConsole(ConsoleInformation *console) {
 	int loop;
 	int loop2;
 	int Screenlines;
-	SDL_Rect DestRect;
 	grs_canvas *canv_save;
 
 	if(!console)
@@ -248,22 +247,25 @@ void CON_UpdateConsole(ConsoleInformation *console) {
 	if(!CON_isVisible(console))
 		return;
 
-	Screenlines = console->ConsoleCanvas->cv_bitmap.bm_h / console->ConsoleCanvas->cv_font->ft_h;
+	Screenlines = console->ConsoleSurface->cv_h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h);
 
+	canv_save = grd_curcanv;
+	gr_set_current_canvas(console->ConsoleSurface);
 
+#if 0
 	SDL_FillRect(console->ConsoleSurface, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, console->ConsoleAlpha));
+#else
+	//gr_rect(0,0,
+#endif
 
+#if 0
 	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
 		SDL_SetAlpha(console->ConsoleSurface, 0, SDL_ALPHA_OPAQUE);
+#endif
 
 	/* draw the background image if there is one */
-	if(console->BackgroundImage) {
-		DestRect.x = console->BackX;
-		DestRect.y = console->BackY;
-		DestRect.w = console->BackgroundImage->w;
-		DestRect.h = console->BackgroundImage->h;
-		SDL_BlitSurface(console->BackgroundImage, NULL, console->ConsoleSurface, &DestRect);
-	}
+	if(console->BackgroundImage)
+		gr_bitmap(0, 0, console->BackgroundImage);
 
 	/* Draw the text from the back buffers, calculate in the scrollback from the user
 	 * this is a normal SDL software-mode blit, so we need to temporarily set the ColorKey
@@ -276,17 +278,13 @@ void CON_UpdateConsole(ConsoleInformation *console) {
 	}
 #endif
 
-
-	canv_save = grd_curcanv;
-	gr_set_current_canvas(console->ConsoleCanvas);
-
 	//now draw text from last but second line to top
 	for(loop = 0; loop < Screenlines-1 && loop < console->LineBuffer - console->ConsoleScrollBack; loop++) {
 		if(console->ConsoleScrollBack != 0 && loop == 0)
 			for(loop2 = 0; loop2 < (console->VChars / 5) + 1; loop2++)
-				gr_string(CON_CHAR_BORDER + (loop2*5*console->ConsoleCanvas->cv_font->ft_w), (Screenlines - loop - 2) * console->ConsoleCanvas->cv_font->ft_h, CON_SCROLL_INDICATOR);
+				gr_string(CON_CHAR_BORDER + (loop2*5*console->ConsoleSurface->cv_font->ft_w), (Screenlines - loop - 2) * (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h), CON_SCROLL_INDICATOR);
 		else
-			gr_string(CON_CHAR_BORDER, (Screenlines - loop - 2) * console->ConsoleCanvas->cv_font->ft_h, console->ConsoleLines[console->ConsoleScrollBack + loop]);
+			gr_string(CON_CHAR_BORDER, (Screenlines - loop - 2) * (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h), console->ConsoleLines[console->ConsoleScrollBack + loop]);
 	}
 
 	gr_set_current_canvas(canv_save);
@@ -311,8 +309,8 @@ void CON_UpdateOffset(ConsoleInformation* console) {
 		break;
 	case CON_OPENING:
 		console->RaiseOffset += CON_OPENCLOSE_SPEED;
-		if(console->RaiseOffset >= console->ConsoleCanvas->cv_bitmap.bm_h) {
-			console->RaiseOffset = console->ConsoleCanvas->cv_bitmap.bm_h;
+		if(console->RaiseOffset >= console->ConsoleSurface->cv_h) {
+			console->RaiseOffset = console->ConsoleSurface->cv_h;
 			console->Visible = CON_OPEN;
 		}
 		break;
@@ -326,6 +324,7 @@ void CON_UpdateOffset(ConsoleInformation* console) {
 void CON_DrawConsole(ConsoleInformation *console) {
 	SDL_Rect DestRect;
 	SDL_Rect SrcRect;
+	grs_canvas *canv_save;
 
 	if(!console)
 		return;
@@ -340,38 +339,51 @@ void CON_DrawConsole(ConsoleInformation *console) {
 	/* Update the command line since it has a blinking cursor */
 	DrawCommandLine();
 
+#if 0
 	/* before drawing, make sure the alpha channel of the console surface is set
 	 * properly.  (sigh) I wish we didn't have to do this every frame... */
 	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
 		CON_AlphaGL(console->ConsoleSurface, console->ConsoleAlpha);
+#endif
 
 	SrcRect.x = 0;
-	SrcRect.y = console->ConsoleCanvas->cv_bitmap.bm_h - console->RaiseOffset;
-	SrcRect.w = console->ConsoleCanvas->cv_bitmap.bm_w;
+	SrcRect.y = console->ConsoleSurface->cv_h - console->RaiseOffset;
+	SrcRect.w = console->ConsoleSurface->cv_w;
 	SrcRect.h = console->RaiseOffset;
 
 	/* Setup the rect the console is being blitted into based on the output screen */
 	DestRect.x = console->DispX;
 	DestRect.y = console->DispY;
-	DestRect.w = console->ConsoleCanvas->cv_bitmap.bm_w;
-	DestRect.h = console->ConsoleCanvas->cv_bitmap.bm_h;
+	DestRect.w = console->ConsoleSurface->cv_w;
+	DestRect.h = console->ConsoleSurface->cv_h;
 
-	SDL_BlitSurface(console->ConsoleSurface, &SrcRect, console->OutputScreen, &DestRect);
+	canv_save = grd_curcanv;
+	gr_set_current_canvas(&console->OutputScreen->sc_canvas);
 
+	{
+		grs_bitmap *clip = gr_create_sub_bitmap(&console->ConsoleSurface->cv_bitmap, SrcRect.x, SrcRect.y, SrcRect.w, SrcRect.h);
+
+		gr_bitmap(DestRect.x, DestRect.y, clip);
+		gr_free_sub_bitmap(clip);
+	}
+
+#if 0
 	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
 		SDL_UpdateRects(console->OutputScreen, 1, &DestRect);
+#endif
+
+	gr_set_current_canvas(canv_save);
 }
 
 
 /* Initializes the console */
-ConsoleInformation *CON_Init(grs_font *Font, SDL_Surface *DisplayScreen, int lines, SDL_Rect rect) {
+ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, SDL_Rect rect) {
 	int loop;
-	SDL_Surface *Temp;
 	ConsoleInformation *newinfo;
 
 
 	/* Create a new console struct and init it. */
-	if((newinfo = (ConsoleInformation *) malloc(sizeof(ConsoleInformation))) == NULL) {
+	if((newinfo = (ConsoleInformation *) d_malloc(sizeof(ConsoleInformation))) == NULL) {
 		PRINT_ERROR("Could not allocate the space for a new console info struct.\n");
 		return NULL;
 	}
@@ -396,66 +408,58 @@ ConsoleInformation *CON_Init(grs_font *Font, SDL_Surface *DisplayScreen, int lin
 	CON_SetExecuteFunction(newinfo, Default_CmdFunction);
 	CON_SetTabCompletion(newinfo, Default_TabFunction);
 
-	Font->ft_w = 10; //HACK
-
 	/* make sure that the size of the console is valid */
-	if(rect.w > newinfo->OutputScreen->w || rect.w < Font->ft_w * 32)
-		rect.w = newinfo->OutputScreen->w;
-	if(rect.h > newinfo->OutputScreen->h || rect.h < Font->ft_h)
-		rect.h = newinfo->OutputScreen->h;
-	if(rect.x < 0 || rect.x > newinfo->OutputScreen->w - rect.w)
+	if(rect.w > newinfo->OutputScreen->sc_w || rect.w < Font->ft_w * 32)
+		rect.w = newinfo->OutputScreen->sc_w;
+	if(rect.h > newinfo->OutputScreen->sc_h || rect.h < Font->ft_h)
+		rect.h = newinfo->OutputScreen->sc_h;
+	if(rect.x < 0 || rect.x > newinfo->OutputScreen->sc_w - rect.w)
 		newinfo->DispX = 0;
 	else
 		newinfo->DispX = rect.x;
-	if(rect.y < 0 || rect.y > newinfo->OutputScreen->h - rect.h)
+	if(rect.y < 0 || rect.y > newinfo->OutputScreen->sc_h - rect.h)
 		newinfo->DispY = 0;
 	else
 		newinfo->DispY = rect.y;
 
 	/* load the console surface */
-	Temp = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, rect.h, newinfo->OutputScreen->format->BitsPerPixel, 0, 0, 0, 0);
-	if(Temp == NULL) {
-		PRINT_ERROR("Couldn't create the ConsoleSurface\n");
-		return NULL;
-	}
-	newinfo->ConsoleSurface = SDL_DisplayFormat(Temp);
-	SDL_FreeSurface(Temp);
-	SDL_FillRect(newinfo->ConsoleSurface, NULL, SDL_MapRGBA(newinfo->ConsoleSurface->format, 0, 0, 0, newinfo->ConsoleAlpha));
-
-	/* load the console canvas */
-	newinfo->ConsoleCanvas = (grs_canvas *)malloc(sizeof(grs_canvas));
-	gr_init_canvas(newinfo->ConsoleCanvas, newinfo->ConsoleSurface->pixels, BM_LINEAR, rect.w, rect.h);
+	newinfo->ConsoleSurface = gr_create_canvas(rect.w, rect.h);
 
 	/* Load the consoles font */
-	newinfo->ConsoleCanvas->cv_font = Font;
+	{
+		grs_canvas *canv_save;
+
+		canv_save = grd_curcanv;
+		gr_set_current_canvas(newinfo->ConsoleSurface);
+		gr_set_curfont(Font);
+		gr_set_fontcolor(gr_getcolor(63,63,63), -1);
+		gr_set_current_canvas(canv_save);
+	}
+
 
 	/* Load the dirty rectangle for user input */
-	Temp = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, newinfo->ConsoleCanvas->cv_font->ft_h, newinfo->OutputScreen->format->BitsPerPixel, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	if(Temp == NULL) {
-		PRINT_ERROR("Couldn't create the InputBackground\n");
-		return NULL;
-	}
-	newinfo->InputBackground = SDL_DisplayFormat(Temp);
-	SDL_FreeSurface(Temp);
+	newinfo->InputBackground = gr_create_bitmap(rect.w, newinfo->ConsoleSurface->cv_font->ft_h);
+#if 0
 	SDL_FillRect(newinfo->InputBackground, NULL, SDL_MapRGBA(newinfo->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+#endif
 
 	/* calculate the number of visible characters in the command line */
-	newinfo->VChars = (rect.w - CON_CHAR_BORDER) / newinfo->ConsoleCanvas->cv_font->ft_w;
+	newinfo->VChars = (rect.w - CON_CHAR_BORDER) / newinfo->ConsoleSurface->cv_font->ft_w;
 	if(newinfo->VChars > CON_CHARS_PER_LINE)
 		newinfo->VChars = CON_CHARS_PER_LINE;
 
 	/* We would like to have a minumum # of lines to guarentee we don't create a memory error */
-	if(rect.h / newinfo->ConsoleCanvas->cv_font->ft_h > lines)
-		newinfo->LineBuffer = rect.h / newinfo->ConsoleCanvas->cv_font->ft_h;
+	if(rect.h / (CON_LINE_SPACE + newinfo->ConsoleSurface->cv_font->ft_h) > lines)
+		newinfo->LineBuffer = rect.h / (CON_LINE_SPACE + newinfo->ConsoleSurface->cv_font->ft_h);
 	else
 		newinfo->LineBuffer = lines;
 
 
-	newinfo->ConsoleLines = (char **)malloc(sizeof(char *) * newinfo->LineBuffer);
-	newinfo->CommandLines = (char **)malloc(sizeof(char *) * newinfo->LineBuffer);
+	newinfo->ConsoleLines = (char **)d_malloc(sizeof(char *) * newinfo->LineBuffer);
+	newinfo->CommandLines = (char **)d_malloc(sizeof(char *) * newinfo->LineBuffer);
 	for(loop = 0; loop <= newinfo->LineBuffer - 1; loop++) {
-		newinfo->ConsoleLines[loop] = (char *)calloc(CON_CHARS_PER_LINE, sizeof(char));
-		newinfo->CommandLines[loop] = (char *)calloc(CON_CHARS_PER_LINE, sizeof(char));
+		newinfo->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+		newinfo->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
 	}
 	memset(newinfo->Command, 0, CON_CHARS_PER_LINE);
 	memset(newinfo->LCommand, 0, CON_CHARS_PER_LINE);
@@ -510,15 +514,26 @@ void CON_Free(ConsoleInformation *console) {
 
 	//CON_DestroyCommands();
 	for(i = 0; i <= console->LineBuffer - 1; i++) {
-		free(console->ConsoleLines[i]);
-		free(console->CommandLines[i]);
+		d_free(console->ConsoleLines[i]);
+		d_free(console->CommandLines[i]);
 	}
-	free(console->ConsoleLines);
-	free(console->CommandLines);
+	d_free(console->ConsoleLines);
+	d_free(console->CommandLines);
 
 	console->ConsoleLines = NULL;
 	console->CommandLines = NULL;
-	free(console);
+
+	gr_free_canvas(console->ConsoleSurface);
+	console->ConsoleSurface = NULL;
+
+	if (console->BackgroundImage)
+		gr_free_bitmap(console->BackgroundImage);
+	console->BackgroundImage = NULL;
+
+	gr_free_bitmap(console->InputBackground);
+	console->InputBackground = NULL;
+
+	d_free(console);
 }
 
 
@@ -593,7 +608,7 @@ void DrawCommandLine() {
 	commandbuffer = Topmost->VChars - strlen(Topmost->Prompt)-1; // -1 to make cursor visible
 
 #if 0
-	CurrentFont = Topmost->ConsoleCanvas->cv_font;
+	CurrentFont = Topmost->ConsoleSurface->cv_font;
 #endif
 
 	//Concatenate the left and right side to command
@@ -623,18 +638,18 @@ void DrawCommandLine() {
 	}
 #endif
 
+	canv_save = grd_curcanv;
+	gr_set_current_canvas(Topmost->ConsoleSurface);
+
 	//first of all restore InputBackground
 	rect.x = 0;
-	rect.y = Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h;
-	rect.w = Topmost->InputBackground->w;
-	rect.h = Topmost->InputBackground->h;
-	SDL_BlitSurface(Topmost->InputBackground, NULL, Topmost->ConsoleSurface, &rect);
-
-	canv_save = grd_curcanv;
-	gr_set_current_canvas(Topmost->ConsoleCanvas);
+	rect.y = Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h;
+	rect.w = Topmost->InputBackground->bm_w;
+	rect.h = Topmost->InputBackground->bm_h;
+	gr_bitmap(rect.x, rect.y, Topmost->InputBackground);
 
 	//now add the text
-	gr_string(CON_CHAR_BORDER, Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h, Topmost->VCommand);
+	gr_string(CON_CHAR_BORDER, Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h, Topmost->VCommand);
 
 	//at last add the cursor
 	//check if the blink period is over
@@ -654,11 +669,11 @@ void DrawCommandLine() {
 	}
 
 	if(Blink) {
-		x = CON_CHAR_BORDER + Topmost->ConsoleCanvas->cv_font->ft_w * (Topmost->CursorPos - Topmost->Offset + strlen(Topmost->Prompt));
+		x = CON_CHAR_BORDER + Topmost->ConsoleSurface->cv_font->ft_w * (Topmost->CursorPos - Topmost->Offset + strlen(Topmost->Prompt));
 		if(Topmost->InsMode)
-			gr_string(x, Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h, CON_INS_CURSOR);
+			gr_string(x, Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h, CON_INS_CURSOR);
 		else
-			gr_string(x, Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h, CON_OVR_CURSOR);
+			gr_string(x, Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h, CON_OVR_CURSOR);
 	}
 
 	gr_set_current_canvas(canv_save);
@@ -717,60 +732,67 @@ void CON_Alpha(ConsoleInformation *console, unsigned char alpha) {
 	/* store alpha as state! */
 	console->ConsoleAlpha = alpha;
 
+#if 0
 	if((console->OutputScreen->flags & SDL_OPENGLBLIT) == 0) {
 		if(alpha == 0)
 			SDL_SetAlpha(console->ConsoleSurface, 0, alpha);
 		else
 			SDL_SetAlpha(console->ConsoleSurface, SDL_SRCALPHA, alpha);
 	}
+#endif
 
 	//	CON_UpdateConsole(console);
 }
 
 
-/* Adds  background image to the console, x and y based on consoles x and y */
-int CON_Background(ConsoleInformation *console, const char *image, int x, int y) {
-	SDL_Surface *temp;
-	SDL_Rect backgroundsrc, backgrounddest;
+/* Adds  background image to the console, scaled to size of console*/
+int CON_Background(ConsoleInformation *console, grs_bitmap *image)
+{
+	SDL_Rect backgroundsrc;
 
 	if(!console)
 		return 1;
 
 	/* Free the background from the console */
-	if(image == NULL) {
-		if(console->BackgroundImage ==NULL)
-			SDL_FreeSurface(console->BackgroundImage);
+	if (image == NULL) {
+		if (console->BackgroundImage)
+			gr_free_bitmap(console->BackgroundImage);
 		console->BackgroundImage = NULL;
+#if 0
 		SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+#endif
 		return 0;
 	}
 
 	/* Load a new background */
-	temp = IMG_Load_RW(PHYSFSRWOPS_openRead(image), 1);
-	if(!temp) {
-		CON_Out(console, "Cannot load background %s.", image);
-		return 1;
-	}
-
-	console->BackgroundImage = SDL_DisplayFormat(temp);
-	SDL_FreeSurface(temp);
-	console->BackX = x;
-	console->BackY = y;
+	if (console->BackgroundImage)
+		gr_free_bitmap(console->BackgroundImage);
+	console->BackgroundImage = gr_create_bitmap(console->ConsoleSurface->cv_w, console->ConsoleSurface->cv_h);
+	gr_bitmap_scale_to(image, console->BackgroundImage);
 
 	backgroundsrc.x = 0;
-	backgroundsrc.y = console->ConsoleCanvas->cv_bitmap.bm_h - console->ConsoleCanvas->cv_font->ft_h - console->BackY;
-	backgroundsrc.w = console->BackgroundImage->w;
-	backgroundsrc.h = console->InputBackground->h;
+	backgroundsrc.y = console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h;
+	backgroundsrc.w = console->BackgroundImage->bm_w;
+	backgroundsrc.h = console->InputBackground->bm_h;
 
-	backgrounddest.x = console->BackX;
-	backgrounddest.y = 0;
-	backgrounddest.w = console->BackgroundImage->w;
-	backgrounddest.h = console->ConsoleCanvas->cv_font->ft_h;
-
+#if 0
 	SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-	SDL_BlitSurface(console->BackgroundImage, &backgroundsrc, console->InputBackground, &backgrounddest);
+#endif
+	gr_bm_bitblt(backgroundsrc.w, backgroundsrc.h, 0, 0, backgroundsrc.x, backgroundsrc.y, console->BackgroundImage, console->InputBackground);
 
 	return 0;
+}
+
+/* Sets font info for the console */
+void CON_Font(ConsoleInformation *console, grs_font *font, int fg, int bg)
+{
+	grs_canvas *canv_save;
+
+	canv_save = grd_curcanv;
+	gr_set_current_canvas(console->ConsoleSurface);
+	gr_set_curfont(font);
+	gr_set_fontcolor(fg, bg);
+	gr_set_current_canvas(canv_save);
 }
 
 /* takes a new x and y of the top left of the console window */
@@ -778,59 +800,47 @@ void CON_Position(ConsoleInformation *console, int x, int y) {
 	if(!console)
 		return;
 
-	if(x < 0 || x > console->OutputScreen->w - console->ConsoleCanvas->cv_bitmap.bm_w)
+	if(x < 0 || x > console->OutputScreen->sc_w - console->ConsoleSurface->cv_w)
 		console->DispX = 0;
 	else
 		console->DispX = x;
 
-	if(y < 0 || y > console->OutputScreen->h - console->ConsoleCanvas->cv_bitmap.bm_h)
+	if(y < 0 || y > console->OutputScreen->sc_h - console->ConsoleSurface->cv_h)
 		console->DispY = 0;
 	else
 		console->DispY = y;
 }
 
+void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
 int CON_Resize(ConsoleInformation *console, SDL_Rect rect) {
-	SDL_Surface *Temp;
-	SDL_Rect backgroundsrc, backgrounddest;
+	SDL_Rect backgroundsrc;
 
 	if(!console)
 		return 1;
 
 	/* make sure that the size of the console is valid */
-	if(rect.w > console->OutputScreen->w || rect.w < console->ConsoleCanvas->cv_font->ft_w * 32)
-		rect.w = console->OutputScreen->w;
-	if(rect.h > console->OutputScreen->h || rect.h < console->ConsoleCanvas->cv_font->ft_h)
-		rect.h = console->OutputScreen->h;
-	if(rect.x < 0 || rect.x > console->OutputScreen->w - rect.w)
+	if(rect.w > console->OutputScreen->sc_w || rect.w < console->ConsoleSurface->cv_font->ft_w * 32)
+		rect.w = console->OutputScreen->sc_w;
+	if(rect.h > console->OutputScreen->sc_h || rect.h < console->ConsoleSurface->cv_font->ft_h)
+		rect.h = console->OutputScreen->sc_h;
+	if(rect.x < 0 || rect.x > console->OutputScreen->sc_w - rect.w)
 		console->DispX = 0;
 	else
 		console->DispX = rect.x;
-	if(rect.y < 0 || rect.y > console->OutputScreen->h - rect.h)
+	if(rect.y < 0 || rect.y > console->OutputScreen->sc_h - rect.h)
 		console->DispY = 0;
 	else
 		console->DispY = rect.y;
 
-	/* load the console surface */
-	SDL_FreeSurface(console->ConsoleSurface);
-	Temp = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, rect.h, console->OutputScreen->format->BitsPerPixel, 0, 0, 0, 0);
-	if(Temp == NULL) {
-		PRINT_ERROR("Couldn't create the console->ConsoleSurface\n");
-		return 1;
-	}
-	console->ConsoleSurface = SDL_DisplayFormat(Temp);
-	SDL_FreeSurface(Temp);
+	/* resize console surface */
+	gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);
+	gr_init_bitmap_alloc(&console->ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, rect.w, rect.h, rect.w);
 
 	/* Load the dirty rectangle for user input */
-	SDL_FreeSurface(console->InputBackground);
-	Temp = SDL_CreateRGBSurface(SDL_SWSURFACE, rect.w, console->ConsoleCanvas->cv_font->ft_h, console->OutputScreen->format->BitsPerPixel, 0, 0, 0, 0);
-	if(Temp == NULL) {
-		PRINT_ERROR("Couldn't create the input background\n");
-		return 1;
-	}
-	console->InputBackground = SDL_DisplayFormat(Temp);
-	SDL_FreeSurface(Temp);
+	gr_free_bitmap(console->InputBackground);
+	console->InputBackground = gr_create_bitmap(rect.w, console->ConsoleSurface->cv_font->ft_h);
 
 	/* Now reset some stuff dependent on the previous size */
 	console->ConsoleScrollBack = 0;
@@ -838,17 +848,14 @@ int CON_Resize(ConsoleInformation *console, SDL_Rect rect) {
 	/* Reload the background image (for the input text area) in the console */
 	if(console->BackgroundImage) {
 		backgroundsrc.x = 0;
-		backgroundsrc.y = console->ConsoleCanvas->cv_bitmap.bm_h - console->ConsoleCanvas->cv_font->ft_h - console->BackY;
-		backgroundsrc.w = console->BackgroundImage->w;
-		backgroundsrc.h = console->InputBackground->h;
+		backgroundsrc.y = console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h;
+		backgroundsrc.w = console->BackgroundImage->bm_w;
+		backgroundsrc.h = console->InputBackground->bm_h;
 
-		backgrounddest.x = console->BackX;
-		backgrounddest.y = 0;
-		backgrounddest.w = console->BackgroundImage->w;
-		backgrounddest.h = console->ConsoleCanvas->cv_font->ft_h;
-
+#if 0
 		SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-		SDL_BlitSurface(console->BackgroundImage, &backgroundsrc, console->InputBackground, &backgrounddest);
+#endif
+		gr_bm_bitblt(backgroundsrc.w, backgroundsrc.h, 0, 0, backgroundsrc.x, backgroundsrc.y, console->BackgroundImage, console->InputBackground);
 	}
 
 	/* restore the alpha level */
@@ -857,7 +864,7 @@ int CON_Resize(ConsoleInformation *console, SDL_Rect rect) {
 }
 
 /* Transfers the console to another screen surface, and adjusts size */
-int CON_Transfer(ConsoleInformation* console, SDL_Surface* new_outputscreen, SDL_Rect rect) {
+int CON_Transfer(ConsoleInformation *console, grs_screen *new_outputscreen, SDL_Rect rect) {
 	if(!console)
 		return 1;
 
@@ -877,14 +884,14 @@ void CON_Topmost(ConsoleInformation *console) {
 	// Make sure the blinking cursor is gone
 	if(Topmost) {
 		canv_save = grd_curcanv;
-		gr_set_current_canvas(Topmost->ConsoleCanvas);
+		gr_set_current_canvas(Topmost->ConsoleSurface);
 
 		rect.x = 0;
-		rect.y = Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h;
-		rect.w = Topmost->InputBackground->w;
-		rect.h = Topmost->InputBackground->h;
-		SDL_BlitSurface(Topmost->InputBackground, NULL, Topmost->ConsoleSurface, &rect);
-		gr_string(CON_CHAR_BORDER, Topmost->ConsoleCanvas->cv_bitmap.bm_h - Topmost->ConsoleCanvas->cv_font->ft_h, Topmost->VCommand);
+		rect.y = Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h;
+		rect.w = Topmost->InputBackground->bm_w;
+		rect.h = Topmost->InputBackground->bm_h;
+		gr_bitmap(rect.x, rect.y, Topmost->InputBackground);
+		gr_string(CON_CHAR_BORDER, Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h, Topmost->VCommand);
 
 		gr_set_current_canvas(canv_save);
 	}

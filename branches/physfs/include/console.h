@@ -13,6 +13,7 @@
 #define CON_DEBUG     2
 
 int  con_init(void);
+void con_resize(void);
 void con_printf(int level, char *fmt, ...);
 
 void con_show(void);
