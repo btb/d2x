@@ -1,4 +1,4 @@
-/* $Id: playsave.c,v 1.12.2.2 2003-05-30 09:25:42 btb Exp $ */
+/* $Id: playsave.c,v 1.12.2.3 2003-06-03 11:03:28 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -315,7 +315,7 @@ typedef struct hli {
 	ubyte	level_num;
 } hli;
 
-int n_highest_levels;
+short n_highest_levels;
 
 hli highest_levels[MAX_MISSIONS];
 
@@ -536,7 +536,8 @@ int read_player_file()
 	char filename[FILENAME_LEN];
 	#endif
 	PHYSFS_file *file;
-	int id,player_file_version,i;
+	int id, i;
+	short player_file_version;
 	int rewrite_it=0;
 	int swap = 0;
 
@@ -579,7 +580,7 @@ int read_player_file()
 	}
 
 	player_file_version = 0;
-	PHYSFS_readULE16(file, (short *)&player_file_version);
+	PHYSFS_readULE16(file, &player_file_version);
 
 	if (player_file_version > 255) // bigendian file?
 		swap = 1;
@@ -630,7 +631,7 @@ int read_player_file()
 	//read new highest level info
 
 	n_highest_levels = 0;
-	PHYSFS_readULE16(file, (short *)&n_highest_levels);
+	PHYSFS_readULE16(file, &n_highest_levels);
 	if (swap)
 		n_highest_levels = SWAPSHORT(n_highest_levels);
 

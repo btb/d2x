@@ -1,5 +1,7 @@
 2003-06-03  Bradley Bell  <btb@icculus.org>
 
+	* main/playsave.c: use shorts for short data
+
 	* main/newmenu.c: fix player file deletion
 
 	* include/physfsx.h: fix statfs includes for OS X
