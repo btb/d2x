@@ -366,7 +366,6 @@ AC_OUTPUT(
     arch/sdl/Makefile
     arch/svgalib/Makefile
     arch/win32/Makefile
-    cfile/Makefile
     iff/Makefile
     libmve/Makefile
     main/Makefile

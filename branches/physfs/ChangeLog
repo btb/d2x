@@ -1,6 +1,7 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
-	* Makefile.am: drop cfile stuff
+	* Makefile.am, cfile/.cvsignore, cfile/Makefile.am, cfile/cfile.c,
+	configure.ac: drop cfile stuff
 
 0.2.4:
 
