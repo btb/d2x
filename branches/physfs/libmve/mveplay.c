@@ -1,4 +1,4 @@
-/* $Id: mveplay.c,v 1.11.4.3 2003-06-02 21:43:14 btb Exp $ */
+/* $Id: mveplay.c,v 1.11.4.4 2003-06-08 11:03:14 btb Exp $ */
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
@@ -450,6 +450,7 @@ static int audio_data_handler(unsigned char major, unsigned char minor, unsigned
 /*************************
  * video handlers
  *************************/
+
 static int videobuf_created = 0;
 static int video_initialized = 0;
 int g_width, g_height;
@@ -490,6 +491,8 @@ static int create_videobuf_handler(unsigned char major, unsigned char minor, uns
 	g_height = h << 3;
 
 	/* TODO: * 4 causes crashes on some files */
+	/* only malloc once */
+	if (g_vBuffers == NULL)
 	g_vBackBuf1 = g_vBuffers = mve_alloc(g_width * g_height * 8);
 	if (truecolor) {
 		g_vBackBuf2 = (unsigned short *)g_vBackBuf1 + (g_width * g_height);
@@ -664,8 +667,22 @@ int MVE_rmPrepMovie(void *src, int x, int y, int track)
 
 	mve_set_handler(mve, MVE_OPCODE_VIDEODATA,            video_data_handler);
 
+	mve_play_next_chunk(mve); /* video initialization chunk */
+	mve_play_next_chunk(mve); /* audio initialization chunk */
+
 	return 0;
 }
+
+
+void MVE_getVideoSpec(MVE_videoSpec *vSpec)
+{
+	vSpec->screenWidth = g_screenWidth;
+	vSpec->screenHeight = g_screenHeight;
+	vSpec->width = g_width;
+	vSpec->height = g_height;
+	vSpec->truecolor = g_truecolor;
+}
+
 
 int MVE_rmStepMovie()
 {

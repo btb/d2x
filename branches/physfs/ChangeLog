@@ -1,3 +1,8 @@
+2003-06-08  Bradley Bell  <btb@icculus.org>
+
+	* include/libmve.h, libmve/mveplay.c, libmve/mve_main.c:
+	completely rewrote standalone mveplayer
+
 2003-06-06  Bradley Bell  <btb@icculus.org>
 
 	* console/.cvsignore: added .cvsignore

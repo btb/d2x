@@ -3,10 +3,20 @@
 
 #define MVE_ERR_EOF 1
 
+typedef struct{
+	int screenWidth;
+	int screenHeight;
+	int width;
+	int height;
+	int truecolor;
+} MVE_videoSpec;
+
 int  MVE_rmPrepMovie(void *stream, int x, int y, int track);
 int  MVE_rmStepMovie();
 void MVE_rmHoldMovie();
 void MVE_rmEndMovie();
+
+void MVE_getVideoSpec(MVE_videoSpec *vSpec);
 
 void MVE_sndInit(int x);
 
