@@ -6,7 +6,6 @@
 #include "gr.h"
 #include "pstypes.h"
 #include "maths.h"
-#include "findfile.h"
 
 int gr_renderstats = 0;
 int gr_badtexture = 0;

@@ -1,4 +1,4 @@
-/* $Id: mission.c,v 1.21.2.4 2003-05-30 09:23:42 btb Exp $ */
+/* $Id: mission.c,v 1.21.2.5 2003-05-31 04:28:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -131,8 +131,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "songs.h"
 #include "mono.h"
 #include "error.h"
-#include "findfile.h"
-
 #include "ignorecase.h"
 
 mle Mission_list[MAX_MISSIONS];
