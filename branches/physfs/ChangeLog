@@ -1,5 +1,9 @@
 2003-06-03  Bradley Bell  <btb@icculus.org>
 
+	* console/CON_console.c, console/DT_drawtext.c,
+	console/Makefile.am, include/CON_console.h, include/DT_drawtext.h,
+	main/console.c: use native fonts for console
+
 	* main/playsave.c: use shorts for short data
 
 	* main/newmenu.c: fix player file deletion

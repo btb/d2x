@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.9.2.1 2003-06-02 21:43:14 btb Exp $ */
+/* $Id: console.c,v 1.9.2.2 2003-06-03 20:58:39 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -27,6 +27,7 @@
 #include "console.h"
 #include "cmd.h"
 #include "gr.h"
+#include "gamefont.h"
 
 #ifndef __MSDOS__
 int text_console_enabled = 1;
@@ -79,7 +80,7 @@ void real_con_init(void)
 	Con_rect.w = 320;
 	Con_rect.h = 200;
 
-	Console = CON_Init("ConsoleFont.png", screen, CON_NUM_LINES, Con_rect);
+	Console = CON_Init(Gamefonts[GFONT_MEDIUM_2], screen, CON_NUM_LINES, Con_rect);
 
 	Assert(Console);
 

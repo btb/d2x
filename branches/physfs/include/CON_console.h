@@ -23,6 +23,8 @@ Have Fun!
 
 #include "SDL.h"
 
+#include "gr.h"
+
 //! Cut the buffer line if it becomes longer than this
 #define CON_CHARS_PER_LINE   128
 //! Cursor blink frequency in ms
@@ -66,7 +68,6 @@ extern "C" {
 		int TotalConsoleLines;		//! Total number of lines in the console
 		int ConsoleScrollBack;		//! How much the user scrolled back in the console
 		int TotalCommands;		//! Number of commands in the Back Commands
-		int FontNumber;			//! This is the number of the font for the console
 		int LineBuffer;			//! The number of visible lines in the console (autocalculated)
 		int VChars;			//! The number of visible characters in one console line (autocalculated)
 		int BackX, BackY;		//! Background images x and y coords
@@ -79,6 +80,7 @@ extern "C" {
 		int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
 		int InsMode;			//! Insert or Overwrite characters?
 		SDL_Surface *ConsoleSurface;	//! Surface of the console
+		grs_canvas *ConsoleCanvas;	//! Canvas of the console
 		SDL_Surface *OutputScreen;	//! This is the screen to draw the console to
 		SDL_Surface *BackgroundImage;	//! Background image for the console
 		SDL_Surface *InputBackground;	//! Dirty rectangle to draw over behind the users background
@@ -87,9 +89,6 @@ extern "C" {
 		int CommandScrollBack;		//! How much the users scrolled back in the command lines
 		void(*CmdFunction)(struct console_information_td *console, char* command);	//! The Function that is executed if you press <Return> in the console
 		char*(*TabFunction)(char* command);	//! The Function that is executed if you press <Tab> in the console
-
-		int FontHeight;
-		int FontWidth;
 	}
 	ConsoleInformation;
 
@@ -108,8 +107,8 @@ extern "C" {
 	/*! Draws the console to the screen if it isVisible()*/
 	void CON_DrawConsole(ConsoleInformation *console);
 	/*! Initializes a new console */
-	ConsoleInformation *CON_Init(const char *FontName, SDL_Surface *DisplayScreen, int lines, SDL_Rect rect);
-	/*! Frees DT_DrawText and calls CON_Free */
+	ConsoleInformation *CON_Init(grs_font *Font, SDL_Surface *DisplayScreen, int lines, SDL_Rect rect);
+	/*! Calls CON_Free */
 	void CON_Destroy(ConsoleInformation *console);
 	/*! Frees all the memory loaded by the console */
 	void CON_Free(ConsoleInformation *console);
