@@ -1,4 +1,3 @@
-/* $ Id: $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -15,8 +14,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _STRUTILS_H
 #define _STRUTILS_H
 
-#ifdef __unix__
-#include <string.h>
+char *d_strdup(char *str);
+
+#ifdef __linux__
 #define stricmp(a,b) strcasecmp(a,b)
 #define strnicmp(a,b,c) strncasecmp(a,b,c)
 #elif 0

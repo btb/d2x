@@ -1,4 +1,3 @@
-/* $Id: object.h,v 1.4 2003-01-11 01:11:37 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -205,9 +204,6 @@ typedef struct object {
 	int			signature;		// Every object ever has a unique signature...
 	ubyte			type;				// what type of object this is... robot, weapon, hostage, powerup, fireball
 	ubyte			id;				// which form of object...which powerup, robot, etc.
-#ifdef WORDS_NEED_ALIGNMENT
-	short pad;
-#endif
 	short			next,prev;		// id of next and previous connected object in Objects, -1 = no connection
 	ubyte			control_type;  // how this object is controlled
 	ubyte			movement_type; // how this object moves
@@ -250,9 +246,6 @@ typedef struct object {
       
 	} __pack__ rtype;
 
-#ifdef WORDS_NEED_ALIGNMENT
-	short pad2;
-#endif
 } __pack__ object;
 
 typedef struct obj_position {

@@ -1,4 +1,3 @@
-/* $Id: kconfig.c,v 1.19 2003-03-27 01:25:41 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -16,337 +15,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-/*
- *
- * Routines to configure keyboard, joystick, etc..
- *
- * Old Log:
- * Revision 1.18  1995/10/29  20:14:10  allender
- * don't read mouse 30x/sec.  Still causes problems -- left with
- * exposure at > 60 frame/s
- *
- * Revision 1.17  1995/10/27  14:16:35  allender
- * don't set lastreadtime when doing mouse stuff if we didn't
- * read mouse this frame
- *
- * Revision 1.16  1995/10/24  18:10:22  allender
- * get mouse stuff working right this time?
- *
- * Revision 1.15  1995/10/23  14:50:50  allender
- * corrected values for control type in kc_set_controls
- *
- * Revision 1.14  1995/10/21  16:36:54  allender
- * fix up mouse read time
- *
- * Revision 1.13  1995/10/20  00:46:53  allender
- * fix up mouse reading problem
- *
- * Revision 1.12  1995/10/19  13:36:38  allender
- * mouse support in kconfig screens
- *
- * Revision 1.11  1995/10/18  21:06:06  allender
- * removed Int3 in cruise stuff -- was in there for debugging and
- * now not needed
- *
- * Revision 1.10  1995/10/17  13:12:47  allender
- * fixed config menus so buttons don't get configured
- *
- * Revision 1.9  1995/10/15  23:07:55  allender
- * added return key as second button for primary fire
- *
- * Revision 1.8  1995/09/05  08:49:47  allender
- * change 'PADRTN' label to 'ENTER'
- *
- * Revision 1.7  1995/09/01  15:38:22  allender
- * took out cap of reading controls max 25 times/sec
- *
- * Revision 1.6  1995/09/01  13:33:59  allender
- * erase all old text
- *
- * Revision 1.5  1995/08/18  10:20:55  allender
- * keep controls reading to 25 times/s max so fast
- * frame rates don't mess up control reading
- *
- * Revision 1.4  1995/07/28  15:43:13  allender
- * make mousebutton control primary fire
- *
- * Revision 1.3  1995/07/26  17:04:32  allender
- * new defaults and make joystick main button work correctly
- *
- * Revision 1.2  1995/07/17  08:51:03  allender
- * fixed up configuration menus to look right
- *
- * Revision 1.1  1995/05/16  15:26:56  allender
- * Initial revision
- *
- * Revision 2.11  1995/08/23  16:08:04  john
- * Added version 2 of external controls that passes the ship
- * position and orientation the drivers.
- *
- * Revision 2.10  1995/07/07  16:48:01  john
- * Fixed bug with new interface.
- *
- * Revision 2.9  1995/07/03  15:02:32  john
- * Added new version of external controls for Cybermouse absolute position.
- *
- * Revision 2.8  1995/06/30  12:30:28  john
- * Added -Xname command line.
- *
- * Revision 2.7  1995/03/30  16:36:56  mike
- * text localization.
- *
- * Revision 2.6  1995/03/21  14:39:31  john
- * Ifdef'd out the NETWORK code.
- *
- * Revision 2.5  1995/03/16  10:53:07  john
- * Move VFX center to Shift+Z instead of Enter because
- * it conflicted with toggling HUD on/off.
- *
- * Revision 2.4  1995/03/10  13:47:24  john
- * Added head tracking sensitivity.
- *
- * Revision 2.3  1995/03/09  18:07:06  john
- * Fixed bug with iglasses tracking not "centering" right.
- * Made VFX have bright headlight lighting.
- *
- * Revision 2.2  1995/03/08  15:32:39  john
- * Made VictorMaxx head tracking use Greenleaf code.
- *
- * Revision 2.1  1995/03/06  15:23:31  john
- * New screen techniques.
- *
- * Revision 2.0  1995/02/27  11:29:26  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- *
- * Revision 1.105  1995/02/22  14:11:58  allender
- * remove anonymous unions from object structure
- *
- * Revision 1.104  1995/02/13  12:01:56  john
- * Fixed bug with buggin not mmaking player faster.
- *
- * Revision 1.103  1995/02/09  22:00:46  john
- * Added i-glasses tracking.
- *
- * Revision 1.102  1995/01/24  21:25:47  john
- * Fixed bug with slide/bank on not working with
- * Cyberman heading.,
- *
- * Revision 1.101  1995/01/24  16:09:56  john
- * Fixed bug with Wingman extreme customize text overwriting title.
- *
- * Revision 1.100  1995/01/24  12:37:46  john
- * Made Esc exit key define menu.
- *
- * Revision 1.99  1995/01/23  23:54:43  matt
- * Made keypad enter work
- *
- * Revision 1.98  1995/01/23  16:42:00  john
- * Made the external controls always turn banking off, leveling off
- * and passed automap state thru to the tsr.
- *
- * Revision 1.97  1995/01/12  11:41:33  john
- * Added external control reading.
- *
- * Revision 1.96  1995/01/05  10:43:58  mike
- * Handle case when timer_get_fixed_seconds() goes negative.  Happens at 9.1
- * hours.  Previously, joystick would stop functioning.  Now will work.
- *
- * Revision 1.95  1994/12/29  11:17:38  john
- * Took out some warnings and mprintf.
- *
- * Revision 1.94  1994/12/29  11:07:41  john
- * Fixed Thrustmaster and Logitech Wingman extreme
- * Hat by reading the y2 axis during the center stage
- * of the calibration, and using 75, 50, 27, and 3 %
- * as values for the 4 positions.
- *
- * Revision 1.93  1994/12/27  12:16:20  john
- * Fixed bug with slide on not working with joystick or mouse buttons.
- *
- * Revision 1.92  1994/12/20  10:34:15  john
- * Made sensitivity work for mouse & joystick and made
- * it only affect, pitch, heading, and roll.
- *
- * Revision 1.91  1994/12/16  00:11:23  matt
- * Made delete key act normally when debug out
- *
- * Revision 1.90  1994/12/14  17:41:15  john
- * Added more buttons so that  Yoke would work.
- *
- * Revision 1.89  1994/12/13  17:25:35  allender
- * Added Assert for bogus time for joystick reading.
- *
- * Revision 1.88  1994/12/13  14:48:01  john
- * Took out some debugging mprintf's
- *
- *
- * Revision 1.87  1994/12/13  14:43:02  john
- * Took out the code in kconfig to build direction array.
- * Called kc_set_controls after selecting a new control type.
- *
- * Revision 1.86  1994/12/13  01:11:32  john
- * Fixed bug with message clearing overwriting
- * right border.
- *
- * Revision 1.85  1994/12/12  00:35:58  john
- * Added or thing for keys.
- *
- * Revision 1.84  1994/12/09  17:08:06  john
- * Made mouse a bit less sensitive.
- *
- * Revision 1.83  1994/12/09  16:04:00  john
- * Increased mouse sensitivity.
- *
- * Revision 1.82  1994/12/09  00:41:26  mike
- * fix hang in automap print screen
- *
- * Revision 1.81  1994/12/08  11:50:37  john
- * Made strcpy only copy corect number of chars,.
- *
- * Revision 1.80  1994/12/07  16:16:06  john
- * Added command to check to see if a joystick axes has been used.
- *
- * Revision 1.79  1994/12/07  14:52:28  yuan
- * Localization 492
- *
- * Revision 1.78  1994/12/07  13:37:40  john
- * Made the joystick thrust work in reverse.
- *
- * Revision 1.77  1994/12/07  11:28:24  matt
- * Did a little localization support
- *
- * Revision 1.76  1994/12/04  12:30:03  john
- * Made the Thrustmaster stick read every frame, not every 10 frames,
- * because it uses analog axis as buttons.
- *
- * Revision 1.75  1994/12/03  22:35:25  yuan
- * Localization 412
- *
- * Revision 1.74  1994/12/03  15:39:24  john
- * Made numeric keypad move in conifg.
- *
- * Revision 1.73  1994/12/01  16:23:39  john
- * Fixed include mistake.
- *
- * Revision 1.72  1994/12/01  16:07:57  john
- * Fixed bug that disabled joystick in automap because it used gametime, which is
- * paused during automap. Fixed be used timer_Get_fixed_seconds instead of GameTime.
- *
- * Revision 1.71  1994/12/01  12:30:49  john
- * Made Ctrl+D delete, not Ctrl+E
- *
- * Revision 1.70  1994/12/01  11:52:52  john
- * Added default values for GamePad.
- *
- * Revision 1.69  1994/11/30  00:59:12  mike
- * optimizations.
- *
- * Revision 1.68  1994/11/29  03:45:50  john
- * Added joystick sensitivity; Added sound channels to detail menu.  Removed -maxchannels
- * command line arg.
- *
- * Revision 1.67  1994/11/27  23:13:44  matt
- * Made changes for new mprintf calling convention
- *
- * Revision 1.66  1994/11/27  19:52:12  matt
- * Made screen shots work in a few more places
- *
- * Revision 1.65  1994/11/22  16:54:50  mike
- * autorepeat on missiles.
- *
- * Revision 1.64  1994/11/21  11:16:17  rob
- * Changed calls to GameLoop to calls to multi_menu_poll and changed
- * conditions under which they are called.
- *
- * Revision 1.63  1994/11/19  15:14:48  mike
- * remove unused code and data
- *
- * Revision 1.62  1994/11/18  23:37:56  john
- * Changed some shorts to ints.
- *
- * Revision 1.61  1994/11/17  13:36:35  rob
- * Added better network hook in kconfig menu.
- *
- * Revision 1.60  1994/11/14  20:09:13  john
- * Made Tab be default for automap.
- *
- * Revision 1.59  1994/11/13  16:34:07  matt
- * Fixed victormaxx angle conversions
- *
- * Revision 1.58  1994/11/12  14:47:05  john
- * Added support for victor head tracking.
- *
- * Revision 1.57  1994/11/08  15:14:55  john
- * Added more calls so net doesn't die in net game.
- *
- * Revision 1.56  1994/11/07  14:01:07  john
- * Changed the gamma correction sequencing.
- *
- * Revision 1.55  1994/11/01  16:40:08  john
- * Added Gamma correction.
- *
- * Revision 1.54  1994/10/25  23:09:26  john
- * Made the automap key configurable.
- *
- * Revision 1.53  1994/10/25  13:11:59  john
- * Made keys the way Adam speced 'em for final game.
- *
- * Revision 1.52  1994/10/24  17:44:22  john
- * Added stereo channel reversing.
- *
- * Revision 1.51  1994/10/22  13:23:18  john
- * Made default rear view key be R.
- *
- * Revision 1.50  1994/10/22  13:20:09  john
- * Took out toggle primary/secondary weapons.  Fixed black
- * background for 'axes' and 'buttons' text.
- *
- * Revision 1.49  1994/10/21  15:20:15  john
- * Made PrtScr do screen dump, not F2.
- *
- * Revision 1.48  1994/10/21  13:41:36  john
- * Allowed F2 to screen dump.
- *
- * Revision 1.47  1994/10/17  13:07:05  john
- * Moved the descent.cfg info into the player config file.
- *
- * Revision 1.46  1994/10/14  15:30:22  john
- * Added Cyberman default positions.
- *
- * Revision 1.45  1994/10/14  15:24:54  john
- * Made Cyberman work with config.
- *
- * Revision 1.44  1994/10/14  12:46:04  john
- * Added the ability to reset all to default.
- *
- * Revision 1.43  1994/10/14  12:18:31  john
- * Made mouse invert axis always be 0 or 1.
- *
- * Revision 1.42  1994/10/14  12:16:03  john
- * Changed code so that by doing DEL+F12 saves the current kconfig
- * values as default. Added support for drop_bomb key.  Took out
- * unused slots for keyboard.  Made keyboard use control_type of 0
- * save slots.
- *
- * Revision 1.41  1994/10/13  21:27:02  john
- * Made axis invert value always be 0 or 1.
- *
- * Revision 1.40  1994/10/13  20:18:15  john
- * Added some more system keys, such as F? and CAPSLOCK.
- *
- * Revision 1.39  1994/10/13  19:22:29  john
- * Added separate config saves for different devices.
- * Made all the devices work together better, such as mice won't
- * get read when you're playing with the joystick.
- *
- * Revision 1.38  1994/10/13  15:41:57  mike
- * Remove afterburner.
- *
- */
-
 #ifdef RCS
-static char rcsid[] = "$Id: kconfig.c,v 1.19 2003-03-27 01:25:41 btb Exp $";
+static char rcsid[] = "$Id: kconfig.c,v 1.11 2001-11-14 11:02:55 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -398,9 +68,10 @@ static char rcsid[] = "$Id: kconfig.c,v 1.19 2003-03-27 01:25:41 btb Exp $";
 #include "poly_acc.h"
 #endif
 
+#include "d_delay.h"
 #include "collide.h"
 
-#ifdef __unix__
+#ifdef __linux__
 #include "joystick.h"
 #endif
 
@@ -456,7 +127,6 @@ int invert_text[2] = { TNUM_N, TNUM_Y };
 int mouseaxis_text[3] = { TNUM_L_R, TNUM_F_B, TNUM_Z1 };
 #ifndef MACINTOSH
 int mousebutton_text[3] = { TNUM_LEFT, TNUM_RIGHT, TNUM_MID };
-char * mousebutton_textra[13] = { "M4", "M5", "M6", "M7", "M8", "M9", "M10","M11","M12","M13","M14","M15","M16" };//text for buttons above 3. -MPM
 #else
 char *mousebutton_text[3] = { "Btn", "", "" };		// only one silly mouse button on the mac
 #endif
@@ -505,9 +175,7 @@ char * key_text[256] = {         \
 #endif /* OGL */
 #endif
 
-//added/removed by Victor Rachels for adding rebindable keys for these
-// KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0
-ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_MINUS, KEY_EQUAL, KEY_PRINT_SCREEN };
+ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS, KEY_EQUAL, KEY_PRINT_SCREEN };
 
 //extern void GameLoop(int, int );
 
@@ -559,10 +227,6 @@ int Num_items=28;
 kc_item *All_items;
 
 ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
-
-//added on 2/4/99 by Victor Rachels to add d1x new keys
-ubyte kconfig_d2x_settings[MAX_D2X_CONTROLS];
-//end this section addition - VR
 
 //----------- WARNING!!!!!!! -------------------------------------------
 // THESE NEXT FOUR BLOCKS OF DATA ARE GENERATED BY PRESSING DEL+F12 WHEN
@@ -752,42 +416,6 @@ kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 	{ 27, 25,117, 85, 26, 25, 13, 25, 13,"Afterburner", BT_MOUSE_BUTTON, 255 },
 };
 
-//added on 2/4/99 by Victor Rachels to add d1x new keys
-kc_item kc_d2x[NUM_D2X_CONTROLS] = {
-//        id,x,y,w1,w2,u,d,l,r,text_num1,type,value
-	{  0, 15, 49, 71, 26, 27,  2, 27,  1, "WEAPON 1", BT_KEY, 255},
-	{  1, 15, 49,100, 26, 26,  3,  0,  2, "WEAPON 1", BT_JOY_BUTTON, 255},
-	{  2, 15, 57, 71, 26,  0,  4,  1,  3, "WEAPON 2", BT_KEY, 255},
-	{  3, 15, 57,100, 26,  1,  5,  2,  4, "WEAPON 2", BT_JOY_BUTTON, 255},
-	{  4, 15, 65, 71, 26,  2,  6,  3,  5, "WEAPON 3", BT_KEY, 255},
-	{  5, 15, 65,100, 26,  3,  7,  4,  6, "WEAPON 3", BT_JOY_BUTTON, 255},
-	{  6, 15, 73, 71, 26,  4,  8,  5,  7, "WEAPON 4", BT_KEY, 255},
-	{  7, 15, 73,100, 26,  5,  9,  6,  8, "WEAPON 4", BT_JOY_BUTTON, 255},
-	{  8, 15, 81, 71, 26,  6, 10,  7,  9, "WEAPON 5", BT_KEY, 255},
-	{  9, 15, 81,100, 26,  7, 11,  8, 10, "WEAPON 5", BT_JOY_BUTTON, 255},
-
-	{ 10, 15, 89, 71, 26,  8, 12,  9, 11, "WEAPON 6", BT_KEY, 255},
-	{ 11, 15, 89,100, 26,  9, 13, 10, 12, "WEAPON 6", BT_JOY_BUTTON, 255},
-	{ 12, 15, 97, 71, 26, 10, 14, 11, 13, "WEAPON 7", BT_KEY, 255},
-	{ 13, 15, 97,100, 26, 11, 15, 12, 14, "WEAPON 7", BT_JOY_BUTTON, 255},
-	{ 14, 15,105, 71, 26, 12, 16, 13, 15, "WEAPON 8", BT_KEY, 255},
-	{ 15, 15,105,100, 26, 13, 17, 14, 16, "WEAPON 8", BT_JOY_BUTTON, 255},
-	{ 16, 15,113, 71, 26, 14, 18, 15, 17, "WEAPON 9", BT_KEY, 255},
-	{ 17, 15,113,100, 26, 15, 19, 16, 18, "WEAPON 9", BT_JOY_BUTTON, 255},
-	{ 18, 15,121, 71, 26, 16, 20, 17, 19, "WEAPON 0", BT_KEY, 255},
-	{ 19, 15,121,100, 26, 17, 21, 18, 20, "WEAPON 0", BT_JOY_BUTTON, 255},
-
-	//{ 20, 15,131, 71, 26, 18, 22, 19, 21, "CYC PRIMARY", BT_KEY, 255},
-	//{ 21, 15,131,100, 26, 19, 23, 20, 22, "CYC PRIMARY", BT_JOY_BUTTON, 255},
-	//{ 22, 15,139, 71, 26, 20, 24, 21, 23, "CYC SECONDARY", BT_KEY, 255},
-	//{ 23, 15,139,100, 26, 21, 25, 22, 24, "CYC SECONDARY", BT_JOY_BUTTON, 255},
-	//{ 24,  8,147, 78, 26, 22, 26, 23, 25, "TOGGLE_PRIM AUTO", BT_KEY, 255},
-	//{ 25,  8,147,107, 26, 23, 27, 24, 26, "TOGGLE_PRIM_AUTO", BT_JOY_BUTTON, 255},
-	//{ 26,  8,155, 78, 26, 24,  1, 25, 27, "TOGGLE SEC AUTO", BT_KEY, 255},
-	//{ 27,  8,155,107, 26, 25,  0, 26,  0, "TOGGLE SEC AUTO", BT_JOY_BUTTON, 255},
-};
-//end this section addition - VR
-
 #else		// ifndef MACINTOSH (following are macintosh controls)
 
 ubyte default_kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS] = {
@@ -963,13 +591,6 @@ kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 };
 
 #endif
-
-//added on 2/4/99 by Victor Rachels to add new keys system
-ubyte default_kconfig_d2x_settings[MAX_D2X_CONTROLS] = {
- 0x2 ,0xff,0x3 ,0xff,0x4 ,0xff,0x5 ,0xff,0x6 ,0xff,0x7 ,0xff,0x8 ,0xff,0x9 ,
- 0xff,0xa ,0xff,0xb ,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,
- 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff };
-//end this section addition - VR
 
 void kc_drawitem( kc_item *item, int is_current );
 void kc_change_key( kc_item * item );
@@ -1218,7 +839,7 @@ WIN(DDGRLOCK(dd_grd_curcanv));
 	gr_rect(close_x, close_y, close_x + close_size, close_y + close_size);
 	gr_setcolor( BM_XRGB(21, 21, 21) );
 	gr_rect( close_x + 2, close_y + 2, close_x + close_size - 2, close_y + close_size -2 );
-#endif
+	#endif
 
 	grd_curcanv->cv_font = GAME_FONT;
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
@@ -1278,15 +899,6 @@ WIN(DDGRLOCK(dd_grd_curcanv));
 		gr_string( LHX(169), LHY(129), TXT_AXIS );
 		gr_string( LHX(199), LHY(129), TXT_INVERT );
 	}
-	else if ( items == kc_d2x )
-	{
-		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
-		gr_setcolor( BM_XRGB(31,27,6) );
-
-		gr_string(LHX( 94), LHY(40), "KB");
-		gr_string(LHX(121), LHY(40), "JOY");
-	}
-
 WIN(DDGRUNLOCK(dd_grd_curcanv));	
 
 	for (i=0; i<nitems; i++ )	{
@@ -1357,12 +969,6 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 			if ( items==kc_keyboard )	{
 				for (i=0; i<NUM_KEY_CONTROLS; i++ )		{
 					items[i].value=default_kconfig_settings[0][i];
-					kc_drawitem( &items[i], 0 );
-				}
-			} else if ( items==kc_d2x ) {
-				for(i=0;i<NUM_D2X_CONTROLS;i++)
-				{
-					items[i].value=default_kconfig_d2x_settings[i];
 					kc_drawitem( &items[i], 0 );
 				}
 			} else {
@@ -1617,8 +1223,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 				strncpy( btext, key_text[item->value], 10 ); break;
 			case BT_MOUSE_BUTTON:
 				#ifndef MACINTOSH
-				//strncpy( btext, Text_string[mousebutton_text[item->value]], 10 ); break;
-				strncpy( btext, (item->value <= 3)?Text_string[mousebutton_text[item->value]]:mousebutton_textra[item->value-3], 10 ); break;
+				strncpy( btext, Text_string[mousebutton_text[item->value]], 10 ); break;
 				#else
 				strncpy( btext, mousebutton_text[item->value], 10 ); break;
 				#endif
@@ -1735,7 +1340,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
 		k = key_inkey();
-		timer_delay(f0_1/10);
+		d_delay(10);
 		kc_drawquestion( item );
 	
 		for (i=0; i<256; i++ )	{
@@ -1804,7 +1409,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
 		k = key_inkey();
-		timer_delay(f0_1/10);
+		d_delay(10);
 
 		if (k == KEY_PRINT_SCREEN)
 			save_screen_shot(0);
@@ -1893,7 +1498,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
 		k = key_inkey();
-		timer_delay(f0_1/10);
+		d_delay(10);
 
 		if (k == KEY_PRINT_SCREEN)
 			save_screen_shot(0);
@@ -1901,7 +1506,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 		kc_drawquestion( item );
 
 		b = mouse_get_btns();
-		for (i = 0; i < 16; i++ ) {
+		for (i=0; i<3; i++ )	{
 			if ( b & (1<<i) )	
 				code = i;
 		}
@@ -1924,7 +1529,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 
 void kc_change_joyaxis( kc_item * item )
 {
-#ifdef __unix__
+#ifdef __linux__
 	int axis[MAX_AXES];
 	int old_axis[MAX_AXES];
 #else
@@ -1970,7 +1575,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
 		k = key_inkey();
-		timer_delay(f0_1/10);
+		d_delay(10);
 
 		if (k == KEY_PRINT_SCREEN)
 			save_screen_shot(0);
@@ -1991,7 +1596,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
   			if ( abs(axis[i]-old_axis[i])>200 )	{
 #endif
 				code = i;
-				con_printf(CON_DEBUG, "Axis Movement detected: Axis %i\n", i);
+				printf("Axis Movement detected: Axis %i\n", i);
 			}
 			//old_axis[i] = axis[i];
 		}
@@ -2058,7 +1663,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
 		k = key_inkey();
-		timer_delay(f0_1/10);
+		d_delay(10);
 
 		if (k == KEY_PRINT_SCREEN)
 			save_screen_shot(0);
@@ -2140,10 +1745,7 @@ void kconfig(int n, char * title)
 	case 1:kconfig_sub( kc_joystick, NUM_OTHER_CONTROLS, title );break;
 	case 2:kconfig_sub( kc_mouse, NUM_OTHER_CONTROLS, title ); break;
 	case 3:kconfig_sub( kc_superjoy, NUM_OTHER_CONTROLS, title); break;
-	//added on 2/4/99 by Victor Rachels for new keys menu
-	case 4:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
-	//end this section addition - VR
- 	default:
+	default:
 		Int3();
 		return;
 	}
@@ -2174,9 +1776,6 @@ void kconfig(int n, char * title)
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
 			kconfig_settings[Config_control_type][i] = kc_superjoy[i].value;
 	}
-
-	for (i=0; i<NUM_D2X_CONTROLS; i++)
-		kconfig_d2x_settings[i] = kc_d2x[i].value;
 }
 
 
@@ -3082,10 +2681,6 @@ int allowed_to_toggle(int i)
 }
 
 
-//added on 2/7/99 by Victor Rachels for jostick state setting
-int d2x_joystick_ostate[20]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-//end this section adition - VR
-
 
 void controls_read_all()
 {
@@ -3098,7 +2693,7 @@ void controls_read_all()
 	int idx, idy;
 	fix ctime;
 	fix mouse_axis[3] = {0,0,0};
-#ifdef __unix__
+#ifdef __linux__
 	int raw_joy_axis[MAX_AXES];
 #else
 	int raw_joy_axis[JOY_NUM_AXES];
@@ -3139,7 +2734,7 @@ void controls_read_all()
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
 		
 		for (i=0; i<6; i++ )	{
-#ifndef SDL_INPUT
+#ifndef __linux__
 			if (channel_masks&(1<<i))	{
 #endif
 				int joy_null_value = 10;
@@ -3160,7 +2755,7 @@ void controls_read_all()
 					  raw_joy_axis[i] = 0;
 					joy_axis[i]	= (raw_joy_axis[i]*FrameTime)/128;	
 				}
-#ifndef SDL_INPUT
+#ifndef __linux__
 			} else {
 				joy_axis[i] = 0;
 			}
@@ -3235,87 +2830,6 @@ void controls_read_all()
 		mouse_buttons = 0;
 		use_mouse=0;
 	}
-
-	//added on 2/4/99 by Victor Rachels for d1x keys
-	//--------- Read primary weapon select -------------
-	//the following "if" added by WraithX to stop deadies from switchin weapons, 4/14/00
-	if (!Player_is_dead)
-	{
-		{
-			int d2x_joystick_state[10];
-
-			for(i=0;i<10;i++)
-				d2x_joystick_state[i] = joy_get_button_state(kc_d2x[i*2+1].value);
-
-
-			//----------------Weapon 1----------------
-			if(key_down_count(kc_d2x[0].value) ||
-			   (joy_get_button_state(kc_d2x[1].value) &&
-				(d2x_joystick_state[0]!=d2x_joystick_ostate[0]) ) )
-			{
-				//int i, valu=0;
-				do_weapon_select(0,0);
-				/*
-				for(i=MAX_PRIMARY_WEAPONS;i<MAX_PRIMARY_WEAPONS+NEWPRIMS;i++)
-					if(primary_order[i]>primary_order[valu]&&player_has_weapon(i,0))
-						valu = i;
-				LaserPowSelected = valu;
-				*/
-			}
-			//----------------Weapon 2----------------
-			if(key_down_count(kc_d2x[2].value) ||
-			   (joy_get_button_state(kc_d2x[3].value) &&
-				(d2x_joystick_state[1]!=d2x_joystick_ostate[1]) ) )
-				do_weapon_select(1,0);
-			//----------------Weapon 3----------------
-			if(key_down_count(kc_d2x[4].value) ||
-			   (joy_get_button_state(kc_d2x[5].value) &&
-				(d2x_joystick_state[2]!=d2x_joystick_ostate[2]) ) )
-				do_weapon_select(2,0);
-			//----------------Weapon 4----------------
-			if(key_down_count(kc_d2x[6].value) ||
-			   (joy_get_button_state(kc_d2x[7].value) &&
-				(d2x_joystick_state[3]!=d2x_joystick_ostate[3]) ) )
-				do_weapon_select(3,0);
-			//----------------Weapon 5----------------
-			if(key_down_count(kc_d2x[8].value) ||
-			   (joy_get_button_state(kc_d2x[9].value) &&
-				(d2x_joystick_state[4]!=d2x_joystick_ostate[4]) ) )
-				do_weapon_select(4,0);
- 
-			//--------- Read secondary weapon select ----------
-			//----------------Weapon 6----------------
-			if(key_down_count(kc_d2x[10].value) ||
-			   (joy_get_button_state(kc_d2x[11].value) &&
-				(d2x_joystick_state[5]!=d2x_joystick_ostate[5]) ) )
-				do_weapon_select(0,1);
-			//----------------Weapon 7----------------
-			if(key_down_count(kc_d2x[12].value) ||
-			   (joy_get_button_state(kc_d2x[13].value) &&
-				(d2x_joystick_state[6]!=d2x_joystick_ostate[6]) ) )
-				do_weapon_select(1,1);
-			//----------------Weapon 8----------------
-			if(key_down_count(kc_d2x[14].value) ||
-			   (joy_get_button_state(kc_d2x[15].value) &&
-				(d2x_joystick_state[7]!=d2x_joystick_ostate[7]) ) )
-				do_weapon_select(2,1);
-			//----------------Weapon 9----------------
-			if(key_down_count(kc_d2x[16].value) ||
-			   (joy_get_button_state(kc_d2x[17].value) &&
-				(d2x_joystick_state[8]!=d2x_joystick_ostate[8]) ) )
-				do_weapon_select(3,1);
-			//----------------Weapon 0----------------
-			if(key_down_count(kc_d2x[18].value) ||
-			   (joy_get_button_state(kc_d2x[19].value) &&
-				(d2x_joystick_state[9]!=d2x_joystick_ostate[9]) ) )
-				do_weapon_select(4,1);
-			memcpy(d2x_joystick_ostate,d2x_joystick_state,10*sizeof(int));
-		}
-		//end this section addition - VR
-
-
-	}//end "if (!Player_is_dead)" - WraithX
-
 
 //------------- Read slide_on -------------
 	
@@ -3910,9 +3424,6 @@ void kc_set_controls()
 			}
 		}
 	}
-
-	for (i=0; i<NUM_D2X_CONTROLS; i++ )
-		kc_d2x[i].value = kconfig_d2x_settings[i];
 }
 
 #if 0 //ndef MACINTOSH	// no mac support for vr headset

@@ -19,7 +19,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vecmat.h"
 //#include "3d.h"
 //#include "inferno.h"
-#include "cfile.h"
 
 // Version 1 - Initial version
 // Version 2 - Mike changed some shorts to bytes in segments, so incompatible!
@@ -235,25 +234,5 @@ extern void add_segment_to_group(int segment_num, int group_num);
 // Verify that all vertices are legal.
 extern void med_check_all_vertices();
 
-#ifdef FAST_FILE_IO
-#define segment2_read(s2, fp) cfread(s2, sizeof(segment2), 1, fp)
-#define delta_light_read(dl, fp) cfread(dl, sizeof(delta_light), 1, fp)
-#define dl_index_read(di, fp) cfread(di, sizeof(dl_index), 1, fp)
-#else
-/*
- * reads a segment2 structure from a CFILE
- */
-void segment2_read(segment2 *s2, CFILE *fp);
-
-/*
- * reads a delta_light structure from a CFILE
- */
-void delta_light_read(delta_light *dl, CFILE *fp);
-
-/*
- * reads a dl_index structure from a CFILE
- */
-void dl_index_read(dl_index *di, CFILE *fp);
 #endif
 
-#endif

@@ -1,4 +1,3 @@
-/* $Id: error.h,v 1.9 2003-04-12 00:11:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,52 +7,74 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
 /*
+ * $Source: /cvs/cvsroot/d2x/include/error.h,v $
+ * $Revision: 1.4 $
+ * $Author: bradleyb $
+ * $Date: 2002-01-18 07:00:59 $
  *
  * Header for error handling/printing/exiting code
  *
- * Old Log:
+ * $Log: not supported by cvs2svn $
+ * Revision 1.3  2001/11/14 10:51:04  bradleyb
+ * kludge to ungrab mouse when we hit an int3
+ *
+ * Revision 1.2  2001/01/22 15:49:14  bradleyb
+ * fix compiler warnings w/opengl
+ *
+ * Revision 1.1.1.1  2001/01/19 03:30:16  bradleyb
+ * Import of d2x-0.0.8
+ *
+ * Revision 1.3  1999/10/14 04:48:21  donut
+ * alpha fixes, and gl_font args
+ *
+ * Revision 1.2  1999/08/05 22:53:41  sekmu
+ *
+ * D3D patch(es) from ADB
+ *
+ * Revision 1.1.1.1  1999/06/14 22:02:09  donut
+ * Import of d1x 1.37 source.
+ *
  * Revision 1.12  1994/06/17  15:22:46  matt
  * Added pragma for Error() for when NDEBUG
- *
+ * 
  * Revision 1.11  1994/03/07  13:22:14  matt
  * Since the Error() function has 'aborts' set in pragma, we do a jmp
  * to the function rather than call.
- *
+ * 
  * Revision 1.10  1994/02/17  12:37:15  matt
  * Combined two pragma's for Error(), since second superseded the first
- *
+ * 
  * Revision 1.9  1994/02/10  18:02:53  matt
  * Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
- *
+ * 
  * Revision 1.8  1994/02/09  15:18:29  matt
  * Added pragma saying that Error() never returns
- *
+ * 
  * Revision 1.7  1993/10/19  12:57:53  matt
  * If DEBUG_ON not defined, define it to be 1
- *
+ * 
  * Revision 1.6  1993/10/15  21:40:39  matt
  * Made error functions generate int3's if debugging on
- *
+ * 
  * Revision 1.5  1993/10/14  15:29:22  matt
  * Added new function clear_warn_func()
- *
+ * 
  * Revision 1.4  1993/10/08  16:16:47  matt
  * Made Assert() call function _Assert(), rather to do 'if...' inline.
- *
+ * 
  * Revision 1.3  1993/09/29  11:39:07  matt
  * Added Assert() macro, like the system one, but calls Error()
- *
+ * 
  * Revision 1.2  1993/09/27  11:47:03  matt
  * Added function set_warn_func()
- *
+ * 
  * Revision 1.1  1993/09/23  20:17:46  matt
  * Initial revision
- *
+ * 
  *
  */
 
@@ -70,7 +91,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define __format
 #endif
 
-int error_init(void (*func)(char *), char *fmt,...);    //init error system, set default message, returns 0=ok
+int error_init(char *fmt,...);			//init error system, set default message, returns 0=ok
 void set_exit_message(char *fmt,...);	//specify message to print at exit
 void Warning(char *fmt,...);				//print out warning message to user
 void set_warn_func(void (*f)(char *s));//specifies the function to call with warning messages
@@ -88,7 +109,7 @@ void Int3();
 #define Int3() ((void)0)
 #else
 #ifdef SDL_INPUT
-#include <SDL.h>
+#include <SDL/SDL.h>
 #endif
 #include "args.h"
 static inline void _Int3()

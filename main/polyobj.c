@@ -1,4 +1,3 @@
-/* $Id: polyobj.c,v 1.14 2003-03-29 22:35:00 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: polyobj.c,v 1.14 2003-03-29 22:35:00 btb Exp $";
+static char rcsid[] = "$Id: polyobj.c,v 1.5 2001-01-31 15:34:40 bradleyb Exp $";
 #endif
 
 #include <stdio.h>
@@ -33,12 +32,11 @@ static char rcsid[] = "$Id: polyobj.c,v 1.14 2003-03-29 22:35:00 btb Exp $";
 #include "polyobj.h"
 
 #include "vecmat.h"
-#include "interp.h"
+#include "3d.h"
 #include "error.h"
 #include "mono.h"
 #include "u_mem.h"
 #include "args.h"
-#include "byteswap.h"
 
 #ifndef DRIVE
 #include "texmap.h"
@@ -94,7 +92,7 @@ int pof_read_int(ubyte *bufp)
 
 	i = *((int *) &bufp[Pof_addr]);
 	Pof_addr += 4;
-	return INTEL_INT(i);
+	return i;
 
 //	if (cfread(&i,sizeof(i),1,f) != 1)
 //		Error("Unexpected end-of-file while reading object");
@@ -126,7 +124,7 @@ short pof_read_short(ubyte *bufp)
 
 	s = *((short *) &bufp[Pof_addr]);
 	Pof_addr += 2;
-	return INTEL_SHORT(s);
+	return s;
 //	if (cfread(&s,sizeof(s),1,f) != 1)
 //		Error("Unexpected end-of-file while reading object");
 //
@@ -152,26 +150,7 @@ void pof_read_vecs(vms_vector *vecs,int n,ubyte *bufp)
 
 	memcpy(vecs, &bufp[Pof_addr], n*sizeof(*vecs));
 	Pof_addr += n*sizeof(*vecs);
-
-#ifdef WORDS_BIGENDIAN
-	while (n > 0)
-		vms_vector_swap(&vecs[--n]);
-#endif
-
-	if (Pof_addr > MODEL_BUF_SIZE)
-		Int3();
-}
-
-void pof_read_angs(vms_angvec *angs,int n,ubyte *bufp)
-{
-	memcpy(angs, &bufp[Pof_addr], n*sizeof(*angs));
-	Pof_addr += n*sizeof(*angs);
-
-#ifdef WORDS_BIGENDIAN
-	while (n > 0)
-		vms_angvec_swap(&angs[--n]);
-#endif
-
+	
 	if (Pof_addr > MODEL_BUF_SIZE)
 		Int3();
 }
@@ -193,91 +172,6 @@ vms_angvec anim_angs[N_ANIM_STATES][MAX_SUBMODELS];
 void robot_set_angles(robot_info *r,polymodel *pm,vms_angvec angs[N_ANIM_STATES][MAX_SUBMODELS]);
 #endif
 
-#define DEBUG_LEVEL CON_NORMAL
-
-#ifdef WORDS_NEED_ALIGNMENT
-ubyte * old_dest(chunk o) // return where chunk is (in unaligned struct)
-{
-	return o.old_base + INTEL_SHORT(*((short *)(o.old_base + o.offset)));
-}
-ubyte * new_dest(chunk o) // return where chunk is (in aligned struct)
-{
-	return o.new_base + INTEL_SHORT(*((short *)(o.old_base + o.offset))) + o.correction;
-}
-/*
- * find chunk with smallest address
- */
-int get_first_chunks_index(chunk *chunk_list, int no_chunks) 
-{
-	int i, first_index = 0;
-	Assert(no_chunks >= 1);
-	for (i = 1; i < no_chunks; i++)
-		if (old_dest(chunk_list[i]) < old_dest(chunk_list[first_index]))
-			first_index = i;
-	return first_index;
-}
-#define SHIFT_SPACE 500 // increase if insufficent
-
-void align_polygon_model_data(polymodel *pm)
-{
-	int i, chunk_len;
-	int total_correction = 0;
-	ubyte *cur_old, *cur_new;
-	chunk cur_ch;
-	chunk ch_list[MAX_CHUNKS];
-	int no_chunks = 0;
-	int tmp_size = pm->model_data_size + SHIFT_SPACE;
-	ubyte *tmp = d_malloc(tmp_size); // where we build the aligned version of pm->model_data
-
-	Assert(tmp != NULL);
-	//start with first chunk (is always aligned!)
-	cur_old = pm->model_data;
-	cur_new = tmp;
-	chunk_len = get_chunks(cur_old, cur_new, ch_list, &no_chunks);
-	memcpy(cur_new, cur_old, chunk_len);
-	while (no_chunks > 0) {
-		int first_index = get_first_chunks_index(ch_list, no_chunks);
-		cur_ch = ch_list[first_index];
-		// remove first chunk from array:
-		no_chunks--;
-		for (i = first_index; i < no_chunks; i++)
-			ch_list[i] = ch_list[i + 1];
-		// if (new) address unaligned:
-		if ((u_int32_t)new_dest(cur_ch) % 4L != 0) {
-			// calculate how much to move to be aligned
-			short to_shift = 4 - (u_int32_t)new_dest(cur_ch) % 4L;
-			// correct chunks' addresses
-			cur_ch.correction += to_shift;
-			for (i = 0; i < no_chunks; i++)
-				ch_list[i].correction += to_shift;
-			total_correction += to_shift;
-			Assert((u_int32_t)new_dest(cur_ch) % 4L == 0);
-			Assert(total_correction <= SHIFT_SPACE); // if you get this, increase SHIFT_SPACE
-		}
-		//write (corrected) chunk for current chunk:
-		*((short *)(cur_ch.new_base + cur_ch.offset))
-		  = INTEL_SHORT(cur_ch.correction
-				+ INTEL_SHORT(*((short *)(cur_ch.old_base + cur_ch.offset))));
-		//write (correctly aligned) chunk:
-		cur_old = old_dest(cur_ch);
-		cur_new = new_dest(cur_ch);
-		chunk_len = get_chunks(cur_old, cur_new, ch_list, &no_chunks);
-		memcpy(cur_new, cur_old, chunk_len);
-		//correct submodel_ptr's for pm, too
-		for (i = 0; i < MAX_SUBMODELS; i++)
-			if (pm->model_data + pm->submodel_ptrs[i] >= cur_old
-			    && pm->model_data + pm->submodel_ptrs[i] < cur_old + chunk_len)
-				pm->submodel_ptrs[i] += (cur_new - tmp) - (cur_old - pm->model_data);
- 	}
-	d_free(pm->model_data);
-	pm->model_data_size += total_correction;
-	pm->model_data = d_malloc(pm->model_data_size);
-	Assert(pm->model_data != NULL);
-	memcpy(pm->model_data, tmp, pm->model_data_size);
-	d_free(tmp);
-}
-#endif //def WORDS_NEED_ALIGNMENT
-
 //reads a binary file containing a 3d model
 polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 {
@@ -286,7 +180,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 	int id,len, next_chunk;
 	int anim_flag = 0;
 	ubyte *model_buf;
-
+	
 	model_buf = (ubyte *)d_malloc( MODEL_BUF_SIZE * sizeof(ubyte) );
 	if (!model_buf)
 		Error("Can't allocate space to read model %s\n", filename);
@@ -314,7 +208,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 		printf( "bspgen -c1" );
 
 	while (new_pof_read_int(id,model_buf) == 1) {
-		id = INTEL_INT(id);
+
 		//id  = pof_read_int(model_buf);
 		len = pof_read_int(model_buf);
 		next_chunk = Pof_addr + len;
@@ -324,7 +218,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			case ID_OHDR: {		//Object header
 				vms_vector pmmin,pmmax;
 
-				//con_printf(DEBUG_LEVEL, "Got chunk OHDR, len=%d\n",len);
+				//mprintf(0,"Got chunk OHDR, len=%d\n",len);
 
 				pm->n_models = pof_read_int(model_buf);
 				pm->rad = pof_read_int(model_buf);
@@ -354,7 +248,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 
 				anim_flag++;
 
-				//con_printf(DEBUG_LEVEL, "Got chunk SOBJ, len=%d\n",len);
+				//mprintf(0,"Got chunk SOBJ, len=%d\n",len);
 
 				n = pof_read_short(model_buf);
 
@@ -377,7 +271,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			#ifndef DRIVE
 			case ID_GUNS: {		//List of guns on this object
 
-				//con_printf(DEBUG_LEVEL, "Got chunk GUNS, len=%d\n",len);
+				//mprintf(0,"Got chunk GUNS, len=%d\n",len);
 
 				if (r) {
 					int i;
@@ -416,7 +310,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			}
 			
 			case ID_ANIM:		//Animation data
-				//con_printf(DEBUG_LEVEL, "Got chunk ANIM, len=%d\n",len);
+				//mprintf(0,"Got chunk ANIM, len=%d\n",len);
 
 				anim_flag++;
 
@@ -429,8 +323,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 
 					for (m=0;m<pm->n_models;m++)
 						for (f=0;f<n_frames;f++)
-							pof_read_angs(&anim_angs[f][m], 1, model_buf);
-
+							pof_cfread(&anim_angs[f][m],1,sizeof(vms_angvec),model_buf);
 
 					robot_set_angles(r,pm,anim_angs);
 				
@@ -445,30 +338,30 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 				int n;
 				char name_buf[128];
 
-				//con_printf(DEBUG_LEVEL, "Got chunk TXTR, len=%d\n",len);
+				//mprintf(0,"Got chunk TXTR, len=%d\n",len);
 
 				n = pof_read_short(model_buf);
-				//con_printf(DEBUG_LEVEL, "  num textures = %d\n",n);
+				//mprintf(0,"  num textures = %d\n",n);
 				while (n--) {
 					pof_read_string(name_buf,128,model_buf);
-					//con_printf(DEBUG_LEVEL, "<%s>\n",name_buf);
+					//mprintf(0,"<%s>\n",name_buf);
 				}
 
 				break;
 			}
 			
 			case ID_IDTA:		//Interpreter data
-				//con_printf(DEBUG_LEVEL, "Got chunk IDTA, len=%d\n",len);
+				//mprintf(0,"Got chunk IDTA, len=%d\n",len);
 
 				pm->model_data = d_malloc(len);
 				pm->model_data_size = len;
-
+			
 				pof_cfread(pm->model_data,1,len,model_buf);
-
+			
 				break;
 
 			default:
-				//con_printf(DEBUG_LEVEL, "Unknown chunk <%c%c%c%c>, len = %d\n",id,id>>8,id>>16,id>>24,len);
+				//mprintf(0,"Unknown chunk <%c%c%c%c>, len = %d\n",id,id>>8,id>>16,id>>24,len);
 				pof_cfseek(model_buf,len,SEEK_CUR);
 				break;
 
@@ -492,14 +385,6 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 	}
 	
 	d_free(model_buf);
-
-#ifdef WORDS_NEED_ALIGNMENT
-	align_polygon_model_data(pm);
-#endif
-#ifdef WORDS_BIGENDIAN
-	swap_polygon_model_data(pm->model_data);
-#endif
-	//verify(pm->model_data);
 
 	return pm;
 }
@@ -540,13 +425,13 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
 		Error("Bad version (%d) in model file <%s>",version,filename);
 
 	while (new_pof_read_int(id,model_buf) == 1) {
-		id = INTEL_INT(id);
+
 		//id  = pof_read_int(model_buf);
 		len = pof_read_int(model_buf);
 
 		if (id == ID_GUNS) {		//List of guns on this object
 
-			//con_printf(DEBUG_LEVEL, "Got chunk GUNS, len=%d\n",len);
+			//mprintf(0,"Got chunk GUNS, len=%d\n",len);
 
 			int i;
 
@@ -595,7 +480,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 {
 	polymodel *po;
 	int i;
-	PA_DFX (int save_light);
+   PA_DFX (int save_light);
 
 	Assert(model_num < N_polygon_models);
 
@@ -873,92 +758,3 @@ void draw_model_picture(int mn,vms_angvec *orient_angles)
 	gr_free_canvas(temp_canv);
 }
 
-#ifndef FAST_FILE_IO
-/*
- * reads a polymodel structure from a CFILE
- */
-extern void polymodel_read(polymodel *pm, CFILE *fp)
-{
-	int i;
-
-	pm->n_models = cfile_read_int(fp);
-	pm->model_data_size = cfile_read_int(fp);
-	pm->model_data = (ubyte *) cfile_read_int(fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		pm->submodel_ptrs[i] = cfile_read_int(fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		cfile_read_vector(&(pm->submodel_offsets[i]), fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		cfile_read_vector(&(pm->submodel_norms[i]), fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		cfile_read_vector(&(pm->submodel_pnts[i]), fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		pm->submodel_rads[i] = cfile_read_fix(fp);
-	cfread(pm->submodel_parents, MAX_SUBMODELS, 1, fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		cfile_read_vector(&(pm->submodel_mins[i]), fp);
-	for (i = 0; i < MAX_SUBMODELS; i++)
-		cfile_read_vector(&(pm->submodel_maxs[i]), fp);
-	cfile_read_vector(&(pm->mins), fp);
-	cfile_read_vector(&(pm->maxs), fp);
-	pm->rad = cfile_read_fix(fp);
-	pm->n_textures = cfile_read_byte(fp);
-	pm->first_texture = cfile_read_short(fp);
-	pm->simpler_model = cfile_read_byte(fp);
-}
-
-/*
- * reads n polymodel structs from a CFILE
- */
-extern int polymodel_read_n(polymodel *pm, int n, CFILE *fp)
-{
-	int i, j;
-
-	for (i = 0; i < n; i++) {
-		pm[i].n_models = cfile_read_int(fp);
-		pm[i].model_data_size = cfile_read_int(fp);
-		pm[i].model_data = (ubyte *) cfile_read_int(fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			pm[i].submodel_ptrs[j] = cfile_read_int(fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			cfile_read_vector(&(pm[i].submodel_offsets[j]), fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			cfile_read_vector(&(pm[i].submodel_norms[j]), fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			cfile_read_vector(&(pm[i].submodel_pnts[j]), fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			pm[i].submodel_rads[j] = cfile_read_fix(fp);
-		cfread(pm[i].submodel_parents, MAX_SUBMODELS, 1, fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			cfile_read_vector(&(pm[i].submodel_mins[j]), fp);
-		for (j = 0; j < MAX_SUBMODELS; j++)
-			cfile_read_vector(&(pm[i].submodel_maxs[j]), fp);
-		cfile_read_vector(&(pm[i].mins), fp);
-		cfile_read_vector(&(pm[i].maxs), fp);
-		pm[i].rad = cfile_read_fix(fp);
-		pm[i].n_textures = cfile_read_byte(fp);
-		pm[i].first_texture = cfile_read_short(fp);
-		pm[i].simpler_model = cfile_read_byte(fp);
-	}
-	return i;
-}
-#endif
-
-
-/*
- * routine which allocates, reads, and inits a polymodel's model_data
- */
-void polygon_model_data_read(polymodel *pm, CFILE *fp)
-{
-	pm->model_data = d_malloc(pm->model_data_size);
-	Assert(pm->model_data != NULL);
-	cfread(pm->model_data, sizeof(ubyte), pm->model_data_size, fp );
-#ifdef WORDS_NEED_ALIGNMENT
-	align_polygon_model_data(pm);
-#endif
-#ifdef WORDS_BIGENDIAN
-	swap_polygon_model_data(pm->model_data);
-#endif
-	//verify(pm->model_data);
-	g3_init_polygon_model(pm->model_data);
-}

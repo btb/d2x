@@ -26,9 +26,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define	MAX_CONTROLCEN_LINKS		10
 
 typedef struct control_center_triggers {
-	short   num_links;
-	short   seg[MAX_CONTROLCEN_LINKS];
-	short   side[MAX_CONTROLCEN_LINKS];
+	short		num_links;
+	short 	seg[MAX_CONTROLCEN_LINKS];
+	short		side[MAX_CONTROLCEN_LINKS];
 } __pack__ control_center_triggers;
 
 extern control_center_triggers ControlCenterTriggers;
@@ -73,20 +73,5 @@ extern fix Countdown_timer;
 extern int Control_center_destroyed,Countdown_seconds_left;
 extern int Base_control_center_explosion_time;		//how long to blow up on insane
 extern int Reactor_strength;
-
-#ifdef FAST_FILE_IO
-#define reactor_read_n(r, n, fp) cfread(r, sizeof(reactor), n, fp)
-#define control_center_triggers_read_n(cct, n, fp) cfread(cct, sizeof(control_center_triggers), n, fp)
-#else
-/*
- * reads n reactor structs from a CFILE
- */
-extern int reactor_read_n(reactor *r, int n, CFILE *fp);
-
-/*
- * reads n control_center_triggers structs from a CFILE
- */
-extern int control_center_triggers_read_n(control_center_triggers *cct, int n, CFILE *fp);
-#endif
 
 #endif

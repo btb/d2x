@@ -1,8 +1,29 @@
-/* $Id: ogl.c,v 1.9 2003-04-11 23:51:48 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/ogl/ogl.c,v $
+ * $Revision: 1.2 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-31 07:35:47 $
  *
  * Graphics support functions for OpenGL.
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.1  2001/10/25 08:25:34  bradleyb
+ * Finished moving stuff to arch/blah.  I know, it's ugly, but It'll be easier to sync with d1x.
+ *
+ * Revision 1.7  2001/10/12 00:18:40  bradleyb
+ * Switched from Cygwin to mingw32 on MS boxes.  Vastly improved compilability.
+ *
+ * Revision 1.6  2001/10/09 03:00:08  bradleyb
+ * opengl improvments (following d1x changes)
+ *
+ * Revision 1.5  2001/10/09 02:38:52  bradleyb
+ * re-imported d1x version of this file
+ *
+ * Revision 1.4  2001/01/31 16:31:14  bradleyb
+ * OpenGL support under Cygwin/SDL
+ *
+ * Revision 1.3  2001/01/29 13:47:52  bradleyb
+ * Fixed build, some minor cleanups.
  *
  */
 
@@ -15,13 +36,8 @@
 #include <windows.h>
 #include <stddef.h>
 #endif
-#if defined(__APPLE__) && defined(__MACH__)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
 #include <GL/gl.h>
 #include <GL/glu.h>
-#endif
 #include <string.h>
 #include <math.h>
 
@@ -43,7 +59,6 @@
 #include "powerup.h"
 #include "polyobj.h"
 #include "gamefont.h"
-#include "byteswap.h"
 
 //change to 1 for lots of spew.
 #if 0
@@ -56,7 +71,7 @@
 #define M_PI 3.14159
 #endif
 
-#if defined(__WINDOWS__) || defined(__MINGW32__) || (defined(__APPLE__) && defined(__MACH__)) || defined(__sun__)
+#if defined(__WINDOWS__) || defined(__MINGW32__)
 #define cosf(a) cos(a)
 #define sinf(a) sin(a)
 #endif
@@ -896,7 +911,6 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int ori
 
 	return 0;
 }
-
 bool ogl_ubitmapm_c(int x, int y,grs_bitmap *bm,int c)
 {
 	GLfloat xo,yo,xf,yf;
@@ -1217,7 +1231,7 @@ int tex_format_supported(int iformat,int format){
 			if (!ogl_rgba2_ok) return 0; break;
 	}
 	if (ogl_gettexlevelparam_ok){
-		GLint internalFormat;
+		int internalFormat;
 		glTexImage2D(GL_PROXY_TEXTURE_2D, 0, iformat, 64, 64, 0,
 				format, GL_UNSIGNED_BYTE, texbuf);//NULL?
 		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_2D, 0,
@@ -1339,10 +1353,9 @@ void tex_set_size1(ogl_texture *tex,int dbits,int bits,int w, int h){
 	glmprintf((0,"tex_set_size1: %ix%i, %ib(%i) %iB\n",w,h,bits,dbits,tex->bytes));
 }
 void tex_set_size(ogl_texture *tex){
-	GLint w,h;
-	int bi=16,a=0;
+	int w,h,bi=16,a=0;
 	if (ogl_gettexlevelparam_ok){
-		GLint t;
+		int t;
 		glGetTexLevelParameteriv(GL_TEXTURE_2D,0,GL_TEXTURE_WIDTH,&w);
 		glGetTexLevelParameteriv(GL_TEXTURE_2D,0,GL_TEXTURE_HEIGHT,&h);
 		glGetTexLevelParameteriv(GL_TEXTURE_2D,0,GL_TEXTURE_LUMINANCE_SIZE,&t);a+=t;
@@ -1376,8 +1389,7 @@ void tex_set_size(ogl_texture *tex){
 //In theory this could be a problem for repeating textures, but all real
 //textures (not sprites, etc) in descent are 64x64, so we are ok.
 //stores OpenGL textured id in *texid and u/v values required to get only the real data in *u/*v
-void ogl_loadtexture(unsigned char * data, int dxo,int dyo, ogl_texture *tex)
-{
+void ogl_loadtexture(unsigned char * data, int dxo,int dyo, ogl_texture *tex){
 //void ogl_loadtexture(unsigned char * data, int width, int height,int dxo,int dyo, int *texid,float *u,float *v,char domipmap,float prio){
 //	int internalformat=GL_RGBA;
 //	int format=GL_RGBA;
@@ -1434,11 +1446,8 @@ void ogl_loadtexture(unsigned char * data, int dxo,int dyo, ogl_texture *tex)
 	glmprintf((0,"ogl_loadtexture(%p,%i,%i,%ix%i,%p):%i u=%f v=%f b=%i bu=%i (%i)\n",data,tex->tw,tex->th,dxo,dyo,tex,tex->handle,tex->u,tex->v,tex->bytes,tex->bytesu,r_texcount));
 
 }
-
 unsigned char decodebuf[512*512];
-
-void ogl_loadbmtexture_m(grs_bitmap *bm,int domipmap)
-{
+void ogl_loadbmtexture_m(grs_bitmap *bm,int domipmap){
 	unsigned char *buf;
 	while (bm->bm_parent)
 		bm=bm->bm_parent;
@@ -1462,36 +1471,24 @@ void ogl_loadbmtexture_m(grs_bitmap *bm,int domipmap)
 	if (bm->bm_flags & BM_FLAG_RLE){
 		unsigned char * dbits;
 		unsigned char * sbits;
-		int i, data_offset;
-
-		data_offset = 1;
-		if (bm->bm_flags & BM_FLAG_RLE_BIG)
-			data_offset = 2;
-
-		sbits = &bm->bm_data[4 + (bm->bm_h * data_offset)];
+		int i;
+		sbits = &bm->bm_data[4 + bm->bm_h];
 		dbits = decodebuf;
 
 		for (i=0; i < bm->bm_h; i++ )    {
 			gr_rle_decode(sbits,dbits);
-			if ( bm->bm_flags & BM_FLAG_RLE_BIG )
-				sbits += (int)INTEL_SHORT(*((short *)&(bm->bm_data[4+(i*data_offset)])));
-			else
-				sbits += (int)bm->bm_data[4+i];
+			sbits += (int)bm->bm_data[4+i];
 			dbits += bm->bm_w;
 		}
 		buf=decodebuf;
 	}
 	ogl_loadtexture(buf,0,0,bm->gltexture);
 }
-
-void ogl_loadbmtexture(grs_bitmap *bm)
-{
+void ogl_loadbmtexture(grs_bitmap *bm){
 	ogl_loadbmtexture_m(bm,1);
 }
-
-void ogl_freetexture(ogl_texture *gltexture)
-{
-	if (gltexture->handle>0) {
+void ogl_freetexture(ogl_texture *gltexture){
+	if (gltexture->handle>0){
 		r_texcount--;
 		glmprintf((0,"ogl_freetexture(%p):%i (last rend %is) (%i left)\n",gltexture,gltexture->handle,(GameTime-gltexture->lastrend)/f1_0,r_texcount));
 		glDeleteTextures( 1, &gltexture->handle );

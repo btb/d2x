@@ -1,4 +1,3 @@
-/* $Id: escort.c,v 1.5 2003-03-27 01:23:18 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -16,7 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#include <stdio.h>		// for printf()
+#include <stdio.h>		//	for printf()
 #include <stdlib.h>		// for rand() and qsort()
 #include <string.h>		// for memset()
 
@@ -53,7 +52,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "automap.h"
 #include "laser.h"
 #include "pa_enabl.h"
-#include "escort.h"
 
 #ifdef EDITOR
 #include "editor/editor.h"
@@ -105,6 +103,8 @@ int	Last_buddy_key;
 
 fix	Last_buddy_message_time;
 
+//if change this length, change in playsave.c also
+#define GUIDEBOT_NAME_LEN 9
 char guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
 char real_guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
 
@@ -980,12 +980,6 @@ int maybe_buddy_fire_mega(int objnum)
 	if (!object_to_object_visibility(buddy_objp, objp, FQ_TRANSWALL))
 		return 0;
 
-	if (Weapon_info[MEGA_ID].render_type == 0) {
-		con_printf(CON_VERBOSE, "Buddy can't fire mega (shareware)\n");
-		buddy_message("CLICK!");
-		return 0;
-	}
-
 	mprintf((0, "Buddy firing mega in frame %i\n", FrameCount));
 
 	buddy_message("GAHOOGA!");
@@ -998,7 +992,7 @@ int maybe_buddy_fire_mega(int objnum)
 	return 1;
 }
 
-//-----------------------------------------------------------------------------
+//	-----------------------------------------------------------------------------
 int maybe_buddy_fire_smart(int objnum)
 {
 	object	*objp = &Objects[objnum];

@@ -1,4 +1,3 @@
-/* $Id: endlevel.h,v 1.5 2003-04-12 00:11:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -12,6 +11,8 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
+
+
 #ifndef _OUTSIDE_H
 #define _OUTSIDE_H
 
@@ -22,6 +23,8 @@ void do_endlevel_frame();
 void stop_endlevel_sequence();
 void start_endlevel_sequence();
 void render_endlevel_frame(fix eye_offset);
+
+#if defined(SHAREWARE) || defined(NMOVIES)
 
 void render_external_scene();
 void draw_exit_model();
@@ -38,5 +41,7 @@ extern int exit_segnum;
 void load_endlevel_data(int level_num);
 
 extern int exit_modelnum,destroyed_exit_modelnum;
+
+#endif
 
 #endif

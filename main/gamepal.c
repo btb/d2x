@@ -124,7 +124,8 @@ int load_palette(char *name,int used_for_level,int no_change_screen)
 	if (used_for_level && stricmp(last_palette_loaded_pig,name) != 0) {
 
 		_splitpath(name,NULL,NULL,pigname,NULL);
-		strcat(pigname,".pig");
+		strcat(pigname,".PIG");
+
 		//if not editor, load pig first so small install message can come
 		//up in old palette.  If editor version, we must load the pig after
 		//the palette is loaded so we can remap new textures.

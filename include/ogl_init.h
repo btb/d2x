@@ -15,11 +15,7 @@
 #include "loadgl.h"
 int ogl_init_load_library(void);
 #else
-#if defined(__APPLE__) && defined(__MACH__)
-#include <OpenGL/gl.h>
-#else
 #include <GL/gl.h>
-#endif
 //######hack, since multi texture support is not working
 #undef GL_ARB_multitexture
 #undef GL_SGIS_multitexture
@@ -37,11 +33,11 @@ int ogl_init_load_library(void);
 #include "palette.h"
 #include "pstypes.h"
 
-/* I assume this ought to be >= MAX_BITMAP_FILES in piggy.h? */
-#define OGL_TEXTURE_LIST_SIZE 3000
+
+#define OGL_TEXTURE_LIST_SIZE 2000
 
 typedef struct _ogl_texture {
-	GLuint handle;
+	int handle;
 	GLint internalformat;
 	GLenum format;
 	int w,h,tw,th,lw;

@@ -1,12 +1,24 @@
-/* $Id: ukali.h,v 1.7 2003-03-19 23:20:09 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/linux/include/ukali.h,v $
+ * $Revision: 1.3 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-19 07:39:26 $
  *
- * Header for kali support functions
+ * FIXME: add description
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  2001/10/19 07:29:37  bradleyb
+ * Brought linux networking in line with d1x, moved some arch/linux_* stuff to arch/linux/
+ *
  *
  */
 
 #ifndef __UKALI_H__
 #define __UKALI_H__
+
+//added on 10/04/98 by Matt Mueller to show correct ver in kali
+#include "vers_id.h"
+//end addition -MM
 
 // 4213 is the port that KaliNix is listening on
 //

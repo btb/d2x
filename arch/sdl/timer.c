@@ -1,8 +1,14 @@
-/* $Id: timer.c,v 1.6 2003-02-21 04:08:48 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/sdl/timer.c,v $
+ * $Revision: 1.3 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-19 09:45:02 $
  *
  * SDL library timer functions
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  2001/01/29 13:35:09  bradleyb
+ * Fixed build system, minor fixes
  *
  */
 
@@ -10,25 +16,12 @@
 #include <conf.h>
 #endif
 
-#include <SDL.h>
-
+#include <SDL/SDL.h>
 #include "maths.h"
-#include "timer.h"
 
-fix timer_get_approx_seconds(void)
-{
-	return approx_msec_to_fsec(SDL_GetTicks());
-}
-
-fix timer_get_fixed_seconds(void)
-{
-	fix x;
-	unsigned long tv_now = SDL_GetTicks();
-	x=i2f(tv_now/1000) | fixdiv(i2f(tv_now % 1000),i2f(1000));
-	return x;
-}
-
-void timer_delay(fix seconds)
-{
-	SDL_Delay(f2i(fixmul(seconds, i2f(1000))));
+fix timer_get_fixed_seconds(void) {
+  fix x;
+  unsigned long tv_now = SDL_GetTicks();
+  x=i2f(tv_now/1000) | fixdiv(i2f(tv_now % 1000),i2f(1000));
+  return x;
 }

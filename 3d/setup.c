@@ -1,4 +1,3 @@
-/* $Id: setup.c,v 1.5 2003-03-19 19:21:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -12,10 +11,28 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
+ * $Source: /cvs/cvsroot/d2x/3d/setup.c,v $
+ * $Revision: 1.3 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-31 03:54:51 $
  * 
  * Setup for 3d library
  * 
- * Old Log:
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  2001/01/31 15:17:48  bradleyb
+ * Makefile and conf.h fixes
+ *
+ * Revision 1.1.1.1  2001/01/19 03:29:58  bradleyb
+ * Import of d2x-0.0.8
+ *
+ * Revision 1.3  1999/10/07 02:27:14  donut
+ * OGL includes to remove warnings
+ *
+ * Revision 1.2  1999/09/21 04:05:55  donut
+ * mostly complete OGL implementation (still needs bitmap handling (reticle), and door/fan textures are corrupt)
+ *
+ * Revision 1.1.1.1  1999/06/14 21:57:50  donut
+ * Import of d1x 1.37 source.
  *
  * Revision 1.4  1995/10/11  00:27:04  allender
  * bash free_num_points to 0
@@ -40,7 +57,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: setup.c,v 1.5 2003-03-19 19:21:34 btb Exp $";
+static char rcsid[] = "$Id: setup.c,v 1.3 2001-10-31 03:54:51 bradleyb Exp $";
 #endif
 
 #include <stdlib.h>
@@ -54,8 +71,6 @@ static char rcsid[] = "$Id: setup.c,v 1.5 2003-03-19 19:21:34 btb Exp $";
 
 #ifdef OGL
 #include "ogl_init.h"
-#else
-#include "texmap.h"  // for init_interface_vars_to_assembler()
 #endif
 
 //initialize the 3d system
@@ -67,6 +82,8 @@ void g3_init(void)
 
 //close down the 3d system
 void g3_close(void) {}
+
+extern void init_interface_vars_to_assembler(void);
 
 //start the frame
 void g3_start_frame(void)

@@ -1,7 +1,4 @@
-/* $Id: strio.c,v 1.3 2003-02-18 20:35:35 btb Exp $ */
-/*
- * strio.c: string/file manipulation functions by Victor Rachels
- */
+/**strio.c: string/file manipulation functions by Victor Rachels **/
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>

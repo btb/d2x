@@ -1,4 +1,3 @@
-/* $Id: automap.c,v 1.10 2003-04-29 08:33:25 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,14 +7,19 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/main/automap.c,v $
+ * $Revision: 1.4 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-31 11:16:08 $
  *
  * FIXME: put description here
  *
+ * $Log: not supported by cvs2svn $
  *
  */
 
@@ -78,10 +82,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
-#endif
-
-#ifdef OGL
-#define AUTOMAP_DIRECT_RENDER
 #endif
 
 #define EF_USED			1		// This edge is used
@@ -175,7 +175,6 @@ static short DrawingListBright[MAX_EDGES];
 #define ZOOM_SPEED_FACTOR		500	//(1500)
 #define ROT_SPEED_DIVISOR		(115000)
 
-#ifndef AUTOMAP_DIRECT_RENDER
 // Screen anvas variables
 static int current_page=0;
 #ifdef WINDOWS
@@ -194,7 +193,6 @@ static dd_grs_canvas ddDrawingPages[2];
 	static grs_canvas Pages[2];
 	static grs_canvas DrawingPages[2];
 #endif
-#endif /* AUTOMAP_DIRECT_RENDER */
 
 #define Page Pages[0]
 #define DrawingPage DrawingPages[0]
@@ -408,7 +406,6 @@ void automap_clear_visited()
 }
  
 grs_canvas *name_canv_left,*name_canv_right;
-char name_level[128];
 
 void draw_player( object * obj )
 {
@@ -613,7 +610,6 @@ void draw_automap()
 		#endif
 	#endif
 	
-#ifndef AUTOMAP_DIRECT_RENDER
 	if (!AutomapHires) {
 		WIN(mprintf((1, "Can't do lores automap in Windows!\n")));
 		WIN(Int3());
@@ -626,7 +622,6 @@ void draw_automap()
 			gr_set_current_canvas(&DrawingPage)
 		);
 	}
-#endif
 
 #if defined(POLY_ACC)
     pa_flush();
@@ -723,16 +718,9 @@ WIN(DDGRLOCK(dd_grd_curcanv));
 
 	gr_bitmapm(AutomapHires?10:AutomapHires?10:5,5,&name_canv_left->cv_bitmap);
 	gr_bitmapm(grd_curcanv->cv_bitmap.bm_w-(AutomapHires?10:5)-name_canv_right->cv_bitmap.bm_w,AutomapHires?10:5,&name_canv_right->cv_bitmap);
-	gr_set_curfont(GAME_FONT);
-	gr_set_fontcolor(BM_XRGB(0,31,0),-1);
-	gr_uprintf(5,5,name_level);
 }
 WIN(DDGRUNLOCK(dd_grd_curcanv));
 
-#ifdef OGL
-	ogl_swap_buffers();
-#else
-#ifndef AUTOMAP_DIRECT_RENDER
 	if (!AutomapHires)
 		gr_show_canvas( &Pages[current_page] );
 	else {
@@ -743,9 +731,12 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 		dd_gr_blt_screen(&ddPage, 0,0,0,0,0,0,0,0);
 	#endif
 	}
+#ifdef OGL
+	ogl_swap_buffers();
+#else
 	gr_update();
 #endif
-#endif
+	
 }
 
 #ifdef WINDOWS
@@ -841,7 +832,7 @@ void create_name_canv()
 	else
 		sprintf(name_level_left, "Secret Level %i",-Current_level_num);
 
-	if (Current_mission_num == Builtin_mission_num && Current_level_num>0)		//built-in mission
+	if (Current_mission_num == 0 && Current_level_num>0)		//built-in mission
 		sprintf(name_level_right,"%s %d: ",system_name[(Current_level_num-1)/4],((Current_level_num-1)%4)+1);
 	else
 		strcpy(name_level_right, " ");
@@ -857,27 +848,18 @@ void create_name_canv()
 void modex_print_message(int x, int y, char *str)
 {
 	if (!AutomapHires) {
-#ifndef AUTOMAP_DIRECT_RENDER
 		int	i;
 
 		for (i=0; i<2; i++ )	{
 			gr_set_current_canvas(&Pages[i]);
-#endif
-
 			modex_printf(x, y, str, MEDIUM1_FONT,Font_color_20);
-#ifndef AUTOMAP_DIRECT_RENDER
 		}
 		gr_set_current_canvas(&DrawingPages[current_page]);
-#endif
 	}
 	else {
-#ifndef AUTOMAP_DIRECT_RENDER
 		gr_set_current_canvas(&Page);
-#endif
 		modex_printf(x, y, str, MEDIUM1_FONT,Font_color_20);
-#ifndef AUTOMAP_DIRECT_RENDER
 		gr_set_current_canvas(&DrawingPage);
-#endif
 	}
 }
 
@@ -889,18 +871,13 @@ int Automap_active = 0;
 #ifdef RELEASE
 #define MAP_BACKGROUND_FILENAME (AutomapHires?"\x01MAPB.PCX":"\x01MAP.PCX")	//load only from hog file
 #else
-#define MAP_BACKGROUND_FILENAME ((AutomapHires && cfexist("mapb.pcx"))?"MAPB.PCX":"MAP.PCX")
+#define MAP_BACKGROUND_FILENAME (AutomapHires?"MAPB.PCX":"MAP.PCX")
 #endif
 
 int Automap_always_hires=0;
 extern int MenuHiresAvailable;
 
 extern int Current_display_mode;
-
-u_int32_t automap_mode = SM(640,480);
-int automap_width = 640;
-int automap_height = 480;
-int automap_use_game_res=0;
 
 void do_automap( int key_code )	{
 	int done=0;
@@ -909,9 +886,7 @@ void do_automap( int key_code )	{
 	int leave_mode=0;
 	int first_time=1;
 	int pcx_error;
-#if !defined(AUTOMAP_DIRECT_RENDER) || !defined(NDEBUG)
 	int i;
-#endif
 	int c, marker_num;
 	fix entry_time;
 	int pause_game=1;		// Set to 1 if everything is paused during automap...No pause during net.
@@ -949,14 +924,7 @@ void do_automap( int key_code )	{
 	#if !defined (WINDOWS) && !defined(MACINTOSH)
 	if ((Current_display_mode!=0 && Current_display_mode!=2) || (Automap_always_hires && MenuHiresAvailable)) {
 #if !defined(POLY_ACC)
-		//edit 4/23/99 Matt Mueller - don't switch res unless we need to
-		if (grd_curscreen->sc_mode != AUTOMAP_MODE)
-			gr_set_mode( AUTOMAP_MODE );
-		else
-			gr_set_current_canvas(NULL);
-		//end edit -MM
-		automap_width=grd_curscreen->sc_canvas.cv_bitmap.bm_w;
-		automap_height=grd_curscreen->sc_canvas.cv_bitmap.bm_h;
+		gr_set_mode( SM(640, 480) );
 #endif
 		PA_DFX (pa_set_frontbuffer_current());
 		AutomapHires = 1;
@@ -975,7 +943,7 @@ void do_automap( int key_code )	{
 		set_screen_mode(SCREEN_GAME);
 	#endif
 
-	FontHires = FontHiresAvailable && AutomapHires;
+	FontHires = AutomapHires;
 
 	create_name_canv();
 
@@ -983,75 +951,72 @@ void do_automap( int key_code )	{
 
 WIN(AutomapRedraw:)
 	if (!AutomapHires) {
-#ifndef MACINTOSH
-#ifndef AUTOMAP_DIRECT_RENDER
+		#ifndef MACINTOSH
 		gr_init_sub_canvas(&Pages[0],grd_curcanv,0,0,320,400);
 		gr_init_sub_canvas(&Pages[1],grd_curcanv,0,401,320,400);
 		gr_init_sub_canvas(&DrawingPages[0],&Pages[0],16,69,WINDOW_WIDTH,272);
 		gr_init_sub_canvas(&DrawingPages[1],&Pages[1],16,69,WINDOW_WIDTH,272);
-#endif
-
-		gr_init_bitmap_data (&Automap_background);
-//		pcx_error = pcx_read_bitmap(MAP_BACKGROUND_FILENAME,&Automap_background,BM_LINEAR,pal);
-//		if ( pcx_error != PCX_ERROR_NONE )
-//			Error("File %s - PCX error: %s",MAP_BACKGROUND_FILENAME,pcx_errormsg(pcx_error));
-//		gr_remap_bitmap_good( &Automap_background, pal, -1, -1 );
-
-#ifndef AUTOMAP_DIRECT_RENDER
+	
+		Automap_background.bm_data = NULL;
+		pcx_error = pcx_read_bitmap(MAP_BACKGROUND_FILENAME,&Automap_background,BM_LINEAR,pal);
+		if ( pcx_error != PCX_ERROR_NONE )
+			Error("File %s - PCX error: %s",MAP_BACKGROUND_FILENAME,pcx_errormsg(pcx_error));
+		gr_remap_bitmap_good( &Automap_background, pal, -1, -1 );
+	
 		for (i=0; i<2; i++ )	{
 			gr_set_current_canvas(&Pages[i]);
-//			gr_bitmap( 0, 0, &Automap_background );
-//			modex_printf( 40, 22,TXT_AUTOMAP,HUGE_FONT,Font_color_20);
-//			modex_printf( 30,353,TXT_TURN_SHIP,SMALL_FONT,Font_color_20);
-//			modex_printf( 30,369,TXT_SLIDE_UPDOWN,SMALL_FONT,Font_color_20);
-//			modex_printf( 30,385,TXT_VIEWING_DISTANCE,SMALL_FONT,Font_color_20);
+			gr_bitmap( 0, 0, &Automap_background );
+			modex_printf( 40, 22,TXT_AUTOMAP,HUGE_FONT,Font_color_20);
+			modex_printf( 30,353,TXT_TURN_SHIP,SMALL_FONT,Font_color_20);
+			modex_printf( 30,369,TXT_SLIDE_UPDOWN,SMALL_FONT,Font_color_20);
+			modex_printf( 30,385,TXT_VIEWING_DISTANCE,SMALL_FONT,Font_color_20);
 		}
-		gr_free_bitmap_data(&Automap_background);	
+		if ( Automap_background.bm_data )
+			d_free( Automap_background.bm_data );
+		Automap_background.bm_data = NULL;
+	
 		gr_set_current_canvas(&DrawingPages[current_page]);
-#endif /* AUTOMAP_DIRECT_RENDER */
-#endif /* MACINTOSH */
+		#endif
 	}
 	else {
-#ifndef AUTOMAP_DIRECT_RENDER
-		if (VR_render_buffer[0].cv_w >= automap_width && VR_render_buffer[0].cv_h >= automap_height)
+		if (VR_render_buffer[0].cv_w >= 640 && VR_render_buffer[0].cv_h >= 480)
 		{
-			WIN(dd_gr_init_sub_canvas(&ddPage, &dd_VR_render_buffer[0], 0, 0, automap_width,automap_height));
+			WIN(dd_gr_init_sub_canvas(&ddPage, &dd_VR_render_buffer[0], 0, 0, 640,480));
 
 			#if defined(MACINTOSH) && defined(POLY_ACC)
 				if (PAEnabled)
 				{
 					// we want all the automap border stuff to be drawn straight to the screen
-					gr_init_sub_canvas(&Page,&(grd_curscreen->sc_canvas),0, 0, automap_width, automap_height);
+					gr_init_sub_canvas(&Page,&(grd_curscreen->sc_canvas),0, 0, 640, 480);
 				}
 				else
 				{
-					gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, automap_width, automap_height);
+					gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, 640, 480);
 				}
 			#else
-				gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, automap_width, automap_height);
+				gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, 640, 480);
 			#endif
 			
 		}
 		else {
 		#ifndef WINDOWS
 			void *raw_data;
-			MALLOC(raw_data,ubyte,automap_width*automap_height);
-			gr_init_canvas(&Page,raw_data,BM_LINEAR,automap_width,automap_height);
+			MALLOC(raw_data,ubyte,640*480);
+			gr_init_canvas(&Page,raw_data,BM_LINEAR,640,480);
 		#else
-			dd_gr_init_canvas(&ddPage, BM_LINEAR, automap_width,automap_height);
-			gr_init_canvas(&Page,NULL,BM_LINEAR,automap_width,automap_height);
+			dd_gr_init_canvas(&ddPage, BM_LINEAR, 640,480);
+			gr_init_canvas(&Page,NULL,BM_LINEAR,640,480);
 		#endif
 			must_free_canvas = 1;
 		}
 
-		WIN(dd_gr_init_sub_canvas(&ddDrawingPage, &ddPage, 0,0,automap_width,automap_height));
-		gr_init_sub_canvas(&DrawingPage,&Page, 0,0,automap_width,automap_height);
+		WIN(dd_gr_init_sub_canvas(&ddDrawingPage, &ddPage, 27,80,582,334));
+		gr_init_sub_canvas(&DrawingPage,&Page,27,80,582,334);
 	
 		WINDOS(
 			dd_gr_set_current_canvas(&ddPage),
 			gr_set_current_canvas(&Page)
 		);
-#endif
 
 #if defined(POLY_ACC)
 
@@ -1102,12 +1067,10 @@ WIN(AutomapRedraw:)
 			gr_printf( 60, 460,TXT_VIEWING_DISTANCE);
 		WIN(DDGRUNLOCK(dd_grd_curcanv));
 	
-#ifndef AUTOMAP_DIRECT_RENDER
 		WINDOS(
 			dd_gr_set_current_canvas(&ddDrawingPage),
 			gr_set_current_canvas(&DrawingPage)
 		);
-#endif
 	}
 
 
@@ -1205,10 +1168,8 @@ WIN(if (redraw_screen) redraw_screen = 0);
 						gr_set_current_canvas(NULL)
 				);
 				}
-#ifndef AUTOMAP_DIRECT_RENDER
 				else
 					gr_set_current_canvas(&Pages[current_page]);
-#endif
 				save_screen_shot(1); 
 				break;
 			}
@@ -1281,18 +1242,14 @@ WIN(if (redraw_screen) redraw_screen = 0);
 			  break;
 
 			case KEY_D+KEY_CTRLED:
-#ifndef AUTOMAP_DIRECT_RENDER
 				if (current_page)		//menu will only work on page 0
 					draw_automap();	//..so switch from 1 to 0
-#endif
 
 				if (HighlightMarker > -1 && MarkerObject[HighlightMarker] != -1) {
-#ifndef AUTOMAP_DIRECT_RENDER
 					WINDOS(
 						dd_gr_set_current_canvas(&ddPages[current_page]),
 						gr_set_current_canvas(&Pages[current_page])
 					);
-#endif
 
 					if (nm_messagebox( NULL, 2, TXT_YES, TXT_NO, "Delete Marker?" ) == 0) {
 						obj_delete(MarkerObject[HighlightMarker]);
@@ -1311,41 +1268,7 @@ WIN(if (redraw_screen) redraw_screen = 0);
 			case KEY_PERIOD:
 				if (MarkerScale<30.0)
 					MarkerScale+=.5;
-				break;
 			#endif
-
-//added 8/23/99 by Matt Mueller for hot key res/fullscreen changing, and menu access
-#if 0
-			case KEY_CTRLED+KEY_SHIFTED+KEY_PADDIVIDE:
-			case KEY_ALTED+KEY_CTRLED+KEY_PADDIVIDE:
-			case KEY_ALTED+KEY_SHIFTED+KEY_PADDIVIDE:
-				d1x_options_menu();
-				break;
-			case KEY_CTRLED+KEY_SHIFTED+KEY_PADMULTIPLY:
-			case KEY_ALTED+KEY_CTRLED+KEY_PADMULTIPLY:
-			case KEY_ALTED+KEY_SHIFTED+KEY_PADMULTIPLY:
-				change_res();
-				break;
-			case KEY_CTRLED+KEY_SHIFTED+KEY_PADMINUS:
-			case KEY_ALTED+KEY_CTRLED+KEY_PADMINUS:
-			case KEY_ALTED+KEY_SHIFTED+KEY_PADMINUS:
-				//lower res 
-				//should we just cycle through the list that is displayed in the res change menu?
-				// what if their card/X/etc can't handle that mode? hrm. 
-				//well, the quick access to the menu is good enough for now.
-				break;
-			case KEY_CTRLED+KEY_SHIFTED+KEY_PADPLUS:
-			case KEY_ALTED+KEY_CTRLED+KEY_PADPLUS:
-			case KEY_ALTED+KEY_SHIFTED+KEY_PADPLUS:
-				//increase res
-				break;
-#endif
-			case KEY_CTRLED+KEY_SHIFTED+KEY_PADENTER:
-			case KEY_ALTED+KEY_CTRLED+KEY_PADENTER:
-			case KEY_ALTED+KEY_SHIFTED+KEY_PADENTER:
-				gr_toggle_fullscreen_game();
-				break;
-//end addition -MM
 
 	      }
 		}
@@ -1405,12 +1328,10 @@ WIN(if (redraw_screen) redraw_screen = 0);
 	gr_free_canvas(name_canv_right);  name_canv_right=NULL;
 
 	if (must_free_canvas)	{
-#ifndef AUTOMAP_DIRECT_RENDER
 	WINDOS(
 		DDFreeSurface(ddPages[0].lpdds),
 		d_free(Page.cv_bitmap.bm_data)
 	);
-#endif
 	}
 
 	mprintf( (0, "Automap memory freed\n" ));

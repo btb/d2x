@@ -1,4 +1,3 @@
-/* $Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char game_rcsid[] = "$Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $";
+char game_rcsid[] = "$Id: game.c,v 1.8 2001-10-25 02:19:31 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -117,7 +116,7 @@ char game_rcsid[] = "$Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $";
 #include "robot.h"
 #include "playsave.h"
 #include "fix.h"
-#include "hudmsg.h"
+#include "d_delay.h"
 
 int VGA_current_mode;
 
@@ -327,7 +326,7 @@ void init_game()
 
 	set_detail_level_parameters(Detail_level);
 
-	build_mission_list(0);
+	build_mission_list(0);		// This also loads mission 0.
 
 	/* Register cvars */
 	cvar_registervariable(&r_framerate);
@@ -464,9 +463,11 @@ void init_cockpit()
 
 	//Initialize the on-screen canvases
 
-	if (Newdemo_state==ND_STATE_RECORDING) {
+   if (Newdemo_state==ND_STATE_RECORDING)
+	 {
+
 		newdemo_record_cockpit_change(Cockpit_mode);
-	}
+	 }
 
 	if ( VR_render_mode != VR_NONE )
 		Cockpit_mode = CM_FULL_SCREEN;
@@ -477,17 +478,10 @@ void init_cockpit()
 	if ( Screen_mode == SCREEN_EDITOR )
 		Cockpit_mode = CM_FULL_SCREEN;
 
-#ifdef OGL
-	if (Cockpit_mode == CM_FULL_COCKPIT || Cockpit_mode == CM_REAR_VIEW) {
-		hud_message(MSGC_GAME_FEEDBACK, "Cockpit not available in GL mode");
-		Cockpit_mode = CM_FULL_SCREEN;
-	}
-#endif
-
-	WINDOS(
-		dd_gr_set_current_canvas(NULL),
-		gr_set_current_canvas(NULL)
-		);
+ WINDOS(
+	dd_gr_set_current_canvas(NULL),
+	gr_set_current_canvas(NULL)
+ );
 	gr_set_curfont( GAME_FONT );
 
 #if !defined(MACINTOSH) && !defined(WINDOWS)
@@ -507,52 +501,54 @@ void init_cockpit()
 	game_win_init_cockpit_mask(0);
 #endif
 
-	switch( Cockpit_mode ) {
+	switch( Cockpit_mode )	
+	{
 	case CM_FULL_COCKPIT:
-	case CM_REAR_VIEW: {
+	case CM_REAR_VIEW:		{
 		grs_bitmap *bm = &GameBitmaps[cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)].index];
 
 		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)]);
 
-#ifdef WINDOWS
+	#ifdef WINDOWS
 		dd_gr_set_current_canvas(NULL);
 		game_win_init_cockpit_mask(1);
 		dd_gr_set_current_canvas(dd_VR_offscreen_buffer);
-#else
-		gr_set_current_canvas(VR_offscreen_buffer);
-#endif		
+	#else
+		gr_set_current_canvas(VR_offscreen_buffer)
+	#endif		
 
-		WIN(DDGRLOCK(dd_grd_curcanv));
+	WIN(DDGRLOCK(dd_grd_curcanv));
 		gr_bitmap( 0, 0, bm );
 		bm = &VR_offscreen_buffer->cv_bitmap;
 		bm->bm_flags = BM_FLAG_TRANSPARENT;
 		gr_ibitblt_find_hole_size ( bm, &minx, &miny, &maxx, &maxy );
-		WIN(	win_get_span_list(bm, miny, maxy);
-				DDGRUNLOCK(dd_grd_curcanv)
-			);
+	WIN(	win_get_span_list(bm, miny, maxy);
+			DDGRUNLOCK(dd_grd_curcanv)
+	);
 
 #ifndef WINDOWS
-#ifndef __MSDOS__
-		gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize);
-#else
-		if ( Current_display_mode ) {
-#if defined(POLY_ACC)
+	#if 1 // def MACINTOSH
+			gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize);
+	#else
+		if ( Current_display_mode )
+      {
+		#if defined(POLY_ACC)
 			Game_cockpit_copy_code  = gr_ibitblt_create_mask_pa( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
 			pa_clear_buffer(1, 0);      // clear offscreen to reduce white flash.
-#else
+		#else
 			Game_cockpit_copy_code  = gr_ibitblt_create_mask_svga( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
-#endif
+		#endif
 		} else
 			Game_cockpit_copy_code  = gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
-#endif
+	#endif
 		bm->bm_flags = 0;		// Clear all flags for offscreen canvas
 #else
-		Game_cockpit_copy_code  = (ubyte *)(1);
+		Game_cockpit_copy_code  = (ubyte *)(1); 
 		bm->bm_flags = 0;		// Clear all flags for offscreen canvas
 #endif
 		game_init_render_sub_buffers( 0, 0, maxx-minx+1, maxy-miny+1 );
 		break;
-	}
+		}
 
 	case CM_FULL_SCREEN:
 
@@ -906,7 +902,7 @@ WIN(static int saved_window_h);
 									dd_grd_screencanv->canvas.cv_bitmap.bm_w,
 									dd_grd_screencanv->canvas.cv_bitmap.bm_h);
 			MenuHires = 1;
-			FontHires = FontHiresAvailable;
+			FontHires = 1;
 
 		#else
 		{
@@ -934,7 +930,7 @@ WIN(static int saved_window_h);
 			gr_init_sub_canvas( &VR_screen_pages[0], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 			gr_init_sub_canvas( &VR_screen_pages[1], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 
-			FontHires = FontHiresAvailable && MenuHires;
+			FontHires = MenuHires;
 
 		}
 		#endif
@@ -1026,15 +1022,15 @@ WIN(static int saved_window_h);
 		init_cockpit();
 
 	#ifdef WINDOWS
-		FontHires = FontHiresAvailable && (Current_display_mode != 0);
+		FontHires = (Current_display_mode != 0);
 		MenuHires = 1;
 	#else
-		FontHires = FontHiresAvailable && (MenuHires = ((Current_display_mode != 0) && (Current_display_mode != 2)));
+		FontHires = MenuHires = ((Current_display_mode != 0) && (Current_display_mode != 2));
 	#endif
 
 		if ( VR_render_mode != VR_NONE )	{
 			// for 640x480 or higher, use hires font.
-			if (FontHiresAvailable && (grd_curscreen->sc_h > 400))
+			if ( grd_curscreen->sc_h > 400 )
 				FontHires = 1;
 			else
 				FontHires = 0;
@@ -1082,38 +1078,6 @@ WIN(static int saved_window_h);
 #endif
 
 	return 1;
-}
-
-int gr_toggle_fullscreen_game(void){
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	int i;
-	hud_message(MSGC_GAME_FEEDBACK, "toggling fullscreen mode %s",(i=gr_toggle_fullscreen())?"on":"off" );
-	//added 2000/06/19 Matthew Mueller - hack to fix "infinite toggle" problem
-	//it seems to be that the screen mode change takes long enough that the key has already sent repeat codes, or that its unpress event gets dropped, etc.  This is a somewhat ugly fix, but it works.
-//	generic_key_handler(KEY_PADENTER,0);
-	key_flush();
-	//end addition -MM
-	return i;
-#else
-	hud_message(MSGC_GAME_FEEDBACK, "fullscreen toggle not supported by this target");
-	return -1;
-#endif
-}
-
-int arch_toggle_fullscreen_menu(void);
-
-int gr_toggle_fullscreen_menu(void){
-#ifdef GR_SUPPORTS_FULLSCREEN_MENU_TOGGLE
-	int i;
-	i=arch_toggle_fullscreen_menu();
-
-//	generic_key_handler(KEY_PADENTER,0);
-	key_flush();
-
-	return i;
-#else
-	return -1;
-#endif
 }
 
 static int timer_paused=0;
@@ -1193,9 +1157,7 @@ int Movie_fixed_frametime;
 #define Movie_fixed_frametime	0
 #endif
 
-//added on 8/18/98 by Victor Rachels to add maximum framerate
-int maxfps = 80;
-//end this section
+static const int max_fps = 80;
 
 void calc_frame_time()
 {
@@ -1211,9 +1173,11 @@ void calc_frame_time()
 	do {
 	    timer_value = timer_get_fixed_seconds();
 	    FrameTime = timer_value - last_timer_value;
-	    if (FrameTime < f1_0/maxfps);
-			timer_delay(1);
-	} while (FrameTime < f1_0/maxfps);
+	    if (FrameTime < f1_0/max_fps);
+	    {
+		d_delay(1);
+	    }
+	} while (FrameTime < f1_0/max_fps);
 
 	#if defined(TIMER_TEST) && !defined(NDEBUG)
 	_timer_value = timer_value;
@@ -2605,9 +2569,7 @@ void flicker_lights();
 
 void GameLoop(int RenderFlag, int ReadControlsFlag )
 {
-#ifdef CONSOLE
 	con_update();
-#endif
 	#ifndef	NDEBUG
 	//	Used to slow down frame rate for testing things.
 	//	RenderFlag = 1; // DEBUG
@@ -3358,15 +3320,3 @@ void game_win_init_cockpit_mask(int sram)
 //@@}
 
 #endif
-
-/*
- * reads a flickering_light structure from a CFILE
- */
-void flickering_light_read(flickering_light *fl, CFILE *fp)
-{
-	fl->segnum = cfile_read_short(fp);
-	fl->sidenum = cfile_read_short(fp);
-	fl->mask = cfile_read_int(fp);
-	fl->timer = cfile_read_fix(fp);
-	fl->delay = cfile_read_fix(fp);
-}

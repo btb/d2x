@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: effects.c,v 1.4 2002-08-02 04:57:19 btb Exp $";
+static char rcsid[] = "$Id: effects.c,v 1.2 2001-01-31 15:17:50 bradleyb Exp $";
 #endif
 
 #include <stdio.h>
@@ -169,30 +169,3 @@ void restart_effect(int effect_num)
 	//Assert(Effects[effect_num].bm_ptr != -1);
 }
 
-#ifndef FAST_FILE_IO
-/*
- * reads n eclip structs from a CFILE
- */
-int eclip_read_n(eclip *ec, int n, CFILE *fp)
-{
-	int i;
-
-	for (i = 0; i < n; i++) {
-		vclip_read_n(&ec[i].vc, 1, fp);
-		ec[i].time_left = cfile_read_fix(fp);
-		ec[i].frame_count = cfile_read_int(fp);
-		ec[i].changing_wall_texture = cfile_read_short(fp);
-		ec[i].changing_object_texture = cfile_read_short(fp);
-		ec[i].flags = cfile_read_int(fp);
-		ec[i].crit_clip = cfile_read_int(fp);
-		ec[i].dest_bm_num = cfile_read_int(fp);
-		ec[i].dest_vclip = cfile_read_int(fp);
-		ec[i].dest_eclip = cfile_read_int(fp);
-		ec[i].dest_size = cfile_read_fix(fp);
-		ec[i].sound_num = cfile_read_int(fp);
-		ec[i].segnum = cfile_read_int(fp);
-		ec[i].sidenum = cfile_read_int(fp);
-	}
-	return i;
-}
-#endif

@@ -49,7 +49,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "kconfig.h"
 
 #include "newdemo.h"
-#include "escort.h"
+#include "ai.h"
 
 #ifdef EDITOR
 #include "gr.h"	//	for powerup outline drawing
@@ -700,21 +700,3 @@ int do_powerup(object *obj)
 	return used;
 
 }
-
-#ifndef FAST_FILE_IO
-/*
- * reads n powerup_type_info structs from a CFILE
- */
-extern int powerup_type_info_read_n(powerup_type_info *pti, int n, CFILE *fp)
-{
-	int i;
-
-	for (i = 0; i < n; i++) {
-		pti[i].vclip_num = cfile_read_int(fp);
-		pti[i].hit_sound = cfile_read_int(fp);
-		pti[i].size = cfile_read_fix(fp);
-		pti[i].light = cfile_read_fix(fp);
-	}
-	return i;
-}
-#endif

@@ -1,4 +1,3 @@
-/* $Id: byteswap.h,v 1.7 2003-04-12 00:11:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,43 +7,34 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-/*
- *
- * code to swap bytes because of big/little endian problems.
- *
- * Old Log:
- * Revision 1.4  1995/08/23  21:28:15  allender
- * fix mcc compiler warning
- *
- * Revision 1.3  1995/08/18  15:51:42  allender
- * put back in old byteswapping code
- *
- * Revision 1.2  1995/05/04  20:10:18  allender
- * proper prototypes
- *
- * Revision 1.1  1995/03/30  15:02:11  allender
- * Initial revision
- *
- */
+
 
 #ifndef _BYTESWAP_H
 #define _BYTESWAP_H
 
 #include "pstypes.h"
 
-#define SWAPSHORT(x) (((ubyte)(x) << 8) | (((ushort)(x)) >> 8))
-#define SWAPINT(x)   (((x)<<24) | (((uint)(x)) >> 24) | (((x) &0x0000ff00) << 8) | (((x) & 0x00ff0000) >> 8))
+#if 0
+extern ushort swapshort(ushort s);
+extern uint swapint(uint i);
+#endif
 
-#ifndef WORDS_BIGENDIAN
+#define SWAPSHORT(x) (((ubyte)x << 8) | (((ushort)x) >> 8))
+#define SWAPINT(x)   ((x<<24) | (((ulong)x) >> 24) | ((x &0x0000ff00) << 8) | ((x & 0x00ff00000) >> 8))
+
+#ifndef BIGENDIAN //MACINTOSH
 #define INTEL_INT(x)	x
 #define INTEL_SHORT(x)	x
 #else
 #define INTEL_INT(x)	SWAPINT(x)
 #define INTEL_SHORT(x)	SWAPSHORT(x)
 #endif
+
+#define swapint(x)   INTEL_INT(x)
+#define swapshort(x) INTEL_SHORT(x)
 
 #endif

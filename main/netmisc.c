@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: netmisc.c,v 1.7 2002-12-31 23:19:42 btb Exp $";
+static char rcsid[] = "$Id: netmisc.c,v 1.3 2001-10-25 02:15:57 bradleyb Exp $";
 #endif
 
 #include <stdio.h>
@@ -26,7 +26,7 @@ static char rcsid[] = "$Id: netmisc.c,v 1.7 2002-12-31 23:19:42 btb Exp $";
 #include "pstypes.h"
 #include "mono.h"
 
-#ifdef WORDS_BIGENDIAN
+#ifdef MACINTOSH
 
 #include "byteswap.h"
 #include "segment.h"
@@ -128,6 +128,7 @@ ushort netmisc_calc_checksum_pc( void * vptr, int len )
 // this code must be kept in total sync
 
 #include "ipx.h"
+#include "byteswap.h"
 #include "multi.h"
 #ifdef NETWORK
 #include "network.h"
@@ -141,17 +142,17 @@ byte out_buffer[IPX_MAX_DATA_SIZE];		// used for tmp netgame packets as well as 
 void receive_netplayer_info(ubyte *data, netplayer_info *info)
 {
 	int loc = 0;
-
-	memcpy(info->callsign, &(data[loc]), CALLSIGN_LEN+1);       loc += CALLSIGN_LEN+1;
-	memcpy(&(info->network.ipx.server), &(data[loc]), 4);       loc += 4;
-	memcpy(&(info->network.ipx.node), &(data[loc]), 6);         loc += 6;
-	info->version_major = data[loc];                            loc++;
-	info->version_minor = data[loc];                            loc++;
-	memcpy(&(info->computer_type), &(data[loc]), 1);            loc++;      // memcpy to avoid compile time warning about enum
-	info->connected = data[loc];                                loc++;
-	memcpy(&(info->socket), &(data[loc]), 2);                   loc += 2;
-	memcpy (&(info->rank),&(data[loc]),1);                      loc++;
-//MWA  don't think we need to swap this because we need it in high order    info->socket = INTEL_SHORT(info->socket);
+	
+	memcpy(info->callsign, &(data[loc]), CALLSIGN_LEN+1);		loc += CALLSIGN_LEN+1;
+	memcpy(&(info->network.ipx.server), &(data[loc]), 4);					loc += 4;
+	memcpy(&(info->network.ipx.node), &(data[loc]), 6);						loc += 6;
+	info->version_major = data[loc];							loc++;
+	info->version_minor = data[loc];							loc++;
+	memcpy(&(info->computer_type), &(data[loc]), 1);			loc++;		// memcpy to avoid compile time warning about enum
+	info->connected = data[loc];								loc++;
+	memcpy(&(info->socket), &(data[loc]), 2);					loc += 2; 
+   memcpy (&(info->rank),&(data[loc]),1);					   loc++;
+//MWA  don't think we need to swap this because we need it in high order	info->socket = swapshort(info->socket);
 }
 
 void send_netplayers_packet(ubyte *server, ubyte *node)
@@ -214,7 +215,7 @@ void send_sequence_packet(sequence_packet seq, ubyte *server, ubyte *node, ubyte
 	out_buffer[loc] = seq.player.version_minor;						loc++;
 	out_buffer[loc] = seq.player.computer_type;						loc++;
 	out_buffer[loc] = seq.player.connected;							loc++;
-	tmps = INTEL_SHORT(seq.player.socket);
+	tmps = swapshort(seq.player.socket);
 	memcpy(&(out_buffer[loc]), &tmps, 2);							loc += 2;
    out_buffer[loc]=seq.player.rank;									loc++;		// for pad byte
 	if (net_address != NULL)	
@@ -238,7 +239,7 @@ void receive_sequence_packet(ubyte *data, sequence_packet *seq)
 void send_netgame_packet(ubyte *server, ubyte *node, ubyte *net_address, int lite_flag)		// lite says shorter netgame packets
 {
 	uint tmpi;
-	ushort tmps; // p;
+	ushort tmps, p;
 	int i, j;
 	int loc = 0;
 	
@@ -360,7 +361,7 @@ void receive_netgame_packet(ubyte *data, netgame_info *netgame, int lite_flag)
 {
 	int i, j;
 	int loc = 0;
-	short bitfield; // new_field;
+	short bitfield, new_field;
 	
 	memcpy(&(netgame->type), &(data[loc]), 1);						loc++;
 	memcpy(&(netgame->Security), &(data[loc]), 4);					loc += 4;
@@ -368,7 +369,7 @@ void receive_netgame_packet(ubyte *data, netgame_info *netgame, int lite_flag)
 	memcpy(netgame->game_name, &(data[loc]), NETGAME_NAME_LEN+1);	loc += (NETGAME_NAME_LEN+1);
 	memcpy(netgame->mission_title, &(data[loc]), MISSION_NAME_LEN+1); loc += (MISSION_NAME_LEN+1);
 	memcpy(netgame->mission_name, &(data[loc]), 9);					loc += 9;
-	memcpy(&(netgame->levelnum), &(data[loc]), 4);					loc += 4;
+	memcpy(&(netgame->levelnum), &(data[loc]), 4);						loc += 4;
 	netgame->levelnum = INTEL_INT(netgame->levelnum);
 	memcpy(&(netgame->gamemode), &(data[loc]), 1);					loc++;
 	memcpy(&(netgame->RefusePlayers), &(data[loc]), 1);				loc++;
@@ -449,12 +450,12 @@ void receive_netgame_packet(ubyte *data, netgame_info *netgame, int lite_flag)
 	memcpy(&(netgame->level_time), &(data[loc]), 4);					loc += 4;
 	netgame->level_time = INTEL_INT(netgame->level_time);
 	memcpy(&(netgame->control_invul_time), &(data[loc]), 4);			loc += 4;
-	netgame->control_invul_time = INTEL_INT(netgame->control_invul_time);
+	netgame->control_invul_time = swapint(netgame->control_invul_time);
 	memcpy(&(netgame->monitor_vector), &(data[loc]), 4);				loc += 4;
-	netgame->monitor_vector = INTEL_INT(netgame->monitor_vector);
+	netgame->monitor_vector = swapint(netgame->monitor_vector);
 	for (i = 0; i < MAX_PLAYERS; i++) {
 		memcpy(&(netgame->player_score[i]), &(data[loc]), 4);			loc += 4;
-		netgame->player_score[i] = INTEL_INT(netgame->player_score[i]);
+		netgame->player_score[i] = swapint(netgame->player_score[i]);
 	}
 	for (i = 0; i < MAX_PLAYERS; i++) {
 		memcpy(&(netgame->player_flags[i]), &(data[loc]), 1); loc++;

@@ -1,8 +1,35 @@
-/* $Id: gr.c,v 1.13 2003-04-11 23:51:48 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/ogl/gr.c,v $
+ * $Revision: 1.5 $
+ * $Author: bradleyb $
+ * $Date: 2001-11-09 06:53:37 $
  *
- * OGL video functions. - Added 9/15/99 Matthew Mueller
+ * // OGL video functions. - Added 9/15/99 Matthew Mueller
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.4  2001/11/08 10:19:52  bradleyb
+ * use new d_realloc function, so mem manager doesn't die
+ *
+ * Revision 1.3  2001/11/04 09:00:25  bradleyb
+ * Enable d1x-style hud_message
+ *
+ * Revision 1.2  2001/10/31 07:35:47  bradleyb
+ * Sync with d1x
+ *
+ * Revision 1.1  2001/10/25 08:25:34  bradleyb
+ * Finished moving stuff to arch/blah.  I know, it's ugly, but It'll be easier to sync with d1x.
+ *
+ * Revision 1.7  2001/10/25 02:23:48  bradleyb
+ * formatting fix
+ *
+ * Revision 1.6  2001/10/18 23:59:23  bradleyb
+ * Changed __ENV_LINUX__ to __linux__
+ *
+ * Revision 1.5  2001/10/12 00:18:40  bradleyb
+ * Switched from Cygwin to mingw32 on MS boxes.  Vastly improved compilability.
+ *
+ * Revision 1.4  2001/01/29 13:47:52  bradleyb
+ * Fixed build, some minor cleanups.
  *
  */
 
@@ -17,11 +44,7 @@
 #include <windows.h>
 #endif
 
-#if defined(__APPLE__) && defined(__MACH__)
-//#include <OpenGL/gl.h>
-#else
 //#include <GL/gl.h>
-#endif
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -48,12 +71,7 @@
 
 #define DECLARE_VARS
 #include "ogl_init.h"
-#if defined(__APPLE__) && defined(__MACH__)
-#include <OpenGL/glu.h>
-#undef GL_ARB_multitexture // hack!
-#else
 #include <GL/glu.h>
-#endif
 
 int ogl_voodoohack=0;
 
@@ -62,7 +80,7 @@ int gr_installed = 0;
 
 void gr_palette_clear(); // Function prototype for gr_init;
 int gl_initialized=0;
-int gl_reticle = 0;
+int gl_reticle=1;
 
 int ogl_fullscreen=0;
 
@@ -312,7 +330,7 @@ int ogl_testneedmipmaps(int i){
 #if defined(__WINDOWS__) || defined(__MINGW32__)
 char *OglLibPath="opengl32.dll";
 #endif
-#ifdef __unix__
+#ifdef __linux__
 char *OglLibPath="libGL.so";
 #endif
 
@@ -345,9 +363,8 @@ int ogl_init_load_library(void)
 
 int gr_init()
 {
-	int mode = SM(640,480);
-	int retcode, t, glt = 0;
-
+ int mode = SM(640,480);
+ int retcode,t,glt=0;
  	// Only do this function once!
 	if (gr_installed==1)
 		return -1;
@@ -417,7 +434,6 @@ int gr_init()
 	{
 		return retcode;
 	}
-
 	grd_curscreen->sc_canvas.cv_color = 0;
 	grd_curscreen->sc_canvas.cv_drawmode = 0;
 	grd_curscreen->sc_canvas.cv_font = NULL;

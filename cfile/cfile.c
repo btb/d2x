@@ -1,4 +1,3 @@
-/* $Id: cfile.c,v 1.11 2003-04-14 18:34:40 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,116 +7,9 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
-/*
- *
- * Functions for accessing compressed files.
- *
- * Old Log:
- * Revision 1.7  1995/10/27  15:18:20  allender
- * get back to descent directory before trying to read a hog file
- *
- * Revision 1.6  1995/10/21  23:48:24  allender
- * hogfile(s) are now in :Data: folder
- *
- * Revision 1.5  1995/08/14  09:27:31  allender
- * added byteswap header
- *
- * Revision 1.4  1995/05/12  11:54:33  allender
- * changed memory stuff again
- *
- * Revision 1.3  1995/05/04  20:03:38  allender
- * added code that was missing...use NewPtr instead of malloc
- *
- * Revision 1.2  1995/04/03  09:59:49  allender
- * *** empty log message ***
- *
- * Revision 1.1  1995/03/30  10:25:02  allender
- * Initial revision
- *
- *
- * --- PC RCS Information ---
- * Revision 1.24  1995/03/15  14:20:27  john
- * Added critical error checker.
- *
- * Revision 1.23  1995/03/13  15:16:53  john
- * Added alternate directory stuff.
- *
- * Revision 1.22  1995/02/09  23:08:47  matt
- * Increased the max number of files in hogfile to 250
- *
- * Revision 1.21  1995/02/01  20:56:47  john
- * Added cfexist function
- *
- * Revision 1.20  1995/01/21  17:53:48  john
- * Added alternate pig file thing.
- *
- * Revision 1.19  1994/12/29  15:10:02  john
- * Increased hogfile max files to 200.
- *
- * Revision 1.18  1994/12/12  13:20:57  john
- * Made cfile work with fiellentth.
- *
- * Revision 1.17  1994/12/12  13:14:25  john
- * Made cfiles prefer non-hog files.
- *
- * Revision 1.16  1994/12/09  18:53:26  john
- * *** empty log message ***
- *
- * Revision 1.15  1994/12/09  18:52:56  john
- * Took out mem, error checking.
- *
- * Revision 1.14  1994/12/09  18:10:31  john
- * Speed up cfgets, which was slowing down the reading of
- * bitmaps.tbl, which was making POF loading look slow.
- *
- * Revision 1.13  1994/12/09  17:53:51  john
- * Added error checking to number of hogfiles..
- *
- * Revision 1.12  1994/12/08  19:02:55  john
- * Added cfgets.
- *
- * Revision 1.11  1994/12/07  21:57:48  john
- * Took out data dir.
- *
- * Revision 1.10  1994/12/07  21:38:02  john
- * Made cfile not return error..
- *
- * Revision 1.9  1994/12/07  21:35:34  john
- * Made it read from data directory.
- *
- * Revision 1.8  1994/12/07  21:33:55  john
- * Stripped out compression stuff...
- *
- * Revision 1.7  1994/04/13  23:44:59  matt
- * When file cannot be opened, free up the buffer for that file.
- *
- * Revision 1.6  1994/02/18  12:38:20  john
- * Optimized a bit
- *
- * Revision 1.5  1994/02/15  18:13:20  john
- * Fixed more bugs.
- *
- * Revision 1.4  1994/02/15  13:27:58  john
- * Works ok...
- *
- * Revision 1.3  1994/02/15  12:51:57  john
- * Crappy inbetween version
- *
- * Revision 1.2  1994/02/14  20:12:29  john
- * First version working with new cfile stuff.
- *
- * Revision 1.1  1994/02/14  15:51:33  john
- * Initial revision
- *
- * Revision 1.1  1994/02/10  15:45:12  john
- * Initial revision
- *
- *
- */
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
@@ -125,7 +17,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
 
 #include "pstypes.h"
 #include "u_mem.h"
@@ -136,9 +27,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "byteswap.h"
 
 typedef struct hogfile {
-	char    name[13];
-	int     offset;
-	int     length;
+	char	name[13];
+	int	offset;
+	int 	length;
 } hogfile;
 
 #define MAX_HOGFILES 300
@@ -146,16 +37,11 @@ typedef struct hogfile {
 hogfile HogFiles[MAX_HOGFILES];
 char Hogfile_initialized = 0;
 int Num_hogfiles = 0;
-char HogFilename[64];
-
-hogfile D1HogFiles[MAX_HOGFILES];
-char D1Hogfile_initialized = 0;
-int D1Num_hogfiles = 0;
-char D1HogFilename[64];
 
 hogfile AltHogFiles[MAX_HOGFILES];
 char AltHogfile_initialized = 0;
 int AltNum_hogfiles = 0;
+char HogFilename[64];
 char AltHogFilename[64];
 
 char AltHogDir[64];
@@ -170,16 +56,16 @@ char AltHogdir_initialized = 0;
 void macify_dospath(char *dos_path, char *mac_path)
 {
 	char *p;
-
+	
 	if (!strncmp(dos_path, ".\\", 2)) {
 		strcpy(mac_path, ":");
 		strcat(mac_path, &(dos_path[2]) );
 	} else
 		strcpy(mac_path, dos_path);
-
+		
 	while ( (p = strchr(mac_path, '\\')) != NULL)
 		*p = ':';
-
+	
 }
 #endif
 
@@ -199,7 +85,7 @@ int default_error_counter=0;
 //ptr to counter of how many critical errors
 int *critical_error_counter_ptr=&default_error_counter;
 
-//tell cfile about your critical error counter
+//tell cfile about your critical error counter 
 void cfile_set_critical_error_counter_ptr(int *ptr)
 {
 	critical_error_counter_ptr = ptr;
@@ -228,7 +114,7 @@ FILE * cfile_get_filehandle( char * filename, char * mode )
 			fclose(fp);
 			fp = NULL;
 		}
-	}
+	} 
 	return fp;
 }
 
@@ -250,8 +136,8 @@ int cfile_init_hogfile(char *fname, hogfile * hog_files, int * nfiles )
 		return 0;
 	}
 
-	while( 1 )
-	{
+	while( 1 )	
+	{	
 		if ( *nfiles >= MAX_HOGFILES ) {
 			fclose(fp);
 			Error( "HOGFILE is limited to %d files.\n",  MAX_HOGFILES );
@@ -279,10 +165,10 @@ int cfile_init(char *hogname)
 {
 	#ifdef MACINTOSH
 	char mac_path[255];
-
+	
 	macify_dospath(hogname, mac_path);
 	#endif
-
+	
 	Assert(Hogfile_initialized == 0);
 
 	#ifndef MACINTOSH
@@ -291,7 +177,7 @@ int cfile_init(char *hogname)
 	#else
 	if (cfile_init_hogfile(mac_path, HogFiles, &Num_hogfiles )) {
 		strcpy( HogFilename, mac_path );
-	#endif
+	#endif	
 		Hogfile_initialized = 1;
 		return 1;
 	}
@@ -300,22 +186,6 @@ int cfile_init(char *hogname)
 }
 
 
-int cfile_size(char *hogname)
-{
-	CFILE *fp;
-	struct stat statbuf;
-
-	fp = cfopen(hogname, "rb");
-	if (fp == NULL)
-		return -1;
-	fstat(fileno(fp->file), &statbuf);
-	cfclose(fp);
-	return statbuf.st_size;
-}
-
-/*
- * return handle for file called "name", embedded in one of the hogfiles
- */
 FILE * cfile_find_libfile(char * name, int * length)
 {
 	FILE * fp;
@@ -349,19 +219,6 @@ FILE * cfile_find_libfile(char * name, int * length)
 			return fp;
 		}
 	}
-
-	if (D1Hogfile_initialized)	{
-		for (i = 0; i < D1Num_hogfiles; i++) {
-			if (!stricmp(D1HogFiles[i].name, name)) {
-				fp = cfile_get_filehandle(D1HogFilename, "rb");
-				if (fp == NULL) return NULL;
-				fseek(fp,  D1HogFiles[i].offset, SEEK_SET);
-				*length = D1HogFiles[i].length;
-				return fp;
-			}
-		}
-	}
-
 	return NULL;
 }
 
@@ -370,7 +227,7 @@ int cfile_use_alternate_hogfile( char * name )
 	if ( name )	{
 		#ifdef MACINTOSH
 		char mac_path[255];
-
+		
 		macify_dospath(name, mac_path);
 		strcpy( AltHogFilename, mac_path);
 		#else
@@ -381,26 +238,6 @@ int cfile_use_alternate_hogfile( char * name )
 		return (AltNum_hogfiles > 0);
 	} else {
 		AltHogfile_initialized = 0;
-		return 1;
-	}
-}
-
-int cfile_use_descent1_hogfile( char * name )
-{
-	if (name)	{
-#ifdef MACINTOSH
-		char mac_path[255];
-
-		macify_dospath(name, mac_path);
-		strcpy(D1HogFilename, mac_path);
-#else
-		strcpy(D1HogFilename, name);
-#endif
-		cfile_init_hogfile(D1HogFilename, D1HogFiles, &D1Num_hogfiles);
-		D1Hogfile_initialized = 1;
-		return (D1Num_hogfiles > 0);
-	} else {
-		D1Hogfile_initialized = 0;
 		return 1;
 	}
 }
@@ -433,12 +270,12 @@ int cfexist( char * filename )
 }
 
 
-CFILE * cfopen(char * filename, char * mode )
+CFILE * cfopen(char * filename, char * mode ) 
 {
 	int length;
 	FILE * fp;
 	CFILE *cfile;
-
+	
 	if (stricmp( mode, "rb"))	{
 		Error( "cfiles can only be opened with mode==rb\n" );
 	}
@@ -446,7 +283,7 @@ CFILE * cfopen(char * filename, char * mode )
 	if (filename[0] != '\x01') {
 		#ifdef MACINTOSH
 		char mac_path[255];
-
+		
 		macify_dospath(filename, mac_path);
 		fp = cfile_get_filehandle( mac_path, mode);
 		#else
@@ -490,14 +327,14 @@ int cfilelength( CFILE *fp )
 	return fp->size;
 }
 
-int cfgetc( CFILE * fp )
+int cfgetc( CFILE * fp ) 
 {
 	int c;
 
 	if (fp->raw_position >= fp->size ) return EOF;
 
 	c = getc( fp->file );
-	if (c!=EOF)
+	if (c!=EOF) 
 		fp->raw_position++;
 
 //	Assert( fp->raw_position==(ftell(fp->file)-fp->lib_offset) );
@@ -511,7 +348,7 @@ char * cfgets( char * buf, size_t n, CFILE * fp )
 	int i;
 	int c;
 
-	for (i=0; i<n-1; i++ ) {
+	for (i=0; i<n-1; i++ )	{
 		do {
 			if (fp->raw_position >= fp->size ) {
 				*buf = 0;
@@ -519,21 +356,23 @@ char * cfgets( char * buf, size_t n, CFILE * fp )
 			}
 			c = fgetc( fp->file );
 			fp->raw_position++;
-			if (c == 0 || c == 10)        // Unix line ending
-				break;
-			if (c == 13) {      // Mac or DOS line ending
+#ifdef MACINTOSH
+			if (c == 13) {
 				int c1;
-
+				
 				c1 = fgetc( fp->file );
 				fseek( fp->file, -1, SEEK_CUR);
-				if ( c1 == 10 ) // DOS line ending
+				if ( c1 == 10 )
 					continue;
-				else            // Mac line ending
+				else
 					break;
 			}
+#endif
 		} while ( c == 13 );
- 		if ( c == 13 )  // because cr-lf is a bad thing on the mac
- 			c = '\n';   // and anyway -- 0xod is CR on mac, not 0x0a
+#ifdef MACINTOSH			// because cr-lf is a bad thing on the mac
+ 		if ( c == 13 )		// and anyway -- 0xod is CR on mac, not 0x0a
+ 			c = '\n';
+#endif
 		*buf++ = c;
 		if ( c=='\n' ) break;
 	}
@@ -658,11 +497,3 @@ void cfile_read_angvec(vms_angvec *v, CFILE *file)
 	v->b = cfile_read_fixang(file);
 	v->h = cfile_read_fixang(file);
 }
-
-void cfile_read_matrix(vms_matrix *m,CFILE *file)
-{
-	cfile_read_vector(&m->rvec,file);
-	cfile_read_vector(&m->uvec,file);
-	cfile_read_vector(&m->fvec,file);
-}
-

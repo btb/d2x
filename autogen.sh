@@ -1,10 +1,9 @@
 #!/bin/sh
 set -e
-echo "If you get errors, you may need newer versions of automake and autoconf."
-echo "You'll need at least automake 1.5 and autoconf 2.50."
+touch ChangeLog
 aclocal $ACLOCAL_FLAGS
 autoheader
-automake --add-missing --copy
+automake --add-missing
 autoconf
 #./configure "$@"
 echo "Now you are ready to run ./configure"

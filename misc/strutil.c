@@ -1,4 +1,3 @@
-/* $Id: strutil.c,v 1.8 2003-02-18 20:35:35 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,10 +7,10 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
+ 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
@@ -23,6 +22,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "error.h"
+
+char *d_strdup(char *str)
+{
+	char *a;
+
+	a = d_malloc(strlen(str) + 1);
+	strcpy(a, str);
+
+	return a;
+}
+
 
 #if 0
 // string compare without regard to case
@@ -73,15 +83,15 @@ void strupr( char *s1 )
 
 void strrev( char *s1 )
 {
-	char *h, *t;
-	h = s1;
-	t = s1 + strlen(s1) - 1;
-	while (h < t) {
-		char c;
-		c = *h;
-		*h++ = *t;
-		*t-- = c;
-	}
+	int i,l;
+	char *s2;
+	
+	s2 = (char *)d_malloc(strlen(s1) + 1);
+	strcpy(s2, s1);
+	l = strlen(s2);
+	for (i = 0; i < l; i++)
+		s1[l-1-i] = s2[i];
+	d_free(s2);
 }
 
 void _splitpath(char *name, char *drive, char *path, char *base, char *ext)

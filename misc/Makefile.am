@@ -1,9 +1,9 @@
 noinst_LIBRARIES = libmisc.a
-INCLUDES = -I $(top_srcdir)/include
+INCLUDES = -I $(top_srcdir)/includes
 
 libmisc_a_SOURCES = \
-args.c      error.c    strio.c \
-d_io.c      hash.c     strutil.c  fileutil.c
+args.c	    d_delay.c  error.c	  strio.c \
+d_io.c      hash.c     strutil.c
 
 # checker.c
 
@@ -11,5 +11,5 @@ d_io.c      hash.c     strutil.c  fileutil.c
 #	gcc -c -g $< -o $@ $(INCLUDES) $(CFLAGS) -I/usr/lib/checker/i686-pc-linux-gnu/include -I.. -I.
 
 EXTRA_DIST = \
-dos_disk.h parsarg.h \
-byteswap.c errtest.c parsarg.c parstest.c
+dos_disk.h fileutil.h parsarg.h \
+byteswap.c d_glob.c errtest.c fileutil.c parsarg.c parstest.c

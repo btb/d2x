@@ -1,4 +1,3 @@
-/* $Id: playsave.c,v 1.12 2003-04-12 00:11:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,244 +7,22 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/main/playsave.c,v $
+ * $Revision: 1.4 $
+ * $Author: bradleyb $
+ * $Date: 2001-11-12 00:59:07 $
  *
  * Functions to load & save player games
  *
- * Old Log:
- * Revision 1.1  1995/12/05  16:05:47  allender
- * Initial revision
+ * $Log: not supported by cvs2svn $
+ * Revision 1.3  2001/11/11 23:39:22  bradleyb
+ * Created header for MAKE_SIG macro
  *
- * Revision 1.10  1995/11/03  12:53:24  allender
- * shareware changes
- *
- * Revision 1.9  1995/10/31  10:19:12  allender
- * shareware stuff
- *
- * Revision 1.8  1995/10/23  14:50:11  allender
- * set control type for new player *before* calling kc_set_controls
- *
- * Revision 1.7  1995/10/21  22:25:31  allender
- * *** empty log message ***
- *
- * Revision 1.6  1995/10/17  15:57:42  allender
- * removed line setting wrong COnfig_control_type
- *
- * Revision 1.5  1995/10/17  13:16:44  allender
- * new controller support
- *
- * Revision 1.4  1995/08/24  16:03:38  allender
- * call joystick code when player file uses joystick
- *
- * Revision 1.3  1995/08/03  15:15:39  allender
- * got player save file working (more to go for shareware)
- *
- * Revision 1.2  1995/08/01  13:57:20  allender
- * macified the player file stuff -- in a seperate folder
- *
- * Revision 1.1  1995/05/16  15:30:00  allender
- * Initial revision
- *
- * Revision 2.3  1995/05/26  16:16:23  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- *
- * Revision 2.2  1995/03/24  17:48:21  john
- * Made player files from saturn excrement the highest level for
- * normal descent levels.
- *
- * Revision 2.1  1995/03/21  14:38:49  john
- * Ifdef'd out the NETWORK code.
- *
- * Revision 2.0  1995/02/27  11:27:59  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- *
- * Revision 1.57  1995/02/13  20:34:55  john
- * Lintized
- *
- * Revision 1.56  1995/02/13  13:23:24  john
- * Fixed bug with new player joystick selection.
- *
- * Revision 1.55  1995/02/13  12:01:19  john
- * Fixed bug with joystick throttle still asking for
- * calibration with new pilots.
- *
- * Revision 1.54  1995/02/13  10:29:12  john
- * Fixed bug with creating new player not resetting everything to default.
- *
- * Revision 1.53  1995/02/03  10:58:46  john
- * Added code to save shareware style saved games into new format...
- * Also, made new player file format not have the saved game array in it.
- *
- * Revision 1.52  1995/02/02  21:09:28  matt
- * Let player start of level 8 if he made it to level 7 in the shareware
- *
- * Revision 1.51  1995/02/02  18:50:14  john
- * Added warning for FCS when new pilot chooses.
- *
- * Revision 1.50  1995/02/02  11:21:34  john
- * Made joystick calibrate when new user selects.
- *
- * Revision 1.49  1995/02/01  18:06:38  rob
- * Put defaults macros into descent.tex
- *
- * Revision 1.48  1995/01/25  14:37:53  john
- * Made joystick only prompt for calibration once...
- *
- * Revision 1.47  1995/01/24  19:37:12  matt
- * Took out incorrect mprintf
- *
- * Revision 1.46  1995/01/22  18:57:22  matt
- * Made player highest level work with missions
- *
- * Revision 1.45  1995/01/21  16:36:05  matt
- * Made starting level system work for now, pending integration with
- * mission code.
- *
- * Revision 1.44  1995/01/20  22:47:32  matt
- * Mission system implemented, though imcompletely
- *
- * Revision 1.43  1995/01/04  14:58:39  rob
- * Fixed for shareware build.
- *
- * Revision 1.42  1995/01/04  11:36:43  rob
- * Added compatibility with older shareware pilot files.
- *
- * Revision 1.41  1995/01/03  11:01:58  rob
- * fixed a default macro.
- *
- * Revision 1.40  1995/01/03  10:44:06  rob
- * Added default taunt macros.
- *
- * Revision 1.39  1994/12/13  10:01:16  allender
- * pop up message box when unable to correctly save player file
- *
- * Revision 1.38  1994/12/12  11:37:14  matt
- * Fixed auto leveling defaults & saving
- *
- * Revision 1.37  1994/12/12  00:26:59  matt
- * Added support for no-levelling option
- *
- * Revision 1.36  1994/12/10  19:09:54  matt
- * Added assert for valid player number when loading game
- *
- * Revision 1.35  1994/12/08  10:53:07  rob
- * Fixed a bug in highest_level tracking.
- *
- * Revision 1.34  1994/12/08  10:01:36  john
- * Changed the way the player callsign stuff works.
- *
- * Revision 1.33  1994/12/07  18:30:38  rob
- * Load highest level along with player (used to be only if higher)
- * Capped at LAST_LEVEL in case a person loads a registered player in shareware.
- *
- * Revision 1.32  1994/12/03  16:01:12  matt
- * When player file has bad version, force player to choose another
- *
- * Revision 1.31  1994/12/02  19:54:00  yuan
- * Localization.
- *
- * Revision 1.30  1994/12/02  11:01:36  yuan
- * Localization.
- *
- * Revision 1.29  1994/11/29  03:46:28  john
- * Added joystick sensitivity; Added sound channels to detail menu.  Removed -maxchannels
- * command line arg.
- *
- * Revision 1.28  1994/11/29  01:10:23  john
- * Took out code that allowed new players to
- * configure keyboard.
- *
- * Revision 1.27  1994/11/25  22:47:10  matt
- * Made saved game descriptions longer
- *
- * Revision 1.26  1994/11/22  12:10:42  rob
- * Fixed file handle left open if player file versions don't
- * match.
- *
- * Revision 1.25  1994/11/21  19:35:30  john
- * Replaced calls to joy_init with if (joy_present)
- *
- * Revision 1.24  1994/11/21  17:29:34  matt
- * Cleaned up sequencing & game saving for secret levels
- *
- * Revision 1.23  1994/11/21  11:10:01  john
- * Fixed bug with read-only .plr file making the config file
- * not update.
- *
- * Revision 1.22  1994/11/20  19:03:08  john
- * Fixed bug with if not having a joystick, default
- * player input device is cyberman.
- *
- * Revision 1.21  1994/11/17  12:24:07  matt
- * Made an array the right size, to fix error loading games
- *
- * Revision 1.20  1994/11/14  17:52:54  allender
- * add call to WriteConfigFile when player files gets written
- *
- * Revision 1.19  1994/11/14  17:19:23  rob
- * Removed gamma, joystick calibration, and sound settings from player file.
- * Added default difficulty and multi macros.
- *
- * Revision 1.18  1994/11/07  14:01:23  john
- * Changed the gamma correction sequencing.
- *
- * Revision 1.17  1994/11/05  17:22:49  john
- * Fixed lots of sequencing problems with newdemo stuff.
- *
- * Revision 1.16  1994/11/01  16:40:11  john
- * Added Gamma correction.
- *
- * Revision 1.15  1994/10/24  19:56:50  john
- * Made the new user setup prompt for config options.
- *
- * Revision 1.14  1994/10/24  17:44:21  john
- * Added stereo channel reversing.
- *
- * Revision 1.13  1994/10/24  16:05:12  matt
- * Improved handling of player names that are the names of DOS devices
- *
- * Revision 1.12  1994/10/22  00:08:51  matt
- * Fixed up problems with bonus & game sequencing
- * Player doesn't get credit for hostages unless he gets them out alive
- *
- * Revision 1.11  1994/10/19  19:59:57  john
- * Added bonus points at the end of level based on skill level.
- *
- * Revision 1.10  1994/10/19  15:14:34  john
- * Took % hits out of player structure, made %kills work properly.
- *
- * Revision 1.9  1994/10/19  12:44:26  john
- * Added hours field to player structure.
- *
- * Revision 1.8  1994/10/17  17:24:34  john
- * Added starting_level to player struct.
- *
- * Revision 1.7  1994/10/17  13:07:15  john
- * Moved the descent.cfg info into the player config file.
- *
- * Revision 1.6  1994/10/09  14:54:31  matt
- * Made player cockpit state & window size save/restore with saved games & automap
- *
- * Revision 1.5  1994/10/08  23:08:09  matt
- * Added error check & handling for game load/save disk io
- *
- * Revision 1.4  1994/10/05  17:40:54  rob
- * Bumped save_file_version to 5 due to change in player.h
- *
- * Revision 1.3  1994/10/03  23:00:54  matt
- * New file version for shorter callsigns
- *
- * Revision 1.2  1994/09/28  17:25:05  matt
- * Added first draft of game save/load system
- *
- * Revision 1.1  1994/09/27  14:39:12  matt
- * Initial revision
  *
  */
 
@@ -288,8 +65,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "powerup.h"
 #include "makesig.h"
 #include "byteswap.h"
-#include "fileutil.h"
-#include "escort.h"
 
 #define SAVE_FILE_ID			MAKE_SIG('D','P','L','R')
 
@@ -316,7 +91,7 @@ int n_highest_levels;
 
 hli highest_levels[MAX_MISSIONS];
 
-#define PLAYER_FILE_VERSION	25			//increment this every time the player file changes
+#define PLAYER_FILE_VERSION	24			//increment this every time the player file changes
 
 //version 5  ->  6: added new highest level information
 //version 6  ->  7: stripped out the old saved_game array.
@@ -337,7 +112,6 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: add d2x keys array
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -418,10 +192,6 @@ RetrySelection:
 	for (i=0;i<CONTROL_MAX_TYPES; i++ )
 		for (j=0;j<MAX_CONTROLS; j++ )
 			kconfig_settings[i][j] = default_kconfig_settings[i][j];
-	//added on 2/4/99 by Victor Rachels for new keys
-	for(i=0; i < MAX_D2X_CONTROLS; i++)
-		kconfig_d2x_settings[i] = default_kconfig_d2x_settings[i];
-	//end this section addition - VR
 	kc_set_controls();
 
 	Config_control_type = control_choice;
@@ -512,6 +282,57 @@ RetrySelection:
 	return 1;
 }
 
+static int read_int(FILE *file)
+{
+	int i;
+
+	if (fread( &i, sizeof(i), 1, file) != 1)
+		Error( "Error reading int in gamesave.c" );
+
+	return i;
+}
+
+static short read_short(FILE *file)
+{
+	short s;
+
+	if (fread( &s, sizeof(s), 1, file) != 1)
+		Error( "Error reading short in gamesave.c" );
+
+	return s;
+}
+
+static byte read_byte(FILE *file)
+{
+	byte s;
+
+	if (fread( &s, sizeof(s), 1, file) != 1)
+		Error( "Error reading byte in gamesave.c" );
+
+	return s;
+}
+
+static void write_int(int i,FILE *file)
+{
+	if (fwrite( &i, sizeof(i), 1, file) != 1)
+		Error( "Error writing int in gamesave.c" );
+
+}
+
+static void write_short(short s,FILE *file)
+{
+	if (fwrite( &s, sizeof(s), 1, file) != 1)
+		Error( "Error writing short in gamesave.c" );
+
+}
+
+static void write_byte(byte i,FILE *file)
+{
+	if (fwrite( &i, sizeof(i), 1, file) != 1)
+		Error( "Error writing byte in gamesave.c" );
+
+}
+
 extern int Guided_in_big_window,Automap_always_hires;
 
 //this length must match the value in escort.c
@@ -520,6 +341,23 @@ extern char guidebot_name[];
 extern char real_guidebot_name[];
 
 WIN(extern char win95_current_joyname[]);
+
+void read_string(char *s, FILE *f)
+{
+	if (feof(f))
+		*s = 0;
+	else
+		do
+			*s = fgetc(f);
+		while (!feof(f) && *s++!=0);
+}
+
+void write_string(char *s, FILE *f)
+{
+	do
+		fputc(*s,f);
+	while (*s++!=0);
+}
 
 ubyte control_type_dos,control_type_win;
 
@@ -535,7 +373,6 @@ int read_player_file()
 	int errno_ret = EZERO;
 	int id,player_file_version,i;
 	int rewrite_it=0;
-	int swap = 0;
 
 	Assert(Player_num>=0 && Player_num<MAX_PLAYERS);
 
@@ -560,7 +397,7 @@ int read_player_file()
 		return errno;
 	}
 
-	id = file_read_int(file);
+	id = read_int(file);
 
         // SWAPINT added here because old versions of d2x
         // used the wrong byte order.
@@ -570,13 +407,7 @@ int read_player_file()
 		return -1;
 	}
 
-	player_file_version = file_read_short(file);
-
-	if (player_file_version > 255) // bigendian file?
-		swap = 1;
-
-	if (swap)
-		player_file_version = SWAPSHORT(player_file_version);
+	player_file_version = read_short(file);
 
 	if (player_file_version<COMPATIBLE_PLAYER_FILE_VERSION) {
 		nm_messagebox(TXT_ERROR, 1, TXT_OK, TXT_ERROR_PLR_VERSION);
@@ -584,18 +415,13 @@ int read_player_file()
 		return -1;
 	}
 
-	Game_window_w					= file_read_short(file);
-	Game_window_h					= file_read_short(file);
+	Game_window_w					= read_short(file);
+	Game_window_h					= read_short(file);
 
-	if (swap) {
-		Game_window_w = SWAPSHORT(Game_window_w);
-		Game_window_h = SWAPSHORT(Game_window_h);
-	}
-
-	Player_default_difficulty	= file_read_byte(file);
-	Default_leveling_on			= file_read_byte(file);
-	Reticle_on						= file_read_byte(file);
-	Cockpit_mode					= file_read_byte(file);
+	Player_default_difficulty	= read_byte(file);
+	Default_leveling_on			= read_byte(file);
+	Reticle_on						= read_byte(file);
+	Cockpit_mode					= read_byte(file);
 	#ifdef POLY_ACC
 	 #ifdef PA_3DFX_VOODOO
 		if (Cockpit_mode<2)
@@ -607,22 +433,19 @@ int read_player_file()
 	 #endif
 	#endif
  
-	Default_display_mode			= file_read_byte(file);
-	Missile_view_enabled			= file_read_byte(file);
-	Headlight_active_default	= file_read_byte(file);
-	Guided_in_big_window			= file_read_byte(file);
+	Default_display_mode			= read_byte(file);
+	Missile_view_enabled			= read_byte(file);
+	Headlight_active_default	= read_byte(file);
+	Guided_in_big_window			= read_byte(file);
 
 	if (player_file_version >= 19)
-		Automap_always_hires			= file_read_byte(file);
+		Automap_always_hires			= read_byte(file);
           
 	Auto_leveling_on = Default_leveling_on;
 
 	//read new highest level info
 
-	n_highest_levels = file_read_short(file);
-	if (swap)
-		n_highest_levels = SWAPSHORT(n_highest_levels);
-
+	n_highest_levels = read_short(file);
 	if (fread(highest_levels,sizeof(hli),n_highest_levels,file) != n_highest_levels) {
 		errno_ret			= errno;
 		fclose(file);
@@ -671,18 +494,14 @@ int read_player_file()
 
 		for (i=0;i<11;i++)
 		 {
-			PrimaryOrder[i]=file_read_byte (file);
-			SecondaryOrder[i]=file_read_byte(file);
+			PrimaryOrder[i]=read_byte (file);
+			SecondaryOrder[i]=read_byte(file);
 		 }
-
+		
 		if (player_file_version>=16)
 		 {
-		  Cockpit_3d_view[0]=file_read_int(file);
-		  Cockpit_3d_view[1]=file_read_int(file);
-		  if (swap) {
-			  Cockpit_3d_view[0] = SWAPINT(Cockpit_3d_view[0]);
-			  Cockpit_3d_view[1] = SWAPINT(Cockpit_3d_view[1]);
-		  }
+		  Cockpit_3d_view[0]=read_int(file);
+		  Cockpit_3d_view[1]=read_int(file);
 		 }	
 		
                   
@@ -695,14 +514,10 @@ int read_player_file()
    if (player_file_version>=22)
 	 {
 #ifdef NETWORK
-		Netlife_kills=file_read_int (file);
-		Netlife_killed=file_read_int (file);
-		if (swap) {
-			Netlife_kills = SWAPINT(Netlife_kills);
-			Netlife_killed = SWAPINT(Netlife_killed);
-		}
+		Netlife_kills=read_int (file);
+		Netlife_killed=read_int (file);
 #else
-		file_read_int(file); file_read_int(file);
+		read_int(file); read_int(file);
 #endif
 	 }
 #ifdef NETWORK
@@ -714,9 +529,7 @@ int read_player_file()
 
 	if (player_file_version>=23)
 	 {
-	  i=file_read_int (file);	
-	  if (swap)
-		  i = SWAPINT(i);
+	  i=read_int (file);	
 #ifdef NETWORK
 	  mprintf ((0,"Reading: lifetime checksum is %d\n",i));
 	  if (i!=get_lifetime_checksum (Netlife_kills,Netlife_killed))
@@ -730,7 +543,7 @@ int read_player_file()
 
 	//read guidebot name
 	if (player_file_version >= 18)
-		file_read_string(guidebot_name,file);
+		read_string(guidebot_name,file);
 	else
 		strcpy(guidebot_name,"GUIDE-BOT");
 
@@ -742,7 +555,7 @@ int read_player_file()
 	#ifdef WINDOWS
 		joy95_get_name(JOYSTICKID1, buf, 127);
 		if (player_file_version >= 24) 
-			file_read_string(win95_current_joyname, file);
+			read_string(win95_current_joyname, file);
 		else
 			strcpy(win95_current_joyname, "Old Player File");
 		
@@ -756,15 +569,9 @@ int read_player_file()
 		}	 
 	#else
 		if (player_file_version >= 24) 
-			file_read_string(buf, file);			// Just read it in fpr DPS.
+			read_string(buf, file);			// Just read it in fpr DPS.
 	#endif
 	}
-
-	if (player_file_version >= 25)
-		fread(kconfig_d2x_settings, MAX_D2X_CONTROLS, 1, file);
-	else
-		for(i=0; i < MAX_D2X_CONTROLS; i++)
-			kconfig_d2x_settings[i] = default_kconfig_d2x_settings[i];
 
 	if (fclose(file) && errno_ret==EZERO)
 		errno_ret			= errno;
@@ -881,24 +688,24 @@ int write_player_file()
 	errno_ret			= EZERO;
 
 	//Write out player's info
-	file_write_int(SAVE_FILE_ID,file);
-	file_write_short(PLAYER_FILE_VERSION,file);
+	write_int(SAVE_FILE_ID,file);
+	write_short(PLAYER_FILE_VERSION,file);
 
-	file_write_short(Game_window_w,file);
-	file_write_short(Game_window_h,file);
+	write_short(Game_window_w,file);
+	write_short(Game_window_h,file);
 
-	file_write_byte(Player_default_difficulty,file);
-	file_write_byte(Auto_leveling_on,file);
-	file_write_byte(Reticle_on,file);
-	file_write_byte((Cockpit_mode_save!=-1)?Cockpit_mode_save:Cockpit_mode,file);	//if have saved mode, write it instead of letterbox/rear view
-	file_write_byte(Default_display_mode,file);
-	file_write_byte(Missile_view_enabled,file);
-	file_write_byte(Headlight_active_default,file);
-	file_write_byte(Guided_in_big_window,file);
-	file_write_byte(Automap_always_hires,file);
+	write_byte(Player_default_difficulty,file);
+	write_byte(Auto_leveling_on,file);
+	write_byte(Reticle_on,file);
+	write_byte((Cockpit_mode_save!=-1)?Cockpit_mode_save:Cockpit_mode,file);	//if have saved mode, write it instead of letterbox/rear view
+	write_byte(Default_display_mode,file);
+	write_byte(Missile_view_enabled,file);
+	write_byte(Headlight_active_default,file);
+	write_byte(Guided_in_big_window,file);
+	write_byte(Automap_always_hires,file);
 
 	//write higest level info
-	file_write_short(n_highest_levels,file);
+	write_short(n_highest_levels,file);
 	if ((fwrite(highest_levels, sizeof(hli), n_highest_levels, file) != n_highest_levels)) {
 		errno_ret			= errno;
 		fclose(file);
@@ -938,25 +745,24 @@ int write_player_file()
         fwrite (&PrimaryOrder[i],sizeof(ubyte),1,file);
         fwrite (&SecondaryOrder[i],sizeof(ubyte),1,file);
        }
-
-		file_write_int (Cockpit_3d_view[0],file);
-		file_write_int (Cockpit_3d_view[1],file);
+		write_int (Cockpit_3d_view[0],file);
+		write_int (Cockpit_3d_view[1],file);
 
 #ifdef NETWORK
-		file_write_int (Netlife_kills,file);
-		file_write_int (Netlife_killed,file);
+		write_int (Netlife_kills,file);
+	   write_int (Netlife_killed,file);
 		i=get_lifetime_checksum (Netlife_kills,Netlife_killed);
 		mprintf ((0,"Writing: Lifetime checksum is %d\n",i));
 #else
-	   file_write_int(0, file);
-	   file_write_int(0, file);
+	   write_int(0, file);
+	   write_int(0, file);
 	   i = get_lifetime_checksum (0, 0);
 #endif
-	   file_write_int (i,file);
+	   write_int (i,file);
 	}
 
 	//write guidebot name
-	file_write_string(real_guidebot_name,file);
+	write_string(real_guidebot_name,file);
 
 	{
 		char buf[128];
@@ -965,10 +771,8 @@ int write_player_file()
 		#else
 		strcpy(buf, "DOS joystick");
 		#endif
-		file_write_string(buf, file);		// Write out current joystick for player.
+		write_string(buf, file);		// Write out current joystick for player.
 	}
-
-	fwrite(kconfig_d2x_settings, MAX_D2X_CONTROLS, 1, file);
 
 	if (fclose(file))
 		errno_ret			= errno;

@@ -1,4 +1,3 @@
-/* $Id: menu.h,v 1.6 2003-03-13 22:34:58 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -19,24 +18,35 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //returns number of item chosen
 extern int DoMenu();
 extern void do_options_menu();
-extern void d2x_options_menu();
 
 extern int MenuHires;
 
-#ifdef RELEASE  //read only from hog file
-#define MENU_PCX_MAC_SHARE ("\x01menub.pcx")
-#define MENU_PCX_SHAREWARE ("\x01menud.pcx")
-#define MENU_PCX_OEM (MenuHires?"\x01menuob.pcx":"\x01menuo.pcx")
-#define MENU_PCX_FULL (MenuHires?"\x01menub.pcx":"\x01menu.pcx")
+#ifdef SHAREWARE
+	#ifdef RELEASE
+		#ifdef MACINTOSH
+			#define Menu_pcx_name "\x01menub.pcx"	//read only from hog file
+		#else
+			#define Menu_pcx_name "\x01menud.pcx"	//read only from hog file
+		#endif
+	#else
+//		#define Menu_pcx_name (MenuHires?"menub.pcx":"menud.pcx")	//name of background bitmap
+		#define Menu_pcx_name "menud.pcx"
+	#endif
 #else
-#define MENU_PCX_MAC_SHARE ("menub.pcx")
-#define MENU_PCX_SHAREWARE ("menud.pcx")
-#define MENU_PCX_OEM (MenuHires?"menuob.pcx":"menuo.pcx")
-#define MENU_PCX_FULL (MenuHires?"menub.pcx":"menu.pcx")
+	#ifdef D2_OEM
+		#ifdef RELEASE
+			#define Menu_pcx_name (MenuHires?"\x01menuob.pcx":"\x01menuo.pcx")	//read only from hog file
+		#else
+			#define Menu_pcx_name (MenuHires?"menuob.pcx":"menuo.pcx")		//name of background bitmap
+		#endif
+	#else	//Full version
+		#ifdef RELEASE
+			#define Menu_pcx_name (MenuHires?"\x01menub.pcx":"\x01menu.pcx")	//read only from hog file
+		#else
+			#define Menu_pcx_name (MenuHires?"menub.pcx":"menu.pcx")		//name of background bitmap
+		#endif
+	#endif
 #endif
-
-//name of background bitmap
-#define Menu_pcx_name (cfexist(MENU_PCX_FULL)?MENU_PCX_FULL:(cfexist(MENU_PCX_OEM)?MENU_PCX_OEM:cfexist(MENU_PCX_SHAREWARE)?MENU_PCX_SHAREWARE:MENU_PCX_MAC_SHARE))
 
 extern void set_detail_level_parameters(int detail_level);
 

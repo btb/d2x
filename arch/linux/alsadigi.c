@@ -1,9 +1,4 @@
-/* $Id: alsadigi.c,v 1.2 2003-03-13 00:20:21 btb Exp $ */
-/*
- *
- * ALSA digital audio support
- *
- */
+// ALSA digital audio support
 
 #include <stdlib.h>
 #include <stdio.h>

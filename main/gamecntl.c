@@ -1,4 +1,5 @@
-/* $Id: gamecntl.c,v 1.17 2003-03-27 01:25:41 btb Exp $ */
+//#define DOOR_DEBUGGING
+
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,15 +9,13 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
-
-//#define DOOR_DEBUGGING
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,9 +94,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "piggy.h"
 #include "multibot.h"
 #include "ai.h"
-#include "rbaudio.h"
 #include "switch.h"
-#include "escort.h"
+#include "cdrom.h"
 
 #ifdef POLY_ACC
 	#include "poly_acc.h"
@@ -122,7 +120,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef SDL_INPUT
-#include <SDL.h>
+#include <SDL/SDL.h>
 #endif
 
 extern void full_palette_save(void);
@@ -977,6 +975,7 @@ int select_next_window_function(int w)
 	return 1;	 //screen_changed
 }
 
+extern void do_escort_menu(void),change_guidebot_name(void);
 extern int Game_paused;
 
 void songs_goto_next_song();
@@ -1388,49 +1387,7 @@ int HandleSystemKey(int key)
 			break;
 		#endif
 
-//added 8/23/99 by Matt Mueller for hot key res/fullscreen changing, and menu access
-		case KEY_CTRLED+KEY_SHIFTED+KEY_PADDIVIDE:
-		case KEY_ALTED+KEY_CTRLED+KEY_PADDIVIDE:
-		case KEY_ALTED+KEY_SHIFTED+KEY_PADDIVIDE:
-			d2x_options_menu();
-			break;
-#if 0
-		case KEY_CTRLED+KEY_SHIFTED+KEY_PADMULTIPLY:
-		case KEY_ALTED+KEY_CTRLED+KEY_PADMULTIPLY:
-		case KEY_ALTED+KEY_SHIFTED+KEY_PADMULTIPLY:
-			change_res();
-			break;
-		case KEY_CTRLED+KEY_SHIFTED+KEY_PADMINUS:
-		case KEY_ALTED+KEY_CTRLED+KEY_PADMINUS:
-		case KEY_ALTED+KEY_SHIFTED+KEY_PADMINUS:
-			//lower res 
-			//should we just cycle through the list that is displayed in the res change menu?
-			// what if their card/X/etc can't handle that mode? hrm. 
-			//well, the quick access to the menu is good enough for now.
-			break;
-		case KEY_CTRLED+KEY_SHIFTED+KEY_PADPLUS:
-		case KEY_ALTED+KEY_CTRLED+KEY_PADPLUS:
-		case KEY_ALTED+KEY_SHIFTED+KEY_PADPLUS:
-			//increase res
-			break;
-#endif
-		case KEY_CTRLED+KEY_SHIFTED+KEY_PADENTER:
-		case KEY_ALTED+KEY_CTRLED+KEY_PADENTER:
-		case KEY_ALTED+KEY_SHIFTED+KEY_PADENTER:
-			gr_toggle_fullscreen_game();
-			break;
-//end addition -MM
-			
-//added 11/01/98 Matt Mueller
-#if 0
-		case KEY_CTRLED+KEY_ALTED+KEY_LAPOSTRO:
-			toggle_hud_log();
-			break;
-#endif
-//end addition -MM
-
-		default:
-			break;
+		default:								break;
 
 	}	 //switch (key)
 
@@ -1532,7 +1489,6 @@ void HandleGameKey(int key)
 		case KEY_COMMAND+KEY_F:	r_framerate.value = !r_framerate.value; break;
 		#endif
 
-#if 0 // weapon selection handled in controls_read_all, d1x-style
 // MWA  changed the weapon select cases to have each case call do_weapon_select
 // the macintosh keycodes aren't consecutive from 1 -- 0 on the keyboard -- boy is that STUPID!!!!
 		//	Select primary or secondary weapon.
@@ -1567,7 +1523,6 @@ void HandleGameKey(int key)
 		case KEY_0:
 			do_weapon_select(4 , 1);
 			break;
-#endif
 
 		case KEY_1 + KEY_SHIFTED:
 		case KEY_2 + KEY_SHIFTED:
@@ -2040,27 +1995,27 @@ char *LamerCheats[]={   "!UyN#E$I",	// gabba-gabbahey
 
 #define N_LAMER_CHEATS (sizeof(LamerCheats) / sizeof(*LamerCheats))
 
-char *WowieCheat        ="F_JMO3CV";    //only Matt knows / h-onestbob
-char *AllKeysCheat      ="%v%MrgbU";    //only Matt knows / or-algroove
-char *InvulCheat        ="Wv_\\JJ\\Z";  //only Matt knows / almighty
-char *HomingCheatString ="t\\LIhSB[";   //only Matt knows / l-pnlizard
-char *BouncyCheat       ="bGbiChQJ";    //only Matt knows / duddaboo
-char *FullMapCheat      ="PI<XQHRI";    //only Matt knows / rockrgrl
-char *LevelWarpCheat    ="ZQHtqbb\"";   //only Matt knows / f-reespace
-char *MonsterCheat      ="nfpEfRQp";    //only Matt knows / godzilla
-char *BuddyLifeCheat    ="%A-BECuY";    //only Matt knows / he-lpvishnu
-char *BuddyDudeCheat    ="u#uzIr%e";    //only Matt knows / g-owingnut
-char *KillRobotsCheat   ="&wxbs:5O";    //only Matt knows / spaniard
-char *FinishLevelCheat  ="%bG_bZ<D";    //only Matt knows / d-elshiftb
-char *RapidFireCheat    ="*jLgHi'J";    //only Matt knows / wildfire
+char *WowieCheat			="F_JMO3CV";	//only Matt knows
+char *AllKeysCheat		="%v%MrgbU";	//only Matt knows
+char *InvulCheat			="Wv_\\JJ\\Z";	//only Matt knows
+char *HomingCheatString	="t\\LIhSB[";	//only Matt knows
+char *BouncyCheat			="bGbiChQJ";	//only Matt knows
+char *FullMapCheat		="PI<XQHRI";	//only Matt knows
+char *LevelWarpCheat		="ZQHtqbb\"";	//only Matt knows
+char *MonsterCheat		="nfpEfRQp";	//only Matt knows
+char *BuddyLifeCheat		="%A-BECuY";	//only Matt knows
+char *BuddyDudeCheat		="u#uzIr%e";	//only Matt knows
+char *KillRobotsCheat	="&wxbs:5O";	//only Matt knows
+char *FinishLevelCheat	="%bG_bZ<D";	//only Matt knows
+char *RapidFireCheat	="*jLgHi'J";	//only Matt knows
 
-char *RobotsKillRobotsCheat ="rT6xD__S"; // New for 1.1 / silkwing
-char *AhimsaCheat       ="!Uscq_yc";    // New for 1.1 / im-agespace 
+char *RobotsKillRobotsCheat	="rT6xD__S";	// New for 1.1
+char *AhimsaCheat					="!Uscq_yc";	// New for 1.1
 
-char *AccessoryCheat    ="dWdz[kCK";    // al-ifalafel
-char *JohnHeadCheat     ="ou]];H:%";    // p-igfarmer
-char *AcidCheat         ="qPmwxz\"S";   // bit-tersweet
-char *FramerateCheat    ="rQ60#ZBN";    // f-rametime
+char *AccessoryCheat		="dWdz[kCK";	// al-ifalafel
+char *JohnHeadCheat		="ou]];H:%";	// p-igfarmer
+char *AcidCheat			="qPmwxz\"S";	// bit-tersweet
+char *FramerateCheat		="rQ60#ZBN";	// f-rametime
 
 char CheatBuffer[]="AAAAAAAAAAAAAAA";
 
@@ -2088,7 +2043,9 @@ extern char Monster_mode;
 void fill_background();
 void load_background_bitmap();
 
-extern int Robots_kill_robots_cheat;
+extern int Buddy_dude_cheat,Robots_kill_robots_cheat;
+extern char guidebot_name[];
+extern char real_guidebot_name[];
 
 void FinalCheats(int key)
 {

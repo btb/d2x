@@ -1,8 +1,20 @@
-/* $Id: digi.c,v 1.11 2003-04-12 00:11:46 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/sdl/digi.c,v $
+ * $Revision: 1.2 $
+ * $Author: bradleyb $
+ * $Date: 2001-11-14 10:42:15 $
  *
  * SDL digital audio support
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.1  2001/10/25 08:25:34  bradleyb
+ * Finished moving stuff to arch/blah.  I know, it's ugly, but It'll be easier to sync with d1x.
+ *
+ * Revision 1.3  2001/10/12 06:36:55  bradleyb
+ * Fix a gcc 3.0 warning, couple updates from d1x
+ *
+ * Revision 1.2  2001/01/29 13:53:28  bradleyb
+ * Fixed build, minor fixes
  *
  */
 
@@ -14,7 +26,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <SDL.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_audio.h>
 
 #include "pstypes.h"
 #include "error.h"
@@ -29,7 +42,7 @@
 #include "newdemo.h"
 #include "kconfig.h"
 
-int digi_sample_rate = SAMPLE_RATE_11K;
+int digi_sample_rate=11025;
 
 //edited 05/17/99 Matt Mueller - added ifndef NO_ASM
 //added on 980905 by adb to add inline fixmul for mixer on i386
@@ -116,7 +129,6 @@ static const Uint8 mix8[] =
 #define SOF_LINK_TO_OBJ		4		// Sound is linked to a moving object. If object dies, then finishes play and quits.
 #define SOF_LINK_TO_POS		8		// Sound is linked to segment, pos
 #define SOF_PLAY_FOREVER	16		// Play forever (or until level is stopped), otherwise plays once
-#define SOF_PERMANANT       32  // Part of the level, like a waterfall or fan
 
 typedef struct sound_object {
 	short		signature;		// A unique signature to this sound
@@ -127,8 +139,6 @@ typedef struct sound_object {
 	int 		pan;			// Pan value that this sound is playing at
 	int		handle; 		// What handle this sound is playing on.  Valid only if SOF_PLAYING is set.
 	short		soundnum;		// The sound number that is playing
-	int     loop_start;     // The start point of the loop. -1 means no loop
-	int     loop_end;       // The end point of the loop
 	union {	
 		struct {
 			short		segnum; 			// Used if SOF_LINK_TO_POS field is used
@@ -249,7 +259,7 @@ int digi_init()
  memset(SampleHandles, 255, sizeof(SampleHandles));
  //end edit by adb
 
- WaveSpec.freq = digi_sample_rate;
+ WaveSpec.freq = 11025;
 //added/changed by Sam Lantinga on 12/01/98 for new SDL version
  WaveSpec.format = AUDIO_U8;
  WaveSpec.channels = 2;
@@ -291,8 +301,6 @@ int digi_xlat_sound(int soundno)
 		soundno = AltSounds[soundno];
 		if ( soundno == 255 ) return -1;
 	}
-	if (Sounds[soundno] == 255) return -1;
-
 	return Sounds[soundno];
 }
 
@@ -306,14 +314,12 @@ static int get_free_slot()
  return -1;
 }
 
-int digi_start_sound(int soundnum, fix volume, fix pan, int looping, int loop_start, int loop_end, int soundobj)
+int digi_start_sound(int soundnum, fix volume, fix pan, int unknown1, int unknown2, int unknown3, int unknown4)
 {
  int ntries;
  int slot;
 
  if (!digi_initialised) return -1;
-
- if (soundnum < 0) return -1;
 
  //added on 980905 by adb from original source to add sound kill system
  // play at most digi_max_channel samples, if possible kill sample with low volume
@@ -346,7 +352,7 @@ TryNextChannel:
  SoundSlots[slot].volume = fixmul(digi_volume, volume);
  SoundSlots[slot].pan = pan;
  SoundSlots[slot].position = 0;
- SoundSlots[slot].looped = looping;
+ SoundSlots[slot].looped = 0;
  SoundSlots[slot].playing = 1;
 
  //added on 980905 by adb to add sound kill system from original sos digi.c
@@ -380,11 +386,6 @@ int digi_start_sound_object(int obj)
 
  if (slot<0) return -1;
 
-#if 0
- // only use up to half the sound channels for "permanant" sounts
- if ((SoundObjects[i].flags & SOF_PERMANANT) && (N_active_sound_objects >= max(1,digi_get_max_channels()/4)) )
-	 return -1;
-#endif
 
  SoundSlots[slot].soundno = SoundObjects[obj].soundnum;
  SoundSlots[slot].samples = GameSounds[SoundObjects[obj].soundnum].data;
@@ -504,10 +505,7 @@ void digi_get_sound_loc( vms_matrix * listener, vms_vector * listener_pos, int l
 	}																					  
 }
 
-//hack to not start object when loading level
-int Dont_start_sound_objects = 0;
-
-int digi_link_sound_to_object3( int org_soundnum, short objnum, int forever, fix max_volume, fix  max_distance, int loop_start, int loop_end )
+int digi_link_sound_to_object2( int org_soundnum, short objnum, int forever, fix max_volume, fix  max_distance )
 {
 	int i,volume,pan;
 	object * objp;
@@ -534,12 +532,6 @@ int digi_link_sound_to_object3( int org_soundnum, short objnum, int forever, fix
 		return -1;
 	}
 
-#ifdef NEWDEMO
-	if ( Newdemo_state == ND_STATE_RECORDING )		{
-		newdemo_record_link_sound_to_object3( org_soundnum, objnum, max_volume, max_distance, loop_start, loop_end );
-	}
-#endif
-
        	for (i=0; i<MAX_SOUND_OBJECTS; i++ )
         	if (SoundObjects[i].flags==0)
 	           break;
@@ -560,40 +552,17 @@ int digi_link_sound_to_object3( int org_soundnum, short objnum, int forever, fix
 	SoundObjects[i].volume = 0;
 	SoundObjects[i].pan = 0;
 	SoundObjects[i].soundnum = soundnum;
-	SoundObjects[i].loop_start = loop_start;
-	SoundObjects[i].loop_end = loop_end;
 
-	if (Dont_start_sound_objects) { 		//started at level start
-
-		SoundObjects[i].flags |= SOF_PERMANANT;
-		SoundObjects[i].handle =  -1;
-	}
-	else {
-		objp = &Objects[SoundObjects[i].lo_objnum];
-		digi_get_sound_loc( &Viewer->orient, &Viewer->pos, Viewer->segnum, 
+	objp = &Objects[SoundObjects[i].lo_objnum];
+	digi_get_sound_loc( &Viewer->orient, &Viewer->pos, Viewer->segnum, 
                        &objp->pos, objp->segnum, SoundObjects[i].max_volume,
                        &SoundObjects[i].volume, &SoundObjects[i].pan, SoundObjects[i].max_distance );
 
-		//if (!forever || SoundObjects[i].volume >= MIN_VOLUME)
+	if (!forever || SoundObjects[i].volume >= MIN_VOLUME)
 	       digi_start_sound_object(i);
-
-		// If it's a one-shot sound effect, and it can't start right away, then
-		// just cancel it and be done with it.
-		if ( (SoundObjects[i].handle < 0) && (!(SoundObjects[i].flags & SOF_PLAY_FOREVER)) )    {
-			SoundObjects[i].flags = 0;
-			return -1;
-		}
-	}
 
 	return SoundObjects[i].signature;
 }
-
-
-int digi_link_sound_to_object2( int org_soundnum, short objnum, int forever, fix max_volume, fix  max_distance )
-{
-	return digi_link_sound_to_object3( org_soundnum, objnum, forever, max_volume, max_distance, -1, -1 );
-}
-
 
 int digi_link_sound_to_object( int soundnum, short objnum, int forever, fix max_volume )
 { return digi_link_sound_to_object2( soundnum, objnum, forever, max_volume, 256*F1_0); }
@@ -647,31 +616,13 @@ int digi_link_sound_to_pos2( int org_soundnum, short segnum, short sidenum, vms_
 	SoundObjects[i].max_distance = max_distance;
 	SoundObjects[i].volume = 0;
 	SoundObjects[i].pan = 0;
-	SoundObjects[i].loop_start = SoundObjects[i].loop_end = -1;
-
-	if (Dont_start_sound_objects) {		//started at level start
-
-		SoundObjects[i].flags |= SOF_PERMANANT;
-
-		SoundObjects[i].handle =  -1;
-	}
-	else {
-
-		digi_get_sound_loc( &Viewer->orient, &Viewer->pos, Viewer->segnum, 
+	digi_get_sound_loc( &Viewer->orient, &Viewer->pos, Viewer->segnum, 
 					   &SoundObjects[i].lp_position, SoundObjects[i].lp_segnum,
 					   SoundObjects[i].max_volume,
                        &SoundObjects[i].volume, &SoundObjects[i].pan, SoundObjects[i].max_distance );
 	
 	if (!forever || SoundObjects[i].volume >= MIN_VOLUME)
 		digi_start_sound_object(i);
-
-		// If it's a one-shot sound effect, and it can't start right away, then
-		// just cancel it and be done with it.
-		if ( (SoundObjects[i].handle < 0) && (!(SoundObjects[i].flags & SOF_PLAY_FOREVER)) )    {
-			SoundObjects[i].flags = 0;
-			return -1;
-		}
-	}
 
 	return SoundObjects[i].signature;
 }
@@ -897,12 +848,6 @@ int digi_get_max_channels() {
 	return digi_max_channels; 
 }
 // end edit by adb
-
-void digi_stop_sound(int channel)
-{
-	//FIXME: Is this correct?  I dunno, it works.
-	SoundSlots[channel].playing=0;
-}
 
 void digi_reset_digi_sounds() {
  int i;
