@@ -1,4 +1,4 @@
-SUBDIRS = 2d 3d maths mem cfile iff texmap misc arch main libmve utilities
+SUBDIRS = 2d 3d maths mem iff texmap misc arch main libmve utilities
 
 EXTRA_SUBDIRS = include unused debian rpm
 
@@ -26,7 +26,7 @@ d2x_gl_SOURCES =
 d2x_svga_SOURCES =
 d2x_ggi_SOURCES =
 
-d2x_LDADD = ${LD_KLUDGE} main/libmain.a ${EDITOR_LIBS} 3d/lib3d.a 2d/lib2d.a ${ARCH_LIBS} libmve/libmve.a mem/libmem.a cfile/libcfile.a iff/libiff.a texmap/libtexmap.a misc/libmisc.a maths/libmaths.a
+d2x_LDADD = ${LD_KLUDGE} main/libmain.a ${EDITOR_LIBS} 3d/lib3d.a 2d/lib2d.a ${ARCH_LIBS} libmve/libmve.a mem/libmem.a iff/libiff.a texmap/libtexmap.a misc/libmisc.a maths/libmaths.a
 
 if MINGW32
 if USE_NETWORK
