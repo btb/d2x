@@ -1,4 +1,3 @@
-/* $Id: automap.c,v 1.10 2003-04-29 08:33:25 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,13 +7,21 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/main/automap.c,v $
+ * $Revision: 1.5 $
+ * $Author: bradleyb $
+ * $Date: 2002-02-15 12:24:53 $
  *
  * FIXME: put description here
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.4  2001/10/31 11:16:08  bradleyb
+ * automap works in opengl
  *
  *
  */
@@ -75,6 +82,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "switch.h"
 #include "automap.h"
 #include "cntrlcen.h"
+#include "d_delay.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
@@ -841,7 +849,7 @@ void create_name_canv()
 	else
 		sprintf(name_level_left, "Secret Level %i",-Current_level_num);
 
-	if (Current_mission_num == Builtin_mission_num && Current_level_num>0)		//built-in mission
+	if (Current_mission_num == 0 && Current_level_num>0)		//built-in mission
 		sprintf(name_level_right,"%s %d: ",system_name[(Current_level_num-1)/4],((Current_level_num-1)%4)+1);
 	else
 		strcpy(name_level_right, " ");
@@ -889,7 +897,7 @@ int Automap_active = 0;
 #ifdef RELEASE
 #define MAP_BACKGROUND_FILENAME (AutomapHires?"\x01MAPB.PCX":"\x01MAP.PCX")	//load only from hog file
 #else
-#define MAP_BACKGROUND_FILENAME ((AutomapHires && cfexist("mapb.pcx"))?"MAPB.PCX":"MAP.PCX")
+#define MAP_BACKGROUND_FILENAME (AutomapHires?"MAPB.PCX":"MAP.PCX")
 #endif
 
 int Automap_always_hires=0;
@@ -909,9 +917,7 @@ void do_automap( int key_code )	{
 	int leave_mode=0;
 	int first_time=1;
 	int pcx_error;
-#if !defined(AUTOMAP_DIRECT_RENDER) || !defined(NDEBUG)
 	int i;
-#endif
 	int c, marker_num;
 	fix entry_time;
 	int pause_game=1;		// Set to 1 if everything is paused during automap...No pause during net.
@@ -975,7 +981,7 @@ void do_automap( int key_code )	{
 		set_screen_mode(SCREEN_GAME);
 	#endif
 
-	FontHires = FontHiresAvailable && AutomapHires;
+	FontHires = AutomapHires;
 
 	create_name_canv();
 

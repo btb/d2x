@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: credits.c,v 1.6 2003-03-15 14:17:52 btb Exp $";
+static char rcsid[] = "$Id: credits.c,v 1.4 2001-10-25 02:15:55 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -116,7 +116,15 @@ typedef struct box {
 	int left, top, width, height;
 } box;
 
-#define CREDITS_FILE    (cfexist("mcredits.tex")?"mcredits.tex":cfexist("ocredits.tex")?"ocredits.tex":"credits.tex")
+#ifdef MACINTOSH
+#define CREDITS_FILE	"mcredits.tex"
+#else
+#ifdef D2_OEM
+#define CREDITS_FILE	"ocredits.tex"
+#else
+#define CREDITS_FILE	"credits.tex"
+#endif
+#endif
 
 //if filename passed is NULL, show normal credits
 void credits_show(char *credits_filename)
@@ -190,9 +198,6 @@ WIN(int credinit = 0;)
 CreditsPaint:
 #endif
 	gr_use_palette_table( "credits.256" );
-#ifdef OGL
-	gr_palette_load(gr_palette);
-#endif
 #if defined(POLY_ACC)
 	pa_update_clut(gr_palette, 0, 256, 0);
 #endif

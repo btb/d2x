@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -29,9 +29,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "cfile.h"
 #include "digi.h"
-#include "rbaudio.h"
 #include "kconfig.h"
 #include "timer.h"
+#include "cdrom.h"
 
 song_info Songs[MAX_NUM_SONGS];
 int Songs_initialized = 0;
@@ -83,7 +83,7 @@ void songs_init()
 	#endif
 
 
-	if (cfexist("descent.sng")) {   // mac (demo?) datafiles don't have the .sng file
+	#ifndef MACINTOSH	// macs don't use the .sng file
 		fp = cfopen( "descent.sng", "rb" );
 		if ( fp == NULL )
 		{
@@ -109,7 +109,7 @@ void songs_init()
 		if (Num_songs <= SONG_FIRST_LEVEL_SONG)
 			Error("Must have at least %d songs",SONG_FIRST_LEVEL_SONG+1);
 		cfclose(fp);
-	}
+	#endif // endof ifdef macintosh for dealing with the .sng file
 
 	Songs_initialized = 1;
 
@@ -121,7 +121,7 @@ void songs_init()
 		}
 		else	// use redbook
 		{
-			#ifndef __MSDOS__ // defined(WINDOWS) || defined(MACINTOSH)
+			#if defined(WINDOWS) || defined(MACINTOSH)
 				RBAInit();
 			#else
 				RBAInit(toupper(CDROM_dir[0]) - 'A');
@@ -180,7 +180,7 @@ int force_rb_register=0;
 
 void reinit_redbook()
 {
-	#ifndef __MSDOS__ // defined(WINDOWS) || defined(MACINTOSH)
+	#if defined(WINDOWS) || defined(MACINTOSH)
 		RBAInit();
 	#else
 		RBAInit(toupper(CDROM_dir[0]) - 'A');
@@ -221,59 +221,13 @@ int play_redbook_track(int tracknum,int keep_playing)
 	return (Redbook_playing != 0);
 }
 
-/*
- * Some of these have different Track listings!
- * Which one is the "correct" order?
- */
-#define D2_1_DISCID         0x7d0ff809 // Descent II
-#define D2_2_DISCID         0xe010a30e // Descent II
-#define D2_3_DISCID         0xd410070d // Descent II
-#define D2_4_DISCID         0xc610080d // Descent II
-#define D2_DEF_DISCID       0x87102209 // Definitive collection Disc 2
-#define D2_OEM_DISCID       0xac0bc30d // Destination: Quartzon
-#define D2_OEM2_DISCID      0xc40c0a0d // Destination: Quartzon
-#define D2_VERTIGO_DISCID   0x53078208 // Vertigo
-#define D2_VERTIGO2_DISCID  0x64071408 // Vertigo + DMB
-#define D2_MAC_DISCID       0xb70ee40e // Macintosh
-#define D2_IPLAY_DISCID     0x22115710 // iPlay for Macintosh
-
-#define REDBOOK_TITLE_TRACK         2
-#define REDBOOK_CREDITS_TRACK       3
-#define REDBOOK_FIRST_LEVEL_TRACK   (songs_haved2_cd()?4:1)
+#define REDBOOK_TITLE_TRACK			2
+#define REDBOOK_CREDITS_TRACK			3
+#define REDBOOK_FIRST_LEVEL_TRACK	(songs_haved2_cd()?4:1)
 
 // songs_haved2_cd returns 1 if the descent 2 CD is in the drive and
 // 0 otherwise
 
-#if 1
-int songs_haved2_cd()
-{
-	int discid;
-
-	if (!Redbook_enabled)
-		return 0;
-
-	discid = RBAGetDiscID();
-
-	switch (discid) {
-	case D2_1_DISCID:
-	case D2_2_DISCID:
-	case D2_3_DISCID:
-	case D2_4_DISCID:
-	case D2_DEF_DISCID:
-	case D2_OEM_DISCID:
-	case D2_OEM2_DISCID:
-	case D2_VERTIGO_DISCID:
-	case D2_VERTIGO2_DISCID:
-	case D2_MAC_DISCID:
-	case D2_IPLAY_DISCID:
-		printf("Found D2 CD! discid: %x\n", discid);
-		return 1;
-	default:
-		printf("Unknown CD! discid: %x\n", discid);
-		return 0;
-	}
-}
-#else
 int songs_haved2_cd()
 {
 	char temp[128],cwd[128];
@@ -294,13 +248,12 @@ int songs_haved2_cd()
 	
 	return 0;
 }
-#endif
-
+	
 
 void songs_play_song( int songnum, int repeat )
 {
 	#ifndef SHAREWARE
-	//Assert(songnum != SONG_ENDLEVEL && songnum != SONG_ENDGAME);	//not in full version
+	Assert(songnum != SONG_ENDLEVEL && songnum != SONG_ENDGAME);	//not in full version
 	#endif
 
 	if ( !Songs_initialized ) 
@@ -349,7 +302,7 @@ void songs_play_level_song( int levelnum )
 	current_song_level = levelnum;
 
 	songnum = (levelnum>0)?(levelnum-1):(-levelnum);
-
+	
 	if (!RBAEnabled() && Redbook_enabled && !FindArg("-noredbook"))
 		reinit_redbook();
 

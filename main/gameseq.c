@@ -1,4 +1,3 @@
-/* $Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $";
+char gameseq_rcsid[] = "$Id: gameseq.c,v 1.7 2001-11-14 09:34:32 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -110,7 +109,6 @@ char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $";
 #include "movie.h"
 #include "controls.h"
 #include "credits.h"
-#include "gamemine.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
@@ -122,9 +120,7 @@ char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $";
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
-
-#include "strutil.h"
-#include "rle.h"
+#include "makesig.h"
 
 void StartNewLevelSecret(int level_num, int page_in_textures);
 void InitPlayerPosition(int random_flag);
@@ -151,7 +147,7 @@ void filter_objects_from_level();
 //-1,-2,-3 are secret levels
 //0 means not a real level loaded
 int	Current_level_num=0,Next_level_num;
-char	Current_level_name[LEVEL_NAME_LEN];
+char	Current_level_name[LEVEL_NAME_LEN];		
 
 #if !defined(SHAREWARE) && !defined(D2_OEM)
 int Last_level,Last_secret_level;
@@ -281,7 +277,7 @@ gameseq_init_network_players()
 #endif
 #if defined (D2_OEM)
 
- 	if ((Game_mode & GM_MULTI) && Current_mission_num == Builtin_mission_num && Current_level_num==8)
+ 	if ((Game_mode & GM_MULTI) && Current_mission_num == 0 && Current_level_num==8)
 	 {
 	  for (i=0;i<N_players;i++)
 		 if (Players[i].connected && !(NetPlayers.players[i].version_minor & 0xF0))
@@ -577,7 +573,7 @@ void DoGameOver()
 {
 //	nm_messagebox( TXT_GAME_OVER, 1, TXT_OK, "" );
 
-	if (Current_mission_num == Builtin_mission_num)
+	if (Current_mission_num == 0)
 		scores_maybe_add_player(0);
 
 	Function_mode = FMODE_MENU;
@@ -817,6 +813,108 @@ do_menu_again:
 	return 1;
 }
 
+extern void change_filename_extension( char *dest, char *src, char *new_ext );
+extern char last_palette_loaded_pig[];
+
+ubyte *Bitmap_replacement_data=NULL;
+
+typedef struct DiskBitmapHeader {
+	char name[8];
+	ubyte dflags;                   //bits 0-5 anim frame num, bit 6 abm flag
+	ubyte width;                    //low 8 bits here, 4 more bits in wh_extra
+	ubyte height;                   //low 8 bits here, 4 more bits in wh_extra
+	ubyte   wh_extra;               //bits 0-3 width, bits 4-7 height
+	ubyte flags;
+	ubyte avg_color;
+	int offset;
+} DiskBitmapHeader;
+
+void load_bitmap_replacements(char *level_name)
+{
+	char ifile_name[FILENAME_LEN];
+	CFILE *ifile;
+	int i;
+
+	//first, free up data allocated for old bitmaps
+	if (Bitmap_replacement_data) {
+		d_free(Bitmap_replacement_data);
+		Bitmap_replacement_data = NULL;
+	}
+
+	change_filename_extension(ifile_name, level_name, ".POG" );
+	
+	ifile = cfopen(ifile_name,"rb");
+
+	if (ifile) {
+		int id,version,n_bitmaps;
+		int bitmap_data_size;
+		ushort *indices;
+ 
+		id = cfile_read_int(ifile);
+		version = cfile_read_int(ifile);
+
+		if (id != MAKE_SIG('G','O','P','D') || version != 1) {
+			cfclose(ifile);
+			return;
+		}
+
+		n_bitmaps = cfile_read_int(ifile);
+
+		MALLOC( indices, ushort, n_bitmaps );
+		
+		#ifndef MACINTOSH	// silly, silly, must swap shorts on the mac.
+			cfread(indices,sizeof(*indices),n_bitmaps,ifile);
+		#else
+			for (i = 0; i < n_bitmaps; i++)
+			{
+				indices[i] = cfile_read_short(ifile);
+			}
+		#endif
+
+		bitmap_data_size = cfilelength(ifile) - cftell(ifile) - (sizeof(DiskBitmapHeader) * n_bitmaps);
+		MALLOC( Bitmap_replacement_data, ubyte, bitmap_data_size );
+
+		for (i=0;i<n_bitmaps;i++) {
+			DiskBitmapHeader bmh;
+			grs_bitmap temp_bitmap;
+
+			//note the groovy mac-compatible code!
+			cfread(bmh.name, 8, 1, ifile);
+			bmh.dflags = cfile_read_byte(ifile);
+			bmh.width = cfile_read_byte(ifile);
+			bmh.height = cfile_read_byte(ifile);
+			bmh.wh_extra = cfile_read_byte(ifile);
+			bmh.flags = cfile_read_byte(ifile);
+			bmh.avg_color = cfile_read_byte(ifile);
+			bmh.offset = cfile_read_int(ifile);
+
+			memset( &temp_bitmap, 0, sizeof(grs_bitmap) );
+	
+			temp_bitmap.bm_w = temp_bitmap.bm_rowsize = bmh.width + ((short) (bmh.wh_extra&0x0f)<<8);
+			temp_bitmap.bm_h = bmh.height + ((short) (bmh.wh_extra&0xf0)<<4);
+			temp_bitmap.avg_color = bmh.avg_color;
+			temp_bitmap.bm_data = Bitmap_replacement_data + bmh.offset;
+	
+			if ( bmh.flags & BM_FLAG_TRANSPARENT ) temp_bitmap.bm_flags |= BM_FLAG_TRANSPARENT;
+			if ( bmh.flags & BM_FLAG_SUPER_TRANSPARENT ) temp_bitmap.bm_flags |= BM_FLAG_SUPER_TRANSPARENT;
+			if ( bmh.flags & BM_FLAG_NO_LIGHTING ) temp_bitmap.bm_flags |= BM_FLAG_NO_LIGHTING;
+			if ( bmh.flags & BM_FLAG_RLE ) temp_bitmap.bm_flags |= BM_FLAG_RLE;
+			if ( bmh.flags & BM_FLAG_RLE_BIG ) temp_bitmap.bm_flags |= BM_FLAG_RLE_BIG;
+
+			GameBitmaps[indices[i]] = temp_bitmap;
+		}
+
+		cfread(Bitmap_replacement_data,1,bitmap_data_size,ifile);
+
+		d_free(indices);
+
+		cfclose(ifile);
+
+		last_palette_loaded_pig[0]= 0;	//force pig re-load
+
+		texmerge_flush();		//for re-merging with new textures
+	}
+}
 
 void load_robot_replacements(char *level_name);
 int read_hamfile();
@@ -838,9 +936,6 @@ void LoadLevel(int level_num,int page_in_textures)
 	else					//normal level
 		level_name = Level_names[level_num-1];
 
-	undo_bm_read_all_d1();
-	d1_pig_loaded = cfexist(D1_PIGFILE);
-
 	#ifdef WINDOWS
 		dd_gr_set_current_canvas(NULL);
 		dd_gr_clear_canvas(BM_XRGB(0,0,0));
@@ -854,7 +949,7 @@ void LoadLevel(int level_num,int page_in_textures)
 //	WIN(LoadCursorWin(MOUSE_WAIT_CURSOR));
 //	WIN(ShowCursorW());
 
-#if 1 //defined(POLY_ACC) || defined(OGL)
+#if defined(POLY_ACC)
     gr_palette_load(gr_palette);
     show_boxed_message(TXT_LOADING);
 #else
@@ -873,15 +968,14 @@ void LoadLevel(int level_num,int page_in_textures)
 
 	load_palette(Current_level_palette,1,1);		//don't change screen
 
+	#ifdef SHAREWARE
 	load_endlevel_data(level_num);
+	#endif
 
 	if ( page_in_textures )
 		piggy_load_level_data();
 
-	if (Mission_list[Current_mission_num].descent_version == 1)
-		load_d1_bitmap_replacements();
-	else
-		load_bitmap_replacements(level_name);
+	load_bitmap_replacements(level_name);
 
 	if (Robot_replacements_loaded) {
 		read_hamfile();		//load original data
@@ -983,7 +1077,11 @@ extern int network_endlevel_poll2( int nitems, newmenu_item * menus, int * key, 
 
 extern int N_secret_levels;
 
-#define STARS_BACKGROUND ((MenuHires && cfexist("starsb.pcx"))?"starsb.pcx":"stars.pcx")
+#ifdef RELEASE
+#define STARS_BACKGROUND (MenuHires?"\x01starsb.pcx":"\x01stars.pcx")
+#else
+#define STARS_BACKGROUND (MenuHires?"starsb.pcx":"stars.pcx")
+#endif
 
 //	-----------------------------------------------------------------------------
 //	Does the bonus scoring.
@@ -1457,29 +1555,33 @@ void DoEndGame(void)
 
 	key_flush();
 
-	if (Current_mission_num == Builtin_mission_num && !(Game_mode & GM_MULTI)) { //only built-in mission, & not multi
+   if (Current_mission_num == 0 && !(Game_mode & GM_MULTI))		//only built-in mission, & not multi
+   {  
 #ifndef SHAREWARE
 		int played=MOVIE_NOT_PLAYED;	//default is not played
 #endif
 
-		init_subtitles(ENDMOVIE ".tex");	//ingore errors
-		played = PlayMovie(ENDMOVIE,MOVIE_REQUIRED);
-		close_subtitles();
-		if (!played) {
-			if (cfexist("end2oem.txb") || cfexist("end2oem.tex")) { // #ifdef D2_OEM
+		#ifdef SHAREWARE
+			songs_play_song( SONG_ENDGAME, 0 );
+			mprintf((0,"doing briefing\n"));
+			do_briefing_screens("ending2.tex",1);
+			mprintf((0,"briefing done\n"));
+		#else
+			init_subtitles(ENDMOVIE ".tex");	//ingore errors
+			played = PlayMovie(ENDMOVIE,MOVIE_REQUIRED);
+			close_subtitles();
+			#ifdef D2_OEM
+			if (!played) {
 				songs_play_song( SONG_TITLE, 0 );
 				do_briefing_screens("end2oem.tex",1);
-			} else {
-				songs_play_song( SONG_ENDGAME, 0 );
-				mprintf((0,"doing briefing\n"));
-				do_briefing_screens("ending2.tex",1);
-				mprintf((0,"briefing done\n"));
 			}
-		}
-   } else if (!(Game_mode & GM_MULTI)) {    //not multi
+			#endif
+		#endif	
+   }
+	else if (!(Game_mode & GM_MULTI)) {		//not multi
 		char tname[FILENAME_LEN];
 		sprintf(tname,"%s.tex",Current_mission_filename);
-		do_briefing_screens (tname,Last_level+1);   //level past last is endgame breifing
+		do_briefing_screens (tname,Last_level+1);		//level past last is endgame breifing
 
 		//try doing special credits
 		sprintf(tname,"%s.ctb",Current_mission_filename);
@@ -1488,9 +1590,9 @@ void DoEndGame(void)
 
 	key_flush();
 
-#ifdef SHAREWARE
+	#ifdef SHAREWARE
 		show_order_form();
-#endif
+   #endif
 
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
@@ -1498,9 +1600,9 @@ void DoEndGame(void)
 	else
 #endif
 		// NOTE LINK TO ABOVE
-		DoEndLevelScoreGlitz(0);
+		DoEndLevelScoreGlitz(0);	
 
-	if (Current_mission_num == Builtin_mission_num && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))) {
+	if (Current_mission_num == 0 && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))) {
 		WINDOS(
 			dd_gr_set_current_canvas(NULL),
 			gr_set_current_canvas( NULL )
@@ -1949,8 +2051,8 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 	init_thief_for_level();
 	init_stuck_objects();
 	game_flush_inputs();		// clear out the keyboard
-	if (!(Game_mode & GM_MULTI))
-		filter_objects_from_level();
+   if (!(Game_mode & GM_MULTI))
+	   filter_objects_from_level();
 
 	turn_cheats_off();
 
@@ -1962,7 +2064,7 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 	reset_special_effects();
 
 #ifdef OGL
-	ogl_cache_level_textures();
+        ogl_cache_level_textures();
 #endif
 
 
@@ -2044,27 +2146,33 @@ void ShowLevelIntro(int level_num)
 	//if shareware, show a briefing?
 
 	if (!(Game_mode & GM_MULTI)) {
+#ifndef SHAREWARE
 		int i;
-
+#endif
 		ubyte save_pal[sizeof(gr_palette)];
 
 		memcpy(save_pal,gr_palette,sizeof(gr_palette));
 
-		if (Current_mission_num == Builtin_mission_num) {
-			int movie=0;
+		#if defined(D2_OEM) || defined(COMPILATION)
+		if (level_num==1 && !intro_played)
+			do_briefing_screens ("brief2o.tex",1);	
+		#endif
 
-			if (cfexist("brief2.txb") || cfexist("brief2.tex")) { // SHAREWARE
+		if (Current_mission_num==0)
+		{
+#ifndef SHAREWARE
+			int movie=0;
+#endif
+			#ifdef SHAREWARE
 				if (level_num==1)
-					do_briefing_screens ("brief2.tex", 1);
-			} else if (cfexist("brief2o.txb") || cfexist("brief2o.tex")) { // OEM
-				if (level_num == 1 && !intro_played)
-					do_briefing_screens("brief2o.tex", 1);
-			} else { // full version
+				{
+					do_briefing_screens ("brief2.tex",1);	
+				}
+			#else
 				for (i=0;i<NUM_INTRO_MOVIES;i++)
 				{
 					if (intro_movie[i].level_num == level_num)
 					{
-						Screen_mode = -1;
 						PlayMovie(intro_movie[i].movie_name,MOVIE_REQUIRED);
 						movie=1;
 						break;
@@ -2081,7 +2189,7 @@ void ShowLevelIntro(int level_num)
 				if (robot_movies)
 				{
 					int hires_save=MenuHiresAvailable;
-
+					
 					if (robot_movies == 1)		//lowres only
 					{
 						MenuHiresAvailable = 0;		//pretend we can't do highres
@@ -2094,16 +2202,12 @@ void ShowLevelIntro(int level_num)
 					MenuHiresAvailable = hires_save;
 				}
 
-			}
-		}
+			#endif
+		}      
 		else {	//not the built-in mission.  check for add-on briefing
-			if (Mission_list[Current_mission_num].descent_version == 1)
-				do_briefing_screens(Briefing_text_filename, level_num);
-			else {
-				char tname[FILENAME_LEN];
-				sprintf(tname, "%s.tex", Current_mission_filename);
-				do_briefing_screens(tname, level_num);
-			}
+			char tname[FILENAME_LEN];
+			sprintf(tname,"%s.tex",Current_mission_filename);
+			do_briefing_screens (tname,level_num);
 		}
 
 
@@ -2326,3 +2430,13 @@ void StartLevel(int random_flag)
 
 	Robot_firing_enabled = 1;
 }
+
+
+
+
+
+
+
+
+
+

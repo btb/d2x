@@ -1,4 +1,3 @@
-/* $Id: mem.c,v 1.11 2003-04-11 23:51:48 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,14 +7,24 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/mem/mem.c,v $
+ * $Revision: 1.7 $
+ * $Author: bradleyb $
+ * $Date: 2001-11-09 06:56:41 $
  *
  * Files for debugging memory allocator
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.6  2001/11/08 10:17:40  bradleyb
+ * added d_realloc/mem_realloc functions
+ *
+ * Revision 1.5  2001/10/19 08:06:20  bradleyb
+ * Partial application of linux/alpha patch.  Courtesy of Falk Hueffner <falk.hueffner@student.uni-tuebingen.de>
  *
  */
 
@@ -34,11 +43,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if defined(__APPLE__) && defined(__MACH__)
-#include <sys/malloc.h>
-#else
 #include <malloc.h>
-#endif
+
 #include "pstypes.h"
 #include "mono.h"
 #include "error.h"
@@ -380,16 +386,6 @@ void *mem_realloc(void * buffer, unsigned int size, char * var, char * filename,
 	return newbuffer;
 }
 
-char *mem_strdup(char *str, char *var, char *filename, int line)
-{
-	char *newstr;
-
-	newstr = mem_malloc(strlen(str) + 1, var, filename, line, 0);
-	strcpy(newstr, str);
-
-	return newstr;
-}
-
 void mem_display_blocks()
 {
 	int i, numleft;
@@ -428,7 +424,7 @@ void mem_display_blocks()
 
 	if (numleft &&  (!out_of_memory))
 	{
-		Warning( "MEM: %d blocks were left allocated!\n", numleft );
+		Warning( "MEM: %d blocks were left allocated!", numleft );
 	}
 
 }

@@ -1,4 +1,3 @@
-/* $Id: gr.h,v 1.19 2003-03-19 22:44:15 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -18,15 +17,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "fix.h"
 
-#if defined(MACINTOSH) || defined(MACDATA)
-#error foo
-#define SWAP_0_255              // swap black and white
-#define TRANSPARENCY_COLOR  0   // palette entry of transparency color -- 0 on the mac
-#define TRANSPARENCY_COLOR_STR  "0"
+#ifdef MACINTOSH
+#define SWAP_0_255			1			// swap black and white
+#define TRANSPARENCY_COLOR	0			// palette entry of transparency color -- 0 on the mac
 #else
-/* #undef  SWAP_0_255 */        // no swapping for PC people
-#define TRANSPARENCY_COLOR  255 // palette entry of transparency color -- 255 on the PC
-#define TRANSPARENCY_COLOR_STR  "255"
+#define SWAP_0_255			0			// no swapping for PC people
+#define TRANSPARENCY_COLOR	255			// palette entry of transparency color -- 255 on the PC
 #endif
 
 #define GR_FADE_LEVELS 34
@@ -41,20 +37,34 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern int Gr_scanline_darkening_level;
 
 typedef struct _grs_point {
-	fix x,y;
+	fix	x,y;
 } grs_point;
 
 //these are control characters that have special meaning in the font code
 
-#define CC_COLOR        1   //next char is new foreground color
-#define CC_LSPACING     2   //next char specifies line spacing
-#define CC_UNDERLINE    3   //next char is underlined
+#define CC_COLOR			1		//next char is new foreground color
+#define CC_LSPACING		2		//next char specifies line spacing
+#define CC_UNDERLINE		3		//next char is underlined
 
 //now have string versions of these control characters (can concat inside a string)
 
-#define CC_COLOR_S      "\x1"   //next char is new foreground color
-#define CC_LSPACING_S   "\x2"   //next char specifies line spacing
-#define CC_UNDERLINE_S  "\x3"   //next char is underlined
+#define CC_COLOR_S	 	"\x1"		//next char is new foreground color
+#define CC_LSPACING_S 	"\x2"		//next char specifies line spacing
+#define CC_UNDERLINE_S	"\x3"		//next char is underlined
+
+//old font structure, could not add new items to it without screwing up gr_init_font
+typedef struct _grs_font {
+	int16_t		ft_w,ft_h;		// Width and height in pixels
+	int16_t		ft_flags;		// Proportional?
+	int16_t		ft_baseline;	//
+	ubyte		ft_minchar,		// The first and last chars defined by
+				ft_maxchar;		// This font
+	int16_t		ft_bytewidth;	// Width in unsigned chars
+	u_int32_t	ft_data;			// Ptr to raw data.
+	u_int32_t	ft_chars;		// Ptrs to data for each char (required for prop font)
+	u_int32_t	ft_widths;		// Array of widths (required for prop font)
+	u_int32_t	ft_kerndata;	// Array of kerning triplet data
+} __pack__ old_grs_font;
 
 #define BM_LINEAR   0
 #define BM_MODEX    1
@@ -65,83 +75,84 @@ typedef struct _grs_point {
 #define BM_OGL      5
 #endif
 
-//@@// Define these modes for Gameplay too, since the game was developed under
-//@@// DOS, we will adapt these modes to other systems thru rendering.
-//@@#define SM_ORIGINAL		-1
-//@@#define SM_320x200C     0
-//@@#define SM_320x200U     1
-//@@#define SM_320x240U     2
-//@@#define SM_360x200U     3
-//@@#define SM_360x240U     4
-//@@#define SM_376x282U     5
-//@@#define SM_320x400U     6
-//@@#define SM_320x480U     7
-//@@#define SM_360x400U     8
-//@@#define SM_360x480U     9
-//@@#define SM_360x360U     10
-//@@#define SM_376x308U     11
-//@@#define SM_376x564U     12
-//@@#define SM_640x400V     13
-//@@#define SM_640x480V     14
-//@@#define SM_800x600V     15
-//@@#define SM_1024x768V    16
-//@@#define SM_640x480V15   17
-//@@#define SM_800x600V15   18
-
+//@@//	Define these modes for Gameplay too, since the game was developed under
+//@@//	DOS, we will adapt these modes to other systems thru rendering.
 #define SM(w,h) ((((u_int32_t)w)<<16)+(((u_int32_t)h)&0xFFFF))
 #define SM_W(m) (m>>16)
 #define SM_H(m) (m&0xFFFF)
 
+#define SM_ORIGINAL 0
+/*
+#define SM_ORIGINAL		-1
+#define SM_320x200C     0
+#define SM_320x200U     1
+#define SM_320x240U     2
+#define SM_360x200U     3
+#define SM_360x240U     4
+#define SM_376x282U     5
+#define SM_320x400U     6
+#define SM_320x480U     7
+#define SM_360x400U     8
+#define SM_360x480U     9
+#define SM_360x360U     10
+#define SM_376x308U     11
+#define SM_376x564U     12
+#define SM_640x400V     13
+#define SM_640x480V     14
+#define SM_800x600V     15
+#define SM_1024x768V    16
+#define SM_640x480V15   17
+#define SM_800x600V15   18
+#define SM_1280x1024V    19
+*/
 
-#define BM_FLAG_TRANSPARENT         1
-#define BM_FLAG_SUPER_TRANSPARENT   2
-#define BM_FLAG_NO_LIGHTING         4
-#define BM_FLAG_RLE                 8   // A run-length encoded bitmap.
-#define BM_FLAG_PAGED_OUT           16  // This bitmap's data is paged out.
-#define BM_FLAG_RLE_BIG             32  // for bitmaps that RLE to > 255 per row (i.e. cockpits)
+#define BM_FLAG_TRANSPARENT			1
+#define BM_FLAG_SUPER_TRANSPARENT	2
+#define BM_FLAG_NO_LIGHTING			4
+#define BM_FLAG_RLE					8			// A run-length encoded bitmap.
+#define BM_FLAG_PAGED_OUT			16			// This bitmap's data is paged out.
+#define BM_FLAG_RLE_BIG				32			// for bitmaps that RLE to > 255 per row (i.e. cockpits)
 
 typedef struct _grs_bitmap {
-	short   bm_x,bm_y;  // Offset from parent's origin
-	short   bm_w,bm_h;  // width,height
-	byte    bm_type;    // 0=Linear, 1=ModeX, 2=SVGA
-	byte    bm_flags;   // bit 0 on means it has transparency.
-	                    // bit 1 on means it has supertransparency
-	                    // bit 2 on means it doesn't get passed through lighting.
-	short   bm_rowsize; // unsigned char offset to next row
-	unsigned char *     bm_data;    // ptr to pixel data...
-	                                //   Linear = *parent+(rowsize*y+x)
-	                                //   ModeX = *parent+(rowsize*y+x/4)
-	                                //   SVGA = *parent+(rowsize*y+x)
-	unsigned short      bm_handle;  //for application.  initialized to 0
-	ubyte   avg_color;  //  Average color of all pixels in texture map.
-	byte    unused;     //  to 4-byte align.
+	short       bm_x,bm_y;      // Offset from parent's origin
+	short       bm_w,bm_h;      // width,height
+	byte       	bm_type;        // 0=Linear, 1=ModeX, 2=SVGA
+	byte			bm_flags;		// bit 0 on means it has transparency.
+										// bit 1 on means it has supertransparency
+										// bit 2 on means it doesn't get passed through lighting.
+	short	    bm_rowsize;     // unsigned char offset to next row
+	unsigned char *      bm_data;	     // ptr to pixel data...
+								//   Linear = *parent+(rowsize*y+x)
+								//   ModeX = *parent+(rowsize*y+x/4)
+								//   SVGA = *parent+(rowsize*y+x)
+	unsigned short bm_handle;	//for application.  initialized to 0
+	ubyte			avg_color;		//	Average color of all pixels in texture map.
+	byte			unused;			//	to 4-byte align.
 #ifdef OGL
-	struct _ogl_texture *gltexture;
-	struct _grs_bitmap  *bm_parent;
+        struct _ogl_texture *gltexture;
+        struct _grs_bitmap *bm_parent;
 #endif
+
 } grs_bitmap;
 
-//font structure
-typedef struct _grs_font {
-	short       ft_w;           // Width in pixels
-	short       ft_h;           // Height in pixels
-	short       ft_flags;       // Proportional?
-	short       ft_baseline;    //
-	ubyte       ft_minchar;     // First char defined by this font
-	ubyte       ft_maxchar;     // Last char defined by this font
-	short       ft_bytewidth;   // Width in unsigned chars
-	ubyte     * ft_data;        // Ptr to raw data.
-	ubyte    ** ft_chars;       // Ptrs to data for each char (required for prop font)
-	short     * ft_widths;      // Array of widths (required for prop font)
-	ubyte     * ft_kerndata;    // Array of kerning triplet data
+//new font structure, which does not suffer from the inability to add new items
+typedef struct _new_grs_font {
+	short		ft_w,ft_h;		// Width and height in pixels
+	short		ft_flags;		// Proportional?
+	short		ft_baseline;	//
+	ubyte		ft_minchar,		// The first and last chars defined by
+				ft_maxchar;		// This font
+	short		ft_bytewidth;	// Width in unsigned chars
+	ubyte	* 	ft_data;			// Ptr to raw data.
+	ubyte	**	ft_chars;		// Ptrs to data for each char (required for prop font)
+	short	*	ft_widths;		// Array of widths (required for prop font)
+	ubyte *  ft_kerndata;	// Array of kerning triplet data
+	old_grs_font * oldfont;
 #ifdef OGL
-	// These fields do not participate in disk i/o!
 	grs_bitmap *ft_bitmaps;
 	grs_bitmap ft_parent_bitmap;
 #endif
-} __pack__ grs_font;
-
-#define GRS_FONT_SIZE 28    // how much space it takes up on disk
+} grs_font;
 
 typedef struct _grs_canvas {
 	grs_bitmap  cv_bitmap;      // the bitmap for this canvas
@@ -156,11 +167,11 @@ typedef struct _grs_canvas {
 #define cv_w cv_bitmap.bm_w
 #define cv_h cv_bitmap.bm_h
 
-typedef struct _grs_screen {    // This is a video screen
-	grs_canvas  sc_canvas;  // Represents the entire screen
-	int     sc_mode;        // Video mode number
-	short   sc_w, sc_h;     // Actual Width and Height
-	fix     sc_aspect;      //aspect ratio (w/h) for this screen
+typedef struct _grs_screen {     // This is a video screen
+	grs_canvas  sc_canvas;      // Represents the entire screen
+	int       sc_mode;        // Video mode number
+	short       sc_w, sc_h;     // Actual Width and Height
+	fix			sc_aspect;		//aspect ratio (w/h) for this screen
 } grs_screen;
 
 
@@ -190,7 +201,7 @@ extern void gr_pal_getblock( int start, int number, unsigned char * pal );
 
 
 extern unsigned char *gr_video_memory;
-	                                            // All graphic modules will define this value.
+												// All graphic modules will define this value.
 
 //shut down the 2d.  Restore the screen mode.
 void gr_close(void);
@@ -265,7 +276,7 @@ void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color );
 void gr_bm_ubitblt( int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 void gr_bm_ubitbltm(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 
-#ifndef __MSDOS__
+#ifdef MACINTOSH
 void gr_bm_ubitblt_double(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap *src, grs_bitmap *dest);
 void gr_linear_movsd_double(ubyte *src, ubyte *dest, int num_pixels);
 #endif
@@ -321,7 +332,6 @@ int gr_uaaline(fix x0,fix y0,fix x1,fix y1);
 void gr_bitmap(int x,int y,grs_bitmap *bm);
 void gr_ubitmap(int x,int y,grs_bitmap *bm);
 void gr_bitmap_scale_to(grs_bitmap *src, grs_bitmap *dst);
-void show_fullscr(grs_bitmap *bm);
 
 // bitmap function with transparency
 void gr_bitmapm( int x, int y, grs_bitmap *bm );
@@ -352,7 +362,7 @@ grs_font * gr_init_font( char * fontfile );
 void gr_close_font( grs_font * font );
 
 //remap a font, re-reading its data & palette
-void gr_remap_font( grs_font *font, char * fontname, char *font_data );
+void gr_remap_font( grs_font *font, char * fontname );
 
 //remap (by re-reading) all the color fonts
 void gr_remap_color_fonts();
@@ -367,7 +377,7 @@ int gr_uprintf( int x, int y, char * format, ... );
 void gr_get_string_size(char *s, int *string_width, int *string_height, int *average_width );
 
 
-//  From roller.c
+//	From roller.c
 void rotate_bitmap(grs_bitmap *bp, grs_point *vertbuf, int light_value);
 
 // From scale.c
@@ -388,9 +398,9 @@ extern void gr_show_canvas( grs_canvas *canv );
 extern void gr_set_current_canvas( grs_canvas *canv );
 
 //flags for fonts
-#define FT_COLOR        1
-#define FT_PROPORTIONAL 2
-#define FT_KERNED       4
+#define FT_COLOR			1
+#define FT_PROPORTIONAL	2
+#define FT_KERNED			4
 
 extern void gr_vesa_update( grs_bitmap * source1, grs_bitmap * dest, grs_bitmap * source2 );
 
@@ -408,10 +418,10 @@ extern ushort gr_palette_selector;
 extern ushort gr_inverse_table_selector;
 extern ushort gr_fade_table_selector;
 
-// Remaps a bitmap into the current palette. If transparent_color is
-// between 0 and 255 then all occurances of that color are mapped to
-// whatever color the 2d uses for transparency. This is normally used
-// right after a call to iff_read_bitmap like this:
+// Remaps a bitmap into the current palette. If transparent_color is between 0 and 255
+// then all occurances of that color are mapped to whatever color the 2d uses for
+// transparency. This is normally used right after a call to iff_read_bitmap like
+// this:
 //		iff_error = iff_read_bitmap(filename,new,BM_LINEAR,newpal);
 //		if (iff_error != IFF_NO_ERROR) Error("Can't load IFF file <%s>, error=%d",filename,iff_error);
 //		if ( iff_has_transparency )
@@ -420,11 +430,9 @@ extern ushort gr_fade_table_selector;
 //			gr_remap_bitmap( new, newpal, -1 );
 extern void gr_remap_bitmap( grs_bitmap * bmp, ubyte * palette, int transparent_color, int super_transparent_color );
 
-// Same as above, but searches using gr_find_closest_color which uses
-// 18-bit accurracy instead of 15bit when translating colors.
+// Same as above, but searches using gr_find_closest_color which uses 18-bit accurracy
+// instaed of 15bit when translating colors.
 extern void gr_remap_bitmap_good( grs_bitmap * bmp, ubyte * palette, int transparent_color, int super_transparent_color );
-
-extern void build_colormap_good( ubyte * palette, ubyte * colormap, int * freq );
 
 extern void gr_palette_step_up( int r, int g, int b );
 

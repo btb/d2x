@@ -1,8 +1,32 @@
-/* $Id: gr.c,v 1.11 2003-03-28 09:27:07 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/sdl/gr.c,v $
+ * $Revision: 1.5 $
+ * $Author: bradleyb $
+ * $Date: 2002-02-23 21:38:15 $
  *
  * SDL video functions.
  *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.4  2002/02/16 02:08:31  bradleyb
+ * allow older sdl versions
+ *
+ * Revision 1.3  2002/02/14 11:29:31  bradleyb
+ * allow gr_init lowres
+ *
+ * Revision 1.2  2001/10/31 07:41:54  bradleyb
+ * Sync with d1x
+ *
+ * Revision 1.1  2001/10/25 08:25:34  bradleyb
+ * Finished moving stuff to arch/blah.  I know, it's ugly, but It'll be easier to sync with d1x.
+ *
+ * Revision 1.5  2001/10/09 08:17:07  bradleyb
+ * changed window caption to include version info
+ *
+ * Revision 1.4  2001/01/31 13:59:23  bradleyb
+ * Fullscreen toggle added to screen res menu
+ *
+ * Revision 1.3  2001/01/29 13:47:52  bradleyb
+ * Fixed build, some minor cleanups.
  *
  */
 
@@ -12,17 +36,23 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <SDL.h>
-#ifdef SDL_IMAGE
-#include <SDL_image.h>
-#endif
+#include <SDL/SDL.h>
 
+#ifndef SDL_VERSION_ATLEAST
+#include "oldsdl.h"
+#endif
 #include "gr.h"
 #include "grdef.h"
 #include "palette.h"
 #include "u_mem.h"
 #include "error.h"
 #include "menu.h"
+
+//added on 9/30/98 by Matt Mueller to set the title bar.  Woohoo!
+#include "vers_id.h"
+//end addition -MM
+
+#include "gamefont.h"
 
 //added 10/05/98 by Matt Mueller - make fullscreen mode optional
 #include "args.h"
@@ -99,15 +129,8 @@ int gr_set_mode(u_int32_t mode)
 //Style "D1X*"  NoTitle, NoHandles, BorderWidth 0
 //if you can't use -fullscreen like me (crashes X), this is a big help in
 //getting the window centered correctly (if you use SmartPlacement)
-	SDL_WM_SetCaption(PACKAGE_STRING, "Descent II");
+	SDL_WM_SetCaption(DESCENT_VERSION, "Descent II");
 //end addition -MM
-
-#ifdef SDL_IMAGE
-	{
-#include "descent.xpm"
-		SDL_WM_SetIcon(IMG_ReadXPMFromArray(pixmap), NULL);
-	}
-#endif
 
 //edited 10/05/98 by Matt Mueller - make fullscreen mode optional
 	  // changed by adb on 980913: added SDL_HWPALETTE (should be option?)
@@ -156,12 +179,18 @@ int gr_check_fullscreen(void){
 
 int gr_toggle_fullscreen(void){
 	sdl_video_flags^=SDL_FULLSCREEN;
+#if SDL_VERSION_ATLEAST(1,0,5)
 	SDL_WM_ToggleFullScreen(screen);
+#else
+	grd_curscreen->sc_mode=0;//hack to get it to reset screen mode
+#endif
 	return (sdl_video_flags & SDL_FULLSCREEN)?1:0;
 }
 
 int gr_init(void)
 {
+ int retcode;
+ int mode = MenuHires?SM(640,480):SM(320,200);
  	// Only do this function once!
 	if (gr_installed==1)
 		return -1;
@@ -184,6 +213,11 @@ int gr_init(void)
 	if (FindArg("-nosdlvidmodecheck"))
 		checkvidmodeok=0;
 	
+	// Set the mode.
+	if ((retcode=gr_set_mode(mode)))
+	{
+		return retcode;
+	}
 	grd_curscreen->sc_canvas.cv_color = 0;
 	grd_curscreen->sc_canvas.cv_drawmode = 0;
 	grd_curscreen->sc_canvas.cv_font = NULL;
@@ -324,13 +358,6 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 
  if (gr_palette_faded_out) return 0;
 
-#if 1 //ifndef NDEBUG
-	if (grd_fades_disabled) {
-		gr_palette_clear();
-		return 0;
-	}
-#endif
-
  palette = screen->format->palette;
  if (palette == NULL) {
     return -1; // Display is not palettised
@@ -390,13 +417,6 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
  SDL_Color fade_colors[256];
 
  if (!gr_palette_faded_out) return 0;
-
-#if 1 //ifndef NDEBUG
-	if (grd_fades_disabled) {
-		gr_palette_load(pal);
-		return 0;
-	}
-#endif
 
  palette = screen->format->palette;
 

@@ -1,4 +1,3 @@
-/* $Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char game_rcsid[] = "$Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $";
+char game_rcsid[] = "$Id: game.c,v 1.11 2002-02-23 21:25:01 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -117,6 +116,7 @@ char game_rcsid[] = "$Id: game.c,v 1.20 2003-03-17 09:33:49 btb Exp $";
 #include "robot.h"
 #include "playsave.h"
 #include "fix.h"
+#include "d_delay.h"
 #include "hudmsg.h"
 
 int VGA_current_mode;
@@ -327,7 +327,7 @@ void init_game()
 
 	set_detail_level_parameters(Detail_level);
 
-	build_mission_list(0);
+	build_mission_list(0);		// This also loads mission 0.
 
 	/* Register cvars */
 	cvar_registervariable(&r_framerate);
@@ -532,7 +532,7 @@ void init_cockpit()
 			);
 
 #ifndef WINDOWS
-#ifndef __MSDOS__
+#if 1 // def MACINTOSH
 		gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize);
 #else
 		if ( Current_display_mode ) {
@@ -547,7 +547,7 @@ void init_cockpit()
 #endif
 		bm->bm_flags = 0;		// Clear all flags for offscreen canvas
 #else
-		Game_cockpit_copy_code  = (ubyte *)(1);
+		Game_cockpit_copy_code  = (ubyte *)(1); 
 		bm->bm_flags = 0;		// Clear all flags for offscreen canvas
 #endif
 		game_init_render_sub_buffers( 0, 0, maxx-minx+1, maxy-miny+1 );
@@ -906,7 +906,7 @@ WIN(static int saved_window_h);
 									dd_grd_screencanv->canvas.cv_bitmap.bm_w,
 									dd_grd_screencanv->canvas.cv_bitmap.bm_h);
 			MenuHires = 1;
-			FontHires = FontHiresAvailable;
+			FontHires = 1;
 
 		#else
 		{
@@ -934,7 +934,7 @@ WIN(static int saved_window_h);
 			gr_init_sub_canvas( &VR_screen_pages[0], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 			gr_init_sub_canvas( &VR_screen_pages[1], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 
-			FontHires = FontHiresAvailable && MenuHires;
+			FontHires = MenuHires;
 
 		}
 		#endif
@@ -1026,15 +1026,15 @@ WIN(static int saved_window_h);
 		init_cockpit();
 
 	#ifdef WINDOWS
-		FontHires = FontHiresAvailable && (Current_display_mode != 0);
+		FontHires = (Current_display_mode != 0);
 		MenuHires = 1;
 	#else
-		FontHires = FontHiresAvailable && (MenuHires = ((Current_display_mode != 0) && (Current_display_mode != 2)));
+		FontHires = MenuHires = ((Current_display_mode != 0) && (Current_display_mode != 2));
 	#endif
 
 		if ( VR_render_mode != VR_NONE )	{
 			// for 640x480 or higher, use hires font.
-			if (FontHiresAvailable && (grd_curscreen->sc_h > 400))
+			if ( grd_curscreen->sc_h > 400 )
 				FontHires = 1;
 			else
 				FontHires = 0;
@@ -1193,9 +1193,7 @@ int Movie_fixed_frametime;
 #define Movie_fixed_frametime	0
 #endif
 
-//added on 8/18/98 by Victor Rachels to add maximum framerate
-int maxfps = 80;
-//end this section
+static const int max_fps = 80;
 
 void calc_frame_time()
 {
@@ -1211,9 +1209,11 @@ void calc_frame_time()
 	do {
 	    timer_value = timer_get_fixed_seconds();
 	    FrameTime = timer_value - last_timer_value;
-	    if (FrameTime < f1_0/maxfps);
-			timer_delay(1);
-	} while (FrameTime < f1_0/maxfps);
+	    if (FrameTime < f1_0/max_fps);
+	    {
+		d_delay(1);
+	    }
+	} while (FrameTime < f1_0/max_fps);
 
 	#if defined(TIMER_TEST) && !defined(NDEBUG)
 	_timer_value = timer_value;
@@ -2605,9 +2605,7 @@ void flicker_lights();
 
 void GameLoop(int RenderFlag, int ReadControlsFlag )
 {
-#ifdef CONSOLE
 	con_update();
-#endif
 	#ifndef	NDEBUG
 	//	Used to slow down frame rate for testing things.
 	//	RenderFlag = 1; // DEBUG
@@ -3358,15 +3356,3 @@ void game_win_init_cockpit_mask(int sram)
 //@@}
 
 #endif
-
-/*
- * reads a flickering_light structure from a CFILE
- */
-void flickering_light_read(flickering_light *fl, CFILE *fp)
-{
-	fl->segnum = cfile_read_short(fp);
-	fl->sidenum = cfile_read_short(fp);
-	fl->mask = cfile_read_int(fp);
-	fl->timer = cfile_read_fix(fp);
-	fl->delay = cfile_read_fix(fp);
-}

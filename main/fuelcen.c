@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: fuelcen.c,v 1.6 2003-03-27 01:23:18 btb Exp $";
+static char rcsid[] = "$Id: fuelcen.c,v 1.3 2001-10-25 02:15:56 bradleyb Exp $";
 #endif
 
 #include <stdio.h>
@@ -52,7 +52,6 @@ static char rcsid[] = "$Id: fuelcen.c,v 1.6 2003-03-27 01:23:18 btb Exp $";
 #include "multi.h"
 #endif
 #include "multibot.h"
-#include "escort.h"
 
 // The max number of fuel stations per mine.
 
@@ -1129,29 +1128,5 @@ void fuelcen_check_for_hoard_goal(segment *segp)
 
 #endif
 
-#ifndef FAST_FILE_IO
-/*
- * reads an old_matcen_info structure from a CFILE
- */
-void old_matcen_info_read(old_matcen_info *mi, CFILE *fp)
-{
-	mi->robot_flags = cfile_read_int(fp);
-	mi->hit_points = cfile_read_fix(fp);
-	mi->interval = cfile_read_fix(fp);
-	mi->segnum = cfile_read_short(fp);
-	mi->fuelcen_num = cfile_read_short(fp);
-}
 
-/*
- * reads a matcen_info structure from a CFILE
- */
-void matcen_info_read(matcen_info *mi, CFILE *fp)
-{
-	mi->robot_flags[0] = cfile_read_int(fp);
-	mi->robot_flags[1] = cfile_read_int(fp);
-	mi->hit_points = cfile_read_fix(fp);
-	mi->interval = cfile_read_fix(fp);
-	mi->segnum = cfile_read_short(fp);
-	mi->fuelcen_num = cfile_read_short(fp);
-}
-#endif
+

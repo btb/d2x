@@ -1,4 +1,3 @@
-/* $Id: wall.c,v 1.9 2003-04-03 07:12:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: wall.c,v 1.9 2003-04-03 07:12:46 btb Exp $";
+static char rcsid[] = "$Id: wall.c,v 1.4 2001-10-25 02:15:57 bradleyb Exp $";
 #endif
 
 #include <stdio.h>
@@ -103,7 +102,7 @@ void kill_stuck_objects(int wallnum);
 //		1 = YES
 //		0 = NO
 int check_transparency( segment * seg, int side )
-{
+{	  
 	if ( (seg->sides[side].tmap_num2 & 0x3FFF) == 0) {
 		if (GameBitmaps[Textures[seg->sides[side].tmap_num].index].bm_flags & BM_FLAG_TRANSPARENT )
 			return 1;
@@ -1123,13 +1122,9 @@ int wall_hit_process(segment *seg, int side, fix damage, int playernum, object *
 // Opens doors/destroys wall/shuts off triggers.
 void wall_toggle(segment *seg, int side)
 {
-	int wall_num;
+	int wall_num; 
 
-	if (seg - Segments > Highest_segment_index)
-	{
-		Warning("Can't toggle side %d of segment %d - nonexistent segment!\n", side, seg-Segments);
-		return;
-	}
+	Assert( seg-Segments <= Highest_segment_index);
 	Assert( side < MAX_SIDES_PER_SEGMENT );
 
 	wall_num = seg->sides[side].wall_num;
@@ -1549,124 +1544,3 @@ void blast_nearby_glass(object *objp, fix damage)
 
 }
 
-#define MAX_CLIP_FRAMES_D1 20
-
-/*
- * reads a wclip structure from a CFILE
- */
-int wclip_read_n_d1(wclip *wc, int n, CFILE *fp)
-{
-	int i, j;
-
-	for (i = 0; i < n; i++) {
-		wc[i].play_time = cfile_read_fix(fp);
-		wc[i].num_frames = cfile_read_short(fp);
-		for (j = 0; j < MAX_CLIP_FRAMES_D1; j++)
-			wc[i].frames[j] = cfile_read_short(fp);
-		wc[i].open_sound = cfile_read_short(fp);
-		wc[i].close_sound = cfile_read_short(fp);
-		wc[i].flags = cfile_read_short(fp);
-		cfread(wc[i].filename, 13, 1, fp);
-		wc[i].pad = cfile_read_byte(fp);
-	}
-	return i;
-}
-
-#ifndef FAST_FILE_IO
-/*
- * reads a wclip structure from a CFILE
- */
-int wclip_read_n(wclip *wc, int n, CFILE *fp)
-{
-	int i, j;
-
-	for (i = 0; i < n; i++) {
-		wc[i].play_time = cfile_read_fix(fp);
-		wc[i].num_frames = cfile_read_short(fp);
-		for (j = 0; j < MAX_CLIP_FRAMES; j++)
-			wc[i].frames[j] = cfile_read_short(fp);
-		wc[i].open_sound = cfile_read_short(fp);
-		wc[i].close_sound = cfile_read_short(fp);
-		wc[i].flags = cfile_read_short(fp);
-		cfread(wc[i].filename, 13, 1, fp);
-		wc[i].pad = cfile_read_byte(fp);
-	}
-	return i;
-}
-
-/*
- * reads a v16_wall structure from a CFILE
- */
-extern void v16_wall_read(v16_wall *w, CFILE *fp)
-{
-	w->type = cfile_read_byte(fp);
-	w->flags = cfile_read_byte(fp);
-	w->hps = cfile_read_fix(fp);
-	w->trigger = cfile_read_byte(fp);
-	w->clip_num = cfile_read_byte(fp);
-	w->keys = cfile_read_byte(fp);
-}
-
-/*
- * reads a v19_wall structure from a CFILE
- */
-extern void v19_wall_read(v19_wall *w, CFILE *fp)
-{
-	w->segnum = cfile_read_int(fp);
-	w->sidenum = cfile_read_int(fp);
-	w->type = cfile_read_byte(fp);
-	w->flags = cfile_read_byte(fp);
-	w->hps = cfile_read_fix(fp);
-	w->trigger = cfile_read_byte(fp);
-	w->clip_num = cfile_read_byte(fp);
-	w->keys = cfile_read_byte(fp);
-	w->linked_wall = cfile_read_int(fp);
-}
-
-/*
- * reads a wall structure from a CFILE
- */
-extern void wall_read(wall *w, CFILE *fp)
-{
-	w->segnum = cfile_read_int(fp);
-	w->sidenum = cfile_read_int(fp);
-	w->hps = cfile_read_fix(fp);
-	w->linked_wall = cfile_read_int(fp);
-	w->type = cfile_read_byte(fp);
-	w->flags = cfile_read_byte(fp);
-	w->state = cfile_read_byte(fp);
-	w->trigger = cfile_read_byte(fp);
-	w->clip_num = cfile_read_byte(fp);
-	w->keys = cfile_read_byte(fp);
-	w->controlling_trigger = cfile_read_byte(fp);
-	w->cloak_value = cfile_read_byte(fp);
-}
-
-/*
- * reads a v19_door structure from a CFILE
- */
-extern void v19_door_read(v19_door *d, CFILE *fp)
-{
-	d->n_parts = cfile_read_int(fp);
-	d->seg[0] = cfile_read_short(fp);
-	d->seg[1] = cfile_read_short(fp);
-	d->side[0] = cfile_read_short(fp);
-	d->side[1] = cfile_read_short(fp);
-	d->type[0] = cfile_read_short(fp);
-	d->type[1] = cfile_read_short(fp);
-	d->open = cfile_read_fix(fp);
-}
-
-/*
- * reads an active_door structure from a CFILE
- */
-extern void active_door_read(active_door *ad, CFILE *fp)
-{
-	ad->n_parts = cfile_read_int(fp);
-	ad->front_wallnum[0] = cfile_read_short(fp);
-	ad->front_wallnum[1] = cfile_read_short(fp);
-	ad->back_wallnum[0] = cfile_read_short(fp);
-	ad->back_wallnum[1] = cfile_read_short(fp);
-	ad->time = cfile_read_fix(fp);
-}
-#endif

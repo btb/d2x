@@ -107,14 +107,6 @@ typedef struct FuelCenter {
 
 extern int Num_robot_centers;
 
-typedef struct  {
-	int			robot_flags;		// Up to 32 different robots
-	fix			hit_points;			// How hard it is to destroy this particular matcen
-	fix			interval;			// Interval between materialogrifizations
-	short			segnum;				// Segment this is attached to.
-	short			fuelcen_num;		// Index in fuelcen array.
-} __pack__ old_matcen_info;
-
 typedef struct matcen_info {
 	int			robot_flags[2];	// Up to 64 different robots
 	fix			hit_points;			// How hard it is to destroy this particular matcen
@@ -140,20 +132,5 @@ extern void init_all_matcens(void);
 extern fix EnergyToCreateOneRobot;
 
 void fuelcen_check_for_hoard_goal(segment *segp);
-
-#ifdef FAST_FILE_IO
-#define old_matcen_info_read(mi, fp) cfread(mi, sizeof(old_matcen_info), 1, fp)
-#define matcen_info_read(mi, fp) cfread(mi, sizeof(matcen_info), 1, fp)
-#else
-/*
- * reads an old_matcen_info structure from a CFILE
- */
-void old_matcen_info_read(old_matcen_info *mi, CFILE *fp);
-
-/*
- * reads a matcen_info structure from a CFILE
- */
-void matcen_info_read(matcen_info *ps, CFILE *fp);
-#endif
 
 #endif

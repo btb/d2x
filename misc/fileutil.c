@@ -1,4 +1,3 @@
-/* $Id: fileutil.c,v 1.7 2003-04-12 00:11:46 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,117 +7,106 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
-/*
- *
- * utilities for file manipulation
- *
- * Old Log:
- * Revision 1.6  1995/10/30  11:09:51  allender
- * use FILE, not CFILE on the write* routines
- *
- * Revision 1.5  1995/05/11  13:00:34  allender
- * added write functions which swap bytes
- *
- * Revision 1.4  1995/05/04  20:10:38  allender
- * remove include for fcntl
- *
- * Revision 1.3  1995/04/26  10:14:39  allender
- * added byteswap header file
- *
- * Revision 1.2  1995/04/26  10:13:21  allender
- *
- * Revision 1.1  1995/03/30  15:02:34  allender
- * Initial revision
- *
- */
-
-#ifdef HAVE_CONFIG_H
-#include <conf.h>
-#endif
-
+ 
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "pstypes.h"
 #include "fileutil.h"
+#include "cfile.h"
 #include "fix.h"
 #include "byteswap.h"
-#include "error.h"
 
-byte file_read_byte(FILE *fp)
+int filelength(int fd)
+{
+	int cur_pos, end_pos;
+	
+	cur_pos = lseek(fd, 0, SEEK_CUR);
+	lseek(fd, 0, SEEK_END);
+	end_pos = lseek(fd, 0, SEEK_CUR);
+	lseek(fd, cur_pos, SEEK_SET);
+	return end_pos;
+}
+#if 0
+byte read_byte(CFILE *fp)
 {
 	byte b;
-
-	if (fread(&b, 1, 1, fp) != 1)
-		Error("Error reading byte in file_read_byte()");
+	
+	cfread(&b, sizeof(byte), 1, fp);
 	return b;
 }
 
-short file_read_short(FILE *fp)
+short read_short(CFILE *fp)
 {
 	short s;
-
-	if (fread(&s, 2, 1, fp) != 1)
-		Error("Error reading short in file_read_short()");
-	return INTEL_SHORT(s);
+	
+	cfread(&s, sizeof(short), 1, fp);
+	return (s);
 }
 
-int file_read_int(FILE *fp)
+short read_short_swap(CFILE *fp)
+{
+	short s;
+	
+	cfread(&s, sizeof(short), 1, fp);
+	return swapshort(s);
+}
+
+int read_int(CFILE *fp)
 {
 	uint i;
-
-	if (fread(&i, 4, 1, fp) != 1)
-		Error("Error reading int in file_read_int()");
-	return INTEL_INT(i);
+	
+	cfread(&i, sizeof(uint), 1, fp);
+	return i;
 }
 
-fix file_read_fix(FILE *fp)
+fix read_fix(CFILE *fp)
 {
 	fix f;
-
-	if (fread(&f, 4, 1, fp) != 1)
-		Error("Error reading fix in file_read_fix()");
-	return INTEL_INT(f);
+	
+	cfread(&f, sizeof(fix), 1, fp);
+	return f;
 }
 
-void file_read_string(char *s, FILE *f)
+int write_byte(FILE *fp, byte b)
 {
-	if (feof(f))
-		*s = 0;
-	else
-		do
-			*s = fgetc(f);
-		while (!feof(f) && *s++!=0);
+	return (fwrite(&b, sizeof(byte), 1, fp));
 }
 
-int file_write_byte(byte b, FILE *fp)
+int write_short(FILE *fp, short s)
 {
-	return (fwrite(&b, 1, 1, fp));
+	return (fwrite(&s, sizeof(short), 1, fp));
 }
 
-int file_write_short(short s, FILE *fp)
+int write_short_swap(FILE *fp, short s)
 {
-	s = INTEL_SHORT(s);
-	return (fwrite(&s, 2, 1, fp));
+	s = swapshort(s);
+	return (fwrite(&s, sizeof(short), 1, fp));
 }
 
-int file_write_int(int i, FILE *fp)
+int write_int(FILE *fp, int i)
 {
-	i = INTEL_INT(i);
-	return (fwrite(&i, 4, 1, fp));
+	return (fwrite(&i,sizeof(int), 1, fp));
 }
 
-int file_write_fix(fix f, FILE *fp)
+int write_int_swap(FILE *fp, int i)
 {
-	f = (fix)INTEL_INT((int)f);
-	return (fwrite(&f, 4, 1, fp));
+	i = swapint(i);
+	return (fwrite(&i,sizeof(int), 1, fp));
 }
 
-void file_write_string(char *s, FILE *f)
+int write_fix(FILE *fp, fix f)
 {
-	do
-		fputc(*s,f);
-	while (*s++!=0);
+	return (fwrite(&f, sizeof(fix), 1, fp));
 }
+
+int write_fix_swap(FILE *fp, fix f)
+{
+	f = (fix)swapint((int)f);
+	return (fwrite(&f, sizeof(fix), 1, fp));
+}
+
+#endif

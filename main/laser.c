@@ -1,4 +1,3 @@
-/* $Id: laser.c,v 1.7 2002-08-06 09:30:24 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char laser_rcsid[] = "$Id: laser.c,v 1.7 2002-08-06 09:30:24 btb Exp $";
+char laser_rcsid[] = "$Id: laser.c,v 1.5 2001-11-08 10:30:28 bradleyb Exp $";
 #endif
 
 #include <stdlib.h>
@@ -2042,16 +2041,16 @@ int create_homing_missile(object *objp, int goal_obj, int objtype, int make_soun
 
 extern void blast_nearby_glass(object *objp, fix damage);
 
-//-----------------------------------------------------------------------------
-// Create the children of a smart bomb, which is a bunch of homing missiles.
+//	-------------------------------------------------------------------------------------------
+//	Create the children of a smart bomb, which is a bunch of homing missiles.
 void create_smart_children(object *objp, int num_smart_children)
 {
-	int	parent_type, parent_num;
+	int		parent_type, parent_num;
 #ifndef SHAREWARE
-	int	make_sound;
-	int	numobjs=0;
-	int	objlist[MAX_OBJDISTS];
-	int	blob_id;
+	int		make_sound;
+	int		numobjs=0;
+	int		objlist[MAX_OBJDISTS];
+	int		blob_id;
 #endif
 
 	if (objp->type == OBJ_WEAPON) {
@@ -2070,12 +2069,10 @@ void create_smart_children(object *objp, int num_smart_children)
 		blast_nearby_glass(objp, Weapon_info[EARTHSHAKER_ID].strength[Difficulty_level]);
 
 #ifndef SHAREWARE
-#if 0
 // -- DEBUG --
 	if ((objp->type == OBJ_WEAPON) && ((objp->id == SMART_ID) || (objp->id == SUPERPROX_ID) || (objp->id == ROBOT_SUPERPROX_ID) || (objp->id == EARTHSHAKER_ID)))
 		Assert(Weapon_info[objp->id].children != -1);
 // -- DEBUG --
-#endif
 
 	if (((objp->type == OBJ_WEAPON) && (Weapon_info[objp->id].children != -1)) || (objp->type == OBJ_ROBOT)) {
 		int	i, objnum;

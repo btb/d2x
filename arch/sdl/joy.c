@@ -1,7 +1,26 @@
-/* $Id: joy.c,v 1.12 2003-04-12 00:11:46 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/sdl/joy.c,v $
+ * $Revision: 1.5 $
+ * $Author: bradleyb $
+ * $Date: 2002-07-16 22:03:45 $
  *
  * SDL joystick support
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.4  2002/03/23 09:13:00  bradleyb
+ * SDL Joystick works\!
+ *
+ * Revision 1.3  2002/03/05 12:13:33  bradleyb
+ * SDL joystick stuff mostly done
+ *
+ * Revision 1.2  2001/12/03 02:43:02  bradleyb
+ * lots of makefile fixes, and sdl joystick stuff
+ *
+ * Revision 1.1  2001/10/24 09:25:05  bradleyb
+ * Moved input stuff to arch subdirs, as in d1x.
+ *
+ * Revision 1.1  2001/10/10 03:01:29  bradleyb
+ * Replacing win32 joystick (broken) with SDL joystick (stubs)
  *
  *
  */
@@ -10,24 +29,19 @@
 #include <conf.h>
 #endif
 
-#include <string.h>   // for memset
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #include "joy.h"
 #include "error.h"
 #include "timer.h"
 #include "console.h"
 #include "event.h"
-#include "text.h"
 
 #define MAX_JOYSTICKS 16
 #define MAX_AXES 32
 
 #define MAX_AXES_PER_JOYSTICK 8
 #define MAX_BUTTONS_PER_JOYSTICK 16
-#define MAX_HATS_PER_JOYSTICK 4
-
-extern int joybutton_text[]; //from kconfig.c
 
 char joy_present = 0;
 int num_joysticks = 0;
@@ -36,7 +50,6 @@ int joy_deadzone = 0;
 
 struct joybutton {
 	int state;
-	int last_state;
 	fix time_went_down;
 	int num_downs;
 	int num_ups;
@@ -60,8 +73,6 @@ static struct {
 	SDL_Joystick *handle;
 	int n_axes;
 	int n_buttons;
-	int n_hats;
-	int hat_map[MAX_HATS_PER_JOYSTICK];  //Note: Descent expects hats to be buttons, so these are indices into Joystick.buttons
 	int axis_map[MAX_AXES_PER_JOYSTICK];
 	int button_map[MAX_BUTTONS_PER_JOYSTICK];
 } SDL_Joysticks[MAX_JOYSTICKS];
@@ -86,39 +97,6 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 	}
 }
 
-void joy_hat_handler(SDL_JoyHatEvent *jhe)
-{
-	int hat = SDL_Joysticks[jhe->which].hat_map[jhe->hat];
-	int hbi;
-
-	//Save last state of the hat-button
-	Joystick.buttons[hat  ].last_state = Joystick.buttons[hat  ].state;
-	Joystick.buttons[hat+1].last_state = Joystick.buttons[hat+1].state;
-	Joystick.buttons[hat+2].last_state = Joystick.buttons[hat+2].state;
-	Joystick.buttons[hat+3].last_state = Joystick.buttons[hat+3].state;
-
-	//get current state of the hat-button
-	Joystick.buttons[hat  ].state = ((jhe->value & SDL_HAT_UP)>0);
-	Joystick.buttons[hat+1].state = ((jhe->value & SDL_HAT_RIGHT)>0);
-	Joystick.buttons[hat+2].state = ((jhe->value & SDL_HAT_DOWN)>0);
-	Joystick.buttons[hat+3].state = ((jhe->value & SDL_HAT_LEFT)>0);
-
-	//determine if a hat-button up or down event based on state and last_state
-	for(hbi=0;hbi<4;hbi++)
-	{
-		if(	!Joystick.buttons[hat+hbi].last_state && Joystick.buttons[hat+hbi].state) //last_state up, current state down
-		{
-			Joystick.buttons[hat+hbi].time_went_down
-				= timer_get_fixed_seconds();
-			Joystick.buttons[hat+hbi].num_downs++;
-		}
-		else if(Joystick.buttons[hat+hbi].last_state && !Joystick.buttons[hat+hbi].state)  //last_state down, current state up
-		{
-			Joystick.buttons[hat+hbi].num_ups++;
-		}
-	}
-}
-
 void joy_axis_handler(SDL_JoyAxisEvent *jae)
 {
 	int axis;
@@ -135,11 +113,6 @@ int joy_init()
 {
 	int i,j,n;
 
-	if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
-		con_printf(CON_VERBOSE, "sdl-joystick: initialisation failed: %s.",SDL_GetError());
-		return 0;
-	}
-
 	memset(&Joystick,0,sizeof(Joystick));
 
 	n = SDL_NumJoysticks();
@@ -150,58 +123,23 @@ int joy_init()
 		SDL_Joysticks[num_joysticks].handle = SDL_JoystickOpen(i);
 		if (SDL_Joysticks[num_joysticks].handle) {
 			joy_present = 1;
-
 			SDL_Joysticks[num_joysticks].n_axes
 				= SDL_JoystickNumAxes(SDL_Joysticks[num_joysticks].handle);
-			if(SDL_Joysticks[num_joysticks].n_axes > MAX_AXES_PER_JOYSTICK)
-			{
-				Warning("sdl-joystick: found %d axes, only %d supported.  Game may be unstable.\n", SDL_Joysticks[num_joysticks].n_axes, MAX_AXES_PER_JOYSTICK);
-				SDL_Joysticks[num_joysticks].n_axes = MAX_AXES_PER_JOYSTICK;
-			}
-
 			SDL_Joysticks[num_joysticks].n_buttons
 				= SDL_JoystickNumButtons(SDL_Joysticks[num_joysticks].handle);
-			if(SDL_Joysticks[num_joysticks].n_buttons > MAX_BUTTONS_PER_JOYSTICK)
-			{
-				Warning("sdl-joystick: found %d buttons, only %d supported.  Game may be unstable.\n", SDL_Joysticks[num_joysticks].n_buttons, MAX_BUTTONS_PER_JOYSTICK);
-				SDL_Joysticks[num_joysticks].n_buttons = MAX_BUTTONS_PER_JOYSTICK;
-			}
-
-			SDL_Joysticks[num_joysticks].n_hats
-				= SDL_JoystickNumHats(SDL_Joysticks[num_joysticks].handle);
-			if(SDL_Joysticks[num_joysticks].n_hats > MAX_HATS_PER_JOYSTICK)
-			{
-				Warning("sdl-joystick: found %d hats, only %d supported.  Game may be unstable.\n", SDL_Joysticks[num_joysticks].n_hats, MAX_HATS_PER_JOYSTICK);
-				SDL_Joysticks[num_joysticks].n_hats = MAX_HATS_PER_JOYSTICK;
-			}
-
 			con_printf(CON_VERBOSE, "sdl-joystick: %d axes\n", SDL_Joysticks[num_joysticks].n_axes);
 			con_printf(CON_VERBOSE, "sdl-joystick: %d buttons\n", SDL_Joysticks[num_joysticks].n_buttons);
-			con_printf(CON_VERBOSE, "sdl-joystick: %d hats\n", SDL_Joysticks[num_joysticks].n_hats);
-
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_axes; j++)
 				SDL_Joysticks[num_joysticks].axis_map[j] = Joystick.n_axes++;
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_buttons; j++)
 				SDL_Joysticks[num_joysticks].button_map[j] = Joystick.n_buttons++;
-			for (j=0; j < SDL_Joysticks[num_joysticks].n_hats; j++)
-			{
-				SDL_Joysticks[num_joysticks].hat_map[j] = Joystick.n_buttons;
-				//a hat counts as four buttons
-				joybutton_text[Joystick.n_buttons++] = j?TNUM_HAT2_U:TNUM_HAT_U;
-				joybutton_text[Joystick.n_buttons++] = j?TNUM_HAT2_R:TNUM_HAT_R;
-				joybutton_text[Joystick.n_buttons++] = j?TNUM_HAT2_D:TNUM_HAT_D;
-				joybutton_text[Joystick.n_buttons++] = j?TNUM_HAT2_L:TNUM_HAT_L;
-			}
-
 			num_joysticks++;
-		}
-		else
+		} else
 			con_printf(CON_VERBOSE, "sdl-joystick: initialization failed!\n");
-
 		con_printf(CON_VERBOSE, "sdl-joystick: %d axes (total)\n", Joystick.n_axes);
 		con_printf(CON_VERBOSE, "sdl-joystick: %d buttons (total)\n", Joystick.n_buttons);
 	}
-
+		
 	return joy_present;
 }
 
@@ -262,7 +200,7 @@ int joy_get_button_down_cnt( int btn )
 
 fix joy_get_button_down_time(int btn)
 {
-	fix time = F0_0;
+	fix time;
 
 	if (!num_joysticks)
 		return 0;

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: gamerend.c,v 1.8 2003-03-17 09:07:57 btb Exp $";
+static char rcsid[] = "$Id: gamerend.c,v 1.5 2001-10-12 00:18:38 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -194,7 +194,6 @@ void show_framerate()
    //static int q;
 
 	fix rate;
-	int x = 8, y = 5; // position measured from lower right corner
 
 	frame_time_total += RealFrameTime - frame_time_list[frame_time_cntr];
 	frame_time_list[frame_time_cntr] = RealFrameTime;
@@ -206,9 +205,7 @@ void show_framerate()
 	gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
 
 	ftoa( temp, rate );	// Convert fixed to string
-	if (Game_mode & GM_MULTI)
-		y = 7;
-	gr_printf(grd_curcanv->cv_w-(x*GAME_FONT->ft_w),grd_curcanv->cv_h-y*(GAME_FONT->ft_h+GAME_FONT->ft_h/4),"FPS: %s ", temp );
+	gr_printf(grd_curcanv->cv_w-(8*GAME_FONT->ft_w),grd_curcanv->cv_h-5*(GAME_FONT->ft_h+GAME_FONT->ft_h/4),"FPS: %s ", temp );
 //   if ( !( q++ % 30 ) )
 //      mprintf( (0,"fps: %s\n", temp ) );
 }
@@ -280,7 +277,7 @@ void render_countdown_gauge()
 
 		#if !defined(D2_OEM) && !defined(SHAREWARE)		// no countdown on registered only
 		//	On last level, we don't want a countdown.
-		if ((Current_mission_num == Builtin_mission_num) && (Current_level_num == Last_level))
+		if ((Current_mission_num == 0) && (Current_level_num == Last_level))
 	    {		
 	     if (!(Game_mode & GM_MULTI))
 		   return;
@@ -1770,20 +1767,20 @@ void update_cockpits(int force_redraw)
 		WINDOS ( dd_gr_clear_canvas( BM_XRGB(0,0,0) ),
 					gr_clear_canvas( BM_XRGB(0,0,0) ) );
 
-		// In a modex mode, clear the other buffer.
+		//	In a modex mode, clear the other buffer.
 		if (grd_curcanv->cv_bitmap.bm_type == BM_MODEX) {
 			gr_set_current_canvas(&VR_screen_pages[VR_current_page^1]);
 			gr_clear_canvas( BM_XRGB(0,0,0) );
 			gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 		}
 		break;
-
+	
 	}
 
 	WINDOS (	dd_gr_set_current_canvas(&dd_VR_screen_pages[VR_current_page]),
 				gr_set_current_canvas(&VR_screen_pages[VR_current_page])
 	);
-
+	
 	if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR)
 		init_gauges();
 

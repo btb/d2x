@@ -1,4 +1,3 @@
-/* $Id: menu.c,v 1.24 2003-04-12 02:52:38 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,13 +7,22 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/main/menu.c,v $
+ * $Revision: 1.8 $
+ * $Author: bradleyb $
+ * $Date: 2002-07-16 08:14:35 $
  *
  * Inferno main menu.
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.7  2002/02/13 10:39:21  bradleyb
+ * Lotsa networking stuff from d1x
+ *
  *
  */
 
@@ -98,32 +106,32 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //char *menu_difficulty_text[] = { "Trainee", "Rookie", "Fighter", "Hotshot", "Insane" };
 //char *menu_detail_text[] = { "Lowest", "Low", "Medium", "High", "Highest", "", "Custom..." };
 
-#define MENU_NEW_GAME                   0
-#define MENU_GAME                       1 
-#define MENU_EDITOR                     2
-#define MENU_VIEW_SCORES                3
-#define MENU_QUIT                       4
-#define MENU_LOAD_GAME                  5
-#define MENU_SAVE_GAME                  6
-#define MENU_DEMO_PLAY                  8
-#define MENU_LOAD_LEVEL                 9
-#define MENU_START_IPX_NETGAME          10
-#define MENU_JOIN_IPX_NETGAME           11
-#define MENU_CONFIG                     13
-#define MENU_REJOIN_NETGAME             14
-#define MENU_DIFFICULTY                 15
-#define MENU_START_SERIAL               18
-#define MENU_HELP                       19
-#define MENU_NEW_PLAYER                 20
-#define MENU_MULTIPLAYER                21
-#define MENU_STOP_MODEM                 22
-#define MENU_SHOW_CREDITS               23
-#define MENU_ORDER_INFO                 24
-#define MENU_PLAY_SONG                  25
-#define MENU_START_TCP_NETGAME          26
-#define MENU_JOIN_TCP_NETGAME           27
-#define MENU_START_APPLETALK_NETGAME    28
-#define MENU_JOIN_APPLETALK_NETGAME     30
+#define MENU_NEW_GAME            0
+#define MENU_GAME                               1 
+#define MENU_EDITOR                                     2
+#define MENU_VIEW_SCORES                        3
+#define MENU_QUIT                4
+#define MENU_LOAD_GAME                          5
+#define MENU_SAVE_GAME                          6
+#define MENU_DEMO_PLAY                          8
+#define MENU_LOAD_LEVEL                         9
+#define MENU_START_IPX_NETGAME                  10
+#define MENU_JOIN_IPX_NETGAME                   11
+#define MENU_CONFIG                             13
+#define MENU_REJOIN_NETGAME                     14
+#define MENU_DIFFICULTY                         15
+#define MENU_START_SERIAL                       18
+#define MENU_HELP                               19
+#define MENU_NEW_PLAYER                         20
+#define MENU_MULTIPLAYER                        21
+#define MENU_STOP_MODEM                         22
+#define MENU_SHOW_CREDITS                       23
+#define MENU_ORDER_INFO                         24
+#define MENU_PLAY_SONG                          25
+#define MENU_START_TCP_NETGAME                  26
+#define MENU_JOIN_TCP_NETGAME                   27
+#define MENU_START_APPLETALK_NETGAME            28
+#define MENU_JOIN_APPLETALK_NETGAME    	        30
 
 //ADD_ITEM("Start netgame...", MENU_START_NETGAME, -1 );
 //ADD_ITEM("Send net message...", MENU_SEND_NET_MESSAGE, -1 );
@@ -201,11 +209,12 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 				gr_printf(grd_curcanv->cv_bitmap.bm_w-w-2,grd_curcanv->cv_bitmap.bm_h-GAME_FONT->ft_h-2,"V%d.%d",Version_major,Version_minor);
 			#endif
 
-		//say this is vertigo version
-		if (cfexist(MISSION_DIR "d2x.hog")) {
+		#ifdef SANTA		//say this is hoard version
+		if (HoardEquipped()) {
 			gr_set_curfont(MEDIUM2_FONT);
-			gr_printf(MenuHires?495:248, MenuHires?88:37, "Vertigo");
+			gr_printf(MenuHires?495:00,MenuHires?88:44,"Vertigo");
 		}
+		#endif
 
 		WIN(DDGRUNLOCK(dd_grd_curcanv));
 	}
@@ -229,14 +238,11 @@ try_again:;
 
 			if ((d_rand() % (n_demos+1)) == 0)
 			{
-				#ifndef SHAREWARE
+				#if !defined(SHAREWARE) && !defined(NMOVIES)
 					#ifdef WINDOWS
 					mouse_set_mode(1);				//re-enable centering mode
 					HideCursorW();
 					#endif
-#ifdef OGL
-					Screen_mode = -1;
-#endif
 					PlayMovie("intro.mve",0);
 					songs_play_song(SONG_TITLE,1);
 					*last_key = -3; //exit menu to force redraw even if not going to game mode. -3 tells menu system not to restore
@@ -335,8 +341,7 @@ int DoMenu()
 
 	do {
 		keyd_time_when_last_pressed = timer_get_fixed_seconds();                // .. 20 seconds from now!
-		if (main_menu_choice < 0 )
-			main_menu_choice = 0;
+		if (main_menu_choice < 0 )      main_menu_choice = 0;           
 		Menu_draw_copyright = 1;
 		main_menu_choice = newmenu_do2( "", NULL, num_options, m, autodemo_menu_check, main_menu_choice, Menu_pcx_name);
 		if ( main_menu_choice > -1 ) do_option(menu_choice[main_menu_choice]);
@@ -345,7 +350,7 @@ int DoMenu()
 
 //      if (main_menu_choice != -2)
 //              do_auto_demo = 0;               // No more auto demos
-	if ( Function_mode==FMODE_GAME )
+	if ( Function_mode==FMODE_GAME )        
 		gr_palette_fade_out( gr_palette, 32, 0 );
 
 	return main_menu_choice;
@@ -368,12 +373,13 @@ void do_option ( int select)
 		case MENU_GAME:
 			break;
 		case MENU_DEMO_PLAY:
-		{
-			char demo_file[16];
-			if (newmenu_get_filename( TXT_SELECT_DEMO, DEMO_DIR "*.dem", demo_file, 1 ))
-				newdemo_start_playback(demo_file);
+			{ 
+				char demo_file[16];
+				if (newmenu_get_filename( TXT_SELECT_DEMO, "demos/*.dem", demo_file, 1 ))     {
+					newdemo_start_playback(demo_file);
+				}
+			}
 			break;
-		}
 		case MENU_LOAD_GAME:
 			state_restore_all(0, 0, NULL);
 			break;
@@ -446,8 +452,7 @@ void do_option ( int select)
 
 #ifdef NETWORK
 		case MENU_START_IPX_NETGAME:
-		case MENU_START_TCP_NETGAME:
-			load_mission(Builtin_mission_num);
+			load_mission(0);
 			#ifdef MACINTOSH
 			Network_game_type = IPX_GAME;
 			#endif
@@ -456,8 +461,7 @@ void do_option ( int select)
 			break;
 
 		case MENU_JOIN_IPX_NETGAME:
-		case MENU_JOIN_TCP_NETGAME:
-			load_mission(Builtin_mission_num);
+			load_mission(0);
 			#ifdef MACINTOSH
 			Network_game_type = IPX_GAME;
 			#endif
@@ -467,7 +471,7 @@ void do_option ( int select)
 
 #ifdef MACINTOSH
 		case MENU_START_APPLETALK_NETGAME:
-			load_mission(Builtin_mission_num);
+			load_mission(0);
 			#ifdef MACINTOSH
 			Network_game_type = APPLETALK_GAME;
 			#endif
@@ -475,20 +479,20 @@ void do_option ( int select)
 			break;
 
 		case MENU_JOIN_APPLETALK_NETGAME:
-			load_mission(Builtin_mission_num);
+			load_mission(0);
 			#ifdef MACINTOSH
 			Network_game_type = APPLETALK_GAME;
 			#endif
 			network_join_game();
 			break;
 #endif
-#if 0
+		
 		case MENU_START_TCP_NETGAME:
 		case MENU_JOIN_TCP_NETGAME:
 			nm_messagebox (TXT_SORRY,1,TXT_OK,"Not available in shareware version!");
 			// DoNewIPAddress();
 			break;
-#endif
+                  
 		case MENU_START_SERIAL:
 			com_main_menu();
 			break;
@@ -607,7 +611,7 @@ void set_detail_level_parameters(int detail_level)
 void do_detail_level_menu(void)
 {
 	int s;
-	newmenu_item m[8];
+	newmenu_item m[7];
 
 	m[0].type=NM_TYPE_MENU; m[0].text=MENU_DETAIL_TEXT(0);
 	m[1].type=NM_TYPE_MENU; m[1].text=MENU_DETAIL_TEXT(1);
@@ -616,9 +620,8 @@ void do_detail_level_menu(void)
 	m[4].type=NM_TYPE_MENU; m[4].text=MENU_DETAIL_TEXT(4);
 	m[5].type=NM_TYPE_TEXT; m[5].text="";
 	m[6].type=NM_TYPE_MENU; m[6].text=MENU_DETAIL_TEXT(5);
-	m[7].type=NM_TYPE_CHECK; m[7].text="Show High Res movies"; m[7].value=MovieHires;
 
-	s = newmenu_do1( NULL, TXT_DETAIL_LEVEL , NDL+3, m, NULL, Detail_level);
+	s = newmenu_do1( NULL, TXT_DETAIL_LEVEL , NDL+2, m, NULL, Detail_level);
 
 	if (s > -1 )    {
 		switch (s)      {
@@ -637,7 +640,7 @@ void do_detail_level_menu(void)
 				break;
 		}
 	}
-	MovieHires = m[7].value;
+
 }
 
 //      -----------------------------------------------------------------------------
@@ -804,7 +807,7 @@ void set_display_mode(int mode)
 		return;								//...don't change
 
 	#if !defined(MACINTOSH) && !defined(WINDOWS)
-	if (0) // (mode >= 5 && !FindArg("-superhires"))
+	if (mode >= 5 && !FindArg("-superhires"))
 		mode = 4;
 	#endif
 
@@ -953,7 +956,7 @@ void do_screen_res_menu()
 	m[5].type=NM_TYPE_RADIO; m[5].value=0; m[5].group=0; m[5].text=" 640x400";
 	m[6].type=NM_TYPE_RADIO; m[6].value=0; m[6].group=0; m[6].text=" 800x600";
 	n_items = 7;
-	if (1) { //(FindArg("-superhires")) {
+	if (FindArg("-superhires")) {
 		m[7].type=NM_TYPE_RADIO; m[7].value=0; m[7].group=0; m[7].text=" 1024x768";
 		m[8].type=NM_TYPE_RADIO; m[8].value=0; m[8].group=0; m[8].text=" 1280x1024";
 		n_items += 2;
@@ -1021,17 +1024,17 @@ void do_screen_res_menu()
 	}
 
 #endif
-#ifdef SHAREWARE
+	#ifdef SHAREWARE
 		if (i != 0)
 			nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"High resolution modes are\n"
 				"only available in the\n"
 				"Commercial version of Descent 2.");
 		return;
-#else
+	#else
 		if (i != Current_display_mode)
 			set_display_mode(i);
-#endif
+	#endif
 
 }
 #endif	// end of PC version of do_screen_res_menu()
@@ -1047,16 +1050,14 @@ void do_new_game_menu()
 
 	n_missions = build_mission_list(0);
 
-	if (n_missions <= 1) {
-		load_mission(0);
-	} else {
+	if (n_missions > 1) {
 		int new_mission_num,i, default_mission;
 		char * m[MAX_MISSIONS];
 
 		default_mission = 0;
 		for (i=0;i<n_missions;i++) {
 			m[i] = Mission_list[i].mission_name;
-			if ( !stricmp( m[i], config_last_mission ) )
+			if ( !stricmp( m[i], config_last_mission ) )    
 				default_mission = i;
 		}
 
@@ -1066,7 +1067,7 @@ void do_new_game_menu()
 			return;         //abort!
 
 		strcpy(config_last_mission, m[new_mission_num]  );
-
+		
 		if (!load_mission(new_mission_num)) {
 			nm_messagebox( NULL, 1, TXT_OK, "Error in Mission file"); 
 			return;
@@ -1142,181 +1143,9 @@ void options_menuset(int nitems, newmenu_item * items, int *last_key, int citem 
 	last_key++;		//kill warning
 }
 
-
-//added on 8/18/98 by Victor Rachels to add d1x options menu, maxfps setting
-//added/edited on 8/18/98 by Victor Rachels to set maxfps always on, max=80
-//added/edited on 9/7/98 by Victor Rachels to attempt dir browsing.  failed.
-
-void d2x_options_menu_poll(int nitems, newmenu_item * menus, int * key, int citem)
-{
-}
-
-
-void d2x_options_menu()
-{
-	newmenu_item m[14];
-	int i=0;
-	int opt = 0;
-	int inputs, commands;
-#if 0
-	int checks;
-#endif
-
-	char smaxfps[4];
-#if 0
-	char shudmaxnumdisp[4];
-	char thogdir[64];
-	extern int gr_message_color_level;
-
-	sprintf(thogdir,AltHogDir);
-#endif
-	sprintf(smaxfps,"%d",maxfps);
-#if 0
-	sprintf(shudmaxnumdisp,"%d",HUD_max_num_disp);
-
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "Primary autoselect ordering...";   opt++;
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "Secondary autoselect ordering..."; opt++;
-#endif
-
-	//added on 2/4/99 by Victor Rachels for new key menu
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "D2X Keys"; opt++;
-	//end this section addition - VR
-
-#if 0
-	//enabled 3/24/99 - Owen Evans
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "Change Screen Resolution";         opt++;
-	//end enabled stuff - OE
-#endif
-
-	commands=opt;
-#if 0
-	//added on 2/2/99 by Victor Rachels for bans
-#ifdef NETWORK
-	m[opt].type = NM_TYPE_MENU; m[opt].text = "Save bans now"; opt++;
-#endif
-	//end this section addition - VR
-#endif // 0
-
-	m[opt].type = NM_TYPE_TEXT;  m[opt].text = "Maximum Framerate (1-80):";       opt++;
-
-
-	inputs=opt;
-	m[opt].type = NM_TYPE_INPUT; m[opt].text = smaxfps; m[opt].text_len=3;         opt++;
-#if 0
-	m[opt].type = NM_TYPE_TEXT;  m[opt].text = "Mission Directory";                opt++;
-	m[opt].type = NM_TYPE_INPUT; m[opt].text = thogdir; m[opt].text_len=64;        opt++;
-	m[opt].type = NM_TYPE_TEXT;  m[opt].text = "Hud Messages lines (1-80):";       opt++;
-	m[opt].type = NM_TYPE_INPUT; m[opt].text = shudmaxnumdisp; m[opt].text_len=3;  opt++;
-	m[opt].type = NM_TYPE_SLIDER; m[opt].text = "Message colorization level"; m[opt].value=gr_message_color_level;m[opt].min_value=0;m[opt].max_value=3;  opt++;
-	checks=opt;
-#ifdef __MSDOS__
-	m[opt].type = NM_TYPE_CHECK; m[opt].text = "Joy is sidewinder"; m[opt].value=Joy_is_Sidewinder;  opt++;
-#endif
-#ifdef SUPPORTS_NICEFPS
-	m[opt].type = NM_TYPE_CHECK; m[opt].text = "Nice FPS (free cpu cycles)"; m[opt].value = use_nice_fps; opt++;
-#endif
-#endif // 0
-
-	for(;;)
-	{
-        i=newmenu_do1( NULL, "D2X options", opt, m, &d2x_options_menu_poll, i);
-
-		if(i>-1)
-		{
-            if(i<commands)
-			{
-				switch(i)
-				{
-#if 0
-                case 0: reorder_primary(); break;
-                case 1: reorder_secondary(); break;
-#endif
-					//added on 2/4/99 by Victor Rachels for new key menu
-                case 0: kconfig(4,"D2X Keys"); break;
-					//end this section addition - VR
-#if 0
-					//enabled 3/24/99 - Owen Evans
-                case 3: change_res(); break;
-					//end enabled stuff - OE
-#endif
-				}
-			}
-
-#if 0
-            //added on 2/4/99 by Victor Rachels for bans
-#ifdef NETWORK
-            if(i==commands+0)
-			{              
-
-				nm_messagebox(NULL,1,TXT_OK, "%i Bans saved",writebans());
-
-			}
-#endif
-            //end this section addition - VR
-#endif // 0
-
-            if(i == inputs+0)
-			{
-				maxfps = atoi(smaxfps);
-                if(maxfps < 1 || maxfps>80)
-				{
-					nm_messagebox(TXT_ERROR, 1, TXT_OK, "Invalid value for maximum framerate");
-					maxfps = 80;
-					i = (inputs+0);
-				}
-			}
-#if 0
-            else if(i==inputs+2)
-				cfile_use_alternate_hogdir(thogdir);
-			else if(i==inputs+4)
-			{
-				HUD_max_num_disp = atoi(shudmaxnumdisp);
-                if(HUD_max_num_disp < 1||HUD_max_num_disp>HUD_MAX_NUM)
-				{
-					nm_messagebox(TXT_ERROR, 1, TXT_OK, "Invalid value for hud lines");
-					HUD_max_num_disp=4;
-					//                   i=(inputs+4);//???
-				}
-			}
-			gr_message_color_level=m[inputs+5].value;
-
-			sprintf(shudmaxnumdisp,"%d",HUD_max_num_disp);
-#endif // 0
-			sprintf(smaxfps,"%d",maxfps);
-			//           m[inputs+0].text=smaxfps;//redundant.. its not going anywhere
-#if 0
-			sprintf(thogdir,AltHogDir);
-			//           m[inputs+2].text=thogdir;//redundant
-#endif
-		}
-		else
-			break;
-	}
-
-#if 0
-	write_player_file();
-
-#ifdef __MSDOS__
-	Joy_is_Sidewinder=m[(checks+0)].value;
-#endif
-#ifdef __LINUX__
-	Joy_is_Sidewinder=0;
-#endif
-#ifdef SUPPORTS_NICEFPS
-	use_nice_fps=m[(checks+0)].value;
-#else
-	use_nice_fps=0;
-#endif
-#endif // 0
-}
-
-//end edit - Victor Rachels
-//end addition - Victor Rachels
-
-
 void do_options_menu()
 {
-	newmenu_item m[13];
+   newmenu_item m[12];
 	int i = 0;
 
 	do {
@@ -1354,11 +1183,7 @@ void do_options_menu()
 		m[ 5].type = NM_TYPE_TEXT;   m[ 5].text="";
 	#endif
 #else
-		m[5].type = NM_TYPE_SLIDER;
-		m[5].text = TXT_BRIGHTNESS;
-		m[5].value = gr_palette_get_gamma();
-		m[5].min_value = 0;
-		m[5].max_value = 16; // CCA too dim, was 8;
+		m[ 5].type = NM_TYPE_SLIDER; m[ 5].text=TXT_BRIGHTNESS; m[5].value=gr_palette_get_gamma();m[5].min_value=0; m[5].max_value=8; 
 #endif
 
 
@@ -1390,9 +1215,7 @@ void do_options_menu()
 		m[ 9].type = NM_TYPE_MENU;   m[ 9].text="Primary autoselect ordering...";
 		m[10].type = NM_TYPE_MENU;   m[10].text="Secondary autoselect ordering...";
 		m[11].type = NM_TYPE_MENU;   m[11].text="Toggles...";
-
-		m[12].type = NM_TYPE_MENU;   m[12].text="D2X options...";
-
+				
 		i = newmenu_do1( NULL, TXT_OPTIONS, sizeof(m)/sizeof(*m), m, options_menuset, i );
 			
 		switch(i)       {
@@ -1404,7 +1227,6 @@ void do_options_menu()
 			case  9: ReorderPrimary();			break;
 			case 10: ReorderSecondary();		break;
 			case 11: do_toggles_menu();			break;
-			case 12: d2x_options_menu();        break;
 		}
 
 	} while( i>-1 );
@@ -1483,7 +1305,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 
 	// don't enable redbook for a non-apple demo version of the shareware demo
 	#if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
-
+		
 	if (Config_redbook_volume != items[2].value )   {
 		Config_redbook_volume = items[2].value;
 		set_redbook_volume(Config_redbook_volume);
@@ -1545,11 +1367,11 @@ void do_sound_menu()
 
 	do {
 		m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; 
-		m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8;
+		m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8; 
 
 	#ifdef WINDOWS
 		if (!wmidi_support_volchange() && !Redbook_playing) {
-			m[1].type = NM_TYPE_CHECK;
+			m[1].type = NM_TYPE_CHECK; 
 			m[1].text = "MIDI MUSIC";
 			if (Config_midi_volume) m[1].value = 1;
 		}
@@ -1560,13 +1382,13 @@ void do_sound_menu()
 			m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
 			m[ 4].type = NM_TYPE_TEXT; m[ 4].text="";
 			#ifdef MACINTOSH
-				m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
-
+				m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8; 
+		
 				#ifdef APPLE_DEMO
 					m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
 					m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
 				#endif
-
+		
 			#endif
 
 		#else		// ifdef SHAREWARE
@@ -1702,13 +1524,10 @@ void do_multi_player_menu()
 		old_game_mode = Game_mode;
 		num_options = 0;
 
-		if (!FindArg("-udp")) {
-			ADD_ITEM(TXT_START_IPX_NET_GAME, MENU_START_IPX_NETGAME, -1 );
-			ADD_ITEM(TXT_JOIN_IPX_NET_GAME, MENU_JOIN_IPX_NETGAME, -1 );
-		} else {
-			ADD_ITEM(TXT_START_TCP_NET_GAME, MENU_START_TCP_NETGAME, -1 );
-			ADD_ITEM(TXT_JOIN_TCP_NET_GAME, MENU_JOIN_TCP_NETGAME, -1 );
-		}
+		ADD_ITEM(TXT_START_IPX_NET_GAME, MENU_START_IPX_NETGAME, -1 );
+		ADD_ITEM(TXT_JOIN_IPX_NET_GAME, MENU_JOIN_IPX_NETGAME, -1 );
+		//ADD_ITEM(TXT_START_TCP_NET_GAME, MENU_START_TCP_NETGAME, -1 );
+		//ADD_ITEM(TXT_JOIN_TCP_NET_GAME, MENU_JOIN_TCP_NETGAME, -1 );
 
         #ifdef MACINTOSH
 		ADD_ITEM("Start Appletalk Netgame", MENU_START_APPLETALK_NETGAME, -1 );

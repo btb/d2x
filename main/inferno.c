@@ -1,4 +1,3 @@
-/* $Id: inferno.c,v 1.62 2003-05-12 22:46:01 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,702 +7,88 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
+ * $Source: /cvs/cvsroot/d2x/main/inferno.c,v $
+ * $Revision: 1.30 $
+ * $Author: bradleyb $
+ * $Date: 2002-07-16 22:29:24 $
  *
- * inferno.c: Entry point of program (main procedure)
+ * FIXME: put description here
  *
- * After main initializes everything, most of the time is spent in the loop
- * while (Function_mode != FMODE_EXIT)
- * In this loop, the main menu is brought up first.
+ * $Log: not supported by cvs2svn $
+ * Revision 1.29  2002/07/16 20:47:27  bradleyb
+ * don't use althogdir on non-unix
  *
- * main() for Inferno
+ * Revision 1.28  2002/07/16 19:05:13  bradleyb
+ * need limits.h on mingw also
  *
- * Old Log:
- * Revision 1.1  1995/12/05  15:57:49  allender
- * Initial revision
+ * Revision 1.27  2002/02/16 02:08:31  bradleyb
+ * allow older sdl versions
  *
- * Revision 1.19  1995/11/07  17:03:12  allender
- * added splash screen for descent contest
+ * Revision 1.26  2002/02/15 12:24:53  bradleyb
+ * automap resolution now selectable
  *
- * Revision 1.18  1995/10/31  10:22:22  allender
- * shareware stuff
+ * Revision 1.25  2002/02/14 11:29:31  bradleyb
+ * allow gr_init lowres
  *
- * Revision 1.17  1995/10/18  01:53:07  allender
- * mouse click to leave do not distribute screen
+ * Revision 1.24  2002/02/13 10:39:21  bradleyb
+ * Lotsa networking stuff from d1x
  *
- * Revision 1.16  1995/10/17  12:00:12  allender
- * mouse click gets past endgame screen
+ * Revision 1.23  2002/02/02 23:30:26  bradleyb
+ * Enabled RELEASE option
  *
- * Revision 1.15  1995/10/12  17:40:12  allender
- * read config file after digi initialized
+ * Revision 1.22  2002/01/29 10:11:56  bradleyb
+ * update copyright date
  *
- * Revision 1.14  1995/10/05  10:38:22  allender
- * changed key_getch at exit to be key_inkey and moved
- * mouse init until after macintosh windowing init call
+ * Revision 1.21  2002/01/29 00:08:13  bradleyb
+ * Added d_mkdir macro
  *
- * Revision 1.13  1995/09/18  17:01:04  allender
- * put gr_init call before render buffer stuff
+ * Revision 1.20  2002/01/28 00:03:47  bradleyb
+ * Data files now go in DATADIR/games/d2x, user files now go in ~/.d2x
  *
- * Revision 1.12  1995/08/31  15:50:53  allender
- * call init for appletalk, and change name of intro screens
+ * Revision 1.19  2002/01/18 07:01:37  bradleyb
+ * allow -h for help
  *
- * Revision 1.11  1995/08/26  16:26:19  allender
- * whole bunch 'o stuff!!
+ * Revision 1.18  2001/12/28 09:26:41  bradleyb
+ * document -nomovies option
  *
- * Revision 1.10  1995/07/12  21:48:18  allender
- * removed Int3 from beginning of program
+ * Revision 1.17  2001/11/09 06:55:08  bradleyb
+ * added documentation
  *
- * Revision 1.9  1995/07/05  16:45:48  allender
- * removed hide_cursor call
+ * Revision 1.16  2001/11/08 10:30:28  bradleyb
+ * Enabled shareware build, endlevel flythrough sequence
  *
- * Revision 1.8  1995/06/20  16:44:57  allender
- * game now renders in 640x480 at all times.  Changed code
- * to call game_init_render_buffers with right params
+ * Revision 1.15  2001/11/05 07:39:08  bradleyb
+ * Change args_init back to InitArgs
  *
- * Revision 1.7  1995/06/13  13:07:55  allender
- * change macintosh initialzation.  Mac windows now init'ed through gr_init.
+ * Revision 1.14  2001/11/04 09:01:41  bradleyb
+ * SDL applies to more than X11...
  *
- * Revision 1.6  1995/06/08  16:36:53  allender
- * "ifdef" profile include
+ * Revision 1.13  2001/10/31 07:41:54  bradleyb
+ * Sync with d1x
  *
- * Revision 1.5  1995/06/07  08:08:18  allender
- * dont' make memory info show at end of program
+ * Revision 1.12  2001/10/27 01:39:23  bradleyb
+ * added some documentation
  *
- * Revision 1.4  1995/06/02  07:47:40  allender
- * removed network initialzation for now
+ * Revision 1.11  2001/10/25 09:12:16  bradleyb
+ * Completed tmap selection code.
  *
- * Revision 1.3  1995/05/26  06:54:52  allender
- * put digi_init after timer and key stuff since I was testing stuff
- * that needed the keyboard handler installed
+ * Revision 1.10  2001/10/25 02:19:31  bradleyb
+ * conditionalize including multi.h and network.h, fix backslashes, fix compiler errors with EDITOR
  *
- * Revision 1.2  1995/05/19  11:28:09  allender
- * removed printf
+ * Revision 1.9  2001/10/19 08:08:50  bradleyb
+ * conditionalize conf.h
  *
- * Revision 1.1  1995/05/16  15:26:39  allender
- * Initial revision
+ * Revision 1.8  2001/10/19 00:31:51  bradleyb
+ * Trying to get network working on win32
  *
- * Revision 2.36  1996/01/05  16:52:16  john
- * Improved 3d stuff.
+ * Revision 1.7  2001/10/18 00:01:01  bradleyb
+ * RCS headers added/changed
  *
- * Revision 2.35  1995/10/07  13:20:06  john
- * Added new modes for LCDBIOS, also added support for -JoyNice,
- * and added Shift+F1-F4 to controls various stereoscopic params.
- *
- * Revision 2.34  1995/06/26  11:30:57  john
- * Made registration/copyright screen go away after 5 minutes.
- *
- * Revision 2.33  1995/05/31  14:26:55  unknown
- * Fixed ugly spacing.
- *
- * Revision 2.32  1995/05/26  16:15:28  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- *
- * Revision 2.31  1995/05/11  13:30:01  john
- * Changed 3dbios detection to work like Didde Kim wanted it to.
- *
- * Revision 2.30  1995/05/08  13:53:50  john
- * Added code to read vipport environemnt variable.
- *
- * Revision 2.29  1995/05/08  11:26:18  john
- * Reversed eyes in 3dmax mode.
- *
- * Revision 2.28  1995/05/08  11:24:06  john
- * Made 3dmax work like Kasan wants it to.
- *
- * Revision 2.27  1995/04/23  16:06:25  john
- * Moved rinvul into modem/null modem menu.
- *
- * Revision 2.26  1995/04/12  13:39:26  john
- * Fixed bug with -lowmem not working.
- *
- * Revision 2.25  1995/04/09  14:43:00  john
- * Made Dynamic sockets not print Msockets for help.
- *
- * Revision 2.24  1995/04/07  16:11:33  john
- * Fixed problem with VFX display when using setup.
- *
- * Revision 2.23  1995/04/06  15:40:51  john
- * Synced VFX with setup #'s.
- *
- * Revision 2.22  1995/04/06  12:12:53  john
- * Fixed some bugs with 3dmax.
- *
- * Revision 2.21  1995/03/30  16:36:51  mike
- * text localization.
- *
- * Revision 2.20  1995/03/29  15:33:52  john
- * Added code to parse descent.net file.
- *
- * Revision 2.19  1995/03/28  20:08:21  john
- * Took away alternate server thing.
- *
- * Revision 2.18  1995/03/27  09:43:08  john
- * Added VR Settings in config file.
- *
- * Revision 2.17  1995/03/23  19:02:21  john
- * Added descent.net file use.
- *
- * Revision 2.16  1995/03/23  12:25:11  john
- * Moved IPX stuff into BIOS lib.
- *
- * Revision 2.15  1995/03/21  16:52:34  john
- * Added 320x100.
- *
- * Revision 2.14  1995/03/21  14:40:33  john
- * Ifdef'd out the NETWORK code.
- *
- * Revision 2.13  1995/03/16  23:13:35  john
- * Fixed bug with piggy paging in bitmap not checking for disk
- * error, hence bogifying textures if you pull the CD out.
- *
- * Revision 2.12  1995/03/16  21:45:22  john
- * Made all paged modes have incompatible menus!
- *
- * Revision 2.11  1995/03/15  15:19:34  john
- * Took out code that changes to exe dir.
- *
- * Revision 2.10  1995/03/15  14:33:37  john
- * Added code to force the Descent CD-rom in the drive.
- *
- * Revision 2.9  1995/03/15  11:41:27  john
- * Better Saturn CD-ROM support.
- *
- * Revision 2.8  1995/03/14  18:24:46  john
- * Force Destination Saturn to use CD-ROM drive.
- *
- * Revision 2.7  1995/03/14  16:22:35  john
- * Added cdrom alternate directory stuff.
- *
- * Revision 2.6  1995/03/13  15:17:19  john
- * Added alternate hogfile directory.
- *
- * Revision 2.5  1995/03/10  13:05:35  john
- * Added code so that palette is correct for VFX1 helmets.
- *
- * Revision 2.4  1995/03/07  15:12:43  john
- * Fixed VFX,3dmax support.
- *
- * Revision 2.3  1995/03/07  14:19:35  mike
- * More destination saturn stuff.
- *
- * Revision 2.2  1995/03/06  16:47:34  mike
- * destination saturn
- *
- * Revision 2.1  1995/03/06  15:24:06  john
- * New screen techniques.
- *
- * Revision 2.0  1995/02/27  11:31:29  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- *
- * Revision 1.295  1995/02/23  12:02:14  john
- * Made mono  windows smaller.
- *
- * Revision 1.294  1995/02/16  17:35:00  john
- * Added code to allow dynamic socket changing.
- *
- * Revision 1.293  1995/02/14  19:29:29  john
- * Locked down critical error handler.
- *
- * Revision 1.292  1995/02/14  15:29:20  john
- * Added CR-LF to last line of menu help text.
- *
- * Revision 1.291  1995/02/14  11:39:01  john
- * Added polled/bios joystick readers.
- *
- * Revision 1.290  1995/02/13  20:35:03  john
- * Lintized
- *
- * Revision 1.289  1995/02/11  16:20:02  john
- * Added code to make the default mission be the one last played.
- *
- * Revision 1.288  1995/02/11  15:54:13  rob
- * changed cinvul to rinvul.
- *
- * Revision 1.287  1995/02/11  14:48:43  rob
- * Added max of 314 seconds to control invul. times
- *
- * Revision 1.286  1995/02/11  12:42:01  john
- * Added new song method, with FM bank switching..
- *
- * Revision 1.285  1995/02/11  11:36:11  rob
- * Added cinvul option.
- *
- * Revision 1.284  1995/02/10  16:07:45  matt
- * Took 'registered' out of printed info at startup
- *
- * Revision 1.283  1995/02/09  22:00:59  john
- * Added i-glasses tracking.
- *
- * Revision 1.282  1995/02/02  11:11:27  john
- * Added -nocyberman switch.
- *
- * Revision 1.281  1995/02/01  16:35:14  john
- * Linted.
- *
- * Revision 1.280  1995/01/31  02:04:25  matt
- * Fixed up cmdline help
- *
- * Revision 1.279  1995/01/30  16:25:55  john
- * Put back in graphical screen at program end.
- *
- * Revision 1.278  1995/01/28  17:05:50  matt
- * Changed imbedded copyright to use comma instead of hyphen
- *
- * Revision 1.277  1995/01/28  15:57:26  john
- * Made joystick calibration be only when wrong detected in
- * menu or joystick axis changed.
- *
- * Revision 1.276  1995/01/25  14:37:49  john
- * Made joystick only prompt for calibration once...
- *
- * Revision 1.275  1995/01/24  18:21:00  john
- * Added Adam's text warning.
- *
- * Revision 1.274  1995/01/22  15:57:20  john
- * Took out code that printed warning out as game exited.
- *
- * Revision 1.273  1995/01/22  13:31:35  matt
- * Added load of mission 0, so there's always a default mission
- *
- * Revision 1.272  1995/01/19  17:00:41  john
- * Made save game work between levels.
- *
- * Revision 1.271  1995/01/18  11:47:57  adam
- * changed copyright notice
- *
- * Revision 1.270  1995/01/15  13:42:42  john
- * Moved low_mem cutoff higher.
- *
- * Revision 1.269  1995/01/12  18:53:50  john
- * Put ifdef EDITOR around the code that checked for
- * a 800x600 mode, because this trashed some people's
- * computers (maybe) causing the mem allocation error in
- * mouse.c that many users reported.
- *
- * Revision 1.268  1995/01/12  11:41:42  john
- * Added external control reading.
- *
- * Revision 1.267  1995/01/06  10:26:55  john
- * Added -nodoscheck command line switch.
- *
- * Revision 1.266  1995/01/05  16:59:30  yuan
- * Don't show orderform in editor version.
- *
- * Revision 1.265  1994/12/28  15:33:51  john
- * Added -slowjoy option.
- *
- * Revision 1.264  1994/12/15  16:44:15  matt
- * Added trademark notice
- *
- * Revision 1.263  1994/12/14  20:13:59  john
- * Reduced physical mem requments to 2 MB.
- *
- * Revision 1.262  1994/12/14  19:06:17  john
- * Lowered physical memory requments to 2 MB.
- *
- * Revision 1.261  1994/12/14  09:41:29  allender
- * change to drive and directory (if needed) of command line invocation
- * so descent can be started from anywhere
- *
- * Revision 1.260  1994/12/13  19:08:59  john
- * Updated memory requirements.
- *
- * Revision 1.259  1994/12/13  17:30:33  john
- * Made the timer rate be changed right after initializing it.
- *
- * Revision 1.258  1994/12/13  02:46:25  matt
- * Added imbedded copyright
- *
- * Revision 1.257  1994/12/13  02:06:46  john
- * Added code to check stack used by descent... initial
- * check showed stack used 35k/50k, so we decided it wasn't
- * worth pursuing any more.
- *
- * Revision 1.256  1994/12/11  23:17:54  john
- * Added -nomusic.
- * Added RealFrameTime.
- * Put in a pause when sound initialization error.
- * Made controlcen countdown and framerate use RealFrameTime.
- *
- * Revision 1.255  1994/12/10  00:56:51  matt
- * Added -nomusic to command-line help
- *
- * Revision 1.254  1994/12/08  11:55:11  john
- * Took out low memory print.
- *
- * Revision 1.253  1994/12/08  11:51:00  john
- * Made strcpy only copy corect number of chars,.
- *
- * Revision 1.252  1994/12/08  00:38:29  matt
- * Cleaned up banner messages
- *
- * Revision 1.251  1994/12/07  19:14:52  matt
- * Cleaned up command-line options and command-line help message
- *
- * Revision 1.250  1994/12/06  19:33:28  john
- * Fixed text of message to make more sense.
- *
- * Revision 1.249  1994/12/06  16:30:55  john
- * Neatend mem message,..
- *
- * Revision 1.248  1994/12/06  16:17:35  john
- * Added better mem checking/printing.
- *
- * Revision 1.247  1994/12/06  14:14:37  john
- * Added code to set low mem based on memory.
- *
- * Revision 1.246  1994/12/05  12:29:09  allender
- * removed ifdefs around -norun option
- *
- * Revision 1.245  1994/12/05  00:03:30  matt
- * Added -norun option to exit after writing pig
- *
- * Revision 1.244  1994/12/04  14:47:01  john
- * MAde the intro and menu be the same song.
- *
- * Revision 1.243  1994/12/04  14:36:42  john
- * Added menu music.
- *
- * Revision 1.242  1994/12/02  13:50:17  yuan
- * Localization.
- *
- * Revision 1.241  1994/12/01  17:28:30  adam
- * added end-shareware stuff
- *
- * Revision 1.240  1994/11/30  12:10:57  adam
- * added support for PCX titles/brief screens
- *
- * Revision 1.239  1994/11/29  15:47:33  matt
- * Moved error_init to start of game, so error message prints last
- *
- * Revision 1.238  1994/11/29  14:19:22  jasen
- * reduced dos mem requirments.
- *
- * Revision 1.237  1994/11/29  03:46:35  john
- * Added joystick sensitivity; Added sound channels to detail menu.  Removed -maxchannels
- * command line arg.
- *
- * Revision 1.236  1994/11/29  02:50:18  john
- * Increased the amount a joystick has to be off before
- * asking if they want to recalibrate their joystick.
- *
- * Revision 1.235  1994/11/29  02:01:29  john
- * Corrected some of the Descent command line help items.
- *
- * Revision 1.234  1994/11/29  01:39:56  john
- * Fixed minor bug with vfx_light help not wrapping correctly.
- *
- * Revision 1.233  1994/11/28  21:34:17  john
- * Reduced dos mem rqment to 70k.
- *
- * Revision 1.232  1994/11/28  21:20:38  john
- * First version with memory checking.
- *
- * Revision 1.231  1994/11/28  20:06:21  rob
- * Removed old serial param command line options.
- * Added -noserial and -nonetwork to help listing.
- *
- * Revision 1.230  1994/11/27  23:15:24  matt
- * Made changes for new mprintf calling convention
- *
- * Revision 1.229  1994/11/27  20:50:51  matt
- * Don't set mem stuff if no debug
- *
- * Revision 1.228  1994/11/27  18:46:21  matt
- * Cleaned up command-line switches a little
- *
- * Revision 1.227  1994/11/21  17:48:00  matt
- * Added text to specifiy whether shareware or registered version
- *
- * Revision 1.226  1994/11/21  14:44:20  john
- * Fixed some bugs with setting volumes even when -nosound was used. Duh!
- *
- * Revision 1.225  1994/11/21  13:53:42  matt
- * Took out dos extender copyright
- *
- * Revision 1.224  1994/11/21  09:46:54  john
- * Added -showmeminfo parameter.
- *
- * Revision 1.223  1994/11/20  22:12:05  mike
- * Make some stuff dependent on SHAREWARE.
- *
- * Revision 1.222  1994/11/20  21:14:09  john
- * Changed -serial to -noserial.  MAde a 1 sec delay
- * before leaving title screen.  Clear keyboard buffer
- * before asking for player name.
- *
- * Revision 1.221  1994/11/19  15:20:20  mike
- * rip out unused code and data
- *
- * Revision 1.220  1994/11/17  19:14:29  adam
- * prevented order screen from coming up when -notitles is used
- *
- * Revision 1.219  1994/11/16  11:34:39  john
- * Added -nottitle switch.
- *
- * Revision 1.218  1994/11/16  10:05:53  john
- * Added verbose messages.
- *
- * Revision 1.217  1994/11/15  20:12:34  john
- * Added back in inferno and parallax screens.
- *
- * Revision 1.216  1994/11/15  18:35:30  john
- * Added verbose setting.
- *
- * Revision 1.215  1994/11/15  17:47:44  john
- * Added ordering info screen.
- *
- * Revision 1.214  1994/11/15  08:57:44  john
- * Added MS-DOS version checking and -nonetwork option.
- *
- * Revision 1.213  1994/11/15  08:34:32  john
- * Added better error messages for IPX init.
- *
- * Revision 1.212  1994/11/14  20:14:18  john
- * Fixed some warnings.
- *
- * Revision 1.211  1994/11/14  19:50:49  john
- * Added joystick cal values to descent.cfg.
- *
- * Revision 1.210  1994/11/14  17:56:44  allender
- * make call to ReadConfigFile at startup
- *
- * Revision 1.209  1994/11/14  11:41:55  john
- * Fixed bug with editor/game sequencing.
- *
- * Revision 1.208  1994/11/13  17:05:11  john
- * Made the callsign entry be a list box and gave the ability
- * to delete players.
- *
- * Revision 1.207  1994/11/13  15:39:22  john
- * Added critical error handler to game.  Took out -editor command line
- * option because it didn't work anymore and wasn't worth fixing.  Made scores
- * not use MINER enviroment variable on release version, and made scores
- * not print an error if there is no descent.hi.
- *
- * Revision 1.206  1994/11/10  20:53:29  john
- * Used new sound install parameters.
- *
- * Revision 1.205  1994/11/10  11:07:52  mike
- * Set default detail level.
- *
- * Revision 1.204  1994/11/09  13:45:43  matt
- * Made -? work again for help
- *
- * Revision 1.203  1994/11/09  10:55:58  matt
- * Cleaned up initialization for editor -> game transitions
- *
- * Revision 1.202  1994/11/07  21:35:47  matt
- * Use new function iff_read_into_bitmap()
- *
- * Revision 1.201  1994/11/05  17:22:16  john
- * Fixed lots of sequencing problems with newdemo stuff.
- *
- * Revision 1.200  1994/11/05  14:05:44  john
- * Fixed fade transitions between all screens by making
- * gr_palette_fade_in and out keep track of whether the palette is
- * faded in or not.  Then, wherever the code needs to fade out, it
- * just calls gr_palette_fade_out and it will fade out if it isn't
- * already.  The same with fade_in.
- * This eliminates the need for all the flags like Menu_fade_out,
- * game_fade_in palette, etc.
- *
- * Revision 1.199  1994/11/04  14:36:30  allender
- * change Auto_demo meaning to mean autostart from menu only.  Use
- * FindArgs when searching for AutoDemo from command line.  also,
- * set N_Players to 1 when starting in editor mode.
- *
- * Revision 1.198  1994/11/02  11:59:49  john
- * Moved menu out of game into inferno main loop.
- *
- * Revision 1.197  1994/11/01  17:57:39  mike
- * -noscreens option to bypass all screens.
- *
- * Revision 1.196  1994/10/28  15:42:34  allender
- * don't register player if Autodemo is on
- *
- * Revision 1.195  1994/10/28  10:58:01  matt
- * Added copyright notice for DOS4GW
- *
- * Revision 1.194  1994/10/20  21:26:48  matt
- * Took out old serial name/number code, and put up message if this
- * is a marked version.
- *
- * Revision 1.193  1994/10/19  09:52:14  allender
- * Print out who descent.exe belongs to if descent.exe is stamped.
- *
- * Revision 1.192  1994/10/18  16:43:05  allender
- * Added check for identifier stamp and time after which descent will
- * no longer run.
- *
- * Revision 1.191  1994/10/17  13:07:17  john
- * Moved the descent.cfg info into the player config file.
- *
- * Revision 1.190  1994/10/04  10:26:31  matt
- * Support new menu fade in
- *
- * Revision 1.189  1994/10/03  22:58:46  matt
- * Changed some values of game_mode
- *
- * Revision 1.188  1994/10/03  18:55:39  rob
- * Changed defaults for com port settings.
- *
- * Revision 1.187  1994/10/03  13:34:47  matt
- * Added new (and hopefully better) game sequencing functions
- *
- * Revision 1.186  1994/09/30  12:37:28  john
- * Added midi,digi volume to configuration.
- *
- * Revision 1.185  1994/09/30  10:08:48  john
- * Changed sound stuff... made it so the reseting card doesn't hang,
- * made volume change only if sound is installed.
- *
- * Revision 1.184  1994/09/28  17:25:00  matt
- * Added first draft of game save/load system
- *
- * Revision 1.183  1994/09/28  16:18:23  john
- * Added capability to play midi song.
- *
- * Revision 1.182  1994/09/28  11:31:18  john
- * Made text output unbuffered.
- *
- * Revision 1.181  1994/09/27  19:23:44  john
- * Added -nojoystick and -nomouse
- *
- * Revision 1.180  1994/09/24  16:55:29  rob
- * No longer open COM port immediately upon program start.
- * No longer set Network_active is serial_active is set.
- *
- * Revision 1.179  1994/09/24  14:16:30  mike
- * Support new game mode constants.
- *
- * Revision 1.178  1994/09/22  17:52:31  rob
- * Added Findargs hooks for -serial, -speed, and -com.
- *
- * Revision 1.177  1994/09/22  16:14:11  john
- * Redid intro sequecing.
- *
- * Revision 1.176  1994/09/21  16:32:58  john
- * Made mouse and keyboard init after bm_init. Why?
- * Because it seems to work better under virtual
- * memory.
- *
- * Revision 1.175  1994/09/21  16:27:52  john
- * Added mouse_init
- *
- * Revision 1.174  1994/09/20  15:14:10  matt
- * New message for new VFX switches
- *
- * Revision 1.173  1994/09/16  16:14:27  john
- * Added acrade sequencing.
- *
- * Revision 1.172  1994/09/16  11:49:52  john
- * Added first version of arcade joystick support;
- * Also fixed some bugs in kconfig.c, such as reading non-present
- * joysticks, which killed frame rate, and not reading key_down_time
- * when in slide mode or bank mode.
- *
- * Revision 1.171  1994/09/15  16:11:35  john
- * Added support for VFX1 head tracking. Fixed bug with memory over-
- * write when using stereo mode.
- *
- * Revision 1.170  1994/09/12  19:38:23  john
- * Made some stuff that prints to the DOS screen go to the
- * mono instead, since it really is debugging info.
- *
- * Revision 1.169  1994/08/29  21:18:28  john
- * First version of new keyboard/oystick remapping stuff.
- *
- * Revision 1.168  1994/08/26  13:02:00  john
- * Put high score system in.
- *
- * Revision 1.167  1994/08/24  19:00:23  john
- * Changed key_down_time to return fixed seconds instead of
- * milliseconds.
- *
- * Revision 1.166  1994/08/18  16:24:20  john
- * changed socket to channel in text.
- *
- * Revision 1.165  1994/08/18  16:16:51  john
- * Added support for different sockets.
- *
- * Revision 1.164  1994/08/18  10:47:53  john
- * *** empty log message ***
- *
- * Revision 1.163  1994/08/12  09:15:54  john
- * *** empty log message ***
- *
- * Revision 1.162  1994/08/12  03:11:19  john
- * Made network be default off; Moved network options into
- * main menu.  Made starting net game check that mines are the
- * same.
- *
- * Revision 1.161  1994/08/10  19:57:05  john
- * Changed font stuff; Took out old menu; messed up lots of
- * other stuff like game sequencing messages, etc.
- *
- * Revision 1.160  1994/08/05  16:30:23  john
- * Added capability to turn off network.
- *
- * Revision 1.159  1994/08/04  19:42:51  matt
- * Moved serial number & name (and version name) from inferno.c to inferno.ini
- *
- * Revision 1.158  1994/08/03  10:30:23  matt
- * Change cybermaxx switches, updated command-line help, and added serial number system
- *
- * Revision 1.157  1994/07/29  18:30:10  matt
- * New parms (lack of parms, actually) for g3_init()
- *
- * Revision 1.156  1994/07/24  00:39:25  matt
- * Added more text to TEX file; make NewGame() take a start level; made game
- * load/save menus use open/close window funcs.
- *
- * Revision 1.155  1994/07/21  21:31:27  john
- * First cheapo version of VictorMaxx tracking.
- *
- * Revision 1.154  1994/07/21  18:15:34  matt
- * Ripped out a bunch of unused stuff
- *
- * Revision 1.153  1994/07/21  17:59:10  matt
- * Cleaned up initial mode game/editor code
- *
- * Revision 1.152  1994/07/21  13:11:19  matt
- * Ripped out remants of old demo system, and added demo only system that
- * disables object movement and game options from menu.
- *
- * Revision 1.151  1994/07/20  15:58:27  john
- * First installment of ipx stuff.
- *
- * Revision 1.150  1994/07/15  16:04:24  matt
- * Changed comment for milestone 3 version
- *
- * Revision 1.149  1994/07/15  13:59:24  matt
- * Fixed stupid mistake I make in the last revision
- *
- * Revision 1.148  1994/07/15  13:20:15  matt
- * Updated comand-line help
- *
- * Revision 1.147  1994/07/14  23:29:43  matt
- * Open two mono debug messages, one for errors & one for spew
- *
- * Revision 1.146  1994/07/09  22:48:05  matt
- * Added localizable text
- *
- * Revision 1.145  1994/07/02  13:49:47  matt
- * Cleaned up includes
- *
- * Revision 1.144  1994/06/30  20:04:43  john
- * Added -joydef support.
- *
- * Revision 1.143  1994/06/24  17:01:44  john
- * Add VFX support; Took Game Sequencing, like EndGame and stuff and
- * took it out of game.c and into gameseq.c
  *
  */
 
@@ -801,8 +186,12 @@ extern int Current_display_mode;        //$$ there's got to be a better way than
 #include "ui.h"
 #endif
 
-#ifndef __MSDOS__
-#include <SDL.h>
+#ifdef SDL_INPUT
+#include <SDL/SDL.h>
+#endif
+
+#ifndef SDL_VERSION_ATLEAST
+#include "oldsdl.h"
 #endif
 
 #include "vers_id.h"
@@ -856,6 +245,7 @@ extern int VR_low_res;
 extern int Config_vr_type;
 extern int Config_vr_resolution;
 extern int Config_vr_tracking;
+int grd_fades_disabled=1;
 
 #define LINE_LEN	100
 
@@ -870,34 +260,29 @@ void print_commandline_help()
 	if (!ifile) {
 		ifile = cfopen("help.txb","rb");
 		if (!ifile)
-			Warning("Cannot load help text file.");
+			Error("Cannot load help text file.");
 		have_binary = 1;
 	}
 
-	if (ifile)
-	{
+	while (cfgets(line,LINE_LEN,ifile)) {
 
-		while (cfgets(line,LINE_LEN,ifile)) {
-
-			if (have_binary) {
-				int i;
-				for (i = 0; i < strlen(line) - 1; i++) {
-					encode_rotate_left(&(line[i]));
-					line[i] = line[i] ^ BITMAP_TBL_XOR;
-					encode_rotate_left(&(line[i]));
-				}
+		if (have_binary) {
+			int i;
+			for (i = 0; i < strlen(line) - 1; i++) {
+				encode_rotate_left(&(line[i]));
+				line[i] = line[i] ^ BITMAP_TBL_XOR;
+				encode_rotate_left(&(line[i]));
 			}
-
-			if (line[0] == ';')
-				continue;		//don't show comments
-
-			printf("%s",line);
-
 		}
 
-		cfclose(ifile);
+		if (line[0] == ';')
+			continue;		//don't show comments
+
+		printf("%s",line);
 
 	}
+
+	cfclose(ifile);
 
 //	printf( " Diagnostic:\n\n");
 //	printf( "  -emul           %s\n", "Certain video cards need this option in order to run game");
@@ -907,20 +292,15 @@ void print_commandline_help()
 	printf( " Editor Options:\n\n");
 	printf( "  -autoload <file>%s\n", "Autoload a level in the editor");
 	printf( "  -hoarddata      %s\n","FIXME: Undocumented");
+	printf( "  -macdata        %s\n","FIXME: Undocumented");
 //	printf( "  -nobm           %s\n","FIXME: Undocumented");
 	printf( "\n");
 #endif
 	printf( " D2X Options:\n\n");
 	printf( "  -noredundancy   %s\n", "Do not send messages when picking up redundant items in multi");
 	printf( "  -shortpackets   %s\n", "Set shortpackets to default as on");
-	printf( "  -maxfps <n>     %s\n", "Set maximum framerate (1-100)");
 	printf( "  -notitles       %s\n", "Do not show titlescreens on startup");
-	printf( "  -hogdir <dir>   %s\n", "set shared data directory to <dir>");
-#ifdef __unix__
-	printf( "  -nohogdir       %s\n", "don't try to use shared data directory");
-	printf( "  -userdir <dir>  %s\n", "set user dir to <dir> instead of $HOME/.d2x");
-#endif
-	printf( "  -ini <file>     %s\n", "option file (alternate to command line), defaults to d2x.ini");
+	printf( "  -ini <file>     %s\n", "option file (alternate to command line) defaults to d2x.ini, or d1x.ini");
 	printf( "  -autodemo       %s\n", "Start in demo mode");
 	printf( "  -bigpig         %s\n","FIXME: Undocumented");
 	printf( "  -bspgen         %s\n","FIXME: Undocumented");
@@ -938,7 +318,9 @@ void print_commandline_help()
 //	printf( "  -dynamicsockets %s\n","FIXME: Undocumented");
 //	printf( "  -forcegfx       %s\n","FIXME: Undocumented");
 #ifdef SDL_INPUT
+#if SDL_VERSION_ATLEAST(1,0,2)
 	printf( "  -grabmouse      %s\n","Keeps the mouse from wandering out of the window");
+#endif
 #endif
 //	printf( "  -hw_3dacc       %s\n","FIXME: Undocumented");
 #ifndef RELEASE
@@ -947,23 +329,15 @@ void print_commandline_help()
 	printf( "  -ipxnetwork <num> %s\n","Use IPX network number <num>");
 	printf( "  -jasen          %s\n","FIXME: Undocumented");
 	printf( "  -joyslow        %s\n","FIXME: Undocumented");
-#ifdef NETWORK
-	printf( "  -kali           %s\n","use Kali for networking");
-#endif
 //	printf( "  -logfile        %s\n","FIXME: Undocumented");
-	printf( "  -lowresmovies   %s\n","Play low resolution movies if available (for slow machines)");
-#if defined(EDITOR) || !defined(MACDATA)
-	printf( "  -macdata        %s\n","Read (and, for editor, write) mac data files (swap colors)");
-#endif
+//	printf( "  -lowresmovies   %s\n","FIXME: Undocumented");
 //	printf( "  -memdbg         %s\n","FIXME: Undocumented");
 //	printf( "  -monodebug      %s\n","FIXME: Undocumented");
 	printf( "  -nocdrom        %s\n","FIXME: Undocumented");
 #ifdef __DJGPP__
 	printf( "  -nocyberman     %s\n","FIXME: Undocumented");
 #endif
-#ifndef NDEBUG
 	printf( "  -nofade         %s\n","Disable fades");
-#endif
 #ifdef NETWORK
 	printf( "  -nomatrixcheat  %s\n","FIXME: Undocumented");
 	printf( "  -norankings     %s\n","Disable multiplayer ranking system");
@@ -973,7 +347,7 @@ void print_commandline_help()
 #endif
 #if !defined(MACINTOSH) && !defined(WINDOWS)
 	printf( "  -nomixer        %s\n","Don't crank music volume");
-//	printf( "  -superhires     %s\n","Allow higher-resolution modes");
+	printf( "  -superhires     %s\n","Allow higher-resolution modes");
 #endif
 //	printf( "  -nomodex        %s\n","FIXME: Undocumented");
 #ifndef RELEASE
@@ -992,15 +366,13 @@ void print_commandline_help()
 	printf( "  -stickmag       %s\n","FIXME: Undocumented");
 #endif
 //	printf( "  -stopwatch      %s\n","FIXME: Undocumented");
-	printf( "  -subtitles      %s\n","Turn on movie subtitles (English-only)");
+//	printf( "  -subtitles      %s\n","Turn on movie subtitles (English-only)");
 //	printf( "  -sysram         %s\n","FIXME: Undocumented");
 	printf( "  -text <file>    %s\n","Specify alternate .tex file");
 //	printf( "  -tsengdebug1    %s\n","FIXME: Undocumented");
 //	printf( "  -tsengdebug2    %s\n","FIXME: Undocumented");
 //	printf( "  -tsengdebug3    %s\n","FIXME: Undocumented");
-#ifdef NETWORK
-	printf( "  -udp            %s\n","Use TCP/UDP for networking");
-#endif
+//	printf( "  -udp            %s\n","FIXME: Undocumented");
 //	printf( "  -vidram         %s\n","FIXME: Undocumented");
 	printf( "  -xcontrol       %s\n","FIXME: Undocumented");
 	printf( "  -xname          %s\n","FIXME: Undocumented");
@@ -1016,7 +388,7 @@ void print_commandline_help()
 #ifdef __MSDOS__
 	printf( "  -joy209         %s\n", "Use alternate port 209 for joystick");
 #endif
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE 
 	printf( "  -fullscreen     %s\n", "Use fullscreen mode if available");
 #endif
 #ifdef OGL
@@ -1026,7 +398,7 @@ void print_commandline_help()
 	printf( "  -gl_simple      %s\n","set gl texture filters to gl_nearest for \"original\" look. (default)");
 	printf( "  -gl_alttexmerge %s\n","use new texmerge, usually uses less ram (default)");
 	printf( "  -gl_stdtexmerge %s\n","use old texmerge, uses more ram, but _might_ be a bit faster");
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE 
 	printf( "  -gl_voodoo      %s\n","force fullscreen mode only");
 #endif
 	printf( "  -gl_16bittextures %s\n","attempt to use 16bit textures");
@@ -1046,7 +418,7 @@ void print_commandline_help()
 	printf( "  -nosdlvidmodecheck %s\n", "Some X servers don't like checking vidmode first, so just switch");
 	printf( "  -hwsurface      %s\n","FIXME: Undocumented");
 #endif
-#ifdef __unix__
+#ifdef __linux__
 	printf( "  -serialdevice <s> %s\n", "Set serial/modem device to <s>");
 	printf( "  -serialread <r> %s\n", "Set serial/modem to read from <r>");
 #endif
@@ -1057,6 +429,7 @@ void print_commandline_help()
 
 void do_joystick_init()
 {
+ 
 
 	if (!FindArg( "-nojoystick" ))	{
 		con_printf(CON_VERBOSE, "\n%s", TXT_VERBOSE_6);
@@ -1091,10 +464,10 @@ void do_register_player(ubyte *title_pal)
 
 		key_flush();
 
-		//now, before we bring up the register player menu, we need to
+		//now, before we bring up the register player menu, we need to 
 		//do some stuff to make sure the palette is ok.  First, we need to
 		//get our current palette into the 2d's array, so the remapping will
-		//work.  Second, we need to remap the fonts.  Third, we need to fill
+		//work.  Second, we need to remap the fonts.  Third, we need to fill 
 		//in part of the fade tables so the darkening of the menu edges works
 
 		memcpy(gr_palette,title_pal,sizeof(gr_palette));
@@ -1108,14 +481,14 @@ void do_register_player(ubyte *title_pal)
 void do_network_init()
 {
 	if (!FindArg( "-nonetwork" ))	{
-		int socket = 0, showaddress = 0, t;
+		int socket=0, t;
 		int ipx_error;
 
 		con_printf(CON_VERBOSE, "\n%s ", TXT_INITIALIZING_NETWORK);
 		if ((t=FindArg("-socket")))
 			socket = atoi( Args[t+1] );
 		//@@if ( FindArg("-showaddress") ) showaddress=1;
-		if ((ipx_error=ipx_init(IPX_DEFAULT_SOCKET+socket, showaddress))==0)	{
+		if ((ipx_error=ipx_init(IPX_DEFAULT_SOCKET+socket))==0)	{
   			con_printf(CON_VERBOSE, "%s %d.\n", TXT_IPX_CHANNEL, socket );
 			Network_active = 1;
 		} else {
@@ -1149,7 +522,9 @@ extern char Language[];
 //can we do highres menus?
 extern int MenuHiresAvailable;
 
+#ifdef D2_OEM
 int intro_played = 0;
+#endif
 
 int Inferno_verbose = 0;
 
@@ -1177,31 +552,26 @@ int	Auto_exit = 0;
 char	Auto_file[128] = "";
 #endif
 
-int main(int argc, char *argv[])
+int main(int argc,char **argv)
 {
-	int i, t;
+	int i,t;
 	ubyte title_pal[768];
 	int screen_width = 640;
 	int screen_height = 480;
-	u_int32_t screen_mode = SM(screen_width,screen_height);
+	u_int32_t screen_mode = SM(640,480);
 
 	con_init();  // Initialise the console
 	mem_init();
 
 	error_init(NULL, NULL);
 
-	InitArgs( argc,argv );
-
 #ifdef __unix__
 	{
 		char *home = getenv("HOME");
 
-		if ((t = FindArg("-userdir")))
-			chdir(Args[t+1]);
-
-		else if (home) {
+		if (home) {
 			char buf[PATH_MAX + 5];
-
+			
 			strcpy(buf, home);
 			strcat(buf, "/.d2x");
 			if (chdir(buf)) {
@@ -1213,44 +583,47 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	if (FindArg("-debug"))
-		con_threshold.value = (float)2;
-	else if (FindArg("-verbose"))
-		con_threshold.value = (float)1;
+	InitArgs( argc,argv );
 
-	//tell cfile where hogdir is
-	if ((t=FindArg("-hogdir")))
-		cfile_use_alternate_hogdir(Args[t+1]);
+	if ( FindArg( "-debug") )
+	{
+		con_threshold.value = (float)2;
+
+	} else
+		if ( FindArg( "-verbose" ) ) 
+		{
+			con_threshold.value = (float)1;
+		}
+
+	arch_init_start();
+
+	arch_init();
+
 #ifdef __unix__
-	else if (!FindArg("-nohogdir"))
-		cfile_use_alternate_hogdir(SHAREPATH);
+	//tell cfile where hogdir is
+	cfile_use_alternate_hogdir(SHAREPATH);
 #endif
 
 	//tell cfile about our counter
 	cfile_set_critical_error_counter_ptr(&descent_critical_error);
 
-	if (! cfile_init("descent2.hog"))
-		if (! cfile_init("d2demo.hog"))
-			Warning("Could not find a valid hog file (descent2.hog or d2demo.hog)\nPossible locations are:\n"
-#ifdef __unix__
-			      "\t$HOME/.d2x\n"
-			      "\t" SHAREPATH "\n"
-#else
-				  "\tCurrent directory\n"
-#endif
-				  "Or use the -hogdir option to specify an alternate location.");
+	#ifdef SHAREWARE
+		cfile_init("d2demo.hog");			//specify name of hogfile
+	#else
+	#define HOGNAME "descent2.hog"
+	if (! cfile_init(HOGNAME)) {		//didn't find HOG.  Check on CD
+		#ifdef RELEASE
+			Error("Could not find required file <%s>",HOGNAME);
+		#endif
+	}
+	#endif
+	
 	load_text();
 
 	//print out the banner title
 	con_printf(CON_NORMAL, "\nDESCENT 2 %s v%d.%d",VERSION_TYPE,Version_major,Version_minor);
-	#ifdef VERSION_NAME
-	con_printf(CON_NORMAL, "  %s", VERSION_NAME);
-	#endif
-	if (cfexist(MISSION_DIR "d2x.hog"))
-		con_printf(CON_NORMAL, "  Vertigo Enhanced");
-
 	con_printf(CON_NORMAL, "  %s %s\n", __DATE__,__TIME__);
-	con_printf(CON_NORMAL, "%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);
+	con_printf(CON_NORMAL, "%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);	
 	con_printf(CON_NORMAL, "This is a MODIFIED version of Descent 2. Copyright (c) 1999 Peter Hawkins\n");
 	con_printf(CON_NORMAL, "                                         Copyright (c) 2002 Bradley Bell\n");
 
@@ -1268,30 +641,7 @@ int main(int argc, char *argv[])
 	con_printf(CON_NORMAL, TXT_HELP, PROGNAME);		//help message has %s for program name
 	con_printf(CON_NORMAL, "\n");
 
-	//(re)added Mar 30, 2003 Micah Lieske - Allow use of 22K sound samples again.
-	if(FindArg("-sound22k"))
-	{
-		digi_sample_rate = SAMPLE_RATE_22K;
-	}
-
-	if(FindArg("-sound11k"))
-	{
-		digi_sample_rate = SAMPLE_RATE_11K;
-	}
-
-	arch_init_start();
-
-	arch_init();
-
-	//con_printf(CON_VERBOSE, "\n%s...", "Checking for Descent 2 CD-ROM");
-
-	//added/edited 8/18/98 by Victor Rachels to set maximum fps <= 100
-	if ((t = FindArg( "-maxfps" ))) {
-		t=atoi(Args[t+1]);
-		if (t>0&&t<=80)
-			maxfps=t;
-	}
-	//end addition - Victor Rachels
+	con_printf(CON_VERBOSE, "\n%s...", "Checking for Descent 2 CD-ROM");
 
 	if ( FindArg( "-autodemo" ))
 		Auto_demo = 1;
@@ -1322,8 +672,6 @@ int main(int argc, char *argv[])
 
 	con_printf (CON_VERBOSE, "%s", TXT_VERBOSE_1);
 	ReadConfigFile();
-
-	do_joystick_init();
 
 #ifdef NETWORK
 	do_network_init();
@@ -1381,7 +729,7 @@ int main(int argc, char *argv[])
 //		Game_Screen_mode = screen_mode;
 		//end added -OE
 		game_init_render_buffers(screen_mode, screen_width, screen_height, vr_mode, screen_compatible);
-               
+                
 	}
 	{
 //added/edited on 12/14/98 by Matt Mueller - override res in d1x.ini with command line args
@@ -1407,7 +755,7 @@ int main(int argc, char *argv[])
 	con_printf(CON_VERBOSE, "\n%s\n\n", TXT_INITIALIZING_GRAPHICS);
 	if (FindArg("-nofade"))
 		grd_fades_disabled=1;
-
+	
 	//determine whether we're using high-res menus & movies
 #if !defined(POLY_ACC)
 	if (FindArg("-nohires") || FindArg("-nohighres") || (gr_check_mode(MENU_HIRES_MODE) != 0) || disable_high_res)
@@ -1417,9 +765,6 @@ int main(int argc, char *argv[])
 		//NOTE LINK TO ABOVE!
 		MenuHires = MenuHiresAvailable = 1;
 
-	if (FindArg( "-lowresmovies" ))
-		MovieHires = 0;
-
 	if ((t=gr_init())!=0)				//doesn't do much
 		Error(TXT_CANT_INIT_GFX,t);
 
@@ -1428,26 +773,24 @@ int main(int argc, char *argv[])
    #endif
 
 	// Load the palette stuff. Returns non-zero if error.
-	con_printf(CON_DEBUG, "Initializing palette system...\n" );
-	gr_use_palette_table(DEFAULT_PALETTE );
+	con_printf(CON_DEBUG, "\nInitializing palette system..." );
+   gr_use_palette_table(DEFAULT_PALETTE );
 
-	con_printf(CON_DEBUG, "Initializing font system...\n" );
+	con_printf(CON_DEBUG, "\nInitializing font system..." );
 	gamefont_init();	// must load after palette data loaded.
 
-	con_printf( CON_DEBUG, "Initializing movie libraries...\n" );
+	con_printf( CON_DEBUG, "\nInitializing movie libraries..." );
 	init_movies();		//init movie libraries
 
-#if 0
-	con_printf(CON_VERBOSE, "Going into graphics mode...\n");
+	con_printf(CON_VERBOSE, "\nGoing into graphics mode...\n");
 #if defined(POLY_ACC)
 	gr_set_mode(SM_640x480x15xPA);
 #else
 	gr_set_mode(MovieHires?SM(640,480):SM(320,200));
 #endif
-#endif
 
 	#ifndef RELEASE
-	if ( FindArg( "-notitles" ) )
+	if ( FindArg( "-notitles" ) ) 
 		songs_play_song( SONG_TITLE, 1);
 	else
 	#endif
@@ -1499,7 +842,7 @@ int main(int argc, char *argv[])
 
 			if (played == MOVIE_NOT_PLAYED) {
 #if defined(POLY_ACC)
-				gr_set_mode(SM_640x480x15xPA);
+            gr_set_mode(SM_640x480x15xPA);
 #else
 				gr_set_mode(MenuHires?SM_640x480V:SM_320x200C);
 #endif
@@ -1545,7 +888,7 @@ int main(int argc, char *argv[])
 			
 	}
 
-	PA_DFX (pa_splash());
+   PA_DFX (pa_splash());
 
 	con_printf( CON_DEBUG, "\nShowing loading screen..." );
 	{
@@ -1553,26 +896,25 @@ int main(int argc, char *argv[])
 		int pcx_error;
 		char filename[14];
 
+		#ifdef SHAREWARE
+		strcpy(filename, "descentd.pcx");
+		#else
+		#ifdef D2_OEM
+		strcpy(filename, MenuHires?"descntob.pcx":"descento.pcx");
+		#else
 		strcpy(filename, MenuHires?"descentb.pcx":"descent.pcx");
-		if (! cfexist(filename))
-			strcpy(filename, MenuHires?"descntob.pcx":"descento.pcx"); // OEM
-		if (! cfexist(filename))
-			strcpy(filename, "descentd.pcx"); // SHAREWARE
-		if (! cfexist(filename))
-			strcpy(filename, "descentb.pcx"); // MAC SHAREWARE
+		#endif
+		#endif
 
 #if defined(POLY_ACC)
 		gr_set_mode(SM_640x480x15xPA);
 #else
 		gr_set_mode(MenuHires?SM(640,480):SM(320,200));
 #endif
-#ifdef OGL
-		set_screen_mode(SCREEN_MENU);
-#endif
 
-		FontHires = FontHiresAvailable && MenuHires;
+		FontHires = MenuHires;
 
-		if ((pcx_error=pcx_read_fullscr( filename, title_pal ))==PCX_ERROR_NONE)	{
+		if ((pcx_error=pcx_read_bitmap( filename, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, title_pal ))==PCX_ERROR_NONE)	{
 			//vfx_set_palette_sub( title_pal );
 			gr_palette_clear();
 			gr_palette_fade_in( title_pal, 32, 0 );
@@ -1614,7 +956,7 @@ int main(int argc, char *argv[])
 		for (i=0;i<nframes;i++)
 			fwrite(bm[i]->bm_data,1,bm[i]->bm_w*bm[i]->bm_h,ofile);
 
-		iff_error = iff_read_animbrush("orbgoal.abm",bm,MAX_BITMAPS_PER_BRUSH,&nframes,palette);
+	   iff_error = iff_read_animbrush("orbgoal.abm",bm,MAX_BITMAPS_PER_BRUSH,&nframes,palette);
 		Assert(iff_error == IFF_NO_ERROR);
 		Assert(bm[0]->bm_w == 64 && bm[0]->bm_h == 64);
 		nframes_short = nframes;
@@ -1738,17 +1080,21 @@ int main(int argc, char *argv[])
 			#endif
 
 #ifdef SDL_INPUT
+#if SDL_VERSION_ATLEAST(1,0,2)
 			/* keep the mouse from wandering in SDL */
 			if (FindArg("-grabmouse"))
 			    SDL_WM_GrabInput(SDL_GRAB_ON);
+#endif
 #endif
 
 			game();
 
 #ifdef SDL_INPUT
+#if SDL_VERSION_ATLEAST(1,0,2)
 			/* give control back to the WM */
 			if (FindArg("-grabmouse"))
 			    SDL_WM_GrabInput(SDL_GRAB_OFF);
+#endif
 #endif
 
 			if ( Function_mode == FMODE_MENU )
@@ -1775,11 +1121,10 @@ int main(int argc, char *argv[])
 
 	WriteConfigFile();
 
-#if 0
+#if 0 /* ????? */
 	#ifndef RELEASE
 	if (!FindArg( "-notitles" ))
 	#endif
-		show_order_form();
 #endif
 
 	#ifndef NDEBUG
@@ -1832,7 +1177,7 @@ void show_order_form()
 	gr_set_current_canvas( NULL );
 	gr_palette_clear();
 
-	key_flush();
+	key_flush();		
 
 	#ifdef D2_OEM
 		strcpy(exit_screen, MenuHires?"ordrd2ob.pcx":"ordrd2o.pcx");
@@ -1844,16 +1189,16 @@ void show_order_form()
 	#endif
 	#endif
 
-	if ((pcx_error=pcx_read_fullscr( exit_screen, title_pal ))==PCX_ERROR_NONE) {
+	if ((pcx_error=pcx_read_bitmap( exit_screen, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, title_pal ))==PCX_ERROR_NONE) {
 		//vfx_set_palette_sub( title_pal );
 		gr_palette_fade_in( title_pal, 32, 0 );
 		key_getch();
-		gr_palette_fade_out( title_pal, 32, 0 );
+		gr_palette_fade_out( title_pal, 32, 0 );		
 	}
 	else
 		Int3();		//can't load order screen
 
-	key_flush();
+	key_flush();		
 
 #endif
 }

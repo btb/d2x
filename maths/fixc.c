@@ -1,4 +1,3 @@
-/* $Id: fixc.c,v 1.5 2002-10-28 20:12:48 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,15 +7,34 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
 /*
- *
+ * $Source: /cvs/cvsroot/d2x/maths/fixc.c,v $
+ * $Revision: 1.3 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-31 07:41:54 $
+ * 
  * C version of fixed point library
+ * 
+ * $Log: not supported by cvs2svn $
+ * Revision 1.2  2001/01/31 15:18:04  bradleyb
+ * Makefile and conf.h fixes
  *
- * Old Log:
+ * Revision 1.1.1.1  2001/01/19 03:29:58  bradleyb
+ * Import of d2x-0.0.8
+ *
+ * Revision 1.3  1999/10/18 00:31:01  donut
+ * more alpha fixes from Falk Hueffner
+ *
+ * Revision 1.2  1999/08/05 22:53:41  sekmu
+ *
+ * D3D patch(es) from ADB
+ *
+ * Revision 1.1.1.1  1999/06/14 22:13:35  donut
+ * Import of d1x 1.37 source.
+ *
  * Revision 1.7  1995/09/22  14:08:16  allender
  * fixed fix_atan2 to work correctly with doubles
  *
@@ -42,8 +60,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * --- PC RCS Info ---
  * Revision 1.1  1995/03/08  18:55:09  matt
  * Initial revision
- *
- *
+ * 
+ * 
  */
 
 #ifdef HAVE_CONFIG_H
@@ -51,7 +69,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: fixc.c,v 1.5 2002-10-28 20:12:48 btb Exp $";
+static char rcsid[] = "$Id: fixc.c,v 1.3 2001-10-31 07:41:54 bradleyb Exp $";
 #endif
 
 #include <stdlib.h>
@@ -75,14 +93,14 @@ extern ushort acos_table[];
 extern fix isqrt_guess_table[];
 
 //negate a quad
-void fixquadnegate(quadint *q)
+void fixquadnegate(quad *q)
 {
 	q->low  = 0 - q->low;
 	q->high = 0 - q->high - (q->low != 0);
 }
 
 //multiply two ints & add 64-bit result to 64-bit sum
-void fixmulaccum(quadint *q,fix a,fix b)
+void fixmulaccum(quad *q,fix a,fix b)
 {
 	u_int32_t aa,bb;
 	u_int32_t ah,al,bh,bl;
@@ -117,7 +135,7 @@ void fixmulaccum(quadint *q,fix a,fix b)
 }
 
 //extract a fix from a quad product
-fix fixquadadjust(quadint *q)
+fix fixquadadjust(quad *q)
 {
 	return (q->high<<16) + (q->low>>16);
 }
@@ -201,7 +219,7 @@ fixang fix_atan2(fix cos,fix sin)
 }
 
 #ifdef NO_FIX_INLINE
-//divide a quadint by a fix, returning a fix
+//divide a quad by a fix, returning a fix
 int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 {
 	int i;
@@ -300,23 +318,11 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 	return r;
 }
 
-#if 0
-// this version caused inf loop with:
-// quad_sqrt(0x27eb7121/*low=669741345*/,
-//           0x4cd40ad8/*high=1288964824*/);
 unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
 {
   return fixdivquadlong((u_int32_t) nl,(u_int32_t) nh,(u_int32_t) d);
 }
-#endif
-
-unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
-{
-  u_int64_t n = (u_int64_t)nl | (((u_int64_t)nh) << 32 );
-  return n / ((u_int64_t)d);
-}
-
-#else //of ifdef NO_FIX_INLINE
+#else
 int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d) {
 int32_t a;
 __asm__("idivl %3"
@@ -335,13 +341,13 @@ __asm__("divl %3"
          );
 return (a);
 }
-#endif //def NO_FIX_INLINE
+#endif
 
 u_int32_t quad_sqrt(u_int32_t low,int32_t high)
 {
 	int i, cnt;
 	u_int32_t r,old_r,t;
-	quadint tq;
+	quad tq;
 
 	if (high<0)
 		return 0;
@@ -363,9 +369,9 @@ u_int32_t quad_sqrt(u_int32_t low,int32_t high)
 
 	//quad loop usually executed 4 times
 
-	r = fixdivquadlongu(low,high,r)/2 + r/2;
-	r = fixdivquadlongu(low,high,r)/2 + r/2;
-	r = fixdivquadlongu(low,high,r)/2 + r/2;
+	r = (fixdivquadlongu(low,high,r)+r)/2;
+	r = (fixdivquadlongu(low,high,r)+r)/2;
+	r = (fixdivquadlongu(low,high,r)+r)/2;
 
 	do {
 
@@ -375,7 +381,7 @@ u_int32_t quad_sqrt(u_int32_t low,int32_t high)
 		if (t==r)	//got it!
 			return r;
  
-		r = t/2 + r/2;
+		r = (t+r)/2;
 
 	} while (!(r==t || r==old_r));
 

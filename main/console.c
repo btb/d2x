@@ -1,8 +1,12 @@
-/* $Id: console.c,v 1.9 2003-03-17 09:33:49 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/main/console.c,v $
+ * $Revision: 1.5 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-19 09:47:34 $
  *
  * FIXME: put description here
  *
+ * $Log: not supported by cvs2svn $
  *
  */
 
@@ -20,9 +24,8 @@
 #include "error.h"
 #include "console.h"
 #include "cmd.h"
-#include "gr.h"
 
-#ifndef __MSDOS__
+#if defined(__linux__) || defined(__MINGW32__)
 int text_console_enabled = 1;
 #else
 int isvga();
@@ -58,7 +61,7 @@ int con_init(void)
 
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
-	return 0;
+	return 0;	
 }
 
 /* ======
@@ -73,17 +76,13 @@ void con_printf(int priority, char *fmt, ...)
 	if (priority <= ((int)con_threshold.value))
 	{
 		va_start (arglist, fmt);
-		vsprintf (buffer,  fmt, arglist);
+                vsprintf (buffer,  fmt, arglist);
+		if (text_console_enabled) vprintf(fmt, arglist);
 		va_end (arglist);
-		if (text_console_enabled) {
-			va_start (arglist, fmt);
-			vprintf(fmt, arglist);
-			va_end (arglist);
-		}
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
 		{
-			memcpy(con_display, &buffer[i], min(80, l-i));
+			memcpy(con_display, &buffer[i], min(80, l-i));	
 		}*/
 	}
 }
@@ -94,14 +93,14 @@ void con_printf(int priority, char *fmt, ...)
  */
 void con_update(void)
 {
-	char buffer[CMD_MAX_LENGTH], *t;
+//	char buffer[CMD_MAX_LENGTH], *t;
 
 	/* Check for new input */
-	t = fgets(buffer, sizeof(buffer), stdin);
+/*	t = fgets(buffer, sizeof(buffer), stdin);
 	if (t == NULL) return;
 
-	cmd_parse(buffer);
-	con_draw();
+	cmd_parse(buffer);*/
+//	con_draw();
 }
 
 /* ======
@@ -111,7 +110,7 @@ void con_update(void)
 void cvar_registervariable (cvar_t *cvar)
 {
 	cvar_t *ptr;
-
+	
 	Assert(cvar != NULL);
 
 	cvar->next = NULL;
@@ -166,12 +165,12 @@ float cvar (char *cvar_name)
  */
 void con_draw(void)
 {
-	char buffer[CON_LINE_LEN+1];
-	int i,j;
-	for (i = con_line, j=0; j < 20; i = (i+1) % CON_NUM_LINES, j++)
+/*	char buffer[CON_LINE_LEN+1];
+	int i,j; */
+/*	for (i = con_line, j=0; j < 20; i = (i+1) % CON_NUM_LINES, j++)
 	{
 		memcpy(buffer, con_display[i], CON_LINE_LEN);
 		buffer[CON_LINE_LEN] = 0;
 		gr_string(1,j*10,buffer);
-	}
+	}*/
 }

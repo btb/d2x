@@ -1,7 +1,14 @@
-/* $Id: init.c,v 1.6 2003-03-19 23:20:09 btb Exp $ */
 /*
+ * $Source: /cvs/cvsroot/d2x/arch/linux/init.c,v $
+ * $Revision: 1.4 $
+ * $Author: bradleyb $
+ * $Date: 2001-10-19 09:01:56 $
  *
  * linux init.c - added Matt Mueller 9/6/98
+ *
+ * $Log: not supported by cvs2svn $
+ * Revision 1.4  2001/01/29 13:35:08  bradleyb
+ * Fixed build system, minor fixes
  *
  */
 
@@ -13,6 +20,7 @@
 #include <stdio.h>
 #include "pstypes.h"
 #include "console.h"
+#include "text.h"
 #include "event.h"
 #include "error.h"
 #include "joy.h"
@@ -36,6 +44,10 @@ void arch_init()
 #ifdef SVGALIB_INPUT
 	arch_svgalib_init();
 #endif
+	if (!FindArg( "-nojoystick" ))  {
+		con_printf(CON_VERBOSE, "\n%s", TXT_VERBOSE_6);
+		joy_init();
+	}
 	//added 06/09/99 Matt Mueller - fix nonetwork compile
 #ifdef NETWORK
 	//end addition -MM

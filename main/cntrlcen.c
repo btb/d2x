@@ -1,4 +1,3 @@
-/* $Id: cntrlcen.c,v 1.9 2003-04-03 07:15:43 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: cntrlcen.c,v 1.9 2003-04-03 07:15:43 btb Exp $";
+static char rcsid[] = "$Id: cntrlcen.c,v 1.3 2001-10-25 02:15:55 bradleyb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -161,7 +160,7 @@ void do_countdown_frame()
 
 	#if !defined(D2_OEM) && !defined(SHAREWARE)	// get countdown in OEM and SHAREWARE only
 	//	On last level, we don't want a countdown.
-	if ((Current_mission_num == Builtin_mission_num) && (Current_level_num == Last_level))
+	if ((Current_mission_num == 0) && (Current_level_num == Last_level))
     {		
      if (!(Game_mode & GM_MULTI))
 	   return;
@@ -508,40 +507,3 @@ void special_reactor_stuff(void)
 	}
 }
 
-#ifndef FAST_FILE_IO
-/*
- * reads n reactor structs from a CFILE
- */
-extern int reactor_read_n(reactor *r, int n, CFILE *fp)
-{
-	int i, j;
-
-	for (i = 0; i < n; i++) {
-		r[i].model_num = cfile_read_int(fp);
-		r[i].n_guns = cfile_read_int(fp);
-		for (j = 0; j < MAX_CONTROLCEN_GUNS; j++)
-			cfile_read_vector(&(r[i].gun_points[j]), fp);
-		for (j = 0; j < MAX_CONTROLCEN_GUNS; j++)
-			cfile_read_vector(&(r[i].gun_dirs[j]), fp);
-	}
-	return i;
-}
-
-/*
- * reads a control_center_triggers structure from a CFILE
- */
-extern int control_center_triggers_read_n(control_center_triggers *cct, int n, CFILE *fp)
-{
-	int i, j;
-
-	for (i = 0; i < n; i++)
-	{
-		cct->num_links = cfile_read_short(fp);
-		for (j = 0; j < MAX_CONTROLCEN_LINKS; j++)
-			cct->seg[j] = cfile_read_short(fp);
-		for (j = 0; j < MAX_CONTROLCEN_LINKS; j++)
-			cct->side[j] = cfile_read_short(fp);
-	}
-	return i;
-}
-#endif

@@ -1,5 +1,3 @@
-/* $Id: joystick.h,v 1.2 2003-03-13 00:20:21 btb Exp $ */
-
 #define MAX_AXES 32
 
 typedef struct joystick_device {

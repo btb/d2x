@@ -46,6 +46,5 @@ void gamefont_init();
 void gamefont_close();
 
 extern int FontHires;
-extern int FontHiresAvailable;
 
 #endif
