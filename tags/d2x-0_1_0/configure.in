@@ -1,0 +1,272 @@
+# -*- mode: shell-script -*-
+AC_INIT(main/inferno.c)
+
+AC_VALIDATE_CACHED_SYSTEM_TUPLE(
+        rm $cache_file
+        echo restart configure
+        exit 1
+)
+
+AM_CONFIG_HEADER(conf.h)
+AM_INIT_AUTOMAKE(d2x, 0.1.0)
+
+AM_MAINTAINER_MODE
+
+AC_PROG_INSTALL
+AC_CHECK_TOOL(CC, gcc, :)
+AC_ISC_POSIX
+AC_CHECK_TOOL(RANLIB, ranlib, :)
+AC_CHECK_TOOL(AR, ar, :)
+AC_STDC_HEADERS
+
+NO_ASM=0
+NO_NETWORK=0
+GL_LIBS="GL GLU"
+
+AC_CYGWIN
+if test x$CYGWIN = xyes; then
+    AC_MSG_WARN([Cygwin found, setting -mno-cygwin])
+    CFLAGS="$CFLAGS -mno-cygwin"
+fi
+
+AC_MINGW32
+AM_CONDITIONAL(MINGW32, test x$MINGW32 = xyes)
+if test x$MINGW32 = xyes; then
+    GL_LIBS="opengl32 glu32"
+    AC_MSG_WARN([mingw32 found, disabling network and assembler])
+    NO_ASM=1
+    NO_NETWORK=1
+fi
+
+CFLAGS="$CFLAGS -g -O2 -Wall"
+
+dnl Count warnings as errors?
+AC_ARG_WITH(werror,
+  [  --with-werror                Count compiler warning as errors ],
+  [case "${withval}" in
+    yes) CFLAGS="-Werror $CFLAGS" ;;
+    no)  ;;
+    *) AC_MSG_ERROR(bad value ${withval} for --with-werror) ;;
+  esac],)
+
+dnl Build with NDEBUG?
+AC_ARG_WITH(ndebug,
+  [  --with-ndebug                Take out extra Asserts, Int3, etc ],
+  [case "${withval}" in
+    yes) AC_DEFINE(NDEBUG) ;;
+    no)  ;;
+    *) AC_MSG_ERROR(bad value ${withval} for --with-ndebug) ;;
+  esac],)
+
+# Test for DJGPP
+AM_CONDITIONAL(ENV_DJGPP, test "$host_os" = "msdosdjgpp")
+if test "$host_os" = "msdosdjgpp"; then
+
+  CFLAGS="-I \$(top_srcdir)/arch/dos/include $CFLAGS"
+  AC_DEFINE(__ENV_DJGPP__)
+  AC_PATH_PROG(NASM, nasm, no)
+  TARGETS=d2x
+
+else
+  CFLAGS="-pipe $CFLAGS"
+
+  case "$host_os" in
+    *linux*) AC_DEFINE(__ENV_LINUX__) ;;
+  esac
+
+  dnl Check for SDL
+  AM_PATH_SDL(1.1.7,
+    :,
+    AC_MSG_ERROR(SDL not found. Make sure sdl-config is in your PATH, or specify with --with-sdl-prefix)
+  )
+  AC_SUBST(SDL_LIBS)
+
+  AC_CHECK_HEADERS(netipx/ipx.h)
+
+  # Check for OpenGL
+  AC_ARG_WITH(opengl,
+    [  --with-opengl                Build OpenGL support ],
+    [case "${withval}" in
+      yes) opengl=true ;;
+      no)  opengl=false ;;
+      *) AC_MSG_ERROR(bad value ${withval} for --with-opengl) ;;
+    esac],[opengl=false])
+
+  if test x$opengl = xtrue; then
+    for lib in $GL_LIBS; do
+	AC_CHECK_LIB($lib, main,
+	    OGL_LIBS="${OGL_LIBS} -l$lib",
+	    [AC_MSG_ERROR([$lib not found, --with-opengl cannot be used])
+	    opengl=false],
+	    ${OGL_LIBS}
+	)
+    done
+  fi
+  AC_SUBST(OGL_LIBS)
+  AM_CONDITIONAL(USE_OPENGL, test x$opengl = xtrue)
+
+  CFLAGS="$SDL_CFLAGS $CFLAGS"
+
+  # Check for GGI
+  AC_ARG_WITH(ggi,
+    [  --with-ggi                   Build GGI support ],
+    [case "${withval}" in
+      yes) ggi=true ;;
+      no)  ggi=false ;;
+      *)   AC_MSG_ERROR(bad value ${withval} for --with-ggi) ;;
+    esac],[ggi=false])
+
+  if test x$ggi = xtrue; then
+    AC_CHECK_LIB(ggi, ggiInit,
+      GGI_LIBS="-lggi",
+      [AC_MSG_ERROR([GGI not found, GGI version cannot be built]); ggi=false])
+    AC_CHECK_LIB(gii, giiInit,
+      GGI_LIBS="${GGI_LIBS} -lgii",
+      [AC_MSG_ERROR([GII not found, GGI version cannot be built]); ggi=false])
+  fi
+  AC_SUBST(GGI_LIBS)
+  AM_CONDITIONAL(USE_GGI, test x$ggi = xtrue)
+
+  # Check for SVGALib
+  AC_ARG_WITH(svga,
+    [  --with-svga                  Build SVGALib support ],
+    [case "${withval}" in
+      yes) svga=true ;;
+      no)  svga=false ;;
+      *) AC_MSG_ERROR(bad value ${withval} for --with-svga) ;;
+    esac],[svga=false])
+
+  if test x$svga = xtrue; then
+    AC_CHECK_LIB(vga, vga_getmousetype,
+      SVGA_LIBS="-lvga",
+      [AC_MSG_ERROR([vga not found, SVGALib cannot be built])
+       svga=false],
+       )
+    AC_CHECK_LIB(vgagl,gl_getcontext,
+      SVGA_LIBS="${SVGA_LIBS} -lvgagl",
+      [AC_MSG_ERROR([vgagl not found, SVGALib cannot be built])
+       svga=false],
+       -lvga)
+  fi
+  AC_SUBST(SVGA_LIBS)
+  AM_CONDITIONAL(USE_SVGALIB, test x$svga = xtrue)
+
+  if test x$opengl = xtrue; then
+    AC_DEFINE(OGL)
+    TARGETS=d2x-ogl
+  else
+    if test x$svga = xtrue; then
+      AC_DEFINE(SVGA)
+      TARGETS=d2x-svga
+    else
+      if test x$ggi = xtrue; then
+        AC_DEFINE(GGI)
+        TARGETS=d2x-ggi
+      else
+        TARGETS=d2x-sdl
+      fi
+    fi
+  fi
+
+  AC_PATH_PROG(NASM, nasm, no)
+  CFLAGS="-I\$(top_srcdir)/input/linux/include -I\$(top_srcdir)/arch/linux/include $CFLAGS"
+
+fi
+
+# Check for NASM and network
+AC_ARG_WITH(assembler,
+  [  --without-assembler          Do not use assembler optimization ],
+      if test x$withval = xno; then
+        NO_ASM=1
+      fi)
+AC_ARG_WITH(network,
+  [  --without-network            Do not build network/serial support ],
+      if test x$withval = xno; then
+        NO_NETWORK=1
+      fi)
+      
+if test "$NASM" = "no"; then
+        NO_ASM=1 
+fi
+if test "$NO_ASM" = 1; then
+        AC_DEFINE(NO_ASM)
+        NASMFLAGS=""
+else
+        case $host_os in
+          cygwin)
+              NASMFLAGS="-f win32 -i\$(srcdir)/"
+              ;;
+	  msdosdjgpp)
+	      NASMFLAGS="-f coff -i\$(srcdir)/"
+	      ;;
+          linux*)
+              NASMFLAGS="-f elf -d__ENV_LINUX__ -i\$(srcdir)/"
+              ;;
+	  *)
+	      AC_MSG_ERROR([Assembler not supported for this OS])
+        esac
+fi  
+if test "$NO_NETWORK" = 0; then
+        AC_DEFINE(NETWORK)
+fi
+AM_CONDITIONAL(USE_ASM, test "$NO_ASM" != 1)
+AM_CONDITIONAL(USE_NETWORK, test "$NO_NETWORK" != 1)
+
+AC_SUBST(NASMFLAGS)
+
+AC_SUBST(CFLAGS)
+
+AC_SUBST(TARGETS)
+
+AC_ARG_PROGRAM
+
+#libdir='$(shell pwd)/${top_srcdir}/main'
+AC_OUTPUT(
+Makefile
+2d/Makefile
+3d/Makefile
+arch/Makefile
+arch/dos/Makefile
+arch/dos/allg_snd/Makefile
+arch/dos/allg_snd/sound/Makefile
+arch/dos/allg_snd/sound/drv/Makefile
+arch/dos/bak/Makefile
+arch/dos/comm/Makefile
+arch/dos/comm/include/Makefile
+arch/dos/include/Makefile
+arch/dos/mm_snd/Makefile
+arch/dos/mm_snd/include/Makefile
+arch/include/Makefile
+arch/linux/Makefile
+arch/linux/include/Makefile
+arch/win32/Makefile
+arch/win32/d3dframe/Makefile
+arch/win32/include/Makefile
+cfile/Makefile
+iff/Makefile
+iff/archive/Makefile
+includes/Makefile
+input/Makefile
+input/linux/Makefile
+input/linux/include/Makefile
+main/Makefile
+main/editor/Makefile
+main/old/Makefile
+maths/Makefile
+mem/Makefile
+misc/Makefile
+sound/Makefile
+texmap/Makefile
+unused/Makefile
+unused/bios/Makefile
+unused/lib/Makefile
+unused/novga/Makefile
+unused/pa_null/Makefile
+unused/ui/Makefile
+unused/vga/Makefile
+unused/vga/new/Makefile
+unused/win95/Makefile
+video/Makefile
+tools/Makefile
+tools/cvs2cl/Makefile
+)
