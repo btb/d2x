@@ -1,5 +1,7 @@
 2003-06-03  Bradley Bell  <btb@icculus.org>
 
+	* main/newmenu.c: fix player file deletion
+
 	* include/physfsx.h: fix statfs includes for OS X
 
 2003-06-02  Bradley Bell  <btb@icculus.org>
