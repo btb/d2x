@@ -1,5 +1,8 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* main/mission.c, main/movie.c, main/newdemo.c, main/newmenu.c:
+	disabled althogdir stuff (shouldn't be needed w/physfs)
+
 	* Makefile.am, cfile/.cvsignore, cfile/Makefile.am, cfile/cfile.c,
 	configure.ac: drop cfile stuff
 

@@ -1,4 +1,4 @@
-/* $Id: newmenu.c,v 1.19 2003-03-17 07:59:11 btb Exp $ */
+/* $Id: newmenu.c,v 1.19.2.1 2003-05-17 04:34:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2650,6 +2650,7 @@ ReadFileNames:
 		FileFindClose();
 	}
 
+#if 0
 	if (demo_mode && AltHogdir_initialized) {
 		char filespec2[PATH_MAX + FILENAME_LEN];
 		strcpy(filespec2, AltHogDir);
@@ -2667,6 +2668,7 @@ ReadFileNames:
 			FileFindClose();
 		}
 	}
+#endif
 
 	if ( (NumFiles < 1) && demos_deleted )	{
 		exit_value = 0;

@@ -1,4 +1,4 @@
-/* $Id: movie.c,v 1.25 2003-03-21 23:13:25 btb Exp $ */
+/* $Id: movie.c,v 1.25.2.1 2003-05-17 04:34:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: movie.c,v 1.25 2003-03-21 23:13:25 btb Exp $";
+static char rcsid[] = "$Id: movie.c,v 1.25.2.1 2003-05-17 04:34:34 btb Exp $";
 #endif
 
 #define DEBUG_LEVEL CON_NORMAL
@@ -670,6 +670,7 @@ movielib *init_movie_lib(char *filename)
 
 	fp = fopen( filename, "rb" );
 
+#if 0
 	if ((fp == NULL) && (AltHogdir_initialized)) {
 		char temp[128];
 		strcpy(temp, AltHogDir);
@@ -677,6 +678,7 @@ movielib *init_movie_lib(char *filename)
 		strcat(temp, filename);
 		fp = fopen(temp, "rb");
 	}
+#endif
 
 	if ( fp == NULL )
 		return NULL;
@@ -890,6 +892,7 @@ int search_movie_lib(movielib *lib,char *filename,int must_have)
 				movie_handle = filehandle = open(lib->name, O_RDONLY);
 #endif
 
+#if 0
 				if ((filehandle == -1) && (AltHogdir_initialized)) {
 					char temp[128];
 					strcpy(temp, AltHogDir);
@@ -901,6 +904,7 @@ int search_movie_lib(movielib *lib,char *filename,int must_have)
 					movie_handle = filehandle = open(temp, O_RDONLY);
 #endif
 				}
+#endif
 
 				if (must_have && from_cd && filehandle == -1) {		//didn't get file!
 

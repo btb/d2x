@@ -1,4 +1,4 @@
-/* $Id: mission.c,v 1.21 2003-03-14 09:17:08 btb Exp $ */
+/* $Id: mission.c,v 1.21.2.1 2003-05-17 04:34:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -581,8 +581,10 @@ void promote (char * mission_name, int * top_place, int num_missions)
 //in the list.  If anarchy_mode set, don't include non-anarchy levels.
 
 extern char CDROM_dir[];
+#if 0
 extern char AltHogDir[];
 extern char AltHogdir_initialized;
+#endif
 
 int build_mission_list(int anarchy_mode)
 {
@@ -609,6 +611,7 @@ int build_mission_list(int anarchy_mode)
 	add_missions_to_list(MISSION_DIR "*.mn2", &count, anarchy_mode);
 	add_missions_to_list(MISSION_DIR "*.msn", &count, anarchy_mode);
 
+#if 0
 	if (AltHogdir_initialized) {
 		char search_name[PATH_MAX + 5];
 		strcpy(search_name, AltHogDir);
@@ -618,6 +621,7 @@ int build_mission_list(int anarchy_mode)
 		strcat(search_name, "/" MISSION_DIR "*.msn");
 		add_missions_to_list(search_name, &count, anarchy_mode);
 	}
+#endif
 
 	// move original missions (in story-chronological order)
 	// to top of mission list

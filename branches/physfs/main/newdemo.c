@@ -1,4 +1,4 @@
-/* $Id: newdemo.c,v 1.12 2003-03-18 02:31:16 btb Exp $ */
+/* $Id: newdemo.c,v 1.12.2.1 2003-05-17 04:34:34 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,6 +17,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Code to make a complete demo playback system.
  *
  * $Log: not supported by cvs2svn $
+ * Revision 1.12  2003/03/18 02:31:16  btb
+ * simplify DEMO_FILENAME macro
+ *
  * Revision 1.11  2003/03/17 07:59:11  btb
  * also look in shared data dir for demos
  *
@@ -3859,6 +3862,7 @@ int newdemo_count_demos()
 		FileFindClose();
 	}
 
+#if 0
 	if ( AltHogdir_initialized ) {
 		char search_name[PATH_MAX + 5];
 		strcpy(search_name, AltHogDir);
@@ -3870,6 +3874,7 @@ int newdemo_count_demos()
 			FileFindClose();
 		}
 	}
+#endif
 
 	return NumFiles;
 }
@@ -3909,6 +3914,7 @@ void newdemo_start_playback(char * filename)
 			FileFindClose();
 		}
 
+#if 0
 		if ( filename == NULL && AltHogdir_initialized ) {
 			char search_name[PATH_MAX + 5];
 			strcpy(search_name, AltHogDir);
@@ -3924,6 +3930,7 @@ void newdemo_start_playback(char * filename)
 				FileFindClose();
 			}
 		}
+#endif
 
 		if ( filename==NULL) return;
 	}
@@ -3935,12 +3942,14 @@ void newdemo_start_playback(char * filename)
 
 	infile = fopen( filename2, "rb" );
 
+#if 0
 	if (infile==NULL && AltHogdir_initialized) {
 		strcpy(filename2, AltHogDir);
 		strcat(filename2, "/" DEMO_DIR);
 		strcat(filename2, filename);
 		infile = fopen( filename2, "rb" );
 	}
+#endif
 
 	if (infile==NULL) {
 		mprintf( (0, "Error reading '%s'\n", filename ));
