@@ -1,5 +1,7 @@
 2003-05-30  Bradley Bell  <btb@icculus.org>
 
+	* main/inferno.c, main/network.c: misc physfs conversions
+
 	* arch/linux/Makefile.am, arch/linux/findfile.c,
 	include/findfile.h, main/kludge.c, main/mission.c, main/newmenu.c,
 	main/piggy.c: get rid of findfile stuff

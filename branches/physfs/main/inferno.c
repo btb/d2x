@@ -1,4 +1,4 @@
-/* $Id: inferno.c,v 1.62.4.2 2003-05-30 21:20:20 btb Exp $ */
+/* $Id: inferno.c,v 1.62.4.3 2003-05-31 04:30:22 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -1487,7 +1487,6 @@ int main(int argc, char *argv[])
 
 #ifdef D2_OEM   //$$POLY_ACC, jay.
 		{	//show bundler screens
-			FILE *tfile;
 			char filename[FILENAME_LEN];
 
 			played=MOVIE_NOT_PLAYED;	//default is not played
@@ -1497,8 +1496,8 @@ int main(int argc, char *argv[])
 			if (!played) {
                 strcpy(filename,MenuHires?"pre_i1b.pcx":"pre_i1.pcx");
 
-				while ((tfile=fopen(filename,"rb")) != NULL) {
-					fclose(tfile);
+				while (PHYSFS_exists(filename))
+				{
 					show_title_screen( filename, 1, 0 );
                     filename[5]++;
 				}
@@ -1536,7 +1535,6 @@ int main(int argc, char *argv[])
 
 		{	//show bundler movie or screens
 
-			FILE *tfile;
 			char filename[FILENAME_LEN];
 			int movie_handle;
 
@@ -1553,8 +1551,7 @@ int main(int argc, char *argv[])
 			if (!played) {
 				strcpy(filename,MenuHires?"oem1b.pcx":"oem1.pcx");
 
-				while ((tfile=fopen(filename,"rb")) != NULL) {
-					fclose(tfile);
+				while (PHYSFS_exists(filename)) {
 					show_title_screen( filename, 1, 0 );
 					filename[3]++;
 				}
