@@ -1,5 +1,7 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* main/inferno.c: physfs initialization stuff
+
 	* main/polyobj.c: use cfilelength instead of file->size
 
 	* configure.ac: add check for physfs lib

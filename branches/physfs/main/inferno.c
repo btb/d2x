@@ -1,4 +1,4 @@
-/* $Id: inferno.c,v 1.62 2003-05-12 22:46:01 btb Exp $ */
+/* $Id: inferno.c,v 1.62.4.1 2003-05-17 04:41:09 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -724,6 +724,8 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include <sys/types.h>
 #endif
 
+#include <physfs.h>
+
 #include "pstypes.h"
 #include "strutil.h"
 #include "console.h"
@@ -1185,6 +1187,9 @@ int main(int argc, char *argv[])
 	int screen_height = 480;
 	u_int32_t screen_mode = SM(screen_width,screen_height);
 
+	PHYSFS_init(argv[0]);
+	PHYSFS_permitSymbolicLinks(1);
+
 	con_init();  // Initialise the console
 	mem_init();
 
@@ -1192,26 +1197,30 @@ int main(int argc, char *argv[])
 
 	InitArgs( argc,argv );
 
+	if ((t = FindArg("-userdir")))
+		PHYSFS_setWriteDir(Args[t+1]);
+
+	if (!PHYSFS_getWriteDir())
 #ifdef __unix__
 	{
-		char *home = getenv("HOME");
+		const char *home = PHYSFS_getUserDir();
+		char buf[PATH_MAX + 5];
 
-		if ((t = FindArg("-userdir")))
-			chdir(Args[t+1]);
-
-		else if (home) {
-			char buf[PATH_MAX + 5];
-
-			strcpy(buf, home);
-			strcat(buf, "/.d2x");
-			if (chdir(buf)) {
-				d_mkdir(buf);
-				if (chdir(buf))
-					fprintf(stderr, "Cannot change to $HOME/.d2x\n");
-			}
-		}
+		strcpy(buf, home);
+		strcat(buf, ".d2x");
+		PHYSFS_setWriteDir(buf);
 	}
+#else
+		PHYSFS_setWriteDir(PHYSFS_getBaseDir);
 #endif
+
+	if (!PHYSFS_getWriteDir())
+		PHYSFS_setWriteDir(".");
+
+	if (!PHYSFS_getWriteDir())
+		Error("can't set write dir\n");
+	else
+		PHYSFS_addToSearchPath(PHYSFS_getWriteDir(), 1);
 
 	if (FindArg("-debug"))
 		con_threshold.value = (float)2;
@@ -1220,14 +1229,11 @@ int main(int argc, char *argv[])
 
 	//tell cfile where hogdir is
 	if ((t=FindArg("-hogdir")))
-		cfile_use_alternate_hogdir(Args[t+1]);
+		PHYSFS_addToSearchPath(Args[t+1], 1);
 #ifdef __unix__
 	else if (!FindArg("-nohogdir"))
-		cfile_use_alternate_hogdir(SHAREPATH);
+		PHYSFS_addToSearchPath(SHAREPATH, 1);
 #endif
-
-	//tell cfile about our counter
-	cfile_set_critical_error_counter_ptr(&descent_critical_error);
 
 	if (! cfile_init("descent2.hog"))
 		if (! cfile_init("d2demo.hog"))
@@ -1267,6 +1273,23 @@ int main(int argc, char *argv[])
 	con_printf(CON_NORMAL, "\n");
 	con_printf(CON_NORMAL, TXT_HELP, PROGNAME);		//help message has %s for program name
 	con_printf(CON_NORMAL, "\n");
+
+	{
+		char **i, **list;
+
+		for (i = PHYSFS_getSearchPath(); *i != NULL; i++)
+			con_printf(CON_VERBOSE, "PHYSFS: [%s] is in the search path.\n", *i);
+
+		list = PHYSFS_getCdRomDirs();
+		for (i = list; *i != NULL; i++)
+			con_printf(CON_VERBOSE, "PHYSFS: cdrom dir [%s] is available.\n", *i);
+		PHYSFS_freeList(list);
+
+		list = PHYSFS_enumerateFiles("");
+		for (i = list; *i != NULL; i++)
+			con_printf(CON_DEBUG, "PHYSFS: * We've got [%s].\n", *i);
+		PHYSFS_freeList(list);
+	}
 
 	//(re)added Mar 30, 2003 Micah Lieske - Allow use of 22K sound samples again.
 	if(FindArg("-sound22k"))
