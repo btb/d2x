@@ -1,4 +1,4 @@
-/* $Id: newmenu.c,v 1.19.2.2 2003-05-21 04:28:36 btb Exp $ */
+/* $Id: newmenu.c,v 1.19.2.3 2003-05-30 09:17:48 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2567,20 +2567,18 @@ void delete_player_saved_games(char * name)
 {
 	int i;
 	char filename[16];
-	
+
 	for (i=0;i<10; i++)	{
 #ifndef MACINTOSH
 		sprintf( filename, "%s.sg%d", name, i );
 #else
-		sprintf( filename, ":Players:%s.sg%d", name, i );
+		sprintf( filename, "Players/%s.sg%d", name, i );
 #endif
-		unlink( filename );
+		PHYSFS_delete(filename);
 	}
 }
 
 #define MAX_FILES 300
-
-int MakeNewPlayerFile(int allow_abort);
 
 int newmenu_get_filename( char * title, char * filespec, char * filename, int allow_abort_flag )
 {
@@ -2588,7 +2586,7 @@ int newmenu_get_filename( char * title, char * filespec, char * filename, int al
 	FILEFINDSTRUCT find;
 	int NumFiles=0, key,done, citem, ocitem;
 	char * filenames = NULL;
-	char real_filespec[1024];
+	char real_filespec[PATH_MAX + FILENAME_LEN];
 	int NumFiles_displayed = 8;
 	int first_item = -1, ofirst_item;
 	int old_keyd_repeat = keyd_repeat;

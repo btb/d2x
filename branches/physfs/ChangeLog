@@ -1,5 +1,8 @@
 2003-05-30  Bradley Bell  <btb@icculus.org>
 
+	* main/ai.c, main/ai.h, main/gameseq.c, main/newmenu.c,
+	main/state.c: use physfs for savegames
+
 	* README: minor update
 
 2003-05-22  Bradley Bell  <btb@icculus.org>
