@@ -1,4 +1,4 @@
-/* $Id: cfile.h,v 1.8.2.2 2003-05-17 10:29:06 btb Exp $ */
+/* $Id: cfile.h,v 1.8.2.3 2003-05-21 19:19:29 btb Exp $ */
 
 /*
  *
@@ -34,6 +34,20 @@ static inline int cfile_init(char *hogname)
 
 	return PHYSFS_addToSearchPath(pathname, 1);
 }
+
+static inline int cfile_close(char *hogname)
+{
+	const char *path = PHYSFS_getRealDir(hogname);
+	char pathname[1024];
+
+	if (!path)
+		return 0;
+
+	snprintf(pathname, 1024, "%s/%s", path, hogname);
+
+	return PHYSFS_removeFromSearchPath(pathname);
+}
+
 
 static inline int cfile_size(char *hogname)
 {

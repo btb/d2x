@@ -1,5 +1,7 @@
 2003-05-20  Bradley Bell  <btb@icculus.org>
 
+	* include/cfile.h: added cfile_close wrapper
+
 	* main/mission.c, main/newmenu.c: use PHYSFS to load missions,
 	player files
 
