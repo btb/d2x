@@ -1,4 +1,4 @@
-/* $Id: newmenu.c,v 1.19.2.1 2003-05-17 04:34:34 btb Exp $ */
+/* $Id: newmenu.c,v 1.19.2.2 2003-05-21 04:28:36 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -575,6 +575,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #include <unistd.h>
 #include <limits.h>
+
+#include <physfs.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "error.h"
@@ -2586,6 +2588,7 @@ int newmenu_get_filename( char * title, char * filespec, char * filename, int al
 	FILEFINDSTRUCT find;
 	int NumFiles=0, key,done, citem, ocitem;
 	char * filenames = NULL;
+	char real_filespec[1024];
 	int NumFiles_displayed = 8;
 	int first_item = -1, ofirst_item;
 	int old_keyd_repeat = keyd_repeat;
@@ -2633,7 +2636,12 @@ ReadFileNames:
 	}
 #endif
 
-	if( !FileFindFirst( filespec, &find ) )	{
+	strcpy(real_filespec, PHYSFS_getWriteDir());
+	strcat(real_filespec, "/");
+	strcat(real_filespec, filespec);
+
+	if(!FileFindFirst(real_filespec, &find))
+	{
 		do	{
 			if (NumFiles<MAX_FILES)	{
                                 strncpy( &filenames[NumFiles*14], find.name, FILENAME_LEN );

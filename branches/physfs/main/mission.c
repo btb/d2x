@@ -1,4 +1,4 @@
-/* $Id: mission.c,v 1.21.2.1 2003-05-17 04:34:34 btb Exp $ */
+/* $Id: mission.c,v 1.21.2.2 2003-05-21 04:28:36 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -133,6 +133,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "findfile.h"
 
+#include "ignorecase.h"
+
 mle Mission_list[MAX_MISSIONS];
 
 int Current_mission_num;
@@ -166,7 +168,7 @@ int load_mission_d1(int mission_num)
 {
 	int i;
 
-	cfile_use_descent1_hogfile("descent.hog");
+	cfile_init("descent.hog");
 
 	Current_mission_num = mission_num;
 	Current_mission_filename = Mission_list[mission_num].filename;
@@ -537,20 +539,24 @@ void add_builtin_mission_to_list(int *count)
 
 void add_missions_to_list(char *search_name, int *count, int anarchy_mode)
 {
-	FILEFINDSTRUCT find;
-	if( !FileFindFirst( search_name, &find ) ) {
-		do	{
-			if (read_mission_file( find.name, *count, ML_MISSIONDIR )) {
+	char **find, **i;
 
+	find = PHYSFS_enumerateFiles(MISSION_DIR);
+
+	for (i = find; *i != NULL; i++)
+	{
+		if (strrchr(*i, '.') && !stricmp(search_name, strrchr(*i, '.')))
+			if (read_mission_file(*i, *count, ML_MISSIONDIR))
 				if (anarchy_mode || !Mission_list[*count].anarchy_only_flag)
 					++(*count);
-			}
-
-		} while( !FileFindNext( &find ) && *count < MAX_MISSIONS);
-		FileFindClose();
 		if (*count >= MAX_MISSIONS)
+		{
 			mprintf((0, "Warning: more missions than d2x can handle\n"));
+			break;
+		}
 	}
+
+	PHYSFS_freeList(find);
 }
 
 /* move <mission_name> to <place> on mission list, increment <place> */
@@ -608,8 +614,8 @@ int build_mission_list(int anarchy_mode)
 
 	add_builtin_mission_to_list(&count);  //read built-in first
 	add_d1_builtin_mission_to_list(&count);
-	add_missions_to_list(MISSION_DIR "*.mn2", &count, anarchy_mode);
-	add_missions_to_list(MISSION_DIR "*.msn", &count, anarchy_mode);
+	add_missions_to_list(".mn2", &count, anarchy_mode);
+	add_missions_to_list(".msn", &count, anarchy_mode);
 
 #if 0
 	if (AltHogdir_initialized) {
@@ -667,7 +673,7 @@ int load_mission(int mission_num)
 	int enhanced_mission = 0;
 
 	if (mission_num == D1_Builtin_mission_num) {
-		cfile_use_descent1_hogfile("descent.hog");
+		cfile_init("descent.hog");
 		switch (D1_Builtin_mission_hogsize) {
 		default:
 			Int3(); // fall through
@@ -726,6 +732,8 @@ int load_mission(int mission_num)
 	else
 		strcat(buf,".msn");
 
+	PHYSFSEXT_locateCorrectCase(buf);
+
 	mfile = cfopen(buf,"rb");
 	if (mfile == NULL) {
 		Current_mission_num = -1;
@@ -737,7 +745,9 @@ int load_mission(int mission_num)
 
 		strcpy(buf+strlen(buf)-4,".hog");		//change extension
 
-		found_hogfile = cfile_use_alternate_hogfile(buf);
+		PHYSFSEXT_locateCorrectCase(buf);
+
+		found_hogfile = cfile_init(buf);
 
 		#ifdef RELEASE				//for release, require mission to be in hogfile
 		if (! found_hogfile) {
@@ -749,7 +759,7 @@ int load_mission(int mission_num)
 
 		// for Descent 1 missions, load descent.hog
 		if (Mission_list[mission_num].descent_version == 1 && strcmp(buf, "descent.hog"))
-			if (!cfile_use_descent1_hogfile("descent.hog"))
+			if (!cfile_init("descent.hog"))
 				Warning("descent.hog not available, this mission may be missing some files required for briefings\n");
 	}
 
@@ -783,7 +793,7 @@ int load_mission(int mission_num)
 				while (*(++bufp) == ' ')
 					;
 
-			cfile_use_alternate_hogfile(bufp);
+			cfile_init(bufp);
 			mprintf((0, "Hog file override = [%s]\n", bufp));
 		}
 		else if (istok(buf,"briefing")) {

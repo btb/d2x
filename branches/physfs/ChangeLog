@@ -1,5 +1,8 @@
 2003-05-20  Bradley Bell  <btb@icculus.org>
 
+	* main/mission.c, main/newmenu.c: use PHYSFS to load missions,
+	player files
+
 	* include/ignorecase.h, misc/Makefile.am, misc/ignorecase.c: added
 	ignorecase stuff
 
