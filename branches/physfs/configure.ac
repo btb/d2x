@@ -187,6 +187,9 @@ else
 		LIBS="-lSDL_image $LIBS"
 		AC_DEFINE(SDL_IMAGE,,[Define if you have the SDL_image library]))
 
+  # Check for PhysicsFS
+	AC_CHECK_LIB(physfs, PHYSFS_init, LIBS="-lphysfs $LIBS")
+
   # Check for OpenGL
     AC_ARG_WITH(opengl,
         [  --with-opengl           Build OpenGL support ],,)

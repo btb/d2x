@@ -1,5 +1,7 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* configure.ac: add check for physfs lib
+
 	* include/cfile.h: made cfile into a wrapper for physfs
 
 	* main/mission.c, main/movie.c, main/newdemo.c, main/newmenu.c:
