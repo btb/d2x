@@ -1,4 +1,4 @@
-/* $Id: newdemo.c,v 1.12.2.2 2003-05-22 09:16:44 btb Exp $ */
+/* $Id: newdemo.c,v 1.12.2.3 2003-05-30 21:20:20 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,6 +17,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Code to make a complete demo playback system.
  *
  * $Log: not supported by cvs2svn $
+ * Revision 1.12.2.2  2003/05/22 09:16:44  btb
+ * use physfs for demos
+ *
  * Revision 1.12.2.1  2003/05/17 04:34:34  btb
  * disabled althogdir stuff (shouldn't be needed w/physfs)
  *
@@ -813,7 +816,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mission.h"
 #include "piggy.h"
 #include "controls.h"
-#include "d_io.h"
 #include "timer.h"
 #include "physfsx.h"
 #ifdef EDITOR
@@ -3657,12 +3659,8 @@ void newdemo_playback_one_frame()
 
 void newdemo_start_recording()
 {
-#ifdef WINDOWS
-	Newdemo_size=GetFreeDiskSpace();
-	mprintf((0, "Free space = %d\n", Newdemo_size));
-#else
-	Newdemo_size = GetDiskFree();
-#endif
+	Newdemo_size = PHYSFSX_getFreeDiskSpace();
+	con_printf(CON_VERBOSE, "Free space = %d\n", Newdemo_size);
 
 	Newdemo_size -= 100000;
 

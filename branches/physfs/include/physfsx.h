@@ -1,4 +1,4 @@
-/* $Id: physfsx.h,v 1.1.2.3 2003-05-22 07:38:50 btb Exp $ */
+/* $Id: physfsx.h,v 1.1.2.4 2003-05-30 21:20:20 btb Exp $ */
 
 /*
  *
@@ -10,6 +10,8 @@
 #define PHYSFSX_H
 
 #include <sys/param.h>
+#include <sys/vfs.h>
+
 #include <physfs.h>
 
 #define PHYSFSX_readU8(file, val) PHYSFS_read(file, val, 1, 1)
@@ -64,6 +66,19 @@ static inline int PHYSFSX_rename(char *oldpath, char *newpath)
 	snprintf(old, PATH_MAX, "%s/%s", PHYSFS_getWriteDir(), oldpath);
 	snprintf(new, PATH_MAX, "%s/%s", PHYSFS_getWriteDir(), newpath);
 	return (rename(old, new) == 0);
+}
+
+
+// returns -1 if error
+// Gets bytes free in current write dir
+static inline PHYSFS_sint64 PHYSFSX_getFreeDiskSpace()
+{
+	struct statfs sfs;
+
+	if (!statfs(PHYSFS_getWriteDir(), &sfs))
+		return (PHYSFS_sint64)(sfs.f_bavail * sfs.f_bsize);
+
+	return -1;
 }
 
 #endif /* PHYSFSX_H */
