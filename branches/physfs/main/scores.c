@@ -1,4 +1,4 @@
-/* $Id: scores.c,v 1.3 2003-03-15 14:17:52 btb Exp $ */
+/* $Id: scores.c,v 1.3.2.1 2003-05-30 09:26:32 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -339,13 +339,13 @@ char * get_scores_filename()
 
 void scores_read()
 {
-	FILE * fp;
+	PHYSFS_file *fp;
 	int fsize;
 
 	// clear score array...
 	memset( &Scores, 0, sizeof(all_scores) );
 
-	fp = fopen( get_scores_filename(), "rb" );
+	fp = PHYSFS_openRead(get_scores_filename());
 	if (fp==NULL) {
 		int i;
 
@@ -366,16 +366,16 @@ void scores_read()
 			Scores.stats[i].score = (10-i)*1000;
 		return;
 	}
-		
-	fsize = filelength( fileno( fp ));
+
+	fsize = PHYSFS_fileLength(fp);
 
 	if ( fsize != sizeof(all_scores) )	{
-		fclose(fp);
+		PHYSFS_close(fp);
 		return;
 	}
 	// Read 'em in...
-	fread( &Scores, sizeof(all_scores),1, fp );
-	fclose(fp);
+	PHYSFS_read(fp, &Scores, sizeof(all_scores), 1);
+	PHYSFS_close(fp);
 
 	if ( (Scores.version!=VERSION_NUMBER)||(Scores.signature[0]!='D')||(Scores.signature[1]!='H')||(Scores.signature[2]!='S') )	{
 		memset( &Scores, 0, sizeof(all_scores) );
@@ -385,9 +385,9 @@ void scores_read()
 
 void scores_write()
 {
-	FILE * fp;
+	PHYSFS_file *fp;
 
-	fp = fopen( get_scores_filename(), "wb" );
+	fp = PHYSFS_openWrite(get_scores_filename());
 	if (fp==NULL) {
 		nm_messagebox( TXT_WARNING, 1, TXT_OK, "%s\n'%s'", TXT_UNABLE_TO_OPEN, get_scores_filename()  );
 		return;
@@ -397,8 +397,8 @@ void scores_write()
 	Scores.signature[1]='H';
 	Scores.signature[2]='S';
 	Scores.version = VERSION_NUMBER;
-	fwrite( &Scores,sizeof(all_scores),1, fp );
-	fclose(fp);
+	PHYSFS_write(fp, &Scores,sizeof(all_scores), 1);
+	PHYSFS_close(fp);
 }
 
 void int_to_string( int number, char *dest )
