@@ -1,3 +1,10 @@
+2003-06-05  Bradley Bell  <btb@icculus.org>
+
+	* arch/sdl/event.c, console/CON_console.c, console/Makefile.am,
+	console/internal.c, console/internal.h, include/CON_console.h,
+	include/console.h, main/console.c, main/gamecntl.c, main/hud.c:
+	finish console conversion away from SDL
+
 2003-06-04  Bradley Bell  <btb@icculus.org>
 
 	* console/CON_console.c, include/CON.console.h, include/console.h,
