@@ -1,4 +1,4 @@
-/* $Id: movie.c,v 1.25.2.4 2003-05-30 09:24:44 btb Exp $ */
+/* $Id: movie.c,v 1.25.2.5 2003-05-30 21:35:18 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: movie.c,v 1.25.2.4 2003-05-30 09:24:44 btb Exp $";
+static char rcsid[] = "$Id: movie.c,v 1.25.2.5 2003-05-30 21:35:18 btb Exp $";
 #endif
 
 #define DEBUG_LEVEL CON_NORMAL
@@ -636,7 +636,7 @@ void close_movie(char *movielib, int is_robots)
 		sprintf(filename, "%s-%s.mvl", movielib, high_res?"l":"h");
 
 		if (!cfile_close(filename))
-			Error("Couldn't remove movielib <%s>: %s\n", filename, PHYSFS_getLastError());
+			Warning("Couldn't remove movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 	}
 }
 
@@ -720,9 +720,6 @@ void init_movie(char *movielib, int is_robots, int required)
 	int high_res;
 	char filename[FILENAME_LEN];
 
-	if (FindArg("-nomovies"))
-		return;
-
 	//for robots, load highres versions if highres menus set
 	if (is_robots)
 		high_res = MenuHiresAvailable;
@@ -751,6 +748,9 @@ void init_movies()
 	int i;
 	int is_robots;
 
+	if (FindArg("-nomovies"))
+		return;
+
 	for (i=0;i<N_BUILTIN_MOVIE_LIBS;i++) {
 
 		if (!strnicmp(movielib_files[i],"robot",5))
@@ -769,11 +769,14 @@ void close_extra_robot_movie(void)
 {
 	if (strlen(movielib_files[EXTRA_ROBOT_LIB]))
 		if (!cfile_close(movielib_files[EXTRA_ROBOT_LIB]))
-			Error("couldn't remove robot lib: %s\n", PHYSFS_getLastError());
+			Warning("Couldn't remove robot lib: %s\n", PHYSFS_getLastError());
 }
 
 void init_extra_robot_movie(char *movielib)
 {
+	if (FindArg("-nomovies"))
+		return;
+
 	close_extra_robot_movie();
 	init_movie(movielib, 1, 0);
 	strcpy(movielib_files[EXTRA_ROBOT_LIB], movielib);

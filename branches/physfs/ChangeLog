@@ -1,5 +1,7 @@
 2003-05-30  Bradley Bell  <btb@icculus.org>
 
+	* main/movie.c: make -nomovies friendlier
+
 	* 2d/pcx.c, include/physfsx.h: use physfs for writing pcx files
 
 	* include/d_io.h, include/physfsx.h, main/inferno.c,
