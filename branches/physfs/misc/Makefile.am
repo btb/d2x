@@ -2,7 +2,7 @@ noinst_LIBRARIES = libmisc.a
 INCLUDES = -I $(top_srcdir)/include
 
 libmisc_a_SOURCES = \
-args.c      error.c    strio.c \
+args.c      error.c    strio.c    ignorecase.c \
 d_io.c      hash.c     strutil.c  fileutil.c
 
 # checker.c

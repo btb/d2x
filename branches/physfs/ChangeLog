@@ -1,3 +1,8 @@
+2003-05-20  Bradley Bell  <btb@icculus.org>
+
+	* include/ignorecase.h, misc/Makefile.am, misc/ignorecase.c: added
+	ignorecase stuff
+
 2003-05-17  Bradley Bell  <btb@icculus.org>
 
 	* main/config.c: use physfs to read config file
