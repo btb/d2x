@@ -1,5 +1,8 @@
 2003-05-21  Bradley Bell  <btb@icculus.org>
 
+	* main/gameseq.c, main/mission.c, main/movie.c: make movies use
+	physfs/rwops, add libmve callbacks
+
 	* include/libmve.h, libmve/mvelib.c, libmve/mvelib.h,
 	libmve/mveplay.c: better separation of libmve
 

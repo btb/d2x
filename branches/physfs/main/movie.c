@@ -1,4 +1,4 @@
-/* $Id: movie.c,v 1.25.2.1 2003-05-17 04:34:34 btb Exp $ */
+/* $Id: movie.c,v 1.25.2.2 2003-05-22 03:00:38 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: movie.c,v 1.25.2.1 2003-05-17 04:34:34 btb Exp $";
+static char rcsid[] = "$Id: movie.c,v 1.25.2.2 2003-05-22 03:00:38 btb Exp $";
 #endif
 
 #define DEBUG_LEVEL CON_NORMAL
@@ -49,6 +49,7 @@ static char rcsid[] = "$Id: movie.c,v 1.25.2.1 2003-05-17 04:34:34 btb Exp $";
 #include "text.h"
 #include "fileutil.h"
 #include "screens.h"
+#include "physfsrwops.h"
 
 extern int MenuHiresAvailable;
 extern char CDROM_dir[];
@@ -70,51 +71,50 @@ typedef struct {
 subtitle Subtitles[MAX_SUBTITLES];
 int Num_subtitles;
 
-
 // Movielib data
-typedef struct {
-	char name[FILENAME_LEN];
-	int offset,len;
-} ml_entry;
-
-#define MLF_ON_CD    1
-#define MAX_MOVIES_PER_LIB    50    //determines size of malloc
-
-typedef struct {
-	char     name[100]; //[FILENAME_LEN];
-	int      n_movies;
-	ubyte    flags,pad[3];
-	ml_entry *movies;
-} movielib;
 
 #ifdef D2_OEM
-char movielib_files[][FILENAME_LEN] = {"intro-l.mvl","other-l.mvl","robots-l.mvl","oem-l.mvl"};
+char movielib_files[][FILENAME_LEN] = {"intro","other","robots","oem"};
 #else
-char movielib_files[][FILENAME_LEN] = {"intro-l.mvl","other-l.mvl","robots-l.mvl"};
+char movielib_files[][FILENAME_LEN] = {"intro","other","robots"};
 #endif
 
 #define N_BUILTIN_MOVIE_LIBS (sizeof(movielib_files)/sizeof(*movielib_files))
 #define N_MOVIE_LIBS (N_BUILTIN_MOVIE_LIBS+1)
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
-movielib *movie_libs[N_MOVIE_LIBS];
-
-
-//do we have the robot movies available
-int robot_movies = 0; //0 means none, 1 means lowres, 2 means hires
 
 int MovieHires = 1;   //default is highres
 
-int RoboFile = 0, RoboFilePos = 0;
+SDL_RWops *RoboFile;
 
 // Function Prototypes
 int RunMovie(char *filename, int highres_flag, int allow_abort,int dx,int dy);
 
-int open_movie_file(char *filename,int must_have);
-int reset_movie_file(int handle);
-
 void change_filename_ext( char *dest, char *src, char *ext );
 void decode_text_line(char *p);
 void draw_subtitles(int frame_num);
+
+
+// ----------------------------------------------------------------------
+void* MPlayAlloc(unsigned size)
+{
+    return d_malloc(size);
+}
+
+void MPlayFree(void *p)
+{
+    d_free(p);
+}
+
+
+//-----------------------------------------------------------------------
+
+unsigned int FileRead(void *handle, void *buf, unsigned int count)
+{
+    unsigned numread;
+    numread = SDL_RWread((SDL_RWops *)handle, buf, 1, count);
+    return (numread == count);
+}
 
 
 //-----------------------------------------------------------------------
@@ -127,10 +127,8 @@ int PlayMovie(const char *filename, int must_have)
 	char name[FILENAME_LEN],*p;
 	int c, ret;
 
-#ifndef RELEASE
 	if (FindArg("-nomovies"))
 		return MOVIE_NOT_PLAYED;
-#endif
 
 	strcpy(name,filename);
 
@@ -164,6 +162,52 @@ int PlayMovie(const char *filename, int must_have)
 	Screen_mode = -1;		//force screen reset
 
 	return ret;
+}
+
+
+void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
+					uint w, uint h, uint dstx, uint dsty)
+{
+	grs_bitmap source_bm;
+
+	//mprintf((0,"MovieShowFrame %d,%d  %d,%d  %d,%d  %d,%d\n",bufw,bufh,sx,sy,w,h,dstx,dsty));
+
+	Assert(bufw == w && bufh == h);
+
+	source_bm.bm_x = source_bm.bm_y = 0;
+	source_bm.bm_w = source_bm.bm_rowsize = bufw;
+	source_bm.bm_h = bufh;
+	source_bm.bm_type = BM_LINEAR;
+	source_bm.bm_flags = 0;
+	source_bm.bm_data = buf;
+
+	gr_bm_ubitblt(bufw,bufh,dstx,dsty,sx,sy,&source_bm,&grd_curcanv->cv_bitmap);
+}
+
+//our routine to set the pallete, called from the movie code
+void MovieSetPalette(unsigned char *p, unsigned start, unsigned count)
+{
+	if (count == 0)
+		return;
+
+	//mprintf((0,"SetPalette p=%x, start=%d, count=%d\n",p,start,count));
+
+	//Color 0 should be black, and we get color 255
+	Assert(start>=1 && start+count-1<=254);
+
+	//Set color 0 to be black
+	gr_palette[0] = gr_palette[1] = gr_palette[2] = 0;
+
+	//Set color 255 to be our subtitle color
+	gr_palette[765] = gr_palette[766] = gr_palette[767] = 50;
+
+	//movie libs palette into our array
+	memcpy(gr_palette+start*3,p+start*3,count*3);
+
+	//finally set the palette in the hardware
+	//gr_palette_load(gr_palette);
+
+	//MVE_SetPalette(p, start, count);
 }
 
 
@@ -233,7 +277,7 @@ void clear_pause_message()
 //returns status.  see movie.h
 int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 {
-	int filehndl;
+	SDL_RWops *filehndl;
 	int result=1,aborted=0;
 	int track = 0;
 	int frame_num;
@@ -246,13 +290,17 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 	// Open Movie file.  If it doesn't exist, no movie, just return.
 
-	filehndl = open_movie_file(filename,must_have);
+	filehndl = PHYSFSRWOPS_openRead(filename);
 
-	if (filehndl == -1) {
+	if (!filehndl)
+	{
 		if (must_have)
-			Warning("movie: RunMovie: Cannot open movie <%s>\n",filename);
+			Warning("movie: RunMovie: Cannot open movie <%s>: %s\n", filename, PHYSFS_getLastError());
 		return MOVIE_NOT_PLAYED;
 	}
+
+	MVE_memCallbacks(MPlayAlloc, MPlayFree);
+	MVE_ioCallbacks(FileRead);
 
 	if (hires_flag) {
 		gr_set_mode(SM(640,480));
@@ -271,6 +319,11 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		return MOVIE_NOT_PLAYED;
 	}
 
+#if !defined(POLY_ACC)
+	MVE_sfCallbacks(MovieShowFrame);
+	MVE_palCallbacks(MovieSetPalette);
+#endif
+
 	frame_num = 0;
 
 	FontHires = FontHiresAvailable && hires_flag;
@@ -278,6 +331,8 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	while((result = MVE_rmStepMovie()) == 0) {
 
 		draw_subtitles(frame_num);
+
+		gr_palette_load(gr_palette); // moved this here because of flashing
 
 		gr_update();
 
@@ -311,7 +366,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
     MVE_rmEndMovie();
 
-	close(filehndl);                           // Close Movie File
+	SDL_FreeRW(filehndl);                           // Close Movie File
 
 	// Restore old graphic state
 
@@ -348,9 +403,11 @@ int RotateRobot()
 
 	err = MVE_rmStepMovie();
 
+	gr_palette_load(gr_palette);
+
 	if (err == MVE_ERR_EOF)     //end of movie, so reset
 	{
-		reset_movie_file(RoboFile);
+		SDL_RWseek(RoboFile, 0, SEEK_SET);
 		if (MVE_rmPrepMovie(RoboFile, MenuHires?280:140, MenuHires?200:80, 0)) {
 			Int3();
 			return 0;
@@ -368,7 +425,7 @@ int RotateRobot()
 void DeInitRobotMovie(void)
 {
 	MVE_rmEndMovie();
-	close(RoboFile);                           // Close Movie File
+	SDL_FreeRW(RoboFile);                           // Close Movie File
 }
 
 
@@ -381,10 +438,10 @@ int InitRobotMovie(char *filename)
 
 	MVE_sndInit(-1);        //tell movies to play no sound for robots
 
-	RoboFile = open_movie_file(filename, 1);
+	RoboFile = PHYSFSRWOPS_openRead(filename);
 
-	if (RoboFile == -1) {
-		Warning("movie: InitRobotMovie: Cannot open movie file <%s>",filename);
+	if (!RoboFile) {
+		Warning("movie: InitRobotMovie: Cannot open movie file <%s>: %s\n", filename, PHYSFS_getLastError());
 		return MOVIE_NOT_PLAYED;
 	}
 
@@ -394,10 +451,6 @@ int InitRobotMovie(char *filename)
 		Int3();
 		return 0;
 	}
-
-	RoboFilePos=lseek (RoboFile,0L,SEEK_CUR);
-
-	con_printf(DEBUG_LEVEL, "RoboFilePos=%d!\n", RoboFilePos);
 
 	return 1;
 }
@@ -566,152 +619,41 @@ void draw_subtitles(int frame_num)
 }
 
 
-movielib *init_new_movie_lib(char *filename,FILE *fp)
+void close_movie(char *movielib, int is_robots)
 {
-	int nfiles,offset;
-	int i,n;
-	movielib *table;
+	int high_res;
+	char filename[FILENAME_LEN];
 
-	//read movie file header
+	if (is_robots)
+		high_res = MenuHiresAvailable;
+	else
+		high_res = MovieHires;
 
-	nfiles = file_read_int(fp);		//get number of files
+	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 
-	//table = d_malloc(sizeof(*table) + sizeof(ml_entry)*nfiles);
-	MALLOC(table, movielib, 1);
-	MALLOC(table->movies, ml_entry, nfiles);
+	if (!cfile_close(filename))
+	{
+		Warning("Couldn't remove movielib <%s>: %s\n", filename, PHYSFS_getLastError());
+		sprintf(filename, "%s-%s.mvl", movielib, high_res?"l":"h");
 
-	strcpy(table->name,filename);
-	table->n_movies = nfiles;
-
-	offset = 4+4+nfiles*(13+4);	//id + nfiles + nfiles * (filename + size)
-
-	for (i=0;i<nfiles;i++) {
-		int len;
-
-		n = fread( table->movies[i].name, 13, 1, fp );
-		if ( n != 1 )
-			break;		//end of file (probably)
-
-		len = file_read_int(fp);
-
-		table->movies[i].len = len;
-		table->movies[i].offset = offset;
-
-		offset += table->movies[i].len;
-
-	}
-
-	fclose(fp);
-
-	table->flags = 0;
-
-	return table;
-
-}
-
-
-movielib *init_old_movie_lib(char *filename,FILE *fp)
-{
-	int nfiles,size;
-	int i;
-	movielib *table,*table2;
-
-	nfiles = 0;
-
-	//allocate big table
-	table = d_malloc(sizeof(*table) + sizeof(ml_entry)*MAX_MOVIES_PER_LIB);
-
-	while( 1 ) {
-		int len;
-
-		i = fread( table->movies[nfiles].name, 13, 1, fp );
-		if ( i != 1 )
-			break;		//end of file (probably)
-
-		i = fread( &len, 4, 1, fp );
-		if ( i != 1 )
-			Error("error reading movie library <%s>",filename);
-
-		table->movies[nfiles].len = INTEL_INT(len);
-		table->movies[nfiles].offset = ftell( fp );
-
-		fseek( fp, INTEL_INT(len), SEEK_CUR );		//skip data
-
-		nfiles++;
-	}
-
-	//allocate correct-sized table
-	size = sizeof(*table) + sizeof(ml_entry)*nfiles;
-	table2 = d_malloc(size);
-	memcpy(table2,table,size);
-	d_free(table);
-	table = table2;
-
-	strcpy(table->name,filename);
-
-	table->n_movies = nfiles;
-
-	fclose(fp);
-
-	table->flags = 0;
-
-	return table;
-
-}
-
-
-//find the specified movie library, and read in list of movies in it
-movielib *init_movie_lib(char *filename)
-{
-	//note: this based on cfile_init_hogfile()
-
-	char id[4];
-	FILE * fp;
-
-	fp = fopen( filename, "rb" );
-
-#if 0
-	if ((fp == NULL) && (AltHogdir_initialized)) {
-		char temp[128];
-		strcpy(temp, AltHogDir);
-		strcat(temp, "/");
-		strcat(temp, filename);
-		fp = fopen(temp, "rb");
-	}
-#endif
-
-	if ( fp == NULL )
-		return NULL;
-
-	fread( id, 4, 1, fp );
-	if ( !strncmp( id, "DMVL", 4 ) )
-		return init_new_movie_lib(filename,fp);
-	else if ( !strncmp( id, "DHF", 3 ) ) {
-		fseek(fp,-1,SEEK_CUR);		//old file had 3 char id
-		return init_old_movie_lib(filename,fp);
-	}
-	else {
-		fclose(fp);
-		return NULL;
+		if (!cfile_close(filename))
+			Error("Couldn't remove movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 	}
 }
-
-
-void close_movie(int i)
-{
-	if (movie_libs[i]) {
-		d_free(movie_libs[i]->movies);
-		d_free(movie_libs[i]);
-	}
-}
-
 
 void close_movies()
 {
-	int i;
+	int i, is_robots;
 
-	for (i=0;i<N_MOVIE_LIBS;i++)
-		close_movie(i);
+	for (i=0;i<N_BUILTIN_MOVIE_LIBS;i++)
+	{
+		if (!strnicmp(movielib_files[i],"robot",5))
+			is_robots = 1;
+		else
+			is_robots = 0;
+
+		close_movie(movielib_files[i], is_robots);
+	}
 }
 
 
@@ -774,17 +716,13 @@ int request_cd(void)
 }
 
 
-void init_movie(char *filename,int libnum,int is_robots,int required)
+void init_movie(char *movielib, int is_robots, int required)
 {
 	int high_res;
-	int try = 0;
+	char filename[FILENAME_LEN];
 
-#ifndef RELEASE
-	if (FindArg("-nomovies")) {
-		movie_libs[libnum] = NULL;
+	if (FindArg("-nomovies"))
 		return;
-	}
-#endif
 
 	//for robots, load highres versions if highres menus set
 	if (is_robots)
@@ -792,45 +730,19 @@ void init_movie(char *filename,int libnum,int is_robots,int required)
 	else
 		high_res = MovieHires;
 
-	if (high_res)
-		strchr(filename,'.')[-1] = 'h';
+	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 
-try_again:;
+	if (!cfile_init(filename))
+	{
+		if (required)
+			Warning("Cannot open movie file <%s>: %s\n", filename, PHYSFS_getLastError());
 
-	if ((movie_libs[libnum] = init_movie_lib(filename)) == NULL) {
-		char name2[100];
+		sprintf(filename, "%s-%s.mvl", movielib, high_res?"l":"h");
 
-		strcpy(name2,CDROM_dir);
-		strcat(name2,filename);
-		movie_libs[libnum] = init_movie_lib(name2);
-
-		if (movie_libs[libnum] != NULL)
-			movie_libs[libnum]->flags |= MLF_ON_CD;
-		else {
-			if (required) {
-				Warning("Cannot open movie file <%s>\n",filename);
-			}
-
-			if (!try) {                                         // first try
-				if (strchr(filename, '.')[-1] == 'h') {         // try again with lowres
-					strchr(filename, '.')[-1] = 'l';
-					high_res = 0;
-					Warning("Trying to open movie file <%s> instead\n", filename);
-					try++;
-					goto try_again;
-				} else if (strchr(filename, '.')[-1] == 'l') {  // try again with highres
-					strchr(filename, '.')[-1] = 'h';
-					high_res = 1;
-					Warning("Trying to open movie file <%s> instead\n", filename);
-					try++;
-					goto try_again;
-				}
-			}
-		}
+		if (!cfile_init(filename))
+			if (required)
+				Warning("Cannot open movie file <%s>: %s\n", filename, PHYSFS_getLastError());
 	}
-
-	if (is_robots && movie_libs[libnum]!=NULL)
-		robot_movies = high_res?2:1;
 }
 
 
@@ -847,102 +759,22 @@ void init_movies()
 		else
 			is_robots = 0;
 
-		init_movie(movielib_files[i],i,is_robots,1);
+		init_movie(movielib_files[i],is_robots,1);
 	}
-
-	movie_libs[EXTRA_ROBOT_LIB] = NULL;
 
 	atexit(close_movies);
 }
 
 
-void init_extra_robot_movie(char *filename)
+void close_extra_robot_movie(void)
 {
-	close_movie(EXTRA_ROBOT_LIB);
-	init_movie(filename,EXTRA_ROBOT_LIB,1,0);
+	if (!cfile_close(movielib_files[EXTRA_ROBOT_LIB]))
+		Error("couldn't remove robot lib: %s\n", PHYSFS_getLastError());
 }
 
-
-int movie_handle,movie_start;
-
-//looks through a movie library for a movie file
-//returns filehandle, with fileposition at movie, or -1 if can't find
-int search_movie_lib(movielib *lib,char *filename,int must_have)
+void init_extra_robot_movie(char *movielib)
 {
-	int i;
-	int filehandle;
-
-	if (lib == NULL)
-		return -1;
-
-	for (i=0;i<lib->n_movies;i++)
-		if (!stricmp(filename,lib->movies[i].name)) {	//found the movie in a library 
-			int from_cd;
-
-			from_cd = (lib->flags & MLF_ON_CD);
-
-			if (from_cd)
-				songs_stop_redbook();		//ready to read from CD
-
-			do {		//keep trying until we get the file handle
-
-#ifdef O_BINARY
-				movie_handle = filehandle = open(lib->name, O_RDONLY | O_BINARY);
-#else
-				movie_handle = filehandle = open(lib->name, O_RDONLY);
-#endif
-
-#if 0
-				if ((filehandle == -1) && (AltHogdir_initialized)) {
-					char temp[128];
-					strcpy(temp, AltHogDir);
-					strcat(temp, "/");
-					strcat(temp, lib->name);
-#ifdef O_BINARY
-					movie_handle = filehandle = open(temp, O_RDONLY | O_BINARY);
-#else
-					movie_handle = filehandle = open(temp, O_RDONLY);
-#endif
-				}
-#endif
-
-				if (must_have && from_cd && filehandle == -1) {		//didn't get file!
-
-					if (request_cd() == -1)		//ESC from requester
-						break;						//bail from here. will get error later
-				}
-
-			} while (must_have && from_cd && filehandle == -1);
-
-			if (filehandle != -1)
-				lseek(filehandle,(movie_start=lib->movies[i].offset),SEEK_SET);
-
-			return filehandle;
-		}
-
-	return -1;
-}
-
-
-//returns file handle
-int open_movie_file(char *filename,int must_have)
-{
-	int filehandle,i;
-
-	for (i=0;i<N_MOVIE_LIBS;i++) {
-		if ((filehandle = search_movie_lib(movie_libs[i],filename,must_have)) != -1)
-			return filehandle;
-	}
-
-	return -1;		//couldn't find it
-}
-
-//sets the file position to the start of this already-open file
-int reset_movie_file(int handle)
-{
-	Assert(handle == movie_handle);
-
-	lseek(handle,movie_start,SEEK_SET);
-
-	return 0;       //everything is cool
+	close_extra_robot_movie();
+	init_movie(movielib, 1, 0);
+	atexit(close_extra_robot_movie);
 }

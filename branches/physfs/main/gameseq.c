@@ -1,4 +1,4 @@
-/* $Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $ */
+/* $Id: gameseq.c,v 1.25.2.1 2003-05-22 03:00:38 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25 2003-03-25 10:17:05 btb Exp $";
+char gameseq_rcsid[] = "$Id: gameseq.c,v 1.25.2.1 2003-05-22 03:00:38 btb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -2078,6 +2078,7 @@ void ShowLevelIntro(int level_num)
 				}
 #endif
 
+#if 0
 				if (robot_movies)
 				{
 					int hires_save=MenuHiresAvailable;
@@ -2090,9 +2091,12 @@ void ShowLevelIntro(int level_num)
 							Screen_mode = -1;		//force reset
 
 					}
+#endif
 					do_briefing_screens ("robot.tex",level_num);
+#if 0
 					MenuHiresAvailable = hires_save;
 				}
+#endif
 
 			}
 		}

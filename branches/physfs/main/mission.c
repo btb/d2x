@@ -1,4 +1,4 @@
-/* $Id: mission.c,v 1.21.2.2 2003-05-21 04:28:36 btb Exp $ */
+/* $Id: mission.c,v 1.21.2.3 2003-05-22 03:00:38 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -879,7 +879,6 @@ int load_mission(int mission_num)
 		sprintf(t,"%s.ham",Current_mission_filename);
 		bm_read_extra_robots(t,enhanced_mission);
 		strncpy(t,Current_mission_filename,6);
-		strcat(t,"-l.mvl");
 		init_extra_robot_movie(t);
 	}
 
