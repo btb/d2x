@@ -1,3 +1,8 @@
+2003-06-04  Bradley Bell  <btb@icculus.org>
+
+	* include/gr.h, main/credits.c, main/kconfig.c, main/newmenu.c:
+	put prototype for gr_bm_bitblt in gr.h
+
 2003-06-03  Bradley Bell  <btb@icculus.org>
 
 	* include/physfsx.h, include/strio.h, main/cntrlcen.c,
