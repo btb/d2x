@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: gamerend.c,v 1.8 2003-03-17 09:07:57 btb Exp $";
+static char rcsid[] = "$Id: gamerend.c,v 1.8.4.1 2003-06-06 22:12:55 btb Exp $";
 #endif
 
 #ifdef WINDOWS
@@ -1381,9 +1381,6 @@ void game_render_frame_mono(void)
          #ifdef _3DFX
          _3dfx_BufferSwap();
          #endif
-#ifdef OGL
-	ogl_swap_buffers();
-#endif
 
 			}
 		} else	{
@@ -1426,6 +1423,9 @@ void game_render_frame_mono(void)
 #endif
 
 	gr_update();
+#ifdef OGL
+	ogl_swap_buffers();
+#endif
 }
 
 void toggle_cockpit()
