@@ -1,5 +1,8 @@
 2003-05-21  Bradley Bell  <btb@icculus.org>
 
+	* include/libmve.h, libmve/mvelib.c, libmve/mvelib.h,
+	libmve/mveplay.c: better separation of libmve
+
 	* include/physfsrwops.h, misc/Makefile.am, misc/physfsrwops.c:
 	added physfsrwops stuff
 
