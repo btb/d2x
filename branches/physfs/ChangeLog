@@ -1,5 +1,7 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* main/polyobj.c: use cfilelength instead of file->size
+
 	* configure.ac: add check for physfs lib
 
 	* include/cfile.h: made cfile into a wrapper for physfs
