@@ -1,5 +1,7 @@
 2003-05-17  Bradley Bell  <btb@icculus.org>
 
+	* include/physfsx.h: added gets and puts functions
+
 	* include/cfile.h: correct seek return value
 
 2003-05-16  Bradley Bell  <btb@icculus.org>
