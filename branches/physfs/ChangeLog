@@ -1,3 +1,7 @@
+2003-05-30  Bradley Bell  <btb@icculus.org>
+
+	* README: minor update
+
 2003-05-22  Bradley Bell  <btb@icculus.org>
 
 	* main/newdemo.c: use physfs for demos
