@@ -1,5 +1,8 @@
 2003-06-06  Bradley Bell  <btb@icculus.org>
 
+	* main/gamerend.c: move ogl swap, so cockpit and console get
+	rendered properly
+
 	* main/console.c: can't write to console after it's closed
 
 2003-06-05  Bradley Bell  <btb@icculus.org>
