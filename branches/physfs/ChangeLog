@@ -1,3 +1,7 @@
+2003-05-22  Bradley Bell  <btb@icculus.org>
+
+	* libmve/mveplay.c: syntax error
+
 2003-05-21  Bradley Bell  <btb@icculus.org>
 
 	* include/fileutil.h, misc/Makefile.am, misc/fileutil.c: remove

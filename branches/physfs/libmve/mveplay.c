@@ -1,4 +1,4 @@
-/* $Id: mveplay.c,v 1.11.4.1 2003-05-22 02:57:21 btb Exp $ */
+/* $Id: mveplay.c,v 1.11.4.2 2003-05-22 07:34:38 btb Exp $ */
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
@@ -536,9 +536,12 @@ static int init_video_handler(unsigned char major, unsigned char minor, unsigned
 static int video_palette_handler(unsigned char major, unsigned char minor, unsigned char *data, int len, void *context)
 {
 	short start, count;
+	unsigned char *p;
+
 	start = get_short(data);
 	count = get_short(data+2);
-	unsigned char *p = data + 4;
+
+	p = data + 4;
 
 	mve_setpalette(p - 3*start, start, count);
 
