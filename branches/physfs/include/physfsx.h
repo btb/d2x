@@ -1,4 +1,4 @@
-/* $Id: physfsx.h,v 1.1.2.4 2003-05-30 21:20:20 btb Exp $ */
+/* $Id: physfsx.h,v 1.1.2.5 2003-05-30 21:33:35 btb Exp $ */
 
 /*
  *
@@ -57,6 +57,16 @@ static inline int PHYSFSX_writeString(PHYSFS_file *file, char *s)
 static inline int PHYSFSX_puts(PHYSFS_file *file, char *s)
 {
 	return PHYSFS_write(file, s, 1, strlen(s));
+}
+
+static inline int PHYSFSX_putc(PHYSFS_file *file, int c)
+{
+	unsigned char ch = (unsigned char)c;
+
+	if (PHYSFS_write(file, &ch, 1, 1) < 1)
+		return -1;
+	else
+		return (int)c;
 }
 
 static inline int PHYSFSX_rename(char *oldpath, char *newpath)

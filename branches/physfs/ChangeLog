@@ -1,5 +1,7 @@
 2003-05-30  Bradley Bell  <btb@icculus.org>
 
+	* 2d/pcx.c, include/physfsx.h: use physfs for writing pcx files
+
 	* include/d_io.h, include/physfsx.h, main/inferno.c,
 	main/newdemo.c, main/scores.c, misc/Makefile.am, misc/d_io.c: get
 	rid of d_io stuff.
