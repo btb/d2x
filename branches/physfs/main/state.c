@@ -1,4 +1,4 @@
-/* $Id: state.c,v 1.8.2.1 2003-05-30 09:17:48 btb Exp $ */
+/* $Id: state.c,v 1.8.2.2 2003-05-30 21:36:15 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -801,66 +801,68 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 				}
 			}
 		}
-	
-	//Save object info
+
+		//Save object info
 		i = Highest_object_index+1;
 		PHYSFS_write(fp, &i, sizeof(int), 1);
-		PHYSFS_write(fp, Objects, sizeof(object)*i, 1);
-		
-	//Save wall info
+		PHYSFS_write(fp, Objects, sizeof(object), i);
+
+		//Save wall info
 		i = Num_walls;
 		PHYSFS_write(fp, &i, sizeof(int), 1);
-		PHYSFS_write(fp, Walls, sizeof(wall)*i, 1);
+		PHYSFS_write(fp, Walls, sizeof(wall), i);
 
-	//Save exploding wall info
+		//Save exploding wall info
 		i = MAX_EXPLODING_WALLS;
 		PHYSFS_write(fp, &i, sizeof(int), 1);
 		PHYSFS_write(fp, expl_wall_list, sizeof(*expl_wall_list), i);
-	
-	//Save door info
+
+		//Save door info
 		i = Num_open_doors;
 		PHYSFS_write(fp, &i, sizeof(int), 1);
-		PHYSFS_write(fp, ActiveDoors, sizeof(active_door)*i, 1);
-	
-	//Save cloaking wall info
+		PHYSFS_write(fp, ActiveDoors, sizeof(active_door), i);
+
+		//Save cloaking wall info
 		i = Num_cloaking_walls;
 		PHYSFS_write(fp, &i, sizeof(int), 1);
 		PHYSFS_write(fp, CloakingWalls, sizeof(cloaking_wall), i);
-	
-	//Save trigger info
+
+		//Save trigger info
 		PHYSFS_write(fp, &Num_triggers, sizeof(int), 1);
-		PHYSFS_write(fp, Triggers, sizeof(trigger)*Num_triggers, 1);
-	
-	//Save tmap info
-		for (i=0; i<=Highest_segment_index; i++ )	{
-			for (j=0; j<6; j++ )	{
+		PHYSFS_write(fp, Triggers, sizeof(trigger), Num_triggers);
+
+		//Save tmap info
+		for (i=0; i<=Highest_segment_index; i++ )
+		{
+			for (j=0; j<6; j++ )
+			{
 				PHYSFS_write(fp, &Segments[i].sides[j].wall_num, sizeof(short), 1);
 				PHYSFS_write(fp, &Segments[i].sides[j].tmap_num, sizeof(short), 1);
 				PHYSFS_write(fp, &Segments[i].sides[j].tmap_num2, sizeof(short), 1);
 			}
 		}
-	
-	// Save the fuelcen info
+
+		// Save the fuelcen info
 		PHYSFS_write(fp, &Control_center_destroyed, sizeof(int), 1);
 		PHYSFS_write(fp, &Countdown_timer, sizeof(int), 1);
 		PHYSFS_write(fp, &Num_robot_centers, sizeof(int), 1);
-		PHYSFS_write(fp, RobotCenters, sizeof(matcen_info)*Num_robot_centers, 1);
+		PHYSFS_write(fp, RobotCenters, sizeof(matcen_info), Num_robot_centers);
 		PHYSFS_write(fp, &ControlCenterTriggers, sizeof(control_center_triggers), 1);
 		PHYSFS_write(fp, &Num_fuelcenters, sizeof(int), 1);
-		PHYSFS_write(fp, Station, sizeof(FuelCenter)*Num_fuelcenters, 1);
-	
-	// Save the control cen info
+		PHYSFS_write(fp, Station, sizeof(FuelCenter), Num_fuelcenters);
+
+		// Save the control cen info
 		PHYSFS_write(fp, &Control_center_been_hit, sizeof(int), 1);
 		PHYSFS_write(fp, &Control_center_player_been_seen, sizeof(int), 1);
 		PHYSFS_write(fp, &Control_center_next_fire_time, sizeof(int), 1);
 		PHYSFS_write(fp, &Control_center_present, sizeof(int), 1);
 		PHYSFS_write(fp, &Dead_controlcen_object_num, sizeof(int), 1);
-	
-	// Save the AI state
+
+		// Save the AI state
 		ai_save_state( fp );
-	
-	// Save the automap visited info
-		PHYSFS_write(fp, Automap_visited, sizeof(ubyte)*MAX_SEGMENTS, 1);
+
+		// Save the automap visited info
+		PHYSFS_write(fp, Automap_visited, sizeof(ubyte), MAX_SEGMENTS);
 
 	}
 	PHYSFS_write(fp, &state_game_id, sizeof(uint), 1);
@@ -1299,18 +1301,18 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 		//Restore door info
 		PHYSFS_read(fp, &i, sizeof(int), 1);
 		Num_open_doors = i;
-		PHYSFS_read(fp, ActiveDoors, sizeof(active_door)*Num_open_doors, 1);
-	
+		PHYSFS_read(fp, ActiveDoors, sizeof(active_door), Num_open_doors);
+
 		if (version >= 14) {		//Restore cloaking wall info
 			PHYSFS_read(fp, &i, sizeof(int), 1);
 			Num_cloaking_walls = i;
 			PHYSFS_read(fp, CloakingWalls, sizeof(cloaking_wall), Num_cloaking_walls);
 		}
-	
+
 		//Restore trigger info
 		PHYSFS_read(fp, &Num_triggers, sizeof(int), 1);
-		PHYSFS_read(fp, Triggers, sizeof(trigger)*Num_triggers, 1);
-	
+		PHYSFS_read(fp, Triggers, sizeof(trigger), Num_triggers);
+
 		//Restore tmap info
 		for (i=0; i<=Highest_segment_index; i++ )	{
 			for (j=0; j<6; j++ )	{
@@ -1319,28 +1321,28 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 				PHYSFS_read(fp, &Segments[i].sides[j].tmap_num2, sizeof(short), 1);
 			}
 		}
-	
+
 		//Restore the fuelcen info
 		PHYSFS_read(fp, &Control_center_destroyed, sizeof(int), 1);
 		PHYSFS_read(fp, &Countdown_timer, sizeof(int), 1);
 		PHYSFS_read(fp, &Num_robot_centers, sizeof(int), 1);
-		PHYSFS_read(fp, RobotCenters, sizeof(matcen_info)*Num_robot_centers, 1);
+		PHYSFS_read(fp, RobotCenters, sizeof(matcen_info), Num_robot_centers);
 		PHYSFS_read(fp, &ControlCenterTriggers, sizeof(control_center_triggers), 1);
 		PHYSFS_read(fp, &Num_fuelcenters, sizeof(int), 1);
-		PHYSFS_read(fp, Station, sizeof(FuelCenter)*Num_fuelcenters, 1);
-	
+		PHYSFS_read(fp, Station, sizeof(FuelCenter), Num_fuelcenters);
+
 		// Restore the control cen info
 		PHYSFS_read(fp, &Control_center_been_hit, sizeof(int), 1);
 		PHYSFS_read(fp, &Control_center_player_been_seen, sizeof(int), 1);
 		PHYSFS_read(fp, &Control_center_next_fire_time, sizeof(int), 1);
 		PHYSFS_read(fp, &Control_center_present, sizeof(int), 1);
 		PHYSFS_read(fp, &Dead_controlcen_object_num, sizeof(int), 1);
-	
+
 		// Restore the AI state
 		ai_restore_state( fp, version );
-	
+
 		// Restore the automap visited info
-		PHYSFS_read(fp, Automap_visited, sizeof(ubyte)*MAX_SEGMENTS, 1);
+		PHYSFS_read(fp, Automap_visited, sizeof(ubyte), MAX_SEGMENTS);
 
 		//	Restore hacked up weapon system stuff.
 		Fusion_next_sound_time = GameTime;
