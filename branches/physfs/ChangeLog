@@ -1,3 +1,16 @@
+2003-06-02  Bradley Bell  <btb@icculus.org>
+
+	* configure.ac, main/console.c: set console background, fix
+	whitespace
+
+2003-06-01  Bradley Bell  <btb@icculus.org>
+
+	* Makefile.am, arch/sdl/event.c, configure.ac,
+	console/CON_console.c, console/DT_drawtext.c, console/Makefile.am,
+	console/internal.c, include/CON_console.h, include/DT_drawtext.h,
+	include/console.h, main/console.c, main/game.c, main/gamecntl.c,
+	main/gamerend.c: added console code (from SDL_console)
+
 2003-05-30  Bradley Bell  <btb@icculus.org>
 
 	* main/inferno.c, main/network.c: misc physfs conversions
@@ -39,6 +52,11 @@
 	main/state.c: use physfs for savegames
 
 	* README: minor update
+
+2003-05-28  Bradley Bell  <btb@icculus.org>
+
+	* Info.plist.in, Makefile.am, configure.ac: add support for MacOS
+	X bundle
 
 2003-05-22  Bradley Bell  <btb@icculus.org>
 

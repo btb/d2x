@@ -1,6 +1,16 @@
-SUBDIRS = 2d 3d maths mem iff texmap misc arch main libmve utilities
+DIST_SUBDIRS = 2d 3d maths mem iff texmap misc arch main libmve utilities
+
+SUBDIRS = ${DIST_SUBDIRS} @D2X_SUBDIRS@
 
 EXTRA_SUBDIRS = include unused debian rpm
+
+if BUILD_MACOSX_BUNDLE
+bundle_contents = @PACKAGE@.app/Contents
+else
+if BUILD_SIMPLE_BUNDLE
+bundle_contents = @PACKAGE@
+endif
+endif
 
 bin_PROGRAMS = @TARGETS@
 
@@ -20,13 +30,17 @@ if EDITOR
 EDITOR_LIBS = main/editor/libeditor.a
 endif
 
+if CONSOLE
+CONSOLE_LIBS = console/libconsole.a
+endif
+
 d2x_SOURCES =
 d2x_sdl_SOURCES =
 d2x_gl_SOURCES =
 d2x_svga_SOURCES =
 d2x_ggi_SOURCES =
 
-d2x_LDADD = ${LD_KLUDGE} main/libmain.a ${EDITOR_LIBS} 3d/lib3d.a 2d/lib2d.a ${ARCH_LIBS} libmve/libmve.a mem/libmem.a iff/libiff.a texmap/libtexmap.a misc/libmisc.a maths/libmaths.a
+d2x_LDADD = ${LD_KLUDGE} main/libmain.a ${EDITOR_LIBS} 3d/lib3d.a 2d/lib2d.a ${ARCH_LIBS} libmve/libmve.a mem/libmem.a iff/libiff.a texmap/libtexmap.a misc/libmisc.a maths/libmaths.a ${CONSOLE_LIBS}
 
 if MINGW32
 if USE_NETWORK
@@ -47,6 +61,60 @@ dist-hook:
 
 pkgdatadir = @sharepath@
 missiondir = ${pkgdatadir}/missions
+
+CLEANFILES = @TARGETS@ Info.plist
+
+if BUILD_MACOSX_BUNDLE
+
+@PACKAGE@_bundle: @TARGETS@
+	mkdir -p $(bundle_contents)/MacOS
+	echo "APPL????" > $(bundle_contents)/PkgInfo
+	$(INSTALL_DATA) Info.plist $(bundle_contents)
+	$(INSTALL_PROGRAM) @TARGETS@ $(bundle_contents)/MacOS/
+
+install-exec-hook: @PACKAGE@_bundle
+	rm -rf $(DESTDIR)$(prefix)/@PACKAGE@.app
+	mkdir -p $(DESTDIR)$(prefix)/
+	cp -r @PACKAGE@.app $(DESTDIR)$(prefix)/
+
+clean-local:
+	rm -rf $(bundle_contents)
+
+else
+
+if BUILD_SIMPLE_BUNDLE
+
+@PACKAGE@_bundle: @TARGETS@
+	$(INSTALL_PROGRAM) @TARGETS@ $(bundle_contents)/
+
+install-exec-hook: @PACKAGE@_bundle
+	rm -rf $(DESTDIR)/$(prefix)/@PACKAGE@
+	mkdir -p $(DESTDIR)/$(prefix)/
+	cp COPYING @PACKAGE@/COPYING.txt
+	cp COPYING.LIB @PACKAGE@/COPYING_LIB.txt
+	cp ChangeLog @PACKAGE@/ChangeLog.txt
+	cp TODO @PACKAGE@/TODO.txt
+	cp README @PACKAGE@/README.txt
+	cp README.jp @PACKAGE@/README_jp.txt
+	cp README.sfont @PACKAGE@/sfont.txt
+	cp README.xkobo @PACKAGE@/xkobo.txt
+	cp README.xkobo.jp @PACKAGE@/xkobo_jp.txt
+	cp 501 @PACKAGE@/scores/42
+	cp -r @PACKAGE@	 $(DESTDIR)/$(prefix)/
+
+clean-local:
+	rm -rf $(bundle_contents)
+
+else
+@PACKAGE@_bundle:
+
+install-exec-hook:
+
+clean-local:
+
+endif
+
+endif
 
 EXTRA_DIST = ${EXTRA_SUBDIRS} \
 ChangeLog \

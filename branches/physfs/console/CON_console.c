@@ -15,7 +15,7 @@
 #include "CON_console.h"
 #include "DT_drawtext.h"
 #include "internal.h"
-
+#include "physfsrwops.h"
 
 /* This contains a pointer to the "topmost" console. The console that
  * is currently taking keyboard input. */
@@ -724,7 +724,7 @@ int CON_Background(ConsoleInformation *console, const char *image, int x, int y)
 	}
 
 	/* Load a new background */
-	temp = IMG_Load(image);
+	temp = IMG_Load_RW(PHYSFSRWOPS_openRead(image), 1);
 	if(!temp) {
 		CON_Out(console, "Cannot load background %s.", image);
 		return 1;

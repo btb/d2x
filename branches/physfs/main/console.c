@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.9 2003-03-17 09:33:49 btb Exp $ */
+/* $Id: console.c,v 1.9.2.1 2003-06-02 21:43:14 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -15,6 +15,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include <fcntl.h>
+
+#include <SDL.h>
+#ifdef CONSOLE
+#include "CON_console.h"
+#endif
+
 #include "pstypes.h"
 #include "u_mem.h"
 #include "error.h"
@@ -38,8 +44,20 @@ cvar_t con_threshold = {"con_threshold", "0",};
 /* Private console stuff */
 #define CON_NUM_LINES 40
 #define CON_LINE_LEN 40
+#if 0
 static char con_display[40][40];
 static int  con_line; /* Current display line */
+#endif
+
+#ifdef CONSOLE
+static int con_initialized;
+
+ConsoleInformation *Console;
+extern SDL_Surface *screen;
+
+void con_parse(ConsoleInformation *console, char *command);
+#endif
+
 
 /* ======
  * con_init - Initialise the console.
@@ -47,19 +65,30 @@ static int  con_line; /* Current display line */
  */
 int con_init(void)
 {
-	/* Make sure the output is unbuffered */
-	if (text_console_enabled) {
-		setbuf (stdout, NULL);
-		setbuf (stderr, NULL);
-	}
-
-	memset(con_display, ' ', sizeof(con_display));
-	con_line = 0;
-
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
 	return 0;
 }
+
+#ifdef CONSOLE
+void real_con_init(void)
+{
+	SDL_Rect Con_rect;
+
+	Con_rect.x = Con_rect.y = 0;
+	Con_rect.w = 320;
+	Con_rect.h = 200;
+
+	Console = CON_Init("ConsoleFont.png", screen, CON_NUM_LINES, Con_rect);
+
+	Assert(Console);
+
+	CON_SetExecuteFunction(Console, con_parse);
+	CON_Background(Console, "scores.pcx", 0, 0);
+
+	con_initialized = 1;
+}
+#endif
 
 /* ======
  * con_printf - Print a message to the console.
@@ -81,6 +110,10 @@ void con_printf(int priority, char *fmt, ...)
 			va_end (arglist);
 		}
 
+#ifdef CONSOLE
+		CON_Out(Console, buffer);
+#endif
+
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
 		{
 			memcpy(con_display, &buffer[i], min(80, l-i));
@@ -94,6 +127,7 @@ void con_printf(int priority, char *fmt, ...)
  */
 void con_update(void)
 {
+#if 0
 	char buffer[CMD_MAX_LENGTH], *t;
 
 	/* Check for new input */
@@ -101,6 +135,7 @@ void con_update(void)
 	if (t == NULL) return;
 
 	cmd_parse(buffer);
+#endif
 	con_draw();
 }
 
@@ -166,6 +201,10 @@ float cvar (char *cvar_name)
  */
 void con_draw(void)
 {
+#ifdef CONSOLE
+	CON_DrawConsole(Console);
+#else
+#if 0
 	char buffer[CON_LINE_LEN+1];
 	int i,j;
 	for (i = con_line, j=0; j < 20; i = (i+1) % CON_NUM_LINES, j++)
@@ -174,4 +213,24 @@ void con_draw(void)
 		buffer[CON_LINE_LEN] = 0;
 		gr_string(1,j*10,buffer);
 	}
+#endif
+#endif
 }
+
+void con_show(void)
+{
+#ifdef CONSOLE
+	if (!con_initialized)
+		real_con_init();
+
+	CON_Show(Console);
+	CON_Topmost(Console);
+#endif
+}
+
+#ifdef CONSOLE
+void con_parse(ConsoleInformation *console, char *command)
+{
+	cmd_parse(command);
+}
+#endif
