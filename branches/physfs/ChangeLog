@@ -1,3 +1,7 @@
+2003-06-03  Bradley Bell  <btb@icculus.org>
+
+	* include/physfsx.h: fix statfs includes for OS X
+
 2003-06-02  Bradley Bell  <btb@icculus.org>
 
 	* configure.ac, main/console.c: set console background, fix

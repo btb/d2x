@@ -1,4 +1,4 @@
-/* $Id: physfsx.h,v 1.1.2.5 2003-05-30 21:33:35 btb Exp $ */
+/* $Id: physfsx.h,v 1.1.2.6 2003-06-03 11:00:40 btb Exp $ */
 
 /*
  *
@@ -10,7 +10,12 @@
 #define PHYSFSX_H
 
 #include <sys/param.h>
+#if defined(__linux__)
 #include <sys/vfs.h>
+#else if defined(__MACH__) && defined(__APPLE__)
+#include <sys/param.h>
+#include <sys/mount.h>
+#endif
 
 #include <physfs.h>
 
