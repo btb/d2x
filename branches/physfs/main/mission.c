@@ -1,4 +1,4 @@
-/* $Id: mission.c,v 1.21.2.3 2003-05-22 03:00:38 btb Exp $ */
+/* $Id: mission.c,v 1.21.2.4 2003-05-30 09:23:42 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -537,15 +537,16 @@ void add_builtin_mission_to_list(int *count)
 }
 
 
-void add_missions_to_list(char *search_name, int *count, int anarchy_mode)
+void add_missions_to_list(int *count, int anarchy_mode)
 {
-	char **find, **i;
+	char **find, **i, *ext;
 
 	find = PHYSFS_enumerateFiles(MISSION_DIR);
 
 	for (i = find; *i != NULL; i++)
 	{
-		if (strrchr(*i, '.') && !stricmp(search_name, strrchr(*i, '.')))
+		ext = strrchr(*i, '.');
+		if (ext && (!strnicmp(ext, ".msn", 4) || !strnicmp(ext, ".mn2", 4)))
 			if (read_mission_file(*i, *count, ML_MISSIONDIR))
 				if (anarchy_mode || !Mission_list[*count].anarchy_only_flag)
 					++(*count);
@@ -614,20 +615,7 @@ int build_mission_list(int anarchy_mode)
 
 	add_builtin_mission_to_list(&count);  //read built-in first
 	add_d1_builtin_mission_to_list(&count);
-	add_missions_to_list(".mn2", &count, anarchy_mode);
-	add_missions_to_list(".msn", &count, anarchy_mode);
-
-#if 0
-	if (AltHogdir_initialized) {
-		char search_name[PATH_MAX + 5];
-		strcpy(search_name, AltHogDir);
-		strcat(search_name, "/" MISSION_DIR "*.mn2");
-		add_missions_to_list(search_name, &count, anarchy_mode);
-		strcpy(search_name, AltHogDir);
-		strcat(search_name, "/" MISSION_DIR "*.msn");
-		add_missions_to_list(search_name, &count, anarchy_mode);
-	}
-#endif
+	add_missions_to_list(&count, anarchy_mode);
 
 	// move original missions (in story-chronological order)
 	// to top of mission list
