@@ -1,33 +1,3 @@
-0.2.4:
-
-2003-05-12  Bradley Bell  <btb@icculus.org>
-
-	* configure.ac: increment version number
-
-	* main/bm.c: use con_printf for exit model warnings
-
-	* configure.ac: must check for timespec after setting -mno-cygwin
-
-	* main/inferno.c: added -nohogdir and -userdir options
-
-	* NEWS, main/titles.c: use briefings with no extension
-
-0.2.3:
-
-2003-04-30  Bradley Bell  <btb@icculus.org>
-
-	* configure.ac: have to include time.h when checking for nanosleep
-
-	* configure.ac, libmve/mveplay.c: use autoconf to check for struct
-	timespec
-
-	* Makefile.am, NEWS, README, configure.ac: fix linking bug,
-	increment version number
-
-	* main/Makefile.am: make dist fix
-
-0.2.2:
-
 2003-04-29  Bradley Bell  <btb@icculus.org>
 
 	* configure.ac, 2d/2dsline.c, main/automap.c, libmve/mveplay.c:
