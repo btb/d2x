@@ -13,16 +13,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 /*
  * $Source: /cvs/cvsroot/d2x/main/gauges.c,v $
- * $Revision: 1.7 $
+ * $Revision: 1.6.4.1 $
  * $Author: btb $
- * $Date: 2003-06-06 19:04:27 $
+ * $Date: 2003-06-06 22:12:55 $
  *
  * Inferno gauge drivers
  *
  * $Log: not supported by cvs2svn $
- * Revision 1.6.2.1  2003/06/06 10:00:31  btb
- * force cockpit redraw in opengl
- *
  * Revision 1.6  2001/11/08 10:30:27  bradleyb
  * Enabled shareware build, endlevel flythrough sequence
  *

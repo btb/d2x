@@ -1,4 +1,4 @@
-/* $Id: gamecntl.c,v 1.19 2003-06-06 19:04:27 btb Exp $ */
+/* $Id: gamecntl.c,v 1.17 2003-03-27 01:25:41 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -1105,12 +1105,6 @@ int HandleSystemKey(int key)
 
 	switch (key) {
 
-#if 1
-		case KEY_SHIFTED + KEY_ESC:
-			con_show();
-			break;
-
-#else
 		case KEY_SHIFTED + KEY_ESC:     //quick exit
 			#ifdef EDITOR
 				if (! SafetyCheck()) break;
@@ -1120,7 +1114,6 @@ int HandleSystemKey(int key)
 			Game_aborted=1;
 			Function_mode=FMODE_EXIT;
 			break;
-#endif
 
 		MAC( case KEY_COMMAND+KEY_P: )
 		case KEY_PAUSE: 
@@ -2602,11 +2595,6 @@ void ReadControls()
 		}
 		#endif
 		#endif
-
-#ifdef CONSOLE
-		if(!con_events(key))
-			continue;
-#endif
 
 		if (Player_is_dead)
 			HandleDeathKey(key);

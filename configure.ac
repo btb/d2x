@@ -2,7 +2,7 @@
 
 define([D2X_MAJOR],0)
 define([D2X_MINOR],2)
-define([D2X_MICRO],4)
+define([D2X_MICRO],5)
 
 AC_INIT(d2x,[D2X_MAJOR.D2X_MINOR.D2X_MICRO],[descent-source@warpcore.org])
 AC_PREREQ(2.52)
@@ -43,9 +43,6 @@ case $host_cpu in
 	;;
 esac
 
-build_macosx_bundle=no
-build_simple_bundle=no
-
 case $host_os in
     cygwin)
         AC_MSG_WARN([Cygwin found, setting -mno-cygwin])
@@ -57,14 +54,7 @@ case $host_os in
         ;;
     darwin*)
         MACOSX=yes
-	AC_MSG_RESULT(Mac OS X/Darwin; Mac OS X bundle)
-	build_macosx_bundle=yes
-	DATADIR='EXE>>../Resources'
-	#SCOREDIR='/Library/Preferences/KoboDeluxe/scores'
-	#CONFIGDIR='HOME>>Library/Preferences'
-	#CONFIGFILE='KoboDeluxe Preferences'
-	MATHLIB=""
-	;;
+        ;;
     msdos*)
         MSDOS=yes
         ;;
@@ -83,8 +73,6 @@ else
 fi
 
 AM_CONDITIONAL(MACOSX, test x$MACOSX = xyes)
-AM_CONDITIONAL(BUILD_MACOSX_BUNDLE, test x$build_macosx_bundle = xyes)
-AM_CONDITIONAL(BUILD_SIMPLE_BUNDLE, test x$build_simple_bundle = xyes)
 
 dnl Set $prefix and $exec_prefix to $ac_default_prefix if they are not set
 test "x$prefix" = "xNONE" && prefix=$ac_default_prefix
@@ -156,12 +144,11 @@ fi
 
 dnl Build with CONSOLE?
 AC_ARG_ENABLE(console,
-    [  --enable-console        Enable console (experimental) ],,)
+    [  --enable-console         Enable console (very experimental) ],,)
 if test x$enable_console = xyes; then
     AC_DEFINE(CONSOLE,,[Define to enable console])
-    D2X_SUBDIRS=console
+    D2X_FEATURES="console ${D2X_FEATURES}"
 fi
-AM_CONDITIONAL(CONSOLE, test x$enable_console = xyes)
 
 AC_ARG_WITH(sharepath,
     [[  --with-sharepath=DIR    Use DIR for shared game data (unix only) [DATADIR/games/d2x]]],
@@ -357,8 +344,6 @@ AH_BOTTOM([
 
 AM_PROG_AS
 
-AC_SUBST(D2X_SUBDIRS)
-
 AC_SUBST(D2X_ARCH_SUBDIRS)
 
 AC_SUBST(D2X_MAIN_SUBDIRS)
@@ -382,7 +367,6 @@ AC_OUTPUT(
     arch/svgalib/Makefile
     arch/win32/Makefile
     cfile/Makefile
-    console/Makefile
     iff/Makefile
     libmve/Makefile
     main/Makefile
@@ -394,14 +378,13 @@ AC_OUTPUT(
     utilities/Makefile
     debian/changelog
     rpm/d2x.spec
-    Info.plist
 )
 
 AC_MSG_RESULT([
         d2x has been configured successfully.
 
         Platform(s): $D2X_ARCH_SUBDIRS
-        Features   : $D2X_FEATURES $D2X_SUBDIRS $D2X_MAIN_SUBDIRS
+        Features   : $D2X_FEATURES $D2X_MAIN_SUBDIRS
 
         Shared game data directory (unix only): $sharepath
         ])

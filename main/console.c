@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.14 2003-06-06 19:04:27 btb Exp $ */
+/* $Id: console.c,v 1.9 2003-03-17 09:33:49 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -15,21 +15,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include <fcntl.h>
-
-#include <SDL.h>
-#ifdef CONSOLE
-#include "CON_console.h"
-#endif
-
 #include "pstypes.h"
 #include "u_mem.h"
 #include "error.h"
 #include "console.h"
 #include "cmd.h"
 #include "gr.h"
-#include "gamefont.h"
-#include "pcx.h"
-#include "cfile.h"
 
 #ifndef __MSDOS__
 int text_console_enabled = 1;
@@ -46,31 +37,9 @@ cvar_t con_threshold = {"con_threshold", "0",};
 
 /* Private console stuff */
 #define CON_NUM_LINES 40
-#if 0
 #define CON_LINE_LEN 40
 static char con_display[40][40];
 static int  con_line; /* Current display line */
-#endif
-
-#ifdef CONSOLE
-static int con_initialized;
-
-ConsoleInformation *Console;
-
-void con_parse(ConsoleInformation *console, char *command);
-#endif
-
-
-/* ======
- * con_free - Free the console.
- * ======
- */
-void con_free(void)
-{
-	if (con_initialized)
-		CON_Free(Console);
-	con_initialized = 0;
-}
 
 /* ======
  * con_init - Initialise the console.
@@ -78,57 +47,19 @@ void con_free(void)
  */
 int con_init(void)
 {
+	/* Make sure the output is unbuffered */
+	if (text_console_enabled) {
+		setbuf (stdout, NULL);
+		setbuf (stderr, NULL);
+	}
+
+	memset(con_display, ' ', sizeof(con_display));
+	con_line = 0;
+
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
 	return 0;
 }
-
-#ifdef CONSOLE
-
-#define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
-#define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
-#define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
-
-void con_background(char *filename)
-{
-	int pcx_error;
-	grs_bitmap bmp;
-	ubyte pal[256*3];
-
-	gr_init_bitmap_data(&bmp);
-	pcx_error = pcx_read_bitmap(filename, &bmp, BM_LINEAR, pal);
-	Assert(pcx_error == PCX_ERROR_NONE);
-	gr_remap_bitmap_good(&bmp, pal, -1, -1);
-	CON_Background(Console, &bmp);
-	gr_free_bitmap_data(&bmp);
-}
-
-
-void con_init_real(void)
-{
-	Console = CON_Init(SMALL_FONT, grd_curscreen, CON_NUM_LINES, 0, 0, SWIDTH, SHEIGHT / 2);
-
-	Assert(Console);
-
-	CON_SetExecuteFunction(Console, con_parse);
-
-	con_background(CON_BG);
-
-	con_initialized = 1;
-
-	atexit(con_free);
-}
-
-void con_resize(void)
-{
-	if (!con_initialized)
-		con_init_real();
-
-	CON_Font(Console, SMALL_FONT, gr_getcolor(63, 63, 63), -1);
-	CON_Resize(Console, 0, 0, SWIDTH, SHEIGHT / 2);
-	con_background(CON_BG);
-}
-#endif
 
 /* ======
  * con_printf - Print a message to the console.
@@ -144,13 +75,11 @@ void con_printf(int priority, char *fmt, ...)
 		va_start (arglist, fmt);
 		vsprintf (buffer,  fmt, arglist);
 		va_end (arglist);
-		if (text_console_enabled)
-			printf(buffer);
-
-#ifdef CONSOLE
-		if (con_initialized)
-			CON_Out(Console, buffer);
-#endif
+		if (text_console_enabled) {
+			va_start (arglist, fmt);
+			vprintf(fmt, arglist);
+			va_end (arglist);
+		}
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
 		{
@@ -165,7 +94,6 @@ void con_printf(int priority, char *fmt, ...)
  */
 void con_update(void)
 {
-#if 0
 	char buffer[CMD_MAX_LENGTH], *t;
 
 	/* Check for new input */
@@ -173,16 +101,8 @@ void con_update(void)
 	if (t == NULL) return;
 
 	cmd_parse(buffer);
-#endif
 	con_draw();
 }
-
-
-int  con_events(int key)
-{
-	return CON_Events(key);
-}
-
 
 /* ======
  * cvar_registervariable - Register a CVar
@@ -246,10 +166,6 @@ float cvar (char *cvar_name)
  */
 void con_draw(void)
 {
-#ifdef CONSOLE
-	CON_DrawConsole(Console);
-#else
-#if 0
 	char buffer[CON_LINE_LEN+1];
 	int i,j;
 	for (i = con_line, j=0; j < 20; i = (i+1) % CON_NUM_LINES, j++)
@@ -258,24 +174,4 @@ void con_draw(void)
 		buffer[CON_LINE_LEN] = 0;
 		gr_string(1,j*10,buffer);
 	}
-#endif
-#endif
 }
-
-void con_show(void)
-{
-#ifdef CONSOLE
-	if (!con_initialized)
-		con_init_real();
-
-	CON_Show(Console);
-	CON_Topmost(Console);
-#endif
-}
-
-#ifdef CONSOLE
-void con_parse(ConsoleInformation *console, char *command)
-{
-	cmd_parse(command);
-}
-#endif

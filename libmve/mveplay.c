@@ -1,4 +1,4 @@
-/* $Id: mveplay.c,v 1.12 2003-06-02 01:58:10 btb Exp $ */
+/* $Id: mveplay.c,v 1.11.2.1 2003-06-06 22:12:55 btb Exp $ */
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
