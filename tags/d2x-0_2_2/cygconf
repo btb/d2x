@@ -1,0 +1,1 @@
+export ACLOCAL_FLAGS="-I /usr/local/share/aclocal"

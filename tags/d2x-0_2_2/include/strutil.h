@@ -1,0 +1,37 @@
+/* $ Id: $ */
+/*
+THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+*/
+ 
+#ifndef _STRUTILS_H
+#define _STRUTILS_H
+
+#ifdef __unix__
+#include <string.h>
+#define stricmp(a,b) strcasecmp(a,b)
+#define strnicmp(a,b,c) strncasecmp(a,b,c)
+#elif 0
+extern int stricmp(char *str1, char *str2);
+extern int strnicmp(char *str1, char *str2, int n);
+#endif
+
+#ifndef __MINGW32__
+#ifndef __DJGPP__
+void strupr( char *s1 );
+void strlwr( char *s1 );
+#endif
+
+void strrev( char *s1 );
+void _splitpath(char *name, char *drive, char *path, char *base, char *ext);
+#endif
+
+#endif /* _STRUTILS_H */
