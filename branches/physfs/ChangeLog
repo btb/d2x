@@ -1,5 +1,7 @@
 2003-05-17  Bradley Bell  <btb@icculus.org>
 
+	* main/config.c: use physfs to read config file
+
 	* include/physfsx.h: added gets and puts functions
 
 	* include/cfile.h: correct seek return value
