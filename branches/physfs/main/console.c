@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.9.2.3 2003-06-05 01:55:42 btb Exp $ */
+/* $Id: console.c,v 1.9.2.4 2003-06-06 03:35:41 btb Exp $ */
 /*
  *
  * FIXME: put description here
@@ -106,14 +106,7 @@ void con_background(char *filename)
 
 void con_init_real(void)
 {
-	SDL_Rect Con_rect;
-
-	Con_rect.x = Con_rect.y = 0;
-	Con_rect.w = SWIDTH;
-	Con_rect.h = SHEIGHT / 2;
-
-	//Console = CON_Init(Gamefonts[GFONT_MEDIUM_2], grd_curscreen, CON_NUM_LINES, Con_rect);
-	Console = CON_Init(SMALL_FONT, grd_curscreen, CON_NUM_LINES, Con_rect);
+	Console = CON_Init(SMALL_FONT, grd_curscreen, CON_NUM_LINES, 0, 0, SWIDTH, SHEIGHT / 2);
 
 	Assert(Console);
 
@@ -128,15 +121,11 @@ void con_init_real(void)
 
 void con_resize(void)
 {
-	SDL_Rect Con_rect;
-
 	if (!con_initialized)
 		con_init_real();
-	Con_rect.x = Con_rect.y = 0;
-	Con_rect.w = SWIDTH;
-	Con_rect.h = SHEIGHT / 2;
+
 	CON_Font(Console, SMALL_FONT, gr_getcolor(63, 63, 63), -1);
-	CON_Resize(Console, Con_rect);
+	CON_Resize(Console, 0, 0, SWIDTH, SHEIGHT / 2);
 	con_background(CON_BG);
 }
 #endif
@@ -186,6 +175,13 @@ void con_update(void)
 #endif
 	con_draw();
 }
+
+
+int  con_events(int key)
+{
+	return CON_Events(key);
+}
+
 
 /* ======
  * cvar_registervariable - Register a CVar

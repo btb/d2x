@@ -27,25 +27,6 @@
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
 
-static int string_width(const char *s)
-{
-	int w, h, avg;
-
-	gr_get_string_size(Topmost->Prompt, &w, &h, &avg);
-
-	return w;
-}
-
-static int string_width_n(const char *s, size_t n)
-{
-	char s2[CON_CHARS_PER_LINE];
-
-	strncpy(s2, s, n);
-
-	return string_width(s2);
-}
-
-
 /* This contains a pointer to the "topmost" console. The console that
  * is currently taking keyboard input. */
 static ConsoleInformation *Topmost;
@@ -700,11 +681,7 @@ void DrawCommandLine() {
 	}
 
 	if(Blink) {
-#if 0
 		x = CON_CHAR_BORDER + Topmost->ConsoleSurface->cv_font->ft_w * (Topmost->CursorPos - Topmost->Offset + strlen(Topmost->Prompt));
-#else
-		x = CON_CHAR_BORDER + string_width_n(Topmost->RCommand, Topmost->CursorPos - Topmost->Offset) + string_width(Topmost->Prompt);
-#endif
 		orig_color = FG_COLOR;
 		if(Topmost->InsMode)
 			gr_string(x, Topmost->ConsoleSurface->cv_h - Topmost->ConsoleSurface->cv_font->ft_h, CON_INS_CURSOR);
