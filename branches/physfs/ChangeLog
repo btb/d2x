@@ -1,5 +1,9 @@
 2003-06-03  Bradley Bell  <btb@icculus.org>
 
+	* include/physfsx.h, include/strio.h, main/cntrlcen.c,
+	main/inferno.c, main/newmenu.c, misc/args.c, misc/strio.c: more
+	physfs additions
+
 	* console/CON_console.c, console/DT_drawtext.c,
 	console/Makefile.am, include/CON_console.h, include/DT_drawtext.h,
 	main/console.c: use native fonts for console

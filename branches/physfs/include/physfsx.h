@@ -1,4 +1,4 @@
-/* $Id: physfsx.h,v 1.1.2.7 2003-06-03 20:59:42 btb Exp $ */
+/* $Id: physfsx.h,v 1.1.2.8 2003-06-03 21:31:27 btb Exp $ */
 
 /*
  *
@@ -15,6 +15,7 @@
 #elif defined(__MACH__) && defined(__APPLE__)
 #include <sys/mount.h>
 #endif
+#include <string.h>
 
 #include <physfs.h>
 
@@ -46,6 +47,16 @@ static inline int PHYSFSX_gets(PHYSFS_file *file, char *s)
 		while (!PHYSFS_eof(file) && *ptr++!='\n');
 
 	return strlen(s);
+}
+
+static inline int PHYSFSX_getc(PHYSFS_file *file)
+{
+	unsigned char c;
+
+	if (PHYSFS_read(file, &c, 1, 1) != 1)
+		return EOF;
+
+	return c;
 }
 
 static inline int PHYSFSX_writeU8(PHYSFS_file *file, PHYSFS_uint8 val)

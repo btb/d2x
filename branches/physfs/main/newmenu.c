@@ -1,4 +1,4 @@
-/* $Id: newmenu.c,v 1.19.2.7 2003-06-03 21:00:09 btb Exp $ */
+/* $Id: newmenu.c,v 1.19.2.8 2003-06-03 21:31:27 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -3273,7 +3273,7 @@ ExitFileMenu:
 // 
 // 	if ( *keypress = KEY_CTRLED+KEY_D )	{
 // 		if ( *nitems > 1 )	{
-// 			unlink( items[*citem] );		// Delete the file
+// 			PHYSFS_delete( items[*citem] );     // Delete the file
 // 			for (i=*citem; i<*nitems-1; i++ )	{
 // 				items[i] = items[i+1];
 // 			}

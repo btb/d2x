@@ -1,4 +1,4 @@
-/* $Id: strio.c,v 1.3 2003-02-18 20:35:35 btb Exp $ */
+/* $Id: strio.c,v 1.3.2.1 2003-06-03 21:31:27 btb Exp $ */
 /*
  * strio.c: string/file manipulation functions by Victor Rachels
  */
@@ -9,37 +9,43 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <physfs.h>
+
 #include "strio.h"
 //added on 9/16/98 by adb to add memory tracking for this module
 #include "u_mem.h"
 //end additions - adb
+#include "physfsx.h"
 
-char* fsplitword(FILE *f, char splitchar)
+char* fsplitword(PHYSFS_file *f, char splitchar)
 {
- int x,y,mem,memx;
- char *word,*buf;
-  memx=1;
-  mem=memx*256;
-  word=(char *) d_malloc(sizeof(char) * mem);
-  x=0;
-  word[x]=fgetc(f);
-   while(word[x]!=splitchar && !feof(f))
+	int x,y,mem,memx;
+	char *word,*buf;
+
+	memx = 1;
+	mem = memx * 256;
+	word = (char *)d_malloc(sizeof(char) * mem);
+	x = 0;
+	word[x] = PHYSFSX_getc(f);
+	while(word[x] != splitchar && !PHYSFS_eof(f))
     {
-     x++;
-      if(x==mem)
-       {
-	buf=word;
-	memx*=2;
-	mem=memx*256;
-	word=(char *) d_malloc(sizeof(char) * mem);
-	 for(y=0;y<x;y++)
-	  word[y]=buf[y];
-	d_free(buf);
-       }
-     word[x]=fgetc(f);
+		x++;
+		if(x == mem)
+		{
+			buf = word;
+			memx *= 2;
+			mem = memx * 256;
+			word = (char *)d_malloc(sizeof(char) * mem);
+			for(y = 0; y < x; y++)
+				word[y] = buf[y];
+			d_free(buf);
+		}
+		word[x] = PHYSFSX_getc(f);
     }
-  word[x]=0;
-  return word;
+	word[x] = 0;
+
+	return word;
 }
 
 char* splitword(char *s, char splitchar)

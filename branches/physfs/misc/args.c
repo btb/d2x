@@ -1,4 +1,4 @@
-/* $Id: args.c,v 1.8 2003-02-18 20:35:35 btb Exp $ */
+/* $Id: args.c,v 1.8.2.1 2003-06-03 21:31:27 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -57,12 +57,15 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: args.c,v 1.8 2003-02-18 20:35:35 btb Exp $";
+static char rcsid[] = "$Id: args.c,v 1.8.2.1 2003-06-03 21:31:27 btb Exp $";
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <physfs.h>
+
 #include "u_mem.h"
 #include "strio.h"
 #include "strutil.h"
@@ -90,38 +93,38 @@ void args_exit(void)
 void InitArgs( int argc,char **argv )
 {
 	int i;
-	FILE *f;
+	PHYSFS_file *f;
 	char *line,*word;
-	
+
 	Num_args=0;
-	
+
 	for (i=0; i<argc; i++ )
 		Args[Num_args++] = d_strdup( argv[i] );
-        
-	
+
+
 	for (i=0; i< Num_args; i++ ) {
 		if ( Args[i][0] == '-' )
 			strlwr( Args[i]  );  // Convert all args to lowercase
 	}
 	if((i=FindArg("-ini")))
-		f=fopen(Args[i+1],"rt");
+		f=PHYSFS_openRead(Args[i+1]);
 	else
-		f=fopen("d2x.ini","rt");
-	
+		f = PHYSFS_openRead("d2x.ini");
+
 	if(f) {
-		while(!feof(f)) {
+		while(!PHYSFS_eof(f)) {
 			line=fsplitword(f,'\n');
 			word=splitword(line,' ');
-			
+
 			Args[Num_args++] = d_strdup(word);
-			
+
 			if(line)
 				Args[Num_args++] = d_strdup(line);
-			
+
 			d_free(line); d_free(word);
 		}
-		fclose(f);
+		PHYSFS_close(f);
 	}
-	
+
 	atexit(args_exit);
 }

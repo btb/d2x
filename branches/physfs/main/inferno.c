@@ -1,4 +1,4 @@
-/* $Id: inferno.c,v 1.62.4.3 2003-05-31 04:30:22 btb Exp $ */
+/* $Id: inferno.c,v 1.62.4.4 2003-06-03 21:31:27 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -1194,11 +1194,6 @@ int main(int argc, char *argv[])
 
 	error_init(NULL, NULL);
 
-	InitArgs( argc,argv );
-
-	if ((t = FindArg("-userdir")))
-		PHYSFS_setWriteDir(Args[t+1]);
-
 	if (!PHYSFS_getWriteDir())
 #ifdef __unix__
 	{
@@ -1220,6 +1215,14 @@ int main(int argc, char *argv[])
 		Error("can't set write dir\n");
 	else
 		PHYSFS_addToSearchPath(PHYSFS_getWriteDir(), 1);
+
+	InitArgs( argc,argv );
+
+	if ((t = FindArg("-userdir")))
+	{
+		PHYSFS_removeFromSearchPath(PHYSFS_getWriteDir());
+		PHYSFS_setWriteDir(Args[t+1]);
+	}
 
 	if (FindArg("-debug"))
 		con_threshold.value = (float)2;
