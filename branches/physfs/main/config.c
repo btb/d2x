@@ -1,3 +1,4 @@
+/* $Id: config.c,v 1.6.2.1 2003-05-17 04:48:50 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -7,9 +8,98 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
+
+/*
+ *
+ * contains routine(s) to read in the configuration file which contains
+ * game configuration stuff like detail level, sound card, etc
+ *
+ * Old Log:
+ * Revision 1.8  1995/10/27  10:52:20  allender
+ * call digi_set_master_volume when prefs are read in to
+ * set the master volume of the mac
+ *
+ * Revision 1.7  1995/10/24  17:08:39  allender
+ * Config_master_volume added for saving sound manager volume
+ * across games
+ *
+ * Revision 1.6  1995/10/20  00:49:31  allender
+ * use default values when no prefs file
+ *
+ * Revision 1.5  1995/09/21  10:06:58  allender
+ * set digi and midi volume appropriately
+ *
+ * Revision 1.4  1995/09/13  08:49:38  allender
+ * prefs file stuff
+ *
+ * Revision 1.3  1995/09/05  08:47:37  allender
+ * prefs file working
+ *
+ * Revision 1.2  1995/05/26  06:54:14  allender
+ * removed midi and digi references from config file
+ *
+ * Revision 1.1  1995/05/16  15:23:45  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/27  09:42:59  john
+ * Added VR Settings in config file.
+ *
+ * Revision 2.1  1995/03/16  11:20:40  john
+ * Put in support for Crystal Lake soundcard.
+ *
+ * Revision 2.0  1995/02/27  11:30:13  john
+ * New version 2.0, which has no anonymous unions, builds with
+ * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
+ *
+ * Revision 1.14  1995/02/11  16:19:36  john
+ * Added code to make the default mission be the one last played.
+ *
+ * Revision 1.13  1995/01/18  13:23:24  matt
+ * Made curtom detail level vars initialize properly at load
+ *
+ * Revision 1.12  1995/01/04  22:15:36  matt
+ * Fixed stupid bug using scanf() to read bytes
+ *
+ * Revision 1.11  1995/01/04  13:14:21  matt
+ * Made custom detail level settings save in config file
+ *
+ * Revision 1.10  1994/12/12  21:35:09  john
+ * *** empty log message ***
+ *
+ * Revision 1.9  1994/12/12  21:31:51  john
+ * Made volume work better by making sure volumes are valid
+ * and set correctly at program startup.
+ *
+ * Revision 1.8  1994/12/12  13:58:01  john
+ * MAde -nomusic work.
+ * Fixed GUS hang at exit by deinitializing digi before midi.
+ *
+ * Revision 1.7  1994/12/08  10:01:33  john
+ * Changed the way the player callsign stuff works.
+ *
+ * Revision 1.6  1994/12/01  11:24:07  john
+ * Made volume/gamma/joystick sliders all be the same length.  0-->8.
+ *
+ * Revision 1.5  1994/11/29  02:01:07  john
+ * Added code to look at -volume command line arg.
+ *
+ * Revision 1.4  1994/11/14  20:14:11  john
+ * Fixed some warnings.
+ *
+ * Revision 1.3  1994/11/14  19:51:01  john
+ * Added joystick cal values to descent.cfg.
+ *
+ * Revision 1.2  1994/11/14  17:53:09  allender
+ * read and write descent.cfg file
+ *
+ * Revision 1.1  1994/11/14  16:28:08  allender
+ * Initial revision
+ *
+ *
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
@@ -30,6 +120,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <ctype.h>
 
+#include <physfs.h>
+
 #include "pstypes.h"
 #include "game.h"
 #include "menu.h"
@@ -45,10 +137,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "pa_enabl.h"
 
+#include "physfsx.h"
 
 
 #ifdef RCS
-static char rcsid[] = "$Id: config.c,v 1.6 2003-03-22 04:04:47 btb Exp $";
+static char rcsid[] = "$Id: config.c,v 1.6.2.1 2003-05-17 04:48:50 btb Exp $";
 #endif
 
 ubyte Config_digi_volume = 8;
@@ -434,7 +527,7 @@ int ReadConfigFile()
 
 int WriteConfigFile()
 {
-	FILE *infile;
+	PHYSFS_file *infile;
 	char str[256];
 	int joy_axis_min[7];
 	int joy_axis_center[7];
@@ -452,66 +545,66 @@ int WriteConfigFile()
    }
 #endif
 
-	infile = fopen("descent.cfg", "wt");
+	infile = PHYSFS_openWrite("descent.cfg");
 	if (infile == NULL) {
 		return 1;
 	}
 	/*sprintf (str, "%s=0x%x\n", digi_dev8_str, Config_digi_type);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=0x%x\n", digi_dev16_str, digi_driver_board_16);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=0x%x\n", digi_port_str, digi_driver_port);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", digi_irq_str, digi_driver_irq);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", digi_dma8_str, Config_digi_dma);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", digi_dma16_str, digi_driver_dma_16);
-	fputs(str, infile);*/
+	PHYSFSX_writeString(infile, str);*/
 	sprintf (str, "%s=%d\n", digi_volume_str, Config_digi_volume);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	/*sprintf (str, "%s=0x%x\n", midi_dev_str, Config_midi_type);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=0x%x\n", midi_port_str, digi_midi_port);
-	fputs(str, infile);*/
+	PHYSFSX_writeString(infile, str);*/
 	sprintf (str, "%s=%d\n", midi_volume_str, Config_midi_volume);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", redbook_enabled_str, FindArg("-noredbook")?save_redbook_enabled:Redbook_enabled);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", redbook_volume_str, Config_redbook_volume);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", stereo_rev_str, Config_channels_reversed);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", gamma_level_str, gamma);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	if (Detail_level == NUM_DETAIL_LEVELS-1)
 		sprintf (str, "%s=%d,%d,%d,%d,%d,%d,%d\n", detail_level_str, Detail_level,
 				Object_complexity,Object_detail,Wall_detail,Wall_render_depth,Debris_amount,SoundChannels);
 	else
 		sprintf (str, "%s=%d\n", detail_level_str, Detail_level);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 
 	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_min_str, joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_cen_str, joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_max_str, joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 
 	sprintf (str, "%s=%s\n", last_player_str, Players[Player_num].callsign );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%s\n", last_mission_str, config_last_mission );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", config_vr_type_str, Config_vr_type );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", config_vr_resolution_str, Config_vr_resolution );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", config_vr_tracking_str, Config_vr_tracking );
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 	sprintf (str, "%s=%d\n", movie_hires_str, (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))?SaveMovieHires:MovieHires);
-	fputs(str, infile);
+	PHYSFSX_writeString(infile, str);
 
-	fclose(infile);
+	PHYSFS_close(infile);
 
 #ifdef WINDOWS
 {
@@ -578,7 +671,7 @@ int WriteConfigFile()
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: config.c,v 1.6 2003-03-22 04:04:47 btb Exp $";
+static char rcsid[] = "$Id: config.c,v 1.6.2.1 2003-05-17 04:48:50 btb Exp $";
 #endif
 
 #define MAX_CTB_LEN	512

@@ -1,5 +1,8 @@
 2003-05-16  Bradley Bell  <btb@icculus.org>
 
+	* main/config.c, main/playsave.c: use physfs to write
+	config/player files
+
 	* include/physfsx.h: added my physfs extensions
 
 	* main/inferno.c: physfs initialization stuff
