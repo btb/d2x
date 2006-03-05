@@ -1,3 +1,8 @@
+2006-03-05  Chris Taylor  <chris@icculus.org>
+
+	* main/inferno.c: create write directory if it doesn't exist
+	(didn't work before)
+
 2006-02-26  Chris Taylor  <chris@icculus.org>
 
 	* include/strutil.h, main/bm.c, main/gamepal.c, main/gamesave.c,
