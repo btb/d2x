@@ -3,6 +3,10 @@
 	* main/inferno.c: create write directory if it doesn't exist
 	(didn't work before)
 
+	* main/gamesave.c, main/object.c, main/render.c,
+	main/editor/kfuncs.c, main/editor/med.c: allow the editor to be
+	built with NDEBUG
+
 2006-02-26  Chris Taylor  <chris@icculus.org>
 
 	* include/strutil.h, main/bm.c, main/gamepal.c, main/gamesave.c,

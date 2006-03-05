@@ -1,4 +1,4 @@
-/* $Id: gamesave.c,v 1.34 2006-02-26 06:16:57 chris Exp $ */
+/* $Id: gamesave.c,v 1.35 2006-03-05 12:19:42 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char gamesave_rcsid[] = "$Id: gamesave.c,v 1.34 2006-02-26 06:16:57 chris Exp $";
+char gamesave_rcsid[] = "$Id: gamesave.c,v 1.35 2006-03-05 12:19:42 chris Exp $";
 #endif
 
 #include <stdio.h>
@@ -1408,7 +1408,7 @@ int load_level(char * filename_passed)
 		editor_status("Loaded NEW mine %s, \"%s\"",filename,Current_level_name);
 	#endif
 
-	#ifdef EDITOR
+	#if !defined(NDEBUG) && !defined(COMPACT_SEGS)
 	if (check_segment_connections())
 		nm_messagebox( "ERROR", 1, "Ok", 
 				"Connectivity errors detected in\n"

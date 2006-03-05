@@ -1,4 +1,4 @@
-/* $Id: object.c,v 1.19 2005-08-02 06:13:56 chris Exp $ */
+/* $Id: object.c,v 1.20 2006-03-05 12:19:42 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -134,7 +134,7 @@ int print_object_info = 0;
 
 window_rendered_data Window_rendered_data[MAX_RENDERED_WINDOWS];
 
-#ifndef NDEBUG
+#if defined(EDITOR) || !defined(NDEBUG)
 char	Object_type_names[MAX_OBJECT_TYPES][9] = {
 	"WALL    ",
 	"FIREBALL",
