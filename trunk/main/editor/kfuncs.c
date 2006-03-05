@@ -1,4 +1,4 @@
-/* $Id: kfuncs.c,v 1.4 2005-04-01 03:21:32 chris Exp $ */
+/* $Id: kfuncs.c,v 1.5 2006-03-05 12:19:57 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -19,7 +19,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #ifdef RCS
-static char rcsid[] = "$Id: kfuncs.c,v 1.4 2005-04-01 03:21:32 chris Exp $";
+static char rcsid[] = "$Id: kfuncs.c,v 1.5 2006-03-05 12:19:57 chris Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -257,8 +257,10 @@ FUNCTION med_functions[] = {
 {   "med-segment-exchange",             0,      ExchangeMarkandCurseg },
 {   "med-segment-mark",                 0,      CopySegToMarked },
 {	 "med-about",								 0,      ShowAbout },
+#ifndef NDEBUG
 {	 "med-mark-start",						 0,		MarkStart },
 {	 "med-mark-end",						 	 0,		MarkEnd },
+#endif
 
 //	In group.c
 {	 "med-group-load",						 0, 		LoadGroup },

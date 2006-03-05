@@ -1,4 +1,4 @@
-/* $Id: render.c,v 1.24 2005-07-30 01:50:17 chris Exp $ */
+/* $Id: render.c,v 1.25 2006-03-05 12:19:42 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2064,7 +2064,7 @@ void render_mine(int start_seg_num,fix eye_offset, int window_num)
 	render_start_frame();
 
 
-	#if defined(EDITOR) && !defined(NDEBUG)
+	#if defined(EDITOR)
 	if (Show_only_curside) {
 		rotate_list(8,Cursegp->verts);
 		render_side(Cursegp,Curside);
