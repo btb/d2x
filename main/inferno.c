@@ -1,4 +1,4 @@
-/* $Id: inferno.c,v 1.105 2005-08-06 13:50:13 chris Exp $ */
+/* $Id: inferno.c,v 1.106 2006-03-05 11:10:27 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -512,12 +512,33 @@ int main(int argc, char *argv[])
 			strncpy(fullPath, path, PATH_MAX + 5);
 		
 		PHYSFS_setWriteDir(fullPath);
-		if (!PHYSFS_getWriteDir())  // need to make it
-		{
-			PHYSFS_mkdir(fullPath);
+		if (!PHYSFS_getWriteDir())
+		{						// need to make it
+			char *p;
+			char ancestor[PATH_MAX + 5];	// the directory which actually exists
+			char child[PATH_MAX + 5];		// the directory relative to the above we're trying to make
+
+			strcpy(ancestor, fullPath);
+			while (!PHYSFS_getWriteDir() && ((p = strrchr(ancestor, *PHYSFS_getDirSeparator()))))
+			{
+				if (p[1] == 0)
+				{					// separator at the end (intended here, for safety)
+					*p = 0;			// kill this separator
+					if (!((p = strrchr(ancestor, *PHYSFS_getDirSeparator()))))
+						break;		// give up, this is (usually) the root directory
+				}
+
+				p[1] = 0;			// go to parent
+				PHYSFS_setWriteDir(ancestor);
+			}
+
+			strcpy(child, fullPath + strlen(ancestor));
+			for (p = child; (p = strchr(p, *PHYSFS_getDirSeparator())); p++)
+				*p = '/';
+			PHYSFS_mkdir(child);
 			PHYSFS_setWriteDir(fullPath);
 		}
-			
+
 		PHYSFS_addToSearchPath(PHYSFS_getWriteDir(), 1);
 		AppendArgs();
 	}
