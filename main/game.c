@@ -1,4 +1,4 @@
-/* $Id: game.c,v 1.42 2005-08-07 09:58:12 chris Exp $ */
+/* $Id: game.c,v 1.43 2006-06-03 12:54:03 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char game_rcsid[] = "$Id: game.c,v 1.42 2005-08-07 09:58:12 chris Exp $";
+char game_rcsid[] = "$Id: game.c,v 1.43 2006-06-03 12:54:03 chris Exp $";
 #endif
 
 #include <stdio.h>
@@ -296,8 +296,6 @@ void init_game()
 	init_special_effects();
 
 	init_ai_system();
-
-	init_gauge_canvases();
 
 	init_exploding_walls();
 

@@ -1,4 +1,4 @@
-/* $Id: gauges.c,v 1.22 2006-02-24 06:08:31 chris Exp $ */
+/* $Id: gauges.c,v 1.23 2006-06-03 12:54:03 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2965,11 +2965,7 @@ extern short *BackBuffer;
 //print out some player statistics
 void render_gauges()
 {
-#ifndef MACINTOSH
-	static int old_display_mode = 0;
-#else
-	static int old_display_mode = 1;
-#endif
+	static int old_display_mode = -2;
 	int energy = f2ir(Players[Player_num].energy);
 	int shields = f2ir(Players[Player_num].shields);
 	int cloak = ((Players[Player_num].flags&PLAYER_FLAGS_CLOAKED) != 0);
@@ -2978,10 +2974,14 @@ void render_gauges()
 
 // check to see if our display mode has changed since last render time --
 // if so, then we need to make new gauge canvases.
+// Also make the first gauge canvases here, in the game,
+// because they are [now] sub-canvases.
 
   
-	if (old_display_mode != Current_display_mode) {
-		close_gauge_canvases();
+	if (old_display_mode != Current_display_mode)
+	{
+		if (old_display_mode != -2)
+			close_gauge_canvases();
 		init_gauge_canvases();
 		old_display_mode = Current_display_mode;
 	}
