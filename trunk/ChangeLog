@@ -1,3 +1,9 @@
+2006-06-03  Chris Taylor  <chris@icculus.org>
+
+	* main/game.c, main/gauges.c: the gauges work in 320xXXX (sdl)
+	again. It needs to create gauge canvases in the game when they're
+	sub-canvases, which they were made into on 2005-08-13
+
 2006-03-05  Chris Taylor  <chris@icculus.org>
 
 	* main/inferno.c: create write directory if it doesn't exist
