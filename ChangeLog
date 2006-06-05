@@ -1,3 +1,7 @@
+2006-06-05  Chris Taylor  <chris@icculus.org>
+
+	* main/slew.h: fix error when building editor with RELEASE
+
 2006-06-03  Chris Taylor  <chris@icculus.org>
 
 	* main/game.c, main/gauges.c: the gauges work in 320xXXX (sdl)
