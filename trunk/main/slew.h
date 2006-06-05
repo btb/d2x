@@ -1,4 +1,4 @@
-/* $Id: slew.h,v 1.3 2004-08-28 23:17:45 schaffner Exp $ */
+/* $Id: slew.h,v 1.4 2006-06-05 07:14:39 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -26,7 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //from slew.c
 
-#ifndef RELEASE
+#if 1	//ndef RELEASE	//kill error on RELEASE build
 
 void slew_init(object *obj);                // say this is slew obj
 int slew_stop();                            // Stops object
