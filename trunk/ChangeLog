@@ -6,6 +6,8 @@
 	* arch/carbon/descent.r: don't allow MPW build to run in OS X
 	(it won't work and doesn't need to)
 
+	* main/gauges.c: only free the gauge canvases when they exist
+
 2006-06-05  Chris Taylor  <chris@icculus.org>
 
 	* main/slew.h: fix error when building editor with RELEASE
