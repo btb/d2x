@@ -1,4 +1,4 @@
-/* $Id: gauges.c,v 1.23 2006-06-03 12:54:03 chris Exp $ */
+/* $Id: gauges.c,v 1.24 2006-07-09 14:58:43 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -70,12 +70,12 @@ extern void draw_guided_crosshair(void);
 bitmap_index Gauges[MAX_GAUGE_BMS];   // Array of all gauge bitmaps.
 bitmap_index Gauges_hires[MAX_GAUGE_BMS];   // hires gauges
 
-grs_canvas *Canv_LeftEnergyGauge;
-grs_canvas *Canv_AfterburnerGauge;
-grs_canvas *Canv_SBEnergyGauge;
-grs_canvas *Canv_SBAfterburnerGauge;
-grs_canvas *Canv_RightEnergyGauge;
-grs_canvas *Canv_NumericalGauge;
+grs_canvas *Canv_LeftEnergyGauge = NULL;
+grs_canvas *Canv_AfterburnerGauge = NULL;
+grs_canvas *Canv_SBEnergyGauge = NULL;
+grs_canvas *Canv_SBAfterburnerGauge = NULL;
+grs_canvas *Canv_RightEnergyGauge = NULL;
+grs_canvas *Canv_NumericalGauge = NULL;
 
 //Flags for gauges/hud stuff
 ubyte Reticle_on=1;
@@ -1706,12 +1706,15 @@ void init_gauge_canvases()
 
 void close_gauge_canvases()
 {
-	gr_free_sub_canvas( Canv_LeftEnergyGauge );
-	gr_free_sub_canvas( Canv_SBEnergyGauge );
-	gr_free_sub_canvas( Canv_SBAfterburnerGauge );
-	gr_free_sub_canvas( Canv_RightEnergyGauge );
-	gr_free_sub_canvas( Canv_NumericalGauge );
-	gr_free_sub_canvas( Canv_AfterburnerGauge );
+	if (Canv_LeftEnergyGauge)
+	{
+		gr_free_sub_canvas( Canv_LeftEnergyGauge );
+		gr_free_sub_canvas( Canv_SBEnergyGauge );
+		gr_free_sub_canvas( Canv_SBAfterburnerGauge );
+		gr_free_sub_canvas( Canv_RightEnergyGauge );
+		gr_free_sub_canvas( Canv_NumericalGauge );
+		gr_free_sub_canvas( Canv_AfterburnerGauge );
+	}
 }
 
 void init_gauges()
@@ -2980,8 +2983,7 @@ void render_gauges()
   
 	if (old_display_mode != Current_display_mode)
 	{
-		if (old_display_mode != -2)
-			close_gauge_canvases();
+		close_gauge_canvases();
 		init_gauge_canvases();
 		old_display_mode = Current_display_mode;
 	}
