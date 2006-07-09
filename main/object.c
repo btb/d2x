@@ -1,4 +1,4 @@
-/* $Id: object.c,v 1.20 2006-03-05 12:19:42 chris Exp $ */
+/* $Id: object.c,v 1.21 2006-07-09 03:25:10 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -1416,7 +1416,8 @@ void obj_delete(int objnum)
 	Assert(obj->type != OBJ_NONE);
 	Assert(obj != ConsoleObject);
 
-	if (obj->type==OBJ_WEAPON && obj->id==GUIDEDMISS_ID) {
+	if (obj->type==OBJ_WEAPON && obj->id==GUIDEDMISS_ID && obj->ctype.laser_info.parent_type==OBJ_PLAYER)
+	{
 		pnum=Objects[obj->ctype.laser_info.parent_num].id;
 		mprintf ((0,"Deleting a guided missile! Player %d\n\n",pnum));
 

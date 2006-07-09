@@ -1,4 +1,4 @@
-/* $Id: laser.c,v 1.13 2004-12-19 09:52:59 btb Exp $ */
+/* $Id: laser.c,v 1.14 2006-07-09 03:25:10 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char laser_rcsid[] = "$Id: laser.c,v 1.13 2004-12-19 09:52:59 btb Exp $";
+char laser_rcsid[] = "$Id: laser.c,v 1.14 2006-07-09 03:25:10 chris Exp $";
 #endif
 
 #include <stdlib.h>
@@ -1536,7 +1536,8 @@ void Laser_do_weapon_sequence(object *obj)
 
 
 	//	For homing missiles, turn towards target. (unless it's the guided missile)
-	if (Weapon_info[obj->id].homing_flag && !(obj->id==GUIDEDMISS_ID && obj==Guided_missile[Objects[obj->ctype.laser_info.parent_num].id] && obj->signature==Guided_missile[Objects[obj->ctype.laser_info.parent_num].id]->signature)) {
+	if (Weapon_info[obj->id].homing_flag && !(obj->id==GUIDEDMISS_ID && obj->ctype.laser_info.parent_type==OBJ_PLAYER && obj==Guided_missile[Objects[obj->ctype.laser_info.parent_num].id] && obj->signature==Guided_missile[Objects[obj->ctype.laser_info.parent_num].id]->signature))
+	{
 		vms_vector		vector_to_object, temp_vec;
 		fix				dot=F1_0;
 		fix				speed, max_speed;
