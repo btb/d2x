@@ -3,6 +3,9 @@
 	* main/laser.c, main/object.c: fix crash when a robot's guided
 	missile explodes
 
+	* arch/carbon/descent.r: don't allow MPW build to run in OS X
+	(it won't work and doesn't need to)
+
 2006-06-05  Chris Taylor  <chris@icculus.org>
 
 	* main/slew.h: fix error when building editor with RELEASE
