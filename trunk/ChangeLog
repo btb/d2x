@@ -1,3 +1,8 @@
+2006-07-24  Chris Taylor  <chris@icculus.org>
+
+	* main/state.c: make the thumbnail properly when doing fast save
+	in d2xgl
+
 2006-07-12  Chris Taylor  <chris@icculus.org>
 
 	* d2x.xcode/project.pbxproj: add references to headers in main
