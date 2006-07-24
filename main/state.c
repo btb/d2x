@@ -1,4 +1,4 @@
-/* $Id: state.c,v 1.26 2005-08-02 06:13:56 chris Exp $ */
+/* $Id: state.c,v 1.27 2006-07-24 08:20:39 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -628,6 +628,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 #ifdef OGL
 		ubyte *buf;
 		int k;
+		GLint gl_draw_buffer;
 #endif
 		grs_canvas * cnv_save;
 		cnv_save = grd_curcanv;
@@ -639,7 +640,8 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 #if defined(OGL)
 # if 1
 		buf = d_malloc(THUMBNAIL_W * THUMBNAIL_H * 3);
-		glReadBuffer(GL_FRONT);
+		glGetIntegerv(GL_DRAW_BUFFER, &gl_draw_buffer);
+		glReadBuffer(gl_draw_buffer);
 		glReadPixels(0, SHEIGHT - THUMBNAIL_H, THUMBNAIL_W, THUMBNAIL_H, GL_RGB, GL_UNSIGNED_BYTE, buf);
 		k = THUMBNAIL_H;
 		for (i = 0; i < THUMBNAIL_W * THUMBNAIL_H; i++) {
