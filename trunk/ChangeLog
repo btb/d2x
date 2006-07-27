@@ -1,3 +1,8 @@
+2006-07-27  Chris Taylor  <chris@icculus.org>
+
+	* main/inferno.c, main/multi.c, main/multi.h:
+	move hoard data saving from main to save_hoard_data
+
 2006-07-24  Chris Taylor  <chris@icculus.org>
 
 	* main/state.c: make the thumbnail properly when doing fast save
