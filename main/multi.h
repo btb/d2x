@@ -1,4 +1,4 @@
-/* $Id: multi.h,v 1.15 2004-10-23 18:59:02 schaffner Exp $ */
+/* $Id: multi.h,v 1.16 2006-07-27 10:07:31 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -416,5 +416,9 @@ void change_playernum_to(int new_pnum);
 //how to encode missiles & flares in weapon packets
 #define MISSILE_ADJUST  100
 #define FLARE_ADJUST    127
+
+#ifdef EDITOR
+void save_hoard_data(void);
+#endif
 
 #endif /* _MULTI_H */
