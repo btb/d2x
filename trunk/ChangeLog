@@ -6,6 +6,10 @@
 	* include/physfsx.h, main/inferno.c: move PhysicsFS
 	initialisation, search path setup and argument reading to physfsx.h
 
+	* main/gauges.c: always show bomb count if player has them,
+	bombs may be the selected secondary weapon but the right view can
+	be a camera view (http://dxx-rebirth.de/smf/index.php?topic=58.0)
+
 2006-07-27  Chris Taylor  <chris@icculus.org>
 
 	* main/inferno.c, main/multi.c, main/multi.h:

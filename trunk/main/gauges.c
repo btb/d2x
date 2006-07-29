@@ -1,4 +1,4 @@
-/* $Id: gauges.c,v 1.24 2006-07-09 14:58:43 chris Exp $ */
+/* $Id: gauges.c,v 1.25 2006-07-29 04:15:55 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -2356,13 +2356,10 @@ void draw_weapon_boxes()
 			draw_secondary_ammo_info(Players[Player_num].secondary_ammo[Secondary_weapon]);
 			old_ammo_count[1][VR_current_page] = Players[Player_num].secondary_ammo[Secondary_weapon];
 
-			if (Secondary_weapon != which_bomb())	// don't draw two bomb counts
-			{
-				if (Cockpit_mode == CM_STATUS_BAR)
-					show_bomb_count(SB_BOMB_COUNT_X, SB_BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
-				else
-					show_bomb_count(BOMB_COUNT_X, BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
-			}
+			if (Cockpit_mode == CM_STATUS_BAR)
+				show_bomb_count(SB_BOMB_COUNT_X, SB_BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
+			else
+				show_bomb_count(BOMB_COUNT_X, BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
 		}
 	}
 	else if (weapon_box_user[1] == WBU_STATIC)
