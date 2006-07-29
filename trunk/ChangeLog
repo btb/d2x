@@ -1,5 +1,10 @@
 2006-07-27  Chris Taylor  <chris@icculus.org>
 
+	* main/inferno.c, main/titles.c, main/titles.h:
+	move titles, loading screen and order form showing to titles.c
+
+2006-07-27  Chris Taylor  <chris@icculus.org>
+
 	* main/inferno.c, main/multi.c, main/multi.h:
 	move hoard data saving from main to save_hoard_data
 
