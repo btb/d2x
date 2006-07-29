@@ -3,6 +3,9 @@
 	* main/inferno.c, main/titles.c, main/titles.h:
 	move titles, loading screen and order form showing to titles.c
 
+	* include/physfsx.h, main/inferno.c: move PhysicsFS
+	initialisation, search path setup and argument reading to physfsx.h
+
 2006-07-27  Chris Taylor  <chris@icculus.org>
 
 	* main/inferno.c, main/multi.c, main/multi.h:
