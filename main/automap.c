@@ -173,10 +173,13 @@ static short DrawingListBright[MAX_EDGES];
 static int current_page=0;
 static grs_canvas Pages[2];
 static grs_canvas DrawingPages[2];
-#endif /* AUTOMAP_DIRECT_RENDER */
 
 #define Page Pages[0]
 #define DrawingPage DrawingPages[0]
+#else
+static grs_canvas Page;
+static grs_canvas DrawingPage;
+#endif /* AUTOMAP_DIRECT_RENDER */
 
 // Flags
 static int Automap_cheat = 0;		// If set, show everything
@@ -669,9 +672,7 @@ void do_automap( int key_code )	{
 	int SegmentLimit = 1;
 	ubyte pal[256*3];
 	char maxdrop;
-#ifndef AUTOMAP_DIRECT_RENDER
 	int must_free_canvas=0;
-#endif
 	
 	Automap_active = 1;
 
@@ -806,7 +807,41 @@ void do_automap( int key_code )	{
 
 	adjust_segment_limit(SegmentLimit);
 
+#ifdef OGL
+	// ZICO - code from above to show frame in OGL correctly. Redundant, but better readable.
+	gr_init_bitmap_data (&Automap_background);
+	pcx_error = pcx_read_bitmap(MAP_BACKGROUND_FILENAME, &Automap_background, BM_LINEAR, pal);
+	if (pcx_error != PCX_ERROR_NONE)
+		Error("File %s - PCX error: %s", MAP_BACKGROUND_FILENAME, pcx_errormsg(pcx_error));
+	gr_remap_bitmap_good(&Automap_background, pal, -1, -1);
+
+	if (VR_render_buffer[0].cv_w >= automap_width && VR_render_buffer[0].cv_h >= automap_height)
+		gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, automap_width, automap_height);
+	else {
+		void *raw_data;
+		MALLOC(raw_data,ubyte,automap_width*automap_height);
+		gr_init_canvas(&Page,raw_data,BM_LINEAR,automap_width,automap_height);
+		must_free_canvas = 1;
+	}
+#endif
+
 	while(!done)	{
+
+#ifdef OGL
+		gr_init_sub_canvas(&DrawingPage, &Page, RESCALE_X(27), RESCALE_Y(80), RESCALE_X(582), RESCALE_Y(334));
+		gr_set_current_canvas(&Page);
+		ogl_ubitmapm_cs(0, 0, -1, -1, &Automap_background, -1, F1_0, 0 );
+		gr_set_curfont(HUGE_FONT);
+		gr_set_fontcolor(BM_XRGB(20, 20, 20), -1);
+		gr_printf(RESCALE_X(80), RESCALE_Y(36), TXT_AUTOMAP);
+		gr_set_curfont(SMALL_FONT);
+		gr_set_fontcolor(BM_XRGB(20, 20, 20), -1);
+		gr_printf(RESCALE_X(60), RESCALE_Y(426), TXT_TURN_SHIP);
+		gr_printf(RESCALE_X(60), RESCALE_Y(443), TXT_SLIDE_UPDOWN);
+		gr_printf(RESCALE_X(60), RESCALE_Y(460), TXT_VIEWING_DISTANCE);
+		gr_set_current_canvas(&DrawingPage);
+#endif
+
 		if ( leave_mode == 0 && Controls.state[automap] && (timer_get_fixed_seconds() - entry_time) > LEAVE_TIME)
 			leave_mode = 1;
 
