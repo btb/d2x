@@ -1,4 +1,4 @@
-/* $Id: game.c,v 1.43 2006-06-03 12:54:03 chris Exp $ */
+/* $Id: game.c,v 1.44 2006-11-26 01:05:24 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-char game_rcsid[] = "$Id: game.c,v 1.43 2006-06-03 12:54:03 chris Exp $";
+char game_rcsid[] = "$Id: game.c,v 1.44 2006-11-26 01:05:24 chris Exp $";
 #endif
 
 #include <stdio.h>
@@ -764,7 +764,6 @@ void start_time()
 		#if defined(TIMER_TEST) && !defined(NDEBUG)
 		if (last_timer_value < 0)
 			Int3();		//get Matt!!!!
-		}
 		#endif
 		last_timer_value = time - last_timer_value;
 		#if defined(TIMER_TEST) && !defined(NDEBUG)

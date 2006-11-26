@@ -1,3 +1,8 @@
+2006-11-26  Chris Taylor  <chris@icculus.org>
+
+	* main/game.c, main/gamerend.c: small brace tidy up to allow
+	a source code editor to list all the functions
+
 2006-07-27  Chris Taylor  <chris@icculus.org>
 
 	* main/inferno.c, main/titles.c, main/titles.h:
