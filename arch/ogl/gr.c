@@ -1,4 +1,4 @@
-/* $Id: gr.c,v 1.44 2005-02-25 06:31:53 btb Exp $ */
+/* $Id: gr.c,v 1.45 2006-11-26 06:13:35 chris Exp $ */
 /*
  *
  * OGL video functions. - Added 9/15/99 Matthew Mueller
@@ -750,8 +750,8 @@ void write_bmp(char *savename,int w,int h,unsigned char *buf){
 		
 		//write .TGA header.
 		PHYSFS_write(f, targaMagic, sizeof(targaMagic), 1);
-		PHYSFS_writeSLE32(f, w);
-		PHYSFS_writeSLE32(f, h);
+		PHYSFS_writeSLE16(f, w);
+		PHYSFS_writeSLE16(f, h);
 		PHYSFSX_writeU8(f, 24); // 24 bpp
 		PHYSFSX_writeU8(f, 0);  // no attribute bits, origin is lowerleft, no interleave
 		
@@ -796,14 +796,13 @@ void save_screen_shot(int automap_flag)
 	stop_time();
 
 //added/changed on 10/31/98 by Victor Rachels to fix overwrite each new game
-	if ( savenum == 9999 ) savenum = 0;
-	sprintf(savename,"scrn%04d.tga",savenum++);
-
-	while(!access(savename,0))
+	do
 	{
-		if ( savenum == 9999 ) savenum = 0;
-		sprintf(savename,"scrn%04d.tga",savenum++);
-	}
+		if (savenum == 9999)
+			savenum = 0;
+		sprintf(savename, "scrn%04d.tga", savenum++);
+	} while (PHYSFS_exists(savename));
+
 	sprintf( message, "%s '%s'", TXT_DUMPING_SCREEN, savename );
 //end this section addition/change - Victor Rachels
 
