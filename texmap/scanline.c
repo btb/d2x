@@ -1,4 +1,4 @@
-/* $Id: scanline.c,v 1.8 2004-08-28 23:17:45 schaffner Exp $ */
+/* $Id: scanline.c,v 1.9 2006-12-02 12:52:41 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #ifdef RCS
-static char rcsid[] = "$Id: scanline.c,v 1.8 2004-08-28 23:17:45 schaffner Exp $";
+static char rcsid[] = "$Id: scanline.c,v 1.9 2006-12-02 12:52:41 chris Exp $";
 #endif
 
 #include <math.h>
@@ -116,7 +116,7 @@ void c_tmap_scanline_lin()
 	dvdx = fx_dv_dx*64; 
 
 	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
+	dldx = fx_dl_dx/256; // fx_dl_dx>>8 != fx_dl_dx/256 for negative numbers
 	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
 
 	if (!Transparency_on)	{
@@ -218,7 +218,7 @@ void c_tmap_scanline_lin()
 	dvdx = fx_dv_dx*64; 
 
 	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
+	dldx = fx_dl_dx/256; // fx_dl_dx>>8 != fx_dl_dx/256 for negative numbers
 	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
 
 	if (!Transparency_on)	{
@@ -805,7 +805,7 @@ void c_tmap_scanline_per()
 	dzdx = fx_dz_dx;
 
 	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
+	dldx = fx_dl_dx/256; // fx_dl_dx>>8 != fx_dl_dx/256 for negative numbers
 	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
 
 	if (!Transparency_on)	{
@@ -813,7 +813,7 @@ void c_tmap_scanline_per()
 		ubyte*			fadeTableLocalCopy = gr_fade_table;
 		unsigned long	destlong;
 
-		x = fx_xright-fx_xleft+1;
+		x = fx_xright-fx_xleft+1; // x = number of pixels in scanline
 
 		if ((j = (unsigned long) dest & 3) != 0)
 			{
@@ -916,7 +916,7 @@ void c_tmap_scanline_per()
 	dzdx = fx_dz_dx;
 
 	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
+	dldx = fx_dl_dx/256; // fx_dl_dx>>8 != fx_dl_dx/256 for negative numbers
 	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
 
 	if (!Transparency_on)	{
