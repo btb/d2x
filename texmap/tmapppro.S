@@ -1,4 +1,4 @@
-/// $Id: tmapppro.S,v 1.6 2003-12-08 21:21:16 btb Exp $
+/// $Id: tmapppro.S,v 1.7 2006-12-03 03:12:25 chris Exp $
 /// tmap_scanline_per - Pentium-Pro-optimized assembly version
 /// written by Brian Raiter, Mar 1998.
 /// lighting roundoff error fixed by Matt Mueller, July 1999
@@ -122,7 +122,7 @@
 // dzdx to z, and finally puts 64 back onto the stack. At the end of
 // the macro, the stack contains: 64, z, u, v.
 
-.macro DoFPCalcs 0		// The FP stack after each instruction:
+.macro DoFPCalcs		// The FP stack after each instruction:
 				//		 64/z  z    u    v
 	fst	%st(4)		//		 64/z  z    u    v  64/z
 	fxch	%st(2)		//		   u   z  64/z   v  64/z

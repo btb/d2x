@@ -1,3 +1,7 @@
+2006-12-03  Chris Taylor  <chris@icculus.org>
+
+	* texmap/tmapppro.S: fix assemble error for gas (fix bug #2312)
+
 2006-12-02  Chris Taylor  <chris@icculus.org>
 
 	* texmap/scanline.c: divide negative light rates of change
