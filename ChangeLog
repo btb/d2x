@@ -2,6 +2,9 @@
 
 	* texmap/tmapppro.S: fix assemble error for gas (fix bug #2312)
 
+	* misc/Makefile.am: add main as an include path for strutil.c,
+	should have done this on 2006-02-26
+
 2006-12-02  Chris Taylor  <chris@icculus.org>
 
 	* texmap/scanline.c: divide negative light rates of change
