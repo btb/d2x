@@ -1,4 +1,4 @@
-/* $Id: tmapflat.c,v 1.6 2004-08-28 23:17:46 schaffner Exp $ */
+/* $Id: tmapflat.c,v 1.7 2006-12-13 07:09:24 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -48,8 +48,8 @@ void tmap_scanline_flat(int y, fix xleft, fix xright)
 	// setup to call assembler scanline renderer
 
 	fx_y = y;
-	fx_xleft = f2i(xleft);
-	fx_xright = f2i(xright);
+	fx_xleft = xleft/F1_0;		// (xleft >> 16) != xleft/F1_0 for negative numbers, f2i caused random crashes
+	fx_xright = xright/F1_0;
 
 	if ( Gr_scanline_darkening_level >= GR_FADE_LEVELS )
 		cur_tmap_scanline_flat();
