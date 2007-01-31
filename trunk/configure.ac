@@ -39,6 +39,7 @@ AC_PROG_CXX
 AC_STDC_HEADERS
 AC_PATH_PROGS(NASM, nasm nasmw, no)
 AC_C_BIGENDIAN
+AC_CHECK_SIZEOF(void *)
 
 case $host_cpu in
 	sparc)
@@ -145,6 +146,10 @@ if test x$enable_fastfileio != xno; then
 		AC_MSG_WARN([big-endian cpu detected.  disabling fastfileio])
 		enable_fastfileio="no";
 	fi
+	if test $ac_cv_sizeof_void_p != 4; then
+		AC_MSG_WARN([pointers not 32 bits.  disabling fastfileio])
+		enable_fastfileio="no";
+	fi
 fi
 if test x$enable_fastfileio != xno; then
     AC_DEFINE(FAST_FILE_IO,,[Define for faster i/o on little-endian cpus])
@@ -167,6 +172,7 @@ if test "x$sharepath" = "xauto" -o "x$sharepath" = "xyes" -o "x$sharepath" = "x"
     sharepath="$default_sharepath"
 fi
 AC_SUBST(sharepath)
+eval sharepath=$sharepath
 eval sharepath=$sharepath
 AC_DEFINE_UNQUOTED(SHAREPATH, "$sharepath",[Define this to be the shared game directory root])
 
@@ -343,6 +349,12 @@ if test x$enable_assembler != xno; then
                 ;;
             *)
                 AC_MSG_WARN([nasm not supported for this OS. disabling assembler])
+                enable_assembler="no"
+                ;;
+        esac
+        case $host_cpu in
+            x86_64)
+                AC_MSG_WARN([nasm not supported for this cpu. disabling assembler])
                 enable_assembler="no"
                 ;;
         esac
