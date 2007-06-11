@@ -283,7 +283,7 @@ void InitDescent()
 
 //	Create and Set Initial Palette.
 	logentry("Initializing palette system...\n" );
-	gr_use_palette_table(DEFAULT_PALETTE);
+	gr_use_palette_table(D2_DEFAULT_PALETTE);
 	gr_palette_load(gr_palette);
 
 	logentry( "Initializing font system...\n" );

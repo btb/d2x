@@ -9,6 +9,8 @@
 #include <conf.h>
 #endif
 
+#define DECLARE_VARS
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,7 +41,6 @@
 #include "key.h"
 #include "physfsx.h"
 
-#define DECLARE_VARS
 #include "internal.h"
 #if defined(__APPLE__) && defined(__MACH__)
 #include <OpenGL/glu.h>
@@ -441,7 +442,7 @@ int ogl_init_load_library(void)
 				Error("Opengl: Functions not imported\n");
 			}
 		}else{
-			Error("Opengl: error loading %s\n", OglLibPath? OglLibPath : SDL_GetError());
+			Error("Opengl: error loading %s\n", OglLibPath);
 		}
 		ogl_rt_loaded=1;
 	}
