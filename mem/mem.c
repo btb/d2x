@@ -522,7 +522,7 @@ void mem_init()
 
 void * mem_malloc( unsigned int size, char * var, char * filename, int line, int fill_zero )
 {
-	unsigned int base;
+	size_t base;
 	void *ptr;
 	int * psize;
 
@@ -565,7 +565,7 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 		Int3();
 	}
 
-	base = (unsigned int)ptr;
+	base = (size_t)ptr;
 	if ( base < SmallestAddress ) SmallestAddress = base;
 	if ( (base+size) > LargestAddress ) LargestAddress = base+size;
 
