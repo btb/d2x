@@ -250,6 +250,8 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
 
 	if (soundnum < 0) return -1;
 
+	SDL_LockAudio();
+
 	Assert(GameSounds[soundnum].data != (void *)-1);
 
 	starting_channel = next_channel;
@@ -303,6 +305,8 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
 	next_channel++;
 	if (next_channel >= digi_max_channels)
 		next_channel = 0;
+
+	SDL_UnlockAudio();
 
 	return i;
 }

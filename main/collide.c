@@ -1035,7 +1035,8 @@ void collide_robot_and_player( object * robot, object * playerobj, vms_vector *c
 	// A "steal" sound was added and it was getting obscured by the bump. -AP 10/3/95
 	//	Changed by MK to make this sound unless the robot stole.
 	if ((!steal_attempt) && !Robot_info[robot->id].energy_drain)
-		digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
+		if (FixedStep & EPS4)
+			digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
 
 	bump_two_objects(robot, playerobj, 1);
 	return; 
@@ -1124,7 +1125,9 @@ void collide_player_and_controlcen( object * controlcen, object * playerobj, vms
 		ai_do_cloak_stuff();				//	In case player cloaked, make control center know where he is.
 	}
 
-	digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
+	if (FixedStep & EPS4)
+		digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
+
 	bump_two_objects(controlcen, playerobj, 1);
 
 	return; 
@@ -1765,7 +1768,9 @@ void collide_hostage_and_player( object * hostage, object * player, vms_vector *
 //##}
 
 void collide_player_and_player( object * player1, object * player2, vms_vector *collision_point ) { 
-	digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, player1->segnum, 0, collision_point, 0, F1_0 );
+	if (FixedStep & EPS4)
+		digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, player1->segnum, 0, collision_point, 0, F1_0 );
+
 	bump_two_objects(player1, player2, 1);
 	return;
 }
@@ -2329,7 +2334,8 @@ void collide_player_and_powerup( object * playerobj, object * powerup, vms_vecto
 //##}
 
 void collide_player_and_clutter( object * playerobj, object * clutter, vms_vector *collision_point ) { 
-	digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
+	if (FixedStep & EPS4)
+		digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, playerobj->segnum, 0, collision_point, 0, F1_0 );
 	bump_two_objects(clutter, playerobj, 1);
 	return; 
 }

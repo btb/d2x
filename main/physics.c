@@ -349,6 +349,7 @@ void do_physics_sim(object *obj)
 	physics_info *pi;
 	int orig_segnum = obj->segnum;
 	int bounced=0;
+	fix PhysTime = (FrameTime < F1_0/30 ? F1_0/30 : FrameTime);
 
 	Assert(obj->type != OBJ_NONE);
 	Assert(obj->movement_type == MT_PHYSICS);
@@ -372,7 +373,12 @@ if (Dont_move_ai_objects)
 
 	disable_new_fvi_stuff = (obj->type != OBJ_PLAYER);
 
-	sim_time = FrameTime;
+	/* As this engine was not designed for that high FPS as we intend, we use F1_0/30 max. for sim_time to ensure
+	   scaling and dot products stay accurate and reliable. The object position intended for this frame will be scaled down later,
+	   after the main collision-loop is done.
+	   This won't make collision results be equal in all FPS settings, but hopefully more accurate, the higher our FPS are.
+	*/
+	sim_time = PhysTime; //FrameTime;
 
 //debug_obj = obj;
 
@@ -414,24 +420,25 @@ if (Dont_move_ai_objects)
 //mprintf((0,"thrust=%x  speed=%x\n",vm_vec_mag(&obj->mtype.phys_info.thrust),vm_vec_mag(&obj->mtype.phys_info.velocity)));
 
 	//do thrust & drag
-	
+	// NOTE: this always must be dependent on FrameTime, if sim_time differs!
 	if ((drag = obj->mtype.phys_info.drag) != 0) {
 
 		int count;
 		vms_vector accel;
-		fix r,k;
+		fix r, k, have_accel;
 
-		count = sim_time / FT;
-		r = sim_time % FT;
+		count = FrameTime / FT;
+		r = FrameTime % FT;
 		k = fixdiv(r,FT);
 
 		if (obj->mtype.phys_info.flags & PF_USES_THRUST) {
 
 			vm_vec_copy_scale(&accel,&obj->mtype.phys_info.thrust,fixdiv(f1_0,obj->mtype.phys_info.mass));
+			have_accel = (accel.x || accel.y || accel.z);
 
 			while (count--) {
-
-				vm_vec_add2(&obj->mtype.phys_info.velocity,&accel);
+				if (have_accel)
+					vm_vec_add2(&obj->mtype.phys_info.velocity, &accel);
 
 				vm_vec_scale(&obj->mtype.phys_info.velocity,f1_0-drag);
 			}
@@ -844,16 +851,26 @@ save_p1 = *fq.p1;
 		}
 	}
 
-	//I'm not sure why we do this.  I wish there were a comment that
-	//explained it.  I think maybe it only needs to be done if the object
-	//is sliding, but I don't know
-	if (!obj_stopped && !bounced)	{	//Set velocity from actual movement
+	// As sim_time may not base on FrameTime, scale actual object position to get accurate movement
+	if (PhysTime/FrameTime > 0)
+	{
+		obj->pos.x = start_pos.x + ((obj->pos.x - start_pos.x) / ((float)PhysTime/FrameTime));
+		obj->pos.y = start_pos.y + ((obj->pos.y - start_pos.y) / ((float)PhysTime/FrameTime));
+		obj->pos.z = start_pos.z + ((obj->pos.z - start_pos.z) / ((float)PhysTime/FrameTime));
+	}
+
+	// After collision with objects and walls, set velocity from actual movement
+	if (!obj_stopped && !bounced && ((fate == HIT_WALL) || (fate == HIT_BAD_P0))) {
 		vms_vector moved_vec;
 
 		vm_vec_sub(&moved_vec,&obj->pos,&start_pos);
 		vm_vec_copy_scale(&obj->mtype.phys_info.velocity,&moved_vec,fixdiv(f1_0,FrameTime));
 
 		#ifdef BUMP_HACK
+		/*
+		 FIXME: Instead of judging by velocity and thrust, we just need to know *if* we are stuck into the wall
+		 and "bump" back by the value saying how far we are in already.
+		 */
 		if (obj==ConsoleObject && (obj->mtype.phys_info.velocity.x==0 && obj->mtype.phys_info.velocity.y==0 && obj->mtype.phys_info.velocity.z==0) &&
 			  !(obj->mtype.phys_info.thrust.x==0 && obj->mtype.phys_info.thrust.y==0 && obj->mtype.phys_info.thrust.z==0)) {
 			vms_vector center,bump_vec;
