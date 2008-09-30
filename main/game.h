@@ -32,6 +32,7 @@ extern fix FrameTime;               // time in seconds since last frame
 extern fix RealFrameTime;           // time in seconds since last frame
 extern fix GameTime;                // time in game (sum of FrameTime)
 extern int FrameCount;              // how many frames rendered
+extern int FixedStep;               // fixed time bytes stored here
 extern fix Next_laser_fire_time;    // Time at which player can next fire his selected laser.
 extern fix Last_laser_fired_time;
 extern fix Next_missile_fire_time;  // Time at which player can next fire his selected missile.
@@ -39,6 +40,11 @@ extern fix Laser_delay_time;        // Delay between laser fires.
 extern cvar_t Cheats_enabled;
 
 extern cvar_t Missile_view_enabled;
+
+// bits for FixedStep
+#define EPS4    1
+#define EPS20   2
+#define EPS30   4
 
 extern object *Missile_viewer;
 

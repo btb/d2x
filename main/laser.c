@@ -530,10 +530,13 @@ void do_omega_stuff(object *parent_objp, vms_vector *firing_pos, object *weapon_
 	firing_segnum = find_point_seg(firing_pos, parent_objp->segnum);
 
 	//	Play sound.
-	if ( parent_objp == Viewer )
-		digi_play_sample( Weapon_info[weapon_objp->id].flash_sound, F1_0 );
-	else
-		digi_link_sound_to_pos( Weapon_info[weapon_objp->id].flash_sound, weapon_objp->segnum, 0, &weapon_objp->pos, 0, F1_0 );
+	if (FixedStep & EPS30)
+	{
+		if ( parent_objp == Viewer )
+			digi_play_sample( Weapon_info[weapon_objp->id].flash_sound, F1_0 );
+		else
+			digi_link_sound_to_pos( Weapon_info[weapon_objp->id].flash_sound, weapon_objp->segnum, 0, &weapon_objp->pos, 0, F1_0 );
+	}
 
 	// -- if ((Last_omega_muzzle_flash_time + F1_0/4 < GameTime) || (Last_omega_muzzle_flash_time > GameTime)) {
 	// -- 	do_muzzle_stuff(firing_segnum, firing_pos);

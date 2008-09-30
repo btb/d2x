@@ -889,6 +889,38 @@ void game_flush_inputs()
 	memset(&Controls,0,sizeof(control_info));
 }
 
+/*
+    Calculates several - common used - timesteps and stores into FixedStep
+*/
+void FixedStepCalc()
+{
+	int StepRes = 0;
+	static fix Timer4 = 0, Timer20 = 0, Timer30 = 0;
+
+	Timer4 += FrameTime;
+	if (Timer4 >= F1_0/4)
+	{
+		StepRes |= EPS4;
+		Timer4 = 0 + (Timer4-F1_0/4);
+	}
+
+	Timer20 += FrameTime;
+	if (Timer20 >= F1_0/20)
+	{
+		StepRes |= EPS20;
+		Timer20 = 0 + (Timer20-F1_0/20);
+	}
+
+	Timer30 += FrameTime;
+	if (Timer30 >= F1_0/30)
+	{
+		StepRes |= EPS30;
+		Timer30 = 0 + (Timer30-F1_0/30);
+	}
+
+	FixedStep = StepRes;
+}
+
 void reset_time()
 {
 	last_timer_value = timer_get_fixed_seconds();
@@ -954,7 +986,9 @@ void calc_frame_time()
 	last_timer_value = timer_value;
 
 	if (FrameTime < 0)						//if bogus frametime...
-		FrameTime = last_frametime;		//...then use time from last frame
+		FrameTime = (last_frametime==0?1:last_frametime); // ...then use time from last frame
+
+	FixedStepCalc();
 
 	#ifndef NDEBUG
 	if (fixed_frametime) FrameTime = fixed_frametime;
@@ -2480,7 +2514,7 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
 				else if (GameTime + FrameTime/2 >= Auto_fire_fusion_cannon_time) {
 					Auto_fire_fusion_cannon_time = 0;
 					Global_laser_firing_count = 1;
-				} else {
+				} else if (FixedStep & EPS20) {
 					vms_vector	rand_vec;
 					fix			bump_amount;
 
@@ -2496,6 +2530,10 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
 						bump_amount = Fusion_charge*4;
 
 					bump_one_object(ConsoleObject, &rand_vec, bump_amount);
+				}
+				else
+				{
+					Global_laser_firing_count = 0;
 				}
 			}
 
