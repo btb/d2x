@@ -674,15 +674,15 @@ int get_message_num(char **message)
 {
 	int	num=0;
 
-	while (**message == ' ')
+	while (strlen(*message) > 0 && **message == ' ')
 		(*message)++;
 
-	while ((**message >= '0') && (**message <= '9')) {
+	while (strlen(*message) > 0 && (**message >= '0') && (**message <= '9')) {
 		num = 10*num + **message-'0';
 		(*message)++;
 	}
 
-	while (*(*message)++ != 10) // Get and drop eoln
+	while (strlen(*message) > 0 && *(*message)++ != 10) // Get and drop eoln
 		;
 
 	return num;
@@ -691,17 +691,17 @@ int get_message_num(char **message)
 //-----------------------------------------------------------------------------
 void get_message_name(char **message, char *result)
 {
-	while (**message == ' ')
+	while (strlen(*message) > 0 && **message == ' ')
 		(*message)++;
 
-	while ((**message != ' ') && (**message != 10)) {
+	while (strlen(*message) > 0 && (**message != ' ') && (**message != 10)) {
 		if (**message != '\n')
 			*result++ = **message;
 		(*message)++;
 	}
 
 	if (**message != 10)
-		while (*(*message)++ != 10) // Get and drop eoln
+		while (strlen(*message) > 0 && *(*message)++ != 10) // Get and drop eoln
 			;
 
 	*result = 0;
@@ -1234,7 +1234,7 @@ int load_screen_text(char *filename, char **buf)
 		have_binary = 1;
 
 		len = cfilelength(ifile);
-		MALLOC(*buf, char, len+500);
+		MALLOC(*buf, char, len + 1);
 		mprintf((0, "len=%d\n", len));
 		for (x = 0, i = 0; i < len; i++, x++) {
 			cfread(*buf+x, 1, 1, ifile);
@@ -1246,7 +1246,7 @@ int load_screen_text(char *filename, char **buf)
 		cfclose(ifile);
 	} else {
 		len = cfilelength(tfile);
-		MALLOC(*buf, char, len+500);
+		MALLOC(*buf, char, len + 1);
 		for (x = 0, i = 0; i < len; i++, x++) {
 			cfread(*buf+x, 1, 1, tfile);
 			//mprintf((0, "%c", *(*buf+x)));
@@ -1261,6 +1261,8 @@ int load_screen_text(char *filename, char **buf)
 
 	if (have_binary)
 		decode_text(*buf, len);
+
+	*(*buf+len)='\0';
 
 	return 1;
 }
@@ -1471,10 +1473,10 @@ int get_new_message_num(char **message)
 {
 	int num = 0;
 
-	while (**message == ' ')
+	while (strlen(*message) > 0 && **message == ' ')
 		(*message)++;
 
-	while ((**message >= '0') && (**message <= '9')) {
+	while (strlen(*message) > 0 && (**message >= '0') && (**message <= '9')) {
 		num = 10*num + **message - '0';
 		(*message)++;
 	}

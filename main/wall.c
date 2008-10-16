@@ -398,15 +398,18 @@ void wall_open_door(segment *seg, int side)
 	// So that door can't be shot while opening
 	csegp = &Segments[seg->children[side]];
 	Connectside = find_connect_side(seg, csegp);
-	Assert(Connectside != -1);
-	cwall_num = csegp->sides[Connectside].wall_num;
-	if (cwall_num > -1)
-		Walls[cwall_num].state = WALL_DOOR_OPENING;
-
-	//kill_stuck_objects(csegp->sides[Connectside].wall_num);
-
-	d->front_wallnum[0] = seg->sides[side].wall_num;
-	d->back_wallnum[0] = cwall_num;
+	if (Connectside >= 0)
+	{
+		cwall_num = csegp->sides[Connectside].wall_num;
+		if (cwall_num > -1)
+		{
+			Walls[cwall_num].state = WALL_DOOR_OPENING;
+			d->back_wallnum[0] = cwall_num;
+		}
+		d->front_wallnum[0] = seg->sides[side].wall_num;
+	}
+	else
+		con_printf(CON_URGENT, "Illegal Connectside %i in wall_open_door. Trying to hop over. Please check your level!\n", side);
 
 	Assert( SEGMENT_NUMBER(seg) != -1 );
 
@@ -805,7 +808,9 @@ void do_door_open(int door_num)
 	int p;
 	active_door *d;
 
-	Assert(door_num != -1);		//Trying to do_door_open on illegal door
+// 	Assert(door_num != -1);		//Trying to do_door_open on illegal door
+	if (door_num == -1)
+		return;
 	
 	d = &ActiveDoors[door_num];
 
@@ -823,7 +828,12 @@ void do_door_open(int door_num)
 		seg = &Segments[w->segnum];
 		side = w->sidenum;
 	
-		Assert(seg->sides[side].wall_num != -1);		//Trying to do_door_open on illegal wall
+// 		Assert(seg->sides[side].wall_num != -1);		//Trying to do_door_open on illegal wall
+		if (seg->sides[side].wall_num == -1)
+		{
+			con_printf(CON_URGENT, "Trying to do_door_open on illegal wall %i. Please check your level!\n",side);
+			continue;
+		}
 	
 		csegp = &Segments[seg->children[side]];
 		Connectside = find_connect_side(seg, csegp);

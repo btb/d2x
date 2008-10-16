@@ -1993,6 +1993,7 @@ void game()
 
 			if (Automap_flag) {
 				int save_w = Game_window_w.intval, save_h = Game_window_h.intval;
+				game_flush_inputs();
 				do_automap(0);
 				Screen_mode=-1; set_screen_mode(SCREEN_GAME);
 				cvar_setint(&Game_window_w, save_w);
