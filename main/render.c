@@ -1682,7 +1682,7 @@ void render_frame(fix eye_offset, int window_num)
 	  //mprintf((0, "Objnum=%d objtype=%d objid=%d\n", OBJECT_NUMBER(Viewer), Viewer->type, Viewer->id));
 		
       if (RenderingType==0)
-   		newdemo_record_start_frame(FrameCount, FrameTime );
+   		newdemo_record_start_frame(FrameTime);
       if (RenderingType!=255)
    		newdemo_record_viewer_object(Viewer);
 	}

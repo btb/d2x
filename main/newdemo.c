@@ -148,6 +148,7 @@ char nd_save_callsign[CALLSIGN_LEN+1];
 int Newdemo_state = 0;
 int Newdemo_vcr_state = 0;
 int Newdemo_start_frame = -1;
+int Newdemo_frame_number = -1;
 unsigned int Newdemo_size;
 int Newdemo_num_written;
 int Newdemo_game_mode;
@@ -864,7 +865,7 @@ void newdemo_record_start_demo()
 	nd_write_int(Players[Player_num].flags);        // be sure players flags are set
 	nd_write_byte((sbyte)Primary_weapon);
 	nd_write_byte((sbyte)Secondary_weapon);
-	Newdemo_start_frame = FrameCount;
+	Newdemo_start_frame = Newdemo_frame_number = 0;
 	JustStartedRecording=1;
 
 	newdemo_set_new_level(Current_level_num);
@@ -872,7 +873,7 @@ void newdemo_record_start_demo()
 
 }
 
-void newdemo_record_start_frame(int frame_number, fix frame_time )
+void newdemo_record_start_frame(fix frame_time)
 {
 	int i;
 
@@ -891,14 +892,13 @@ void newdemo_record_start_frame(int frame_number, fix frame_time )
 	for (i=0;i<32;i++)
 		RenderingWasRecorded[i]=0;
 
-	frame_number -= Newdemo_start_frame;
-
-	Assert(frame_number >= 0 );
+	Newdemo_frame_number -= Newdemo_start_frame;
 
 	nd_write_byte(ND_EVENT_START_FRAME);
 	nd_write_short(frame_bytes_written - 1);        // from previous frame
 	frame_bytes_written=3;
-	nd_write_int(frame_number);
+	nd_write_int(Newdemo_frame_number);
+	Newdemo_frame_number++;
 	nd_write_int(frame_time);
 	start_time();
 

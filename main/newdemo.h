@@ -52,7 +52,7 @@ extern int Auto_demo;
 
 // Functions called during recording process...
 extern void newdemo_record_start_demo(void);
-extern void newdemo_record_start_frame(int frame_number, fix frame_time );
+extern void newdemo_record_start_frame(fix frame_time);
 extern void newdemo_record_render_object(object * obj);
 extern void newdemo_record_viewer_object(object * obj);
 extern void newdemo_record_sound_3d( int soundno, int angle, int volume );

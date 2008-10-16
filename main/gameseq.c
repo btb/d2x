@@ -1049,7 +1049,7 @@ void StartNewLevelSecret(int level_num, int page_in_textures)
 
 	if (Newdemo_state == ND_STATE_RECORDING) {
 		newdemo_set_new_level(level_num);
-		newdemo_record_start_frame(FrameCount, FrameTime);
+		newdemo_record_start_frame(FrameTime);
 	} else if (Newdemo_state != ND_STATE_PLAYBACK) {
 
 		gr_palette_fade_out(gr_palette, 32, 0);
@@ -1651,7 +1651,7 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 
 	if (Newdemo_state == ND_STATE_RECORDING) {
 		newdemo_set_new_level(level_num);
-		newdemo_record_start_frame(FrameCount, FrameTime);
+		newdemo_record_start_frame(FrameTime);
 	}
 
 	if (Game_mode & GM_MULTI)
