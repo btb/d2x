@@ -961,17 +961,16 @@ void ogl_font_choose_size(grs_font * font,int gap,int *rw,int *rh){
 }
 
 void ogl_init_font(grs_font * font){
-	int oglflags = OGL_FLAG_ALPHA;
+	int oglflags = OGL_FLAG_ALPHA | OGL_FLAG_MIPMAP;
 	int	nchars = font->ft_maxchar-font->ft_minchar+1;
 	int i,w,h,tw,th,x,y,curx=0,cury=0;
 	unsigned char *fp;
-	//	char data[32*32*4];
 	ubyte *data;
-	int gap=0;//having a gap just wastes ram, since we don't filter text textures at all.
-	//	char s[2];
+	int gap=1; // x/y offset between the chars so we can filter
+
 	ogl_font_choose_size(font,gap,&tw,&th);
 	data=d_malloc(tw*th);
-	memset(data, 0, tw * th);
+	memset(data, TRANSPARENCY_COLOR, tw * th); // map the whole data with transparency so we won't have borders if using gap
 	gr_init_bitmap(&font->ft_parent_bitmap,BM_LINEAR,0,0,tw,th,tw,data);
 	gr_set_transparent(&font->ft_parent_bitmap, 1);
 
@@ -1008,15 +1007,35 @@ void ogl_init_font(grs_font * font){
 			else
 				fp = font->ft_data + i * w*h;
 			for (y=0;y<h;y++)
+			{
 				for (x=0;x<w;x++){
 					font->ft_parent_bitmap.bm_data[curx+x+(cury+y)*tw]=fp[x+y*w];
+					// Let's call this a HACK:
+					// If we filter the fonts, the sliders will be messed up as the border pixels will have an
+					// alpha value while filtering. So the slider bitmaps will not look "connected".
+					// To prevent this, duplicate the first/last pixel-row with a 1-pixel offset.
+					if (gap && i >= 99 && i <= 102)
+					{
+						// See which bitmaps need left/right shifts:
+						// 99  = SLIDER_LEFT - shift RIGHT
+						// 100 = SLIDER_RIGHT - shift LEFT
+						// 101 = SLIDER_MIDDLE - shift LEFT+RIGHT
+						// 102 = SLIDER_MARKER - shift RIGHT
+
+						// shift left border
+						if (x==0 && i != 99 && i != 102)
+							font->ft_parent_bitmap.bm_data[(curx+x+(cury+y)*tw)-1]=fp[x+y*w];
+
+						// shift right border
+						if (x==w-1 && i != 100)
+							font->ft_parent_bitmap.bm_data[(curx+x+(cury+y)*tw)+1]=fp[x+y*w];
+					}
 				}
+			}
 
 			//			gr_init_bitmap(&font->ft_bitmaps[i],BM_LINEAR,0,0,w,h,w,font->);
 		}else{
 			int BitMask,bits=0,white=gr_find_closest_color(63,63,63);
-			//			if (w*h>sizeof(data))
-			//				Error("ogl_init_font: toobig\n");
 			if (font->ft_flags & FT_PROPORTIONAL)
 				fp = font->ft_chars[i];
 			else
