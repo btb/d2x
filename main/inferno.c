@@ -802,5 +802,6 @@ void quit_request()
 //	if(Network_status)
 //		network_abort_game();
 #endif
+	set_warn_func(warn_printf);
 	exit(0);
 }

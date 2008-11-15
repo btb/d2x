@@ -145,6 +145,8 @@ static void audio_mixcallback(void *userdata, Uint8 *stream, int len)
 
 	memset(stream, 0x80, len); // fix "static" sound bug on Mac OS X
 
+	SDL_LockAudio();
+
 	for (sl = SoundSlots; sl < SoundSlots + MAX_SOUND_SLOTS; sl++) {
 		if (sl->playing) {
 			Uint8 *sldata = sl->samples + sl->position, *slend = sl->samples + sl->length;
@@ -179,6 +181,7 @@ static void audio_mixcallback(void *userdata, Uint8 *stream, int len)
 			sl->position = (int)(sldata - sl->samples);
 		}
 	}
+	SDL_UnlockAudio();
 }
 //end changes by adb
 
