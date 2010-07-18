@@ -748,10 +748,10 @@
 		146695C11A2729860070D41D /* digi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = digi.c; sourceTree = "<group>"; };
 		146695C21A2729860070D41D /* glinit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glinit.c; sourceTree = "<group>"; };
 		146695C31A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
-		146695C41A2729860070D41D /* hmpfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmpfile.c; sourceTree = "<group>"; };
+		146695C41A2729860070D41D /* hmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmp.c; sourceTree = "<group>"; };
 		146695C61A2729860070D41D /* d3dhelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = d3dhelp.h; sourceTree = "<group>"; };
 		146695C71A2729860070D41D /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
-		146695C81A2729860070D41D /* hmpfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmpfile.h; sourceTree = "<group>"; };
+		146695C81A2729860070D41D /* hmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmp.h; sourceTree = "<group>"; };
 		146695C91A2729860070D41D /* ipx_mcast4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_mcast4.h; sourceTree = "<group>"; };
 		146695CA1A2729860070D41D /* ipx_udp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_udp.h; sourceTree = "<group>"; };
 		146695CB1A2729860070D41D /* joy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = joy.h; sourceTree = "<group>"; };
@@ -1581,7 +1581,6 @@
 				146695C11A2729860070D41D /* digi.c */,
 				146695C21A2729860070D41D /* glinit.c */,
 				146695C31A2729860070D41D /* vid.c */,
-				146695C41A2729860070D41D /* hmpfile.c */,
 				146695C51A2729860070D41D /* include */,
 				146695D51A2729860070D41D /* init.c */,
 				146695D61A2729860070D41D /* ipx_drv.h */,
@@ -1636,7 +1635,6 @@
 			children = (
 				146695C61A2729860070D41D /* d3dhelp.h */,
 				146695C71A2729860070D41D /* debug.h */,
-				146695C81A2729860070D41D /* hmpfile.h */,
 				146695C91A2729860070D41D /* ipx_mcast4.h */,
 				146695CA1A2729860070D41D /* ipx_udp.h */,
 				146695CB1A2729860070D41D /* joy.h */,
@@ -1690,6 +1688,7 @@
 				146696221A2729860070D41D /* gr.h */,
 				146696231A2729860070D41D /* grdef.h */,
 				146696241A2729860070D41D /* hash.h */,
+				146695C81A2729860070D41D /* hmp.h */,
 				146696251A2729860070D41D /* i86.h */,
 				146696261A2729860070D41D /* ibitblt.h */,
 				146696271A2729860070D41D /* iff.h */,
@@ -1999,6 +1998,7 @@
 				146697521A2729870070D41D /* error.c */,
 				146697531A2729870070D41D /* errtest.c */,
 				146697541A2729870070D41D /* hash.c */,
+				146695C41A2729860070D41D /* hmp.c */,
 				146697551A2729870070D41D /* ignorecase.c */,
 				146697581A2729870070D41D /* parsarg.c */,
 				146697591A2729870070D41D /* parsarg.h */,
