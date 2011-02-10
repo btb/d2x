@@ -3600,7 +3600,11 @@ void multi_initiate_save_game()
 	game_id = timer_get_fixed_seconds();
 	game_id ^= N_players<<4;
 	for (i=0; i<N_players; i++ )
-		game_id ^= *(uint *)Players[i].callsign;
+	{
+		fix call2i;
+		memcpy(&call2i, Players[i].callsign, sizeof(fix));
+		game_id ^= call2i;
+	}
 	if ( game_id == 0 ) game_id = 1;                // 0 is invalid
 
 	mprintf(( 1, "Game_id = %8x\n", game_id));
