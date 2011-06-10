@@ -1312,9 +1312,13 @@ void update_cockpits(int force_redraw)
 
 	case CM_LETTERBOX:
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-#if 0//ndef OGL
-		gr_clear_canvas( BM_XRGB(0,0,0) );
-#endif
+
+		// Clear the top and bottom of the screen
+		gr_setcolor(BM_XRGB(0,0,0));
+		gr_rect(0,
+			VR_render_sub_buffer[VR_current_page].cv_bitmap.bm_y + VR_render_sub_buffer[VR_current_page].cv_bitmap.bm_h,
+			GWIDTH-1,GHEIGHT-1);
+		gr_rect(0,0,GWIDTH-1,VR_render_sub_buffer[VR_current_page].cv_bitmap.bm_y);
 
 		// In a modex mode, clear the other buffer.
 		if (grd_curcanv->cv_bitmap.bm_type == BM_MODEX) {

@@ -1,6 +1,12 @@
+2011-06-10  Ben Baker  <BenB@cfl.rr.com>
+
+	* main/gamerend.c: clear the top and bottom of the screen in death
+	sequence (bug #2572)
+
 2011-06-10  Christian Beckhaeuser  <zicodxx@yahoo.de>
 
-	* main/gamerend.c: fix for death-sequence and sdl segfault in 320xXXX
+	* main/gamerend.c: fix for death-sequence and sdl segfault in
+	320xXXX (bug #2513)
 
 2007-01-30  Bradley Bell  <btb@icculus.org>
 
