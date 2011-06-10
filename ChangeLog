@@ -1,3 +1,7 @@
+2011-06-10  Christian Beckhaeuser  <zicodxx@yahoo.de>
+
+	* main/gamerend.c: fix for death-sequence and sdl segfault in 320xXXX
+
 2007-01-30  Bradley Bell  <btb@icculus.org>
 
 	* configure.ac, iff/iff.c: amd64 fixes
