@@ -169,8 +169,6 @@ extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 extern ubyte Hack_DblClick_MenuMode;
 #endif
 
-void compute_all_static_light(void);
-
 //-------------------------------------------------------------------
 void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 {
@@ -1000,6 +998,8 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	player restore_players[MAX_PLAYERS];
 #endif
 	fix	old_gametime = GameTime;
+	short TempTmapNum[MAX_SEGMENTS][MAX_SIDES_PER_SEGMENT];
+	short TempTmapNum2[MAX_SEGMENTS][MAX_SIDES_PER_SEGMENT];
 
 	#if defined(MACINTOSH) && !defined(NDEBUG)
 	if (strncmp(filename, "Players/", 9))
@@ -1258,12 +1258,12 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 		PHYSFS_read(fp, &Num_triggers, sizeof(int), 1);
 		PHYSFS_read(fp, Triggers, sizeof(trigger), Num_triggers);
 	
-		//Restore tmap info
+		//Restore tmap info (to temp values so we can use compiled-in tmap info to compute static_light)
 		for (i=0; i<=Highest_segment_index; i++ )	{
 			for (j=0; j<6; j++ )	{
 				PHYSFS_read(fp, &Segments[i].sides[j].wall_num, sizeof(short), 1);
-				PHYSFS_read(fp, &Segments[i].sides[j].tmap_num, sizeof(short), 1);
-				PHYSFS_read(fp, &Segments[i].sides[j].tmap_num2, sizeof(short), 1);
+				PHYSFS_read(fp, &TempTmapNum[i][j], sizeof(short), 1);
+				PHYSFS_read(fp, &TempTmapNum2[i][j], sizeof(short), 1);
 			}
 		}
 	
@@ -1359,11 +1359,18 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	if (version >= 16) {
 		PHYSFS_read(fp, Light_subtracted, sizeof(Light_subtracted[0]), MAX_SEGMENTS);
 		apply_all_changed_light();
-		compute_all_static_light();	//	set static_light field in segment struct.  See note at that function.
 	} else {
 		int	i;
 		for (i=0; i<=Highest_segment_index; i++)
 			Light_subtracted[i] = 0;
+	}
+
+	// static_light should now be computed - now actually set tmap info
+	for (i=0; i<=Highest_segment_index; i++ )       {
+		for (j=0; j<6; j++ )    {
+			Segments[i].sides[j].tmap_num=TempTmapNum[i][j];
+			Segments[i].sides[j].tmap_num2=TempTmapNum2[i][j];
+		}
 	}
 
 	if (!secret_restore) {
@@ -1408,36 +1415,6 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 //!!	piggy_load_level_data();	//already done by StartNewLevelSub()
 
 	return 1;
-}
-
-//	When loading a saved game, segp->static_light is bogus.
-//	This is because apply_all_changed_light, which is supposed to properly update this value,
-//	cannot do so because it needs the original light cast from a light which is no longer there.
-//	That is, a light has been blown out, so the texture remaining casts 0 light, but the static light
-//	which is present in the static_light field contains the light cast from that light.
-void compute_all_static_light(void)
-{
-	int	i, j, k;
-
-	for (i=0; i<=Highest_segment_index; i++) {
-		fix	total_light;
-		segment	*segp;
-
-		segp = &Segments[i];
-		total_light = 0;
-
-		for (j=0; j<MAX_SIDES_PER_SEGMENT; j++) {
-			side	*sidep;
-
-			sidep = &segp->sides[j];
-
-			for (k=0; k<4; k++)
-				total_light += sidep->uvls[k].l;
-		}
-
-		Segment2s[i].static_light = total_light/(MAX_SIDES_PER_SEGMENT*4);
-	}
-
 }
 
 
