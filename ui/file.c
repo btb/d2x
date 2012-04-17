@@ -159,7 +159,7 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
 		return 0;
 	}
 
-	//MessageBox( -2,-2, 1,"DEBUG:0", "Ok" );
+	//ui_messagebox( -2,-2, 1,"DEBUG:0", "Ok" );
 	for (i=0; i<35; i++)
 		Spaces[i] = ' ';
 	Spaces[34] = 0;
@@ -211,7 +211,7 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
 		}
 
 		if ( HelpButton->pressed )
-			MessageBox( -1, -1, 1, "Sorry, no help is available!", "Ok" );
+			ui_messagebox( -1, -1, 1, "Sorry, no help is available!", "Ok" );
 
 		if (ListBox1->moved || new_listboxes)
 		{
