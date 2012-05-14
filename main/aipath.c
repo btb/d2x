@@ -491,7 +491,7 @@ cpp_done1: ;
 	return 0;
 }
 
-int	Last_buddy_polish_path_frame;
+int	Last_buddy_polish_path_tick;
 
 //	-------------------------------------------------------------------------------------------------------
 //	polish_path
@@ -510,13 +510,13 @@ int polish_path(object *objp, point_seg *psegs, int num_points)
 	if (num_points <= 4)
 		return num_points;
 
-	//	Prevent the buddy from polishing his path twice in one frame, which can cause him to get hung up.  Pretty ugly, huh?
+	//	Prevent the buddy from polishing his path twice in one tick, which can cause him to get hung up.  Pretty ugly, huh?
 	if (Robot_info[objp->id].companion)
 	{
-		if (FrameCount == Last_buddy_polish_path_frame)
+		if (d_tick_count == Last_buddy_polish_path_tick)
 			return num_points;
 		else
-			Last_buddy_polish_path_frame = FrameCount;
+			Last_buddy_polish_path_tick = d_tick_count;
 	}
 
 	// -- MK: 10/18/95: for (i=0; i<num_points-3; i++) {
@@ -1093,7 +1093,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 			vm_vec_scale(&objp->mtype.phys_info.velocity, vel_scale);
 
 			return;
-		} else if (!(FrameCount ^ ((OBJECT_NUMBER(objp)) & 0x07))) { // Done 1/8 frames.
+		} else if (!(d_tick_count ^ ((OBJECT_NUMBER(objp)) & 0x07))) { // Done 1/8 frames.
 			//	If player on path (beyond point robot is now at), then create a new path.
 			point_seg	*curpsp = &Point_segs[aip->hide_index];
 			int			player_segnum = ConsoleObject->segnum;
@@ -1370,7 +1370,7 @@ void ai_path_set_orient_and_vel(object *objp, vms_vector *goal_point, int player
 
 }
 
-int	Last_frame_garbage_collected = 0;
+int	Last_tick_garbage_collected = 0;
 
 //	----------------------------------------------------------------------------------------------------------
 //	Garbage colledion -- Free all unused records in Point_segs and compress all paths.
@@ -1386,9 +1386,9 @@ void ai_path_garbage_collect(void)
 	force_dump_ai_objects_all("***** Start ai_path_garbage_collect *****");
 #endif
 
-	// -- mprintf((0, "Garbage collection frame %i, last frame %i!  Old free index = %i ", FrameCount, Last_frame_garbage_collected, POINT_SEG_NUMBER(Point_segs_free_ptr)));
+	// -- mprintf((0, "Garbage collection tick %i, last tick %i!  Old free index = %i ", d_tick_count, Last_tick_garbage_collected, POINT_SEG_NUMBER(Point_segs_free_ptr)));
 
-	Last_frame_garbage_collected = FrameCount;
+	Last_tick_garbage_collected = d_tick_count;
 
 #if PATH_VALIDATION
 	validate_all_paths();
@@ -1455,7 +1455,7 @@ void ai_path_garbage_collect(void)
 void maybe_ai_path_garbage_collect(void)
 {
 	if (POINT_SEG_NUMBER(Point_segs_free_ptr) > MAX_POINT_SEGS - MAX_PATH_LENGTH) {
-		if (Last_frame_garbage_collected+1 >= FrameCount) {
+		if (Last_tick_garbage_collected + 1 >= d_tick_count) {
 			//	This is kind of bad.  Garbage collected last frame or this frame.
 			//	Just destroy all paths.  Too bad for the robots.  They are memory wasteful.
 			ai_reset_all_paths();
@@ -1467,11 +1467,11 @@ void maybe_ai_path_garbage_collect(void)
 			mprintf((1, "Free records = %i/%i\n", MAX_POINT_SEGS - (POINT_SEG_NUMBER(Point_segs_free_ptr)), MAX_POINT_SEGS));
 		}
 	} else if (POINT_SEG_NUMBER(Point_segs_free_ptr) > 3*MAX_POINT_SEGS/4) {
-		if (Last_frame_garbage_collected + 16 < FrameCount) {
+		if (Last_tick_garbage_collected + 16 < d_tick_count) {
 			ai_path_garbage_collect();
 		}
 	} else if (POINT_SEG_NUMBER(Point_segs_free_ptr) > MAX_POINT_SEGS/2) {
-		if (Last_frame_garbage_collected + 256 < FrameCount) {
+		if (Last_tick_garbage_collected + 256 < d_tick_count) {
 			ai_path_garbage_collect();
 		}
 	}

@@ -1460,8 +1460,6 @@ void game_render_frame(void)
 	stop_time();
 	gr_palette_fade_in( gr_palette, 32, 0 );
 	start_time();
-
-	FrameCount++;
 }
 
 

@@ -857,11 +857,11 @@ void rock_the_mine_frame(void)
 
 				Seismic_tremor_volume += fc;
 
-				rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-				rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-
-				if (FixedStep & EPS20)
+				if (d_tick_step)
 				{
+					rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+					rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+
 					ConsoleObject->mtype.phys_info.rotvel.x += rx;
 					ConsoleObject->mtype.phys_info.rotvel.z += rz;
 
@@ -870,10 +870,9 @@ void rock_the_mine_frame(void)
 						Objects[Buddy_objnum].mtype.phys_info.rotvel.x += rx*4;
 						Objects[Buddy_objnum].mtype.phys_info.rotvel.z += rz*4;
 					}
+					//	Shake a guided missile!
+					Seismic_tremor_magnitude += rx;
 				}
-
-				//	Shake a guided missile!
-				Seismic_tremor_magnitude += rx;
 
 			} else
 				Smega_detonate_times[i] = 0;
@@ -952,11 +951,11 @@ void seismic_disturbance_frame(void)
 
 			Seismic_tremor_volume += fc;
 
-			rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-			rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-
-			if (FixedStep & EPS20)
+			if (d_tick_step)
 			{
+				rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+				rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+
 				ConsoleObject->mtype.phys_info.rotvel.x += rx;
 				ConsoleObject->mtype.phys_info.rotvel.z += rz;
 
@@ -965,10 +964,9 @@ void seismic_disturbance_frame(void)
 					Objects[Buddy_objnum].mtype.phys_info.rotvel.x += rx*4;
 					Objects[Buddy_objnum].mtype.phys_info.rotvel.z += rz*4;
 				}
+				//	Shake a guided missile!
+				Seismic_tremor_magnitude += rx;
 			}
-
-			//	Shake a guided missile!
-			Seismic_tremor_magnitude += rx;
 		}
 	}
 }
@@ -1003,7 +1001,7 @@ void process_super_mines_frame(void)
 	//	If we don't know of there being any super mines in the level, just
 	//	check every 8th object each frame.
 	if (Super_mines_yes == 0) {
-		start = FrameCount & 7;
+		start = d_tick_count & 7;
 		add = 8;
 	} else {
 		start = 0;
@@ -1038,7 +1036,7 @@ void process_super_mines_frame(void)
 								else {
 									//	Object which is close enough to detonate smart mine is not in same segment as smart mine.
 									//	Need to do a more expensive check to make sure there isn't an obstruction.
-									if (((FrameCount ^ (i+j)) % 4) == 0) {
+									if (((d_tick_count ^ (i+j)) % 4) == 0) {
 										fvi_query	fq;
 										fvi_info		hit_data;
 										int			fate;
