@@ -890,35 +890,23 @@ void game_flush_inputs()
 }
 
 /*
-    Calculates several - common used - timesteps and stores into FixedStep
-*/
-void FixedStepCalc()
+ * timer that every 50ms sets d_tick_step true and increments d_tick_count
+ */
+void calc_d_tick()
 {
-	int StepRes = 0;
-	static fix Timer4 = 0, Timer20 = 0, Timer30 = 0;
+	static fix timer = 0;
 
-	Timer4 += FrameTime;
-	if (Timer4 >= F1_0/4)
+	d_tick_step = 0;
+
+	timer += FrameTime;
+	if (timer >= F1_0/20)
 	{
-		StepRes |= EPS4;
-		Timer4 = 0 + (Timer4-F1_0/4);
+		d_tick_step = 1;
+		d_tick_count++;
+		if (d_tick_count > 1000000)
+			d_tick_count = 0;
+		timer = (timer-(F1_0/20));
 	}
-
-	Timer20 += FrameTime;
-	if (Timer20 >= F1_0/20)
-	{
-		StepRes |= EPS20;
-		Timer20 = 0 + (Timer20-F1_0/20);
-	}
-
-	Timer30 += FrameTime;
-	if (Timer30 >= F1_0/30)
-	{
-		StepRes |= EPS30;
-		Timer30 = 0 + (Timer30-F1_0/30);
-	}
-
-	FixedStep = StepRes;
 }
 
 void reset_time()
@@ -988,7 +976,7 @@ void calc_frame_time()
 	if (FrameTime < 0)						//if bogus frametime...
 		FrameTime = (last_frametime==0?1:last_frametime); // ...then use time from last frame
 
-	FixedStepCalc();
+	calc_d_tick();
 
 	#ifndef NDEBUG
 	if (fixed_frametime) FrameTime = fixed_frametime;
@@ -2514,7 +2502,7 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
 				else if (GameTime + FrameTime/2 >= Auto_fire_fusion_cannon_time) {
 					Auto_fire_fusion_cannon_time = 0;
 					Global_laser_firing_count = 1;
-				} else if (FixedStep & EPS20) {
+				} else if (d_tick_step) {
 					vms_vector	rand_vec;
 					fix			bump_amount;
 
@@ -2964,7 +2952,7 @@ int	Max_obj_count_mike = 0;
 //	Shows current number of used objects.
 void show_free_objects(void)
 {
-	if (!(FrameCount & 8)) {
+	if (!(d_tick_count & 8)) {
 		int	i;
 		int	count=0;
 
