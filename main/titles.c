@@ -42,7 +42,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "joy.h"
 #include "mono.h"
 #include "cfile.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 #include "mouse.h"
 

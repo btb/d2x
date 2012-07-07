@@ -28,7 +28,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "maths.h"
 #include "gr.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #if 0
 #define TRANSPARENCY_COLOR 255;

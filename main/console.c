@@ -30,7 +30,7 @@
 #include "key.h"
 #include "timer.h"
 #include "pstypes.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "cfile.h"
 
 

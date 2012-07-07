@@ -10,7 +10,7 @@
 #include <alsa/asoundlib.h>
 #include <pthread.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "maths.h"
 #include "gr.h" // needed for piggy.h

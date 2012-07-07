@@ -16,7 +16,7 @@
 
 #include "internal.h"
 #include "vers_id.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "args.h"
 

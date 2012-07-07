@@ -3,7 +3,7 @@
 #include "dpmi.h"
 #include "timer.h"
 #include "key.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "rbaudio.h"
 
 

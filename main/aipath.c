@@ -28,7 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "mono.h"
 #include "3d.h"
-#include "error.h"
+#include "dxxerror.h"
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif

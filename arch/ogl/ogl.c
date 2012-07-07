@@ -30,7 +30,7 @@
 #include "3d.h"
 #include "inferno.h"
 #include "../../3d/globvars.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "texmap.h"
 #include "gr.h"
 #include "mono.h"

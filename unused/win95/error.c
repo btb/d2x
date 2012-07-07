@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 
 #ifdef MACINTOSH

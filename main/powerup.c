@@ -30,7 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "3d.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 #include "key.h"
 #ifdef EDITOR

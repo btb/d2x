@@ -14,7 +14,7 @@
 #include <string.h>
 
 #include "pstypes.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "fix.h"
 #include "gr.h" // needed for piggy.h

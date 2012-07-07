@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "maths.h"
 #include "gr.h"
 #include "3d.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "iff.h"
 #include "mono.h"
 #include "texmap.h"

@@ -20,7 +20,7 @@
 #include "text.h"
 #include "console.h"
 #include "args.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #include "joy.h"
 #include "timer.h"

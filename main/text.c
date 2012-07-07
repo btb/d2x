@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "cfile.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 #include "args.h"
 

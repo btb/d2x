@@ -37,7 +37,7 @@ _go32_dpmi_registers handler_regs;
 //#include <i86.h>
 #include <string.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "fix.h"
 #include "u_dpmi.h"
 #include "mouse.h"

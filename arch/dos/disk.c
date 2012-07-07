@@ -2,7 +2,7 @@
 #include <dos.h>
 #include <limits.h>
 #include "pstypes.h"
-#include "error.h"
+#include "dxxerror.h"
 
 unsigned long getdiskfree() {
 	struct diskfree_t dfree;

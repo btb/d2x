@@ -16,7 +16,7 @@
 
 #include "types.h"
 #include "mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 
 //	New for VGA Library.

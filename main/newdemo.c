@@ -46,7 +46,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "texmap.h"
 #include "key.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "maths.h"
 #include "args.h"
 #include "timer.h"

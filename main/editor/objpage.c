@@ -34,7 +34,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"				// For canves, font stuff
 #include "ui.h"				// For UI_GADGET stuff
 #include "mono.h"				// For debugging
-#include "error.h"
+#include "dxxerror.h"
 
 
 #define OBJS_PER_PAGE 8

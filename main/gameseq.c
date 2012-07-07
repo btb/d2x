@@ -35,7 +35,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "vid.h"
 #include "key.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "joy.h"
 #include "mono.h"
 #include "iff.h"

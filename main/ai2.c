@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "3d.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "timer.h"
 #include "key.h"
 #ifdef EDITOR

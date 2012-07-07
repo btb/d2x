@@ -31,7 +31,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "editor.h"
 #include "maths.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "3d.h"		//	For g3_point_to_vec
 
 

@@ -1,7 +1,7 @@
 // MIDI stuff follows.
 #include <stdio.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "hmpfile.h"
 #include "args.h"
 

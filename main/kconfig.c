@@ -30,7 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef WINDOWS
 #include "desw.h"
 #endif
-#include "error.h"
+#include "dxxerror.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"

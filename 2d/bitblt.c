@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "mono.h"
 #include "byteswap.h"       // because of rle code that has short for row offsets
-#include "error.h"
+#include "dxxerror.h"
 
 #ifdef OGL
 #include "ogl_init.h"

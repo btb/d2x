@@ -36,7 +36,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "iff.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "joy.h"
 #include "maths.h"

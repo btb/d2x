@@ -37,7 +37,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define near
 _go32_dpmi_seginfo kbd_hand_info;
 #endif
-#include "error.h"
+#include "dxxerror.h"
 #include "key.h"
 #include "timer.h"
 #include "u_dpmi.h"

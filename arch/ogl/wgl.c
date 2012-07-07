@@ -18,7 +18,7 @@
 
 #include "internal.h"
 #include "vers_id.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "key.h"
 #include "joy.h"
 #include "mouse.h"

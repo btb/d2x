@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "types.h"
 #include "mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 
 //	New for VGA Library.

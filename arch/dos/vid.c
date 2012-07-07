@@ -21,7 +21,7 @@
 #include "u_dpmi.h"
 #include "vesa.h"
 #include "modex.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #ifdef __DJGPP__
 #include <sys/nearptr.h>

@@ -32,7 +32,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #include <time.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 #include "editor.h"
 #include "mono.h"

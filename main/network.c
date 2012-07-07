@@ -39,7 +39,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ipx.h"
 #include "key.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "byteswap.h"
 #include "cfile.h"
 

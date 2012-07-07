@@ -33,7 +33,7 @@
 #include "gr.h"
 #include "vid.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "timer.h"
 #include "strutil.h"
 #include "mono.h"
