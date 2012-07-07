@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "mono.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 int Num_effects;

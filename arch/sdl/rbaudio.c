@@ -20,7 +20,7 @@
 #endif
 
 #include "pstypes.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 #include "rbaudio.h"
 

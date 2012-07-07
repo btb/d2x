@@ -31,7 +31,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "editor.h"
 #include "maths.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 void compute_uv_side_center(uvl *uvcenter, segment *segp, int sidenum);

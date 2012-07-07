@@ -20,7 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conio.h>
 
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "args.h"
 #include "text.h"

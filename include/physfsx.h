@@ -22,7 +22,7 @@
 #include <physfs.h>
 
 #include "pstypes.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "vecmat.h"
 #include "args.h"
 

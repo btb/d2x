@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 #if defined (TACTILE)
 #include "tactile.h"

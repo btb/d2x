@@ -32,7 +32,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "object.h"
 #include "player.h"
 #include "laser.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "collide.h"
 #include "endlevel.h"
 #include "network.h"

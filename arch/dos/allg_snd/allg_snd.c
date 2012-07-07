@@ -10,7 +10,7 @@
 #include "cfile.h"
 #include "internal.h"
 #include <sys/stat.h>
-#include "error.h"
+#include "dxxerror.h"
 #include "timer.h"
 #include "d_io.h"
 

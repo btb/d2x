@@ -30,7 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "strutil.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "key.h"
 #include "timer.h"

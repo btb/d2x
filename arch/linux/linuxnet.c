@@ -38,7 +38,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pstypes.h"
 #include "args.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #include "ipx.h"
 #include "ipx_drv.h"
@@ -50,7 +50,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #include "ipx_udp.h"
 #include "ipx_mcast4.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 //added 05/17/99 Matt Mueller - needed to redefine FD_* so that no asm is used
 //#include "checker.h"

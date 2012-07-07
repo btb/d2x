@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "strutil.h"
 #include "inferno.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "ignorecase.h"
 

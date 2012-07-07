@@ -13,7 +13,7 @@
 #include "pstypes.h"
 #include "console.h"
 #include "event.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "joy.h"
 #include "args.h"
 

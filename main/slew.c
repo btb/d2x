@@ -28,7 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "maths.h"
 #include "key.h"
 #include "joy.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 
 

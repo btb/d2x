@@ -25,7 +25,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "args.h"
 #include "key.h"
 #include "u_dpmi.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "cfile.h"
 #include "midiallg.h"
 

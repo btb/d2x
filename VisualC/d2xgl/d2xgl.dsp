@@ -768,7 +768,7 @@ SOURCE=..\..\main\endlevel.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include\error.h
+SOURCE=..\..\include\dxxerror.h
 # End Source File
 # Begin Source File
 

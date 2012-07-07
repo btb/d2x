@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 #include "mono.h"
 #include "cfile.h"

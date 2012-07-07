@@ -31,7 +31,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "editor.h"
 #include "maths.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 void cast_all_light_in_mine(int quick_flag);

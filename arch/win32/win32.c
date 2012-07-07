@@ -5,7 +5,7 @@
 #include "gr.h"
 #include "u_mem.h"
 #include "timer.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "d3dhelp.h"
 #include "game.h"
 #include "gauges.h"

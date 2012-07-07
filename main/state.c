@@ -40,7 +40,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #include "mono.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "cfile.h"
 #include "hash.h"
 #include "key.h"

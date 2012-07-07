@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #ifdef OGL
 #include "ogl_init.h"

@@ -19,7 +19,7 @@
 #include "gr.h"
 #include "vid.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 #include "timer.h"
 #include "args.h"

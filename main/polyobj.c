@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "maths.h"
 #include "3d.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "u_mem.h"
 #include "args.h"

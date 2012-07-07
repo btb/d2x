@@ -38,7 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "newdemo.h"
 #include "game.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "wall.h"
 #include "cfile.h"
 #include "piggy.h"

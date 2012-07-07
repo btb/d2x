@@ -14,7 +14,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "types.h"
 #include "fix.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 
 #define _WIN32

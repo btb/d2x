@@ -25,7 +25,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "gr.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #ifdef __MSDOS__
 #include "modex.h"

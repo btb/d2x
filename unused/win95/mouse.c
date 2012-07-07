@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <i86.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "fix.h"
 #include "mouse.h"
 #include "timer.h"

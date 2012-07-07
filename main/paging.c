@@ -28,7 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "mono.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "gr.h"
 #include "timer.h"
 

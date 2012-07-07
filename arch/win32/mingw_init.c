@@ -14,7 +14,7 @@
 #include "console.h"
 #include "text.h"
 #include "event.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "joy.h"
 #include "args.h"
 

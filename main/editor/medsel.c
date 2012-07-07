@@ -33,7 +33,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ui.h"
 #include "key.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "inferno.h"
 #include "editor.h"

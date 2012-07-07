@@ -24,7 +24,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "winapp.h"
 #include "comm.h"
-#include "error.h"
+#include "dxxerror.h"
 
 #define ASCII_XON       0x11
 #define ASCII_XOFF      0x13

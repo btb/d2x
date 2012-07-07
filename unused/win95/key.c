@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#define WATCOM_10
 
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "key.h"
 #include "timer.h"
 

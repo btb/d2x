@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 
 #include "scores.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"

@@ -7,7 +7,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "strutil.h"
 #include "inferno.h"

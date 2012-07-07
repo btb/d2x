@@ -21,9 +21,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conio.h>
 
 #include "types.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "dpmi.h"
 
 int dpmi_find_dos_memory()

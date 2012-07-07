@@ -38,7 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "inferno.h"
 #include "strutil.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "byteswap.h"
 #include "gr.h"

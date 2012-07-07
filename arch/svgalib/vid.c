@@ -17,7 +17,7 @@
 
 #include "gr.h"
 #include "u_mem.h"
-#include "error.h"
+#include "dxxerror.h"
 #ifdef SVGALIB_INPUT
 #include <vgamouse.h>
 #endif

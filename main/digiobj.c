@@ -38,7 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef __MSDOS__
 #include "dpmi.h"
 #endif
-#include "error.h"
+#include "dxxerror.h"
 #include "cfile.h"
 
 

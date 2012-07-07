@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "rle.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 #include "winapp.h"
 

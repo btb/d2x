@@ -1061,7 +1061,7 @@
 		1466961C1A2729860070D41D /* console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = console.h; sourceTree = "<group>"; };
 		1466961D1A2729860070D41D /* d1x.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = d1x.xpm; sourceTree = "<group>"; };
 		1466961E1A2729860070D41D /* descent.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = descent.xpm; sourceTree = "<group>"; };
-		1466961F1A2729860070D41D /* error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = error.h; sourceTree = "<group>"; };
+		1466961F1A2729860070D41D /* dxxerror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dxxerror.h; sourceTree = "<group>"; };
 		146696201A2729860070D41D /* fix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fix.h; sourceTree = "<group>"; };
 		146696211A2729860070D41D /* func.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = func.h; sourceTree = "<group>"; };
 		146696221A2729860070D41D /* gr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gr.h; sourceTree = "<group>"; };
@@ -1956,7 +1956,7 @@
 				1466961C1A2729860070D41D /* console.h */,
 				1466961D1A2729860070D41D /* d1x.xpm */,
 				1466961E1A2729860070D41D /* descent.xpm */,
-				1466961F1A2729860070D41D /* error.h */,
+				1466961F1A2729860070D41D /* dxxerror.h */,
 				146696201A2729860070D41D /* fix.h */,
 				146696211A2729860070D41D /* func.h */,
 				146696221A2729860070D41D /* gr.h */,

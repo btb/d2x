@@ -30,7 +30,7 @@
 #include "pstypes.h"
 #include "ipx_mcast4.h"
 #include "args.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "inferno.h"
 
 

@@ -26,7 +26,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "editor.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 #define XDIM	0

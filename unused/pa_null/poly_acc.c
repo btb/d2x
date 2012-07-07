@@ -34,7 +34,7 @@ static unsigned poly_count;
 #include "texmap.h"
 #include "mono.h"
 #include "debug.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "poly_acc.h"
 
 //

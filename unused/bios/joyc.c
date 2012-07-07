@@ -21,7 +21,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#define ARCADE 1
 
 #include "types.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "joy.h"
 #include "dpmi.h"

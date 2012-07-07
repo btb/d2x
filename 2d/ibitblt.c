@@ -40,7 +40,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "types.h"
 #include "gr.h"
 #include "mem.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 #define MODE_NONE           0
@@ -539,7 +539,7 @@ void    gr_ibitblt_find_hole_size( grs_bitmap * mask_bmp, int *minx, int *miny, 
 #else /* __MSDOS__ */ // was: /* !MACINTOSH */
 
 #include "gr.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 
 

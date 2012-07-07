@@ -30,7 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mem.h"
 #include "mono.h"
 #include "args.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "winapp.h"
 
 #include "dd.h"

@@ -16,7 +16,7 @@
 
 #include "text.h"
 #include "event.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "args.h"
 #include "digi.h"
 

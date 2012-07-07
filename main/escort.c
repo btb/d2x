@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "3d.h"
 #include "vid.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "key.h"
 #ifdef EDITOR
 #include "editor/editor.h"

@@ -44,7 +44,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "editor.h"
 #include "key.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_mem.h"
 #include "func.h"
 #include "texmap.h"

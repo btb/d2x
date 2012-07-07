@@ -35,7 +35,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ui.h"
 #include "editor.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 int init_info;

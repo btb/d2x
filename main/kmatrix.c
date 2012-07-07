@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #include <stdarg.h>
 
-#include "error.h"
+#include "dxxerror.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"

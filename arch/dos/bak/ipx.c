@@ -34,7 +34,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "types.h"
 #include "timer.h"
 #include "ipx.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "u_dpmi.h"
 #include "key.h"
 

@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "maths.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "timer.h"
 #include "byteswap.h"

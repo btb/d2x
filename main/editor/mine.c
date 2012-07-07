@@ -33,7 +33,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "inferno.h"
 #include "editor.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "ui.h"			// Because texpage.h need UI_WINDOW type
 
 

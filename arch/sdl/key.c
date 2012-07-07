@@ -17,7 +17,7 @@
 #include "inferno.h"
 #include "game.h"
 #include "event.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "key.h"
 #include "timer.h"
 #include "console.h"

@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "byteswap.h"
 #include "ipx.h"
-#include "error.h"
+#include "dxxerror.h"
 
 
 // routine to calculate the checksum of the segments.  We add these specialized routines

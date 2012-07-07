@@ -15,7 +15,7 @@
 
 #include "internal.h"
 #include "vers_id.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "event.h"
 #include "mono.h"
 #include "u_mem.h"

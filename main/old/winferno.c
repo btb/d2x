@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "bm.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "game.h"
 #include "mem.h"
 #include "screens.h"

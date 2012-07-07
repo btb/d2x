@@ -27,7 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "inferno.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "mono.h"
 #include "maths.h"
 #include "byteswap.h"

@@ -9,7 +9,7 @@
 #include <float.h>
 
 #include "console.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "strutil.h"
 #include "u_mem.h"
 #include "hash.h"

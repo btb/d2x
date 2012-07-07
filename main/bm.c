@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "u_mem.h"
 #include "mono.h"
-#include "error.h"
+#include "dxxerror.h"
 #include "iff.h"
 #include "cfile.h"
 #include "makesig.h"
