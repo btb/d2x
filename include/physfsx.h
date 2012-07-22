@@ -156,12 +156,12 @@ static inline PHYSFS_sint64 PHYSFSX_writeU8(PHYSFS_file *file, PHYSFS_uint8 val)
 	return PHYSFS_write(file, &val, 1, 1);
 }
 
-static inline PHYSFS_sint64 PHYSFSX_writeString(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_writeString(PHYSFS_file *file, const char *s)
 {
 	return PHYSFS_write(file, s, 1, (PHYSFS_uint32)strlen(s) + 1);
 }
 
-static inline PHYSFS_sint64 PHYSFSX_puts(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_puts(PHYSFS_file *file, const char *s)
 {
 	return PHYSFS_write(file, s, 1, (PHYSFS_uint32)strlen(s));
 }
@@ -176,7 +176,7 @@ static inline int PHYSFSX_putc(PHYSFS_file *file, int c)
 		return (int)c;
 }
 
-static inline PHYSFS_sint64 PHYSFSX_printf(PHYSFS_file *file, char *format, ...)
+static inline PHYSFS_sint64 PHYSFSX_printf(PHYSFS_file *file, const char *format, ...)
 {
 	char buffer[1024];
 	va_list args;
@@ -264,7 +264,7 @@ static inline int PHYSFSX_getRealPath(const char *stdPath, char *realPath)
 	return 1;
 }
 
-static inline int PHYSFSX_rename(char *oldpath, char *newpath)
+static inline int PHYSFSX_rename(const char *oldpath, const char *newpath)
 {
 	char old[PATH_MAX], new[PATH_MAX];
 
@@ -291,7 +291,7 @@ static inline PHYSFS_sint64 PHYSFSX_getFreeDiskSpace()
 }
 
 //Open a file for reading, set up a buffer
-static inline PHYSFS_file *PHYSFSX_openReadBuffered(char *filename)
+static inline PHYSFS_file *PHYSFSX_openReadBuffered(const char *filename)
 {
 	PHYSFS_file *fp;
 	PHYSFS_uint64 bufSize;
@@ -314,7 +314,7 @@ static inline PHYSFS_file *PHYSFSX_openReadBuffered(char *filename)
 }
 
 //Open a file for writing, set up a buffer
-static inline PHYSFS_file *PHYSFSX_openWriteBuffered(char *filename)
+static inline PHYSFS_file *PHYSFSX_openWriteBuffered(const char *filename)
 {
 	PHYSFS_file *fp;
 	PHYSFS_uint64 bufSize = 1024*1024;	// hmm, seems like an OK size.

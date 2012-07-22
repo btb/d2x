@@ -802,7 +802,7 @@ extern object DemoRightExtra, DemoLeftExtra;
 
 char DemoWBUType[] = { 0, WBU_MISSILE, WBU_MISSILE, WBU_REAR, WBU_ESCORT, WBU_MARKER, WBU_MISSILE };
 char DemoRearCheck[] = { 0, 0, 0, 1, 0, 0, 0 };
-char *DemoExtraMessage[] = { "PLAYER", "GUIDED", "MISSILE", "REAR", "GUIDE-BOT", "MARKER", "SHIP" };
+static const char *const DemoExtraMessage[] = { "PLAYER", "GUIDED", "MISSILE", "REAR", "GUIDE-BOT", "MARKER", "SHIP" };
 
 extern char guidebot_name[];
 

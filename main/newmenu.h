@@ -107,7 +107,7 @@ int newmenu_get_filename(char *title, char *filespec, char *filename, int allow_
 // in menu.c
 extern int Max_linear_depth_objects;
 
-extern char *Newmenu_allowed_chars;
+extern const char *Newmenu_allowed_chars;
 
 // Example listbox callback function...
 // int lb_callback( int * citem, int *nitems, char * items[], int *keypress )

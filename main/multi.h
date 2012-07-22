@@ -195,7 +195,6 @@ extern int Network_laser_level;
 extern int Network_laser_flags;
 extern int Netlife_kills,Netlife_killed;
 
-extern int message_length[MULTI_MAX_TYPE+1];
 extern char multibuf[MAX_MULTI_MESSAGE_LEN+4];
 extern short Network_laser_track;
 

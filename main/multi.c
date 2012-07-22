@@ -160,7 +160,7 @@ typedef struct netplayer_stats {
 	ubyte  unused[16];
 } netplayer_stats;
 
-int message_length[MULTI_MAX_TYPE+1] = {
+static const int message_length[MULTI_MAX_TYPE+1] = {
 	24, // POSITION
 	3,  // REAPPEAR
 	8,  // FIRE

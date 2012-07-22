@@ -64,7 +64,7 @@ ubyte ExtYVibrateClear = 0;
 #define TABLE_CREATION 1
 
 // Array used to 'blink' the cursor while waiting for a keypress.
-sbyte fades[64] = { 1,1,1,2,2,3,4,4,5,6,8,9,10,12,13,15,16,17,19,20,22,23,24,26,27,28,28,29,30,30,31,31,31,31,31,30,30,29,28,28,27,26,24,23,22,20,19,17,16,15,13,12,10,9,8,6,5,4,4,3,2,2,1,1 };
+static const sbyte fades[64] = { 1,1,1,2,2,3,4,4,5,6,8,9,10,12,13,15,16,17,19,20,22,23,24,26,27,28,28,29,30,30,31,31,31,31,31,30,30,29,28,28,27,26,24,23,22,20,19,17,16,15,13,12,10,9,8,6,5,4,4,3,2,2,1,1 };
 
 //char *invert_text[2] = { "N", "Y" };
 //char *joyaxis_text[4] = { "X1", "Y1", "X2", "Y2" };
@@ -108,7 +108,7 @@ char * key_text[256] = {
 };
 #endif /* OGL */
 
-ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN };
+static const ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN };
 
 //extern void GameLoop(int, int);
 
@@ -124,19 +124,20 @@ ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6,
 #define BT_JOY_AXIS         4
 #define BT_INVERT           5
 
-char *btype_text[] = { "BT_KEY", "BT_MOUSE_BUTTON", "BT_MOUSE_AXIS", "BT_JOY_BUTTON", "BT_JOY_AXIS", "BT_INVERT" };
-
 #define INFO_Y 28
 
 typedef struct kc_item {
-	short id;       // The id of this item
-	short x, y;
-	short w1;
-	short w2;
+	const short id;       // The id of this item
+	const short x, y;
+	const short w1;
+	const short w2;
+#ifndef TABLE_CREATION
+	const
+#endif
 	short u, d, l, r;
 	//short text_num1;
-	char *text;
-	ubyte type;
+	const char *text;
+	const ubyte type;
 	ubyte value;    // what key,button,etc
 } kc_item;
 
@@ -245,7 +246,7 @@ char *kc_key_bind_text[NUM_KEY_CONTROLS] = {
 	"togglebomb",
 };
 
-ubyte default_kc_keyboard_settings[NUM_KEY_CONTROLS] = {0x48,0xc8,0x50,0xd0,0x4b,0xcb,0x4d,0xcd,0x38,0xff,0x4f,0xff,0x51,0xff,0x4a,0xff,0x4e,0xff,0x2a,0xff,0x10,0x47,0x12,0x49,0x1d,0x80,0x39,0x81,0x21,0x24,0x1e,0xff,0x2c,0xff,0x30,0xff,0x13,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xf,0xff,0x1f,0xff,0x33,0xff,0x34,0xff,0x23,0xff,0x14,0xff,0xff};
+const ubyte default_kc_keyboard_settings[NUM_KEY_CONTROLS] = {0x48,0xc8,0x50,0xd0,0x4b,0xcb,0x4d,0xcd,0x38,0xff,0x4f,0xff,0x51,0xff,0x4a,0xff,0x4e,0xff,0x2a,0xff,0x10,0x47,0x12,0x49,0x1d,0x80,0x39,0x81,0x21,0x24,0x1e,0xff,0x2c,0xff,0x30,0xff,0x13,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xf,0xff,0x1f,0xff,0x33,0xff,0x34,0xff,0x23,0xff,0x14,0xff,0xff};
 
 kc_item kc_other[NUM_OTHER_CONTROLS] = {
 	{  0, 22,138, 51, 40, 23,  2, 23,  1,"Pitch U/D", BT_JOY_AXIS, 255 },
@@ -289,7 +290,7 @@ kc_axis_map kc_other_axismap[NUM_OTHER_CONTROLS] = {
 	AXIS_THROTTLE,  AXIS_NONE,
 };
 
-ubyte default_kc_other_settings[NUM_OTHER_CONTROLS] = {0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x2,0x0};
+const ubyte default_kc_other_settings[NUM_OTHER_CONTROLS] = {0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x2,0x0};
 
 kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 //        id,x,y,w1,w2,u,d,l,r,text_num1,type,value
@@ -323,7 +324,7 @@ kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 	//{ 27,  8,155,107, 26, 25,  0, 26,  0, "TOGGLE SEC AUTO", BT_KEY, 255},
 };
 
-ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = {0x2,0xff,0x3,0xff,0x4,0xff,0x5,0xff,0x6,0xff,0x7,0xff,0x8,0xff,0x9,0xff,0xa,0xff,0xb,0xff,0xc,0xff,0xd,0xff};
+const ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = {0x2,0xff,0x3,0xff,0x4,0xff,0x5,0xff,0x6,0xff,0x7,0xff,0x8,0xff,0x9,0xff,0xa,0xff,0xb,0xff,0xc,0xff,0xd,0xff};
 
 
 void kc_drawitem( kc_item *item, int is_current );
@@ -744,6 +745,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 #ifdef TABLE_CREATION
 		case KEY_DEBUGGED+KEY_SHIFTED+KEY_2:
 		case KEY_DEBUGGED+KEY_F12: {
+			static const char *const btype_text[] = { "BT_KEY", "BT_MOUSE_BUTTON", "BT_MOUSE_AXIS", "BT_JOY_BUTTON", "BT_JOY_AXIS", "BT_INVERT" };
 			FILE * fp;
 			int j;
 
@@ -775,7 +777,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 					34, kc_keyboard[i].text, 34, btype_text[kc_keyboard[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
-			fprintf( fp, "ubyte default_kc_keyboard_settings[NUM_KEY_CONTROLS] = " );
+			fprintf( fp, "const ubyte default_kc_keyboard_settings[NUM_KEY_CONTROLS] = " );
 			fprintf( fp, "{ 0x%x", kc_keyboard[0].value );
 			for ( j = 1; j < NUM_KEY_CONTROLS; j++ )
 				fprintf( fp, ", 0x%x", kc_keyboard[j].value );
@@ -789,7 +791,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 					34, kc_other[i].text, 34, btype_text[kc_other[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
-			fprintf( fp, "ubyte default_kc_other_settings[NUM_OTHER_CONTROLS] = " );
+			fprintf( fp, "const ubyte default_kc_other_settings[NUM_OTHER_CONTROLS] = " );
 			fprintf( fp, "{ 0x%x", kc_other[0].value );
 			for ( j = 1; j < NUM_OTHER_CONTROLS; j++ )
 				fprintf( fp, ", 0x%x", kc_other[j].value );
@@ -803,7 +805,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 					34, kc_d2x[i].text, 34, btype_text[kc_d2x[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
-			fprintf( fp, "ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = " );
+			fprintf( fp, "const ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = " );
 			fprintf( fp, "{ 0x%x", kc_d2x[0].value );
 			for ( j = 1; j < NUM_D2X_CONTROLS; j++ )
 				fprintf( fp, ", 0x%x", kc_d2x[j].value );
