@@ -64,7 +64,7 @@ int GL_texminfilt=GL_NEAREST;
 float GL_texanisofilt = 0;
 int GL_needmipmaps=0;
 
-int last_width=-1,last_height=-1;
+unsigned last_width = ~0u, last_height = ~0u;
 int GL_TEXTURE_2D_enabled=-1;
 int GL_texclamp_enabled=-1;
 
