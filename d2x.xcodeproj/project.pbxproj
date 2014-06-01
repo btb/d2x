@@ -1054,6 +1054,8 @@
 		14804D661A4C9FE0001CB0FB /* SDL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDL.h; sourceTree = "<group>"; };
 		14804D7B1A4CA263001CB0FB /* iff */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iff; sourceTree = "<group>"; };
 		14D696771A520C80009ABFD2 /* mveplayer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mveplayer; sourceTree = BUILT_PRODUCTS_DIR; };
+		14D696841A5B2C98009ABFD2 /* COPYING.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING.txt; sourceTree = "<group>"; };
+		14D696851A5B2C98009ABFD2 /* GPL-3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GPL-3.txt"; sourceTree = "<group>"; };
 		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = /usr/local/Cellar/physfs/2.0.3/lib/libphysfs.a; sourceTree = "<absolute>"; };
 		14E97E051A3703BE0027FB84 /* cvar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvar.h; sourceTree = "<group>"; };
 		14E97E061A3703D40027FB84 /* cvar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cvar.c; sourceTree = "<group>"; };
@@ -1126,6 +1128,8 @@
 				146699A01A2729C60070D41D /* utilities */,
 				141FE1001A2D36A600A4FB18 /* Makefile.am */,
 				14669A431A285F9B0070D41D /* configure.ac */,
+				14D696841A5B2C98009ABFD2 /* COPYING.txt */,
+				14D696851A5B2C98009ABFD2 /* GPL-3.txt */,
 				1478618B1A4410C500DB53B9 /* README.utils */,
 				1478618E1A44120900DB53B9 /* README */,
 				147861901A44121000DB53B9 /* NEWS */,
