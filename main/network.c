@@ -1766,7 +1766,7 @@ void
 network_send_endlevel_sub(int player_num)
 {
 	endlevel_info end;
-	int i, j;
+	int i, j = 0;
 
 	// Send an endlevel packet for a player
 	end.type                = PID_ENDLEVEL;

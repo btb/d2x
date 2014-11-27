@@ -183,7 +183,7 @@ void con_printf(int priority, char *fmt, ...)
 			while (*p1);
 			*p2 = 0;
 
-			printf(buffer);
+			printf("%s", buffer);
 		}
 	}
 }

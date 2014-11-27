@@ -1261,7 +1261,7 @@ _exit_cheat:
 
 	// - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 	// If new state = fire, then set all gun states to fire.
-	if ((aip->GOAL_STATE == AIS_FIRE) ) {
+	if ( aip->GOAL_STATE == AIS_FIRE ) {
 		int i,num_guns;
 		num_guns = Robot_info[obj->id].n_guns;
 		for (i=0; i<num_guns; i++)

@@ -335,7 +335,7 @@ void game_draw_hud_stuff()
 				sprintf (message, " ");
 			}
 		} else 
-			sprintf (message, TXT_DEMO_RECORDING);
+			sprintf (message, "%s", TXT_DEMO_RECORDING);
 
 		gr_set_curfont( GAME_FONT );    //GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(27,0,0), -1 );
@@ -387,12 +387,12 @@ mprintf((0,"line_spacing=%d ",line_spacing));
 	if (r_framerate.value)
 		show_framerate();
 
-	if ( (Newdemo_state == ND_STATE_PLAYBACK) )
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
 		Game_mode = Newdemo_game_mode;
 
 	draw_hud();
 
-	if ( (Newdemo_state == ND_STATE_PLAYBACK) )
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
 		Game_mode = GM_NORMAL;
 
 	if ( Player_is_dead )
@@ -1028,12 +1028,12 @@ void game_render_frame_mono(void)
 
 	if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR) {
 
-		if ( (Newdemo_state == ND_STATE_PLAYBACK) )
+		if ( Newdemo_state == ND_STATE_PLAYBACK )
 			Game_mode = Newdemo_game_mode;
 
 		render_gauges();
 
-		if ( (Newdemo_state == ND_STATE_PLAYBACK) )
+		if ( Newdemo_state == ND_STATE_PLAYBACK )
 			Game_mode = GM_NORMAL;
 	}
 

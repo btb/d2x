@@ -68,7 +68,7 @@ int knix_Recv(int hand, char *data, int len) {
 
 	tlen = sizeof(taddr);
 
-	return recvfrom(hand, data, len, 0, (struct sockaddr *)&taddr, &tlen);
+	return recvfrom(hand, data, len, 0, (struct sockaddr *)&taddr, (unsigned int *)&tlen);
 
 }
 
