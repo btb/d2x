@@ -18,3 +18,9 @@ missing
 mkinstalldirs
 stamp-h.in
 stamp-h1
+.DS_Store
+*.o
+*.a
+.deps
+debian/changelog
+rpm/d2x.spec
