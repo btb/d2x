@@ -90,7 +90,7 @@ key_props key_properties[256] = {
 { "[",      '[',    '{',    SDLK_LEFTBRACKET   },
 { "]",      ']',    '}',    SDLK_RIGHTBRACKET  },
 //edited 06/08/99 Matt Mueller - set to correct key_text
-{ "ƒ",      255,    255,    SDLK_RETURN        },
+{ "\x83",   255,    255,    SDLK_RETURN        },
 //end edit -MM
 { "LCTRL",  255,    255,    SDLK_LCTRL         },
 { "A",      'a',    'A',    SDLK_a             },
@@ -228,7 +228,7 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 //edited 06/08/99 Matt Mueller - set to correct key_text
-{ "PADƒ",   255,    255,    SDLK_KP_ENTER      },
+{ "PAD\x83",255,    255,    SDLK_KP_ENTER      },
 //end edit -MM
 //edited 06/08/99 Matt Mueller - set to correct sym
 { "RCTRL",  255,    255,    SDLK_RCTRL            },

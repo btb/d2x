@@ -84,18 +84,18 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define SELECTED_FONT   MEDIUM2_FONT    //highlighted item
 #define SUBTITLE_FONT   MEDIUM3_FONT
 
-#define NORMAL_CHECK_BOX    "Å"
-#define CHECKED_CHECK_BOX   "Ç"
+#define NORMAL_CHECK_BOX    "\x81"  // 129
+#define CHECKED_CHECK_BOX   "\x82"  // 130
 
-#define NORMAL_RADIO_BOX    ""
-#define CHECKED_RADIO_BOX   "Ä"
+#define NORMAL_RADIO_BOX    "\x7f"  // 127
+#define CHECKED_RADIO_BOX   "\x80"  // 128
 #define CURSOR_STRING       "_"
-#define SLIDER_LEFT         "É"  // 131
-#define SLIDER_RIGHT        "Ñ"  // 132
-#define SLIDER_MIDDLE       "Ö"  // 133
-#define SLIDER_MARKER       "Ü"  // 134
-#define UP_ARROW_MARKER     "á"  // 135
-#define DOWN_ARROW_MARKER   "à"  // 136
+#define SLIDER_LEFT         "\x83"  // 131
+#define SLIDER_RIGHT        "\x84"  // 132
+#define SLIDER_MIDDLE       "\x85"  // 133
+#define SLIDER_MARKER       "\x86"  // 134
+#define UP_ARROW_MARKER     "\x87"  // 135
+#define DOWN_ARROW_MARKER   "\x88"  // 136
 
 int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height, int TinyMode );
 void show_extra_netgame_info(int choice);
