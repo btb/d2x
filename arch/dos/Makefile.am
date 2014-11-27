@@ -8,7 +8,7 @@ libarch_dos_a_SOURCES = \
 digi.c dpmi.c findfile.c gr.c init.c ipx.c joyc.c joydefs.c key.c mouse.c rbaudio.c vesa.c
 
 SUFFIXES = .asm
-%.o: %.asm
+.asm.o:
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 libarch_dos_a_LIBADD = timer.o modex.o

@@ -8,7 +8,7 @@ libmaths_a_SOURCES = vecmat.c rand.c tables.c fixc.c
 endif
 
 SUFFIXES = .asm
-%.o: %.asm
+.asm.o:
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 if USE_ASM

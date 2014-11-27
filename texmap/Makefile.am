@@ -12,7 +12,7 @@ libtexmap_a_SOURCES = ${NOGL_SRCS} ${ASM_SRCS} \
 ntmap.c scanline.c
 
 SUFFIXES = .asm
-%.o: %.asm
+.asm.o:
 	$(NASM) $(NASMFLAGS) $< -o $@
 
 if !USE_OPENGL
