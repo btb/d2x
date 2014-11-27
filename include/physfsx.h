@@ -120,7 +120,7 @@ static inline void PHYSFSX_init(int argc, char *argv[])
 #endif
 }
 
-static inline int PHYSFSX_readString(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_readString(PHYSFS_file *file, char *s)
 {
 	char *ptr = s;
 
@@ -134,7 +134,7 @@ static inline int PHYSFSX_readString(PHYSFS_file *file, char *s)
 	return strlen(s);
 }
 
-static inline int PHYSFSX_gets(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_gets(PHYSFS_file *file, char *s)
 {
 	char *ptr = s;
 
@@ -148,19 +148,19 @@ static inline int PHYSFSX_gets(PHYSFS_file *file, char *s)
 	return strlen(s);
 }
 
-static inline int PHYSFSX_writeU8(PHYSFS_file *file, PHYSFS_uint8 val)
+static inline PHYSFS_sint64 PHYSFSX_writeU8(PHYSFS_file *file, PHYSFS_uint8 val)
 {
 	return PHYSFS_write(file, &val, 1, 1);
 }
 
-static inline int PHYSFSX_writeString(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_writeString(PHYSFS_file *file, char *s)
 {
-	return PHYSFS_write(file, s, 1, strlen(s) + 1);
+	return PHYSFS_write(file, s, 1, (PHYSFS_uint32)strlen(s) + 1);
 }
 
-static inline int PHYSFSX_puts(PHYSFS_file *file, char *s)
+static inline PHYSFS_sint64 PHYSFSX_puts(PHYSFS_file *file, char *s)
 {
-	return PHYSFS_write(file, s, 1, strlen(s));
+	return PHYSFS_write(file, s, 1, (PHYSFS_uint32)strlen(s));
 }
 
 static inline int PHYSFSX_putc(PHYSFS_file *file, int c)
@@ -173,7 +173,7 @@ static inline int PHYSFSX_putc(PHYSFS_file *file, int c)
 		return (int)c;
 }
 
-static inline int PHYSFSX_printf(PHYSFS_file *file, char *format, ...)
+static inline PHYSFS_sint64 PHYSFSX_printf(PHYSFS_file *file, char *format, ...)
 {
 	char buffer[1024];
 	va_list args;
