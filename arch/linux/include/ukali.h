@@ -8,6 +8,8 @@
 #ifndef __UKALI_H__
 #define __UKALI_H__
 
+#include "vers_id.h"
+
 // 4213 is the port that KaliNix is listening on
 //
 //		char code; // 1 == open, 2 == close, 3 == data, 5 == GetMyAddr
@@ -53,7 +55,7 @@ typedef struct kaliaddr_ipx_tag {
 // Process name that shows up in /whois and /games list.
 // Maximum of 8 characters.
 //edited on 10/04/98 by Matt Mueller to show correct ver in kali
-#define KALI_PROCESS_NAME "D2X" VERSION
+#define KALI_PROCESS_NAME DESCENT_VERSION
 //end edit -MM
 #define MAX_PACKET_SIZE 1500
 
