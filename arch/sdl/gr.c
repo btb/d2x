@@ -203,7 +203,6 @@ int gr_set_mode(u_int32_t mode)
 //end edit -MM
         if (screen == NULL) {
            Error("Could not set %dx%dx8 video mode\n",w,h);
-           exit(1);
         }
 	memset( grd_curscreen, 0, sizeof(grs_screen));
 	grd_curscreen->sc_mode = mode;
