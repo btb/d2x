@@ -1,5 +1,5 @@
 noinst_LIBRARIES = libmisc.a
-INCLUDES = -I $(top_srcdir)/include -I $(top_srcdir)/main
+AM_CPPFLAGS = -I $(top_srcdir)/include -I $(top_srcdir)/main
 
 if USE_LIBPNG
 PNG_SRCS = pngfile.c

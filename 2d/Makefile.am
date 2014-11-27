@@ -1,5 +1,5 @@
 noinst_LIBRARIES = lib2d.a
-INCLUDES = -I $(top_srcdir)/include
+AM_CPPFLAGS = -I $(top_srcdir)/include
 
 if USE_ASM
 ASM_SRCS =
@@ -19,7 +19,7 @@ bitblt.c   canvas.c  font.c    line.c	  pixel.c  rle.c \
 bitmap.c   circle.c  gpixel.c  palette.c  poly.c
 
 SUFFIXES = .asm
-%.o: %.asm
+.asm.o:
 	$(NASM) -dTRANSPARENCY_COLOR=${TRANSPARENCY_COLOR} $(NASMFLAGS) $< -o $@
 
 if USE_ASM

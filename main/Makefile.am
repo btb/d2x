@@ -6,7 +6,7 @@ EXTRA_SUBDIRS = old
 
 noinst_LIBRARIES = libmain.a
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/arch/include
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/arch/include
 
 if USE_NETWORK
 NETWORK_SRCS = kmatrix.c multi.c multibot.c network.c netmisc.c

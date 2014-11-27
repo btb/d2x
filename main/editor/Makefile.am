@@ -1,5 +1,5 @@
 noinst_LIBRARIES = libeditor.a
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/arch/include -I$(top_srcdir)/main
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/arch/include -I$(top_srcdir)/main
 
 libeditor_a_SOURCES = \
 autosave.c  centers.c   curves.c    eglobal.c   ehostage.c  \

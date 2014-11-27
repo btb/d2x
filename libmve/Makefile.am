@@ -7,7 +7,7 @@ mveplayer_MANS = mveplayer.1
 
 noinst_LIBRARIES = libmve.a
 
-INCLUDES = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include
 
 libmve_a_SOURCES = decoder16.c decoder8.c mve_audio.c mvelib.c mveplay.c
 

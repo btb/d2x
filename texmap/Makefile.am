@@ -1,5 +1,5 @@
 noinst_LIBRARIES = libtexmap.a
-INCLUDES = -I $(top_srcdir)/include -DFL1_WITH_FLAT
+AM_CPPFLAGS = -I $(top_srcdir)/include -DFL1_WITH_FLAT
 
 if !USE_OPENGL
 NOGL_SRCS = tmapflat.c
