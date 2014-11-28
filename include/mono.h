@@ -27,7 +27,7 @@ static inline void _do_mprintf(int n, char *fmt, ...)
 	vsprintf (buffer, fmt, arglist);
 	va_end (arglist);
 	
-	con_printf (CON_DEBUG, buffer);
+	con_printf (n?CON_VERBOSE:CON_DEBUG, buffer);
 }
 
 #define mprintf(args) _do_mprintf args
