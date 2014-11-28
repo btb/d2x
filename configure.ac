@@ -158,12 +158,12 @@ fi
 
 dnl Build with CONSOLE?
 AC_ARG_ENABLE(console,
-    [  --enable-console        Enable console (experimental) ],,)
-if test x$enable_console = xyes; then
+    [  --disable-console        Disable graphical console ],,)
+if test x$enable_console != xno; then
     AC_DEFINE(CONSOLE,,[Define to enable console])
     D2X_SUBDIRS="console ${D2X_SUBDIRS}"
 fi
-AM_CONDITIONAL(CONSOLE, test x$enable_console = xyes)
+AM_CONDITIONAL(CONSOLE, test x$enable_console != xno)
 
 AC_ARG_WITH(sharepath,
     [[  --with-sharepath=DIR    Use DIR for shared game data (unix only) [DATADIR/games/d2x]]],
