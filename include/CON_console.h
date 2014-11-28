@@ -45,7 +45,7 @@ Have Fun!
 //! Defines the default hide key (Hide() the console if pressed)
 #define CON_DEFAULT_HIDEKEY	KEY_ESC
 //! Defines the opening/closing speed
-#define CON_OPENCLOSE_SPEED 25
+#define CON_OPENCLOSE_SPEED 50
 
 #ifdef __cplusplus
 extern "C" {

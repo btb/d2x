@@ -154,7 +154,7 @@ int CON_Events(int event)
 				Topmost->CommandScrollBack = -1;
 			}
 			break;
-		case KEY_ESC:
+		case KEY_LAPOSTRO:
 			//deactivate Console
 			CON_Hide(Topmost);
 			return 0;
