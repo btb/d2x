@@ -40,52 +40,32 @@ void _Assert(int expr,char *expr_text,char *filename,int linenum);	//assert func
 void Error(char *fmt,...) __noreturn __format;				//exit with error code=1, print message
 void Assert(int expr);
 void Int3();
+
 #ifndef NDEBUG		//macros for debugging
 
-#ifdef NO_ASM
-# if defined(__APPLE__) || defined(macintosh)
-extern void Debugger(void);	// Avoids some name clashes
-#  define Int3 Debugger
-# else
-//# define Int3() Error("int 3 %s:%i\n",__FILE__,__LINE__);
-//# define Int3() {volatile int a=0,b=1/a;}
-#  define Int3() ((void)0)
-# endif // Macintosh
+#if defined(__GNUC__) && (defined(__i386__) || defined(__amd64__))
 
-#else // NO_ASM
-
-#ifdef __GNUC__
-#ifdef SDL_INPUT
-#include <SDL.h>
-#endif
-#include "args.h"
-static inline void _Int3()
-{
-	if (FindArg("-debug")) {
-#ifdef SDL_INPUT
-		SDL_WM_GrabInput(SDL_GRAB_OFF);
-#endif
-		asm("int $3");
-	}
-}
-#define Int3() _Int3()
+#define Int3() asm volatile ("int $3")
 
 #elif defined __WATCOMC__
+
 void Int3(void);								      //generate int3
 #pragma aux Int3 = "int 3h";
 
 #elif defined _MSC_VER
-static __inline void _Int3()
-{
-	__asm { int 3 }
-}
-#define Int3() _Int3()
+
+#define Int3() __asm { int 3 }
+
+#elif defined(__APPLE__) || defined(macintosh)
+
+extern void Debugger(void);	// Avoids some name clashes
+#define Int3 Debugger
 
 #else
-#error Unknown Compiler!
-#endif
 
-#endif // NO_ASM
+#error Unknown Compiler!
+
+#endif
 
 #define Assert(expr) ((expr)?(void)0:(void)_Assert(0,#expr,__FILE__,__LINE__))
 
