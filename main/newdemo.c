@@ -933,7 +933,7 @@ void newdemo_record_start_frame(int frame_number, fix frame_time )
 
 void newdemo_record_render_object(object * obj)
 {
-	if (ViewWasRecorded[obj-Objects])
+	if (ViewWasRecorded[OBJECT_NUMBER(obj)])
 		return;
 
 	//if (obj==&Objects[Players[Player_num].objnum] && !Player_is_dead)
@@ -950,14 +950,14 @@ extern ubyte RenderingType;
 void newdemo_record_viewer_object(object * obj)
 {
 
-	if (ViewWasRecorded[obj-Objects] && (ViewWasRecorded[obj-Objects]-1)==RenderingType)
+	if (ViewWasRecorded[OBJECT_NUMBER(obj)] && (ViewWasRecorded[OBJECT_NUMBER(obj)] - 1) == RenderingType)
 		return;
-	//if (WasRecorded[obj-Objects])
+	//if (WasRecorded[OBJECT_NUMBER(obj)])
 	//	return;
 	if (RenderingWasRecorded[RenderingType])
 		return;
 
-	ViewWasRecorded[obj-Objects]=RenderingType+1;
+	ViewWasRecorded[OBJECT_NUMBER(obj)] = RenderingType + 1;
 	RenderingWasRecorded[RenderingType]=1;
 	stop_time();
 	nd_write_byte(ND_EVENT_VIEWER_OBJECT);
@@ -1664,7 +1664,7 @@ int newdemo_read_frame_information()
 
 					if (segnum > Highest_segment_index)
 						segnum = 0;
-					obj_link(Viewer-Objects,segnum);
+					obj_link(OBJECT_NUMBER(Viewer), segnum);
 				}
 			}
 			break;
@@ -1686,7 +1686,7 @@ int newdemo_read_frame_information()
 				if (segnum > Highest_segment_index)
 					break;
 
-				obj_link(obj-Objects,segnum);
+				obj_link(OBJECT_NUMBER(obj), segnum);
 #ifdef NETWORK
 				if ((obj->type == OBJ_PLAYER) && (Newdemo_game_mode & GM_MULTI)) {
 					int player;
@@ -1837,7 +1837,7 @@ int newdemo_read_frame_information()
 				if (Newdemo_vcr_state != ND_STATE_PAUSED) {
 					segnum = obj->segnum;
 					obj->next = obj->prev = obj->segnum = -1;
-					obj_link(obj-Objects,segnum);
+					obj_link(OBJECT_NUMBER(obj), segnum);
 				}
 			}
 			break;

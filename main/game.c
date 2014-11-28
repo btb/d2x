@@ -910,7 +910,7 @@ void move_player_2_segment(segment *seg,int side)
 	vm_vec_sub2(&vp,&ConsoleObject->pos);
 	vm_vector_2_matrix(&ConsoleObject->orient,&vp,NULL,NULL);
 
-	obj_relink( ConsoleObject-Objects, SEG_PTR_2_NUM(seg) );
+	obj_relink( OBJECT_NUMBER(ConsoleObject), SEG_PTR_2_NUM(seg) );
 
 }
 
@@ -1781,7 +1781,7 @@ void game_setup(void)
 
 	#ifdef EDITOR
 		if (Segments[ConsoleObject->segnum].segnum == -1)      //segment no longer exists
-			obj_relink( ConsoleObject-Objects, SEG_PTR_2_NUM(Cursegp) );
+			obj_relink( OBJECT_NUMBER(ConsoleObject), SEG_PTR_2_NUM(Cursegp) );
 
 		if (!check_obj_seg(ConsoleObject))
 			move_player_2_segment(Cursegp,Curside);

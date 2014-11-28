@@ -85,7 +85,7 @@ int get_first_object(segment *seg)
 
 	id = seg->objects;
 
-	if (id == (ConsoleObject-Objects))
+	if (id == OBJECT_NUMBER(ConsoleObject))
 		id = Objects[id].next;
 
 	return id;
@@ -97,7 +97,7 @@ int get_next_object(segment *seg,int id)
 	if (id==-1 || (id=Objects[id].next)==-1)
 		return get_first_object(seg);
 
-	if (id == (ConsoleObject-Objects))
+	if (id == OBJECT_NUMBER(ConsoleObject))
 		return get_next_object(seg,id);
 
 	return id;
@@ -184,9 +184,9 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 				hide_segment = -1;
 			//	robots which lunge forward to attack cannot have behavior type still.
 			if (Robot_info[obj->id].attack_type)
-				init_ai_object(obj-Objects, AIB_NORMAL, hide_segment);
+				init_ai_object(OBJECT_NUMBER(obj), AIB_NORMAL, hide_segment);
 			else
-				init_ai_object(obj-Objects, AIB_STILL, hide_segment);
+				init_ai_object(OBJECT_NUMBER(obj), AIB_STILL, hide_segment);
 			}
 			break;
 
@@ -416,7 +416,7 @@ int ObjectSelectNextInMine()
 		Cur_object_index++;
 		if (Cur_object_index>= MAX_OBJECTS ) Cur_object_index= 0;
 
-		if ((Objects[Cur_object_index ].type != OBJ_NONE) && (Cur_object_index != (ConsoleObject-Objects)) )	{
+		if ( (Objects[Cur_object_index ].type != OBJ_NONE) && (Cur_object_index != OBJECT_NUMBER(ConsoleObject)) )	{
 			Cursegp = &Segments[Objects[Cur_object_index ].segnum];
 			med_create_new_segment_from_cursegp();
 			//Cur_object_seg = Cursegp;
@@ -438,7 +438,7 @@ int ObjectSelectPrevInMine()
 		if (Cur_object_index < 0 )
 			Cur_object_index = MAX_OBJECTS-1;
 
-		if ((Objects[Cur_object_index ].type != OBJ_NONE) && (Cur_object_index != (ConsoleObject-Objects)) )	{
+		if ( (Objects[Cur_object_index ].type != OBJ_NONE) && (Cur_object_index != OBJECT_NUMBER(ConsoleObject)) )	{
 			Cursegp = &Segments[Objects[Cur_object_index ].segnum];
 			med_create_new_segment_from_cursegp();
 			//Cur_object_seg = Cursegp;
@@ -505,7 +505,7 @@ int move_object_within_mine(object * obj, vms_vector *newpos )
 
 			if (fate != HIT_WALL) {
 				if ( segnum != obj->segnum )
-					obj_relink( obj-Objects, segnum);
+					obj_relink( OBJECT_NUMBER(obj), segnum );
 				obj->pos = *newpos;
 				return 0;
 			} //else
@@ -969,7 +969,7 @@ void move_object_to_position(int objnum, vms_vector *newpos)
 				objp->pos = hit_info.hit_pnt;
 				new_segnum = find_object_seg(objp);
 				Assert(new_segnum != -1);
-				obj_relink(objp-Objects, new_segnum);
+				obj_relink(OBJECT_NUMBER(objp), new_segnum);
 				//mprintf((0, "Object moved from segment %i to %i\n", old_segnum, objp->segnum));
 			} else {
 				editor_status("Attempted to move object out of mine.  Object not moved.");

@@ -767,7 +767,7 @@ void say_escort_goal(int goal_num)
 void escort_create_path_to_goal(object *objp)
 {
 	int	goal_seg = -1;
-	int			objnum = objp-Objects;
+	int         objnum = OBJECT_NUMBER(objp);
 	ai_static	*aip = &objp->ctype.ai_info;
 	ai_local		*ailp = &Ai_local_info[objnum];
 
@@ -957,7 +957,7 @@ void bash_buddy_weapon_info(int weapon_objnum)
 {
 	object	*objp = &Objects[weapon_objnum];
 
-	objp->ctype.laser_info.parent_num = ConsoleObject-Objects;
+	objp->ctype.laser_info.parent_num = OBJECT_NUMBER(ConsoleObject);
 	objp->ctype.laser_info.parent_type = OBJ_PLAYER;
 	objp->ctype.laser_info.parent_signature = ConsoleObject->signature;
 }
@@ -1066,11 +1066,11 @@ void do_buddy_dude_stuff(void)
 //	Called every frame (or something).
 void do_escort_frame(object *objp, fix dist_to_player, int player_visibility)
 {
-	int			objnum = objp-Objects;
+	int         objnum = OBJECT_NUMBER(objp);
 	ai_static	*aip = &objp->ctype.ai_info;
 	ai_local		*ailp = &Ai_local_info[objnum];
 
-	Buddy_objnum = objp-Objects;
+	Buddy_objnum = OBJECT_NUMBER(objp);
 
 	if (player_visibility) {
 		Buddy_last_seen_player = GameTime;
@@ -1188,7 +1188,7 @@ void invalidate_escort_goal(void)
 //	-------------------------------------------------------------------------------------------------
 void do_snipe_frame(object *objp, fix dist_to_player, int player_visibility, vms_vector *vec_to_player)
 {
-	int			objnum = objp-Objects;
+	int         objnum = OBJECT_NUMBER(objp);
 	ai_local		*ailp = &Ai_local_info[objnum];
 	fix			connected_distance;
 
@@ -1312,7 +1312,7 @@ void recreate_thief(object *objp)
 	compute_segment_center(&center_point, &Segments[segnum]);
 
 	new_obj = create_morph_robot( &Segments[segnum], &center_point, objp->id);
-	init_ai_object(new_obj-Objects, AIB_SNIPE, -1);
+	init_ai_object(OBJECT_NUMBER(new_obj), AIB_SNIPE, -1);
 	Re_init_thief_time = GameTime + F1_0*10;		//	In 10 seconds, re-initialize thief.
 }
 
@@ -1324,7 +1324,7 @@ fix	Thief_wait_times[NDL] = {F1_0*30, F1_0*25, F1_0*20, F1_0*15, F1_0*10};
 //	-------------------------------------------------------------------------------------------------
 void do_thief_frame(object *objp, fix dist_to_player, int player_visibility, vms_vector *vec_to_player)
 {
-	int			objnum = objp-Objects;
+	int         objnum = OBJECT_NUMBER(objp);
 	ai_local		*ailp = &Ai_local_info[objnum];
 	fix			connected_distance;
 
@@ -1423,8 +1423,8 @@ void do_thief_frame(object *objp, fix dist_to_player, int player_visibility, vms
 				if (d_rand() > 8192) {
 					// --- mprintf((0, "RETREAT!!\n"));
 					create_n_segment_path(objp, 10, ConsoleObject->segnum);
-					Ai_local_info[objp-Objects].next_action_time = Thief_wait_times[Difficulty_level]/2;
-					Ai_local_info[objp-Objects].mode = AIM_THIEF_RETREAT;
+					Ai_local_info[OBJECT_NUMBER(objp)].next_action_time = Thief_wait_times[Difficulty_level]/2;
+					Ai_local_info[OBJECT_NUMBER(objp)].mode = AIM_THIEF_RETREAT;
 				}
 			} else if (ailp->next_action_time < 0) {
 				//	This forces him to create a new path every second.
@@ -1440,8 +1440,8 @@ void do_thief_frame(object *objp, fix dist_to_player, int player_visibility, vms
 						fix	dot = vm_vec_dot(vec_to_player, &ConsoleObject->orient.fvec);
 						if (dot < -F1_0/2) {	//	Looking at least towards thief, so thief will run!
 							create_n_segment_path(objp, 10, ConsoleObject->segnum);
-							Ai_local_info[objp-Objects].next_action_time = Thief_wait_times[Difficulty_level]/2;
-							Ai_local_info[objp-Objects].mode = AIM_THIEF_RETREAT;
+							Ai_local_info[OBJECT_NUMBER(objp)].next_action_time = Thief_wait_times[Difficulty_level]/2;
+							Ai_local_info[OBJECT_NUMBER(objp)].mode = AIM_THIEF_RETREAT;
 						}
 					} 
 					ai_turn_towards_vector(vec_to_player, objp, F1_0/4);
@@ -1592,7 +1592,7 @@ int attempt_to_steal_item_3(object *objp, int player_num)
 {
 	int	i;
 
-	if (Ai_local_info[objp-Objects].mode != AIM_THIEF_ATTACK)
+	if (Ai_local_info[OBJECT_NUMBER(objp)].mode != AIM_THIEF_ATTACK)
 		return 0;
 
 	//	First, try to steal equipped items.
@@ -1682,8 +1682,8 @@ int attempt_to_steal_item(object *objp, int player_num)
 	// -- mprintf((0, "%i items were stolen!\n", rval));
 
 	create_n_segment_path(objp, 10, ConsoleObject->segnum);
-	Ai_local_info[objp-Objects].next_action_time = Thief_wait_times[Difficulty_level]/2;
-	Ai_local_info[objp-Objects].mode = AIM_THIEF_RETREAT;
+	Ai_local_info[OBJECT_NUMBER(objp)].next_action_time = Thief_wait_times[Difficulty_level]/2;
+	Ai_local_info[OBJECT_NUMBER(objp)].mode = AIM_THIEF_RETREAT;
 	if (rval) {
 		PALETTE_FLASH_ADD(30, 15, -20);
 		update_laser_weapon_info();

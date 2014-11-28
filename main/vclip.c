@@ -71,7 +71,7 @@ void draw_weapon_vclip(object *obj)
 	int	vclip_num;
 	fix	modtime,play_time;
 
-	//mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", obj-Objects, Weapon_info[obj->id].weapon_vclip, obj->size );
+	//mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", OBJECT_NUMBER(obj), Weapon_info[obj->id].weapon_vclip, obj->size );
 
 	Assert(obj->type == OBJ_WEAPON);
 
@@ -89,7 +89,7 @@ void draw_weapon_vclip(object *obj)
 		modtime = d_rand();
 
 	if (obj->id == PROXIMITY_ID) {		//make prox bombs spin out of sync
-		int objnum = obj-Objects;
+		int objnum = OBJECT_NUMBER(obj);
 
 		modtime += (modtime * (objnum&7)) / 16;	//add variance to spin rate
 

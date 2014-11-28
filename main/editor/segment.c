@@ -1266,7 +1266,7 @@ int med_delete_segment(segment *sp)
 			//if an object is in the seg, delete it
 			//if the object is the player, move to new curseg
 
-			if (objnum == (ConsoleObject-Objects))	{
+			if (objnum == OBJECT_NUMBER(ConsoleObject))	{
 				compute_segment_center(&ConsoleObject->pos,Cursegp);
 				obj_relink(objnum,Cursegp-Segments);
 			} else

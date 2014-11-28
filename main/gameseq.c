@@ -660,7 +660,7 @@ void create_player_appearance_effect(object *player_obj)
 
 #ifndef NDEBUG
 	{
-		int objnum = player_obj-Objects;
+		int objnum = OBJECT_NUMBER(player_obj);
 		if ( (objnum < 0) || (objnum > Highest_object_index) )
 			Int3(); // See Rob, trying to track down weird network bug
 	}
@@ -677,7 +677,7 @@ void create_player_appearance_effect(object *player_obj)
 		effect_obj->orient = player_obj->orient;
 
 		if ( Vclip[VCLIP_PLAYER_APPEARANCE].sound_num > -1 )
-			digi_link_sound_to_object( Vclip[VCLIP_PLAYER_APPEARANCE].sound_num, effect_obj-Objects, 0, F1_0);
+			digi_link_sound_to_object( Vclip[VCLIP_PLAYER_APPEARANCE].sound_num, OBJECT_NUMBER(effect_obj), 0, F1_0 );
 	}
 }
 
@@ -2111,7 +2111,7 @@ void InitPlayerPosition(int random_flag)
 
 	// -- mprintf((0, "Re-starting in location %d of %d.\n", NewPlayer+1, NumNetPlayerPositions));
 
- 	obj_relink(ConsoleObject-Objects,Player_init[NewPlayer].segnum);
+	obj_relink(OBJECT_NUMBER(ConsoleObject), Player_init[NewPlayer].segnum);
 
 #ifdef NETWORK
 done:

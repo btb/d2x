@@ -115,7 +115,7 @@ int SaveGameData()
 			if (get_seg_masks(&Perm_player_position, Perm_player_segnum, 0, __FILE__, __LINE__).centermask == 0)
 			{
 				ConsoleObject->pos = Perm_player_position;
-				obj_relink(ConsoleObject-Objects,Perm_player_segnum);
+				obj_relink(OBJECT_NUMBER(ConsoleObject), Perm_player_segnum);
 				ConsoleObject->orient = Perm_player_orient;
 			}
 			else
@@ -135,7 +135,7 @@ int SaveGameData()
 				found_save_segnum = save_segnum;
 			}
 
-			obj_relink(ConsoleObject-Objects,found_save_segnum);
+			obj_relink(OBJECT_NUMBER(ConsoleObject), found_save_segnum);
 			ConsoleObject->orient = save_orient;
 		}
 		if (saved_flag)

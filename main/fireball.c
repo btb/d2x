@@ -298,7 +298,7 @@ object *explode_badass_weapon(object *obj,vms_vector *pos)
 	if ((obj->id == EARTHSHAKER_ID) || (obj->id == ROBOT_EARTHSHAKER_ID))
 		smega_rock_stuff();
 
-	digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, obj-Objects, 0, F1_0);
+	digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, OBJECT_NUMBER(obj), 0, F1_0);
 
 	return object_create_badass_explosion(obj, obj->segnum, pos,
 	                                      wi->impact_size,
@@ -317,9 +317,9 @@ object *explode_badass_object(object *objp, fix damage, fix distance, fix force)
 	rval = object_create_badass_explosion(objp, objp->segnum, &objp->pos, objp->size,
 					get_explosion_vclip(objp, 0),
 					damage, distance, force,
-					objp-Objects);
+					OBJECT_NUMBER(objp));
 	if (rval)
-		digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, rval-Objects, 0, F1_0);
+		digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, OBJECT_NUMBER(rval), 0, F1_0);
 
 	return (rval);
 
@@ -391,7 +391,7 @@ object *object_create_debris(object *parent, int subobj_num)
 
 void draw_fireball(object *obj)
 {
-	//mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", obj-Objects, obj->id, obj->size );
+	//mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", OBJECT_NUMBER(obj), obj->id, obj->size );
 
 	if ( obj->lifeleft > 0 )
 		draw_vclip_object(obj,obj->lifeleft,0, obj->id);
@@ -767,7 +767,7 @@ void maybe_replace_powerup_with_energy(object *del_obj)
 	//	If this robot was gated in by the boss and it now contains energy, make it contain nothing,
 	//	else the room gets full of energy.
 	if ( (del_obj->matcen_creator == BOSS_GATE_MATCEN_NUM) && (del_obj->contains_id == POW_ENERGY) && (del_obj->contains_type == OBJ_POWERUP) ) {
-		mprintf((0, "Converting energy powerup to nothing because robot %i gated in by boss.\n", del_obj-Objects));
+		mprintf((0, "Converting energy powerup to nothing because robot %i gated in by boss.\n", OBJECT_NUMBER(del_obj)));
 		del_obj->contains_count = 0;
 	}
 
@@ -946,8 +946,8 @@ int drop_powerup(int type, int id, int num, vms_vector *init_vel, vms_vector *po
 				obj->shields = Robot_info[obj->id].strength;
 
 				obj->ctype.ai_info.behavior = AIB_NORMAL;
-				Ai_local_info[obj-Objects].player_awareness_type = PA_WEAPON_ROBOT_COLLISION;
-				Ai_local_info[obj-Objects].player_awareness_time = F1_0*3;
+				Ai_local_info[OBJECT_NUMBER(obj)].player_awareness_type = PA_WEAPON_ROBOT_COLLISION;
+				Ai_local_info[OBJECT_NUMBER(obj)].player_awareness_time = F1_0*3;
 				obj->ctype.ai_info.CURRENT_STATE = AIS_LOCK;
 				obj->ctype.ai_info.GOAL_STATE = AIS_LOCK;
 				obj->ctype.ai_info.REMOTE_OWNER = -1;
@@ -1127,7 +1127,7 @@ void explode_object(object *hitobj,fix delay_time)
 		//now set explosion-specific data
 	
 		obj->lifeleft = delay_time;
-		obj->ctype.expl_info.delete_objnum = hitobj-Objects;
+		obj->ctype.expl_info.delete_objnum = OBJECT_NUMBER(hitobj);
 #ifndef NDEBUG
 		if (obj->ctype.expl_info.delete_objnum < 0)
 		 Int3(); // See Rob!
@@ -1187,7 +1187,7 @@ void do_explosion_sequence(object *obj)
 {
 	Assert(obj->control_type == CT_EXPLOSION);
 
-	//mprintf( 0, "Object %d life left is %d\n", obj-Objects, obj->lifeleft );
+	//mprintf( 0, "Object %d life left is %d\n", OBJECT_NUMBER(obj), obj->lifeleft );
 
 	//See if we should die of old age
 	if (obj->lifeleft <= 0 ) 	{	// We died of old age
@@ -1254,7 +1254,7 @@ void do_explosion_sequence(object *obj)
 
 		// mprintf( 0, "Spawned an explosion of type %d\n", Robot_info[del_obj->id].exp2_vclip_num );
 
-		//mprintf( 0, "Object %d spawned.\n", obj-Objects );
+		//mprintf( 0, "Object %d spawned.\n", OBJECT_NUMBER(obj) );
 		//mprintf( 0, "Explosion at %d,%d,%d\n", obj->pos.x, obj->pos.y, obj->pos.z );
 		//mprintf( 0, "Explosion at %d,%d,%d\n", obj->pos.x, obj->pos.y, obj->pos.z );
 		//mprintf( 0, "Spawned exp at %d,%d,%d\n", expl_obj->pos.x, expl_obj->pos.y, expl_obj->pos.z );
@@ -1274,7 +1274,7 @@ void do_explosion_sequence(object *obj)
 			}
 
 			expl_obj->ctype.expl_info.delete_time = expl_obj->lifeleft/2;
-			expl_obj->ctype.expl_info.delete_objnum = del_obj-Objects;
+			expl_obj->ctype.expl_info.delete_objnum = OBJECT_NUMBER(del_obj);
 #ifndef NDEBUG
 			if (obj->ctype.expl_info.delete_objnum < 0)
 		  		Int3(); // See Rob!

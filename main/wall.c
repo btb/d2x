@@ -1389,7 +1389,7 @@ void add_stuck_object(object *objp, int segnum, int sidenum)
 		for (i=0; i<MAX_STUCK_OBJECTS; i++) {
 			if (Stuck_objects[i].wallnum == -1) {
 				Stuck_objects[i].wallnum = wallnum;
-				Stuck_objects[i].objnum = objp-Objects;
+				Stuck_objects[i].objnum = OBJECT_NUMBER(objp);
 				Stuck_objects[i].signature = objp->signature;
 				// mprintf((0, "Added wall %i at index %i\n", wallnum, i));
 				Num_stuck_objects++;
@@ -1397,7 +1397,7 @@ void add_stuck_object(object *objp, int segnum, int sidenum)
 			}
 		}
 		if (i == MAX_STUCK_OBJECTS)
-			mprintf((1, "Warning: Unable to add object %i which got stuck in wall %i to Stuck_objects\n", objp-Objects, wallnum));
+			mprintf((1, "Warning: Unable to add object %i which got stuck in wall %i to Stuck_objects\n", OBJECT_NUMBER(objp), wallnum));
 	}
 
 
@@ -1470,7 +1470,7 @@ void kill_stuck_objects(int wallnum)
 // -- unused -- 		if ((objp->type == OBJ_WEAPON) && (objp->id == FLARE_ID)) {
 // -- unused -- 			if (Walls[Stuck_objects[i].wallnum].segnum == segp-Segments)
 // -- unused -- 				if (Walls[Stuck_objects[i].wallnum].sidenum == sidenum)
-// -- unused -- 					return objp-Objects;
+// -- unused -- 					return OBJECT_NUMBER(objp);
 // -- unused -- 		}
 // -- unused -- 	}
 // -- unused --

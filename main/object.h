@@ -293,6 +293,7 @@ extern ubyte CollisionResult[MAX_OBJECT_TYPES][MAX_OBJECT_TYPES];
 
 extern object Objects[];
 extern int Highest_object_index;    // highest objnum
+#define OBJECT_NUMBER(obj) ((int)((obj) - Objects))
 
 extern char *robot_names[];         // name of each robot
 

@@ -109,7 +109,7 @@ void Laser_render(object *obj)
 	switch( Weapon_info[obj->id].render_type )	{
 	case WEAPON_RENDER_LASER:
 		Int3();	// Not supported anymore!
-					//Laser_draw_one(obj-Objects, Weapon_info[obj->id].bitmap );
+		//Laser_draw_one( OBJECT_NUMBER(obj), Weapon_info[obj->id].bitmap );
 		break;
 	case WEAPON_RENDER_BLOB:
 		draw_object_blob(obj, Weapon_info[obj->id].bitmap  );
@@ -454,7 +454,7 @@ void create_omega_blobs(int firing_segnum, vms_vector *firing_pos, vms_vector *g
 	
 			objp->ctype.laser_info.parent_type			= parent_objp->type;
 			objp->ctype.laser_info.parent_signature	= parent_objp->signature;
-			objp->ctype.laser_info.parent_num			= parent_objp-Objects;
+			objp->ctype.laser_info.parent_num       = OBJECT_NUMBER(parent_objp);
 			objp->movement_type = MT_NONE;	//	Only last one moves, that will get bashed below.
 
 		}
@@ -540,7 +540,7 @@ void do_omega_stuff(object *parent_objp, vms_vector *firing_pos, object *weapon_
 	if (pnum == Player_num) {
 		//	If charge >= min, or (some charge and zero energy), allow to fire.
 		if (!((Omega_charge >= MIN_OMEGA_CHARGE) || (Omega_charge && !Players[pnum].energy))) {
-			obj_delete(weapon_objp-Objects);
+			obj_delete(OBJECT_NUMBER(weapon_objp));
 			return;
 		}
 
@@ -574,7 +574,7 @@ void do_omega_stuff(object *parent_objp, vms_vector *firing_pos, object *weapon_
 	// -- }
 
 	//	Delete the original object.  Its only purpose in life was to determine which object to home in on.
-	obj_delete(weapon_objp-Objects);
+	obj_delete(OBJECT_NUMBER(weapon_objp));
 
 	//	If couldn't lock on anything, fire straight ahead.
 	if (lock_objnum == -1) {
@@ -595,7 +595,7 @@ void do_omega_stuff(object *parent_objp, vms_vector *firing_pos, object *weapon_
 		fq.p0						= firing_pos;
 		fq.p1						= &goal_pos;
 		fq.rad					= 0;
-		fq.thisobjnum			= parent_objp-Objects;
+		fq.thisobjnum       = OBJECT_NUMBER(parent_objp);
 		fq.ignore_obj_list	= NULL;
 		fq.flags					= FQ_IGNORE_POWERUPS | FQ_TRANSPOINT | FQ_CHECK_OBJS;		//what about trans walls???
 
@@ -741,7 +741,7 @@ int Laser_create_new( vms_vector * direction, vms_vector * position, int segnum,
 	volume = F1_0;
 	if (Weapon_info[obj->id].flash_sound > -1 )	{
 		if (make_sound)	{
-			if ( parent == (Viewer-Objects) )	{
+			if ( parent == OBJECT_NUMBER(Viewer) )	{
 				if (weapon_type == VULCAN_ID)	// Make your own vulcan gun  1/2 as loud.
 					volume = F1_0 / 2;
 				digi_play_sample( Weapon_info[obj->id].flash_sound, volume );
@@ -765,7 +765,7 @@ int Laser_create_new( vms_vector * direction, vms_vector * position, int segnum,
 			// mprintf(0, "Warning: Laser tip not in same segment as player.\n");
 			if (end_segnum != -1) {
 				obj->pos = end_pos;
-				obj_relink(obj-Objects, end_segnum);
+				obj_relink(OBJECT_NUMBER(obj), end_segnum);
 			} else
 				mprintf((0, "Warning: Laser tip outside mine.  Laser not being moved to end of gun.\n"));
 		} else
@@ -833,7 +833,7 @@ int Laser_create_new_easy( vms_vector * direction, vms_vector * position, int pa
 	fq.startseg				= pobjp->segnum;
 	fq.p1						= position;
 	fq.rad					= 0;
-	fq.thisobjnum			= pobjp-Objects;
+	fq.thisobjnum       = OBJECT_NUMBER(pobjp);
 	fq.ignore_obj_list	= NULL;
 	fq.flags					= FQ_TRANSWALL | FQ_CHECK_OBJS;		//what about trans walls???
 
@@ -864,7 +864,7 @@ int object_to_object_visibility(object *obj1, object *obj2, int trans_type)
 	fq.startseg				= obj1->segnum;
 	fq.p1						= &obj2->pos;
 	fq.rad					= 0x10;
-	fq.thisobjnum			= obj1-Objects;
+	fq.thisobjnum       = OBJECT_NUMBER(obj1);
 	fq.ignore_obj_list	= NULL;
 	fq.flags					= trans_type;
 
@@ -990,7 +990,7 @@ int find_homing_object(vms_vector *curpos, object *tracker)
 		//	Not in network mode.  If not fired by player, then track player.
 		if (tracker->ctype.laser_info.parent_num != Players[Player_num].objnum) {
 			if (!(Players[Player_num].flags & PLAYER_FLAGS_CLOAKED))
-				best_objnum = ConsoleObject - Objects;
+				best_objnum = OBJECT_NUMBER(ConsoleObject);
 		} else {
 			int	window_num = -1;
 			fix	dist, max_trackable_dist;
@@ -1045,7 +1045,7 @@ int find_homing_object(vms_vector *curpos, object *tracker)
 					//	Note: This uses the constant, not-scaled-by-frametime value, because it is only used
 					//	to determine if an object is initially trackable.  find_homing_object is called on subsequent
 					//	frames to determine if the object remains trackable.
-					// mprintf((0, "find_homing_object:  [%3i] %7.3f, min = %7.3f\n", curobjp-Objects, f2fl(dot), f2fl(MIN_TRACKABLE_DOT)));
+					// mprintf((0, "find_homing_object:  [%3i] %7.3f, min = %7.3f\n", OBJECT_NUMBER(curobjp), f2fl(dot), f2fl(MIN_TRACKABLE_DOT)));
 					if (dot > cur_min_trackable_dot) {
 						if (dot > max_dot) {
 							if (object_to_object_visibility(tracker, &Objects[objnum], FQ_TRANSWALL)) {
@@ -1155,7 +1155,7 @@ int find_homing_object_complete(vms_vector *curpos, object *tracker, int track_o
 			//	Note: This uses the constant, not-scaled-by-frametime value, because it is only used
 			//	to determine if an object is initially trackable.  find_homing_object is called on subsequent
 			//	frames to determine if the object remains trackable.
-			// mprintf((0, "fho_complete:        [%3i] %7.3f, min = %7.3f\n", curobjp-Objects, f2fl(dot), f2fl(MIN_TRACKABLE_DOT)));
+			// mprintf((0, "fho_complete:        [%3i] %7.3f, min = %7.3f\n", OBJECT_NUMBER(curobjp), f2fl(dot), f2fl(MIN_TRACKABLE_DOT)));
 			if (dot > min_trackable_dot) {
 				// mprintf(0, "Object %i: dist = %7.3f, dot = %7.3f\n", objnum, f2fl(dist), f2fl(dot));
 				if (dot > max_dot) {
@@ -1181,10 +1181,10 @@ int find_homing_object_complete(vms_vector *curpos, object *tracker, int track_o
 int track_track_goal(int track_goal, object *tracker, fix *dot)
 {
 	//	Every 8 frames for each object, scan all objects.
-	if (object_is_trackable(track_goal, tracker, dot) && ((((tracker-Objects) ^ FrameCount) % 8) != 0)) {
+	if (object_is_trackable(track_goal, tracker, dot) && (((OBJECT_NUMBER(tracker) ^ FrameCount) % 8) != 0)) {
 		//mprintf((0, "ttg: QO"));
 		return track_goal;
-	} else if ((((tracker-Objects) ^ FrameCount) % 4) == 0) {
+	} else if (((OBJECT_NUMBER(tracker) ^ FrameCount) % 4) == 0) {
 		int	rval = -2;
 
 		//	If player fired missile, then search for an object, if not, then give up.
@@ -1233,7 +1233,7 @@ int track_track_goal(int track_goal, object *tracker, fix *dot)
 	}
 
 //if (track_goal != -1)
-// mprintf((0, "Object %i not tracking anything.\n", tracker-Objects));
+// mprintf((0, "Object %i not tracking anything.\n", OBJECT_NUMBER(tracker)));
 
 	return -1;
 }
@@ -1271,7 +1271,7 @@ void Laser_player_fire_spread_delay(object *obj, int laser_type, int gun_num, fi
 	fq.startseg				= obj->segnum;
 	fq.p1						= &LaserPos;
 	fq.rad					= 0x10;
-	fq.thisobjnum			= obj-Objects;
+	fq.thisobjnum       = OBJECT_NUMBER(obj);
 	fq.ignore_obj_list	= NULL;
 	fq.flags					= FQ_CHECK_OBJS | FQ_IGNORE_POWERUPS;
 
@@ -1311,7 +1311,7 @@ void Laser_player_fire_spread_delay(object *obj, int laser_type, int gun_num, fi
 		vm_vec_scale_add2(&LaserDir, &obj->orient.uvec, spreadu);
 	}
 
-	objnum = Laser_create_new( &LaserDir, &LaserPos, LaserSeg, obj-Objects, laser_type, make_sound );
+	objnum = Laser_create_new( &LaserDir, &LaserPos, LaserSeg, OBJECT_NUMBER(obj), laser_type, make_sound );
 
 	//	Omega cannon is a hack, not surprisingly.  Don't want to do the rest of this stuff.
 	if (laser_type == OMEGA_ID)
@@ -1498,7 +1498,7 @@ void Laser_do_weapon_sequence(object *obj)
 			(obj->id != FLARE_ID) &&
 			(Weapon_info[obj->id].speed[Difficulty_level] > 0) &&
 			(vm_vec_mag_quick(&obj->mtype.phys_info.velocity) < F2_0)) {
-		obj_delete(obj-Objects);
+		obj_delete(OBJECT_NUMBER(obj));
 		return;
 	}
 
@@ -1551,7 +1551,7 @@ void Laser_do_weapon_sequence(object *obj)
 
 			//	If it's time to do tracking, then it's time to grow up, stop bouncing and start exploding!.
 			if ((obj->id == ROBOT_SMART_MINE_HOMING_ID) || (obj->id == ROBOT_SMART_HOMING_ID) || (obj->id == SMART_MINE_HOMING_ID) || (obj->id == PLAYER_SMART_HOMING_ID) || (obj->id == EARTHSHAKER_MEGA_ID)) {
-				// if (obj->mtype.phys_info.flags & PF_BOUNCE) mprintf(0, "Debouncing smart child %i\n", obj-Objects);
+				// if (obj->mtype.phys_info.flags & PF_BOUNCE) mprintf(0, "Debouncing smart child %i\n", OBJECT_NUMBER(obj));
 				obj->mtype.phys_info.flags &= ~PF_BOUNCE;
 			}
 
@@ -1601,7 +1601,7 @@ void Laser_do_weapon_sequence(object *obj)
 				
 					lifelost = fixmul(absdot*32, FrameTime);
 					obj->lifeleft -= lifelost;
-					// -- mprintf((0, "Missile %3i, dot = %7.3f life lost = %7.3f, life left = %7.3f\n", obj-Objects, f2fl(dot), f2fl(lifelost), f2fl(obj->lifeleft)));
+					// -- mprintf((0, "Missile %3i, dot = %7.3f life lost = %7.3f, life left = %7.3f\n", OBJECT_NUMBER(obj), f2fl(dot), f2fl(lifelost), f2fl(obj->lifeleft)));
 				}
 
 				//	Only polygon objects have visible orientation, so only they should turn.
@@ -1862,7 +1862,7 @@ if (Zbonkers) {
 // -- {
 // -- 	if ((GameTime - Lightning_start_time < LIGHTNING_TIME) && (GameTime - Lightning_start_time > 0)) {
 // -- 		if (GameTime - Lightning_last_time > LIGHTNING_DELAY) {
-// -- 			create_lightning_blobs(&ConsoleObject->orient.fvec, &ConsoleObject->pos, ConsoleObject->segnum, ConsoleObject-Objects);
+// -- 			create_lightning_blobs(&ConsoleObject->orient.fvec, &ConsoleObject->pos, ConsoleObject->segnum, OBJECT_NUMBER(ConsoleObject));
 // -- 			Lightning_last_time = GameTime;
 // -- 		}
 // -- 	}
@@ -2068,7 +2068,7 @@ int create_homing_missile(object *objp, int goal_obj, int objtype, int make_soun
 	}		
 
 	//	Create a vector towards the goal, then add some noise to it.
-	objnum = Laser_create_new(&vector_to_goal, &objp->pos, objp->segnum, objp-Objects, objtype, make_sound);
+	objnum = Laser_create_new(&vector_to_goal, &objp->pos, objp->segnum, OBJECT_NUMBER(objp), objtype, make_sound);
 	if (objnum == -1)
 		return -1;
 
@@ -2100,7 +2100,7 @@ void create_smart_children(object *objp, int num_smart_children)
 		parent_num = objp->ctype.laser_info.parent_num;
 	} else if (objp->type == OBJ_ROBOT) {
 		parent_type = OBJ_ROBOT;
-		parent_num = objp-Objects;
+		parent_num = OBJECT_NUMBER(objp);
 	} else {
 		Int3();	//	Hey, what kind of object is this!?
 		parent_type = 0;

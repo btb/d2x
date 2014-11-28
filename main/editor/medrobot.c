@@ -93,7 +93,7 @@ void call_init_ai_object(object *objp, int behavior)
 	}
 
 	mprintf((0, "Initializing AI object with hide segment = %i\n", hide_segment));
-	init_ai_object(objp-Objects, behavior, hide_segment);
+	init_ai_object(OBJECT_NUMBER(objp), behavior, hide_segment);
 
 	if (behavior == AIB_STATION) {
 		int	cseg, mseg;

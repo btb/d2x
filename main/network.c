@@ -2757,7 +2757,7 @@ network_read_object_packet( ubyte *data )
 				obj->next = obj->prev = obj->segnum = -1;
 				obj->attached_obj = -1;
 				if (segnum > -1)
-					obj_link(obj-Objects,segnum);
+					obj_link(OBJECT_NUMBER(obj), segnum);
 				if (obj_owner == my_pnum) 
 					map_objnum_local_to_local(objnum);
 				else if (obj_owner != -1)
@@ -5081,7 +5081,7 @@ void network_do_frame(int force, int listen)
 				ubyte send_data[IPX_MAX_DATA_SIZE];
 				//int squished_size;
 #endif
-				create_shortpos(&ShortSyncPack.thepos, Objects+objnum, 0);
+				create_shortpos(&ShortSyncPack.thepos, &Objects[objnum], 0);
 				ShortSyncPack.type                                      = PID_PDATA;
 				ShortSyncPack.playernum                         = Player_num;
 				ShortSyncPack.obj_render_type           = Objects[objnum].render_type;

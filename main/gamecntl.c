@@ -1629,7 +1629,7 @@ void kill_and_so_forth(void)
 			for (j=0; j<Num_walls; j++) {
 				if (Walls[j].trigger == i) {
 					compute_segment_center(&ConsoleObject->pos, &Segments[Walls[j].segnum]);
-					obj_relink(ConsoleObject-Objects,Walls[j].segnum);
+					obj_relink(OBJECT_NUMBER(ConsoleObject), Walls[j].segnum);
 					goto kasf_done;
 				}
 			}
@@ -2369,7 +2369,7 @@ void speedtest_frame(void)
 	compute_segment_center(&Viewer->pos, &Segments[Speedtest_segnum]);
 	Viewer->pos.x += 0x10;		Viewer->pos.y -= 0x10;		Viewer->pos.z += 0x17;
 
-	obj_relink(Viewer-Objects, Speedtest_segnum);
+	obj_relink(OBJECT_NUMBER(Viewer), Speedtest_segnum);
 	compute_center_point_on_side(&center_point, &Segments[Speedtest_segnum], Speedtest_sidenum);
 	vm_vec_normalized_dir_quick(&view_dir, &center_point, &Viewer->pos);
 	vm_vector_2_matrix(&Viewer->orient, &view_dir, NULL, NULL);

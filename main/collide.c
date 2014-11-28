@@ -100,7 +100,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //	The only reason this routine is called (as of 10/12/94) is so Brain guys can open doors.
 void collide_robot_and_wall( object * robot, fix hitspeed, short hitseg, short hitwall, vms_vector * hitpt)
 {
-	ai_local		*ailp = &Ai_local_info[robot-Objects];
+	ai_local *ailp = &Ai_local_info[OBJECT_NUMBER(robot)];
 
 	if ((robot->id == ROBOT_BRAIN) || (robot->ctype.ai_info.behavior == AIB_RUN_FROM) || (Robot_info[robot->id].companion == 1) || (robot->ctype.ai_info.behavior == AIB_SNIPE)) {
 		int	wall_num = Segments[hitseg].sides[hitwall].wall_num;
@@ -166,7 +166,7 @@ void apply_force_damage(object *obj,fix force,object *other_obj)
 	if ((other_obj->type == OBJ_PLAYER) && Monster_mode)
 		damage = 0x7fffffff;
 
-//mprintf((0,"obj %d, damage=%x\n",obj-Objects,damage));
+//mprintf((0,"obj %d, damage=%x\n",OBJECT_NUMBER(obj),damage));
 
 	switch (obj->type) {
 
@@ -176,13 +176,13 @@ void apply_force_damage(object *obj,fix force,object *other_obj)
 				if (other_obj->type == OBJ_WEAPON)
 					result = apply_damage_to_robot(obj,damage/4, other_obj->ctype.laser_info.parent_num);
 				else
-					result = apply_damage_to_robot(obj,damage/4, other_obj-Objects);
+					result = apply_damage_to_robot(obj,damage/4, OBJECT_NUMBER(other_obj));
 			}
 			else {
 				if (other_obj->type == OBJ_WEAPON)
 					result = apply_damage_to_robot(obj,damage/2, other_obj->ctype.laser_info.parent_num);
 				else
-					result = apply_damage_to_robot(obj,damage/2, other_obj-Objects);
+					result = apply_damage_to_robot(obj,damage/2, OBJECT_NUMBER(other_obj));
 			}		
 
 			if (result && (other_obj->ctype.laser_info.parent_signature == ConsoleObject->signature))
@@ -210,7 +210,7 @@ void apply_force_damage(object *obj,fix force,object *other_obj)
 
 		case OBJ_CNTRLCEN:
 
-			apply_damage_to_controlcen(obj,damage, other_obj-Objects);
+			apply_damage_to_controlcen(obj, damage, OBJECT_NUMBER(other_obj));
 			break;
 
 		case OBJ_WEAPON:
@@ -852,7 +852,7 @@ void collide_weapon_and_wall( object * weapon, fix hitspeed, short hitseg, short
 
 			if ( Weapon_info[weapon->id].damage_radius ) {
 
-				digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, weapon-Objects, 0, F1_0);
+				digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, OBJECT_NUMBER(weapon), 0, F1_0);
 
 				//	MK: 09/13/95: Badass in water is 1/2 normal intensity.
 				object_create_badass_explosion( weapon, hitseg, hitpt, 
@@ -944,7 +944,7 @@ void collide_weapon_and_wall( object * weapon, fix hitspeed, short hitseg, short
 						break;
 				}
 			} // else
-				//mprintf((0, "Weapon %i hits wall, but has silent bit set.\n", weapon-Objects));
+				//mprintf((0, "Weapon %i hits wall, but has silent bit set.\n", OBJECT_NUMBER(weapon)));
 		} // else {
 			//	if (weapon->lifeleft <= 0)
 			//	weapon->flags |= OF_SHOULD_BE_DEAD;
@@ -1008,8 +1008,8 @@ void collide_debris_and_wall( object * debris, fix hitspeed, short hitseg, short
 //	-------------------------------------------------------------------------------------------------------------------
 void collide_robot_and_robot( object * robot1, object * robot2, vms_vector *collision_point ) { 
 //	mprintf((0, "Coll: [%2i %4i %4i %4i] [%2i %4i %4i %4i] at [%4i %4i %4i]", 
-//		robot1-Objects, f2i(robot1->pos.x), f2i(robot1->pos.y), f2i(robot1->pos.z),
-//		robot2-Objects, f2i(robot2->pos.x), f2i(robot2->pos.y), f2i(robot2->pos.z),
+//		OBJECT_NUMBER(robot1), f2i(robot1->pos.x), f2i(robot1->pos.y), f2i(robot1->pos.z),
+//		OBJECT_NUMBER(robot2), f2i(robot2->pos.x), f2i(robot2->pos.y), f2i(robot2->pos.z),
 //		f2i(collision_point->x), f2i(collision_point->y), f2i(collision_point->z)));
 
 	bump_two_objects(robot1, robot2, 1);
@@ -1053,13 +1053,13 @@ void collide_robot_and_player( object * robot, object * playerobj, vms_vector *c
 		if (Robot_info[robot->id].companion)	//	Player and companion don't collide.
 			return;
 		if (Robot_info[robot->id].kamikaze) {
-			apply_damage_to_robot(robot, robot->shields+1, playerobj-Objects);
+			apply_damage_to_robot(robot, robot->shields+1, OBJECT_NUMBER(playerobj));
 			if (playerobj == ConsoleObject)
 				add_points_to_score(Robot_info[robot->id].score_value);
 		}
 
 		if (Robot_info[robot->id].thief) {
-			if (Ai_local_info[robot-Objects].mode == AIM_THIEF_ATTACK) {
+			if (Ai_local_info[OBJECT_NUMBER(robot)].mode == AIM_THIEF_ATTACK) {
 				Last_thief_hit_time = GameTime;
 				attempt_to_steal_item(robot, playerobj->id);
 				steal_attempt = 1;
@@ -1152,7 +1152,7 @@ void apply_damage_to_controlcen(object *controlcen, fix damage, short who)
 		if (Game_mode & GM_MULTI) {
 			if (who == Players[Player_num].objnum)
 				add_points_to_score(CONTROL_CEN_SCORE);
-			multi_send_destroy_controlcen((ushort)(controlcen-Objects), Objects[who].id );
+			multi_send_destroy_controlcen( (ushort)(OBJECT_NUMBER(controlcen)), Objects[who].id );
 		}
 		#endif
 
@@ -1200,7 +1200,7 @@ void collide_player_and_marker( object * marker, object * playerobj, vms_vector 
 		if (drawn)
 			digi_play_sample( SOUND_MARKER_HIT, F1_0 );
 
-		detect_escort_goal_accomplished(marker-Objects);
+		detect_escort_goal_accomplished(OBJECT_NUMBER(marker));
    }
 }
 
@@ -1426,13 +1426,13 @@ int apply_damage_to_robot(object *robot, fix damage, int killer_objnum)
 			for (i=0;i<MAX_STOLEN_ITEMS;i++)
 			 temp_stolen[(int)i]=Stolen_items[(int)i];
 		  		
-			if (multi_explode_robot_sub(robot-Objects, killer_objnum,Robot_info[robot->id].thief))
+			if (multi_explode_robot_sub(OBJECT_NUMBER(robot), killer_objnum,Robot_info[robot->id].thief))
 			{
 			 if (isthief)	
    			for (i=0;i<MAX_STOLEN_ITEMS;i++)
 				  Stolen_items[(int)i]=temp_stolen[(int)i];
 					
-				multi_send_robot_explode(robot-Objects, killer_objnum,Robot_info[robot->id].thief);
+				multi_send_robot_explode(OBJECT_NUMBER(robot), killer_objnum,Robot_info[robot->id].thief);
 
 	     	   if (isthief)	
    				for (i=0;i<MAX_STOLEN_ITEMS;i++)
@@ -1620,12 +1620,12 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 	//	If a persistent weapon hit robot most recently, quick abort, else we cream the same robot many times,
 	//	depending on frame rate.
 	if (weapon->mtype.phys_info.flags & PF_PERSISTENT) {
-		if (weapon->ctype.laser_info.last_hitobj == robot-Objects)
+		if (weapon->ctype.laser_info.last_hitobj == OBJECT_NUMBER(robot))
 			return;
 		else
-			weapon->ctype.laser_info.last_hitobj = robot-Objects;
+			weapon->ctype.laser_info.last_hitobj = OBJECT_NUMBER(robot);
 
-		// mprintf((0, "weapon #%i with power %i hits robot #%i.\n", weapon - Objects, f2i(weapon->shields), robot - Objects));
+		// mprintf((0, "weapon #%i with power %i hits robot #%i.\n", OBJECT_NUMBER(weapon), f2i(weapon->shields), OBJECT_NUMBER(robot)));
 	}
 
 	if (weapon->ctype.laser_info.parent_signature == robot->signature)
@@ -1711,7 +1711,7 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 				bump_two_objects(robot, weapon, 0);		//only bump if not dead. no damage from bump
 			else if (weapon->ctype.laser_info.parent_signature == ConsoleObject->signature) {
 				add_points_to_score(Robot_info[robot->id].score_value);
-				detect_escort_goal_accomplished(robot-Objects);
+				detect_escort_goal_accomplished(OBJECT_NUMBER(robot));
 			}
 		}
 
@@ -1756,7 +1756,7 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 void collide_hostage_and_player( object * hostage, object * player, vms_vector *collision_point ) { 
 	// Give player points, etc.
 	if ( player == ConsoleObject )	{
-		detect_escort_goal_accomplished(hostage-Objects);
+		detect_escort_goal_accomplished(OBJECT_NUMBER(hostage));
 		add_points_to_score(HOSTAGE_SCORE);
 
 		// Do effect
@@ -1767,7 +1767,7 @@ void collide_hostage_and_player( object * hostage, object * player, vms_vector *
 
 		#ifdef NETWORK	
 		if (Game_mode & GM_MULTI)
-			multi_send_remobj(hostage-Objects);
+			multi_send_remobj(OBJECT_NUMBER(hostage));
 		#endif
 	}
 	return; 
@@ -1894,7 +1894,7 @@ void drop_player_eggs(object *playerobj)
 			vm_vec_add(&tvec, &playerobj->pos, &randvec);
 			newseg = find_point_seg(&tvec, playerobj->segnum);
 			if (newseg != -1)
-				Laser_create_new(&randvec, &tvec, newseg, playerobj-Objects, SUPERPROX_ID, 0);
+				Laser_create_new(&randvec, &tvec, newseg, OBJECT_NUMBER(playerobj), SUPERPROX_ID, 0);
 	  	}
 
 		//	If the player had proximity bombs, maybe arm one of them.
@@ -1911,7 +1911,7 @@ void drop_player_eggs(object *playerobj)
 				vm_vec_add(&tvec, &playerobj->pos, &randvec);
 				newseg = find_point_seg(&tvec, playerobj->segnum);
 				if (newseg != -1)
-					Laser_create_new(&randvec, &tvec, newseg, playerobj-Objects, PROXIMITY_ID, 0);
+					Laser_create_new(&randvec, &tvec, newseg, OBJECT_NUMBER(playerobj), PROXIMITY_ID, 0);
 	
 			}
 		}
@@ -2135,10 +2135,10 @@ void apply_damage_to_player(object *playerobj, object *killer, fix damage)
 
 		if (Players[Player_num].shields < 0)	{
 
-  			Players[Player_num].killer_objnum = killer-Objects;
+			Players[Player_num].killer_objnum = OBJECT_NUMBER(killer);
 			
 //			if ( killer && (killer->type == OBJ_PLAYER))
-//				Players[Player_num].killer_objnum = killer-Objects;
+//				Players[Player_num].killer_objnum = OBJECT_NUMBER(killer);
 
 			playerobj->flags |= OF_SHOULD_BE_DEAD;
 
@@ -2183,7 +2183,7 @@ void collide_player_and_weapon( object * playerobj, object * weapon, vms_vector 
 
 	//	Don't collide own smart mines unless direct hit.
 	if (weapon->id == SUPERPROX_ID)
-		if (playerobj-Objects == weapon->ctype.laser_info.parent_num)
+		if (OBJECT_NUMBER(playerobj) == weapon->ctype.laser_info.parent_num)
 			if (vm_vec_dist_quick(collision_point, &playerobj->pos) > playerobj->size)
 				return;
 
@@ -2198,10 +2198,10 @@ void collide_player_and_weapon( object * playerobj, object * weapon, vms_vector 
 
 	if (weapon->mtype.phys_info.flags & PF_PERSISTENT)
 	{
-		if (weapon->ctype.laser_info.last_hitobj == playerobj-Objects)
+		if (weapon->ctype.laser_info.last_hitobj == OBJECT_NUMBER(playerobj))
 			return;
 		else
-			weapon->ctype.laser_info.last_hitobj = playerobj-Objects;
+			weapon->ctype.laser_info.last_hitobj = OBJECT_NUMBER(playerobj);
 	}
 
 	if (playerobj->id == Player_num)
@@ -2344,7 +2344,7 @@ void collide_player_and_powerup( object * playerobj, object * powerup, vms_vecto
 			powerup->flags |= OF_SHOULD_BE_DEAD;
 			#ifdef NETWORK
 			if (Game_mode & GM_MULTI)
-				multi_send_remobj(powerup-Objects);
+				multi_send_remobj(OBJECT_NUMBER(powerup));
 			#endif
 		}
 	}
@@ -2522,7 +2522,7 @@ void collide_two_objects( object * A, object * B, vms_vector *collision_point )
 		
 	collision_type = COLLISION_OF(A->type,B->type);
 
-	//mprintf( (0, "Object %d of type %d collided with object %d of type %d\n", A-Objects,A->type, B-Objects, B->type ));
+	//mprintf( (0, "Object %d of type %d collided with object %d of type %d\n", OBJECT_NUMBER(A), A->type, OBJECT_NUMBER(B), B->type) );
 
 	switch( collision_type )	{
 	NO_SAME_COLLISION( OBJ_FIREBALL, OBJ_FIREBALL,   collide_fireball_and_fireball )

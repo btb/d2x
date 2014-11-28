@@ -509,7 +509,7 @@ void move_player_2_segment_and_rotate(segment *seg,int side)
 	vm_vector_2_matrix(&ConsoleObject->orient,&vp,&upvec,NULL);
 //	vm_vector_2_matrix(&ConsoleObject->orient,&vp,NULL,NULL);
 
-	obj_relink( ConsoleObject-Objects, SEG_PTR_2_NUM(seg) );
+	obj_relink( OBJECT_NUMBER(ConsoleObject), SEG_PTR_2_NUM(seg) );
 	
 }
 
@@ -561,12 +561,12 @@ int SetPlayerFromCursegMinusOne()
 	vm_vec_copy_scale(&view_vec2,&view_vec,view_dist);
 	vm_vec_sub(&ConsoleObject->pos,&side_center,&view_vec2);
 
-	//obj_relink(ConsoleObject-Objects, SEG_PTR_2_NUM(Cursegp) );
+	//obj_relink( OBJECT_NUMBER(ConsoleObject), SEG_PTR_2_NUM(Cursegp) );
 	//update_object_seg(ConsoleObject);		//might have backed right out of curseg
 
 	newseg = find_point_seg(&ConsoleObject->pos,SEG_PTR_2_NUM(Cursegp) );
 	if (newseg != -1)
-		obj_relink(ConsoleObject-Objects,newseg);
+		obj_relink(OBJECT_NUMBER(ConsoleObject), newseg);
 
 	Update_flags |= UF_ED_STATE_CHANGED | UF_GAME_VIEW_CHANGED;
 	return 1;
@@ -966,7 +966,7 @@ void gamestate_restore_check() {
 			if (Save_position.segnum <= Highest_segment_index) {
 				ConsoleObject->pos = Save_position.pos;
 				ConsoleObject->orient = Save_position.orient;
-				obj_relink(ConsoleObject-Objects,Save_position.segnum);
+				obj_relink(OBJECT_NUMBER(ConsoleObject), Save_position.segnum);
 			}
 
 			gamestate_not_restored = 0;

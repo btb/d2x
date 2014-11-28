@@ -443,7 +443,7 @@ void set_dynamic_light(void)
 			obj_intensity = compute_light_intensity(objnum);
 
 			if (obj_intensity) {
-				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, obj-Objects);
+				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, OBJECT_NUMBER(obj));
 				new_lighting_objects[objnum] = 1;
 			}
 
@@ -630,7 +630,7 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 {
 	fix light;
 	g3s_point objpnt;
-	int objnum = obj-Objects;
+	int objnum = OBJECT_NUMBER(obj);
 
 	if (!rotated_pnt) {
 		g3_rotate_point(&objpnt,&obj->pos);

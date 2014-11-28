@@ -465,9 +465,9 @@ multi_send_robot_position_sub(int objnum)
 
 																		loc += 3;
 #ifndef WORDS_BIGENDIAN
-	create_shortpos((shortpos *)(multibuf+loc), Objects+objnum,0);		loc += sizeof(shortpos);
+	create_shortpos((shortpos *)(multibuf+loc), &Objects[objnum], 0);   loc += sizeof(shortpos);
 #else
-	create_shortpos(&sp, Objects+objnum, 1);
+	create_shortpos(&sp, &Objects[objnum], 1);
 	memcpy(&(multibuf[loc]), (ubyte *)(sp.bytemat), 9);
 	loc += 9;
 	memcpy(&(multibuf[loc]), (ubyte *)&(sp.xo), 14);
@@ -914,13 +914,13 @@ multi_explode_robot_sub(int botnum, int killer,char isthief)
 	}
 	else if (robot->ctype.ai_info.REMOTE_OWNER == Player_num) 
 	{
-		multi_drop_robot_powerups(robot-Objects);
-		multi_delete_controlled_robot(robot-Objects);
+		multi_drop_robot_powerups(OBJECT_NUMBER(robot));
+		multi_delete_controlled_robot(OBJECT_NUMBER(robot));
 	}
 	else if (robot->ctype.ai_info.REMOTE_OWNER == -1 && network_i_am_master()) 
 	{
-		multi_drop_robot_powerups(robot-Objects);
-		//multi_delete_controlled_robot(robot-Objects);
+		multi_drop_robot_powerups(OBJECT_NUMBER(robot));
+		//multi_delete_controlled_robot(OBJECT_NUMBER(robot));
 	}
 
    if (isthief || Robot_info[robot->id].thief)
@@ -1030,8 +1030,8 @@ multi_do_create_robot(char *buf)
 	vm_vector_2_matrix( &obj->orient, &direction, &obj->orient.uvec, NULL);
 	morph_start( obj );
 
-	mprintf((1, "matcen created robot %d (remote %d)\n", obj-Objects, objnum));
-	map_objnum_local_to_remote(obj-Objects, objnum, pnum);
+	mprintf((1, "matcen created robot %d (remote %d)\n", OBJECT_NUMBER(obj), objnum));
+	map_objnum_local_to_remote(OBJECT_NUMBER(obj), objnum, pnum);
 
 	Assert(obj->ctype.ai_info.REMOTE_OWNER == -1);
 }
@@ -1091,16 +1091,16 @@ multi_do_boss_actions(char *buf)
 					return;
 				}
 				compute_segment_center(&boss_obj->pos, &Segments[teleport_segnum]);
-				obj_relink(boss_obj-Objects, teleport_segnum);
+				obj_relink(OBJECT_NUMBER(boss_obj), teleport_segnum);
 				Last_teleport_time = GameTime;
 		
 				vm_vec_sub(&boss_dir, &Objects[Players[pnum].objnum].pos, &boss_obj->pos);
 				vm_vector_2_matrix(&boss_obj->orient, &boss_dir, NULL, NULL);
 
 				digi_link_sound_to_pos( Vclip[VCLIP_MORPHING_ROBOT].sound_num, teleport_segnum, 0, &boss_obj->pos, 0 , F1_0);
-				digi_kill_sound_linked_to_object( boss_obj-Objects);
-				digi_link_sound_to_object2( SOUND_BOSS_SHARE_SEE, boss_obj-Objects, 1, F1_0, F1_0*512 );	//	F1_0*512 means play twice as loud
-				Ai_local_info[boss_obj-Objects].next_fire = 0;
+				digi_kill_sound_linked_to_object( OBJECT_NUMBER(boss_obj) );
+				digi_link_sound_to_object2( SOUND_BOSS_SHARE_SEE, OBJECT_NUMBER(boss_obj), 1, F1_0, F1_0*512 ); // F1_0*512 means play twice as loud
+				Ai_local_info[OBJECT_NUMBER(boss_obj)].next_fire = 0;
 
 				if (boss_obj->ctype.ai_info.REMOTE_OWNER == Player_num)
 				{
@@ -1263,7 +1263,7 @@ multi_drop_robot_powerups(int objnum)
 
 	if (egg_objnum >= 0) {
 		// Transmit the object creation to the other players	 	
-		mprintf((0, "Dropped %d powerups for robot %d.\n", Net_create_loc, del_obj-Objects));
+		mprintf((0, "Dropped %d powerups for robot %d.\n", Net_create_loc, OBJECT_NUMBER(del_obj)));
 		multi_send_create_robot_powerups(del_obj);
 	}
 }
@@ -1291,7 +1291,7 @@ void multi_robot_request_change(object *robot, int player_num)
 		return;
 	}
 
-	remote_objnum = objnum_local_to_remote(robot-Objects, &dummy);
+	remote_objnum = objnum_local_to_remote(OBJECT_NUMBER(robot), &dummy);
 	if (remote_objnum < 0)
 		return;
 
@@ -1300,7 +1300,7 @@ void multi_robot_request_change(object *robot, int player_num)
 
 	if ( (robot_agitation[slot] < 70) || (MULTI_ROBOT_PRIORITY(remote_objnum, player_num) > MULTI_ROBOT_PRIORITY(remote_objnum, Player_num)) || (d_rand() > 0x4400))
 	{
-		mprintf((0, "Robot %d (%d) released because it got hit by Player %d.\n", robot-Objects, remote_objnum, player_num));
+		mprintf((0, "Robot %d (%d) released because it got hit by Player %d.\n", OBJECT_NUMBER(robot), remote_objnum, player_num));
 		if (robot_send_pending[slot])
 			multi_send_robot_position(robot_controlled[slot], -1);
 		multi_send_release_robot(robot_controlled[slot]);

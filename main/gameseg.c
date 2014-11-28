@@ -1233,7 +1233,7 @@ void extract_shortpos(object *objp, shortpos *spp, int swap_bytes)
 	objp->mtype.phys_info.velocity.y = (spp->vely << VEL_PRECISION);
 	objp->mtype.phys_info.velocity.z = (spp->velz << VEL_PRECISION);
 
-	obj_relink(objp-Objects, segnum);
+	obj_relink(OBJECT_NUMBER(objp), segnum);
 
 //	mprintf((0, "Matrix: %08x %08x %08x    %08x %08x %08x\n", objp->orient.m1,objp->orient.m2,objp->orient.m3,
 //					spp->bytemat[0],spp->bytemat[1],spp->bytemat[2]));

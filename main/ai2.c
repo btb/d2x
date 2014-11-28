@@ -579,7 +579,7 @@ int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_vi
 		if (segnum == -1) {
 			fq.startseg = objp->segnum;
 			*pos = objp->pos;
-			mprintf((1, "Object %i, gun is outside mine, moving towards center.\n", objp-Objects));
+			mprintf((1, "Object %i, gun is outside mine, moving towards center.\n", OBJECT_NUMBER(objp)));
 			move_towards_segment_center(objp);
 		} else {
 			if (segnum != objp->segnum) {
@@ -592,7 +592,7 @@ int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_vi
 		fq.startseg			= objp->segnum;
 	fq.p1						= &Believed_player_pos;
 	fq.rad					= F1_0/4;
-	fq.thisobjnum			= objp-Objects;
+	fq.thisobjnum       = OBJECT_NUMBER(objp);
 	fq.ignore_obj_list	= NULL;
 	fq.flags					= FQ_TRANSWALL; // -- Why were we checking objects? | FQ_CHECK_OBJS;		//what about trans walls???
 
@@ -619,7 +619,7 @@ int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_vi
 //	Return 1 if animates, else return 0
 int do_silly_animation(object *objp)
 {
-	int				objnum = objp-Objects;
+	int             objnum = OBJECT_NUMBER(objp);
 	jointpos 		*jp_list;
 	int				robot_type, gun_num, robot_state, num_joint_positions;
 	polyobj_info	*pobj_info = &objp->rtype.pobj_info;
@@ -634,7 +634,7 @@ int do_silly_animation(object *objp)
 	attack_type = Robot_info[robot_type].attack_type;
 
 	if (num_guns == 0) {
-		// mprintf((0, "Object #%i of type #%i has 0 guns.\n", objp-Objects, robot_type));
+		// mprintf((0, "Object #%i of type #%i has 0 guns.\n", OBJECT_NUMBER(objp), robot_type));
 		return 0;
 	}
 
@@ -729,7 +729,7 @@ int do_silly_animation(object *objp)
 
 		if (at_goal) {
 			//ai_static	*aip = &objp->ctype.ai_info;
-			ai_local		*ailp = &Ai_local_info[objp-Objects];
+			ai_local    *ailp = &Ai_local_info[OBJECT_NUMBER(objp)];
 			ailp->achieved_state[gun_num] = ailp->goal_state[gun_num];
 			if (ailp->achieved_state[gun_num] == AIS_RECO)
 				ailp->goal_state[gun_num] = AIS_FIRE;
@@ -753,7 +753,7 @@ int do_silly_animation(object *objp)
 //	Delta orientation of object is at:		ai_info.delta_angles
 void ai_frame_animation(object *objp)
 {
-	int	objnum = objp-Objects;
+	int	objnum = OBJECT_NUMBER(objp);
 	int	joint;
 	int	num_joints;
 
@@ -845,7 +845,7 @@ void set_next_fire_time(object *objp, ai_local *ailp, robot_info *robptr, int gu
 //	If player is cloaked, then robot probably didn't actually collide, deal with that here.
 void do_ai_robot_hit_attack(object *robot, object *playerobj, vms_vector *collision_point)
 {
-	ai_local		*ailp = &Ai_local_info[robot-Objects];
+	ai_local   *ailp = &Ai_local_info[OBJECT_NUMBER(robot)];
 	robot_info *robptr = &Robot_info[robot->id];
 
 //#ifndef NDEBUG
@@ -982,7 +982,7 @@ int lead_player(object *objp, vms_vector *fire_point, vms_vector *believed_playe
 //	When this routine is complete, the parameter vec_to_player should not be necessary.
 void ai_fire_laser_at_player(object *obj, vms_vector *fire_point, int gun_num, vms_vector *believed_player_pos)
 {
-	int			objnum = obj-Objects;
+	int         objnum = OBJECT_NUMBER(obj);
 	ai_local		*ailp = &Ai_local_info[objnum];
 	robot_info	*robptr = &Robot_info[obj->id];
 	vms_vector	fire_vec;
@@ -1055,7 +1055,7 @@ void ai_fire_laser_at_player(object *obj, vms_vector *fire_point, int gun_num, v
 			fq.p0						= &obj->pos;
 			fq.p1						= fire_point;
 			fq.rad					= 0;
-			fq.thisobjnum			= obj-Objects;
+			fq.thisobjnum       = OBJECT_NUMBER(obj);
 			fq.ignore_obj_list	= NULL;
 			fq.flags					= FQ_TRANSWALL;
 
@@ -1110,7 +1110,7 @@ player_led: ;
 		if (gun_num == 0)
 			weapon_type = robptr->weapon_type2;
 
-	Laser_create_new_easy( &fire_vec, fire_point, obj-Objects, weapon_type, 1);
+	Laser_create_new_easy( &fire_vec, fire_point, OBJECT_NUMBER(obj), weapon_type, 1 );
 
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI) {
@@ -1185,7 +1185,7 @@ void move_around_player(object *objp, vms_vector *vec_to_player, int fast_flag)
 	physics_info	*pptr = &objp->mtype.phys_info;
 	fix				speed;
 	robot_info		*robptr = &Robot_info[objp->id];
-	int				objnum = objp-Objects;
+	int             objnum = OBJECT_NUMBER(objp);
 	int				dir;
 	int				dir_change;
 	fix				ft;
@@ -1266,7 +1266,7 @@ void move_around_player(object *objp, vms_vector *vec_to_player, int fast_flag)
 	pptr->velocity.z += evade_vector.z;
 
 	speed = vm_vec_mag_quick(&pptr->velocity);
-	if ((objp-Objects != 1) && (speed > robptr->max_speed[Difficulty_level])) {
+	if ((OBJECT_NUMBER(objp) != 1) && (speed > robptr->max_speed[Difficulty_level])) {
 		pptr->velocity.x = (pptr->velocity.x*3)/4;
 		pptr->velocity.y = (pptr->velocity.y*3)/4;
 		pptr->velocity.z = (pptr->velocity.z*3)/4;
@@ -1287,7 +1287,7 @@ void move_away_from_player(object *objp, vms_vector *vec_to_player, int attack_t
 
 	if (attack_type) {
 		//	Get value in 0..3 to choose evasion direction.
-		objref = ((objp-Objects) ^ ((FrameCount + 3*(objp-Objects)) >> 5)) & 3;
+		objref = ((OBJECT_NUMBER(objp)) ^ ((FrameCount + 3*(OBJECT_NUMBER(objp))) >> 5)) & 3;
 
 		switch (objref) {
 			case 0:	vm_vec_scale_add2(&pptr->velocity, &objp->orient.uvec, FrameTime << 5);	break;
@@ -1388,7 +1388,7 @@ void ai_move_relative_to_player(object *objp, ai_local *ailp, fix dist_to_player
 	} else if (robptr->thief) {
 		move_towards_player(objp, vec_to_player);
 	} else {
-		int	objval = ((objp-Objects) & 0x0f) ^ 0x0a;
+		int objval = ((OBJECT_NUMBER(objp)) & 0x0f) ^ 0x0a;
 
 		//	Changes here by MK, 12/29/95.  Trying to get rid of endless circling around bots in a large room.
 		if (robptr->kamikaze) {
@@ -1427,7 +1427,7 @@ void make_random_vector(vms_vector *vec)
 void mprintf_animation_info(object *objp)
 {
 	ai_static	*aip = &objp->ctype.ai_info;
-	ai_local		*ailp = &Ai_local_info[objp-Objects];
+	ai_local    *ailp = &Ai_local_info[OBJECT_NUMBER(objp)];
 
 	if (!Ai_info_enabled)
 		return;
@@ -1483,7 +1483,7 @@ void do_firing_stuff(object *obj, int player_visibility, vms_vector *vec_to_play
 		fix	dot = vm_vec_dot(&obj->orient.fvec, vec_to_player);
 		if ((dot >= 7*F1_0/8) || (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)) {
 			ai_static	*aip = &obj->ctype.ai_info;
-			ai_local		*ailp = &Ai_local_info[obj-Objects];
+			ai_local    *ailp = &Ai_local_info[OBJECT_NUMBER(obj)];
 
 			switch (aip->GOAL_STATE) {
 				case AIS_NONE:
@@ -1531,11 +1531,11 @@ void do_ai_robot_hit(object *objp, int type)
 						create_path_to_player(objp, 10, 1);
 						objp->ctype.ai_info.behavior = AIB_STATION;
 						objp->ctype.ai_info.hide_segment = objp->segnum;
-						Ai_local_info[objp-Objects].mode = AIM_CHASE_OBJECT;
+						Ai_local_info[OBJECT_NUMBER(objp)].mode = AIM_CHASE_OBJECT;
 					} else if (r < 4096+8192) {
 						// -- mprintf((0, "Still guy creating n segment path."));
 						create_n_segment_path(objp, d_rand()/8192 + 2, -1);
-						Ai_local_info[objp-Objects].mode = AIM_FOLLOW_PATH;
+						Ai_local_info[OBJECT_NUMBER(objp)].mode = AIM_FOLLOW_PATH;
 					}
 					break;
 				}
@@ -1568,7 +1568,7 @@ void compute_vis_and_vec(object *objp, vms_vector *pos, ai_local *ailp, vms_vect
 	if (!*flag) {
 		if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED) {
 			fix			delta_time, dist;
-			int			cloak_index = (objp-Objects) % MAX_AI_CLOAK_INFO;
+			int         cloak_index = (OBJECT_NUMBER(objp)) % MAX_AI_CLOAK_INFO;
 
 			delta_time = GameTime - Ai_cloak_info[cloak_index].last_time;
 			if (delta_time > F1_0*2) {
@@ -1678,7 +1678,7 @@ void move_object_to_legal_spot(object *objp)
 				int	new_segnum = find_point_seg(&objp->pos, objp->segnum);
 
 				if (new_segnum != -1) {
-					obj_relink(objp-Objects, new_segnum);
+					obj_relink(OBJECT_NUMBER(objp), new_segnum);
 					return;
 				}
 			} else
@@ -1690,8 +1690,8 @@ void move_object_to_legal_spot(object *objp)
 		Int3();		//	Note: Boss is poking outside mine.  Will try to resolve.
 		teleport_boss(objp);
 	} else {
-		mprintf((0, "Note: Killing robot #%i because he's badly stuck outside the mine.\n", objp-Objects));
-		apply_damage_to_robot(objp, objp->shields*2, objp-Objects);
+		mprintf((0, "Note: Killing robot #%i because he's badly stuck outside the mine.\n", OBJECT_NUMBER(objp)));
+		apply_damage_to_robot(objp, objp->shields*2, OBJECT_NUMBER(objp));
 	}
 }
 
@@ -1712,7 +1712,7 @@ void move_towards_segment_center(object *objp)
 	if (dist_to_center < objp->size) {
 		//	Center is nearer than the distance we want to move, so move to center.
 		objp->pos = segment_center;
-		mprintf((0, "Object #%i moved to center of segment #%i (%7.3f %7.3f %7.3f)\n", objp-Objects, objp->segnum, f2fl(objp->pos.x), f2fl(objp->pos.y), f2fl(objp->pos.z)));
+		mprintf((0, "Object #%i moved to center of segment #%i (%7.3f %7.3f %7.3f)\n", OBJECT_NUMBER(objp), objp->segnum, f2fl(objp->pos.x), f2fl(objp->pos.y), f2fl(objp->pos.z)));
 		if (object_intersects_wall(objp)) {
 			mprintf((0, "Object #%i still illegal, trying trickier move.\n"));
 			move_object_to_legal_spot(objp);
@@ -1727,7 +1727,7 @@ void move_towards_segment_center(object *objp)
 			objp->pos = segment_center;
 			move_object_to_legal_spot(objp);
 		}
-		// -- mprintf((0, "Obj %i moved twrds seg %i (%6.2f %6.2f %6.2f), dists: [%6.2f %6.2f]\n", objp-Objects, objp->segnum, f2fl(objp->pos.x), f2fl(objp->pos.y), f2fl(objp->pos.z), f2fl(vm_vec_dist_quick(&objp->pos, &segment_center)), f2fl(vm_vec_dist_quick(&objp->pos, &segment_center))));
+		// -- mprintf((0, "Obj %i moved twrds seg %i (%6.2f %6.2f %6.2f), dists: [%6.2f %6.2f]\n", OBJECT_NUMBER(objp), objp->segnum, f2fl(objp->pos.x), f2fl(objp->pos.y), f2fl(objp->pos.z), f2fl(vm_vec_dist_quick(&objp->pos, &segment_center)), f2fl(vm_vec_dist_quick(&objp->pos, &segment_center))));
 	}
 
 }
@@ -1792,7 +1792,7 @@ int ai_door_is_openable(object *objp, segment *segp, int sidenum)
 		if (objp == NULL)
 			ailp_mode = Ai_local_info[Buddy_objnum].mode;
 		else
-			ailp_mode = Ai_local_info[objp-Objects].mode;
+			ailp_mode = Ai_local_info[OBJECT_NUMBER(objp)].mode;
 
 		// -- if (Buddy_got_stuck) {
 		if (ailp_mode == AIM_GOTO_PLAYER) {
@@ -1961,7 +1961,7 @@ int create_gated_robot( int segnum, int object_id, vms_vector *pos)
 
 	compute_segment_center(&object_pos, segp);
 	if (pos == NULL)
-		pick_random_point_in_seg(&object_pos, segp-Segments);
+		pick_random_point_in_seg(&object_pos, (int)(segp - Segments));
 	else
 		object_pos = *pos;
 
@@ -2006,7 +2006,7 @@ int create_gated_robot( int segnum, int object_id, vms_vector *pos)
 	objp->matcen_creator = BOSS_GATE_MATCEN_NUM;	//	flag this robot as having been created by the boss.
 
 	default_behavior = Robot_info[objp->id].behavior;
-	init_ai_object(objp-Objects, default_behavior, -1 );		//	Note, -1 = segment this robot goes to to hide, should probably be something useful
+	init_ai_object( OBJECT_NUMBER(objp), default_behavior, -1 ); // Note, -1 = segment this robot goes to to hide, should probably be something useful
 
 	object_create_explosion(segnum, &object_pos, i2f(10), VCLIP_MORPHING_ROBOT );
 	digi_link_sound_to_pos( Vclip[VCLIP_MORPHING_ROBOT].sound_num, segnum, 0, &object_pos, 0 , F1_0);
@@ -2017,7 +2017,7 @@ int create_gated_robot( int segnum, int object_id, vms_vector *pos)
 	Players[Player_num].num_robots_level++;
 	Players[Player_num].num_robots_total++;
 
-	return objp-Objects;
+	return OBJECT_NUMBER(objp);
 }
 
 #define	MAX_SPEW_BOT		3
@@ -2111,7 +2111,7 @@ int gate_in_robot(int type, int segnum)
 int boss_fits_in_seg(object *boss_objp, int segnum)
 {
 	vms_vector	segcenter;
-	int			boss_objnum = boss_objp-Objects;
+	int         boss_objnum = OBJECT_NUMBER(boss_objp);
 	int			posnum;
 
 	compute_segment_center(&segcenter, &Segments[segnum]);
@@ -2150,11 +2150,11 @@ void teleport_boss(object *objp)
 
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
-		multi_send_boss_actions(objp-Objects, 1, rand_segnum, 0);
+		multi_send_boss_actions(OBJECT_NUMBER(objp), 1, rand_segnum, 0);
 #endif
 
 	compute_segment_center(&objp->pos, &Segments[rand_segnum]);
-	obj_relink(objp-Objects, rand_segnum);
+	obj_relink(OBJECT_NUMBER(objp), rand_segnum);
 
 	Last_teleport_time = GameTime;
 
@@ -2163,12 +2163,12 @@ void teleport_boss(object *objp)
 	vm_vector_2_matrix(&objp->orient, &boss_dir, NULL, NULL);
 
 	digi_link_sound_to_pos( Vclip[VCLIP_MORPHING_ROBOT].sound_num, rand_segnum, 0, &objp->pos, 0 , F1_0);
-	digi_kill_sound_linked_to_object( objp-Objects);
-	digi_link_sound_to_object2( Robot_info[objp->id].see_sound, objp-Objects, 1, F1_0, F1_0*512 );	//	F1_0*512 means play twice as loud
+	digi_kill_sound_linked_to_object( OBJECT_NUMBER(objp) );
+	digi_link_sound_to_object2( Robot_info[objp->id].see_sound, OBJECT_NUMBER(objp), 1, F1_0, F1_0*512 ); // F1_0*512 means play twice as loud
 
 	//	After a teleport, boss can fire right away.
-	Ai_local_info[objp-Objects].next_fire = 0;
-	Ai_local_info[objp-Objects].next_fire2 = 0;
+	Ai_local_info[OBJECT_NUMBER(objp)].next_fire = 0;
+	Ai_local_info[OBJECT_NUMBER(objp)].next_fire2 = 0;
 
 }
 
@@ -2213,7 +2213,7 @@ int do_robot_dying_frame(object *objp, fix start_time, fix roll_duration, sbyte 
 		if (!*dying_sound_playing) {
 			mprintf((0, "Starting death sound!\n"));
 			*dying_sound_playing = 1;
-			digi_link_sound_to_object2( death_sound, objp-Objects, 0, sound_scale, sound_scale*256 );	//	F1_0*512 means play twice as loud
+			digi_link_sound_to_object2( death_sound, OBJECT_NUMBER(objp), 0, sound_scale, sound_scale*256 ); // F1_0*512 means play twice as loud
 		} else if (d_rand() < FrameTime*16)
 			create_small_fireball_on_object(objp, (F1_0 + d_rand()) * (16 * expl_scale/F1_0)/8, 0);
 	} else if (d_rand() < FrameTime*8)
@@ -2244,7 +2244,7 @@ void do_boss_dying_frame(object *objp)
 	if (rval) {
 		do_controlcen_destroyed_stuff(NULL);
 		explode_object(objp, F1_0/4);
-		digi_link_sound_to_object2(SOUND_BADASS_EXPLOSION, objp-Objects, 0, F2_0, F1_0*512);
+		digi_link_sound_to_object2(SOUND_BADASS_EXPLOSION, OBJECT_NUMBER(objp), 0, F2_0, F1_0*512);
 	}
 }
 
@@ -2261,7 +2261,7 @@ int do_any_robot_dying_frame(object *objp)
 
 		if (rval) {
 			explode_object(objp, F1_0/4);
-			digi_link_sound_to_object2(SOUND_BADASS_EXPLOSION, objp-Objects, 0, F2_0, F1_0*512);
+			digi_link_sound_to_object2(SOUND_BADASS_EXPLOSION, OBJECT_NUMBER(objp), 0, F2_0, F1_0*512);
 			if ((Current_level_num < 0) && (Robot_info[objp->id].thief))
 				recreate_thief(objp);
 		}
@@ -2290,7 +2290,7 @@ int ai_multiplayer_awareness(object *objp, int awareness_level)
 	if (Game_mode & GM_MULTI) {
 		if (awareness_level == 0)
 			return 0;
-		rval = multi_can_move_robot(objp-Objects, awareness_level);
+		rval = multi_can_move_robot(OBJECT_NUMBER(objp), awareness_level);
 	}
 #endif
 
@@ -2316,7 +2316,7 @@ void do_boss_stuff(object *objp, int player_visibility)
 
 #ifndef NDEBUG
 	if (objp->shields != Prev_boss_shields) {
-		mprintf((0, "Boss shields = %7.3f, object %i\n", f2fl(objp->shields), objp-Objects));
+		mprintf((0, "Boss shields = %7.3f, object %i\n", f2fl(objp->shields), OBJECT_NUMBER(objp)));
 		Prev_boss_shields = objp->shields;
 	}
 #endif
@@ -2353,7 +2353,7 @@ void do_boss_stuff(object *objp, int player_visibility)
 				objp->ctype.ai_info.CLOAKED = 1;
 #ifdef NETWORK
 				if (Game_mode & GM_MULTI)
-					multi_send_boss_actions(objp-Objects, 2, 0, 0);
+					multi_send_boss_actions(OBJECT_NUMBER(objp), 2, 0, 0);
 #endif
 			}
 		}
@@ -2379,14 +2379,14 @@ void do_boss_stuff(object *objp, int player_visibility)
 // -- Obsolete D1 code -- 		if (GameTime - Last_gate_time > Gate_interval/2) {
 // -- Obsolete D1 code -- 			restart_effect(BOSS_ECLIP_NUM);
 // -- Obsolete D1 code -- 			if (eclip_state == 0) {
-// -- Obsolete D1 code -- 				multi_send_boss_actions(objp-Objects, 4, 0, 0);
+// -- Obsolete D1 code -- 				multi_send_boss_actions(OBJECT_NUMBER(objp), 4, 0, 0);
 // -- Obsolete D1 code -- 				eclip_state = 1;
 // -- Obsolete D1 code -- 			}
 // -- Obsolete D1 code -- 		}
 // -- Obsolete D1 code -- 		else {
 // -- Obsolete D1 code -- 			stop_effect(BOSS_ECLIP_NUM);
 // -- Obsolete D1 code -- 			if (eclip_state == 1) {
-// -- Obsolete D1 code -- 				multi_send_boss_actions(objp-Objects, 5, 0, 0);
+// -- Obsolete D1 code -- 				multi_send_boss_actions(OBJECT_NUMBER(objp), 5, 0, 0);
 // -- Obsolete D1 code -- 				eclip_state = 0;
 // -- Obsolete D1 code -- 			}
 // -- Obsolete D1 code -- 		}
@@ -2403,7 +2403,7 @@ void do_boss_stuff(object *objp, int player_visibility)
 // -- Obsolete D1 code -- 				rtval = gate_in_robot(randtype, -1);
 // -- Obsolete D1 code -- 				if ((rtval != -1) && (Game_mode & GM_MULTI))
 // -- Obsolete D1 code -- 				{
-// -- Obsolete D1 code -- 					multi_send_boss_actions(objp-Objects, 3, randtype, Net_create_objnums[0]);
+// -- Obsolete D1 code -- 					multi_send_boss_actions(OBJECT_NUMBER(objp), 3, randtype, Net_create_objnums[0]);
 // -- Obsolete D1 code -- 					map_objnum_local_to_local(Net_create_objnums[0]);
 // -- Obsolete D1 code -- 				}
 // -- Obsolete D1 code -- 			}	

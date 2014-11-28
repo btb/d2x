@@ -251,7 +251,7 @@ void draw_window_label()
 		}
 
 		gr_set_fontcolor( gr_getcolor(31, 0, 0), -1 );
-		gr_printf( 0x8000, 45, "%i: %s [%s] View - %s",Viewer-Objects, viewer_name, viewer_id, control_name );
+		gr_printf( 0x8000, 45, "%i: %s [%s] View - %s", OBJECT_NUMBER(Viewer), viewer_name, viewer_id, control_name );
 
 	}
 }
