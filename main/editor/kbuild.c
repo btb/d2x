@@ -77,7 +77,7 @@ int CreateAdjacentJoint()
 	segment	*adj_sp;
 
 	if (med_find_adjacent_segment_side(Cursegp, Curside, &adj_sp, &adj_side)) {
-		if (Cursegp->children[Curside] != adj_sp-Segments) {
+		if (Cursegp->children[Curside] != SEGMENT_NUMBER(adj_sp)) {
 			med_form_joint(Cursegp,Curside,adj_sp,adj_side);
 			Update_flags |= UF_WORLD_CHANGED;
 			mine_changed = 1;
@@ -102,7 +102,7 @@ int CreateSloppyAdjacentJoint()
 	save_level("SLOPPY.LVL");
 
 	if (med_find_closest_threshold_segment_side(Cursegp, Curside, &adj_sp, &adj_side, 20*F1_0)) {
-		if (Cursegp->children[Curside] != adj_sp-Segments) {
+		if (Cursegp->children[Curside] != SEGMENT_NUMBER(adj_sp)) {
 			if (!med_form_joint(Cursegp,Curside,adj_sp,adj_side))
 				{
 				Update_flags |= UF_WORLD_CHANGED;
@@ -140,7 +140,7 @@ int CreateSloppyAdjacentJointsGroup()
 			if (!IS_CHILD(segp->children[sidenum]))
 				if (med_find_closest_threshold_segment_side(segp, sidenum, &adj_sp, &adj_side, 5*F1_0)) {
 					if (adj_sp->group == segp->group) {
-						if (segp->children[sidenum] != adj_sp-Segments)
+						if (segp->children[sidenum] != SEGMENT_NUMBER(adj_sp))
 							if (!med_form_joint(segp, sidenum, adj_sp,adj_side))
 								done_been_a_change = 1;
 					}
@@ -170,7 +170,7 @@ int CreateAdjacentJointsSegment()
 
 	for (s=0; s<MAX_SIDES_PER_SEGMENT; s++) {
 		if (med_find_adjacent_segment_side(Cursegp, s, &adj_sp, &adj_side))
-			if (Cursegp->children[s] != adj_sp-Segments)
+			if (Cursegp->children[s] != SEGMENT_NUMBER(adj_sp))
 					{
 					med_form_joint(Cursegp,s,adj_sp,adj_side);
 					Update_flags |= UF_WORLD_CHANGED;
@@ -196,7 +196,7 @@ int CreateAdjacentJointsAll()
 	for (seg=0; seg<=Highest_segment_index; seg++)
 		for (s=0; s<MAX_SIDES_PER_SEGMENT; s++)
 			if (med_find_adjacent_segment_side(&Segments[seg], s, &adj_sp, &adj_side))
-				if (Segments[seg].children[s] != adj_sp-Segments)
+				if (Segments[seg].children[s] != SEGMENT_NUMBER(adj_sp))
 						med_form_joint(&Segments[seg],s,adj_sp,adj_side);
 
 	Update_flags |= UF_WORLD_CHANGED;

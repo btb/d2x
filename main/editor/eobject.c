@@ -68,7 +68,7 @@ void show_objects_in_segment(segment *sp)
 {
 	short		objid;
 
-	mprintf((0,"Objects in segment #%i: ",sp-Segments));
+	mprintf((0, "Objects in segment #%i: ", SEGMENT_NUMBER(sp)));
 
 	objid = sp->objects;
 	while (objid != -1) {
@@ -133,8 +133,8 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 		case OBJ_HOSTAGE:
 
 			objnum = obj_create(OBJ_HOSTAGE, -1, 
-					segp-Segments,object_pos,&seg_matrix,HOSTAGE_SIZE,
-					CT_NONE,MT_NONE,RT_HOSTAGE);
+					SEGMENT_NUMBER(segp), object_pos, &seg_matrix, HOSTAGE_SIZE,
+					CT_NONE, MT_NONE, RT_HOSTAGE);
 
 			if ( objnum < 0 )
 				return 0;
@@ -154,7 +154,7 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 
 		case OBJ_ROBOT:
 
-			objnum = obj_create(OBJ_ROBOT, object_id, segp - Segments, object_pos,
+			objnum = obj_create(OBJ_ROBOT, object_id, SEGMENT_NUMBER(segp), object_pos,
 				&seg_matrix, Polygon_models[Robot_info[object_id].model_num].rad,
 				CT_AI, MT_PHYSICS, RT_POLYOBJ);
 
@@ -179,7 +179,7 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 
 			{	int	hide_segment;
 			if (Markedsegp)
-				hide_segment = Markedsegp-Segments;
+				hide_segment = SEGMENT_NUMBER(Markedsegp);
 			else
 				hide_segment = -1;
 			//	robots which lunge forward to attack cannot have behavior type still.
@@ -193,7 +193,7 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 		case OBJ_POWERUP:
 
 			objnum = obj_create(OBJ_POWERUP, object_id,
-					segp - Segments, object_pos, &seg_matrix, Powerup_info[object_id].size,
+					SEGMENT_NUMBER(segp), object_pos, &seg_matrix, Powerup_info[object_id].size,
 					CT_POWERUP, MT_NONE, RT_POWERUP);
 
 			if ( objnum < 0 )
@@ -216,7 +216,7 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 
 		case OBJ_CNTRLCEN: 
 		{
-			objnum = obj_create(OBJ_CNTRLCEN, object_id, segp - Segments, object_pos,
+			objnum = obj_create(OBJ_CNTRLCEN, object_id, SEGMENT_NUMBER(segp), object_pos,
 					&seg_matrix, Polygon_models[object_id].rad,
 					CT_CNTRLCEN, MT_NONE, RT_POLYOBJ);
 
@@ -234,7 +234,7 @@ int place_object(segment *segp, vms_vector *object_pos, short object_type, short
 		}
 
 		case OBJ_PLAYER:	{
-			objnum = obj_create(OBJ_PLAYER, object_id, segp - Segments, object_pos,
+			objnum = obj_create(OBJ_PLAYER, object_id, SEGMENT_NUMBER(segp), object_pos,
 				&seg_matrix, Polygon_models[Player_ship->model_num].rad,
 				CT_NONE, MT_PHYSICS, RT_POLYOBJ);
 
@@ -388,7 +388,7 @@ int ObjectSelectNextinSegment(void)
 		Cur_object_index = objsegp->objects;
 	} else {
 		objsegp = Cursegp;
-		if (Objects[Cur_object_index].segnum != Cursegp-Segments)
+		if (Objects[Cur_object_index].segnum != SEGMENT_NUMBER(Cursegp))
 			Cur_object_index = objsegp->objects;
 	}
 

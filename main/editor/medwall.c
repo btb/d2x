@@ -703,7 +703,7 @@ int wall_remove_side(segment *seg, short side)
 		// Destroy any links to the deleted wall.
 		for (t=0;t<Num_triggers;t++)
 			for (l=0;l<Triggers[t].num_links;l++)
-				if ((Triggers[t].seg[l] == seg-Segments) && (Triggers[t].side[l] == side)) {
+				if ((Triggers[t].seg[l] == SEGMENT_NUMBER(seg)) && (Triggers[t].side[l] == side)) {
 					for (t1=0;t1<Triggers[t].num_links-1;t1++) {
 						Triggers[t].seg[t1] = Triggers[t].seg[t1+1];
 						Triggers[t].side[t1] = Triggers[t].side[t1+1];
@@ -713,7 +713,7 @@ int wall_remove_side(segment *seg, short side)
 
 		// Destroy control center links as well.
 		for (l=0;l<ControlCenterTriggers.num_links;l++)
-			if ((ControlCenterTriggers.seg[l] == seg-Segments) && (ControlCenterTriggers.side[l] == side)) {
+			if ((ControlCenterTriggers.seg[l] == SEGMENT_NUMBER(seg)) && (ControlCenterTriggers.side[l] == side)) {
 				for (t1=0;t1<ControlCenterTriggers.num_links-1;t1++) {
 					ControlCenterTriggers.seg[t1] = ControlCenterTriggers.seg[t1+1];
 					ControlCenterTriggers.side[t1] = ControlCenterTriggers.side[t1+1];
@@ -750,8 +750,8 @@ int wall_add_to_side(segment *segp, int side, sbyte type)
 		csegp = &Segments[segp->children[side]];
 		connectside = find_connect_side(segp, csegp);
 
-		Walls[segp->sides[side].wall_num].segnum = segp-Segments;
-		Walls[csegp->sides[connectside].wall_num].segnum = csegp-Segments;
+		Walls[segp->sides[side].wall_num].segnum = SEGMENT_NUMBER(segp);
+		Walls[csegp->sides[connectside].wall_num].segnum = SEGMENT_NUMBER(csegp);
 
 		Walls[segp->sides[side].wall_num].sidenum = side;
 		Walls[csegp->sides[connectside].wall_num].sidenum = connectside;
@@ -821,8 +821,8 @@ int wall_add_to_markedside(sbyte type)
 		wall_num = Markedsegp->sides[Markedside].wall_num;
 		cwall_num = csegp->sides[Connectside].wall_num;
 
-		Walls[wall_num].segnum = Markedsegp-Segments;
-		Walls[cwall_num].segnum = csegp-Segments;
+		Walls[wall_num].segnum = SEGMENT_NUMBER(Markedsegp);
+		Walls[cwall_num].segnum = SEGMENT_NUMBER(csegp);
 
 		Walls[wall_num].sidenum = Markedside;
 		Walls[cwall_num].sidenum = Connectside;
@@ -931,13 +931,13 @@ int bind_wall_to_control_center() {
 
 	link_num = ControlCenterTriggers.num_links;
 	for (i=0;i<link_num;i++)
-		if ((Cursegp-Segments == ControlCenterTriggers.seg[i]) && (Curside == ControlCenterTriggers.side[i])) {
+		if ((SEGMENT_NUMBER(Cursegp) == ControlCenterTriggers.seg[i]) && (Curside == ControlCenterTriggers.side[i])) {
 			editor_status("Curside already bound to Control Center.");
 			return 0;
 		}
 
 	// Error checking completed, actual binding begins
-	ControlCenterTriggers.seg[link_num] = Cursegp - Segments;
+	ControlCenterTriggers.seg[link_num] = SEGMENT_NUMBER(Cursegp);
 	ControlCenterTriggers.side[link_num] = Curside;
 	ControlCenterTriggers.num_links++;
 

@@ -287,10 +287,10 @@ int check_line_to_face(vms_vector *newp,vms_vector *p0,vms_vector *p1,segment *s
 		norm = seg->sides[side].normals[facenum];
 	#endif
 
-	if ((seg-Segments)==-1)
+	if (SEGMENT_NUMBER(seg) == -1)
 		Error("segnum == -1 in check_line_to_face()");
 
-	create_abs_vertex_lists(&num_faces, vertex_list, seg - Segments, side, __FILE__, __LINE__);
+	create_abs_vertex_lists(&num_faces, vertex_list, SEGMENT_NUMBER(seg), side, __FILE__, __LINE__);
 
 	//use lowest point number
 	if (num_faces==2) {
@@ -387,10 +387,10 @@ int special_check_line_to_face(vms_vector *newp,vms_vector *p0,vms_vector *p1,se
 
 	//calc some basic stuff
 
-	if ((seg-Segments)==-1)
+	if ((SEGMENT_NUMBER(seg))==-1)
 		Error("segnum == -1 in special_check_line_to_face()");
 
-	create_abs_vertex_lists(&num_faces, vertex_list, seg - Segments, side, __FILE__, __LINE__);
+	create_abs_vertex_lists(&num_faces, vertex_list, SEGMENT_NUMBER(seg), side, __FILE__, __LINE__);
 	vm_vec_sub(&move_vec,p1,p0);
 
 	//figure out which edge(s) to check against
@@ -1158,7 +1158,7 @@ void find_hitpoint_uv(fix *u,fix *v,fix *l,vms_vector *pnt,segment *seg,int side
 {
 	vms_vector_array *pnt_array;
 	vms_vector_array normal_array;
-	int segnum = seg-Segments;
+	int segnum = SEGMENT_NUMBER(seg);
 	int num_faces;
 	int biggest,ii,jj;
 	side *side = &seg->sides[sidenum];
@@ -1315,10 +1315,10 @@ int sphere_intersects_wall(vms_vector *pnt,int segnum,fix rad)
 
 					//did we go through this wall/door?
 
-					if ((seg-Segments)==-1)
+					if (SEGMENT_NUMBER(seg) == -1)
 						Error("segnum == -1 in sphere_intersects_wall()");
 
-					create_abs_vertex_lists(&num_faces, vertex_list, seg - Segments, side, __FILE__, __LINE__);
+					create_abs_vertex_lists(&num_faces, vertex_list, SEGMENT_NUMBER(seg), side, __FILE__, __LINE__);
 
 					face_hit_type = check_sphere_to_face( pnt,&seg->sides[side],
 										face,((num_faces==1)?4:3),rad,vertex_list);

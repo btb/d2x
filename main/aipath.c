@@ -1071,7 +1071,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 			// int	connect_side = find_connect_side(objp->segnum, goal_seg);
 			//	Only move to goal if allowed to fly through the side.
 			//	Buddy-bot can create paths he can't fly, waiting for player.
-			// -- bah, this isn't good enough, buddy will fail to get through any door! if (WALL_IS_DOORWAY(&Segments]objp->segnum], connect_side) & WID_FLY_FLAG) {
+			// -- bah, this isn't good enough, buddy will fail to get through any door! if (WALL_IS_DOORWAY(&Segments[objp->segnum], connect_side) & WID_FLY_FLAG) {
 			if (!Robot_info[objp->id].companion && !Robot_info[objp->id].thief) {
 				if (distance_travellable >= dist_to_goal) {
 					move_object_to_goal(objp, &goal_point, goal_seg);
@@ -1562,7 +1562,7 @@ void test_create_path_many(void)
 	for (i=0; i<Test_size; i++) {
 		Cursegp = &Segments[(d_rand() * (Highest_segment_index + 1)) / D_RAND_MAX];
 		Markedsegp = &Segments[(d_rand() * (Highest_segment_index + 1)) / D_RAND_MAX];
-		create_path_points(&Objects[0], Cursegp-Segments, Markedsegp-Segments, point_segs, &num_points, -1, 0, 0, -1);
+		create_path_points(&Objects[0], SEGMENT_NUMBER(Cursegp), SEGMENT_NUMBER(Markedsegp), point_segs, &num_points, -1, 0, 0, -1);
 	}
 
 }
@@ -1572,7 +1572,7 @@ void test_create_path(void)
 	point_seg	point_segs[200];
 	short			num_points;
 
-	create_path_points(&Objects[0], Cursegp-Segments, Markedsegp-Segments, point_segs, &num_points, -1, 0, 0, -1);
+	create_path_points(&Objects[0], SEGMENT_NUMBER(Cursegp), SEGMENT_NUMBER(Markedsegp), point_segs, &num_points, -1, 0, 0, -1);
 
 }
 
@@ -1667,7 +1667,7 @@ void test_create_all_paths(void)
 //--anchor--	point_seg	point_segs[200];
 //--anchor--	short			num_points;
 //--anchor--
-//--anchor--	create_path_points(&Objects[0], Cursegp-Segments, -2, point_segs, &num_points, Test_path_length, 0, 0, -1);
+//--anchor--	create_path_points(&Objects[0], SEGMENT_NUMBER(Cursegp), -2, point_segs, &num_points, Test_path_length, 0, 0, -1);
 //--anchor--}
 
 short	Player_path_length=0;

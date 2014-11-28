@@ -416,20 +416,20 @@ void med_rotate_group(vms_matrix *rotmat, short *group_seglist, int group_size, 
 void cgl_aux(segment *segp, short *seglistp, int *num_segs, short *ignore_list, int num_ignore_segs)
 {
 	int	i, side;
-	int	curseg = segp-Segments;
+	int curseg = SEGMENT_NUMBER(segp);
 
 	for (i=0; i<num_ignore_segs; i++)
 		if (curseg == ignore_list[i])
 			return;
 
-	if ((segp-Segments < 0) || (segp-Segments >= MAX_SEGMENTS)) {
-		mprintf((0,"Warning -- invalid segment index = %i, max = %i\n",segp-Segments,MAX_SEGMENTS));
+	if ((SEGMENT_NUMBER(segp) < 0) || (SEGMENT_NUMBER(segp) >= MAX_SEGMENTS)) {
+		mprintf((0, "Warning -- invalid segment index = %i, max = %i\n", SEGMENT_NUMBER(segp), MAX_SEGMENTS));
 		Int3();
 	}
 
-	if (!Been_visited[segp-Segments]) {
-		seglistp[(*num_segs)++] = segp-Segments;
-		Been_visited[segp-Segments] = 1;
+	if (!Been_visited[SEGMENT_NUMBER(segp)]) {
+		seglistp[(*num_segs)++] = SEGMENT_NUMBER(segp);
+		Been_visited[SEGMENT_NUMBER(segp)] = 1;
 
 		for (side=0; side<MAX_SIDES_PER_SEGMENT; side++)
 			if (IS_CHILD(segp->children[side]))
@@ -585,7 +585,7 @@ int med_copy_group(int delta_flag, segment *base_seg, int base_side, segment *gr
 
 	// Find groupsegp index
 	for (s=0;s<GroupList[current_group].num_segments;s++)
-		if (GroupList[current_group].segments[s] == (Groupsegp[current_group]-Segments))
+		if (GroupList[current_group].segments[s] == SEGMENT_NUMBER(Groupsegp[current_group]))
 			gs_index=s; 
 
 	GroupList[new_current_group] = GroupList[current_group];
@@ -639,7 +639,7 @@ int med_copy_group(int delta_flag, segment *base_seg, int base_side, segment *gr
 		for (c=0; c<MAX_SIDES_PER_SEGMENT; c++) 
 			if (IS_CHILD(segp->children[c])) {
 				if (!in_group(segp->children[c], new_current_group)) {
-					mprintf((0, "2: Breaking connection at seg:side = %i:%i\n", segp-Segments, c));
+					mprintf((0, "2: Breaking connection at seg:side = %i:%i\n", SEGMENT_NUMBER(segp), c));
 					segp->children[c] = -1;
 					validate_segment_side(segp,c);					// we have converted a connection to a side so validate the segment
 				}
@@ -719,7 +719,7 @@ int med_move_group(int delta_flag, segment *base_seg, int base_side, segment *gr
 	vms_matrix	rotmat;
 
 	if (IS_CHILD(base_seg->children[base_side]))
-		if (base_seg->children[base_side] != group_seg-Segments) {
+		if (base_seg->children[base_side] != SEGMENT_NUMBER(group_seg)) {
 			editor_status("Error -- unable to move group, base_seg:base_side must be free or point to group_seg.");
 			return 1;
 	}
@@ -1002,7 +1002,7 @@ int rotate_segment_new(vms_angvec *pbh)
 	int			current_group_save;
 
         if (!IS_CHILD(Cursegp->children[(int) Side_opposite[Curside]])) {
-		// -- I don't understand this, MK, 01/25/94: if (Cursegp->children[Curside] != group_seg-Segments) {
+		// -- I don't understand this, MK, 01/25/94: if (Cursegp->children[Curside] != SEGMENT_NUMBER(group_seg)) {
 			editor_status("Error -- unable to rotate group, Cursegp:Side_opposite[Curside] cannot be free.");
 			return 1;
 	}
@@ -1013,7 +1013,7 @@ int rotate_segment_new(vms_angvec *pbh)
 	
 	save_selected_segs(&n_selected_segs_save, selected_segs_save);
 	GroupList[ROT_GROUP].num_segments = 0;
-	newseg = Cursegp - Segments;
+	newseg = SEGMENT_NUMBER(Cursegp);
 	newseg_side = Side_opposite[Curside];
 
 	// Create list of segments to rotate.
@@ -1139,7 +1139,7 @@ int med_save_group( char *filename, short *vertex_ids, short *segment_ids, int n
 	group_editor.newsegment_size     =   sizeof(segment);
 	// Next 3 vars added 10/07 by JAS
 	if (Groupsegp[current_group]) {
-		segnum = Groupsegp[current_group]-Segments;
+		segnum = SEGMENT_NUMBER(Groupsegp[current_group]);
 		for (i=0;i<num_segments;i++)
 			if (segnum == segment_ids[i])	
 				group_editor.Groupsegp = i;
@@ -1586,7 +1586,7 @@ int UngroupSegment( void )
 	if (Cursegp->group == current_group) {
 	
 		Cursegp->group = -1;
-		delete_segment_from_group( Cursegp-Segments, current_group );
+		delete_segment_from_group( SEGMENT_NUMBER(Cursegp), current_group );
 	
 	   Update_flags |= UF_WORLD_CHANGED;
 	   mine_changed = 1;
@@ -1602,7 +1602,7 @@ int GroupSegment( void )
 	if (Cursegp->group == -1) {
 
 		Cursegp->group = current_group;
-		add_segment_to_group( Cursegp-Segments, current_group );
+		add_segment_to_group( SEGMENT_NUMBER(Cursegp), current_group );
 	
 	   Update_flags |= UF_WORLD_CHANGED;
 	   mine_changed = 1;
@@ -1625,7 +1625,7 @@ int Degroup( void )
 	for (i=0; i<GroupList[current_group].num_segments; i++)
 		delete_segment_from_group( GroupList[current_group].segments[i], current_group );
 
-	  //	delete_segment_from_group( &Segments[GroupList[current_group].segments[i]]-Segments, current_group );
+	  //	delete_segment_from_group( GroupList[current_group].segments[i], current_group );
 
 	for (i=current_group;i<num_groups-1;i++)
 		{

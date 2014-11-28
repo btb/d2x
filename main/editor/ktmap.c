@@ -159,7 +159,7 @@ void pts_aux(segment *sp)
 {
 	int		side;
 
-	Been_visited[sp-Segments] = 1;
+	Been_visited[SEGMENT_NUMBER(sp)] = 1;
 
 	for (side=0; side<MAX_SIDES_PER_SEGMENT; side++) {
 		if (IS_CHILD(sp->children[side])) {
@@ -182,7 +182,7 @@ int PropagateTexturesSelected(void)
    strcpy(undo_status[Autosave_count], "Propogate Textures Selected UNDONE.");
 
 	for (i=0; i<MAX_SEGMENTS; i++) Been_visited[i] = 0;	//clear visited list
-	Been_visited[Cursegp-Segments] = 1;
+	Been_visited[SEGMENT_NUMBER(Cursegp)] = 1;
 
 	pts_aux(Cursegp);
 

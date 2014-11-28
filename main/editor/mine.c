@@ -436,19 +436,19 @@ int save_mine_data(CFILE * SaveFile)
 	cfwrite( &mine_header, sizeof(mine_header), 1, SaveFile );
 
 	//===================== SAVE EDITOR INFO ==========================
-	mine_editor.current_seg         =   Cursegp - Segments;
+	mine_editor.current_seg         =   SEGMENT_NUMBER(Cursegp);
 	mine_editor.newsegment_offset   =   newsegment_offset; 
 	mine_editor.newsegment_size     =   sizeof(segment);
 
 	// Next 3 vars added 10/07 by JAS
 	mine_editor.Curside             =   Curside;
 	if (Markedsegp)
-		mine_editor.Markedsegp       =   Markedsegp - Segments;
+		mine_editor.Markedsegp      =   SEGMENT_NUMBER(Markedsegp);
 	else									  
 		mine_editor.Markedsegp       =   -1;
 	mine_editor.Markedside          =   Markedside;
 	for (i=0;i<10;i++)
-		mine_editor.Groupsegp[i]	  =	Groupsegp[i] - Segments;
+		mine_editor.Groupsegp[i]    =   SEGMENT_NUMBER(Groupsegp[i]);
 	for (i=0;i<10;i++)
 		mine_editor.Groupside[i]     =	Groupside[i];
 

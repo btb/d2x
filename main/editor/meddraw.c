@@ -403,7 +403,7 @@ void add_edges(segment *seg)
 			int	num_faces, num_vertices;
 			int	vertex_list[6];
 
-			create_all_vertex_lists(&num_faces, vertex_list, seg-Segments, sn);
+			create_all_vertex_lists(&num_faces, vertex_list, SEGMENT_NUMBER(seg), sn);
 			if (num_faces == 1)
 				num_vertices = 4;
 			else

@@ -434,7 +434,7 @@ void check_lighting_side(segment *sp, int sidenum)
 
 	for (v=0; v<4; v++)
 		if ((sidep->uvls[v].l > F1_0*16) || (sidep->uvls[v].l < 0))
-			Int3(); //mprintf(0,"Bogus lighting value in segment %i, side %i, vert %i = %x\n",sp-Segments, side, v, sidep->uvls[v].l);
+			Int3(); //mprintf(0, "Bogus lighting value in segment %i, side %i, vert %i = %x\n", SEGMENT_NUMBER(sp), side, v, sidep->uvls[v].l);
 }
 
 void check_lighting_segment(segment *segp)
@@ -617,7 +617,7 @@ void assign_uvs_to_side(segment *segp, int sidenum, uvl *uva, uvl *uvb, int va, 
 		mag01 = fixmul(mag01, Stretch_scale_y);
 
 	if (mag01 < F1_0/1024 )
-		editor_status("U, V bogosity in segment #%i, probably on side #%i.  CLEAN UP YOUR MESS!", segp-Segments, sidenum);
+		editor_status("U, V bogosity in segment #%i, probably on side #%i.  CLEAN UP YOUR MESS!", SEGMENT_NUMBER(segp), sidenum);
 	else {
 		vm_vec_sub(&tvec,&Vertices[v2],&Vertices[v1]);
 		uvls[(vhi+1)%4].u = uvhi.u + 
@@ -1008,7 +1008,7 @@ void fix_bogus_uvs_on_side1(segment *sp, int sidenum, int uvonly_flag)
 	side	*sidep = &sp->sides[sidenum];
 
 	if ((sidep->uvls[0].u == 0) && (sidep->uvls[1].u == 0) && (sidep->uvls[2].u == 0)) {
-		mprintf((0,"Found bogus segment %i, side %i\n", sp-Segments, sidenum));
+		mprintf((0, "Found bogus segment %i, side %i\n", SEGMENT_NUMBER(sp), sidenum));
 		med_propagate_tmaps_to_back_side(sp, sidenum, uvonly_flag);
 	}
 }
@@ -1092,9 +1092,9 @@ void med_propagate_tmaps_to_segments(segment *base_seg,segment *con_seg, int uv_
 {
 	int		s;
 
-// mprintf((0,"Propagating segments from %i to %i\n",base_seg-Segments,con_seg-Segments));
+// mprintf((0, "Propagating segments from %i to %i\n", SEGMENT_NUMBER(base_seg), SEGMENT_NUMBER(con_seg)));
 	for (s=0; s<MAX_SIDES_PER_SEGMENT; s++)
-		if (base_seg->children[s] == con_seg-Segments)
+		if (base_seg->children[s] == SEGMENT_NUMBER(con_seg))
 			propagate_tmaps_to_segment_sides(base_seg, s, con_seg, find_connect_side(base_seg, con_seg), uv_only_flag);
 
 	s2s2(con_seg)->static_light = s2s2(base_seg)->static_light;
@@ -1164,7 +1164,7 @@ void cast_light_from_side(segment *segp, int light_side, fix light_intensity, in
 
 	compute_segment_center(&segment_center, segp);
 
-//mprintf((0, "From [%i %i %7.3f]:  ", segp-Segments, light_side, f2fl(light_intensity)));
+//mprintf((0, "From [%i %i %7.3f]:  ", SEGMENT_NUMBER(segp), light_side, f2fl(light_intensity)));
 
 	//	Do for four lights, one just inside each corner of side containing light.
 	for (lightnum=0; lightnum<4; lightnum++) {
@@ -1206,7 +1206,7 @@ void cast_light_from_side(segment *segp, int light_side, fix light_intensity, in
 						side			*rsidep = &rsegp->sides[sidenum];
 						vms_vector	*side_normalp = &rsidep->normals[0];	//	kinda stupid? always use vector 0.
 
-//mprintf((0, "[%i %i], ", rsegp-Segments, sidenum));
+//mprintf((0, "[%i %i], ", SEGMENT_NUMBER(rsegp), sidenum));
 						for (vertnum=0; vertnum<4; vertnum++) {
 							fix			distance_to_point, light_at_point, light_dot;
 							vms_vector	vert_location, vector_to_light;
@@ -1239,10 +1239,10 @@ void cast_light_from_side(segment *segp, int light_side, fix light_intensity, in
 									vm_vec_scale_add(&vert_location_1, &vert_location, &r_vector_to_center, inverse_segment_magnitude);
 									vert_location = vert_location_1;
 
-//if ((segp-Segments == 199) && (rsegp-Segments==199))
+//if ((SEGMENT_NUMBER(segp) == 199) && (SEGMENT_NUMBER(rsegp) == 199))
 //	Int3();
-// Seg0 = segp-Segments;
-// Seg1 = rsegp-Segments;
+// Seg0 = SEGMENT_NUMBER(segp);
+// Seg1 = SEGMENT_NUMBER(rsegp);
 									if (!quick_light) {
 										int hash_value = Side_to_verts[sidenum][vertnum];
 										hash_info	*hashp = &fvi_cache[hash_value];
@@ -1268,7 +1268,7 @@ void cast_light_from_side(segment *segp, int light_side, fix light_intensity, in
 												hashp->flag = 1;
 
 												fq.p0						= &light_location;
-												fq.startseg				= segp-Segments;
+												fq.startseg         = SEGMENT_NUMBER(segp);
 												fq.p1						= &vert_location;
 												fq.rad					= 0;
 												fq.thisobjnum			= -1;
@@ -1378,7 +1378,7 @@ void cast_light_from_side_to_center(segment *segp, int light_side, fix light_int
 						fvi_info	hit_data;
 
 						fq.p0						= &light_location;
-						fq.startseg				= segp-Segments;
+						fq.startseg         = SEGMENT_NUMBER(segp);
 						fq.p1						= &r_segment_center;
 						fq.rad					= 0;
 						fq.thisobjnum			= -1;

@@ -84,12 +84,12 @@ void call_init_ai_object(object *objp, int behavior)
 	int	hide_segment;
 
 	if (behavior == AIB_STATION)
-		hide_segment = Cursegp-Segments;
+		hide_segment = SEGMENT_NUMBER(Cursegp);
 	else {
 		if (Markedsegp != NULL)
-			hide_segment = Markedsegp-Segments;
+			hide_segment = SEGMENT_NUMBER(Markedsegp);
 		else
-			hide_segment = Cursegp-Segments;
+			hide_segment = SEGMENT_NUMBER(Cursegp);
 	}
 
 	mprintf((0, "Initializing AI object with hide segment = %i\n", hide_segment));
@@ -102,14 +102,14 @@ void call_init_ai_object(object *objp, int behavior)
 		mseg = 0;
 
 		if (Cursegp != NULL)
-			cseg = Cursegp-Segments;
+			cseg = SEGMENT_NUMBER(Cursegp);
 
 		if (Markedsegp != NULL) {
-			mseg = Markedsegp-Segments;
+			mseg = SEGMENT_NUMBER(Markedsegp);
 		}
 
-		//objp->ctype.ai_info.follow_path_start_seg = Cursegp-Segments;
-		//objp->ctype.ai_info.follow_path_end_seg = Markedsegp-Segments;
+		//objp->ctype.ai_info.follow_path_start_seg = SEGMENT_NUMBER(Cursegp);
+		//objp->ctype.ai_info.follow_path_end_seg = SEGMENT_NUMBER(Markedsegp);
 	}
 }
 

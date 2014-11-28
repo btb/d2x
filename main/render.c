@@ -499,7 +499,7 @@ void render_side(segment *segp, int sidenum)
 		// -- Old, slow way --	else
 		// -- Old, slow way --		vm_vec_normalized_dir(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
 
-		get_side_verts(vertnum_list,segp-Segments,sidenum);
+		get_side_verts(vertnum_list, SEGMENT_NUMBER(segp), sidenum);
 		v_dot_n0 = vm_vec_dot(&tvec, &normals[0]);
 
 // -- flare creates point -- {
@@ -517,7 +517,7 @@ void render_side(segment *segp, int sidenum)
 // -- flare creates point -- 
 // -- flare creates point -- 		find_hitpoint_uv( &u, &v, &l, hit_point, segp, sidenum, 0);	//	last parm means always use face 0.
 // -- flare creates point -- 
-// -- flare creates point -- 		get_side_verts(vertnum_list, segp-Segments, sidenum);
+// -- flare creates point -- 		get_side_verts(vertnum_list, SEGMENT_NUMBER(segp), sidenum);
 // -- flare creates point -- 
 // -- flare creates point -- 		g3_rotate_point(&Segment_points[MAX_VERTICES-1], hit_point);
 // -- flare creates point -- 
@@ -535,7 +535,7 @@ void render_side(segment *segp, int sidenum)
 // -- flare creates point -- 			tri_uvls[2].v = v;
 // -- flare creates point -- 			tri_uvls[2].l = F1_0;
 // -- flare creates point -- 
-// -- flare creates point -- 			render_face(segp-Segments, sidenum, 3, tri_verts, sidep->tmap_num, sidep->tmap_num2, tri_uvls, &normals[0]);
+// -- flare creates point -- 			render_face(SEGMENT_NUMBER(segp), sidenum, 3, tri_verts, sidep->tmap_num, sidep->tmap_num2, tri_uvls, &normals[0]);
 // -- flare creates point -- 		}
 // -- flare creates point -- 
 // -- flare creates point -- 	return;
@@ -543,9 +543,9 @@ void render_side(segment *segp, int sidenum)
 // -- flare creates point -- }
 
 		if (v_dot_n0 >= 0) {
-			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
+			render_face(SEGMENT_NUMBER(segp), sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 			#ifdef EDITOR
-			check_face(segp-Segments, sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+			check_face(SEGMENT_NUMBER(segp), sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 			#endif
 		}
 	} else {
@@ -556,7 +556,7 @@ void render_side(segment *segp, int sidenum)
 		else
 			vm_vec_normalized_dir_quick(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
 
-		get_side_verts(vertnum_list,segp-Segments,sidenum);
+		get_side_verts(vertnum_list, SEGMENT_NUMBER(segp), sidenum);
 
 		v_dot_n0 = vm_vec_dot(&tvec, &normals[0]);
 
@@ -577,7 +577,7 @@ void render_side(segment *segp, int sidenum)
 		}
 
 		//	Determine whether to detriangulate side: (speed hack, assumes Tulate_min_ratio == F1_0*2, should fixmul(min_dot, Tulate_min_ratio))
-		if (Detriangulation_on && ((min_dot+F1_0/256 > max_dot) || ((Viewer->segnum != segp-Segments) &&  (min_dot > Tulate_min_dot) && (max_dot < min_dot*2)))) {
+		if (Detriangulation_on && ((min_dot+F1_0/256 > max_dot) || ((Viewer->segnum != SEGMENT_NUMBER(segp)) && (min_dot > Tulate_min_dot) && (max_dot < min_dot*2)))) {
 			fix	n0_dot_n1;
 
 			//	The other detriangulation code doesn't deal well with badly non-planar sides.
@@ -585,47 +585,47 @@ void render_side(segment *segp, int sidenum)
 			if (n0_dot_n1 < Min_n0_n1_dot)
 				goto im_so_ashamed;
 
-			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
+			render_face(SEGMENT_NUMBER(segp), sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 			#ifdef EDITOR
-			check_face(segp-Segments, sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+			check_face(SEGMENT_NUMBER(segp), sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 			#endif
 		} else {
 im_so_ashamed: ;
 			if (sidep->type == SIDE_IS_TRI_02) {
 				if (v_dot_n0 >= 0) {
-					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
+					render_face(SEGMENT_NUMBER(segp), sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 					#ifdef EDITOR
-					check_face(segp-Segments, sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+					check_face(SEGMENT_NUMBER(segp), sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
 				}
 
 				if (v_dot_n1 >= 0) {
 					temp_uvls[0] = sidep->uvls[0];		temp_uvls[1] = sidep->uvls[2];		temp_uvls[2] = sidep->uvls[3];
 					vertnum_list[1] = vertnum_list[2];	vertnum_list[2] = vertnum_list[3];	// want to render from vertices 0, 2, 3 on side
-					render_face(segp-Segments, sidenum, 3, &vertnum_list[0], sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
+					render_face(SEGMENT_NUMBER(segp), sidenum, 3, &vertnum_list[0], sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
 					#ifdef EDITOR
-					check_face(segp-Segments, sidenum, 1, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+					check_face(SEGMENT_NUMBER(segp), sidenum, 1, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
 				}
 			} else if (sidep->type ==  SIDE_IS_TRI_13) {
 				if (v_dot_n1 >= 0) {
-					render_face(segp-Segments, sidenum, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, &sidep->uvls[1], wid_flags);	// rendering 1,2,3, so just skip 0
+					render_face(SEGMENT_NUMBER(segp), sidenum, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, &sidep->uvls[1], wid_flags); // rendering 1,2,3, so just skip 0
 					#ifdef EDITOR
-					check_face(segp-Segments, sidenum, 1, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+					check_face(SEGMENT_NUMBER(segp), sidenum, 1, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
 				}
 
 				if (v_dot_n0 >= 0) {
 					temp_uvls[0] = sidep->uvls[0];		temp_uvls[1] = sidep->uvls[1];		temp_uvls[2] = sidep->uvls[3];
 					vertnum_list[2] = vertnum_list[3];		// want to render from vertices 0,1,3
-					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
+					render_face(SEGMENT_NUMBER(segp), sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
 					#ifdef EDITOR
-					check_face(segp-Segments, sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
+					check_face(SEGMENT_NUMBER(segp), sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
 				}
 
 			} else
-				Error("Illegal side type in render_side, type = %i, segment # = %li, side # = %i\n", sidep->type, segp-Segments, sidenum);
+				Error("Illegal side type in render_side, type = %i, segment # = %li, side # = %i\n", sidep->type, SEGMENT_NUMBER(segp), sidenum);
 		}
 	}
 

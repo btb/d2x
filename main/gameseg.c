@@ -86,7 +86,7 @@ void compute_segment_center(vms_vector *vp,segment *sp)
 int find_connect_side(segment *base_seg, segment *con_seg)
 {
 	int	s;
-	short	base_seg_num = base_seg - Segments;
+	short base_seg_num = SEGMENT_NUMBER(base_seg);
 	short *childs = con_seg->children;
 
 	for (s=0; s<MAX_SIDES_PER_SEGMENT; s++) {
@@ -1504,7 +1504,7 @@ void create_walls_on_side(segment *sp, int sidenum)
 	vm_vec_normal(&vn, &Vertices[vm0], &Vertices[vm1], &Vertices[vm2]);
 	dist_to_plane = abs(vm_dist_to_plane(&Vertices[vm3], &vn, &Vertices[vm0]));
 
-//if ((sp-Segments == 0x7b) && (sidenum == 3)) {
+//if ((SEGMENT_NUMBER(sp) == 0x7b) && (sidenum == 3)) {
 //	mprintf((0, "Verts = %3i %3i %3i %3i, negate flag = %3i, dist = %8x\n", vm0, vm1, vm2, vm3, negate_flag, dist_to_plane));
 //	mprintf((0, "  Normal = %8x %8x %8x\n", vn.x, vn.y, vn.z));
 //	mprintf((0, "   Vert %3i = [%8x %8x %8x]\n", vm0, Vertices[vm0].x, Vertices[vm0].y, Vertices[vm0].z));
@@ -1513,7 +1513,7 @@ void create_walls_on_side(segment *sp, int sidenum)
 //	mprintf((0, "   Vert %3i = [%8x %8x %8x]\n", vm3, Vertices[vm3].x, Vertices[vm3].y, Vertices[vm3].z));
 //}
 
-//if ((sp-Segments == 0x86) && (sidenum == 5)) {
+//if ((SEGMENT_NUMBER(sp) == 0x86) && (sidenum == 5)) {
 //	mprintf((0, "Verts = %3i %3i %3i %3i, negate flag = %3i, dist = %8x\n", vm0, vm1, vm2, vm3, negate_flag, dist_to_plane));
 //	mprintf((0, "  Normal = %8x %8x %8x\n", vn.x, vn.y, vn.z));
 //	mprintf((0, "   Vert %3i = [%8x %8x %8x]\n", vm0, Vertices[vm0].x, Vertices[vm0].y, Vertices[vm0].z));
@@ -1541,7 +1541,7 @@ void create_walls_on_side(segment *sp, int sidenum)
 			int			vertnum;
 			side			*s;
 
-			create_abs_vertex_lists(&num_faces, vertex_list, sp - Segments, sidenum, __FILE__, __LINE__);
+			create_abs_vertex_lists(&num_faces, vertex_list, SEGMENT_NUMBER(sp), sidenum, __FILE__, __LINE__);
 
 			Assert(num_faces == 2);
 
@@ -1667,7 +1667,7 @@ int find_ncache_element( int segnum, int sidenum, int face_flags )
 void get_side_normal(segment *sp, int sidenum, int face_num, vms_vector * vm )
 {
 	int i;
-	i = find_ncache_element( sp - Segments, sidenum, 1 << face_num );
+	i = find_ncache_element( SEGMENT_NUMBER(sp), sidenum, 1 << face_num );
 	*vm = ncache[i].normals[face_num];
 	if (0) {
 		vms_vector tmp;
@@ -1681,7 +1681,7 @@ void get_side_normal(segment *sp, int sidenum, int face_num, vms_vector * vm )
 void get_side_normals(segment *sp, int sidenum, vms_vector * vm1, vms_vector * vm2 )
 {
 	int i;
-	i = find_ncache_element( sp - Segments, sidenum, 3 );
+	i = find_ncache_element( SEGMENT_NUMBER(sp), sidenum, 3 );
 	*vm1 = ncache[i].normals[0];
 	*vm2 = ncache[i].normals[1];
 
@@ -1924,7 +1924,7 @@ void apply_light_to_segment(segment *segp,vms_vector *segment_center, fix light_
 {
 	vms_vector	r_segment_center;
 	fix			dist_to_rseg;
-	int 			i,segnum=segp-Segments,sidenum;
+	int         i, segnum = SEGMENT_NUMBER(segp), sidenum;
 
 	for (i=0;i<n_changed_segs;i++)
 		if (changed_segs[i] == segnum)

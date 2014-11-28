@@ -140,7 +140,7 @@ void do_centers_window()
 	// If we change walls, we need to reset the ui code for all
 	// of the checkboxes that control the wall flags.  
 	//------------------------------------------------------------
-	if (old_seg_num != Cursegp-Segments) {
+	if (old_seg_num != SEGMENT_NUMBER(Cursegp)) {
 		Assert(Curseg2p->special < MAX_CENTER_TYPES);
 		ui_radio_set_value(CenterFlag[Curseg2p->special], 1);
 
@@ -192,13 +192,13 @@ void do_centers_window()
 				if (!(robot_flags & (1 << robot_index)))
 				{
 					robot_flags |= (1 << robot_index);
-					mprintf((0, "Segment %i, matcen = %i, robot_flags[%d] = %d\n", Cursegp - Segments, Curseg2p->matcen_num, i, robot_flags));
+					mprintf((0, "Segment %i, matcen = %i, robot_flags[%d] = %d\n", SEGMENT_NUMBER(Cursegp), Curseg2p->matcen_num, i, robot_flags));
 				}
 			}
 			else if (robot_flags & 1 << robot_index)
 			{
 				robot_flags &= ~(1 << robot_index);
-				mprintf((0, "Segment %i, matcen = %i, robot_flags[%d] = %d\n", Cursegp - Segments, Curseg2p->matcen_num, i, robot_flags));
+				mprintf((0, "Segment %i, matcen = %i, robot_flags[%d] = %d\n", SEGMENT_NUMBER(Cursegp), Curseg2p->matcen_num, i, robot_flags));
 			}
 		}
 
@@ -209,11 +209,11 @@ void do_centers_window()
 	// If anything changes in the ui system, redraw all the text that
 	// identifies this wall.
 	//------------------------------------------------------------
-	if (redraw_window || (old_seg_num != Cursegp-Segments ) ) {
+	if ( redraw_window || (old_seg_num != SEGMENT_NUMBER(Cursegp)) ) {
 //		int	i;
 //		char	temp_text[CENTER_STRING_LENGTH];
 	
-		ui_wprintf_at( MainWindow, 12, 6, "Seg: %3d", Cursegp-Segments );
+		ui_wprintf_at( MainWindow, 12, 6, "Seg: %3d", SEGMENT_NUMBER(Cursegp) );
 
 //		for (i=0; i<CENTER_STRING_LENGTH; i++)
 //			temp_text[i] = ' ';
@@ -230,7 +230,7 @@ void do_centers_window()
 		return;
 	}		
 
-	old_seg_num = Cursegp-Segments;
+	old_seg_num = SEGMENT_NUMBER(Cursegp);
 }
 
 

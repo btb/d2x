@@ -608,10 +608,10 @@ int check_effect_blowup(segment *seg,int side,vms_vector *pnt, object *blower, i
 				//note: this must get called before the texture changes, 
 				//because we use the light value of the texture to change
 				//the static light in the segment
-				subtract_light(seg-Segments,side);
+				subtract_light(SEGMENT_NUMBER(seg), side);
 
 				if (Newdemo_state == ND_STATE_RECORDING)
-					newdemo_record_effect_blowup( seg-Segments, side, pnt);
+					newdemo_record_effect_blowup( SEGMENT_NUMBER(seg), side, pnt );
 
 				if (ec!=-1) {
 					dest_size = Effects[ec].dest_size;
@@ -621,15 +621,15 @@ int check_effect_blowup(segment *seg,int side,vms_vector *pnt, object *blower, i
 					vc = 3;
 				}
 
-				object_create_explosion( seg-Segments, pnt, dest_size, vc );
+				object_create_explosion( SEGMENT_NUMBER(seg), pnt, dest_size, vc );
 
 				if (ec!=-1 && db!=-1 && !(Effects[ec].flags&EF_ONE_SHOT)) {
 
 					if ((sound_num = Vclip[vc].sound_num) != -1)
-		  				digi_link_sound_to_pos( sound_num, seg-Segments, 0, pnt,  0, F1_0 );
+						digi_link_sound_to_pos( sound_num, SEGMENT_NUMBER(seg), 0, pnt, 0, F1_0 );
 
 					if ((sound_num=Effects[ec].sound_num)!=-1)		//kill sound
-						digi_kill_sound_linked_to_segment(seg-Segments,side,sound_num);
+						digi_kill_sound_linked_to_segment(SEGMENT_NUMBER(seg), side, sound_num);
 
 					if (Effects[ec].dest_eclip!=-1 && Effects[Effects[ec].dest_eclip].segnum==-1) {
 						int bm_num;
@@ -642,7 +642,7 @@ int check_effect_blowup(segment *seg,int side,vms_vector *pnt, object *blower, i
 
 						new_ec->time_left = new_ec->vc.frame_time;
 						new_ec->frame_count = 0;
-						new_ec->segnum = seg-Segments;
+						new_ec->segnum = SEGMENT_NUMBER(seg);
 						new_ec->sidenum = side;
 						new_ec->flags |= EF_ONE_SHOT;
 						new_ec->dest_bm_num = Effects[ec].dest_bm_num;
@@ -660,7 +660,7 @@ int check_effect_blowup(segment *seg,int side,vms_vector *pnt, object *blower, i
 					seg->sides[side].tmap_num2 = TmapInfo[tm].destroyed | tmf;
 
 					//assume this is a light, and play light sound
-		  			digi_link_sound_to_pos( SOUND_LIGHT_BLOWNUP, seg-Segments, 0, pnt,  0, F1_0 );
+					digi_link_sound_to_pos( SOUND_LIGHT_BLOWNUP, SEGMENT_NUMBER(seg), 0, pnt, 0, F1_0 );
 				}
 
 

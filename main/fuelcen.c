@@ -128,7 +128,7 @@ void reset_all_robot_centers()
 // Turns a segment into a fully charged up fuel center...
 void fuelcen_create( segment *segp)
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	int	station_type;
 
@@ -158,7 +158,7 @@ void fuelcen_create( segment *segp)
 	Station[Num_fuelcenters].Type = station_type;
 	Station[Num_fuelcenters].MaxCapacity = Fuelcen_max_amount;
 	Station[Num_fuelcenters].Capacity = Station[Num_fuelcenters].MaxCapacity;
-	Station[Num_fuelcenters].segnum = seg2p-Segment2s;
+	Station[Num_fuelcenters].segnum = SEGMENT_NUMBER(segp);
 	Station[Num_fuelcenters].Timer = -1;
 	Station[Num_fuelcenters].Flag = 0;
 //	Station[Num_fuelcenters].NextRobotType = -1;
@@ -178,7 +178,7 @@ void fuelcen_create( segment *segp)
 // This function is separate from other fuelcens because we don't want values reset.
 void matcen_create( segment *segp)
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	int	station_type = seg2p->special;
 
@@ -194,20 +194,20 @@ void matcen_create( segment *segp)
 	Station[Num_fuelcenters].Capacity = i2f(Difficulty_level + 3);
 	Station[Num_fuelcenters].MaxCapacity = Station[Num_fuelcenters].Capacity;
 
-	Station[Num_fuelcenters].segnum = seg2p-Segment2s;
+	Station[Num_fuelcenters].segnum = SEGMENT_NUMBER(segp);
 	Station[Num_fuelcenters].Timer = -1;
 	Station[Num_fuelcenters].Flag = 0;
 //	Station[Num_fuelcenters].NextRobotType = -1;
 //	Station[Num_fuelcenters].last_created_obj=NULL;
 //	Station[Num_fuelcenters].last_created_sig = -1;
-	compute_segment_center(&Station[Num_fuelcenters].Center, &Segments[seg2p-Segment2s] );
+	compute_segment_center( &Station[Num_fuelcenters].Center, segp );
 
 	seg2p->matcen_num = Num_robot_centers;
 	Num_robot_centers++;
 
 	RobotCenters[seg2p->matcen_num].hit_points = MATCEN_HP_DEFAULT;
 	RobotCenters[seg2p->matcen_num].interval = MATCEN_INTERVAL_DEFAULT;
-	RobotCenters[seg2p->matcen_num].segnum = seg2p-Segment2s;
+	RobotCenters[seg2p->matcen_num].segnum = SEGMENT_NUMBER(segp);
 	RobotCenters[seg2p->matcen_num].fuelcen_num = Num_fuelcenters;
 
 	//mprintf( (0, "Segment %d is assigned to be fuel center %d.\n", Station[Num_fuelcenters].segnum, Num_fuelcenters ));
@@ -218,7 +218,7 @@ void matcen_create( segment *segp)
 // Adds a segment that already is a special type into the Station array.
 void fuelcen_activate( segment * segp, int station_type )
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	seg2p->special = station_type;
 
@@ -288,7 +288,7 @@ void trigger_matcen(int segnum)
 //	Deletes the segment point entry in the FuelCenter list.
 void fuelcen_delete( segment * segp )
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 	int i, j;
 
 Restart: ;
@@ -296,7 +296,7 @@ Restart: ;
 	seg2p->special = 0;
 
 	for (i=0; i<Num_fuelcenters; i++ )	{
-		if ( Station[i].segnum == segp-Segments )	{
+		if ( Station[i].segnum == SEGMENT_NUMBER(segp) ) {
 
 			// If Robot maker is deleted, fix Segments and RobotCenters.
 			if (Station[i].Type == SEGMENT_IS_ROBOTMAKER) {
@@ -342,7 +342,7 @@ object * create_morph_robot( segment *segp, vms_vector *object_pos, int object_i
 	Players[Player_num].num_robots_level++;
 	Players[Player_num].num_robots_total++;
 
-	objnum = obj_create(OBJ_ROBOT, object_id, segp-Segments, object_pos,
+	objnum = obj_create(OBJ_ROBOT, object_id, SEGMENT_NUMBER(segp), object_pos,
 				&vmd_identity_matrix, Polygon_models[Robot_info[object_id].model_num].rad,
 				CT_AI, MT_PHYSICS, RT_POLYOBJ);
 
@@ -638,7 +638,7 @@ void fuelcen_update_all()
 //-------------------------------------------------------------
 fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	static fix last_play_time=0;
 
@@ -708,7 +708,7 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 // use same values as fuel centers
 fix repaircen_give_shields(segment *segp, fix MaxAmountCanTake )
 {
-	segment2        *seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 	static fix last_play_time=0;
 
 	Assert( segp != NULL );
@@ -765,7 +765,7 @@ fix repaircen_give_shields(segment *segp, fix MaxAmountCanTake )
 //--unused-- 	Assert( segp != NULL );
 //--unused-- 	if ( segp == NULL ) return;
 //--unused--
-//--unused-- 	mprintf((0, "Obsolete function fuelcen_damage() called with seg=%i, damage=%7.3f\n", segp-Segments, f2fl(damage)));
+//--unused-- 	mprintf((0, "Obsolete function fuelcen_damage() called with seg=%i, damage=%7.3f\n", SEGMENT_NUMBER(segp), f2fl(damage)));
 //--unused-- 	switch( segp->special )	{
 //--unused-- 	case SEGMENT_IS_NOTHING:
 //--unused-- 		return;
@@ -1136,7 +1136,7 @@ extern void multi_send_capture_bonus (char);
 
 void fuelcen_check_for_goal(segment *segp)
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	Assert( segp != NULL );
 	Assert (Game_mode & GM_CAPTURE);
@@ -1166,7 +1166,7 @@ void fuelcen_check_for_goal(segment *segp)
 
 void fuelcen_check_for_hoard_goal(segment *segp)
 {
-	segment2	*seg2p = &Segment2s[segp-Segments];
+	segment2 *seg2p = s2s2(segp);
 
 	Assert( segp != NULL );
 	Assert (Game_mode & GM_HOARD);

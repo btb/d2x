@@ -1348,7 +1348,7 @@ void add_segment_edges(segment *seg)
 	int 	is_grate, no_fade;
 	ubyte	color;
 	int	sn;
-	int	segnum = seg-Segments;
+	int     segnum = SEGMENT_NUMBER(seg);
 	int	hidden_flag;
 	int ttype,trigger_num;
 	
@@ -1424,7 +1424,7 @@ void add_segment_edges(segment *seg)
 				} else {
 					color = Wall_normal_color;
 					hidden_flag = 1;
-					//mprintf((0, "Wall at seg:side %i:%i is hidden.\n", seg-Segments, sn));
+					//mprintf((0, "Wall at seg:side %i:%i is hidden.\n", SEGMENT_NUMBER(seg), sn));
 				}
 				break;
 			case WALL_CLOSED:
@@ -1474,7 +1474,7 @@ void add_segment_edges(segment *seg)
 void add_unknown_segment_edges(segment *seg)
 {
 	int sn;
-	int segnum = seg-Segments;
+	int segnum = SEGMENT_NUMBER(seg);
 	
 	for (sn=0;sn<MAX_SIDES_PER_SEGMENT;sn++) {
 		short	vertex_list[4];

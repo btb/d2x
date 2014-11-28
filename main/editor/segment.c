@@ -566,7 +566,7 @@ int check_for_degenerate_segment(segment *sp)
 	if (dot > 0)
 		degeneracy_flag = 0;
 	else {
-		mprintf((0, "segment #%i is degenerate due to cross product check.\n", sp-Segments));
+		mprintf((0, "segment #%i is degenerate due to cross product check.\n", SEGMENT_NUMBER(sp)));
 		degeneracy_flag = 1;
 	}
 
@@ -982,7 +982,7 @@ int med_attach_segment_rotated(segment *destseg, segment *newseg, int destside, 
 
 	// Add segment to proper group list.
 	if (nsp->group > -1)
-		add_segment_to_group(nsp-Segments, nsp->group);
+		add_segment_to_group(SEGMENT_NUMBER(nsp), nsp->group);
 
 	// Copy the texture map ids.
 	copy_tmap_ids(nsp,newseg);
@@ -996,7 +996,7 @@ int med_attach_segment_rotated(segment *destseg, segment *newseg, int destside, 
 	// Form the connection
 	destseg->children[destside] = segnum;
 //	destseg->sides[destside].render_flag = 0;
-	nsp->children[newside] = destseg-Segments;
+	nsp->children[newside] = SEGMENT_NUMBER(destseg);
 
 	// Copy vertex indices of the four vertices forming the joint
 	dvp = Side_to_verts[destside];
@@ -1189,7 +1189,7 @@ int med_delete_segment(segment *sp)
 	int		s,side,segnum;
 	int 		objnum;
 
-	segnum = sp-Segments;
+	segnum = SEGMENT_NUMBER(sp);
 
 	// Cannot delete segment if only segment.
 	if (Num_segments == 1)
@@ -1244,7 +1244,7 @@ int med_delete_segment(segment *sp)
 
 	// If deleted segment = group segment, wipe it off the group list.
 	if (sp->group > -1) 
-			delete_segment_from_group(sp-Segments, sp->group);
+			delete_segment_from_group(SEGMENT_NUMBER(sp), sp->group);
 
 	// If we deleted something which was not connected to anything, must now select a new current segment.
 	if (Cursegp == sp)
@@ -1268,7 +1268,7 @@ int med_delete_segment(segment *sp)
 
 			if (objnum == OBJECT_NUMBER(ConsoleObject))	{
 				compute_segment_center(&ConsoleObject->pos,Cursegp);
-				obj_relink(objnum,Cursegp-Segments);
+				obj_relink(objnum, SEGMENT_NUMBER(Cursegp));
 			} else
 				obj_delete(objnum);
 		}
@@ -1331,14 +1331,14 @@ int med_rotate_segment(segment *seg, vms_matrix *rotmat)
 	destseg = &Segments[seg->children[newside]];
 
 	destside = 0;
-	while ((destseg->children[destside] != seg-Segments) && (destside < MAX_SIDES_PER_SEGMENT))
+	while ((destseg->children[destside] != SEGMENT_NUMBER(seg)) && (destside < MAX_SIDES_PER_SEGMENT))
 		destside++;
 		
 	// Before deleting the segment, copy its texture maps to New_segment
 	copy_tmaps_to_segment(&New_segment,seg);
 
 	if (med_delete_segment(seg))
-		mprintf((0,"Error in rotation: Unable to delete segment %i\n",seg-Segments));
+		mprintf((0, "Error in rotation: Unable to delete segment %i\n", SEGMENT_NUMBER(seg)));
 
 	if (Curside == WFRONT)
 		Curside = WBACK;
@@ -1507,7 +1507,7 @@ int med_form_joint(segment *seg1, int side1, segment *seg2, int side2)
 	// Put the one segment we know are being modified into the validation list.
 	// Note: seg1 does not require a full validation, only a validation of the affected side.  Its vertices do not move.
 	nv = 1;
-	validation_list[0] = seg2 - Segments;
+	validation_list[0] = SEGMENT_NUMBER(seg2);
 
 	for (v=0; v<4; v++)
 		for (s=0; s<=Highest_segment_index; s++)
@@ -1525,8 +1525,8 @@ int med_form_joint(segment *seg1, int side1, segment *seg2, int side2)
 					}
 
 	//	Form new connections.
-	seg1->children[side1] = seg2 - Segments;
-	seg2->children[side2] = seg1 - Segments;
+	seg1->children[side1] = SEGMENT_NUMBER(seg2);
+	seg2->children[side2] = SEGMENT_NUMBER(seg1);
 
 	// validate all segments
 	validate_segment_side(seg1,side1);
@@ -1580,9 +1580,9 @@ int med_form_bridge_segment(segment *seg1, int side1, segment *seg2, int side2)
 		return 1;
 
 	bs = &Segments[get_free_segment_number()];
-// mprintf((0,"Forming bridge segment %i from %i to %i\n",bs-Segments,seg1-Segments,seg2-Segments));
+// mprintf((0, "Forming bridge segment %i from %i to %i\n", SEGMENT_NUMBER(bs), SEGMENT_NUMBER(seg1), SEGMENT_NUMBER(seg2)));
 
-	bs->segnum = bs-Segments;
+	bs->segnum = SEGMENT_NUMBER(bs);
 	bs->objects = -1;
 
 	// Copy vertices from seg2 into last 4 vertices of bridge segment.
@@ -1605,11 +1605,11 @@ int med_form_bridge_segment(segment *seg1, int side1, segment *seg2, int side2)
 
 	// Now form connections between segments.
 
-	bs->children[AttachSide] = seg1 - Segments;
-        bs->children[(int) Side_opposite[AttachSide]] = seg2 - Segments;
+	bs->children[AttachSide] = SEGMENT_NUMBER(seg1);
+	bs->children[(int) Side_opposite[AttachSide]] = SEGMENT_NUMBER(seg2);
 
-	seg1->children[side1] = bs-Segments; //seg2 - Segments;
-	seg2->children[side2] = bs-Segments; //seg1 - Segments;
+	seg1->children[side1] = SEGMENT_NUMBER(bs); // SEGMENT_NUMBER(seg2);
+	seg2->children[side2] = SEGMENT_NUMBER(bs); // SEGMENT_NUMBER(seg1);
 
 	//	Validate bridge segment, and if degenerate, clean up mess.
 	Degenerate_segment_found = 0;
@@ -1968,7 +1968,7 @@ void warn_if_concave_segment(segment *s)
 	result = check_seg_concavity(s);
 
 	if (result) {
-		Warning_segs[N_warning_segs++] = s-Segments;
+		Warning_segs[N_warning_segs++] = SEGMENT_NUMBER(s);
 
         if (N_warning_segs) {
 			editor_status("*** WARNING *** New segment is concave! *** WARNING ***");
@@ -1997,7 +1997,7 @@ int med_find_adjacent_segment_side(segment *sp, int side, segment **adj_sp, int 
 
 	//	Scan all segments, looking for a segment which contains the four abs_verts
 	for (seg=0; seg<=Highest_segment_index; seg++) {
-		if (seg != sp-Segments) {
+		if (seg != SEGMENT_NUMBER(sp)) {
 			for (v=0; v<4; v++) {												// do for each vertex in abs_verts
 				for (vv=0; vv<MAX_VERTICES_PER_SEGMENT; vv++)			// do for each vertex in segment
 					if (abs_verts[v] == Segments[seg].verts[vv])
@@ -2054,7 +2054,7 @@ int med_find_closest_threshold_segment_side(segment *sp, int side, segment **adj
 
 	//	Scan all segments, looking for a segment which contains the four abs_verts
 	for (seg=0; seg<=Highest_segment_index; seg++) 
-		if (seg != sp-Segments) 
+		if (seg != SEGMENT_NUMBER(sp))
 			for (s=0;s<MAX_SIDES_PER_SEGMENT;s++) {
 				if (!IS_CHILD(Segments[seg].children[s])) {
 					compute_center_point_on_side(&vtc, &Segments[seg], s); 

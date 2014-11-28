@@ -89,9 +89,9 @@ int SelectCurrentSegForward()
 {
 	int	newseg_num,newside;
 
-	get_next_segment(Cursegp-Segments,Curside,&newseg_num,&newside);
+	get_next_segment(SEGMENT_NUMBER(Cursegp), Curside, &newseg_num, &newside);
 
-	if (newseg_num != Cursegp-Segments) {
+	if (newseg_num != SEGMENT_NUMBER(Cursegp)) {
 		Cursegp = &Segments[newseg_num];
 		Curside = newside;
 		Update_flags |= UF_ED_STATE_CHANGED;
@@ -110,7 +110,7 @@ int SelectCurrentSegBackward()
 {
 	int	newseg_num,newside;
 
-	get_previous_segment(Cursegp-Segments,Curside,&newseg_num,&newside);
+	get_previous_segment(SEGMENT_NUMBER(Cursegp), Curside, &newseg_num, &newside);
 
 	Cursegp = &Segments[newseg_num];
 	Curside = newside;

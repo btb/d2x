@@ -173,15 +173,16 @@ extern segment      Segments[];
 extern segment2     Segment2s[];
 extern int          Num_segments;
 extern int          Num_vertices;
+#define SEGMENT_NUMBER(seg) ((int)((seg) - Segments))
 
 // Get pointer to the segment2 for the given segment pointer
-#define s2s2(segp) (&Segment2s[(segp) - Segments])
+#define s2s2(segp) (&Segment2s[SEGMENT_NUMBER(segp)])
 
 extern sbyte Side_to_verts[MAX_SIDES_PER_SEGMENT][4];       // Side_to_verts[my_side] is list of vertices forming side my_side.
 extern int  Side_to_verts_int[MAX_SIDES_PER_SEGMENT][4];    // Side_to_verts[my_side] is list of vertices forming side my_side.
 extern char Side_opposite[];                                // Side_opposite[my_side] returns side opposite cube from my_side.
 
-#define SEG_PTR_2_NUM(segptr) (Assert((unsigned) (segptr-Segments)<MAX_SEGMENTS),(segptr)-Segments)
+#define SEG_PTR_2_NUM(segptr) (Assert( (unsigned)SEGMENT_NUMBER(segptr) < MAX_SEGMENTS ), SEGMENT_NUMBER(segptr))
 
 // New stuff, 10/14/95: For shooting out lights and monitors.
 // Light cast upon vert_light vertices in segnum:sidenum by some light

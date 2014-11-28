@@ -1961,7 +1961,7 @@ int create_gated_robot( int segnum, int object_id, vms_vector *pos)
 
 	compute_segment_center(&object_pos, segp);
 	if (pos == NULL)
-		pick_random_point_in_seg(&object_pos, (int)(segp - Segments));
+		pick_random_point_in_seg(&object_pos, SEGMENT_NUMBER(segp));
 	else
 		object_pos = *pos;
 
@@ -1980,7 +1980,7 @@ int create_gated_robot( int segnum, int object_id, vms_vector *pos)
 		return -1;
 	}
 
-	//mprintf((0, "Gating in object %i in segment %i\n", objnum, segp-Segments));
+	//mprintf((0, "Gating in object %i in segment %i\n", objnum, SEGMENT_NUMBER(segp)));
 
 	Objects[objnum].lifeleft = F1_0*30;	//	Gated in robots only live 30 seconds.
 

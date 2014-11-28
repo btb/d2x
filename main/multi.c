@@ -4045,7 +4045,7 @@ void multi_do_wall_status (char *buf)
 	if (Walls[wallnum].type==WALL_OPEN)
 	{
 		digi_kill_sound_linked_to_segment(Walls[wallnum].segnum,Walls[wallnum].sidenum,SOUND_FORCEFIELD_HUM);
-		//digi_kill_sound_linked_to_segment(csegp-Segments,cside,SOUND_FORCEFIELD_HUM);
+		//digi_kill_sound_linked_to_segment(SEGMENT_NUMBER(csegp), cside, SOUND_FORCEFIELD_HUM);
 	}
 
 
