@@ -473,9 +473,9 @@ int main(int argc, char *argv[])
 	PHYSFSX_init(argc, argv);
 
 	if (FindArg("-debug"))
-		con_threshold.value = (float)2;
+		con_threshold.value = (float)CON_DEBUG;
 	else if (FindArg("-verbose"))
-		con_threshold.value = (float)1;
+		con_threshold.value = (float)CON_VERBOSE;
 
 	if (! cfile_init("descent2.hog"))
 		if (! cfile_init("d2demo.hog"))
