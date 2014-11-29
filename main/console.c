@@ -56,8 +56,6 @@ static int  con_line; /* Current display line */
 #endif
 
 #ifdef CONSOLE
-static int con_initialized;
-
 ConsoleInformation *Console;
 
 void con_parse(ConsoleInformation *console, char *command);
@@ -69,9 +67,7 @@ void con_parse(ConsoleInformation *console, char *command);
  */
 void con_free(void)
 {
-	if (con_initialized)
-		CON_Free(Console);
-	con_initialized = 0;
+	CON_Free(Console);
 }
 #endif
 
@@ -82,8 +78,24 @@ void con_free(void)
  */
 int con_init(void)
 {
+	grs_screen fake_screen;
+	grs_font   fake_font;
+
+	fake_screen.sc_w = 200;
+	fake_screen.sc_h = 100;
+	fake_font.ft_w = 1;
+	fake_font.ft_h = 1;
+
+	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
+
+	CON_SetExecuteFunction(Console, con_parse);
+
+
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
+
+	atexit(con_free);
+
 	return 0;
 }
 
@@ -108,19 +120,12 @@ void con_background(char *filename)
 }
 
 
-void con_init_real(void)
+void con_init_gfx(void)
 {
-	Console = CON_Init(SMALL_FONT, grd_curscreen, CON_NUM_LINES, 0, 0, SWIDTH, SHEIGHT / 2);
-
-	Assert(Console);
-
-	CON_SetExecuteFunction(Console, con_parse);
+	CON_Font(Console, SMALL_FONT, gr_getcolor(63, 63, 63), -1);
+	CON_Transfer(Console, grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
 
 	con_background(CON_BG);
-
-	con_initialized = 1;
-
-	atexit(con_free);
 }
 #endif
 
@@ -128,9 +133,6 @@ void con_init_real(void)
 void con_resize(void)
 {
 #ifdef CONSOLE
-	if (!con_initialized)
-		con_init_real();
-
 	CON_Font(Console, SMALL_FONT, gr_getcolor(63, 63, 63), -1);
 	CON_Resize(Console, 0, 0, SWIDTH, SHEIGHT / 2);
 	con_background(CON_BG);
@@ -153,8 +155,7 @@ void con_printf(int priority, char *fmt, ...)
 		va_end (arglist);
 
 #ifdef CONSOLE
-		if (con_initialized)
-			CON_Out(Console, buffer);
+		CON_Out(Console, buffer);
 #endif
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
@@ -298,9 +299,6 @@ void con_draw(void)
 void con_show(void)
 {
 #ifdef CONSOLE
-	if (!con_initialized)
-		con_init_real();
-
 	CON_Show(Console);
 	CON_Topmost(Console);
 #endif

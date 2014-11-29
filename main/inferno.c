@@ -466,8 +466,8 @@ int main(int argc, char *argv[])
 	int i, t;
 	ubyte title_pal[768];
 
-	con_init();  // Initialise the console
 	mem_init();
+	con_init();  // Initialise the console
 
 	error_init(NULL, NULL);
 	PHYSFSX_init(argc, argv);
@@ -721,6 +721,8 @@ int main(int argc, char *argv[])
 
 	con_printf( CON_DEBUG, "\nShowing loading screen..." );
 	show_loading_screen(title_pal);	// title_pal is needed (see below)
+
+	con_init_gfx();
 
 	con_printf( CON_DEBUG , "\nDoing bm_init..." );
 	#ifdef EDITOR
