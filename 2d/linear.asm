@@ -39,8 +39,8 @@ section .data
 		XAdvance	dd  0	;1 or -1, for direction in which X advances
 		XStart		dd  0
 		YStart		dd  0
-		XEnd		dd  0
-		YEnd		dd  0
+		X_End		dd  0
+		Y_End		dd  0
 
 section .text
 ; Fast run length slice line drawing implementation for mode 0x13, the VGA's
@@ -66,8 +66,8 @@ gr_linear_line:
 	mov	ecx,[esp+32]
 	mov	[XStart], eax
 	mov	[YStart], edx
-	mov	[XEnd], ebx
-	mov	[YEnd], ecx
+	mov	[X_End], ebx
+	mov	[Y_End], ecx
 
 	mov	ebp, [_gr_var_bwidth]
 
@@ -75,12 +75,12 @@ gr_linear_line:
 ; and to make lines between the same endpoints always draw the same pixels.
 
 	mov	eax,[YStart]
-	cmp	eax,[YEnd]
+	cmp	eax,[Y_End]
 	jle     LineIsTopToBottom
-	xchg	[YEnd], eax    ;swap endpoints
+	xchg	[Y_End], eax    ;swap endpoints
 	mov	[YStart], eax
 	mov	ebx, [XStart]
-	xchg	[XEnd], ebx
+	xchg	[X_End], ebx
 	mov	[XStart], ebx
 
 LineIsTopToBottom:
@@ -95,14 +95,14 @@ LineIsTopToBottom:
 							; = offset of initial pixel
 
 ; Figure out how far we're going vertically (guaranteed to be positive).
-	mov	ecx, [YEnd]
+	mov	ecx, [Y_End]
 	sub	ecx, [YStart]	  ;ECX = YDelta
 
 ; Figure out whether we're going left or right, and how far we're going
 ; horizontally. In the process, special-case vertical lines, for speed and
 ; to avoid nasty boundary conditions and division by 0.
 
-	mov	edx, [XEnd]
+	mov	edx, [X_End]
 	sub     edx, esi        ;XDelta
 	jnz     NotVerticalLine ;XDelta == 0 means vertical line
 							;it is a vertical line
