@@ -16,7 +16,7 @@ endif
 lib2d_a_SOURCES = ${ASM_SRCS} \
 2dsline.c  box.c     disc.c    ibitblt.c  pcx.c    rect.c   scalec.c \
 bitblt.c   canvas.c  font.c    line.c	  pixel.c  rle.c \
-bitmap.c   circle.c  gpixel.c  palette.c  poly.c
+bitmap.c   circle.c  gpixel.c  palette.c
 
 SUFFIXES = .asm
 .asm.o:
@@ -29,4 +29,4 @@ endif
 EXTRA_DIST = \
 linear.asm scalea.asm tmerge_a.asm \
 bitmap.h clip.h scalea.h \
-scale.c tmerge.c
+poly.c scale.c tmerge.c
