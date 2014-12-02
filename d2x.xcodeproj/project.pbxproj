@@ -170,6 +170,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		146694A51A27246A0070D41D /* d2x.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = d2x.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		146694A91A27246A0070D41D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		146694AA1A27246A0070D41D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -200,7 +201,6 @@
 		146694DD1A2729860070D41D /* line.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = line.c; sourceTree = "<group>"; };
 		146694DE1A2729860070D41D /* linear.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = linear.asm; sourceTree = "<group>"; };
 		146694DF1A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146694E01A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146694E11A2729860070D41D /* palette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = palette.c; sourceTree = "<group>"; };
 		146694E21A2729860070D41D /* pcx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcx.c; sourceTree = "<group>"; };
 		146694E31A2729860070D41D /* pixel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pixel.c; sourceTree = "<group>"; };
@@ -222,7 +222,6 @@
 		146694F41A2729860070D41D /* interp.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = interp.asm; sourceTree = "<group>"; };
 		146694F51A2729860070D41D /* interp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interp.c; sourceTree = "<group>"; };
 		146694F61A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146694F71A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146694F81A2729860070D41D /* matrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = matrix.c; sourceTree = "<group>"; };
 		146694F91A2729860070D41D /* points.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = points.c; sourceTree = "<group>"; };
 		146694FA1A2729860070D41D /* rod.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rod.c; sourceTree = "<group>"; };
@@ -287,7 +286,6 @@
 		146695411A2729860070D41D /* joydefs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joydefs.c; sourceTree = "<group>"; };
 		146695421A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		146695431A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695441A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695451A2729860070D41D /* midiallg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = midiallg.c; sourceTree = "<group>"; };
 		146695471A2729860070D41D /* drv_sb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = drv_sb.c; sourceTree = "<group>"; };
 		146695491A2729860070D41D /* mdma.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mdma.h; sourceTree = "<group>"; };
@@ -313,7 +311,6 @@
 		1466955F1A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
 		146695601A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		146695611A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695621A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695631A2729860070D41D /* mouse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mouse.c; sourceTree = "<group>"; };
 		146695651A2729860070D41D /* event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = event.h; sourceTree = "<group>"; };
 		146695661A2729860070D41D /* gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui.h; sourceTree = "<group>"; };
@@ -343,18 +340,15 @@
 		146695801A2729860070D41D /* joystick.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joystick.c; sourceTree = "<group>"; };
 		146695811A2729860070D41D /* linuxnet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linuxnet.c; sourceTree = "<group>"; };
 		146695821A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695831A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695841A2729860070D41D /* mono.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mono.c; sourceTree = "<group>"; };
 		146695851A2729860070D41D /* serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serial.c; sourceTree = "<group>"; };
 		146695861A2729860070D41D /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
 		146695871A2729860070D41D /* ukali.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ukali.c; sourceTree = "<group>"; };
 		146695881A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695891A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		1466958B1A2729860070D41D /* glx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glx.c; sourceTree = "<group>"; };
 		1466958C1A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
 		1466958D1A2729860070D41D /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
 		1466958E1A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		1466958F1A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695901A2729860070D41D /* ogl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogl.c; sourceTree = "<group>"; };
 		146695911A2729860070D41D /* sdlgl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sdlgl.c; sourceTree = "<group>"; };
 		146695921A2729860070D41D /* wgl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wgl.c; sourceTree = "<group>"; };
@@ -366,7 +360,6 @@
 		146695991A2729860070D41D /* joydefs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joydefs.c; sourceTree = "<group>"; };
 		1466959A1A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		1466959B1A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		1466959C1A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		1466959D1A2729860070D41D /* mouse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mouse.c; sourceTree = "<group>"; };
 		1466959E1A2729860070D41D /* rbaudio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rbaudio.c; sourceTree = "<group>"; };
 		1466959F1A2729860070D41D /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
@@ -375,7 +368,6 @@
 		146695A31A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
 		146695A41A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		146695A51A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695A61A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695A71A2729860070D41D /* mouse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mouse.c; sourceTree = "<group>"; };
 		146695A91A2729860070D41D /* d1x.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = d1x.ico; sourceTree = "<group>"; };
 		146695AA1A2729860070D41D /* d1x.rc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = d1x.rc; sourceTree = "<group>"; };
@@ -427,7 +419,6 @@
 		146695DB1A2729860070D41D /* joyhh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joyhh.c; sourceTree = "<group>"; };
 		146695DC1A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		146695DD1A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695DE1A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146695DF1A2729860070D41D /* midi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = midi.c; sourceTree = "<group>"; };
 		146695E01A2729860070D41D /* mingw_init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mingw_init.c; sourceTree = "<group>"; };
 		146695E11A2729860070D41D /* mono.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mono.c; sourceTree = "<group>"; };
@@ -443,7 +434,6 @@
 		146695EB1A2729860070D41D /* winnet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = winnet.c; sourceTree = "<group>"; };
 		146695ED1A2729860070D41D /* CON_console.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CON_console.c; sourceTree = "<group>"; };
 		146695EE1A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146695EF1A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		1466960C1A2729860070D41D /* iff15bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff15bpp.c; sourceTree = "<group>"; };
 		1466960D1A2729860070D41D /* iff8bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff8bpp.c; sourceTree = "<group>"; };
 		1466960E1A2729860070D41D /* iffmike.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iffmike.c; sourceTree = "<group>"; };
@@ -451,7 +441,6 @@
 		146696101A2729860070D41D /* ifftestv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ifftestv.c; sourceTree = "<group>"; };
 		146696111A2729860070D41D /* iff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff.c; sourceTree = "<group>"; };
 		146696121A2729860070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146696131A2729860070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146696151A2729860070D41D /* 3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3d.h; sourceTree = "<group>"; };
 		146696161A2729860070D41D /* args.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = args.h; sourceTree = "<group>"; };
 		146696171A2729860070D41D /* byteswap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = byteswap.h; sourceTree = "<group>"; };
@@ -506,7 +495,6 @@
 		146696491A2729870070D41D /* decoder8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = decoder8.c; sourceTree = "<group>"; };
 		1466964A1A2729870070D41D /* decoders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decoders.h; sourceTree = "<group>"; };
 		1466964B1A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		1466964C1A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		1466964D1A2729870070D41D /* mve_audio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_audio.c; sourceTree = "<group>"; };
 		1466964E1A2729870070D41D /* mve_audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mve_audio.h; sourceTree = "<group>"; };
 		1466964F1A2729870070D41D /* mve_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_main.c; sourceTree = "<group>"; };
@@ -579,7 +567,6 @@
 		146696941A2729870070D41D /* macro.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = macro.c; sourceTree = "<group>"; };
 		146696951A2729870070D41D /* macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
 		146696961A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146696971A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146696981A2729870070D41D /* med.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = med.c; sourceTree = "<group>"; };
 		146696991A2729870070D41D /* meddraw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = meddraw.c; sourceTree = "<group>"; };
 		1466969A1A2729870070D41D /* meddraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meddraw.h; sourceTree = "<group>"; };
@@ -653,7 +640,6 @@
 		146696DE1A2729870070D41D /* lighting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lighting.h; sourceTree = "<group>"; };
 		146696DF1A2729870070D41D /* link.bat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = link.bat; sourceTree = "<group>"; };
 		146696E01A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146696E11A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146696E21A2729870070D41D /* menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = menu.c; sourceTree = "<group>"; };
 		146696E31A2729870070D41D /* menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
 		146696E41A2729870070D41D /* mglobal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mglobal.c; sourceTree = "<group>"; };
@@ -751,13 +737,11 @@
 		146697421A2729870070D41D /* fix.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = fix.asm; sourceTree = "<group>"; };
 		146697431A2729870070D41D /* fixc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixc.c; sourceTree = "<group>"; };
 		146697441A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146697451A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146697461A2729870070D41D /* rand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rand.c; sourceTree = "<group>"; };
 		146697471A2729870070D41D /* tables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tables.c; sourceTree = "<group>"; };
 		146697481A2729870070D41D /* vecmat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vecmat.c; sourceTree = "<group>"; };
 		146697491A2729870070D41D /* vecmata.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = vecmata.asm; sourceTree = "<group>"; };
 		1466974B1A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		1466974C1A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		1466974D1A2729870070D41D /* mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mem.c; sourceTree = "<group>"; };
 		1466974F1A2729870070D41D /* args.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = args.c; sourceTree = "<group>"; };
 		146697501A2729870070D41D /* byteswap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = byteswap.c; sourceTree = "<group>"; };
@@ -767,7 +751,6 @@
 		146697541A2729870070D41D /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
 		146697551A2729870070D41D /* ignorecase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ignorecase.c; sourceTree = "<group>"; };
 		146697561A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146697571A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146697581A2729870070D41D /* parsarg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parsarg.c; sourceTree = "<group>"; };
 		146697591A2729870070D41D /* parsarg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parsarg.h; sourceTree = "<group>"; };
 		1466975A1A2729870070D41D /* parstest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parstest.c; sourceTree = "<group>"; };
@@ -776,7 +759,6 @@
 		1466975D1A2729870070D41D /* strio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strio.c; sourceTree = "<group>"; };
 		1466975E1A2729870070D41D /* strutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = strutil.c; sourceTree = "<group>"; };
 		146697601A2729870070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146697611A2729870070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146697621A2729870070D41D /* ntmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ntmap.c; sourceTree = "<group>"; };
 		146697631A2729870070D41D /* scanline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = scanline.c; sourceTree = "<group>"; };
 		146697641A2729870070D41D /* scanline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scanline.h; sourceTree = "<group>"; };
@@ -803,9 +785,7 @@
 		146699221A2729C60070D41D /* keypress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keypress.c; sourceTree = "<group>"; };
 		146699231A2729C60070D41D /* keytrap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keytrap.c; sourceTree = "<group>"; };
 		146699241A2729C60070D41D /* listbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = listbox.c; sourceTree = "<group>"; };
-		146699251A2729C60070D41D /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		146699261A2729C60070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146699271A2729C60070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146699281A2729C60070D41D /* medfunc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = medfunc.c; sourceTree = "<group>"; };
 		146699291A2729C60070D41D /* menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = menu.c; sourceTree = "<group>"; };
 		1466992A1A2729C60070D41D /* menubar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = menubar.c; sourceTree = "<group>"; };
@@ -925,7 +905,6 @@
 		146699A31A2729C60070D41D /* hogextract.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = hogextract.1; sourceTree = "<group>"; };
 		146699A41A2729C60070D41D /* hogextract.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hogextract.c; sourceTree = "<group>"; };
 		146699A51A2729C60070D41D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		146699A61A2729C60070D41D /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
 		146699A71A2729C60070D41D /* mvlcreate.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = mvlcreate.1; sourceTree = "<group>"; };
 		146699A81A2729C60070D41D /* mvlcreate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mvlcreate.c; sourceTree = "<group>"; };
 		146699A91A2729C60070D41D /* mvlextract.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = mvlextract.1; sourceTree = "<group>"; };
@@ -981,6 +960,7 @@
 				146698FF1A2729C60070D41D /* ui */,
 				146699351A2729C60070D41D /* unused */,
 				146699A01A2729C60070D41D /* utilities */,
+				141FE1001A2D36A600A4FB18 /* Makefile.am */,
 				14669A431A285F9B0070D41D /* configure.ac */,
 				14669A441A2860370070D41D /* conf.h */,
 			);
@@ -1056,7 +1036,6 @@
 				146694DD1A2729860070D41D /* line.c */,
 				146694DE1A2729860070D41D /* linear.asm */,
 				146694DF1A2729860070D41D /* Makefile.am */,
-				146694E01A2729860070D41D /* Makefile.in */,
 				146694E11A2729860070D41D /* palette.c */,
 				146694E21A2729860070D41D /* pcx.c */,
 				146694E31A2729860070D41D /* pixel.c */,
@@ -1085,7 +1064,6 @@
 				146694F41A2729860070D41D /* interp.asm */,
 				146694F51A2729860070D41D /* interp.c */,
 				146694F61A2729860070D41D /* Makefile.am */,
-				146694F71A2729860070D41D /* Makefile.in */,
 				146694F81A2729860070D41D /* matrix.c */,
 				146694F91A2729860070D41D /* points.c */,
 				146694FA1A2729860070D41D /* rod.c */,
@@ -1104,7 +1082,6 @@
 				146695641A2729860070D41D /* include */,
 				1466956A1A2729860070D41D /* linux */,
 				146695881A2729860070D41D /* Makefile.am */,
-				146695891A2729860070D41D /* Makefile.in */,
 				1466958A1A2729860070D41D /* ogl */,
 				146695931A2729860070D41D /* sdl */,
 				146695A01A2729860070D41D /* svgalib */,
@@ -1156,7 +1133,6 @@
 				146695411A2729860070D41D /* joydefs.c */,
 				146695421A2729860070D41D /* key.c */,
 				146695431A2729860070D41D /* Makefile.am */,
-				146695441A2729860070D41D /* Makefile.in */,
 				146695451A2729860070D41D /* midiallg.c */,
 				146695461A2729860070D41D /* mm_snd */,
 				146695521A2729860070D41D /* modex.asm */,
@@ -1295,7 +1271,6 @@
 				1466955F1A2729860070D41D /* init.c */,
 				146695601A2729860070D41D /* key.c */,
 				146695611A2729860070D41D /* Makefile.am */,
-				146695621A2729860070D41D /* Makefile.in */,
 				146695631A2729860070D41D /* mouse.c */,
 			);
 			path = ggi;
@@ -1329,7 +1304,6 @@
 				146695801A2729860070D41D /* joystick.c */,
 				146695811A2729860070D41D /* linuxnet.c */,
 				146695821A2729860070D41D /* Makefile.am */,
-				146695831A2729860070D41D /* Makefile.in */,
 				146695841A2729860070D41D /* mono.c */,
 				146695851A2729860070D41D /* serial.c */,
 				146695861A2729860070D41D /* timer.c */,
@@ -1363,7 +1337,6 @@
 				1466958C1A2729860070D41D /* gr.c */,
 				1466958D1A2729860070D41D /* internal.h */,
 				1466958E1A2729860070D41D /* Makefile.am */,
-				1466958F1A2729860070D41D /* Makefile.in */,
 				146695901A2729860070D41D /* ogl.c */,
 				146695911A2729860070D41D /* sdlgl.c */,
 				146695921A2729860070D41D /* wgl.c */,
@@ -1382,7 +1355,6 @@
 				146695991A2729860070D41D /* joydefs.c */,
 				1466959A1A2729860070D41D /* key.c */,
 				1466959B1A2729860070D41D /* Makefile.am */,
-				1466959C1A2729860070D41D /* Makefile.in */,
 				1466959D1A2729860070D41D /* mouse.c */,
 				1466959E1A2729860070D41D /* rbaudio.c */,
 				1466959F1A2729860070D41D /* timer.c */,
@@ -1398,7 +1370,6 @@
 				146695A31A2729860070D41D /* init.c */,
 				146695A41A2729860070D41D /* key.c */,
 				146695A51A2729860070D41D /* Makefile.am */,
-				146695A61A2729860070D41D /* Makefile.in */,
 				146695A71A2729860070D41D /* mouse.c */,
 			);
 			path = svgalib;
@@ -1427,7 +1398,6 @@
 				146695DB1A2729860070D41D /* joyhh.c */,
 				146695DC1A2729860070D41D /* key.c */,
 				146695DD1A2729860070D41D /* Makefile.am */,
-				146695DE1A2729860070D41D /* Makefile.in */,
 				146695DF1A2729860070D41D /* midi.c */,
 				146695E01A2729860070D41D /* mingw_init.c */,
 				146695E11A2729860070D41D /* mono.c */,
@@ -1496,7 +1466,6 @@
 			children = (
 				146695ED1A2729860070D41D /* CON_console.c */,
 				146695EE1A2729860070D41D /* Makefile.am */,
-				146695EF1A2729860070D41D /* Makefile.in */,
 			);
 			path = console;
 			sourceTree = "<group>";
@@ -1507,7 +1476,6 @@
 				1466960B1A2729860070D41D /* archive */,
 				146696111A2729860070D41D /* iff.c */,
 				146696121A2729860070D41D /* Makefile.am */,
-				146696131A2729860070D41D /* Makefile.in */,
 			);
 			path = iff;
 			sourceTree = "<group>";
@@ -1588,7 +1556,6 @@
 				146696491A2729870070D41D /* decoder8.c */,
 				1466964A1A2729870070D41D /* decoders.h */,
 				1466964B1A2729870070D41D /* Makefile.am */,
-				1466964C1A2729870070D41D /* Makefile.in */,
 				1466964D1A2729870070D41D /* mve_audio.c */,
 				1466964E1A2729870070D41D /* mve_audio.h */,
 				1466964F1A2729870070D41D /* mve_main.c */,
@@ -1687,7 +1654,6 @@
 				146696DE1A2729870070D41D /* lighting.h */,
 				146696DF1A2729870070D41D /* link.bat */,
 				146696E01A2729870070D41D /* Makefile.am */,
-				146696E11A2729870070D41D /* Makefile.in */,
 				146696E21A2729870070D41D /* menu.c */,
 				146696E31A2729870070D41D /* menu.h */,
 				146696E41A2729870070D41D /* mglobal.c */,
@@ -1805,7 +1771,6 @@
 				146696941A2729870070D41D /* macro.c */,
 				146696951A2729870070D41D /* macro.h */,
 				146696961A2729870070D41D /* Makefile.am */,
-				146696971A2729870070D41D /* Makefile.in */,
 				146696981A2729870070D41D /* med.c */,
 				146696991A2729870070D41D /* meddraw.c */,
 				1466969A1A2729870070D41D /* meddraw.h */,
@@ -1864,7 +1829,6 @@
 				146697421A2729870070D41D /* fix.asm */,
 				146697431A2729870070D41D /* fixc.c */,
 				146697441A2729870070D41D /* Makefile.am */,
-				146697451A2729870070D41D /* Makefile.in */,
 				146697461A2729870070D41D /* rand.c */,
 				146697471A2729870070D41D /* tables.c */,
 				146697481A2729870070D41D /* vecmat.c */,
@@ -1877,7 +1841,6 @@
 			isa = PBXGroup;
 			children = (
 				1466974B1A2729870070D41D /* Makefile.am */,
-				1466974C1A2729870070D41D /* Makefile.in */,
 				1466974D1A2729870070D41D /* mem.c */,
 			);
 			path = mem;
@@ -1894,7 +1857,6 @@
 				146697541A2729870070D41D /* hash.c */,
 				146697551A2729870070D41D /* ignorecase.c */,
 				146697561A2729870070D41D /* Makefile.am */,
-				146697571A2729870070D41D /* Makefile.in */,
 				146697581A2729870070D41D /* parsarg.c */,
 				146697591A2729870070D41D /* parsarg.h */,
 				1466975A1A2729870070D41D /* parstest.c */,
@@ -1910,7 +1872,6 @@
 			isa = PBXGroup;
 			children = (
 				146697601A2729870070D41D /* Makefile.am */,
-				146697611A2729870070D41D /* Makefile.in */,
 				146697621A2729870070D41D /* ntmap.c */,
 				146697631A2729870070D41D /* scanline.c */,
 				146697641A2729870070D41D /* scanline.h */,
@@ -1944,9 +1905,7 @@
 				146699221A2729C60070D41D /* keypress.c */,
 				146699231A2729C60070D41D /* keytrap.c */,
 				146699241A2729C60070D41D /* listbox.c */,
-				146699251A2729C60070D41D /* Makefile */,
 				146699261A2729C60070D41D /* Makefile.am */,
-				146699271A2729C60070D41D /* Makefile.in */,
 				146699281A2729C60070D41D /* medfunc.c */,
 				146699291A2729C60070D41D /* menu.c */,
 				1466992A1A2729C60070D41D /* menubar.c */,
@@ -2112,7 +2071,6 @@
 				146699A31A2729C60070D41D /* hogextract.1 */,
 				146699A41A2729C60070D41D /* hogextract.c */,
 				146699A51A2729C60070D41D /* Makefile.am */,
-				146699A61A2729C60070D41D /* Makefile.in */,
 				146699A71A2729C60070D41D /* mvlcreate.1 */,
 				146699A81A2729C60070D41D /* mvlcreate.c */,
 				146699A91A2729C60070D41D /* mvlextract.1 */,
