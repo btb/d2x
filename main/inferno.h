@@ -76,6 +76,13 @@ extern ubyte Version_major, Version_minor;
 extern ubyte Version_fix;
 #endif
 
+/**
+ **	Functions
+ **/
+
+void quit_request();
+
+
 #endif
 
 

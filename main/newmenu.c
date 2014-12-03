@@ -1344,7 +1344,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			}
 			break;
 
-		MAC(case KEY_COMMAND+KEY_SHIFTED+KEY_3:)
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
 		case KEY_PRINT_SCREEN:
 			MAC(newmenu_hide_cursor());
 			save_screen_shot(0);
@@ -2146,7 +2146,7 @@ ReadFileNames:
 		key = key_inkey();
 
 		switch(key)	{
-		MAC(case KEY_COMMAND+KEY_SHIFTED+KEY_3:)
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
 		case KEY_PRINT_SCREEN:
 			MAC(newmenu_hide_cursor());
 			save_screen_shot(0);
@@ -2248,17 +2248,13 @@ ReadFileNames:
 			done = 1;
 			break;
 			
-		#ifdef MACINTOSH
 		case KEY_COMMAND+KEY_Q: {
-			extern void macintosh_quit();
-			
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			newmenu_show_cursor();
 			key_flush();
 			break;
 		}
-		#endif
 		
 		default:	
 			{
@@ -2663,7 +2659,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 	#endif
 		
 		switch(key)	{
-		MAC(case KEY_COMMAND+KEY_SHIFTED+KEY_3:)
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
 		case KEY_PRINT_SCREEN: 		
 			MAC(newmenu_hide_cursor());
 			save_screen_shot(0); 
@@ -2706,17 +2702,13 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 			done = 1;
 			break;
 
-		#ifdef MACINTOSH
 		case KEY_COMMAND+KEY_Q: {
-			extern void macintosh_quit();
-			
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			newmenu_show_cursor();
 			key_flush();
 			break;
 		}
-		#endif
 
 		default:	
 			if ( key > 0 )	{

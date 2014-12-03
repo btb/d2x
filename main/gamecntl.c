@@ -667,14 +667,11 @@ void do_show_netgame_help()
 
 void HandleEndlevelKey(int key)
 {
-
-	#ifdef MACINTOSH
 	if ( key == (KEY_COMMAND + KEY_SHIFTED + KEY_3) )
 		save_screen_shot(0);
 
 	if ( key == KEY_COMMAND+KEY_Q && !(Game_mode & GM_MULTI) )
-		macintosh_quit();
-	#endif
+		quit_request();
 
 	if (key==KEY_PRINT_SCREEN)
 		save_screen_shot(0);
@@ -708,27 +705,23 @@ void HandleDeathKey(int key)
 	if (Player_exploded && !key_isfunc(key) && !key_ismod(key))
 		Death_sequence_aborted  = 1;		//Any key but func or modifier aborts
 
-	#ifdef MACINTOSH
 	if ( key == (KEY_COMMAND + KEY_SHIFTED + KEY_3) ) {
 //		save_screen_shot(0);
 		Death_sequence_aborted  = 0;		// Clear because code above sets this for any key.
 	}
 
 	if ( key == KEY_COMMAND+KEY_Q && !(Game_mode & GM_MULTI) )
-		macintosh_quit();
-	#endif
+		quit_request();
 
 	if (key==KEY_PRINT_SCREEN) {
 //		save_screen_shot(0);
 		Death_sequence_aborted  = 0;		// Clear because code above sets this for any key.
 	}
 
-	#ifdef MACINTOSH
 	if ( key == (KEY_COMMAND+KEY_P) ) {
 //		key = do_game_pause();
 		Death_sequence_aborted  = 0;		// Clear because code above sets this for any key.
 	}
-	#endif
 
 	if (key == KEY_PAUSE)   {
 //		key = do_game_pause();		//so esc from pause will end level
@@ -821,12 +814,10 @@ void HandleDemoKey(int key)
 			break;
 		}
 
-		#ifdef MACINTOSH
 		case KEY_COMMAND+KEY_Q:
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			break;
-		#endif
 
 		#ifndef NDEBUG
 		case KEY_BACKSP:
@@ -1209,7 +1200,7 @@ int HandleSystemKey(int key)
 			multi_define_macro(KEY_F12);
 			break;
 
-		MAC(case KEY_COMMAND+KEY_S:)
+		case KEY_COMMAND+KEY_S:
 		case KEY_COMMAND+KEY_ALTED+KEY_2:
 		case KEY_ALTED+KEY_F2:
 			if (!Player_is_dead && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))) {
@@ -1227,7 +1218,7 @@ int HandleSystemKey(int key)
 			}
 			break;
 
-		MAC(case KEY_COMMAND+KEY_O:)
+		case KEY_COMMAND+KEY_O:
 		case KEY_COMMAND+KEY_ALTED+KEY_3:
 		case KEY_ALTED+KEY_F3:
 			if (!Player_is_dead && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))) {
@@ -1238,12 +1229,10 @@ int HandleSystemKey(int key)
 			}
 			break;
 
-
 		case KEY_COMMAND+KEY_SHIFTED+KEY_4:
 		case KEY_F4 + KEY_SHIFTED:
 			do_escort_menu();
 			break;
-
 
 		case KEY_COMMAND+KEY_SHIFTED+KEY_ALTED+KEY_4:
 		case KEY_F4 + KEY_SHIFTED + KEY_ALTED:

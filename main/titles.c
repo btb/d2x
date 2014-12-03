@@ -123,10 +123,8 @@ int local_key_inkey(void)
 	else if (mouse_button_state(0))
 		rval = KEY_SPACEBAR;
 
-	#ifdef MACINTOSH
 	if ( rval == KEY_Q+KEY_COMMAND )
-		macintosh_quit();
-	#endif
+		quit_request();
 
 	return rval;
 }
@@ -152,10 +150,8 @@ int local_key_inkey(void)
 	if (check_button_press())		//joystick or mouse button pressed?
 		rval = KEY_SPACEBAR;
 
-	#ifdef MACINTOSH
 	if ( rval == KEY_Q+KEY_COMMAND )
-		macintosh_quit();
-	#endif
+		quit_request();
 
 	return rval;
 }
