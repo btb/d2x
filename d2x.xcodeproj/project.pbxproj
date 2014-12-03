@@ -156,8 +156,7 @@
 		146698F41A2729870070D41D /* ntmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697621A2729870070D41D /* ntmap.c */; };
 		146698F51A2729870070D41D /* scanline.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697631A2729870070D41D /* scanline.c */; };
 		146698FC1A2729870070D41D /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
-		14669A3C1A27329D0070D41D /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14669A3B1A27329D0070D41D /* SDL.framework */; };
-		14669A3E1A27666D0070D41D /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14669A3D1A27666D0070D41D /* libphysfs.a */; };
+		14E0A3221A2C4DDE0039A9FC /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -935,10 +934,10 @@
 		146699AC1A2729C60070D41D /* tex2txb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tex2txb.c; sourceTree = "<group>"; };
 		146699AD1A2729C60070D41D /* txb2tex.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = txb2tex.1; sourceTree = "<group>"; };
 		146699AE1A2729C60070D41D /* txb2tex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
-		14669A3B1A27329D0070D41D /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../../../../Library/Frameworks/SDL.framework; sourceTree = "<group>"; };
-		14669A3D1A27666D0070D41D /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../../../usr/local/lib/libphysfs.a; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		14669A441A2860370070D41D /* conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = conf.h; sourceTree = "<group>"; };
+		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../../../../usr/local/lib/libphysfs.a; sourceTree = "<group>"; };
+		14E0A3271A2C5CF10039A9FC /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -946,8 +945,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14669A3C1A27329D0070D41D /* SDL.framework in Frameworks */,
-				14669A3E1A27666D0070D41D /* libphysfs.a in Frameworks */,
+				14E0A3221A2C4DDE0039A9FC /* libphysfs.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,8 +962,7 @@
 		1466949C1A27246A0070D41D = {
 			isa = PBXGroup;
 			children = (
-				14669A3D1A27666D0070D41D /* libphysfs.a */,
-				14669A3B1A27329D0070D41D /* SDL.framework */,
+				14E0A3211A2C4DDE0039A9FC /* libphysfs.a */,
 				146694A71A27246A0070D41D /* d2x */,
 				146694C31A27246A0070D41D /* d2xTests */,
 				146694A61A27246A0070D41D /* Products */,
@@ -1606,6 +1603,7 @@
 		146696541A2729870070D41D /* main */ = {
 			isa = PBXGroup;
 			children = (
+				14E0A3271A2C5CF10039A9FC /* Makefile.am */,
 				146696551A2729870070D41D /* ai.c */,
 				146696561A2729870070D41D /* ai.h */,
 				146696571A2729870070D41D /* ai2.c */,
@@ -2132,15 +2130,16 @@
 /* Begin PBXLegacyTarget section */
 		14669A3F1A285C280070D41D /* d2x ext */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
+			buildArgumentsString = "";
 			buildConfigurationList = 14669A421A285C280070D41D /* Build configuration list for PBXLegacyTarget "d2x ext" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
 			name = "d2x ext";
-			passBuildSettingsInEnvironment = 1;
+			passBuildSettingsInEnvironment = 0;
 			productName = "d2x ext";
 		};
 /* End PBXLegacyTarget section */
@@ -2454,6 +2453,7 @@
 					HAVE_STRUCT_TIMEVAL,
 					HAVE_STRUCT_TIMESPEC,
 					NEWDEMO,
+					PIGGY_USE_PAGING,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2466,7 +2466,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/local/include,
-					/Library/Frameworks/SDL.framework/Headers,
+					/usr/local/include/SDL,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -2510,7 +2510,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/local/include,
-					/Library/Frameworks/SDL.framework/Headers,
+					/usr/local/include/SDL,
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -2528,6 +2528,13 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+					/usr/local/include/SDL,
+				);
 				INFOPLIST_FILE = d2x/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2542,6 +2549,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+					/usr/local/include/SDL,
 				);
 				INFOPLIST_FILE = d2x/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -2647,6 +2660,7 @@
 				14669A411A285C280070D41D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
