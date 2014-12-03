@@ -233,8 +233,8 @@ key_props key_properties[256] = {
 //edited 06/08/99 Matt Mueller - set to correct sym
 { "RCTRL",  255,    255,    SDLK_RCTRL            },
 //end edit -MM
-{ "",       255,    255,    -1                 },
-{ "",       255,    255,    -1                 },
+{ "LCMD",   255,    255,    SDLK_LMETA         },
+{ "RCMD",   255,    255,    SDLK_RMETA         },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
@@ -417,6 +417,9 @@ void key_handler(SDL_KeyboardEvent *event)
 				keycode |= KEY_CTRLED;
                         if ( keyd_pressed[KEY_DELETE] )
                                 keycode |= KEY_DEBUGGED;
+			if ( keyd_pressed[KEY_LMETA] || keyd_pressed[KEY_RMETA])
+				keycode |= KEY_METAED;
+
 			temp = key_data.keytail+1;
 			if ( temp >= KEY_BUFFER_SIZE ) temp=0;
 			if (temp!=key_data.keyhead)	{
@@ -568,6 +571,9 @@ unsigned int key_get_shift_status()
 
 	if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL] )
 		shift_status |= KEY_CTRLED;
+
+	if ( keyd_pressed[KEY_LMETA] || keyd_pressed[KEY_RMETA] )
+		shift_status |= KEY_METAED;
 
 #ifndef NDEBUG
 	if (keyd_pressed[KEY_DELETE])
