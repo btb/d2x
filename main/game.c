@@ -32,6 +32,7 @@ char game_rcsid[] = "$Id: game.c,v 1.44 2006-11-26 01:05:24 chris Exp $";
 #include <stdarg.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 
 #ifdef MACINTOSH
 #include <Files.h>
@@ -196,7 +197,9 @@ int Cockpit_mode=CM_FULL_COCKPIT;		//set game.h for values
 int Cockpit_mode_save=-1;					//set while in letterbox or rear view, or -1
 int force_cockpit_redraw=0;
 
-cvar_t r_framerate = {"r_framerate","0"};
+float oldfov;
+cvar_t r_framerate = {"show_fps", "0"};
+cvar_t cg_fov = {"fov", "30"};
 
 int PaletteRedAdd, PaletteGreenAdd, PaletteBlueAdd;
 
@@ -307,6 +310,7 @@ void init_game()
 
 	/* Register cvars */
 	cvar_registervariable(&r_framerate);
+	cvar_registervariable(&cg_fov);
 
 }
 
@@ -1844,6 +1848,17 @@ void game()
 
 			ExtGameStatus=GAMESTAT_RUNNING;
 			GameLoop( 1, 1 );		// Do game loop with rendering and reading controls.
+
+			if (oldfov != cg_fov.value)
+			{
+				oldfov = cg_fov.value;
+				if (cg_fov.value < 1)
+					cvar_set("fov", "1");
+				if (cg_fov.value > 170)
+					cvar_set("fov", "170");
+				Render_zoom = fl2f(cg_fov.value * M_PI / 180); // convert to radians
+				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)", cg_fov.value, Render_zoom);
+			}
 
 			//if the player is taking damage, give up guided missile control
 			if (Players[Player_num].shields != player_shields)
