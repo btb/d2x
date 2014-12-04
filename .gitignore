@@ -10,8 +10,18 @@ config.log
 config.status
 config.sub
 configure
-d2x-sdl
+d2x
+d2x-ggi
 d2x-gl
+d2x-sdl
+d2x-svga
+hogcreate
+hogextract
+mveplayer
+mvlcreate
+mvlextract
+tex2txb
+txb2tex
 depcomp
 install-sh
 missing
@@ -24,3 +34,4 @@ stamp-h1
 .deps
 debian/changelog
 rpm/d2x.spec
+.dirstamp

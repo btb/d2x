@@ -14,7 +14,7 @@ AC_CANONICAL_TARGET
 AC_EXEEXT
 AC_OBJEXT
 
-AM_INIT_AUTOMAKE([1.6])
+AM_INIT_AUTOMAKE([subdir-objects])
 
 AM_CONFIG_HEADER(conf.h)
 
@@ -42,9 +42,9 @@ AC_C_BIGENDIAN
 AC_CHECK_SIZEOF(void *)
 
 case $host_cpu in
-	sparc)
-		AC_DEFINE(WORDS_NEED_ALIGNMENT,,[Define if your processor needs data to be word-aligned])
-	;;
+    sparc)
+        AC_DEFINE(WORDS_NEED_ALIGNMENT,,[Define if your processor needs data to be word-aligned])
+    ;;
 esac
 
 case $host_os in
@@ -58,8 +58,8 @@ case $host_os in
         ;;
     darwin*)
         MACOSX=yes
-	CFLAGS="-no-cpp-precomp $CFLAGS"
-	;;
+        CFLAGS="-no-cpp-precomp $CFLAGS"
+        ;;
     msdos*)
         MSDOS=yes
         ;;
@@ -69,15 +69,10 @@ AC_CHECK_DECLS(nanosleep,,,[#include <time.h>])
 AC_CHECK_TYPES([struct timespec, struct timeval],,,[#include <sys/time.h>])
 
 AM_CONDITIONAL(MINGW32, test x$MINGW32 = xyes)
-if test x$MINGW32 = xyes; then
-    GL_LIBS="opengl32 glu32"
-elif test x$MACOSX = xyes; then
-    GL_LIBS=""
-else
-    GL_LIBS="GL GLU"
-fi
 
 AM_CONDITIONAL(MACOSX, test x$MACOSX = xyes)
+
+AM_CONDITIONAL(MSDOS, test x$MSDOS = xyes)
 
 dnl Set $prefix and $exec_prefix to $ac_default_prefix if they are not set
 test "x$prefix" = "xNONE" && prefix=$ac_default_prefix
@@ -88,18 +83,14 @@ default_sharepath="$datadir/games/$PACKAGE"
 
 CFLAGS="-Wall -Wno-char-subscripts $CFLAGS"
 
-D2X_SUBDIRS=""
-D2X_MAIN_SUBDIRS=""
-
 dnl Enable editor build?
 AC_ARG_ENABLE(editor,
     [  --enable-editor         Build editor? (not functional)],,)
 if test x$enable_editor = xyes; then
     AC_DEFINE(EDITOR,,[Define if you want to build the editor])
-    D2X_SUBDIRS="ui ${D2X_SUBDIRS}"
-    D2X_MAIN_SUBDIRS="editor ${D2X_MAIN_SUBDIRS}"
+    D2X_FEATURES="editor $D2X_FEATURES"
 fi
-AM_CONDITIONAL(EDITOR, test x$enable_editor = xyes)
+AM_CONDITIONAL(USE_EDITOR, test x$enable_editor = xyes)
 
 dnl Enable macdata build?
 AC_ARG_ENABLE(macdata,
@@ -142,14 +133,14 @@ dnl Build with FAST_FILE_IO?
 AC_ARG_ENABLE(fastfileio,
     [  --disable-fastfileio    Disable fast file i/o. ],,)
 if test x$enable_fastfileio != xno; then
-	if test x$ac_cv_c_bigendian = xyes; then
-		AC_MSG_WARN([big-endian cpu detected.  disabling fastfileio])
-		enable_fastfileio="no";
-	fi
-	if test $ac_cv_sizeof_void_p != 4; then
-		AC_MSG_WARN([pointers not 32 bits.  disabling fastfileio])
-		enable_fastfileio="no";
-	fi
+    if test x$ac_cv_c_bigendian = xyes; then
+        AC_MSG_WARN([big-endian cpu detected.  disabling fastfileio])
+        enable_fastfileio="no";
+    fi
+    if test $ac_cv_sizeof_void_p != 4; then
+        AC_MSG_WARN([pointers not 32 bits.  disabling fastfileio])
+        enable_fastfileio="no";
+    fi
 fi
 if test x$enable_fastfileio != xno; then
     AC_DEFINE(FAST_FILE_IO,,[Define for faster i/o on little-endian cpus])
@@ -161,9 +152,10 @@ AC_ARG_ENABLE(console,
     [  --disable-console        Disable graphical console ],,)
 if test x$enable_console != xno; then
     AC_DEFINE(CONSOLE,,[Define to enable console])
-    D2X_SUBDIRS="console ${D2X_SUBDIRS}"
+    D2X_FEATURES="console ${D2X_FEATURES}"
+
 fi
-AM_CONDITIONAL(CONSOLE, test x$enable_console != xno)
+AM_CONDITIONAL(USE_CONSOLE, test x$enable_console != xno)
 
 AC_ARG_WITH(sharepath,
     [[  --with-sharepath=DIR    Use DIR for shared game data (unix only) [DATADIR/games/d2x]]],
@@ -176,11 +168,11 @@ eval sharepath=$sharepath
 eval sharepath=$sharepath
 AC_DEFINE_UNQUOTED(SHAREPATH, "$sharepath",[Define this to be the shared game directory root])
 
+TARGETS=
+
 # Test for MSDOS
 if test x$MSDOS = xyes; then
-    CFLAGS="-I \$(top_srcdir)/arch/dos/include $CFLAGS"
-    TARGETS=d2x
-    D2X_ARCH_SUBDIRS=dos
+    TARGETS="d2x $TARGETS"
 else
 
     CFLAGS="-pipe $CFLAGS"
@@ -190,66 +182,45 @@ else
         :,
         AC_MSG_ERROR(SDL not found. Make sure sdl-config is in your PATH, or specify with --with-sdl-prefix)
     )
-    CFLAGS="$SDL_CFLAGS $CFLAGS"
-    LIBS="$SDL_LIBS $LIBS"
 
-    TARGETS=d2x-sdl
-    D2X_ARCH_SUBDIRS=sdl
+    TARGETS="d2x-sdl $TARGETS"
 
     AC_CHECK_HEADERS(netipx/ipx.h)
 
   # Check for SDL_image
     AC_CHECK_LIB(SDL_image, IMG_ReadXPMFromArray,
-        LIBS="-lSDL_image $LIBS"
+        SDLIMAGE_LIBS="-lSDL_image"
         AC_DEFINE(SDL_IMAGE,,[Define if you have the SDL_image library]))
+    AC_SUBST(SDLIMAGE_LIBS)
 
   # Check for libpng
     have_libpng=no
     #PKG_CHECK_MODULES(LIBPNG, libpng,
-    #	AC_DEFINE(HAVE_LIBPNG,,[Define if you have libpng])
-    #	have_libpng=yes
-    #	LIBS="$LIBPNG_LIBS $LIBS",
-    #	AC_MSG_WARN([libpng not found. disabling png replacement texture support])
-#)
+    #    AC_DEFINE(HAVE_LIBPNG,,[Define if you have libpng])
+    #    have_libpng=yes
+    #    LIBS="$LIBPNG_LIBS $LIBS",
+    #    AC_MSG_WARN([libpng not found. disabling png replacement texture support])
+    #)
     AM_CONDITIONAL(USE_LIBPNG, test x$have_libpng = xyes)
 
   # Check for PhysicsFS
     AC_CHECK_HEADERS(physfs.h, , [AC_MSG_ERROR([physfs.h required])])
-    AC_CHECK_LIB(physfs, PHYSFS_init, LIBS="-lphysfs $LIBS",
+    AC_CHECK_LIB(physfs, PHYSFS_init, PHYSFS_LIBS="-lphysfs",
                  [AC_MSG_ERROR([physfs library required])])
+    AC_SUBST(PHYSFS_LIBS)
 
   # Check for OpenGL
     AC_ARG_WITH(opengl,
         [  --with-opengl           Build OpenGL support ],,)
     if test x$with_opengl = xyes; then
-        for lib in $GL_LIBS; do
-            AC_CHECK_LIB($lib, main,
-                OGL_LIBS="${OGL_LIBS} -l$lib",
-                [AC_MSG_ERROR([$lib not found, --with-opengl cannot be used])
-                    opengl=false],
-                ${OGL_LIBS}
-            )
-        done
-        AC_DEFINE(OGL,,[Define if you want an OpenGL build])
-        TARGETS=d2x-gl
-        D2X_ARCH_SUBDIRS="ogl ${D2X_ARCH_SUBDIRS}"
+        TARGETS="d2x-gl $TARGETS"
     fi
-    AC_SUBST(OGL_LIBS)
-    AM_CONDITIONAL(USE_OPENGL, test x$with_opengl = xyes)
 
   # Check for GGI
     AC_ARG_WITH(ggi,
         [  --with-ggi              Build GGI support ],,)
     if test x$with_ggi = xyes; then
-        AC_CHECK_LIB(ggi, ggiInit,
-            GGI_LIBS="-lggi",
-            [AC_MSG_ERROR([GGI not found, GGI version cannot be built]); ggi=false])
-        AC_CHECK_LIB(gii, giiInit,
-            GGI_LIBS="${GGI_LIBS} -lgii",
-            [AC_MSG_ERROR([GII not found, GGI version cannot be built]); ggi=false])
-        AC_DEFINE(GGI,,[Define if you want a GGI build])
-        TARGETS=d2x-ggi
-        D2X_ARCH_SUBDIRS="ggi ${D2X_ARCH_SUBDIRS}"
+        TARGETS="d2x-ggi $TARGETS"
     fi
     AC_SUBST(GGI_LIBS)
     AM_CONDITIONAL(USE_GGI, test x$with_ggi = xyes)
@@ -258,29 +229,10 @@ else
     AC_ARG_WITH(svga,
         [  --with-svga             Build SVGALib support ],,)
     if test x$with_svga = xyes; then
-        AC_CHECK_LIB(vga,vga_getmousetype,
-            SVGA_LIBS="-lvga",
-            [AC_MSG_ERROR([vga not found, SVGALib cannot be built])
-                svga=false],
-        )
-        AC_CHECK_LIB(vgagl,gl_getcontext,
-            SVGA_LIBS="${SVGA_LIBS} -lvgagl",
-            [AC_MSG_ERROR([vgagl not found, SVGALib cannot be built])
-                svga=false],
-            -lvga)
-        AC_DEFINE(SVGA,,[Define if you want an SVGALib build])
-        TARGETS=d2x-svga
-        D2X_ARCH_SUBDIRS="svgalib ${D2X_ARCH_SUBDIRS}"
+        TARGETS="d2x-svga $TARGETS"
     fi
     AC_SUBST(SVGA_LIBS)
     AM_CONDITIONAL(USE_SVGALIB, test x$with_svga = xyes)
-
-    if test x$MINGW32 = xyes; then
-        D2X_ARCH_SUBDIRS="win32 ${D2X_ARCH_SUBDIRS}"
-    else
-        CFLAGS="-I \$(top_srcdir)/arch/linux/include $CFLAGS"
-        D2X_ARCH_SUBDIRS="linux ${D2X_ARCH_SUBDIRS}"
-    fi
 fi
 
 dnl Check for network
@@ -296,18 +248,18 @@ if test x$enable_network != xno; then
             enable_native_ipx="no";
             ;;
     esac
-	case $host_os in
-		cygwin* | mingw* | msdos*)
-			enable_kalinix="no";
-			;;
-	esac
+    case $host_os in
+        cygwin* | mingw* | msdos*)
+            enable_kalinix="no";
+            ;;
+    esac
     case $host_os in
         *solaris*)
             AC_CHECK_LIB(socket, socket, LIBS="${LIBS} -lsocket",
-	        [AC_MSG_ERROR(socket lib required for net support on solaris not found)])
+                [AC_MSG_ERROR(socket lib required for net support on solaris not found)])
             AC_CHECK_LIB(nsl, inet_addr, LIBS="${LIBS} -lnsl",
-	        [AC_MSG_ERROR(nsl lib required for net support on solaris not found)])		
-           ;;
+                [AC_MSG_ERROR(nsl lib required for net support on solaris not found)])
+            ;;
     esac
 fi
 AC_ARG_ENABLE(kalinix,
@@ -344,8 +296,8 @@ if test x$enable_assembler != xno; then
             msdos*)
                 NASMFLAGS="-f coff $NASMFLAGS"
                 ;;
-			linux* | freebsd*)
-				NASMFLAGS="-f elf -d__ELF__ $NASMFLAGS"
+            linux* | freebsd*)
+                NASMFLAGS="-f elf -d__ELF__ $NASMFLAGS"
                 ;;
             *)
                 AC_MSG_WARN([nasm not supported for this OS. disabling assembler])
@@ -413,12 +365,6 @@ TARGETS="$TARGETS$ac_cv_exeext"
 
 AM_PROG_AS
 
-AC_SUBST(D2X_SUBDIRS)
-
-AC_SUBST(D2X_ARCH_SUBDIRS)
-
-AC_SUBST(D2X_MAIN_SUBDIRS)
-
 AC_SUBST(TARGETS)
 
 AC_SUBST(NASMFLAGS)
@@ -427,26 +373,6 @@ AC_SUBST(CFLAGS)
 
 AC_OUTPUT(
     Makefile
-    2d/Makefile
-    3d/Makefile
-    arch/Makefile
-    arch/dos/Makefile
-    arch/ggi/Makefile
-    arch/linux/Makefile
-    arch/ogl/Makefile
-    arch/sdl/Makefile
-    arch/svgalib/Makefile
-    arch/win32/Makefile
-    console/Makefile
-    iff/Makefile
-    libmve/Makefile
-    main/Makefile
-    main/editor/Makefile
-    maths/Makefile
-    mem/Makefile
-    misc/Makefile
-    texmap/Makefile
-    ui/Makefile
     utilities/Makefile
     debian/changelog
     rpm/d2x.spec
@@ -455,8 +381,8 @@ AC_OUTPUT(
 AC_MSG_RESULT([
         d2x has been configured successfully.
 
-        Platform(s): $D2X_ARCH_SUBDIRS
-        Features   : $D2X_FEATURES $D2X_SUBDIRS $D2X_MAIN_SUBDIRS
+        Targets: $TARGETS
+        Features: $D2X_FEATURES
 
         Shared game data directory (unix only): $sharepath
         ])
