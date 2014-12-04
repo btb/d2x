@@ -81,10 +81,10 @@ int con_init(void)
 	grs_screen fake_screen;
 	grs_font   fake_font;
 
-	fake_screen.sc_w = 200;
-	fake_screen.sc_h = 100;
-	fake_font.ft_w = 1;
-	fake_font.ft_h = 1;
+	fake_screen.sc_w = 320;
+	fake_screen.sc_h = 200;
+	fake_font.ft_w = 5;
+	fake_font.ft_h = 5;
 
 	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
 
