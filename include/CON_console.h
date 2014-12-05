@@ -89,6 +89,7 @@ extern "C" {
 		int CommandScrollBack;		//! How much the users scrolled back in the command lines
 		void(*CmdFunction)(struct console_information_td *console, char* command);	//! The Function that is executed if you press <Return> in the console
 		char*(*TabFunction)(char* command);	//! The Function that is executed if you press <Tab> in the console
+		void(*HideFunction)(void); //! The Function that is executed when the console is hidden
 	}
 	ConsoleInformation;
 
@@ -142,6 +143,8 @@ extern "C" {
 		ESCAPE and the HideKey. compared against event->key.keysym.sym !! */
 	void CON_SetHideKey(ConsoleInformation *console, int key);
 	/*! Internal: executes the command typed in at the console (called if you press ENTER)*/
+	void CON_SetHideFunction(ConsoleInformation *console, void(*HideFunction)(void));
+	/*! Sets the callback function that is called after a console has been hidden */
 	void CON_Execute(ConsoleInformation *console, char* command);
 	/*! Sets the callback function that is called if a command was typed in. The function could look like this:
 		void my_command_handler(ConsoleInformation* console, char* command). @param console: the console the command
@@ -166,6 +169,8 @@ extern "C" {
 	void Default_CmdFunction(ConsoleInformation *console, char* command);
 	/*! Internal: Default TabCompletion callback */
 	char* Default_TabFunction(char* command);
+	/*! Internal: Default Hide callback */
+	void Default_HideFunction(void);
 
 	/*! Internal: draws the commandline the user is typing in to the screen. called by update? */
 	void DrawCommandLine();

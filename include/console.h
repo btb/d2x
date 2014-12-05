@@ -32,6 +32,7 @@ typedef struct cvar_s
 	struct cvar_s *next;
 } cvar_t;
 
+extern int Console_open;
 extern cvar_t *cvar_vars;
 
 /* Register a CVar with the name and string and optionally archive elements set */

@@ -426,6 +426,7 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 
 	CON_SetExecuteFunction(newinfo, Default_CmdFunction);
 	CON_SetTabCompletion(newinfo, Default_TabFunction);
+	CON_SetHideFunction(newinfo, Default_HideFunction);
 
 	/* make sure that the size of the console is valid */
 	if(w > newinfo->OutputScreen->sc_w || w < Font->ft_w * 32)
@@ -505,6 +506,7 @@ void CON_Show(ConsoleInformation *console) {
 void CON_Hide(ConsoleInformation *console) {
 	if(console)
 		console->Visible = CON_CLOSING;
+	console->HideFunction();
 }
 
 /* tells wether the console is visible or not */
@@ -924,6 +926,14 @@ void CON_SetPrompt(ConsoleInformation *console, char* newprompt) {
 void CON_SetHideKey(ConsoleInformation *console, int key) {
 	if(console)
 		console->HideKey = key;
+}
+
+void CON_SetHideFunction(ConsoleInformation *console, void(*HideFunction)(void)) {
+	if(console)
+		console->HideFunction = HideFunction;
+}
+
+void Default_HideFunction(void) {
 }
 
 /* Executes the command entered */

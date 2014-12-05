@@ -41,6 +41,7 @@ int isvga();
 #define text_console_enabled (!isvga())
 #endif
 
+int Console_open = 0;
 cvar_t *cvar_vars = NULL;
 
 /* Console specific cvars */
@@ -59,6 +60,7 @@ static int  con_line; /* Current display line */
 ConsoleInformation *Console;
 
 void con_parse(ConsoleInformation *console, char *command);
+void con_hide();
 
 
 /* ======
@@ -89,7 +91,7 @@ int con_init(void)
 	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
 
 	CON_SetExecuteFunction(Console, con_parse);
-
+	CON_SetHideFunction(Console, con_hide);
 
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
@@ -298,10 +300,16 @@ void con_draw(void)
 
 void con_show(void)
 {
+	Console_open = 1;
 #ifdef CONSOLE
 	CON_Show(Console);
 	CON_Topmost(Console);
 #endif
+}
+
+void con_hide(void)
+{
+	Console_open = 0;
 }
 
 #ifdef CONSOLE
