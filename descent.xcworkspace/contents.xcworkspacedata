@@ -2,9 +2,1744 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:dxx-rebirth/dxx-rebirth.xcodeproj">
+      location = "group:dxx-rebirth/contrib/dxx-rebirth.xcodeproj">
    </FileRef>
    <FileRef
       location = "container:d2x/d2x.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:d2src"
+      name = "d2src">
+      <Group
+         location = "group:2d"
+         name = "2d">
+         <FileRef
+            location = "group:bitblt.c">
+         </FileRef>
+         <FileRef
+            location = "group:bitmap.c">
+         </FileRef>
+         <FileRef
+            location = "group:box.c">
+         </FileRef>
+         <FileRef
+            location = "group:canvas.c">
+         </FileRef>
+         <FileRef
+            location = "group:circle.c">
+         </FileRef>
+         <FileRef
+            location = "group:clip.h">
+         </FileRef>
+         <FileRef
+            location = "group:cursor.c">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:disc.c">
+         </FileRef>
+         <FileRef
+            location = "group:effect2d.h">
+         </FileRef>
+         <FileRef
+            location = "group:effects.c">
+         </FileRef>
+         <FileRef
+            location = "group:effects.h">
+         </FileRef>
+         <FileRef
+            location = "group:font.c">
+         </FileRef>
+         <FileRef
+            location = "group:gpixel.c">
+         </FileRef>
+         <FileRef
+            location = "group:gr.c">
+         </FileRef>
+         <FileRef
+            location = "group:gr.h">
+         </FileRef>
+         <FileRef
+            location = "group:gr.inc">
+         </FileRef>
+         <FileRef
+            location = "group:gr.out">
+         </FileRef>
+         <FileRef
+            location = "group:grdef.h">
+         </FileRef>
+         <FileRef
+            location = "group:ibitblt.c">
+         </FileRef>
+         <FileRef
+            location = "group:ibitblt.h">
+         </FileRef>
+         <FileRef
+            location = "group:lbitblt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:line.c">
+         </FileRef>
+         <FileRef
+            location = "group:linear.asm">
+         </FileRef>
+         <FileRef
+            location = "group:macstubs.c">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:makefile.mac">
+         </FileRef>
+         <FileRef
+            location = "group:mndebug.bat">
+         </FileRef>
+         <FileRef
+            location = "group:mspeed.c">
+         </FileRef>
+         <FileRef
+            location = "group:nonvesa.c">
+         </FileRef>
+         <FileRef
+            location = "group:paging.asm">
+         </FileRef>
+         <FileRef
+            location = "group:paging.h">
+         </FileRef>
+         <FileRef
+            location = "group:palette.h">
+         </FileRef>
+         <FileRef
+            location = "group:pcx.c">
+         </FileRef>
+         <FileRef
+            location = "group:pcx.h">
+         </FileRef>
+         <FileRef
+            location = "group:pflow.asm">
+         </FileRef>
+         <FileRef
+            location = "group:pixel.c">
+         </FileRef>
+         <FileRef
+            location = "group:poly.c">
+         </FileRef>
+         <FileRef
+            location = "group:rect.c">
+         </FileRef>
+         <FileRef
+            location = "group:rle.c">
+         </FileRef>
+         <FileRef
+            location = "group:rle.h">
+         </FileRef>
+         <FileRef
+            location = "group:scale.c">
+         </FileRef>
+         <FileRef
+            location = "group:scalea.asm">
+         </FileRef>
+         <FileRef
+            location = "group:scalemac.c">
+         </FileRef>
+         <FileRef
+            location = "group:scanline.c">
+         </FileRef>
+         <FileRef
+            location = "group:selector.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmapbits.c">
+         </FileRef>
+         <FileRef
+            location = "group:tpoly.c">
+         </FileRef>
+         <FileRef
+            location = "group:vesalib.c">
+         </FileRef>
+         <FileRef
+            location = "group:vesatest.c">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:3d"
+         name = "3d">
+         <FileRef
+            location = "group:3d.h">
+         </FileRef>
+         <FileRef
+            location = "group:3d.inc">
+         </FileRef>
+         <FileRef
+            location = "group:3dtest.c">
+         </FileRef>
+         <FileRef
+            location = "group:3dtest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:clipper.asm">
+         </FileRef>
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:draw.asm">
+         </FileRef>
+         <FileRef
+            location = "group:draw.lst">
+         </FileRef>
+         <FileRef
+            location = "group:draw_seg.c">
+         </FileRef>
+         <FileRef
+            location = "group:globvars.asm">
+         </FileRef>
+         <FileRef
+            location = "group:horizon.asm">
+         </FileRef>
+         <FileRef
+            location = "group:instance.asm">
+         </FileRef>
+         <FileRef
+            location = "group:interp.asm">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:matrix.asm">
+         </FileRef>
+         <FileRef
+            location = "group:objects.asm">
+         </FileRef>
+         <FileRef
+            location = "group:out.c">
+         </FileRef>
+         <FileRef
+            location = "group:points.asm">
+         </FileRef>
+         <FileRef
+            location = "group:rod.asm">
+         </FileRef>
+         <FileRef
+            location = "group:segment.c">
+         </FileRef>
+         <FileRef
+            location = "group:setup.asm">
+         </FileRef>
+         <FileRef
+            location = "group:t.bat">
+         </FileRef>
+         <FileRef
+            location = "group:trakball.c">
+         </FileRef>
+         <FileRef
+            location = "group:upvecs.c">
+         </FileRef>
+         <FileRef
+            location = "group:upvecs2.c">
+         </FileRef>
+         <FileRef
+            location = "group:vecview.c">
+         </FileRef>
+         <FileRef
+            location = "group:vecview2.c">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:bios"
+         name = "bios">
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dpmi.c">
+         </FileRef>
+         <FileRef
+            location = "group:dpmi.h">
+         </FileRef>
+         <FileRef
+            location = "group:error.c">
+         </FileRef>
+         <FileRef
+            location = "group:error.h">
+         </FileRef>
+         <FileRef
+            location = "group:findfile.c">
+         </FileRef>
+         <FileRef
+            location = "group:findfile.h">
+         </FileRef>
+         <FileRef
+            location = "group:ipx.c">
+         </FileRef>
+         <FileRef
+            location = "group:ipx.h">
+         </FileRef>
+         <FileRef
+            location = "group:joy.asm">
+         </FileRef>
+         <FileRef
+            location = "group:joy.h">
+         </FileRef>
+         <FileRef
+            location = "group:joyc.c">
+         </FileRef>
+         <FileRef
+            location = "group:key.asm">
+         </FileRef>
+         <FileRef
+            location = "group:key.c">
+         </FileRef>
+         <FileRef
+            location = "group:key.h">
+         </FileRef>
+         <FileRef
+            location = "group:keys.inc">
+         </FileRef>
+         <FileRef
+            location = "group:make0000.bat">
+         </FileRef>
+         <FileRef
+            location = "group:make0001.bat">
+         </FileRef>
+         <FileRef
+            location = "group:make0100.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:mono.c">
+         </FileRef>
+         <FileRef
+            location = "group:mono.h">
+         </FileRef>
+         <FileRef
+            location = "group:mouse.asm">
+         </FileRef>
+         <FileRef
+            location = "group:mouse.c">
+         </FileRef>
+         <FileRef
+            location = "group:mouse.h">
+         </FileRef>
+         <FileRef
+            location = "group:oldkey.asm">
+         </FileRef>
+         <FileRef
+            location = "group:rbaudio.c">
+         </FileRef>
+         <FileRef
+            location = "group:rbaudio.h">
+         </FileRef>
+         <FileRef
+            location = "group:rbaudio.new">
+         </FileRef>
+         <FileRef
+            location = "group:speaker.c">
+         </FileRef>
+         <FileRef
+            location = "group:swiftcfg.h">
+         </FileRef>
+         <FileRef
+            location = "group:testj.c">
+         </FileRef>
+         <FileRef
+            location = "group:testk.c">
+         </FileRef>
+         <FileRef
+            location = "group:testk.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:testm.c">
+         </FileRef>
+         <FileRef
+            location = "group:testm.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:testms.c">
+         </FileRef>
+         <FileRef
+            location = "group:testt.c">
+         </FileRef>
+         <FileRef
+            location = "group:timer.asm">
+         </FileRef>
+         <FileRef
+            location = "group:timer.h">
+         </FileRef>
+         <FileRef
+            location = "group:timerp.c">
+         </FileRef>
+         <FileRef
+            location = "group:x">
+         </FileRef>
+         <FileRef
+            location = "group:x.bat">
+         </FileRef>
+         <FileRef
+            location = "group:x.c">
+         </FileRef>
+         <FileRef
+            location = "group:y.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:cfile"
+         name = "cfile">
+         <FileRef
+            location = "group:cfile.c">
+         </FileRef>
+         <FileRef
+            location = "group:cfile.h">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:makefile.mac">
+         </FileRef>
+         <FileRef
+            location = "group:nocfile.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:div"
+         name = "div">
+         <FileRef
+            location = "group:div0.asm">
+         </FileRef>
+         <FileRef
+            location = "group:div0.h">
+         </FileRef>
+         <FileRef
+            location = "group:div0.inc">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:fix"
+         name = "fix">
+         <FileRef
+            location = "group:asin.out">
+         </FileRef>
+         <FileRef
+            location = "group:asingen.c">
+         </FileRef>
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:fix.asm">
+         </FileRef>
+         <FileRef
+            location = "group:fix.h">
+         </FileRef>
+         <FileRef
+            location = "group:fix.inc">
+         </FileRef>
+         <FileRef
+            location = "group:fixtest.c">
+         </FileRef>
+         <FileRef
+            location = "group:fixtest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:fixtest.out">
+         </FileRef>
+         <FileRef
+            location = "group:fixtest.smp">
+         </FileRef>
+         <FileRef
+            location = "group:lst.bat">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:prof.bat">
+         </FileRef>
+         <FileRef
+            location = "group:samp.bat">
+         </FileRef>
+         <FileRef
+            location = "group:singen.c">
+         </FileRef>
+         <FileRef
+            location = "group:t.bat">
+         </FileRef>
+         <FileRef
+            location = "group:test.asm">
+         </FileRef>
+         <FileRef
+            location = "group:test.lst">
+         </FileRef>
+         <FileRef
+            location = "group:x.out">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:iff"
+         name = "iff">
+         <Group
+            location = "group:archive"
+            name = "archive">
+            <FileRef
+               location = "group:iff15bpp.c">
+            </FileRef>
+            <FileRef
+               location = "group:iff8bpp.c">
+            </FileRef>
+            <FileRef
+               location = "group:iffmike.c">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:d2.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:iff.c">
+         </FileRef>
+         <FileRef
+            location = "group:iff.h">
+         </FileRef>
+         <FileRef
+            location = "group:ifftest.c">
+         </FileRef>
+         <FileRef
+            location = "group:ifftest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:ifftestv.bak">
+         </FileRef>
+         <FileRef
+            location = "group:ifftestv.c">
+         </FileRef>
+         <FileRef
+            location = "group:ifftestv.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:mndebug.bat">
+         </FileRef>
+         <FileRef
+            location = "group:t.bat">
+         </FileRef>
+         <FileRef
+            location = "group:test.bat">
+         </FileRef>
+         <FileRef
+            location = "group:tt.bat">
+         </FileRef>
+         <FileRef
+            location = "group:vesa.h">
+         </FileRef>
+         <FileRef
+            location = "group:vesa.lib">
+         </FileRef>
+         <FileRef
+            location = "group:x.bat">
+         </FileRef>
+         <FileRef
+            location = "group:y.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:includes"
+         name = "includes">
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dtypes.h">
+         </FileRef>
+         <FileRef
+            location = "group:dtypes.inc">
+         </FileRef>
+         <FileRef
+            location = "group:lst.bat">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:psmacros.inc">
+         </FileRef>
+         <FileRef
+            location = "group:pstypes.h">
+         </FileRef>
+         <FileRef
+            location = "group:pstypes.inc">
+         </FileRef>
+         <FileRef
+            location = "group:test.c">
+         </FileRef>
+         <FileRef
+            location = "group:test.lnk">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:init"
+         name = "init">
+         <Group
+            location = "group:INIT"
+            name = "INIT">
+            <FileRef
+               location = "group:make.ini">
+            </FileRef>
+            <FileRef
+               location = "group:makefile.def">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:make.ini">
+         </FileRef>
+         <FileRef
+            location = "group:makefile.def">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:lib"
+         name = "lib">
+         <FileRef
+            location = "group:fix.h">
+         </FileRef>
+         <FileRef
+            location = "group:rbaudio.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:main"
+         name = "main">
+         <FileRef
+            location = "group:3dfx.c">
+         </FileRef>
+         <FileRef
+            location = "group:3dfx_des.h">
+         </FileRef>
+         <FileRef
+            location = "group:ai.c">
+         </FileRef>
+         <FileRef
+            location = "group:ai.h">
+         </FileRef>
+         <FileRef
+            location = "group:ai2.c">
+         </FileRef>
+         <FileRef
+            location = "group:aipath.c">
+         </FileRef>
+         <FileRef
+            location = "group:aistruct.h">
+         </FileRef>
+         <FileRef
+            location = "group:arcade.c">
+         </FileRef>
+         <FileRef
+            location = "group:arcade.h">
+         </FileRef>
+         <FileRef
+            location = "group:automap.c">
+         </FileRef>
+         <FileRef
+            location = "group:automap.h">
+         </FileRef>
+         <FileRef
+            location = "group:bm.c">
+         </FileRef>
+         <FileRef
+            location = "group:bm.h">
+         </FileRef>
+         <FileRef
+            location = "group:bmread.c">
+         </FileRef>
+         <FileRef
+            location = "group:bmread.h">
+         </FileRef>
+         <FileRef
+            location = "group:cdmix32.c">
+         </FileRef>
+         <FileRef
+            location = "group:cdrom.c">
+         </FileRef>
+         <FileRef
+            location = "group:cdrom.h">
+         </FileRef>
+         <FileRef
+            location = "group:cntrlcen.c">
+         </FileRef>
+         <FileRef
+            location = "group:cntrlcen.h">
+         </FileRef>
+         <FileRef
+            location = "group:coindev.c">
+         </FileRef>
+         <FileRef
+            location = "group:coindev.h">
+         </FileRef>
+         <FileRef
+            location = "group:collide.c">
+         </FileRef>
+         <FileRef
+            location = "group:collide.h">
+         </FileRef>
+         <FileRef
+            location = "group:compbit.h">
+         </FileRef>
+         <FileRef
+            location = "group:config.c">
+         </FileRef>
+         <FileRef
+            location = "group:config.h">
+         </FileRef>
+         <FileRef
+            location = "group:controls.c">
+         </FileRef>
+         <FileRef
+            location = "group:controls.h">
+         </FileRef>
+         <FileRef
+            location = "group:credits.c">
+         </FileRef>
+         <FileRef
+            location = "group:credits.h">
+         </FileRef>
+         <FileRef
+            location = "group:crypt.c">
+         </FileRef>
+         <FileRef
+            location = "group:desc_id.h">
+         </FileRef>
+         <FileRef
+            location = "group:descentw.c">
+         </FileRef>
+         <FileRef
+            location = "group:desw.h">
+         </FileRef>
+         <FileRef
+            location = "group:digi.c">
+         </FileRef>
+         <FileRef
+            location = "group:digi.h">
+         </FileRef>
+         <FileRef
+            location = "group:digiobj.c">
+         </FileRef>
+         <FileRef
+            location = "group:dumpmine.c">
+         </FileRef>
+         <Group
+            location = "group:editor"
+            name = "editor">
+            <FileRef
+               location = "group:editor.h">
+            </FileRef>
+            <FileRef
+               location = "group:kdefs.h">
+            </FileRef>
+            <FileRef
+               location = "group:texpage.h">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:effects.c">
+         </FileRef>
+         <FileRef
+            location = "group:effects.h">
+         </FileRef>
+         <FileRef
+            location = "group:endlevel.c">
+         </FileRef>
+         <FileRef
+            location = "group:endlevel.h">
+         </FileRef>
+         <FileRef
+            location = "group:escort.c">
+         </FileRef>
+         <FileRef
+            location = "group:files.h">
+         </FileRef>
+         <FileRef
+            location = "group:fireball.c">
+         </FileRef>
+         <FileRef
+            location = "group:fireball.h">
+         </FileRef>
+         <FileRef
+            location = "group:fuelcen.c">
+         </FileRef>
+         <FileRef
+            location = "group:fuelcen.h">
+         </FileRef>
+         <FileRef
+            location = "group:fvi.c">
+         </FileRef>
+         <FileRef
+            location = "group:fvi.h">
+         </FileRef>
+         <FileRef
+            location = "group:game.c">
+         </FileRef>
+         <FileRef
+            location = "group:game.h">
+         </FileRef>
+         <FileRef
+            location = "group:gamecntl.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamefont.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamefont.h">
+         </FileRef>
+         <FileRef
+            location = "group:gamemine.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamemine.h">
+         </FileRef>
+         <FileRef
+            location = "group:gamepal.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamepal.h">
+         </FileRef>
+         <FileRef
+            location = "group:gamerend.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamesave.c">
+         </FileRef>
+         <FileRef
+            location = "group:gamesave.h">
+         </FileRef>
+         <FileRef
+            location = "group:gameseg.c">
+         </FileRef>
+         <FileRef
+            location = "group:gameseg.h">
+         </FileRef>
+         <FileRef
+            location = "group:gameseq.c">
+         </FileRef>
+         <FileRef
+            location = "group:gameseq.h">
+         </FileRef>
+         <FileRef
+            location = "group:gamestat.h">
+         </FileRef>
+         <FileRef
+            location = "group:gauges.c">
+         </FileRef>
+         <FileRef
+            location = "group:gauges.h">
+         </FileRef>
+         <FileRef
+            location = "group:hostage.c">
+         </FileRef>
+         <FileRef
+            location = "group:hostage.h">
+         </FileRef>
+         <FileRef
+            location = "group:hud.c">
+         </FileRef>
+         <FileRef
+            location = "group:iglasses.c">
+         </FileRef>
+         <FileRef
+            location = "group:iglasses.h">
+         </FileRef>
+         <FileRef
+            location = "group:inferno.c">
+         </FileRef>
+         <FileRef
+            location = "group:inferno.h">
+         </FileRef>
+         <FileRef
+            location = "group:inferno.ini">
+         </FileRef>
+         <FileRef
+            location = "group:joydefs.c">
+         </FileRef>
+         <FileRef
+            location = "group:joydefs.h">
+         </FileRef>
+         <FileRef
+            location = "group:joydefsw.c">
+         </FileRef>
+         <FileRef
+            location = "group:kconfig.c">
+         </FileRef>
+         <FileRef
+            location = "group:kconfig.h">
+         </FileRef>
+         <FileRef
+            location = "group:kmatrix.c">
+         </FileRef>
+         <FileRef
+            location = "group:kmatrix.h">
+         </FileRef>
+         <FileRef
+            location = "group:laser.c">
+         </FileRef>
+         <FileRef
+            location = "group:laser.h">
+         </FileRef>
+         <FileRef
+            location = "group:lighting.c">
+         </FileRef>
+         <FileRef
+            location = "group:lighting.h">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:menu.c">
+         </FileRef>
+         <FileRef
+            location = "group:menu.h">
+         </FileRef>
+         <FileRef
+            location = "group:mglobal.c">
+         </FileRef>
+         <FileRef
+            location = "group:mission.c">
+         </FileRef>
+         <FileRef
+            location = "group:mission.h">
+         </FileRef>
+         <FileRef
+            location = "group:modem.c">
+         </FileRef>
+         <FileRef
+            location = "group:modem.h">
+         </FileRef>
+         <FileRef
+            location = "group:morph.c">
+         </FileRef>
+         <FileRef
+            location = "group:morph.h">
+         </FileRef>
+         <FileRef
+            location = "group:movie.c">
+         </FileRef>
+         <FileRef
+            location = "group:movie.h">
+         </FileRef>
+         <FileRef
+            location = "group:multi.c">
+         </FileRef>
+         <FileRef
+            location = "group:multi.h">
+         </FileRef>
+         <FileRef
+            location = "group:multibot.c">
+         </FileRef>
+         <FileRef
+            location = "group:multibot.h">
+         </FileRef>
+         <FileRef
+            location = "group:netmisc.c">
+         </FileRef>
+         <FileRef
+            location = "group:netmisc.h">
+         </FileRef>
+         <FileRef
+            location = "group:network.c">
+         </FileRef>
+         <FileRef
+            location = "group:network.h">
+         </FileRef>
+         <FileRef
+            location = "group:newdemo.c">
+         </FileRef>
+         <FileRef
+            location = "group:newdemo.h">
+         </FileRef>
+         <FileRef
+            location = "group:newmenu.c">
+         </FileRef>
+         <FileRef
+            location = "group:newmenu.h">
+         </FileRef>
+         <FileRef
+            location = "group:newmodel.c">
+         </FileRef>
+         <FileRef
+            location = "group:object.c">
+         </FileRef>
+         <FileRef
+            location = "group:object.h">
+         </FileRef>
+         <FileRef
+            location = "group:paging.c">
+         </FileRef>
+         <FileRef
+            location = "group:paging.h">
+         </FileRef>
+         <FileRef
+            location = "group:physics.c">
+         </FileRef>
+         <FileRef
+            location = "group:physics.h">
+         </FileRef>
+         <FileRef
+            location = "group:piggy.c">
+         </FileRef>
+         <FileRef
+            location = "group:piggy.h">
+         </FileRef>
+         <FileRef
+            location = "group:player.h">
+         </FileRef>
+         <FileRef
+            location = "group:playsave.c">
+         </FileRef>
+         <FileRef
+            location = "group:playsave.h">
+         </FileRef>
+         <FileRef
+            location = "group:polyobj.c">
+         </FileRef>
+         <FileRef
+            location = "group:polyobj.h">
+         </FileRef>
+         <FileRef
+            location = "group:powerup.c">
+         </FileRef>
+         <FileRef
+            location = "group:powerup.h">
+         </FileRef>
+         <FileRef
+            location = "group:rbtest.c">
+         </FileRef>
+         <FileRef
+            location = "group:render.c">
+         </FileRef>
+         <FileRef
+            location = "group:render.h">
+         </FileRef>
+         <FileRef
+            location = "group:robot.c">
+         </FileRef>
+         <FileRef
+            location = "group:robot.h">
+         </FileRef>
+         <FileRef
+            location = "group:scores.c">
+         </FileRef>
+         <FileRef
+            location = "group:scores.h">
+         </FileRef>
+         <FileRef
+            location = "group:screens.h">
+         </FileRef>
+         <FileRef
+            location = "group:segment.h">
+         </FileRef>
+         <FileRef
+            location = "group:segpoint.h">
+         </FileRef>
+         <FileRef
+            location = "group:settings.h">
+         </FileRef>
+         <FileRef
+            location = "group:slew.c">
+         </FileRef>
+         <FileRef
+            location = "group:slew.h">
+         </FileRef>
+         <FileRef
+            location = "group:songs.c">
+         </FileRef>
+         <FileRef
+            location = "group:songs.h">
+         </FileRef>
+         <FileRef
+            location = "group:sounds.h">
+         </FileRef>
+         <FileRef
+            location = "group:state.c">
+         </FileRef>
+         <FileRef
+            location = "group:state.h">
+         </FileRef>
+         <FileRef
+            location = "group:switch.c">
+         </FileRef>
+         <FileRef
+            location = "group:switch.h">
+         </FileRef>
+         <FileRef
+            location = "group:terrain.c">
+         </FileRef>
+         <FileRef
+            location = "group:terrain.h">
+         </FileRef>
+         <FileRef
+            location = "group:texmerge.c">
+         </FileRef>
+         <FileRef
+            location = "group:texmerge.h">
+         </FileRef>
+         <FileRef
+            location = "group:text.c">
+         </FileRef>
+         <FileRef
+            location = "group:text.h">
+         </FileRef>
+         <FileRef
+            location = "group:textures.h">
+         </FileRef>
+         <FileRef
+            location = "group:titles.c">
+         </FileRef>
+         <FileRef
+            location = "group:titles.h">
+         </FileRef>
+         <FileRef
+            location = "group:vclip.c">
+         </FileRef>
+         <FileRef
+            location = "group:vclip.h">
+         </FileRef>
+         <FileRef
+            location = "group:vers_id.h">
+         </FileRef>
+         <FileRef
+            location = "group:wall.c">
+         </FileRef>
+         <FileRef
+            location = "group:wall.h">
+         </FileRef>
+         <FileRef
+            location = "group:weapon.c">
+         </FileRef>
+         <FileRef
+            location = "group:weapon.h">
+         </FileRef>
+         <FileRef
+            location = "group:windigi.c">
+         </FileRef>
+         <FileRef
+            location = "group:winferno.c">
+         </FileRef>
+         <FileRef
+            location = "group:winmodem.c">
+         </FileRef>
+         <FileRef
+            location = "group:winvideo.c">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:make.ini">
+      </FileRef>
+      <FileRef
+         location = "group:makefile">
+      </FileRef>
+      <Group
+         location = "group:mem"
+         name = "mem">
+         <FileRef
+            location = "group:1">
+         </FileRef>
+         <FileRef
+            location = "group:2">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:makefile.mac">
+         </FileRef>
+         <FileRef
+            location = "group:mem.c">
+         </FileRef>
+         <FileRef
+            location = "group:mem.h">
+         </FileRef>
+         <FileRef
+            location = "group:rdir.out">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:misc"
+         name = "misc">
+         <FileRef
+            location = "group:args.c">
+         </FileRef>
+         <FileRef
+            location = "group:args.h">
+         </FileRef>
+         <FileRef
+            location = "group:byteswap.c">
+         </FileRef>
+         <FileRef
+            location = "group:byteswap.h">
+         </FileRef>
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:debug.h">
+         </FileRef>
+         <FileRef
+            location = "group:errtest.c">
+         </FileRef>
+         <FileRef
+            location = "group:errtest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:fileutil.c">
+         </FileRef>
+         <FileRef
+            location = "group:fileutil.h">
+         </FileRef>
+         <FileRef
+            location = "group:hash.c">
+         </FileRef>
+         <FileRef
+            location = "group:hash.h">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:makefile.mac">
+         </FileRef>
+         <FileRef
+            location = "group:parsarg.c">
+         </FileRef>
+         <FileRef
+            location = "group:parsarg.h">
+         </FileRef>
+         <FileRef
+            location = "group:parstest.c">
+         </FileRef>
+         <FileRef
+            location = "group:parstest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:strutil.c">
+         </FileRef>
+         <FileRef
+            location = "group:strutil.h">
+         </FileRef>
+         <FileRef
+            location = "group:t.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:novga"
+         name = "novga">
+         <FileRef
+            location = "group:files.rc">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:novesa.c">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:pa_null"
+         name = "pa_null">
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:pa_enabl.h">
+         </FileRef>
+         <FileRef
+            location = "group:poly_acc.c">
+         </FileRef>
+         <FileRef
+            location = "group:poly_acc.h">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:readme.txt">
+      </FileRef>
+      <Group
+         location = "group:texmap"
+         name = "texmap">
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:ntmap.c">
+         </FileRef>
+         <FileRef
+            location = "group:ntmap.new">
+         </FileRef>
+         <FileRef
+            location = "group:ntmapout.h">
+         </FileRef>
+         <FileRef
+            location = "group:scanline.c">
+         </FileRef>
+         <FileRef
+            location = "group:scanline.h">
+         </FileRef>
+         <FileRef
+            location = "group:texmap.h">
+         </FileRef>
+         <FileRef
+            location = "group:texmapl.h">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_ed.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_flt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_inc.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_lln.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_llt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_lnn.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_lnt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_per.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_pln.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_plt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_pnn.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_pnt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_qln.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_qlt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_qnn.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmap_qnt.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmapfade.asm">
+         </FileRef>
+         <FileRef
+            location = "group:tmapflat.c">
+         </FileRef>
+         <FileRef
+            location = "group:x.bat">
+         </FileRef>
+         <FileRef
+            location = "group:xyz.bat">
+         </FileRef>
+         <FileRef
+            location = "group:y.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:ui"
+         name = "ui">
+         <FileRef
+            location = "group:barbox.c">
+         </FileRef>
+         <FileRef
+            location = "group:button.c">
+         </FileRef>
+         <FileRef
+            location = "group:checkbox.c">
+         </FileRef>
+         <FileRef
+            location = "group:file.c">
+         </FileRef>
+         <FileRef
+            location = "group:func.c">
+         </FileRef>
+         <FileRef
+            location = "group:func.h">
+         </FileRef>
+         <FileRef
+            location = "group:gadget.c">
+         </FileRef>
+         <FileRef
+            location = "group:harderr.c">
+         </FileRef>
+         <FileRef
+            location = "group:icon.c">
+         </FileRef>
+         <FileRef
+            location = "group:inputbox.c">
+         </FileRef>
+         <FileRef
+            location = "group:keypad.c">
+         </FileRef>
+         <FileRef
+            location = "group:keypress.c">
+         </FileRef>
+         <FileRef
+            location = "group:keytrap.c">
+         </FileRef>
+         <FileRef
+            location = "group:listbox.c">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:medfunc.c">
+         </FileRef>
+         <FileRef
+            location = "group:menu.c">
+         </FileRef>
+         <FileRef
+            location = "group:menubar.c">
+         </FileRef>
+         <FileRef
+            location = "group:message.c">
+         </FileRef>
+         <FileRef
+            location = "group:mouse.c">
+         </FileRef>
+         <FileRef
+            location = "group:number.c">
+         </FileRef>
+         <FileRef
+            location = "group:popup.c">
+         </FileRef>
+         <FileRef
+            location = "group:radio.c">
+         </FileRef>
+         <FileRef
+            location = "group:scroll.c">
+         </FileRef>
+         <FileRef
+            location = "group:ui.c">
+         </FileRef>
+         <FileRef
+            location = "group:ui.h">
+         </FileRef>
+         <FileRef
+            location = "group:uidraw.c">
+         </FileRef>
+         <FileRef
+            location = "group:userbox.c">
+         </FileRef>
+         <FileRef
+            location = "group:window.c">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:vecmat"
+         name = "vecmat">
+         <FileRef
+            location = "group:bug.c">
+         </FileRef>
+         <FileRef
+            location = "group:d.bat">
+         </FileRef>
+         <FileRef
+            location = "group:disttest.c">
+         </FileRef>
+         <FileRef
+            location = "group:m.bat">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:sml9x9.asm">
+         </FileRef>
+         <FileRef
+            location = "group:t.bat">
+         </FileRef>
+         <FileRef
+            location = "group:vecmat.asm">
+         </FileRef>
+         <FileRef
+            location = "group:vecmat.h">
+         </FileRef>
+         <FileRef
+            location = "group:vecmat.inc">
+         </FileRef>
+         <FileRef
+            location = "group:vecmat.lst">
+         </FileRef>
+         <FileRef
+            location = "group:vecmat.new">
+         </FileRef>
+         <FileRef
+            location = "group:vectest.c">
+         </FileRef>
+         <FileRef
+            location = "group:vectest.lnk">
+         </FileRef>
+         <FileRef
+            location = "group:vectest.out">
+         </FileRef>
+         <FileRef
+            location = "group:xx.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:vga"
+         name = "vga">
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:framebuf.c">
+         </FileRef>
+         <FileRef
+            location = "group:framebuf.jas">
+         </FileRef>
+         <FileRef
+            location = "group:fxdpmi.h">
+         </FileRef>
+         <FileRef
+            location = "group:fxvesa.h">
+         </FileRef>
+         <FileRef
+            location = "group:grx.h">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:modex.asm">
+         </FileRef>
+         <Group
+            location = "group:new"
+            name = "new">
+            <FileRef
+               location = "group:palette.c">
+            </FileRef>
+            <FileRef
+               location = "group:vga.c">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:palette.c">
+         </FileRef>
+         <FileRef
+            location = "group:tweak.inc">
+         </FileRef>
+         <FileRef
+            location = "group:vesa.asm">
+         </FileRef>
+         <FileRef
+            location = "group:vga.c">
+         </FileRef>
+         <FileRef
+            location = "group:vga.h">
+         </FileRef>
+         <FileRef
+            location = "group:vga.jas">
+         </FileRef>
+         <FileRef
+            location = "group:vgaregs.inc">
+         </FileRef>
+         <FileRef
+            location = "group:xyz.bat">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:win95"
+         name = "win95">
+         <FileRef
+            location = "group:comm.c">
+         </FileRef>
+         <FileRef
+            location = "group:comm.h">
+         </FileRef>
+         <FileRef
+            location = "group:dd.bat">
+         </FileRef>
+         <FileRef
+            location = "group:dd.c">
+         </FileRef>
+         <FileRef
+            location = "group:dd.h">
+         </FileRef>
+         <FileRef
+            location = "group:ddgfx.c">
+         </FileRef>
+         <FileRef
+            location = "group:ddgr.c">
+         </FileRef>
+         <FileRef
+            location = "group:ddraw.c">
+         </FileRef>
+         <FileRef
+            location = "group:direct3d.c">
+         </FileRef>
+         <FileRef
+            location = "group:direct3d.h">
+         </FileRef>
+         <FileRef
+            location = "group:ds.c">
+         </FileRef>
+         <FileRef
+            location = "group:ds.h">
+         </FileRef>
+         <FileRef
+            location = "group:error.c">
+         </FileRef>
+         <FileRef
+            location = "group:error.h">
+         </FileRef>
+         <FileRef
+            location = "group:findfile.c">
+         </FileRef>
+         <FileRef
+            location = "group:gfx.c">
+         </FileRef>
+         <FileRef
+            location = "group:global.h">
+         </FileRef>
+         <FileRef
+            location = "group:iforce.c">
+         </FileRef>
+         <FileRef
+            location = "group:iforce.h">
+         </FileRef>
+         <FileRef
+            location = "group:ipx.c">
+         </FileRef>
+         <FileRef
+            location = "group:joyc.c">
+         </FileRef>
+         <FileRef
+            location = "group:key.c">
+         </FileRef>
+         <FileRef
+            location = "group:makefile">
+         </FileRef>
+         <FileRef
+            location = "group:midifile.h">
+         </FileRef>
+         <FileRef
+            location = "group:midiseq.h">
+         </FileRef>
+         <FileRef
+            location = "group:mono.c">
+         </FileRef>
+         <FileRef
+            location = "group:mouse.c">
+         </FileRef>
+         <FileRef
+            location = "group:palette.c">
+         </FileRef>
+         <FileRef
+            location = "group:rbaudio.c">
+         </FileRef>
+         <FileRef
+            location = "group:swift.c">
+         </FileRef>
+         <FileRef
+            location = "group:tactile.c">
+         </FileRef>
+         <FileRef
+            location = "group:tactile.h">
+         </FileRef>
+         <FileRef
+            location = "group:timer.c">
+         </FileRef>
+         <FileRef
+            location = "group:winapp.c">
+         </FileRef>
+         <FileRef
+            location = "group:winapp.h">
+         </FileRef>
+         <FileRef
+            location = "group:winckpit.asm">
+         </FileRef>
+         <FileRef
+            location = "group:winmidi.c">
+         </FileRef>
+         <FileRef
+            location = "group:winmidi.h">
+         </FileRef>
+         <FileRef
+            location = "group:winmono.c">
+         </FileRef>
+         <FileRef
+            location = "group:winregs.c">
+         </FileRef>
+         <FileRef
+            location = "group:winregs.h">
+         </FileRef>
+         <FileRef
+            location = "group:xtapi.c">
+         </FileRef>
+         <FileRef
+            location = "group:xtapi.h">
+         </FileRef>
+      </Group>
+   </Group>
 </Workspace>
