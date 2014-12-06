@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/vclip.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:42 $
+ * $Source: Smoke:miner:source:main::RCS:VCLIP.H $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:14:45 $
  * 
  * Stuff for video clips.
  * 
- * $Log: vclip.h $
+ * $Log: VCLIP.H $
+ * Revision 1.2  1995/09/14  14:14:45  allender
+ * return void in draw_vclip_object
+ *
+ * Revision 1.1  1995/05/16  16:04:35  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:42  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -165,8 +171,7 @@ extern int Num_vclips;
 extern vclip Vclip[VCLIP_MAXNUM];
 
 //draw an object which renders as a vclip.
-draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num);
+void draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num);
 extern void draw_weapon_vclip(object *obj);
 
 #endif
-

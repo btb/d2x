@@ -1,46 +1,109 @@
 #
-# $Source: f:/miner/source/fix/rcs/makefile $
-# $Revision: 1.5 $
-# $Author: matt $
-# $Date: 1994/11/27 23:21:18 $
+# $Source: Buggin:miner:source:fix::RCS:makefile $
+# $Revision: 1.3 $
+# $Author: allender $
+# $Date: 1995/06/25 21:55:35 $
 #
-# Makefile for fixed-point library
-#
-
-LIBDIR = ..\main
+# Makefile for graphics functions
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
-# What to install, and where to install it
-INSTALL_TARGS = fix.lib fix.h fix.inc
-
-# What to clean
-CLEAN_TARGS = $(OBJDIR)\*.obj
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
 # What libs to make
-LIBS = fix
+LIB = fix.lib
 
-# What test programs to make
-TEST_PROGS = fixtest
+# includes to copy to lib directory
+GLOBAL_INCLUDES = fix.h
 
-# What object files for the lib
-FIX_OBJS = fix.obj
+# test file libraries needed
+TEST_LIBS = {LIBDIR}fix.lib {LIBDIR}io.lib {LIBDIR}macsys.lib
 
-# What object files and libs for the test programs
-FIXTEST_SRCS = fixtest.c
-FIXTEST_LIBS = fix.lib io.lib
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-fix.lib: $(FIX_OBJS)
-	wlib fix.lib $(FIX_OBJS)
-	copy *.lib $(LIBDIR)
-asingen.obj: math.h stdio.h
+# standard libs to link anything with
+STDSC_LIBS = ¶
+	"{SCLibraries}"SCMainC.a.o ¶
+	"{SCLibraries}"SCLibC.o ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-fix.obj: fix.inc fix.asm
-	masm fix.asm
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r
 
-fixtest.obj: conio.h fix.h graph.h stdio.h stdlib.h types.h
+OBJ_DIR = :obj:
 
-singen.obj: math.h
+# C compiler options
+CFLAGS = {SYM_FLAG}
 
-test.obj: psmacros.inc
+LDFLAGS = ¶
+	{SYM_FLAG}
+
+FIX_OBJS = ¶
+	{OBJDIR}fix.c.o {OBJDIR}tables.c.o {OBJDIR}fix.ppc.a.o
+	
+All Ä {LIB}
+
+{LIB} Ä {FIX_OBJS}
+	Echo "# `Date -t` ----- Building FIX library..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+fixtest Ä fixtest.c.o {TEST_LIBS}
+	Link -t 'APPL' -c '????' -sym on -model far -mf ¶
+		fixtest.c.o {STD_LIBS} ¶
+		{TEST_LIBS} ¶
+		-o {Targ}
+	Rez {TEST_RESOURCES} -rd -append -o {Targ}
+
+clean Ä
+	del -i :obj:Å
+	del -i {LIB}
+
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
+
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	rm -i {targDir}{default}.c.o
+	{C} "{depDir}{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+.a.o	Ä	.a
+	if "{Asm}" == "PPCAsm"
+		Echo "# `Date -t` ----- Assembling {default}.a..."
+		rm -i {targDir}{default}.a.o
+		{Asm} "{depDir}{default}.a"		{AFLAGS}	¶
+			-o "{targDir}{default}.a.o"		¶
+			|| ( Echo "#####   ### ERROR ###   #####" )
+	end
+#	if "{Asm}" == "PPCAsm"
+#		{Asm} fix.ppc.a	-o :obj:fix.a.o		¶
+#			|| ( Echo "#####   ### ERROR ###   #####" )
+#	else
+#		rm -i :obj:fix.a.o
+#		{Asm} fix.a	-o :obj:fix.a.o		¶
+#			|| ( Echo "#####   ### ERROR ###   #####" )
+#	end
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+{OBJDIR}fix.c.o Ä fix.h
+
+{OBJDIR}fixtest.c.o Ä fix.h
+
+{OBJDIR}tables.c.o Ä fix.h
+
+

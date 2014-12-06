@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/switch.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:26:52 $
+ * $Source: Smoke:miner:source:main::RCS:SWITCH.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:03:48 $
  * 
  * Triggers and Switches.
  * 
- * $Log: switch.h $
+ * $Log: SWITCH.H $
+ * Revision 1.1  1995/05/16  16:03:48  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:26:52  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -98,13 +101,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 typedef struct trigger {
 	byte		type;
+	byte		link_num;
 	short		flags;
 	fix		value;
 	fix		time;
-	byte		link_num;
 	short 	num_links;
 	short 	seg[MAX_WALLS_PER_LINK];
-	short		side[MAX_WALLS_PER_LINK];
+	short	side[MAX_WALLS_PER_LINK];
 	} trigger;
 
 //typedef struct link {
@@ -113,7 +116,8 @@ typedef struct trigger {
 //	short		side[MAX_WALLS_PER_LINK];
 //	} link;
 
-extern trigger Triggers[MAX_TRIGGERS];
+//extern trigger Triggers[MAX_TRIGGERS];
+extern trigger *Triggers;
 //extern link Links[MAX_WALL_LINKS];
 
 extern int Num_triggers;
@@ -127,4 +131,3 @@ extern int check_trigger_sub(int trigger_num, int player_num);
 extern void triggers_frame_process();
 
 #endif
-

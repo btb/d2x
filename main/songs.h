@@ -11,14 +11,30 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/songs.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:52 $
+ * $Source: Smoke:miner:source:main::RCS:songs.h $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/11/03 12:52:43 $
  * 
  * .
  * 
  * $Log: songs.h $
+ * Revision 1.5  1995/11/03  12:52:43  allender
+ * shareware changes
+ * shareware changes
+ *
+ * Revision 1.4  1995/10/18  01:51:45  allender
+ * redbook fixes
+ *
+ * Revision 1.3  1995/10/17  13:14:14  allender
+ * fixed track numbers for redbook
+ *
+ * Revision 1.2  1995/07/17  08:50:45  allender
+ * changed some constants around
+ *
+ * Revision 1.1  1995/05/16  16:03:17  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:30:52  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -47,26 +63,31 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _SONGS_H
 #define _SONGS_H
 
-typedef struct song_info {
-	char	filename[16];
-	char	melodic_bank_file[16];
-	char	drum_bank_file[16];
-} song_info;
+#ifdef MAC_SHAREWARE
 
-#define MAX_SONGS 27
+#define SONG_TITLE			1000
+#define SONG_BRIEFING		1001
+#define SONG_ENDLEVEL		-1
+#define SONG_ENDGAME		1002
+#define SONG_CREDITS		1003
+#define SONG_LEVEL_MUSIC	1004
+#define NUM_GAME_SONGS 		3
 
-extern song_info Songs[];
+#else
 
-#define SONG_TITLE			0
-#define SONG_BRIEFING		1
-#define SONG_ENDLEVEL		2
-#define SONG_ENDGAME			3
-#define SONG_CREDITS			4
-#define SONG_LEVEL_MUSIC	5
-#define NUM_GAME_SONGS 		22
+#define SONG_TITLE			2
+#define SONG_BRIEFING		3
+#define SONG_ENDLEVEL		4
+#define SONG_ENDGAME		3
+#define SONG_CREDITS		5
+#define SONG_LEVEL_MUSIC	6
+#define NUM_GAME_SONGS		8
+
+#endif
+
+extern ubyte shuffle_levels;
 
 void songs_play_song( int songnum, int repeat );
 void songs_play_level_song( int levelnum );
 
 #endif
-

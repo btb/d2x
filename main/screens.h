@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/screens.h $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/14 12:14:00 $
+ * $Source: Smoke:miner:source:main::RCS:SCREENS.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:02:15 $
  * 
  * Info on canvases, screens, etc.
  * 
- * $Log: screens.h $
+ * $Log: SCREENS.H $
+ * Revision 1.1  1995/05/16  16:02:15  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/14  12:14:00  john
  * Made VR helmets have 4 resolutions to choose from.
  * 
@@ -100,4 +103,3 @@ extern grs_canvas *Canv_editor_game;	//the game window on the editor screen
 extern int set_screen_mode(int sm);		// True = editor screen
 
 #endif
-

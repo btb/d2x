@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/effect2d.h $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1994/02/01 13:18:47 $
+ * $Source: Smoke:miner:source:2d::RCS:effect2d.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/05 09:26:41 $
  * 
  * .
  * 
  * $Log: effect2d.h $
+ * Revision 1.1  1995/05/05  09:26:41  allender
+ * Initial revision
+ *
  * Revision 1.2  1994/02/01  13:18:47  john
  * *** empty log message ***
  * 
@@ -39,4 +42,3 @@ extern void gr_grey_canvas();
 extern void effect2d_headlight_copy( grs_bitmap * src_bmp, grs_bitmap * dest_bmp, grs_bitmap * mask_bmp );
 
 #endif
-

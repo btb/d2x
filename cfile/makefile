@@ -1,28 +1,72 @@
 #
-# Master makefile for Miner source
+# $Source: Buggin:miner:source:cfile::RCS:makefile $
+# $Revision: 1.3 $
+# $Author: allender $
+# $Date: 1995/08/23 16:59:43 $
 #
-# Makes all the executable by visiting subdirs and making there
+# Makefile for graphics functions
 #
 
-LIBDIR = ..\main
-#
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
+# What libs to make
+LIB = cfile.lib
 
-CLEAN_TARGS = $(OBJDIR)\*.obj
+# includes to copy to lib directory
+GLOBAL_INCLUDES = cfile.h nocfile.h
 
-INSTALL_TARGS = cfile.lib cfile.h nocfile.h
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-LIBS = cfile
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r
 
-CFILE_OBJS = cfile.obj
+OBJ_DIR = :obj:
 
-cfile.lib: $(CFILE_OBJS)
-	wlib cfile.lib $(CFILE_OBJS)
-	copy *.lib $(LIBDIR)
-cfile.obj: cfile.h cfile.c
-	wcc386 $(CCFLAGS) cfile.c
+# C compiler options
+CFLAGS = {SYM_FLAG}
+	
+LDFLAGS = ¶
+	{SYM_FLAG}
+	
+CFILE_OBJS = ¶
+	{OBJDIR}cfile.c.o
+	
+All Ä {LIB}
 
-test.obj: test.c
-	wcc386 $(CCFLAGS) test.c
-
+{LIB} Ä {CFILE_OBJS}
+	Echo "# `Date -t` ----- Building CFILE library..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+clean Ä
+	del -i :obj:Å
+	del -i {LIB}
+
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
+
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{depDir}{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+.a.o	Ä	.a
+	Echo "# `Date -t` ----- Assembling {default}.a..."
+	Asm "{depDir}{default}.a"			¶
+		-o "{targDir}{default}.a.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+cfile.c.o Ä cfile.c cfile.h makefile

@@ -11,10 +11,10 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/multi.c $
- * $Revision: 2.10 $
- * $Author: john $
- * $Date: 1995/05/29 16:18:26 $
+ * $Source: Smoke:miner:source:main::RCS:multi.c $
+ * $Revision: 1.15 $
+ * $Author: allender $
+ * $Date: 1995/11/13 09:27:22 $
  * 
  * Multiplayer code shared by serial and network play.
  * 
@@ -25,15 +25,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define DOS4G
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: multi.c 2.10 1995/05/29 16:18:26 john Exp $";
+static char rcsid[] = "$Id: multi.c 1.15 1995/11/13 09:27:22 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <dos.h>
-#include <conio.h>
 #include <string.h>
 #include <time.h>
+
+#include <Events.h>				// for TickCount
+#include <Connections.h>
+#include <CommResources.h>
 
 #include "game.h"
 #include "modem.h"
@@ -63,30 +65,17 @@ static char rcsid[] = "$Id: multi.c 2.10 1995/05/29 16:18:26 john Exp $";
 #include "newdemo.h"
 #include "text.h"
 #include "kmatrix.h"
-//#include "glfmodem.h"//This and the next file aren't part of the public release -KRB
-//#include "commlib.h"
 #include "multibot.h"
 #include "gameseq.h"
 #include "physics.h"
 #include "config.h"
 #include "state.h"
+#ifdef MAC_SHAREWARE
+#include "songs.h"			// for shareware only
+#endif
 
-//*******************************************
-typedef struct  {
-	char buffer[256];
-	unsigned char write_index;
-	unsigned char read_index;
-} BUFFER;
+#include "byteswap.h"
 
-typedef struct  {
-	void (interrupt far * old_vector)();
-	int uart_base;
-	int irq_mask;
-	int interrupt_number;
-	BUFFER in;
-	BUFFER out;
-} PORT; //I added this from serial.c, it will compile, but I doubt it works. -KRB
-//*******************************************
 //
 // Local macros and prototypes
 //
@@ -177,24 +166,24 @@ int message_length[MULTI_MAX_TYPE+1] = {
 	24, // POSITION
 	3,  // REAPPEAR
 	8,  // FIRE
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	7,  // KILL
 #else
 	5,  // KILL
 #endif
 	4,  // REMOVE_OBJECT
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	56, // PLAYER_EXPLODE
 #else
 	57, // PLAYER_EXPLODE
 #endif
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	28, // MESSAGE (MAX_MESSAGE_LENGTH = 25)
 #else
 	37, // MESSAGE (MAX_MESSAGE_LENGTH = 40)
 #endif
 	2,  // QUIT
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	10, // PLAY_SOUND
 	24, // BEGIN_SYNC
 #else
@@ -203,21 +192,21 @@ int message_length[MULTI_MAX_TYPE+1] = {
 #endif
 	4,  // CONTROLCEN
 	5,  // CLAIM ROBOT
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	3,  // END_SYNC
 #else
 	4,  // END_SYNC
 #endif
    2,  // CLOAK
 	3,  // ENDLEVEL_START
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	7,  // DOOR_OPEN
 #else
    4,  // DOOR_OPEN
 #endif
 	2,  // CREATE_EXPLOSION
 	16, // CONTROLCEN_FIRE
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	56, // PLAYER_DROP
 	7,  // CREATE_POWERUP
 #else
@@ -226,7 +215,7 @@ int message_length[MULTI_MAX_TYPE+1] = {
 #endif
 	9,  // MISSILE_TRACK
 	2,  // DE-CLOAK
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	2,	 // MENU_CHOICE
 	28, // ROBOT_POSITION  (shortpos_length (23) + 5 = 28)
 	8,  // ROBOT_EXPLODE
@@ -241,11 +230,105 @@ int message_length[MULTI_MAX_TYPE+1] = {
 #else
 	2,	 // MENU_CHOICE
 #endif
+#if 0
 	2+24,   //SAVE_GAME 		(ubyte slot, uint id, char name[20])
 	2+4,   //RESTORE_GAME	(ubyte slot, uint id)
 	1+1, 	// MULTI_REQ_PLAYER
 	sizeof(netplayer_stats),			// MULTI_SEND_PLAYER
+#endif
 };
+
+//
+        2,  // GOTO_SECRET  BEFORE DE-CLOAK SIZE
+
+
+
+void multi_reset_player_object(object *objp);
+void multi_set_robot_ai(void);
+void multi_save_game(ubyte slot, uint id, char *desc);
+void multi_restore_game(ubyte slot, uint id);
+void extract_netplayer_stats( netplayer_stats *ps, player * pd );
+
+// following is code that is used in the shareware only.  This function was
+// created initially for the PC 3 level shareware.  It dumps out the
+// player in multi games so that the PC players with 7 levels see him
+// at the endlevel.  This does the endgame stuff that used to be in
+// gameseq and network_endlevel().
+
+// there is also variables here for the shareware version contest which
+// will report the first person to 15 kills in either modem or network game
+
+#ifdef MAC_SHAREWARE
+
+short contest_running_kills[MAX_NUM_NET_PLAYERS];
+ubyte contest_active = 0;
+
+void multi_contest_start()
+{
+	int i;
+	
+	for (i = 0; i < MAX_NUM_NET_PLAYERS; i++)
+		contest_running_kills[i] = 0;
+		
+}
+
+void contest_compute_kill(int pnum)
+{
+	contest_running_kills[pnum]++;
+	if ( (contest_running_kills[pnum] >= 15) && contest_active ) {
+		HUD_init_message("%s wins the contest!!!", Players[pnum].callsign);
+		Network_message_reciever = 100;		// Send to everyone...
+		sprintf( Network_message, "%s wins the contest!!!", Players[pnum].callsign);
+		contest_active = 0;
+	}
+}
+
+void
+multi_endlevel_abort()
+{
+	if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM)) {
+
+		// Abort com game because we've reached the last level
+		Function_mode = FMODE_MENU;
+		com_flush();
+		com_flush();
+
+		if ((Newdemo_state == ND_STATE_RECORDING) || (Newdemo_state == ND_STATE_PAUSED))
+			newdemo_stop_recording();
+
+		songs_play_song( SONG_ENDGAME, 0 );
+//		digi_play_midi_song( "endgame.hmp" );
+
+		do_end_game();
+
+		longjmp(LeaveGame,0);
+	}		
+	else if (Game_mode & GM_NETWORK) {
+
+		// Abort network game because we've reached our last level
+
+		Function_mode = FMODE_MENU;
+		network_flush();
+		Network_status = 5;		//==NETSTAT_ENDLEVEL
+		network_listen();
+
+		Players[Player_num].connected = 0;
+		network_send_endlevel_packet();
+		network_send_endlevel_packet();
+		network_send_endlevel_packet();
+
+		if ((Newdemo_state == ND_STATE_RECORDING) || (Newdemo_state == ND_STATE_PAUSED))
+			newdemo_stop_recording();
+
+		songs_play_song( SONG_ENDGAME, 0 );
+//		digi_play_midi_song( "endgame.hmp" );
+
+		do_end_game();
+
+		longjmp(LeaveGame,0);
+	}
+}
+#endif
 
 //
 //  Functions that replace what used to be macros
@@ -368,7 +451,7 @@ multi_endlevel_score(void)
 {
 	int old_connect;
 	int i;
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	return; // DEBUG
 #endif
 
@@ -444,7 +527,7 @@ multi_choose_mission(int *anarchy_only)
 				default_mission = i;
 		}
 
-		new_mission_num = newmenu_listbox1(TXT_MULTI_MISSION, n_missions, m, 1, default_mission, NULL );
+		new_mission_num = newmenu_listbox1(TXT_MULTI_MISSION, n_missions, m, 1, default_mission, NULL, 1 );
 
 		if (new_mission_num == -1)
 			return -1; 	//abort!
@@ -480,7 +563,7 @@ multi_new_game(void)
 		Players[i].flags = 0;
 	}
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	for (i = 0; i < MAX_ROBOTS_CONTROLLED; i++)
 	{
 		robot_controlled[i] = -1;	
@@ -524,8 +607,10 @@ multi_make_player_ghost(int playernum)
 	obj->movement_type = MT_NONE;
 	multi_reset_player_object(obj);
 
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_ROBOTS)
 		multi_strip_robots(playernum);
+#endif
 }
 
 void
@@ -582,7 +667,7 @@ multi_sort_kill_list(void)
 	
 	for (i = 0; i < MAX_NUM_NET_PLAYERS; i++)
 	{
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		if (Game_mode & GM_MULTI_COOP)
 			kills[i] = Players[i].score;
 		else
@@ -671,7 +756,7 @@ void multi_compute_kill(int killer, int killed)
 		return;		
 	}
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	else if ((killer_type != OBJ_PLAYER) && (killer_type != OBJ_GHOST))
 	{
 		if (killed_pnum == Player_num)
@@ -734,6 +819,10 @@ void multi_compute_kill(int killer, int killed)
 				team_kills[get_team(killer_pnum)] += 1;
 		}
 		Players[killer_pnum].net_kills_total += 1;
+		
+#ifdef MAC_SHAREWARE
+		contest_compute_kill(killer_pnum);
+#endif
 
 #ifndef SHAREWARE
 		if (Newdemo_state == ND_STATE_RECORDING)
@@ -769,7 +858,7 @@ multi_do_frame(void)
 	if (!multi_in_menu)
 		multi_leave_menu = 0;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_ROBOTS)
 	{
 		multi_check_robot_timeout();
@@ -793,7 +882,7 @@ multi_do_frame(void)
 }
 		
 void
-multi_send_data(char *buf, int len, int repeat)
+multi_send_data(unsigned char *buf, int len, int repeat)
 {
 	Assert(len == message_length[buf[0]]);
 	Assert(buf[0] <= MULTI_MAX_TYPE);
@@ -877,7 +966,7 @@ multi_endlevel(int *secret)
 //          the state of the game in some way.
 //
 
-extern PORT *com_port;
+extern ConnHandle conn_handle;
 
 int 
 multi_menu_poll(void)
@@ -907,11 +996,10 @@ multi_menu_poll(void)
 //	t1 = timer_get_fixed_seconds();
 //	while (timer_get_fixed_seconds() < t1+F1_0/20)
 //		;
-	t1 = TICKER + 1;		// Wait 1/18th of a second...
-	while (TICKER < t1)
+	t1 = TickCount() + 3;		// Wait 1/20th of a second...was 1/18 sec in PC version
+	while (TickCount() < t1)
 		;
 	
-		
 	if (Endlevel_sequence || (Fuelcen_control_center_destroyed && !was_fuelcen_alive) || Player_is_dead || (Players[Player_num].shields < old_shields))
 	{
 		multi_leave_menu = 1;
@@ -922,11 +1010,11 @@ multi_menu_poll(void)
 		multi_leave_menu = 1;
 		return(-1);
 	}
-	if ((Game_mode & GM_MODEM) && (!GetCd(com_port)))
-	{
-		multi_leave_menu = 1;
-		return(-1);
-	}
+//	if ((Game_mode & GM_MODEM) && (!GetCd(com_port)))
+//	{
+//		multi_leave_menu = 1;
+//		return(-1);
+//	}
 
 	return(0);
 }
@@ -1110,7 +1198,14 @@ void multi_message_input_sub( int key )
 		if ( key > 0 )	{
 			int ascii = key_to_ascii(key);
 			if ((ascii < 255 ))	{
-				if (multi_message_index < MAX_MESSAGE_LEN-2 )	{
+				int length;
+				
+#ifdef MAC_SHAREWARE
+				length = SHAREWARE_MAX_MESSAGE_LEN;
+#else
+				length = MAX_MESSAGE_LEN;
+#endif
+				if (multi_message_index < length-2 )	{
 					Network_message[multi_message_index++] = ascii;
 					Network_message[multi_message_index] = 0;
 				} else if ( multi_sending_message )	{		
@@ -1146,14 +1241,19 @@ void
 multi_send_message_dialog(void)
 {
 	newmenu_item m[1];
-	int choice;
+	int choice, length;
 
 	if (!(Game_mode&GM_MULTI))
 		return;
 
 	Network_message[0] = 0;             // Get rid of old contents
 
-	m[0].type=NM_TYPE_INPUT; m[0].text = Network_message; m[0].text_len = MAX_MESSAGE_LEN-1;
+#ifdef MAC_SHAREWARE
+	length = SHAREWARE_MAX_MESSAGE_LEN;
+#else
+	length = MAX_MESSAGE_LEN;
+#endif
+	m[0].type=NM_TYPE_INPUT; m[0].text = Network_message; m[0].text_len = length-1;
 	choice = newmenu_do( NULL, TXT_SEND_MESSAGE, 1, m, NULL );
 
 	if ((choice > -1) && (strlen(Network_message) > 0)) {
@@ -1180,7 +1280,7 @@ multi_do_death(int objnum)
 }
 
 void
-multi_do_fire(char *buf)
+multi_do_fire(unsigned char *buf)
 {
 	ubyte weapon;
 	char pnum;
@@ -1189,9 +1289,9 @@ multi_do_fire(char *buf)
 	
 	// Act out the actual shooting
 	pnum = buf[1];
-	weapon = (int)buf[2];	
+	weapon = buf[2];
 	flags = buf[4];
-	Network_laser_track = *(short *)(buf+6);
+	Network_laser_track = swapshort(*(short *)(buf+6));
 	
 	Assert (pnum < N_players);
 
@@ -1199,7 +1299,7 @@ multi_do_fire(char *buf)
 		multi_make_ghost_player(pnum);
 		
 	if (weapon >= MISSILE_ADJUST) 
-		net_missile_firing(pnum, weapon, (int)buf[4]);
+		net_missile_firing(pnum, weapon, swapint((int)buf[4]));
 	else {
 		if (weapon == FUSION_INDEX) {
 			Fusion_charge = buf[4] << 12;
@@ -1220,11 +1320,11 @@ multi_do_fire(char *buf)
 }
 
 void 
-multi_do_message(char *buf)
+multi_do_message(unsigned char *buf)
 {
 	char *colon;
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	int loc = 3;
 #else
 	int loc = 2;
@@ -1247,8 +1347,10 @@ multi_do_message(char *buf)
 }
 
 void
-multi_do_position(char *buf)
-{		
+multi_do_position(unsigned char *buf)
+{
+	shortpos sp;
+	
 	// This routine does only player positions, mode game only
 	//	mprintf((0, "Got position packet.\n"));
 
@@ -1258,18 +1360,22 @@ multi_do_position(char *buf)
 
 	Assert(!(Game_mode & GM_NETWORK));
 
-	extract_shortpos(&Objects[Players[pnum].objnum], (shortpos *)(buf+1));
+//	extract_shortpos(&Objects[Players[pnum].objnum], (shortpos *)(buf+1));
+//  extract the buffer into shortpos by hand because of misalignment on the mac
+	memcpy((ubyte *)(sp.bytemat), (ubyte *)(buf + 1), 9);
+	memcpy((ubyte *)&(sp.xo), (ubyte *)(buf + 10), 14);
+	extract_shortpos(&Objects[Players[pnum].objnum], &sp, 1);
 
 	if (Objects[Players[pnum].objnum].movement_type == MT_PHYSICS)
 		set_thrust_from_velocity(&Objects[Players[pnum].objnum]);
 }
 
 void
-multi_do_reappear(char *buf)
+multi_do_reappear(unsigned char *buf)
 {
 	short objnum;
 
-	objnum = *(short *)(buf+1);
+	objnum = swapshort(*(short *)(buf+1));
 
 	Assert(objnum >= 0);
 //	Assert(Players[Objects[objnum].id]].objnum == objnum);
@@ -1282,7 +1388,7 @@ multi_do_reappear(char *buf)
 }
 	
 void
-multi_do_player_explode(char *buf)
+multi_do_player_explode(unsigned char *buf)
 {
 	// Only call this for players, not robots.  pnum is player number, not
 	// Object number.
@@ -1293,7 +1399,7 @@ multi_do_player_explode(char *buf)
 	int i;
 	char remote_created;
 
-	pnum = buf[1];
+	pnum = (int)buf[1];
 
 #ifdef NDEBUG
 	if ((pnum < 0) || (pnum >= N_players))
@@ -1319,12 +1425,12 @@ multi_do_player_explode(char *buf)
 	Players[pnum].secondary_weapon_flags = buf[count];				count++;
 	Players[pnum].laser_level = buf[count];							count++;
 	Players[pnum].secondary_ammo[HOMING_INDEX] = buf[count];		count++;
-	Players[pnum].secondary_ammo[CONCUSSION_INDEX] = buf[count];count++;
-	Players[pnum].secondary_ammo[SMART_INDEX] = buf[count];		count++;
-	Players[pnum].secondary_ammo[MEGA_INDEX] = buf[count];		count++;
-	Players[pnum].secondary_ammo[PROXIMITY_INDEX] = buf[count]; count++;
-	Players[pnum].primary_ammo[VULCAN_INDEX] = *(ushort *)(buf+count); count += 2;
-	Players[pnum].flags = *(uint *)(buf+count);						count += 4;
+	Players[pnum].secondary_ammo[CONCUSSION_INDEX] = buf[count];	count++;
+	Players[pnum].secondary_ammo[SMART_INDEX] = buf[count];			count++;
+	Players[pnum].secondary_ammo[MEGA_INDEX] = buf[count];			count++;
+	Players[pnum].secondary_ammo[PROXIMITY_INDEX] = buf[count]; 	count++;
+	Players[pnum].primary_ammo[VULCAN_INDEX] = swapshort(*(ushort *)(buf+count)); count += 2;
+	Players[pnum].flags = swapint(*(uint *)(buf+count));			count += 4;
 
 	objp = Objects+Players[pnum].objnum;
 
@@ -1347,11 +1453,11 @@ multi_do_player_explode(char *buf)
 
 	for (i = 0; i < remote_created; i++)
 	{
-		if ((i < Net_create_loc) && (*(short *)(buf+count) > 0))
-			map_objnum_local_to_remote((short)Net_create_objnums[i], *(short *)(buf+count), pnum);		
-		else if (*(short *)(buf+count) <= 0)
+		if ((i < Net_create_loc) && (swapshort(*(short *)(buf+count)) > 0))
+			map_objnum_local_to_remote((short)Net_create_objnums[i], swapshort(*(short *)(buf+count)), pnum);
+		else if (swapshort(*(short *)(buf+count)) <= 0)
 		{
-			mprintf((0, "WARNING: Remote created object has non-valid number %d (player %d)", *(short *)(buf+count), pnum));
+			mprintf((0, "WARNING: Remote created object has non-valid number %d (player %d)", swapshort(*(short *)(buf+count)), pnum));
 		}
 		else 
 		{
@@ -1382,14 +1488,14 @@ multi_do_player_explode(char *buf)
 }
 
 void
-multi_do_kill(char *buf)
+multi_do_kill(unsigned char *buf)
 {
 	int killer, killed;
 	int count = 1;
 	
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	int pnum;
-	pnum = buf[count];
+	pnum = (int)buf[count];
 	if ((pnum < 0) || (pnum >= N_players))
 	{
 		Int3(); // Invalid player number killed
@@ -1398,14 +1504,14 @@ multi_do_kill(char *buf)
 	killed = Players[pnum].objnum;			
 	count += 1;
 #else
-	killed = objnum_remote_to_local(*(short *)(buf+count), (byte)buf[count+2]);
+	killed = objnum_remote_to_local(swapshort(*(short *)(buf+count)), (byte)buf[count+2]);
 	count += 3;
 #endif
-	killer = *(short *)(buf+count); 
+	killer = swapshort(*(short *)(buf+count));
 	if (killer > 0)
 		killer = objnum_remote_to_local(killer, (byte)buf[count+2]);
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	if ((Objects[killed].type != OBJ_PLAYER) && (Objects[killed].type != OBJ_GHOST))
 	{
 		Int3();
@@ -1421,12 +1527,12 @@ multi_do_kill(char *buf)
 
 //	Changed by MK on 10/20/94 to send NULL as object to net_destroy_controlcen if it got -1
 // which means not a controlcen object, but contained in another object
-void multi_do_controlcen_destroy(char *buf)
+void multi_do_controlcen_destroy(unsigned char *buf)
 {
 	byte who;
 	short objnum;
 
-	objnum = *(short *)(buf+1);
+	objnum = swapshort(*(short *)(buf+1));
 	who = buf[3];
 
 	if (Fuelcen_control_center_destroyed != 1) 
@@ -1447,7 +1553,7 @@ void multi_do_controlcen_destroy(char *buf)
 }
 
 void 
-multi_do_escape(char *buf)
+multi_do_escape(unsigned char *buf)
 {
 	int objnum;
 
@@ -1458,7 +1564,7 @@ multi_do_escape(char *buf)
 	if (buf[2] == 0)
 	{
 		HUD_init_message("%s %s", Players[buf[1]].callsign, TXT_HAS_ESCAPED);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		if (Game_mode & GM_NETWORK)
 			Players[buf[1]].connected = CONNECT_ESCAPE_TUNNEL;
 #endif
@@ -1468,7 +1574,7 @@ multi_do_escape(char *buf)
 	else if (buf[2] == 1) 
 	{
 		HUD_init_message("%s %s", Players[buf[1]].callsign, TXT_HAS_FOUND_SECRET);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		if (Game_mode & GM_NETWORK)
 			Players[buf[1]].connected = CONNECT_FOUND_SECRET;
 #endif
@@ -1481,13 +1587,13 @@ multi_do_escape(char *buf)
 
 
 void
-multi_do_remobj(char *buf)
+multi_do_remobj(unsigned char *buf)
 {
 	short objnum; // which object to remove
 	short local_objnum;
 	byte obj_owner; // which remote list is it entered in
 
-	objnum = *(short *)(buf+1);
+	objnum = swapshort(*(short *)(buf+1));
 	obj_owner = buf[3];
 
 	Assert(objnum >= 0);
@@ -1522,7 +1628,7 @@ multi_do_remobj(char *buf)
 }
 
 void
-multi_do_quit(char *buf)
+multi_do_quit(unsigned char *buf)
 {
 	
 	if (Game_mode & GM_NETWORK)
@@ -1533,7 +1639,7 @@ multi_do_quit(char *buf)
 
 		HUD_init_message( "%s %s", Players[buf[1]].callsign, TXT_HAS_LEFT_THE_GAME);
 		
-		network_disconnect_player(buf[1]);
+		network_disconnect_player((int)buf[1]);
 
 		if (multi_in_menu)
 			return;
@@ -1559,11 +1665,11 @@ multi_do_quit(char *buf)
 }
 
 void
-multi_do_cloak(char *buf)
+multi_do_cloak(unsigned char *buf)
 {
 	int pnum;
 
-	pnum = buf[1];
+	pnum = (int)buf[1];
 
 	Assert(pnum < N_players);
 	
@@ -1573,7 +1679,7 @@ multi_do_cloak(char *buf)
 	Players[pnum].cloak_time = GameTime;
 	ai_do_cloak_stuff();
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_ROBOTS)
 		multi_strip_robots(pnum);
 #endif
@@ -1583,11 +1689,11 @@ multi_do_cloak(char *buf)
 }
 	
 void
-multi_do_decloak(char *buf)
+multi_do_decloak(unsigned char *buf)
 {
 	int pnum;
 
-	pnum = buf[1];
+	pnum = (int)buf[1];
 
 	if (Newdemo_state == ND_STATE_RECORDING)
 		newdemo_record_multi_decloak(pnum);
@@ -1595,19 +1701,19 @@ multi_do_decloak(char *buf)
 }
 	
 void
-multi_do_door_open(char *buf)
+multi_do_door_open(unsigned char *buf)
 {
 	int segnum;
 	short side;
 	segment *seg;
 	wall *w;
 
-#ifdef SHAREWARE
-	segnum = *(int *)(buf+1);
-	side = *(short *)(buf+5);
+#ifdef MAC_SHAREWARE
+	segnum = swapint(*(int *)(buf+1));
+	side = swapshort(*(short *)(buf+5));
 #else
-	segnum = *(short *)(buf+1);
-	side = buf[3];
+	segnum = (int)swapshort(*(short *)(buf+1));
+	side = (short)buf[3];
 	
 #endif
 	
@@ -1646,34 +1752,34 @@ multi_do_door_open(char *buf)
 }
 
 void
-multi_do_create_explosion(char *buf)
+multi_do_create_explosion(unsigned char *buf)
 {
 	int pnum;
 	int count = 1;
 
-	pnum = buf[count++];
+	pnum = (int)buf[count++];
 
 //	mprintf((0, "Creating small fireball.\n"));
 	create_small_fireball_on_object(&Objects[Players[pnum].objnum], F1_0, 1);
 }
 	
 void
-multi_do_controlcen_fire(char *buf)
+multi_do_controlcen_fire(unsigned char *buf)
 {
 	vms_vector to_target;
 	char gun_num;
 	short objnum;
 	int count = 1;
 
-	memcpy(&to_target, buf+count, 12);	count += 12;
-	gun_num = buf[count];					count += 1;
-	objnum = *(short *)(buf+count);		count += 2;
+	memcpy(&to_target, buf+count, 12);			count += 12;
+	gun_num = buf[count];						count += 1;
+	objnum = swapshort(*(short *)(buf+count));	count += 2;
 
  	Laser_create_new_easy(&to_target, &Gun_pos[gun_num], objnum, CONTROLCEN_WEAPON_NUM, 1);
 }
 
 void
-multi_do_create_powerup(char *buf)
+multi_do_create_powerup(unsigned char *buf)
 {
 	short segnum;
 	short objnum;
@@ -1688,16 +1794,19 @@ multi_do_create_powerup(char *buf)
 
 	pnum = buf[count++];
 	powerup_type = buf[count++];
-	segnum = *(short *)(buf+count); count+=2;
-	objnum = *(short *)(buf+count); count+=2;
+	segnum = swapshort(*(short *)(buf+count)); count+=2;
+	objnum = swapshort(*(short *)(buf+count)); count+=2;
 
 	if ((segnum < 0) || (segnum > Highest_segment_index)) {
 		Int3();
 		return;
 	}
 	
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	new_pos = *(vms_vector *)(buf+count); count+=sizeof(vms_vector);
+	new_pos.x = (fix)swapint((int)new_pos.x);
+	new_pos.y = (fix)swapint((int)new_pos.y);
+	new_pos.z = (fix)swapint((int)new_pos.z);
 #else
 	compute_segment_center(&new_pos, &Segments[segnum]);
 #endif
@@ -1729,14 +1838,14 @@ multi_do_create_powerup(char *buf)
 }		
 
 void
-multi_do_play_sound(char *buf)
+multi_do_play_sound(unsigned char *buf)
 {
-	int pnum = buf[1];
-#ifdef SHAREWARE
-	int sound_num = *(int *)(buf+2);
-	fix volume = *(fix *)(buf+6);
+	int pnum = (int)buf[1];
+#ifdef MAC_SHAREWARE
+	int sound_num = swapint(*(int *)(buf+2));
+	fix volume = (fix)swapint((int)(*(fix *)(buf+6)));
 #else
-	int sound_num = buf[2];
+	int sound_num = (int)buf[2];
 	fix volume = buf[3] << 12;
 #endif
 
@@ -1749,11 +1858,11 @@ multi_do_play_sound(char *buf)
 	digi_link_sound_to_object( sound_num, Players[pnum].objnum, 0, volume);	
 }
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 void
-multi_do_score(char *buf)
+multi_do_score(unsigned char *buf)
 {
-	int pnum = buf[1];
+	int pnum = (int)buf[1];
 	
 	if ((pnum < 0) || (pnum >= N_players))
 	{
@@ -1762,18 +1871,18 @@ multi_do_score(char *buf)
 	}
 
 	if (Newdemo_state == ND_STATE_RECORDING)
-		newdemo_record_multi_score(pnum, *(int *)(buf+2));
+		newdemo_record_multi_score(pnum, swapint(*(int *)(buf+2)));
 
-	Players[pnum].score = *(int *)(buf+2);
+	Players[pnum].score = swapint(*(int *)(buf+2));
 
 	multi_sort_kill_list();
 }
 
 void
-multi_do_trigger(char *buf)
+multi_do_trigger(unsigned char *buf)
 {
-	int pnum = buf[1];
-	int trigger = buf[2];
+	int pnum = (int)buf[1];
+	int trigger = (int)buf[2];
 
 	if ((pnum < 0) || (pnum >= N_players) || (pnum == Player_num))
 	{
@@ -1788,7 +1897,7 @@ multi_do_trigger(char *buf)
 	check_trigger_sub(trigger, pnum);
 }
 
-void multi_do_hostage_door_status(char *buf)
+void multi_do_hostage_door_status(unsigned char *buf)
 {
 	// Update hit point status of a door
 
@@ -1796,8 +1905,8 @@ void multi_do_hostage_door_status(char *buf)
 	int wallnum; 
 	fix hps;
 
-	wallnum = *(short *)(buf+count);		count += 2;
-	hps = *(fix *)(buf+count);		count += 4;
+	wallnum = swapshort(*(short *)(buf+count));		count += 2;
+	hps = (fix)swapint((int)(*(fix *)(buf+count)));	count += 4;
 
 	if ((wallnum < 0) || (wallnum > Num_walls) || (hps < 0) || (Walls[wallnum].type != WALL_BLASTABLE))
 	{
@@ -1812,7 +1921,8 @@ void multi_do_hostage_door_status(char *buf)
 }
 #endif
 
-void multi_do_save_game(char *buf)
+#ifndef MAC_SHAREWARE
+void multi_do_save_game(unsigned char *buf)
 {
 	int count = 1;
 	ubyte slot;
@@ -1820,26 +1930,26 @@ void multi_do_save_game(char *buf)
 	char desc[25];
 
 	slot = *(ubyte *)(buf+count);		count += 1;
-	id = *(uint *)(buf+count);		count += 4;
+	id = swapint(*(uint *)(buf+count));	count += 4;
 	memcpy( desc, &buf[count], 20 );	count += 20;
 
 	multi_save_game( slot, id, desc );
 }
 
-void multi_do_restore_game(char *buf)
+void multi_do_restore_game(unsigned char *buf)
 {
 	int count = 1;
 	ubyte slot;
 	uint id;
 
 	slot = *(ubyte *)(buf+count);		count += 1;
-	id = *(uint *)(buf+count);		count += 4;
+	id = swapint(*(uint *)(buf+count));	count += 4;
 
 	multi_restore_game( slot, id );
 }
 
 // 
-void multi_do_req_player(char *buf)
+void multi_do_req_player(unsigned char *buf)
 {
 	netplayer_stats ps;
 	ubyte player_n;
@@ -1853,7 +1963,7 @@ void multi_do_req_player(char *buf)
 	}
 }
 
-void multi_do_send_player(char *buf)
+void multi_do_send_player(unsigned char *buf)
 {
 	// Got a player packet from someone!!!
 	netplayer_stats * p;
@@ -1867,6 +1977,7 @@ void multi_do_send_player(char *buf)
 
 //	use_netplayer_stats( &Players[p->Player_num], p );
 }
+#endif
 
 void
 multi_reset_stuff(void)
@@ -1945,7 +2056,7 @@ multi_reset_player_object(object *objp)
 }
 
 void
-multi_process_data(char *buf, int len)
+multi_process_data(unsigned char *buf, int len)
 {
 	// Take an entire message (that has already been checked for validity,
 	// if necessary) and act on it.  
@@ -1953,7 +2064,7 @@ multi_process_data(char *buf, int len)
 	int type;
 	len = len;
 
-	type = buf[0];
+	type = (int)buf[0];
 	
 	if (type > MULTI_MAX_TYPE)
 	{
@@ -2004,7 +2115,7 @@ multi_process_data(char *buf, int len)
 		case MULTI_PLAY_SOUND:
 			if (!Endlevel_sequence) multi_do_play_sound(buf); break;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		case MULTI_ROBOT_CLAIM:
 			if (!Endlevel_sequence) multi_do_claim_robot(buf); break;
 		case MULTI_ROBOT_POSITION:
@@ -2043,7 +2154,7 @@ multi_process_data(char *buf, int len)
 }
 
 void
-multi_process_bigdata(char *buf, int len)
+multi_process_bigdata(unsigned char *buf, int len)
 {
 	// Takes a bunch of messages, check them for validity,
 	// and pass them to multi_process_data. 
@@ -2051,7 +2162,7 @@ multi_process_bigdata(char *buf, int len)
 	int type, sub_len, bytes_processed = 0;
 
 	while( bytes_processed < len )	{
-		type = buf[bytes_processed];
+		type = (int)buf[bytes_processed];
 
 		if ( (type<0) || (type>MULTI_MAX_TYPE))	{
 			mprintf( (1, "multi_process_bigdata: Invalid packet type %d!\n", type ));
@@ -2089,7 +2200,7 @@ multi_send_fire(void)
 	multibuf[3] = (char)Network_laser_level;
 	multibuf[4] = (char)Network_laser_flags;
 	multibuf[5] = (char)Network_laser_fired;
-	*(short *)(multibuf+6) = Network_laser_track;
+	*(short *)(multibuf+6) = swapshort(Network_laser_track);
 
 	multi_send_data(multibuf, 8, 1);
 	
@@ -2107,16 +2218,16 @@ multi_send_destroy_controlcen(int objnum, int player)
 		HUD_init_message(TXT_CONTROL_DESTROYED);
 
 	multibuf[0] = (char)MULTI_CONTROLCEN;
-	*(ushort *)(multibuf+1) = objnum;
+	*(ushort *)(multibuf+1) = swapshort((short)objnum);
 	multibuf[3] = player;
-   multi_send_data(multibuf, 4, 2);
+	multi_send_data(multibuf, 4, 2);
 }
 
 void 
 multi_send_endlevel_start(int secret)
 {
 	multibuf[0] = (char)MULTI_ENDLEVEL_START;
-	multibuf[1] = Player_num;
+	multibuf[1] = (char)Player_num;
 	multibuf[2] = (char)secret;
 	
 	if ((secret) && !multi_goto_secret)
@@ -2137,6 +2248,7 @@ multi_send_player_explode(char type)
 {
 	int count = 0;
 	int i;
+	short s;
 
 	Assert( (type == MULTI_PLAYER_DROP) || (type == MULTI_PLAYER_EXPLODE) );
 
@@ -2149,7 +2261,7 @@ multi_send_player_explode(char type)
 	}
 
 	multibuf[count++] = type;
-	multibuf[count++] = Player_num;
+	multibuf[count++] = (char)Player_num;
 	multibuf[count++] = (char)Players[Player_num].primary_weapon_flags;
 	multibuf[count++] = (char)Players[Player_num].secondary_weapon_flags;
 	multibuf[count++] = (char)Players[Player_num].laser_level;
@@ -2158,16 +2270,17 @@ multi_send_player_explode(char type)
 	multibuf[count++] = (char)Players[Player_num].secondary_ammo[SMART_INDEX];
 	multibuf[count++] = (char)Players[Player_num].secondary_ammo[MEGA_INDEX];
 	multibuf[count++] = (char)Players[Player_num].secondary_ammo[PROXIMITY_INDEX];
-	*(ushort *)(multibuf+count) = (ushort)Players[Player_num].primary_ammo[VULCAN_INDEX];
+	*(ushort *)(multibuf+count) = swapshort((ushort)Players[Player_num].primary_ammo[VULCAN_INDEX]);
 	count += 2;
-	*(uint *)(multibuf+count) = (uint)Players[Player_num].flags;
+	*(uint *)(multibuf+count) = swapint((uint)Players[Player_num].flags);
 	count += 4;
 	
 	multibuf[count++] = Net_create_loc;
 
 	Assert(Net_create_loc <= MAX_NET_CREATE_OBJECTS);
 
-	memset(multibuf+count, -1, MAX_NET_CREATE_OBJECTS*sizeof(short));
+	s = swapshort((short)-1);
+	memset(multibuf+count, s, MAX_NET_CREATE_OBJECTS*sizeof(short));
 	
 	mprintf((0, "Created %d explosion objects.\n", Net_create_loc));
 
@@ -2179,7 +2292,7 @@ multi_send_player_explode(char type)
 			continue;
 		}
 
-		*(short *)(multibuf+count) = (short)Net_create_objnums[i]; count += 2;
+		*(short *)(multibuf+count) = swapshort((short)Net_create_objnums[i]); count += 2;
 
 		// We created these objs so our local number = the network number
 		map_objnum_local_to_local((short)Net_create_objnums[i]);
@@ -2197,7 +2310,9 @@ multi_send_player_explode(char type)
 	multi_send_data(multibuf, message_length[MULTI_PLAYER_EXPLODE], 2);
 	if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)
 		multi_send_decloak();
+#ifndef MAC_SHAREWARE
 	multi_strip_robots(Player_num);
+#endif
 }
 
 void
@@ -2208,10 +2323,13 @@ multi_send_message(void)
 	{
 		multibuf[loc] = (char)MULTI_MESSAGE; 		loc += 1;
 		multibuf[loc] = (char)Player_num;			loc += 1;
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
+		multibuf[loc] = (byte)Network_message_reciever;	loc += 1;
+		strncpy(multibuf+loc, Network_message, SHAREWARE_MAX_MESSAGE_LEN); loc += SHAREWARE_MAX_MESSAGE_LEN;
+#else
 		loc += 1; // Dummy space for receiver (Which isn't used)
-#endif
 		strncpy(multibuf+loc, Network_message, MAX_MESSAGE_LEN); loc += MAX_MESSAGE_LEN;
+#endif
 		multibuf[loc-1] = '\0';
 		multi_send_data(multibuf, loc, 1);
 		Network_message_reciever = -1;
@@ -2222,7 +2340,7 @@ void
 multi_send_reappear()
 {
 	multibuf[0] = (char)MULTI_REAPPEAR;
-	*(short *)(multibuf+1) = Players[Player_num].objnum;
+	*(short *)(multibuf+1) = swapshort((short)Players[Player_num].objnum);
 	
 	multi_send_data(multibuf, 3, 3);
 }
@@ -2231,14 +2349,21 @@ void
 multi_send_position(int objnum)
 {
 	int count=0;
+	shortpos sp;
 
 	if (Game_mode & GM_NETWORK) {
 		return;
 	}
 
 	multibuf[count++] = (char)MULTI_POSITION;
-	create_shortpos((shortpos *)(multibuf+count), Objects+objnum);
-	count += sizeof(shortpos);
+//	create_shortpos((shortpos *)(multibuf+count), Objects+objnum);
+//	count += (sizeof(shortpos) - 1);			// pad byte at the end of shortpos
+//  copy the shortpos structure by hand to avoid pad byte)
+	create_shortpos(&sp, Objects+objnum, 1);
+	memcpy(&(multibuf[count]), (ubyte *)(sp.bytemat), 9);
+	count += 9;
+	memcpy(&(multibuf[count]), (ubyte *)&(sp.xo), 14);
+	count += 14;
 	
 	multi_send_data(multibuf, count, 0);
 }
@@ -2252,20 +2377,20 @@ multi_send_kill(int objnum)
 	int count = 0;
 
 	multibuf[count] = (char)MULTI_KILL; 	count += 1;
-#ifndef SHAREWARE
-	multibuf[1] = Player_num;					count += 1;
+#ifndef MAC_SHAREWARE
+	multibuf[1] = (char)Player_num;			count += 1;
 #else
-	*(short *)(multibuf+count) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[count+2]);
+	*(short *)(multibuf+count) = swapshort((short)objnum_local_to_remote(objnum, (byte *)&multibuf[count+2]));
 	count += 3;
 #endif
 
 	Assert(Objects[objnum].id == Player_num);
 	killer_objnum = Players[Player_num].killer_objnum;
 	if (killer_objnum > -1)
-		*(short *)(multibuf+count) = (short)objnum_local_to_remote(killer_objnum, (byte *)&multibuf[count+2]);
+		*(short *)(multibuf+count) = swapshort((short)objnum_local_to_remote(killer_objnum, (byte *)&multibuf[count+2]));
 	else
 	{
-		*(short *)(multibuf+count) = -1;
+		*(short *)(multibuf+count) = swapshort((short)-1);
 		multibuf[count+2] = (char)-1;
 	}
 	count += 3;
@@ -2273,7 +2398,7 @@ multi_send_kill(int objnum)
 	multi_compute_kill(killer_objnum, objnum);
 	multi_send_data(multibuf, count, 1);
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_ROBOTS)
 		multi_strip_robots(Player_num);
 #endif
@@ -2291,7 +2416,7 @@ multi_send_remobj(int objnum)
 
 	remote_objnum = objnum_local_to_remote((short)objnum, &obj_owner);
 
-	*(short *)(multibuf+1) = remote_objnum; // Map to network objnums
+	*(short *)(multibuf+1) = swapshort(remote_objnum); // Map to network objnums
 
 	multibuf[3] = obj_owner;	
 
@@ -2314,7 +2439,7 @@ multi_send_quit(int why)
 	Assert (why == MULTI_QUIT);
 
 	multibuf[0] = (char)why;
-	multibuf[1] = Player_num;
+	multibuf[1] = (char)Player_num;
 	multi_send_data(multibuf, 2, 1);
 
 }
@@ -2329,7 +2454,7 @@ multi_send_cloak(void)
 
 	multi_send_data(multibuf, 2, 1);
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_ROBOTS)
 		multi_strip_robots(Player_num);
 #endif
@@ -2352,12 +2477,12 @@ multi_send_door_open(int segnum, int side)
 	// When we open a door make sure everyone else opens that door
 
 	multibuf[0] = MULTI_DOOR_OPEN;
-#ifdef SHAREWARE
-	*(int *)(multibuf+1) = segnum;
-	*(short *)(multibuf+5) = (short)side;
+#ifdef MAC_SHAREWARE
+	*(int *)(multibuf+1) = swapint(segnum);
+	*(short *)(multibuf+5) = swapshort((short)side);
 	multi_send_data(multibuf, 7, 1);
 #else
-	*(short *)(multibuf+1) = (short)segnum;
+	*(short *)(multibuf+1) = swapshort((short)segnum);
 	multibuf[3] = (byte)side;
 	multi_send_data(multibuf, 4, 1);
 #endif
@@ -2378,9 +2503,9 @@ multi_send_create_explosion(int pnum)
 	int count = 0;
 
 	multibuf[count] = MULTI_CREATE_EXPLOSION; 	count += 1;
-	multibuf[count] = (byte)pnum;					count += 1;
-	//													-----------
-	//													Total size = 2
+	multibuf[count] = (byte)pnum;				count += 1;
+	//											-----------
+	//											Total size = 2
 
 	multi_send_data(multibuf, count, 0);
 }
@@ -2389,10 +2514,15 @@ void
 multi_send_controlcen_fire(vms_vector *to_goal, int best_gun_num, int objnum)
 {
 	int count = 0;
-	multibuf[count] = MULTI_CONTROLCEN_FIRE; 		count +=  1;
-	memcpy(multibuf+count, to_goal, 12);			count += 12;
-	multibuf[count] = (char)best_gun_num;			count +=  1;
-	*(short *)(multibuf+count) = (short)objnum;	count +=  2;
+	vms_vector swapped_vec;
+
+	swapped_vec.x = (fix)swapint((int)to_goal->x);	
+	swapped_vec.y = (fix)swapint((int)to_goal->y);	
+	swapped_vec.z = (fix)swapint((int)to_goal->z);	
+	multibuf[count] = MULTI_CONTROLCEN_FIRE; 					count +=  1;
+	memcpy(multibuf+count, &swapped_vec, 12);					count += 12;
+	multibuf[count] = (char)best_gun_num;						count +=  1;
+	*(short *)(multibuf+count) = swapshort((short)objnum);		count +=  2;
 	//															------------
 	//															Total  = 16
 	multi_send_data(multibuf, count, 0);
@@ -2405,17 +2535,22 @@ multi_send_create_powerup(int powerup_type, int segnum, int objnum, vms_vector *
 	// placement of used powerups like missiles and cloaking
 	// powerups.
 
+	vms_vector swapped_vec;
 	int count = 0;
-	multibuf[count] = MULTI_CREATE_POWERUP;		count += 1;
-	multibuf[count] = Player_num;					   count += 1;
-	multibuf[count] = powerup_type;					count += 1;
-	*(short *)(multibuf+count) = (short)segnum;	count += 2;
-	*(short *)(multibuf+count) = (short)objnum;	count += 2;
-#ifndef SHAREWARE
-	*(vms_vector *)(multibuf+count) = *pos;		count += sizeof(vms_vector);
+	multibuf[count] = MULTI_CREATE_POWERUP;					count += 1;
+	multibuf[count] = (char)Player_num;					   	count += 1;
+	multibuf[count] = (char)powerup_type;					count += 1;
+	*(short *)(multibuf+count) = swapshort((short)segnum);	count += 2;
+	*(short *)(multibuf+count) = swapshort((short)objnum);	count += 2;
+#ifndef MAC_SHAREWARE
+	swapped_vec.x = (fix)swapint((int)pos->x);	
+	swapped_vec.y = (fix)swapint((int)pos->y);	
+	swapped_vec.z = (fix)swapint((int)pos->z);	
+//	*(vms_vector *)(multibuf+count) = *pos;		count += sizeof(vms_vector);
+	memcpy(multibuf+count, &swapped_vec, 12);				count += 12;
 #endif
-	//													      -----------
-	//													      Total =  19
+	//														-----------
+	//													    Total =  19
 	multi_send_data(multibuf, count, 1);
 
 	if (Network_send_objects && network_objnum_is_past(objnum))
@@ -2432,18 +2567,18 @@ void
 multi_send_play_sound(int sound_num, fix volume)
 {
 	int count = 0;
-	multibuf[count] = MULTI_PLAY_SOUND;			count += 1;
-	multibuf[count] = Player_num;					count += 1;
-#ifdef SHAREWARE
-	*(int *)(multibuf+count) = sound_num;			count += 4;
-	*(fix *)(multibuf+count) = volume;				count += 4;
+	multibuf[count] = MULTI_PLAY_SOUND;							count += 1;
+	multibuf[count] = (char)Player_num;							count += 1;
+#ifdef MAC_SHAREWARE
+	*(int *)(multibuf+count) = swapint(sound_num);				count += 4;
+	*(fix *)(multibuf+count) = (fix)swapint((int)volume);		count += 4;
 	//															-----------
 	//															Total = 10
 #else
-	multibuf[count] = (char)sound_num;			count += 1;
-	multibuf[count] = (char)(volume >> 12);	count += 1;
-	//													   -----------
-	//													   Total = 4
+	multibuf[count] = (char)sound_num;							count += 1;
+	multibuf[count] = (char)(volume >> 12);						count += 1;
+	//													 		-----------
+	//													  		Total = 4
 #endif
 	multi_send_data(multibuf, count, 1);
 }
@@ -2472,7 +2607,7 @@ multi_send_audio_taunt(int taunt_num)
 }
 #pragma on (unreferenced)
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 void
 multi_send_score(void)
 {
@@ -2482,9 +2617,9 @@ multi_send_score(void)
 
 	if (Game_mode & GM_MULTI_COOP) {
 		multi_sort_kill_list();
-		multibuf[count] = MULTI_SCORE;			count += 1;
-		multibuf[count] = Player_num;				count += 1;
-		*(int *)(multibuf+count) = Players[Player_num].score;  count += 4;
+		multibuf[count] = MULTI_SCORE;									count += 1;
+		multibuf[count] = (char)Player_num;								count += 1;
+		*(int *)(multibuf+count) = swapint(Players[Player_num].score);  count += 4;
 		multi_send_data(multibuf, count, 0);
 	}
 }	
@@ -2495,10 +2630,10 @@ multi_send_save_game(ubyte slot, uint id, char * desc)
 {
 	int count = 0;
 	
-	multibuf[count] = MULTI_SAVE_GAME;		count += 1;
+	multibuf[count] = MULTI_SAVE_GAME;				count += 1;
 	multibuf[count] = slot;							count += 1;		// Save slot=0
-	*(uint *)(multibuf+count) = id; 	count += 4;		// Save id
-	memcpy( &multibuf[count], desc, 20 ); count += 20;
+	*(uint *)(multibuf+count) = swapint(id);	 	count += 4;		// Save id
+	memcpy( &multibuf[count], desc, 20 ); 			count += 20;
 
 	multi_send_data(multibuf, count, 2);
 }
@@ -2508,9 +2643,9 @@ multi_send_restore_game(ubyte slot, uint id)
 {
 	int count = 0;
 	
-	multibuf[count] = MULTI_RESTORE_GAME;	count += 1;
+	multibuf[count] = MULTI_RESTORE_GAME;			count += 1;
 	multibuf[count] = slot;							count += 1;		// Save slot=0
-	*(uint *)(multibuf+count) = id; 	count += 4;		// Save id
+	*(uint *)(multibuf+count) = swapint(id);	 	count += 4;		// Save id
 
 	multi_send_data(multibuf, count, 2);
 }
@@ -2520,7 +2655,7 @@ multi_send_netplayer_stats_request(ubyte player_num)
 {
 	int count = 0;
 	
-	multibuf[count] = MULTI_REQ_PLAYER;	count += 1;
+	multibuf[count] = MULTI_REQ_PLAYER;		count += 1;
 	multibuf[count] = player_num;			count += 1;
 
 	multi_send_data(multibuf, count, 2 );
@@ -2535,8 +2670,8 @@ multi_send_trigger(int triggernum)
 	
 	int count = 0;
 	
-	multibuf[count] = MULTI_TRIGGER;				count += 1;
-	multibuf[count] = Player_num;					count += 1;
+	multibuf[count] = MULTI_TRIGGER;			count += 1;
+	multibuf[count] = (char)Player_num;			count += 1;
 	multibuf[count] = (ubyte)triggernum;		count += 1;
 
 	multi_send_data(multibuf, count, 2);
@@ -2552,9 +2687,9 @@ multi_send_hostage_door_status(int wallnum)
 	
 	Assert(Walls[wallnum].type == WALL_BLASTABLE);
 
-	multibuf[count] = MULTI_HOSTAGE_DOOR;		count += 1;
-	*(short *)(multibuf+count) = wallnum;		count += 2;
-	*(fix *)(multibuf+count) = Walls[wallnum].hps; 	count += 4;
+	multibuf[count] = MULTI_HOSTAGE_DOOR;								count += 1;
+	*(short *)(multibuf+count) = swapshort((short)wallnum);				count += 2;
+	*(fix *)(multibuf+count) = (fix)swapint((int)Walls[wallnum].hps); 	count += 4;
 
 //	mprintf((0, "Door %d damaged by %f points.\n", wallnum, f2fl(Walls[wallnum].hps)));
 
@@ -2590,7 +2725,7 @@ multi_prep_level(void)
 		LastPacketTime[i] = 0;
 	}
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	for (i = 0; i < MAX_ROBOTS_CONTROLLED; i++)
 	{
 		robot_controlled[i] = -1;	
@@ -2749,8 +2884,6 @@ void change_playernum_to( int new_Player_num )
 	Player_num = new_Player_num;
 }
 
-#endif
-
 void multi_initiate_save_game()
 {
 	uint game_id;
@@ -2855,55 +2988,68 @@ void multi_restore_game(ubyte slot, uint id)
 
 void extract_netplayer_stats( netplayer_stats *ps, player * pd )
 {
-	ps->flags = pd->flags;							// Powerup flags, see below...
-	ps->energy = pd->energy;							// Amount of energy remaining.
-	ps->shields = pd->shields;							// shields remaining (protection) 
-	ps->lives = pd->lives;							// Lives remaining, 0 = game over.
-	ps->laser_level = pd->laser_level;					//	Current level of the laser.
-	ps->primary_weapon_flags=pd->primary_weapon_flags;					//	bit set indicates the player has this weapon.
-	ps->secondary_weapon_flags=pd->secondary_weapon_flags;					//	bit set indicates the player has this weapon.
-	memcpy( ps->primary_ammo, pd->primary_ammo, MAX_PRIMARY_WEAPONS*sizeof(short) );	// How much ammo of each type.
-	memcpy( ps->secondary_ammo, pd->secondary_ammo, MAX_SECONDARY_WEAPONS*sizeof(short) ); // How much ammo of each type.
-	ps->last_score=pd->last_score;							// Score at beginning of current level.
-	ps->score=pd->score;											// Current score.
-	ps->cloak_time=pd->cloak_time;							// Time cloaked
-	ps->homing_object_dist=pd->homing_object_dist;		//	Distance of nearest homing object.
-	ps->invulnerable_time=pd->invulnerable_time;			// Time invulnerable
-	ps->net_killed_total=pd->net_killed_total;			// Number of times killed total
- 	ps->net_kills_total=pd->net_kills_total;				// Number of net kills total
-	ps->num_kills_level=pd->num_kills_level;				// Number of kills this level
- 	ps->num_kills_total=pd->num_kills_total;				// Number of kills total
-	ps->num_robots_level=pd->num_robots_level; 			// Number of initial robots this level
-	ps->num_robots_total=pd->num_robots_total; 			// Number of robots total
-	ps->hostages_rescued_total=pd->hostages_rescued_total;	// Total number of hostages rescued.
-	ps->hostages_total=pd->hostages_total;					// Total number of hostages.
+	int i;
+	
+	ps->flags = swapint(pd->flags);							// Powerup flags, see below...
+	ps->energy = (fix)swapint((int)pd->energy);				// Amount of energy remaining.
+	ps->shields = (fix)swapint((int)pd->shields);			// shields remaining (protection) 
+	ps->lives = pd->lives;									// Lives remaining, 0 = game over.
+	ps->laser_level = pd->laser_level;						//	Current level of the laser.
+	ps->primary_weapon_flags=pd->primary_weapon_flags;		//	bit set indicates the player has this weapon.
+	ps->secondary_weapon_flags=pd->secondary_weapon_flags;	//	bit set indicates the player has this weapon.
+	for (i = 0; i < MAX_PRIMARY_WEAPONS; i++)
+		ps->primary_ammo[i] = swapshort(pd->primary_ammo[i]);
+//	memcpy( ps->primary_ammo, pd->primary_ammo, MAX_PRIMARY_WEAPONS*sizeof(short) );	// How much ammo of each type.
+	for (i = 0; i < MAX_SECONDARY_WEAPONS; i++)
+		ps->secondary_ammo[i] = swapshort(pd->secondary_ammo[i]);
+//	memcpy( ps->secondary_ammo, pd->secondary_ammo, MAX_SECONDARY_WEAPONS*sizeof(short) ); // How much ammo of each type.
+	ps->last_score = swapint(pd->last_score);				// Score at beginning of current level.
+	ps->score = swapint(pd->score);							// Current score.
+	ps->cloak_time = (fix)swapint((int)pd->cloak_time);		// Time cloaked
+	ps->homing_object_dist = (fix)swapint((int)pd->homing_object_dist); //	Distance of nearest homing object.
+	ps->invulnerable_time = (fix)swapint((int)pd->invulnerable_time);	// Time invulnerable
+	ps->net_killed_total = swapshort(pd->net_killed_total);	// Number of times killed total
+ 	ps->net_kills_total = swapshort(pd->net_kills_total);	// Number of net kills total
+	ps->num_kills_level = swapshort(pd->num_kills_level);	// Number of kills this level
+ 	ps->num_kills_total = swapshort(pd->num_kills_total);	// Number of kills total
+	ps->num_robots_level = swapshort(pd->num_robots_level);	// Number of initial robots this level
+	ps->num_robots_total = swapshort(pd->num_robots_total);	// Number of robots total
+	ps->hostages_rescued_total = swapshort(pd->hostages_rescued_total);	// Total number of hostages rescued.
+	ps->hostages_total = swapshort(pd->hostages_total);		// Total number of hostages.
 	ps->hostages_on_board=pd->hostages_on_board;			//	Number of hostages on ship.
 }
 
 void use_netplayer_stats( player * ps, netplayer_stats *pd )
 {
-	ps->flags = pd->flags;							// Powerup flags, see below...
-	ps->energy = pd->energy;							// Amount of energy remaining.
-	ps->shields = pd->shields;							// shields remaining (protection) 
-	ps->lives = pd->lives;							// Lives remaining, 0 = game over.
-	ps->laser_level = pd->laser_level;					//	Current level of the laser.
-	ps->primary_weapon_flags=pd->primary_weapon_flags;					//	bit set indicates the player has this weapon.
-	ps->secondary_weapon_flags=pd->secondary_weapon_flags;					//	bit set indicates the player has this weapon.
-	memcpy( ps->primary_ammo, pd->primary_ammo, MAX_PRIMARY_WEAPONS*sizeof(short) );	// How much ammo of each type.
-	memcpy( ps->secondary_ammo, pd->secondary_ammo, MAX_SECONDARY_WEAPONS*sizeof(short) ); // How much ammo of each type.
-	ps->last_score=pd->last_score;							// Score at beginning of current level.
-	ps->score=pd->score;											// Current score.
-	ps->cloak_time=pd->cloak_time;							// Time cloaked
-	ps->homing_object_dist=pd->homing_object_dist;		//	Distance of nearest homing object.
-	ps->invulnerable_time=pd->invulnerable_time;			// Time invulnerable
-	ps->net_killed_total=pd->net_killed_total;			// Number of times killed total
- 	ps->net_kills_total=pd->net_kills_total;				// Number of net kills total
-	ps->num_kills_level=pd->num_kills_level;				// Number of kills this level
- 	ps->num_kills_total=pd->num_kills_total;				// Number of kills total
-	ps->num_robots_level=pd->num_robots_level; 			// Number of initial robots this level
-	ps->num_robots_total=pd->num_robots_total; 			// Number of robots total
-	ps->hostages_rescued_total=pd->hostages_rescued_total;	// Total number of hostages rescued.
-	ps->hostages_total=pd->hostages_total;					// Total number of hostages.
+	int i;
+	
+	ps->flags = swapint(pd->flags);							// Powerup flags, see below...
+	ps->energy = (fix)swapint((int)pd->energy);				// Amount of energy remaining.
+	ps->shields = (fix)swapint((int)pd->shields);			// shields remaining (protection) 
+	ps->lives = pd->lives;									// Lives remaining, 0 = game over.
+	ps->laser_level = pd->laser_level;						//	Current level of the laser.
+	ps->primary_weapon_flags=pd->primary_weapon_flags;		//	bit set indicates the player has this weapon.
+	ps->secondary_weapon_flags=pd->secondary_weapon_flags;	//	bit set indicates the player has this weapon.
+	for (i = 0; i < MAX_PRIMARY_WEAPONS; i++)
+		ps->primary_ammo[i] = swapshort(pd->primary_ammo[i]);
+//	memcpy( ps->primary_ammo, pd->primary_ammo, MAX_PRIMARY_WEAPONS*sizeof(short) );	// How much ammo of each type.
+	for (i = 0; i < MAX_SECONDARY_WEAPONS; i++)
+		ps->secondary_ammo[i] = swapshort(pd->secondary_ammo[i]);
+//	memcpy( ps->secondary_ammo, pd->secondary_ammo, MAX_SECONDARY_WEAPONS*sizeof(short) ); // How much ammo of each type.
+	ps->last_score = swapint(pd->last_score);				// Score at beginning of current level.
+	ps->score = swapint(pd->score);							// Current score.
+	ps->cloak_time = (fix)swapint((int)pd->cloak_time);		// Time cloaked
+	ps->homing_object_dist = (fix)swapint((int)pd->homing_object_dist); //	Distance of nearest homing object.
+	ps->invulnerable_time = (fix)swapint((int)pd->invulnerable_time);	// Time invulnerable
+	ps->net_killed_total = swapshort(pd->net_killed_total);	// Number of times killed total
+ 	ps->net_kills_total = swapshort(pd->net_kills_total);	// Number of net kills total
+	ps->num_kills_level = swapshort(pd->num_kills_level);	// Number of kills this level
+ 	ps->num_kills_total = swapshort(pd->num_kills_total);	// Number of kills total
+	ps->num_robots_level = swapshort(pd->num_robots_level);	// Number of initial robots this level
+	ps->num_robots_total = swapshort(pd->num_robots_total);	// Number of robots total
+	ps->hostages_rescued_total = swapshort(pd->hostages_rescued_total);	// Total number of hostages rescued.
+	ps->hostages_total = swapshort(pd->hostages_total);		// Total number of hostages.
 	ps->hostages_on_board=pd->hostages_on_board;			//	Number of hostages on ship.
 }
-
+
+#endif

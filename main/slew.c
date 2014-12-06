@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/slew.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:29:32 $
+ * $Source: Smoke:miner:source:main::RCS:SLEW.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:30:57 $
  * 
  * Basic slew system for moving around the mine
  * 
- * $Log: slew.c $
+ * $Log: SLEW.C $
+ * Revision 1.1  1995/05/16  15:30:57  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:29:32  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -117,7 +120,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "kconfig.h"
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: slew.c 2.0 1995/02/27 11:29:32 john Exp $";
+static char rcsid[] = "$Id: SLEW.C 1.1 1995/05/16 15:30:57 allender Exp $";
 #pragma on (unreferenced)
 
 //variables for slew system
@@ -197,6 +200,7 @@ int do_slew_movement(object *obj, int check_keys, int check_joy )
 
 	//check for joystick movement
 
+#if 0
 	if (check_joy && joy_present && (Function_mode == FMODE_EDITOR) )	{
 		joy_get_pos(&joy_x,&joy_y);
 		btns=joy_get_btns();
@@ -217,6 +221,7 @@ int do_slew_movement(object *obj, int check_keys, int check_joy )
 		if (joyx_moved) old_joy_x = joy_x;
 		if (joyy_moved) old_joy_y = joy_y;
 	}
+#endif
 
 	moved = rotang.p | rotang.b | rotang.h;
 
@@ -248,4 +253,3 @@ int slew_frame(int check_keys)
 	return do_slew_movement( slew_obj, !check_keys, 1 );
 
 }
-

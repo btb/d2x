@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/mission.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:35 $
+ * $Source: BigRed:miner:source:main::RCS:mission.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:59:22 $
  * 
  * Header for mission.h
  * 
  * $Log: mission.h $
+ * Revision 1.1  1995/05/16  15:59:22  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:35  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -49,8 +52,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _MISSION_H
 
 #include <types.h>
+#include "dtypes.h"
 
-#define MAX_MISSIONS 						100
+#define MAX_MISSIONS 					200
 #define MAX_LEVELS_PER_MISSION			30
 #define MAX_SECRET_LEVELS_PER_MISSION	5
 #define MISSION_NAME_LEN 					21

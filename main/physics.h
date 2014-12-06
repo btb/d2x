@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/physics.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:06 $
+ * $Source: Smoke:miner:source:main::RCS:physics.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/23 21:33:04 $
  * 
  * Headers for physics functions and data
  * 
  * $Log: physics.h $
+ * Revision 1.2  1995/08/23  21:33:04  allender
+ * fix mcc compiler warnings
+ *
+ * Revision 1.1  1995/05/16  16:00:56  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:33:06  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -78,7 +84,7 @@ extern int phys_seglist[MAX_FVI_SEGS],n_phys_segs;
 void read_flying_controls( object * obj );
 
 //Simulate a physics object for this frame
-do_physics_sim(object *obj);
+void do_physics_sim(object *obj);
 
 //tell us what the given object will do (as far as hiting walls) in
 //the given time (in seconds) t.  Igores acceleration (sorry) 
@@ -90,11 +96,11 @@ int physics_lookahead(object *obj,fix t,int fvi_flags,fix *hit_time, fvi_info *h
 
 //Applies an instantaneous force on an object, resulting in an instantaneous
 //change in velocity.
-phys_apply_force(object *obj,vms_vector *force_vec);
-phys_apply_rot(object *obj,vms_vector *force_vec);
+void phys_apply_force(object *obj,vms_vector *force_vec);
+void phys_apply_rot(object *obj,vms_vector *force_vec);
 
 //this routine will set the thrust for an object to a value that will
 //(hopefully) maintain the object's current velocity
-set_thrust_from_velocity(object *obj);
+void set_thrust_from_velocity(object *obj);
 
 #endif

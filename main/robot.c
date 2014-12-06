@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/robot.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/07 16:52:02 $
+ * $Source: Smoke:miner:source:main::RCS:ROBOT.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:30:34 $
  * 
  * Code for handling robots
  * 
- * $Log: robot.c $
+ * $Log: ROBOT.C $
+ * Revision 1.1  1995/05/16  15:30:34  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/07  16:52:02  john
  * Fixed robots not moving without edtiro bug.
  * 
@@ -92,7 +95,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: robot.c 2.1 1995/03/07 16:52:02 john Exp $";
+static char rcsid[] = "$Id: ROBOT.C 1.1 1995/05/16 15:30:34 allender Exp $";
 #pragma on (unreferenced)
 
 #include "error.h"
@@ -317,4 +320,3 @@ robot_set_angles(robot_info *r,polymodel *pm,vms_angvec angs[N_ANIM_STATES][MAX_
 }
 
 
-

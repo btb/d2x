@@ -11,14 +11,22 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/line.c $
- * $Revision: 1.10 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:02 $
+ * $Source: Smoke:miner:source:2d::RCS:line.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 13:45:24 $
  *
  * Graphical routines for drawing lines.
  *
  * $Log: line.c $
+ * Revision 1.2  1995/09/14  13:45:24  allender
+ * optimizations from Dave Denhart
+ *
+ * Revision 1.1  1995/03/09  09:09:46  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.10  1994/11/18  22:50:02  john
  * Changed shorts to ints in parameters.
  * 
@@ -63,16 +71,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "clip.h"
 
-extern void gr_modex_line();
-int modex_line_vertincr;
-int modex_line_incr1;
-int modex_line_incr2;		
-int modex_line_x1;		
-int modex_line_y1;		
-int modex_line_x2;		
-int modex_line_y2;		
-ubyte modex_line_Color;
-
 /*
 Symmetric Double Step Line Algorithm
 by Brian Wyvill
@@ -80,19 +78,30 @@ from "Graphics Gems", Academic Press, 1990
 */
 
 /* non-zero flag indicates the pixels needing EXCHG back. */
-void plot(int x,int y,int flag)
-{   if (flag)
-		gr_upixel(y, x);
-	else
-		gr_upixel(x, y);
-}
+//void plot(int x,int y,int flag)
+//{   if (flag)
+//		gr_upixel(y, x);
+//	else
+//		gr_upixel(x, y);
+//}
+#define plot( x, y, flag)					\
+do{   if (flag)								\
+		DATA[ ROWSIZE*(x)+(y) ] = COLOR;	\
+	else									\
+		DATA[ ROWSIZE*(y)+(x) ] = COLOR;	\
+}while(0)
 
 int gr_hline(int x1, int x2, int y)
 {   int i;
+	int	t;
 
 	if (x1 > x2) EXCHG(x1,x2);
+	t = ROWSIZE * y;
 	for (i=x1; i<=x2; i++ )
-		gr_upixel( i, y );
+	{
+//		gr_upixel( i, y );
+		DATA[ t + i ] = COLOR;
+	}
 	return 0;
 }
 
@@ -100,7 +109,8 @@ int gr_vline(int y1, int y2, int x)
 {   int i;
 	if (y1 > y2) EXCHG(y1,y2);
 	for (i=y1; i<=y2; i++ )
-		gr_upixel( x, i );
+//		gr_upixel( x, i );
+		DATA[ ROWSIZE*i + x ] = COLOR;
 	return 0;
 }
 
@@ -305,23 +315,9 @@ int gr_uline(fix _a1, fix _b1, fix _a2, fix _b2)
 	int a1,b1,a2,b2;
 	a1 = f2i(_a1); b1 = f2i(_b1); a2 = f2i(_a2); b2 = f2i(_b2);
 
-	switch(TYPE)
-	{
-	case BM_LINEAR:
-		gr_linear_line( a1, b1, a2, b2 );
-		return 0;
-	case BM_MODEX:
-		modex_line_x1 = a1+XOFFSET;		
-		modex_line_y1 = b1+YOFFSET;		
-		modex_line_x2 = a2+XOFFSET;		
-		modex_line_y2 = b2+YOFFSET;		
-		modex_line_Color = grd_curcanv->cv_color;
-		gr_modex_line();
-		return 0;
-	default:
-		gr_universal_uline( a1, b1, a2, b2 );
-		return 0;
-	}
+//	gr_linear_line( a1, b1, a2, b2 );
+	gr_universal_uline( a1, b1, a2, b2 );
+	return 0;
 }
 
 // Returns 0 if drawn with no clipping, 1 if drawn but clipped, and
@@ -344,5 +340,3 @@ int gr_line(fix a1, fix b1, fix a2, fix b2)
 	return clipped;
 
 }
-
-

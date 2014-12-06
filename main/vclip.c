@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/vclip.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:41 $
+ * $Source: Smoke:miner:source:main::RCS:VCLIP.C $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:14:31 $
  * 
  * Routines for vclips.
  * 
- * $Log: vclip.c $
+ * $Log: VCLIP.C $
+ * Revision 1.2  1995/09/14  14:14:31  allender
+ * return void in draw_vclip_object
+ *
+ * Revision 1.1  1995/05/16  15:32:00  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:41  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -62,7 +68,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: vclip.c 2.0 1995/02/27 11:32:41 john Exp $";
+static char rcsid[] = "$Id: VCLIP.C 1.2 1995/09/14 14:14:31 allender Exp $";
 #pragma on (unreferenced)
 
 #include "error.h"
@@ -76,7 +82,7 @@ int 					Num_vclips = 0;
 vclip 				Vclip[VCLIP_MAXNUM];		// General purpose vclips.
 
 //draw an object which renders as a vclip
-draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num)
+void draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num)
 {
 	int nf,bitmapnum;
 
@@ -117,4 +123,3 @@ void draw_weapon_vclip(object *obj)
 
 }
 
-

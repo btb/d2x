@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/texmap/rcs/texmap.h $
- * $Revision: 1.17 $
- * $Author: mike $
- * $Date: 1994/11/10 11:09:16 $
+ * $Source: Smoke:miner:source:texmap::RCS:texmap.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/04 14:22:10 $
  *
  * Include file for entities using texture mapper library.
  *
  * $Log: texmap.h $
+ * Revision 1.2  1995/09/04  14:22:10  allender
+ * #defines for fixed point limits on render buffer
+ *
+ * Revision 1.1  1995/05/04  20:14:50  allender
+ * Initial revision
+ *
  * Revision 1.17  1994/11/10  11:09:16  mike
  * detail level stuff.
  * 
@@ -150,12 +156,17 @@ void gr_upoly_tmap(int nverts, int *vert );
 
 //This is like gr_upoly_tmap() but instead of drawing, it calls the specified
 //function with ylr values
-void gr_upoly_tmap_ylr(int nverts, int *vert, void *ylr_func() );
+void gr_upoly_tmap_ylr(int nverts, int *vert, void (*ylr_func)() );
 
 extern int Transparency_on,per2_flag;
 
 //	Set to !0 to enable Sim City 2000 (or Eric's Drive Through, or Eric's Game) specific code.
 extern	int	SC2000;
+
+// for ugly hack put in to be sure we don't overflow render buffer
+
+#define FIX_XLIMIT	(639 * F1_0)
+#define FIX_YLIMIT	(479 * F1_0)
 
 #endif
 

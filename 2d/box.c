@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/box.c $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:19 $
+ * $Source: Smoke:miner:source:2d::RCS:box.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 08:49:05 $
  *
  * Graphical routines for drawing boxes.
  *
  * $Log: box.c $
+ * Revision 1.1  1995/03/09  08:49:05  allender
+ * Initial revision
+ *
+ *
+ * --  PC Descent RCS information -----
  * Revision 1.3  1994/11/18  22:50:19  john
  * Changed shorts to ints in parameters.
  * 
@@ -32,8 +37,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #include "mem.h"
-
-
 #include "gr.h"
 #include "grdef.h"
 
@@ -116,25 +119,10 @@ void gr_box12(int left,int top,int right,int bot)
 
 void gr_ubox(int left,int top,int right,int bot)
 {
-	if (TYPE==BM_LINEAR)
-		gr_ubox0( left, top, right, bot );
-
-	else if ( TYPE == BM_MODEX )
-		gr_ubox12( left, top, right, bot );
-
-    else
-		gr_ubox12( left, top, right, bot );
+	gr_ubox0( left, top, right, bot );
 }
 
 void gr_box(int left,int top,int right,int bot)
 {
-	if (TYPE==BM_LINEAR)
-		gr_box0( left, top, right, bot );
-
-	else if ( TYPE == BM_MODEX )
-		gr_box12( left, top, right, bot );
-    
-	else
-		gr_ubox12( left, top, right, bot );
+	gr_box0( left, top, right, bot );
 }
-

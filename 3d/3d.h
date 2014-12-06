@@ -11,113 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/3d/rcs/3d.h $
- * $Revision: 1.34 $
- * $Author: matt $
- * $Date: 1994/11/11 19:22:14 $
+ * $Source: Smoke:miner:source:3d::RCS:3d.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:08:58 $
  *
  * Header file for 3d library
  *
  * $Log: 3d.h $
- * Revision 1.34  1994/11/11  19:22:14  matt
- * Added new function, g3_calc_point_depth()
- * 
- * Revision 1.33  1994/09/09  14:23:58  matt
- * Added support for glowing textures, to add engine glow to Descent.
- * 
- * Revision 1.32  1994/09/01  10:42:27  matt
- * Blob routine, renamed g3_draw_bitmap(), now takes seperate 3d width & height.
- * 
- * Revision 1.31  1994/07/29  18:16:14  matt
- * Added instance by angles, and corrected parms for g3_init()
- * 
- * Revision 1.30  1994/07/25  00:00:00  matt
- * Made 3d no longer deal with point numbers, but only with pointers.
- * 
- * Revision 1.29  1994/07/22  17:57:27  matt
- * Changed the name of the rod functions, and took out some debugging code
- * 
- * Revision 1.28  1994/06/07  16:49:12  matt
- * Made interpreter take lighting value as parm, rather than in global var
- * 
- * Revision 1.27  1994/05/31  18:35:28  matt
- * Added light value to g3_draw_facing_bitmap()
- * 
- * Revision 1.26  1994/05/30  22:48:04  matt
- * Added support for morph effect
- * 
- * Revision 1.25  1994/05/30  11:34:57  matt
- * Added g3_set_special_render() to allow a user to specify functions to
- * call for 2d draws.
- * 
- * Revision 1.24  1994/05/19  21:46:31  matt
- * Moved texture lighting out of 3d and into the game
- * 
- * Revision 1.23  1994/05/14  15:26:48  matt
- * Added extern for polyobj outline flag
- * 
- * Revision 1.22  1994/04/19  18:26:33  matt
- * Added g3_draw_sphere() function.
- * 
- * Revision 1.21  1994/03/25  18:22:28  matt
- * g3_draw_polygon_model() now takes ptr to list of angles
- * 
- * Revision 1.20  1994/03/15  21:23:23  matt
- * Added interpreter functions
- * 
- * Revision 1.19  1994/02/15  17:37:34  matt
- * New function, g3_draw_blob()
- * 
- * Revision 1.18  1994/02/09  11:47:47  matt
- * Added rod & delta point functions
- * 
- * Revision 1.17  1994/01/26  12:38:11  matt
- * Added function g3_compute_lighting_value()
- * 
- * Revision 1.16  1994/01/25  18:00:02  yuan
- * Fixed variable beam_brightness...
- * 
- * Revision 1.15  1994/01/24  14:08:34  matt
- * Added instancing functions
- * 
- * Revision 1.14  1994/01/22  18:21:48  matt
- * New lighting stuff now done in 3d; g3_draw_tmap() takes lighting parm
- * 
- * Revision 1.13  1994/01/20  17:21:24  matt
- * New function g3_compute_sky_polygon()
- * 
- * Revision 1.12  1994/01/14  17:20:25  matt
- * Added prototype for new function g3_draw_horizon()
- * 
- * Revision 1.10  1993/12/20  20:21:52  matt
- * Added g3_point_2_vec()
- * 
- * Revision 1.9  1993/12/07  23:05:47  matt
- * Fixed mistyped function name.
- * 
- * Revision 1.8  1993/12/05  23:47:03  matt
- * Added function g3_draw_line_ptrs()
- * 
- * Revision 1.7  1993/12/05  23:13:22  matt
- * Added prototypes for g3_rotate_point() and g3_project_point()
- * 
- * Revision 1.6  1993/12/05  23:03:28  matt
- * Changed uvl structs to g3s_uvl
- * 
- * Revision 1.5  1993/11/22  10:51:09  matt
- * Moved uvl structure here from segment.h, made texture map functions use it
- * 
- * Revision 1.4  1993/11/21  20:08:31  matt
- * Added function g3_draw_object()
- * 
- * Revision 1.3  1993/11/04  18:49:19  matt
- * Added system to only rotate points once per frame
- * 
- * Revision 1.2  1993/11/04  08:16:06  mike
- * Add light field (p3_l) to g3s_point.
- * 
- * Revision 1.1  1993/10/29  22:20:56  matt
+ * Revision 1.2  1995/09/14  14:08:58  allender
+ * return value for g3_draw_sphere
+ *
+ * Revision 1.1  1995/05/05  08:48:41  allender
  * Initial revision
+ *
  * 
  *
  */
@@ -147,6 +54,7 @@ typedef struct g3s_codes {
 #define PF_OVERFLOW		2	//can't project
 #define PF_TEMP_POINT	4	//created during clip
 #define PF_UVS				8	//has uv values set
+#define PF_LS				16	//has lighting values set
 
 //clipping codes flags
 
@@ -159,20 +67,18 @@ typedef struct g3s_codes {
 //Used to store rotated points for mines.  Has frame count to indictate
 //if rotated, and flag to indicate if projected.
 typedef struct g3s_point {
-	union {                   //post rotation point
-		vms_vector p3_vec;         //reference as vector...
-		struct {fix x,y,z;};   //...or by element name
-		fix xyz[3];            //...or by element number
-	};
-	union {					//u,v,light values for texture mapper
-		struct {fix p3_u,p3_v,p3_l;};
-		g3s_uvl p3_uvl;
-	};
+	vms_vector p3_vec;         //reference as vector...
+	fix p3_u,p3_v,p3_l;
 	fix p3_sx,p3_sy;		//screen x&y
 	ubyte p3_codes;		//clipping codes
 	ubyte p3_flags;		//projected?
 	short p3_pad;			//keep structure longwork aligned
 } g3s_point;
+
+//macros to reference x,y,z elements of a 3d point
+#define p3_x p3_vec.x
+#define p3_y p3_vec.y
+#define p3_z p3_vec.z
 
 //An object, such as a robot
 typedef struct g3s_object {
@@ -287,7 +193,7 @@ bool g3_draw_tmap(int nv,g3s_point **pointlist,g3s_uvl *uvl_list,grs_bitmap *bm)
 
 //draw a sortof sphere - i.e., the 2d radius is proportional to the 3d
 //radius, but not to the distance from the eye
-g3_draw_sphere(g3s_point *pnt,fix rad);
+int g3_draw_sphere(g3s_point *pnt,fix rad);
 
 //@@//return ligting value for a point
 //@@fix g3_compute_lighting_value(g3s_point *rotated_point,fix normval);
@@ -306,17 +212,20 @@ bool g3_check_and_draw_tmap(int nv,g3s_point **pointlist,g3s_uvl *uvl_list,grs_b
 bool g3_draw_line(g3s_point *p0,g3s_point *p1);
 
 //draw a polygon that is always facing you
-g3_draw_rod_flat(g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width);
+//returns 1 if off screen, 0 if drew
+bool g3_draw_rod_flat(g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width);
 
 //draw a bitmap object that is always facing you
-g3_draw_rod_tmap(grs_bitmap *bitmap,g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width,fix light);
+//returns 1 if off screen, 0 if drew
+bool g3_draw_rod_tmap(grs_bitmap *bitmap,g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width,fix light);
 
 //draws a bitmap with the specified 3d width & height 
-g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm);
+//returns 1 if off screen, 0 if drew
+bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm);
 
 //specifies 2d drawing routines to use instead of defaults.  Passing
 //NULL for either or both restores defaults
-g3_set_special_render(void *tmap_drawer(),void *flat_drawer(),void *line_drawer());
+void g3_set_special_render(void (*tmap_drawer)(),void (*flat_drawer)(),int (*line_drawer)());
 
 //Object functions:
 
@@ -333,62 +242,8 @@ void g3_init_polygon_model(void *model_ptr);
 //alternate interpreter for morphing object
 bool g3_draw_morphing_model(void *model_ptr,grs_bitmap **model_bitmaps,vms_angvec *anim_angles,fix light,vms_vector *new_points);
 
-//Pragmas
-
-#pragma aux g3_init "*" modify exact [eax edx];
-#pragma aux g3_close "*" parm [] modify exact [];
-#pragma aux g3_start_frame "*" parm [] modify exact [];
-#pragma aux g3_end_frame "*" parm [] modify exact [];
-
-#pragma aux g3_set_view_angles "*" parm [edi] [esi] [eax] modify exact [];
-#pragma aux g3_set_view_matrix "*" parm [edi] [esi] [eax] modify exact [];
-
-#pragma aux g3_rotate_point "*" parm [edi] [esi] value [bl] modify exact [ebx];
-#pragma aux g3_project_point "*" parm [esi] modify exact [];
-
-#pragma aux g3_calc_point_depth "*" parm [esi] value [eax] modify exact [eax];
-
-#pragma aux g3_point_2_vec "*" parm [esi] [eax] [ebx] modify exact [eax ebx];
-
-#pragma aux g3_draw_line "*" parm [esi] [edi] value [al] modify exact [eax];
-#pragma aux g3_draw_poly "*" parm [ecx] [esi] value [al] modify exact [eax ecx esi edx];
-#pragma aux g3_check_and_draw_poly "*" parm [ecx] [esi] [edi] [ebx] value [al] modify exact [eax ecx esi edx edi];
-#pragma aux g3_draw_tmap "*" parm [ecx] [esi] [ebx] [edx] value [al] modify exact [eax ecx esi edx];
-#pragma aux g3_check_and_draw_tmap "*" parm [ecx] [esi] [ebx] [edx] [edi] [eax] value [al] modify exact [eax ecx esi edx];
-#pragma aux g3_check_normal_facing "*" parm [esi] [edi] value [al] modify exact [eax esi edi];
-
-#pragma aux g3_draw_object "*" parm [ebx] [esi] [edi] [eax] modify exact [];
-
-#pragma aux g3_draw_horizon "*" parm [eax] [edx] modify exact [];
-#pragma aux g3_compute_sky_polygon "*" parm [ebx] [ecx] value [eax] modify exact [eax];
-
-#pragma aux g3_start_instance_matrix "*" parm [esi] [edi] modify exact [esi edi];
-#pragma aux g3_start_instance_angles "*" parm [esi] [edi] modify exact [esi edi];
-#pragma aux g3_done_instance "*" modify exact [];
-#pragma aux g3_new_points "*" parm [esi] [edi] modify exact [];
-#pragma aux g3_restore_points "*" modify exact [];
-
-//@@#pragma aux g3_compute_lighting_value "*" parm [esi] [ecx] value [ecx] modify exact [ecx];
-#pragma aux g3_draw_rod_tmap "*" parm [ebx] [esi] [eax] [edi] [edx] [ecx] modify exact [];
-#pragma aux g3_draw_rod_flat "*" parm [esi] [eax] [edi] [edx] modify exact [];
-#pragma aux g3_draw_bitmap "*" parm [esi] [ebx] [ecx] [eax] modify exact [esi ecx eax];
-#pragma aux g3_draw_sphere "*" parm [esi] [ecx] modify exact [];
-
-#pragma aux g3_code_point "*" parm [eax] value [bl] modify exact [bl];
-
-//delta rotation functions
-#pragma aux g3_rotate_delta_x "*" parm [edi] [ebx] value [edi] modify exact [];
-#pragma aux g3_rotate_delta_y "*" parm [edi] [ebx] value [edi] modify exact [];
-#pragma aux g3_rotate_delta_z "*" parm [edi] [ebx] value [edi] modify exact [];
-#pragma aux g3_rotate_delta_vec "*" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux g3_add_delta_vec "*" parm [eax] [esi] [edi] value [bl] modify exact [bl];
-
-#pragma aux g3_set_interp_points "*" parm [eax] modify exact [];
-#pragma aux g3_draw_polygon_model "*" parm [esi] [edi] [eax] [edx] [ebx] value [al] modify exact [];
-#pragma aux g3_init_polygon_model "*" parm [esi] modify exact [];
-#pragma aux g3_draw_morphing_model "*" parm [esi] [edi] [eax] [edx] [ebx] value [al] modify exact [];
-
-#pragma aux g3_set_special_render "*" parm [eax] [edx] [ebx] modify exact [eax edx ebx];
+// routine to convert little to big endian in polygon model data
+void swap_polygon_model_data(ubyte *data);
 
 #endif
 

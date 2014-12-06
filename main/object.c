@@ -11,22 +11,31 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/object.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/06/15 12:30:51 $
+ * $Source: Smoke:miner:source:main::RCS:object.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/10/26 14:08:03 $
  * 
  * object rendering
  * 
  * $Log: object.c $
- * Revision 2.3  1995/06/15  12:30:51  john
- * Fixed bug with multiplayer ships cloaking out wrongly.
- * 
- * Revision 2.2  1995/05/15  11:34:53  john
- * Fixed bug as Matt directed that fixed problems with the exit
- * triggers being missed on slow frame rate computer.
- * 
- * Revision 2.1  1995/03/21  14:38:51  john
+ * Revision 1.5  1995/10/26  14:08:03  allender
+ * optimization to do physics on objects that didn't render last
+ * frame only every so often
+ *
+ * Revision 1.4  1995/10/20  00:50:57  allender
+ * make alt texture for player ship work correctly when cloaked
+ *
+ * Revision 1.3  1995/09/14  14:11:32  allender
+ * fix_object_segs returns void
+ *
+ * Revision 1.2  1995/08/12  11:31:01  allender
+ * removed #ifdef NEWDEMO -- always in
+ *
+ * Revision 1.1  1995/05/16  15:29:23  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:38:51  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:28:14  john
@@ -314,7 +323,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: object.c 2.3 1995/06/15 12:30:51 john Exp $";
+static char rcsid[] = "$Id: object.c 1.5 1995/10/26 14:08:03 allender Exp $";
 #pragma on (unreferenced)
 
 #include <string.h>	// for memset
@@ -377,6 +386,10 @@ static char rcsid[] = "$Id: object.c 2.3 1995/06/15 12:30:51 john Exp $";
  *  Global variables
  */
 
+int object_rendered_last[MAX_OBJECTS];
+int skipped_time_init = 0;
+fix skipped_time[MAX_OBJECTS];
+
 ubyte CollisionResult[MAX_OBJECT_TYPES][MAX_OBJECT_TYPES];
 
 object *ConsoleObject;					//the object that is the player
@@ -392,7 +405,7 @@ static short free_obj_list[MAX_OBJECTS];
 object	Object_minus_one;
 #endif
 
-object Objects[MAX_OBJECTS];
+object *Objects;
 int num_objects=0;
 int Highest_object_index=0;
 int Highest_ever_object_index=0;
@@ -414,7 +427,7 @@ int print_object_info = 0;
 //--unused-- int Player_controller_type = 0;
 
 //	List of objects rendered last frame in order.  Created at render time, used by homing missiles in laser.c
-short ordered_rendered_object_list[MAX_RENDERED_OBJECTS];
+short Ordered_rendered_object_list[MAX_RENDERED_OBJECTS];
 int	Num_rendered_objects = 0;
 
 #ifndef NDEBUG
@@ -436,6 +449,9 @@ char	Object_type_names[MAX_OBJECT_TYPES][9] = {
 	"COOP    ",
 };
 #endif
+
+void obj_detach_one(object *sub);
+void obj_detach_all(object *parent);
 
 #ifndef RELEASE
 //set viewer object to next object in array
@@ -529,7 +545,7 @@ fix	Cloak_fadein_duration;
 fix	Cloak_fadeout_duration;
 
 //do special cloaked render
-draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time,bitmap_index * alt_textures)
+draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time, ushort *alt_tmap)
 {
 	fix cloak_delta_time,total_cloaked_time;
 	fix light_scale;
@@ -598,12 +614,12 @@ draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix clo
 
 		new_light = fixmul(light,light_scale);
 		new_glow = fixmul(*glow,light_scale);
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,new_light,&new_glow, alt_textures );
+		draw_polygon_model(&obj->pos,&obj->orient,obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,new_light,&new_glow, (bitmap_index *)alt_tmap );
 	}
 	else {
 		Gr_scanline_darkening_level = cloak_value;
 		g3_set_special_render(draw_tmap_flat,NULL,NULL);		//use special flat drawer
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,glow, alt_textures );
+		draw_polygon_model(&obj->pos,&obj->orient,obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,glow, (bitmap_index *)alt_tmap );
 		g3_set_special_render(NULL,NULL,NULL);
 		Gr_scanline_darkening_level = GR_FADE_LEVELS;
 	}
@@ -648,29 +664,30 @@ void draw_polygon_object(object *obj)
 		for (i=0;i<pm->n_textures;i++)
 			bm_ptrs[i] = Textures[obj->rtype.pobj_info.tmap_override];
 
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,bm_ptrs);
+		draw_polygon_model(&obj->pos,&obj->orient,obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,bm_ptrs);
 	}
 	else {
-		bitmap_index * alt_textures = NULL;
+			ushort * alt_textures = NULL;
 	
-		#ifdef NETWORK
-		if ( obj->rtype.pobj_info.alt_textures > 0 )
-			alt_textures = multi_player_textures[obj->rtype.pobj_info.alt_textures-1];
-		#endif
+			#ifdef NETWORK
+			if ( obj->rtype.pobj_info.alt_textures > 0 )
+				alt_textures = (ushort *)(multi_player_textures[obj->rtype.pobj_info.alt_textures-1]);
+			#endif
 
 		if (obj->type==OBJ_PLAYER && (Players[obj->id].flags&PLAYER_FLAGS_CLOAKED))
-			draw_cloaked_object(obj,light,&engine_glow_value,Players[obj->id].cloak_time,Players[obj->id].cloak_time+CLOAK_TIME_MAX,alt_textures);
+			draw_cloaked_object(obj,light,&engine_glow_value,Players[obj->id].cloak_time,Players[obj->id].cloak_time+CLOAK_TIME_MAX, alt_textures);
 		else if ((obj->type == OBJ_ROBOT) && (obj->ctype.ai_info.CLOAKED)) {
 			if (Robot_info[obj->id].boss_flag)
-				draw_cloaked_object(obj,light,&engine_glow_value, Boss_cloak_start_time, Boss_cloak_end_time,alt_textures);
+				draw_cloaked_object(obj,light,&engine_glow_value, Boss_cloak_start_time, Boss_cloak_end_time, alt_textures);
 			else
-				draw_cloaked_object(obj,light,&engine_glow_value, GameTime-F1_0*10, GameTime+F1_0*10,alt_textures);
+				draw_cloaked_object(obj,light,&engine_glow_value, GameTime-F1_0*10, GameTime+F1_0*10, alt_textures);
 		} else {
-			draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,alt_textures);
+
+			draw_polygon_model(&obj->pos,&obj->orient,obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,(bitmap_index *)alt_textures);
 			if (obj->type == OBJ_WEAPON && (Weapon_info[obj->id].model_num_inner > -1 )) {
 				fix dist_to_eye = vm_vec_dist_quick(&Viewer->pos, &obj->pos);
 				if (dist_to_eye < Simple_model_threshhold_scale * F1_0*2)
-					draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,Weapon_info[obj->id].model_num_inner,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,alt_textures);
+					draw_polygon_model(&obj->pos,&obj->orient,obj->rtype.pobj_info.anim_angles,Weapon_info[obj->id].model_num_inner,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,(bitmap_index *)alt_textures);
 			}
 		}
 	}
@@ -752,7 +769,7 @@ void set_robot_location_info(object *objp)
 		//the code below to check for object near the center of the screen
 		//completely ignores z, which may not be good
 
-		if ((abs(temp.x) < F1_0*4) && (abs(temp.y) < F1_0*4)) {
+		if ((abs(temp.p3_x) < F1_0*4) && (abs(temp.p3_y) < F1_0*4)) {
 			objp->ctype.ai_info.danger_laser_num = Player_fired_laser_this_frame;
 			objp->ctype.ai_info.danger_laser_signature = Objects[Player_fired_laser_this_frame].signature;
 		}
@@ -889,11 +906,9 @@ void render_object(object *obj)
 		default: Error("Unknown render_type <%d>",obj->render_type);
  	}
 
-	#ifdef NEWDEMO
 	if ( obj->render_type != RT_NONE )
 		if ( Newdemo_state == ND_STATE_RECORDING )
 			newdemo_record_render_object(obj);
-	#endif
 
 	Max_linear_depth = mld_save;
 
@@ -1022,7 +1037,7 @@ void init_player_object()
 //sets up the free list & init player & whatever else
 void init_objects()
 {
-	int i;
+	register int i;
 
 	collide_init();
 
@@ -1032,8 +1047,9 @@ void init_objects()
 		Objects[i].segnum = -1;
 	}
 
-	for (i=0;i<MAX_SEGMENTS;i++)
+	for (i=0;i<MAX_SEGMENTS;i++) {
 		Segments[i].objects = -1;
+	}
 
 	ConsoleObject = Viewer = &Objects[0];
 
@@ -1404,6 +1420,8 @@ int obj_create(ubyte type,ubyte id,int segnum,vms_vector *pos,
 
 	// Find next free object
 	objnum = obj_allocate();
+	
+    object_rendered_last[objnum] = FrameCount;
 
 	if (objnum == -1)		//no free objects
 		return -1;
@@ -1760,8 +1778,8 @@ void dead_player_frame(void)
 	}
 }
 
-Killed_in_frame = -1;
-Killed_objnum = -1;
+int Killed_in_frame = -1;
+int Killed_objnum = -1;
 
 //	------------------------------------------------------------------------------------------------------------------
 void start_player_death_sequence(object *player)
@@ -1900,7 +1918,7 @@ spin_object(object *obj)
 //move an object for the current frame
 void object_move_one( object * obj )
 {
-
+	
 	#ifndef DEMO_ONLY
 
 	int	previous_segment = obj->segnum;
@@ -1998,8 +2016,31 @@ void object_move_one( object * obj )
 
 		case MT_NONE:			break;								//this doesn't move
 
-		case MT_PHYSICS:		do_physics_sim(obj);	break;	//move by physics
-
+		case MT_PHYSICS:		//do_physics_sim(obj);	break;	//move by physics
+		{
+			int objnum = obj - Objects;
+			
+			if ( ((obj->type == OBJ_WEAPON) && (obj->ctype.laser_info.parent_num==Players[Player_num].objnum)) ||
+				  (objnum == Players[Player_num].objnum) ) {
+				do_physics_sim(obj);
+			} else if ( object_rendered_last[objnum] != FrameCount-1 ) {
+				// Didn't render last frame, so don't do physics this frame.
+				if ( (objnum&7)!=(FrameCount&7) )  {
+					// Do every 7 or so frames...
+					skipped_time[objnum] += FrameTime;
+//					mprintf((0, "Skipping physics for object %d\n", objnum ));
+				} else {
+					fix save_frame_time = FrameTime;
+					FrameTime += skipped_time[objnum];
+					skipped_time[objnum] = 0;
+					do_physics_sim(obj);
+					FrameTime = save_frame_time;
+				}
+			} else
+				do_physics_sim(obj);
+		}
+		break;
+		
 		case MT_SPINNING:		spin_object(obj); break;
 
 	}
@@ -2011,8 +2052,7 @@ void object_move_one( object * obj )
 			for (i=0;i<n_phys_segs-1;i++) {
 				connect_side = find_connect_side(&Segments[phys_seglist[i+1]], &Segments[phys_seglist[i]]);
 				if (connect_side != -1)
-					check_trigger(&Segments[phys_seglist[i]], connect_side, obj-Objects);
-					//check_trigger(&Segments[previous_segment], connect_side, obj-Objects);
+					check_trigger(&Segments[previous_segment], connect_side, obj-Objects);
 				#ifndef NDEBUG
 				else {	// segments are not directly connected, so do binary subdivision until you find connected segments.
 					mprintf((1, "UNCONNECTED SEGMENTS %d,%d\n",phys_seglist[i+1],phys_seglist[i]));
@@ -2038,6 +2078,11 @@ void object_move_all()
 
 //	check_duplicate_objects();
 //	remove_incorrect_objects();
+
+    if ( !skipped_time_init )   {
+        memset( skipped_time, 0, MAX_OBJECTS*sizeof(int) );
+        skipped_time_init = 1;
+    }
 
 	if (Highest_object_index > Max_used_objects)
 		free_object_slots(Max_used_objects);		//	Free all possible object slots.
@@ -2169,7 +2214,7 @@ int update_object_seg(object * obj )
 
 
 //go through all objects and make sure they have the correct segment numbers
-fix_object_segs()
+void fix_object_segs()
 {
 	int i;
 
@@ -2306,4 +2351,3 @@ void obj_detach_all(object *parent)
 		obj_detach_one(&Objects[parent->attached_obj]);
 }
 
-

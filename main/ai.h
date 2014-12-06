@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/ai.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:07 $
+ * $Source: Smoke:miner:source:main::RCS:ai.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/10/15 16:28:07 $
  * 
  * Header file for AI system.
  * 
  * $Log: ai.h $
+ * Revision 1.3  1995/10/15  16:28:07  allender
+ * added flag to player_is_visible function
+ *
+ * Revision 1.2  1995/10/10  11:48:32  allender
+ * PC ai header
+ *
+ * Revision 1.1  1995/05/16  15:54:00  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:33:07  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -203,7 +212,7 @@ extern void attempt_to_resume_path(object *objp);
 extern void do_ai_robot_hit_attack(object *robot, object *player, vms_vector *collision_point);
 extern void ai_open_doors_in_segment(object *robot);
 extern int ai_door_is_openable(object *objp, segment *segp, int sidenum);
-extern int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_view, vms_vector *vec_to_player);
+extern int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_view, vms_vector *vec_to_player, int prev_vis);
 extern void ai_reset_all_paths(void);	//	Reset all paths.  Call at the start of a level.
 extern int ai_multiplayer_awareness(object *objp, int awareness_level);
 

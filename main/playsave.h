@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/playsave.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:24 $
+ * $Source: Smoke:miner:source:main::RCS:PLAYSAVE.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:01:19 $
  * 
  * Header for playsave.c
  * 
- * $Log: playsave.h $
+ * $Log: PLAYSAVE.H $
+ * Revision 1.1  1995/05/16  16:01:19  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:24  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.

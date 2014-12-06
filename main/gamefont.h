@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gamefont.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:09 $
+ * $Source: Smoke:miner:source:main::RCS:gamefont.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/18 10:23:54 $
  * 
  * Font declarations for the game,.
  * 
  * $Log: gamefont.h $
+ * Revision 1.2  1995/08/18  10:23:54  allender
+ * removed large font -- added PC small font
+ *
+ * Revision 1.1  1995/05/16  15:56:55  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:09  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -56,16 +62,20 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // When adding a new font, don't forget to change the
 // filename in gamefont.c!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#define GFONT_BIG_1 		0
-#define GFONT_MEDIUM_1	1
-#define GFONT_MEDIUM_2	2
-#define GFONT_MEDIUM_3	3
-#define GFONT_SMALL		4
+//#define GFONT_BIG_1 		0
+#define GFONT_BIG_1		0		// because we don't have the Big font on the mac -- a waste
+								// use the first medium font.  Probably won't make a big difference
+#define GFONT_MEDIUM_1	0
+#define GFONT_MEDIUM_2	1
+#define GFONT_MEDIUM_3	2
+#define GFONT_SMALL		3
+#define GFONT_SMALL_PC	4		// the PC small font -- for pixel doubling on the hud.
 
 #define GAME_FONT		(Gamefonts[GFONT_SMALL])
 #define HELP_FONT		(Gamefonts[GFONT_MEDIUM_1])
 #define MENU_FONT		(Gamefonts[GFONT_MEDIUM_1])
-#define SCORES_FONT	(Gamefonts[GFONT_MEDIUM_1])
+#define SCORES_FONT		(Gamefonts[GFONT_MEDIUM_1])
+#define GAME_FONT_PC	(Gamefonts[GFONT_SMALL_PC])
 
 #define MAX_FONTS 5
 
@@ -76,4 +86,3 @@ void gamefont_close();
 
 
 #endif
-

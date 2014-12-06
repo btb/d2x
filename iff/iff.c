@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/iff/rcs/iff.c $
- * $Revision: 1.43 $
- * $Author: john $
- * $Date: 1994/12/08 19:03:17 $
+ * $Source: Smoke:miner:source:iff::RCS:iff.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/05/12 11:54:43 $
  *
  * Routines for reading and writing IFF files
  *
  * $Log: iff.c $
+ * Revision 1.2  1995/05/12  11:54:43  allender
+ * changed memory stuff again
+ *
+ * Revision 1.1  1995/05/05  08:59:41  allender
+ * Initial revision
+ *
  * Revision 1.43  1994/12/08  19:03:17  john
  * Added code to use cfile.
  * 
@@ -165,13 +171,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MIN_COMPRESS_WIDTH	65	//don't compress if less than this wide
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: iff.c 1.43 1994/12/08 19:03:17 john Exp $";
+static char rcsid[] = "$Id: iff.c 1.2 1995/05/12 11:54:43 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
-#include <conio.h>
 #include <string.h>
 
 #include "mem.h"
@@ -257,14 +261,16 @@ long get_sig(FFILE *f)
 //	if ((s[1]=cfgetc(f))==EOF) return(EOF);
 //	if ((s[0]=cfgetc(f))==EOF) return(EOF);
 
+//  The order was s[3] ... s[0]  MWA
+
 	if (f->position>=f->length) return EOF;
-	s[3] = f->data[f->position++];
-	if (f->position>=f->length) return EOF;
-	s[2] = f->data[f->position++];
+	s[0] = f->data[f->position++];
 	if (f->position>=f->length) return EOF;
 	s[1] = f->data[f->position++];
 	if (f->position>=f->length) return EOF;
-	s[0] = f->data[f->position++];
+	s[2] = f->data[f->position++];
+	if (f->position>=f->length) return EOF;
+	s[3] = f->data[f->position++];
 
 	return(*((long *) s));
 }
@@ -356,7 +362,6 @@ long get_long(FFILE *f)
 //  if (c0==0xff) return(EOF);
 
 	return(((long)c3<<24) + ((long)c2<<16) + ((long)c1<<8) + c0);
-
 }
 
 int parse_bmhd(FFILE *ifile,long len,iff_bitmap_header *bmheader)
@@ -656,8 +661,7 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 						}
 						else {
 
-							//MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );//Hack by KRB
-							bmheader->raw_data=(ubyte *)malloc((bmheader->w * bmheader->h)*sizeof(ubyte));
+							MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );
 							if (!bmheader->raw_data)
 								return IFF_NO_MEM;
 						}
@@ -674,8 +678,7 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 						bmheader->h = prev_bm->bm_h;
 						bmheader->type = prev_bm->bm_type;
 
-						//MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );//Hack by KRB
-						bmheader->raw_data=(ubyte *)malloc((bmheader->w * bmheader->h)*sizeof(ubyte));
+						MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );
 
 						memcpy(bmheader->raw_data, prev_bm->bm_data, bmheader->w * bmheader->h );
 						skip_chunk(ifile,len);
@@ -738,12 +741,11 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 int convert_ilbm_to_pbm(iff_bitmap_header *bmheader)
 {
 	int x,y,p;
-	byte *new_data,*destptr,*rowptr;
+	ubyte *new_data,*destptr,*rowptr;
 	int bytes_per_row,byteofs;
 	ubyte checkmask,newbyte,setbit;
 
-	//MALLOC( new_data, byte, bmheader->w * bmheader->h );//hack by KRB
-	new_data = (byte *)malloc((bmheader->w * bmheader->h)*sizeof(byte));
+	MALLOC( new_data, ubyte, bmheader->w * bmheader->h );
 	if (new_data == NULL) return IFF_NO_MEM;
 
 	destptr = new_data;
@@ -773,7 +775,7 @@ int convert_ilbm_to_pbm(iff_bitmap_header *bmheader)
 
 	}
 
-	free(bmheader->raw_data);
+	myfree(bmheader->raw_data);
 	bmheader->raw_data = new_data;
 
 	bmheader->type = TYPE_PBM;
@@ -794,8 +796,7 @@ int convert_rgb15(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 //        if ((new_data = malloc(bm->bm_w * bm->bm_h * 2)) == NULL)
 //            {ret=IFF_NO_MEM; goto done;}
-       //MALLOC(new_data, ushort, bm->bm_w * bm->bm_h * 2);//hack by KRB also a bug I believe. It is allocating twice the needed memory.
-		new_data = malloc(bm->bm_w * bm->bm_h * 2);//I left it as previously done, thinking the *2 means sizeof(ushort)
+       MALLOC(new_data, ushort, bm->bm_w * bm->bm_h * 2);
        if (new_data == NULL)
            return IFF_NO_MEM;
 
@@ -806,7 +807,7 @@ int convert_rgb15(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 	}
 
-	free(bm->bm_data);				//get rid of old-style data
+	myfree(bm->bm_data);				//get rid of old-style data
 	bm->bm_data = (ubyte *) new_data;			//..and point to new data
 
 	bm->bm_rowsize *= 2;				//two bytes per row
@@ -829,8 +830,7 @@ int open_fake_file(char *ifilename,FFILE *ffile)
 
 	ffile->length = cfilelength(ifile);
 
-	//MALLOC(ffile->data,ubyte,ffile->length);//Hack by KRB
-	ffile->data = (ubyte *)malloc(ffile->length*sizeof(ubyte));
+	MALLOC(ffile->data,ubyte,ffile->length);
 
 	if (cfread(ffile->data, 1, ffile->length, ifile) < ffile->length)
 		ret = IFF_READ_ERROR;
@@ -847,7 +847,7 @@ int open_fake_file(char *ifilename,FFILE *ffile)
 close_fake_file(FFILE *f)
 {
 	if (f->data)
-		free(f->data);
+		myfree(f->data);
 
 	f->data = NULL;
 }
@@ -867,12 +867,13 @@ copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 //if bm->bm_data is set, use it (making sure w & h are correct), else
 //allocate the memory
-int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,grs_bitmap *prev_bm)
+int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,ubyte *palette,grs_bitmap *prev_bm)
 {
-	int ret;			//return code
+	int ret, i;			//return code
 	iff_bitmap_header bmheader;
 	long sig,form_len;
 	long form_type;
+	ubyte *c;
 
 	bmheader.raw_data = bm->bm_data;
 
@@ -900,7 +901,7 @@ int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,g
 		ret = IFF_UNKNOWN_FORM;
 
 	if (ret != IFF_NO_ERROR) {		//got an error parsing
-		if (bmheader.raw_data) free(bmheader.raw_data); 
+		if (bmheader.raw_data) myfree(bmheader.raw_data); 
 		goto done;
 	}
 
@@ -916,14 +917,22 @@ int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,g
 
 	copy_iff_to_grs(bm,&bmheader);
 
-	if (palette) memcpy(palette,&bmheader.palette,sizeof(bmheader.palette));
+//	if (palette) memcpy(palette,&bmheader.palette,sizeof(bmheader.palette));
+	if (palette) {
+		c = palette;
+		for (i = 0; i < 256; i++) {
+			*c++ = bmheader.palette[i].r;
+			*c++ = bmheader.palette[i].g;
+			*c++ = bmheader.palette[i].b;
+		}
+	}
 
 	//Now do post-process if required
 
-	if (bitmap_type == BM_RGB15) {
-		ret = convert_rgb15(bm,&bmheader);
-		if (ret != IFF_NO_ERROR) goto done;
-	}
+//	if (bitmap_type == BM_RGB15) {
+//		ret = convert_rgb15(bm,&bmheader);
+//		if (ret != IFF_NO_ERROR) goto done;
+//	}
 
 done:
 
@@ -931,12 +940,15 @@ done:
 
 }
 
+char *tmpfilename;
+
 //returns error codes - see IFF.H.  see GR.H for bitmap_type
-int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,byte *palette)
+int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,ubyte *palette)
 {
 	int ret;			//return code
 	FFILE ifile;
 
+	tmpfilename = ifilename;
 	ret = open_fake_file(ifilename,&ifile);		//read in entire file
 	if (ret != IFF_NO_ERROR) goto done;
 
@@ -946,7 +958,9 @@ int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,byte *palette
 
 done:
 
-	if (ifile.data) free(ifile.data);
+	if (ifile.data) myfree(ifile.data);
+	
+	ifile.data = NULL;
 
 	close_fake_file(&ifile);
 
@@ -957,7 +971,7 @@ done:
 
 //like iff_read_bitmap(), but reads into a bitmap that already exists,
 //without allocating memory for the bitmap. 
-int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette)
+int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,ubyte *palette)
 {
 	int ret;			//return code
 	FFILE ifile;
@@ -969,7 +983,9 @@ int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette)
 
 done:
 
-	if (ifile.data) free(ifile.data);
+	if (ifile.data) myfree(ifile.data);
+	
+	ifile.data = NULL;
 
 	close_fake_file(&ifile);
 
@@ -1112,8 +1128,7 @@ int write_body(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 	put_long(len,ofile);
 
     //if (! (new_span = malloc(bitmap_header->w+(bitmap_header->w/128+2)*2))) return IFF_NO_MEM;
-   // MALLOC( new_span, ubyte, bitmap_header->w + (bitmap_header->w/128+2)*2);//hack by KRB, also allocating twice the needed memory, probably a bug
-	new_span = malloc(bitmap_header->w+(bitmap_header->w/128+2)*2);//left it alone, as in 2 lines above -KRB
+    MALLOC( new_span, ubyte, bitmap_header->w + (bitmap_header->w/128+2)*2);
     if (new_span == NULL) return IFF_NO_MEM;
 
 	for (y=bitmap_header->h;y--;) {
@@ -1135,7 +1150,7 @@ int write_body(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 		if (total_len&1) fputc(0,ofile);		//pad to even
 	}
 
-	free(new_span);
+	myfree(new_span);
 
 	return ((compression_on) ? (EVEN(total_len)+8) : (len+8));
 
@@ -1235,14 +1250,14 @@ int write_pbm(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)		
 
 //writes an IFF file from a grs_bitmap structure. writes palette if not null
 //returns error codes - see IFF.H.
-int iff_write_bitmap(char *ofilename,grs_bitmap *bm,byte *palette)
+int iff_write_bitmap(char *ofilename,grs_bitmap *bm,ubyte *palette)
 {
 	FILE *ofile;
 	iff_bitmap_header bmheader;
 	int ret;
 	int compression_on;
 
-	if (bm->bm_type == BM_RGB15) return IFF_BAD_BM_TYPE;
+//	if (bm->bm_type == BM_RGB15) return IFF_BAD_BM_TYPE;
 
 #if COMPRESS
 	compression_on = (bm->bm_w>=MIN_COMPRESS_WIDTH);
@@ -1323,8 +1338,8 @@ int iff_read_animbrush(char *ifilename,grs_bitmap **bm_list,int max_bitmaps,int 
 
 			prev_bm = *n_bitmaps>0?bm_list[*n_bitmaps-1]:NULL;
 
-		   //MALLOC(bm_list[*n_bitmaps] , grs_bitmap, 1 );//hack by KRB
-			bm_list[*n_bitmaps]=(grs_bitmap *)malloc(1*sizeof(grs_bitmap));
+		   MALLOC(bm_list[*n_bitmaps] , grs_bitmap, 1 );
+
 			bm_list[*n_bitmaps]->bm_data = NULL;
 
 			ret = iff_parse_bitmap(&ifile,bm_list[*n_bitmaps],form_type,*n_bitmaps>0?NULL:palette,prev_bm);
@@ -1385,4 +1400,3 @@ char *iff_errormsg(int error_number)
 }
 
 
-

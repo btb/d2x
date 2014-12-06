@@ -11,10 +11,10 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*	 
- * $Source: f:/miner/source/main/rcs/laser.c $
- * $Revision: 2.6 $
- * $Author: mike $
- * $Date: 1995/04/05 13:18:31 $
+ * $Source: Smoke:miner:source:main::RCS:laser.c $
+ * $Revision: 1.11 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:22:07 $
  * 
  * This will contain the laser code
  * 
@@ -25,7 +25,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: laser.c 2.6 1995/04/05 13:18:31 mike Exp $";
+static char rcsid[] = "$Id: laser.c 1.11 1995/10/31 10:22:07 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -1117,6 +1117,7 @@ int do_laser_firing_player(void)
 //	Returns number of times a weapon was fired.  This is typically 1, but might be more for low frame rates.
 //	More than one shot is fired with a pseudo-delay so that players on show machines can fire (for themselves
 //	or other players) often enough for things like the vulcan cannon.
+
 int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires)
 {
 	object	*objp = &Objects[objnum];
@@ -1124,7 +1125,7 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 	// The Laser_offset is used to "jitter" the laser fire so that lasers don't always appear
 	// right in front of your face.   I put it here instead of laser_create_new because I want
 	// both of the dual laser beams to be fired from the same distance.
-	Laser_offset = ((F1_0*2)*(rand()%10))/10;
+	Laser_offset = ((F1_0*2)*(rand()%8))/8;
 
 	switch (weapon_num) {
 		case LASER_INDEX: {
@@ -1164,7 +1165,7 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 			}
 			break;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		case PLASMA_INDEX:
 			Laser_player_fire( objp, PLASMA_ID, 0, 1, 0);
 			Laser_player_fire( objp, PLASMA_ID, 1, 0, 0);
@@ -1410,7 +1411,7 @@ void do_missile_firing(void)
 				#endif
 				break;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 			case SMART_INDEX:
 				Laser_player_fire( ConsoleObject, SMART_ID, SMART_GUN, 1, 0);
 				#ifdef NETWORK

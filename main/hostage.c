@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/hostage.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:36 $
+ * $Source: Smoke:miner:source:main::RCS:HOSTAGE.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:26:24 $
  * 
  * Code to render and manipulate hostages
  * 
- * $Log: hostage.c $
+ * $Log: HOSTAGE.C $
+ * Revision 1.1  1995/05/16  15:26:24  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:36  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -180,10 +183,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: hostage.c 2.0 1995/02/27 11:28:36 john Exp $";
+static char rcsid[] = "$Id: HOSTAGE.C 1.1 1995/05/16 15:26:24 allender Exp $";
 #pragma on (unreferenced)
 
-#include <dos.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -581,4 +583,3 @@ void hostage_compress_all()	{
 
 
 
-

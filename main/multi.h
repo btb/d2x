@@ -11,14 +11,37 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/multi.h $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/04/03 08:49:50 $
+ * $Source: Smoke:miner:source:main::RCS:multi.h $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/11/07 17:06:30 $
  * 
  * Defines and exported variables for multi.c
  * 
  * $Log: multi.h $
+ * Revision 1.7  1995/11/07  17:06:30  allender
+ * changed max_message_len so that player files save and restore
+ * correctly
+ *
+ * Revision 1.6  1995/11/03  12:54:13  allender
+ * shareware changes
+ *
+ * Revision 1.5  1995/10/31  10:20:55  allender
+ * shareware stuff
+ *
+ * Revision 1.4  1995/08/31  15:52:21  allender
+ * added union in netplayer_info to include
+ * appletalk information and ipx information
+ *
+ * Revision 1.3  1995/07/26  17:02:47  allender
+ * implemented and working on mac
+ *
+ * Revision 1.2  1995/06/08  12:56:19  allender
+ * couple of prototypes to be unsigned char
+ *
+ * Revision 1.1  1995/05/16  15:59:44  allender
+ * Initial revision
+ *
  * Revision 2.3  1995/04/03  08:49:50  john
  * Added code to get someone's player struct.
  * 
@@ -273,22 +296,19 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _MULTI_H
 #define _MULTI_H
 
-#ifdef SHAREWARE
-#define MAX_MESSAGE_LEN 25
-#else
 #define MAX_MESSAGE_LEN 35
 #define SHAREWARE_MAX_MESSAGE_LEN 25
-#endif
 
 #ifdef NETWORK
 
 // Defines
+#include "Appletalk.h"
 #include "gameseq.h"
 #include "piggy.h"
 
 // What version of the multiplayer protocol is this?
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 #define MULTI_PROTO_VERSION 	1
 #else
 #define MULTI_PROTO_VERSION	2
@@ -321,7 +341,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MULTI_CONSISTENCY		20
 #define MULTI_DECLOAK			21
 #define MULTI_MENU_CHOICE		22
-#ifndef SHAREWARE
+
+#ifndef MAC_SHAREWARE
 #define MULTI_ROBOT_POSITION	23
 #define MULTI_ROBOT_EXPLODE	24
 #define MULTI_ROBOT_RELEASE	25
@@ -340,13 +361,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MULTI_REQ_PLAYER		35		// Someone requests my player structure
 #define MULTI_SEND_PLAYER		36		// Sending someone my player structure
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #define MULTI_MAX_TYPE			36
 #else
 #define MULTI_MAX_TYPE			22
 #endif
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 #define MAX_NET_CREATE_OBJECTS 19 
 #else
 #define MAX_NET_CREATE_OBJECTS 20
@@ -393,8 +414,8 @@ void multi_prep_level(void);
 int multi_endlevel(int *secret);
 int multi_menu_poll(void);
 void multi_leave_game(void);
-void multi_process_data(char *dat, int len);
-void multi_process_bigdata(char *buf, int len);		
+void multi_process_data(unsigned char *dat, int len);
+void multi_process_bigdata(unsigned char *buf, int len);		
 void multi_do_death(int objnum);
 void multi_send_message_dialog(void);
 int multi_delete_extra_objects(void);
@@ -408,7 +429,7 @@ void multi_sort_kill_list(void);
 int multi_choose_mission(int *anarchy_only);
 void multi_reset_stuff(void);
 
-void multi_send_data(char *buf, int len, int repeat);
+void multi_send_data(unsigned char *buf, int len, int repeat);
 
 int get_team(int pnum);
 
@@ -472,43 +493,52 @@ extern bitmap_index multi_player_textures[MAX_NUM_NET_PLAYERS][N_PLAYER_SHIP_TEX
 
 #define NETGAME_NAME_LEN				15
 
+typedef struct ipx_net_info {
+	ubyte		server[4];							// 4
+	ubyte		node[6];							// 6
+	ushort		socket;								// 2
+} ipx_net_info;
+
 typedef struct netplayer_info {
-	char		callsign[CALLSIGN_LEN+1];
-	ubyte		server[4];
-	ubyte		node[6];
-	ushort	socket;
-	byte 		connected;
+	char		callsign[CALLSIGN_LEN+1];			// 9
+	byte 		connected;							// 1
+	union {
+		ipx_net_info	ipx_info;
+		AddrBlock		appletalk_info;
+	} network_info;
 } netplayer_info;
 
 typedef struct netgame_info {
-	ubyte					type;
-	char					game_name[NETGAME_NAME_LEN+1];
-	char					team_name[2][CALLSIGN_LEN+1];
-	ubyte					gamemode;
-	ubyte					difficulty;
-	ubyte 				game_status;
-	ubyte					numplayers;
-	ubyte					max_numplayers;
-	ubyte					game_flags;
-	netplayer_info		players[MAX_PLAYERS];
-	int					locations[MAX_PLAYERS];
+	ubyte					type;								//  1
+	char					game_name[NETGAME_NAME_LEN+1];		// 16
+	char					team_name[2][CALLSIGN_LEN+1];		// 18
+	ubyte					gamemode;							//  1
+	ubyte					difficulty;							//  1
+	ubyte 					game_status;						//  1
+	ubyte					numplayers;							//  1
+	ubyte					max_numplayers;						//  1
+	ubyte					game_flags;							//  1     --->   41 bytes total
+	netplayer_info			players[MAX_PLAYERS];				//  starts byte 42  22*8 = 176
+	int						locations[MAX_PLAYERS];
 	short					kills[MAX_PLAYERS][MAX_PLAYERS];
-	int					levelnum;
+	int						levelnum;
 	ubyte					protocol_version;
 	ubyte					team_vector;
-	ushort				segments_checksum;
+	ushort					segments_checksum;
 	short					team_kills[2];
 	short					killed[MAX_PLAYERS];
 	short					player_kills[MAX_PLAYERS];
-#ifndef SHAREWARE
-	fix					level_time;
-	int					control_invul_time;
+
+#ifndef MAC_SHAREWARE
+	fix						level_time;
+	int						control_invul_time;
 	int 					monitor_vector;
-	int					player_score[MAX_PLAYERS];
+	int						player_score[MAX_PLAYERS];
 	ubyte					player_flags[MAX_PLAYERS];
 	char					mission_name[9];
 	char					mission_title[MISSION_NAME_LEN+1];
 #endif
+
 } netgame_info;
 
 extern struct netgame_info Netgame;
@@ -519,4 +549,3 @@ void change_playernum_to(int new_pnum);
 #endif
 
 #endif
-

@@ -1,31 +1,75 @@
 #
-# $Source: f:/miner/source/mem/rcs/makefile $
-# $Revision: 1.1 $
-# $Author: john $
-# $Date: 1993/11/02 17:45:38 $
+# $Source: Smoke:miner:source:mem::RCS:makefile $
+# $Revision: 1.5 $
+# $Author: allender $
+# $Date: 1995/10/25 12:06:48 $
 #
-# Makefile for memory debugging
-#
-
-LIBDIR = ..\main
+# Makefile for bios functions
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
-
-# What to install, and where to install it
-INSTALL_TARGS = mem.lib mem.h
-
-# What to clean
-CLEAN_TARGS = $(OBJDIR)\*.obj
+OBJDIR = :obj:
+SRCDIR = :
 
 # What libs to make
-LIBS = mem
+LIB = mem.lib
 
-MEM_OBJS = mem.obj
+# includes to copy to lib directory
+GLOBAL_INCLUDES = mem.h
 
-mem.lib: $(MEM_OBJS)
-	wlib mem.lib $(MEM_OBJS)
-	copy *.lib $(LIBDIR)
-mem.obj: mem.h mem.c
-	wcc386 $(CCFLAGS) mem.c
+OBJ_DIR = :obj:
+
+# C compiler options
+CFLAGS = {SYM_FLAG}
+	
+LDFLAGS = ¶
+	{SYM_FLAG}
+	
+MEM_OBJS = ¶
+	{OBJDIR}mem.c.o
+	
+TESTMEM_OBJS = ¶
+	{OBJDIR}test_mem.c.o
+	
+All Ä {LIB}
+
+{LIB} Ä {MEM_OBJS}
+	Echo "# `Date -t` ----- Building MEM library..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "#  Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+
+clean Ä
+	del :obj:Å
+	del mem.lib
+	
+test_mem Ä {TESTMEM_OBJS} {LIB}
+	Link -t APPL -c '????' -sym on -mf ¶
+		{TESTMEM_OBJS} {LIB} ¶
+		"{CLibraries}"CSANELib.o ¶
+		"{CLibraries}"Math.o ¶
+		"{CLibraries}"StdClib.o ¶
+ 		"{Libraries}"Runtime.o ¶
+ 		"{Libraries}"Interface.o ¶
+		-o test_mem
+	
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
+
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+.a.o	Ä	.a
+	Echo "# `Date -t` ----- Assembling {default}.a..."
+	Asm "{depDir}{default}.a"			¶
+		-o "{targDir}{default}.a.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+mem.c.o Ä mem.c mem.h mono.h
+
+test_mem.c.o Ä test_mem.c

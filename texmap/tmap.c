@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/texmap/rcs/tmap.c $
- * $Revision: 1.19 $
- * $Author: mike $
- * $Date: 1994/03/14 15:44:27 $
+ * $Source: Buggin:miner:source:texmap::RCS:tmap.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/04 20:15:38 $
  *
  * Texture mapper
  *
  * $Log: tmap.c $
+ * Revision 1.1  1995/05/04  20:15:38  allender
+ * Initial revision
+ *
  * Revision 1.19  1994/03/14  15:44:27  mike
  * Streamline code, rendering this file obsolete, replaced by ntmap.c
  * 
@@ -80,7 +83,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: tmap.c 1.19 1994/03/14 15:44:27 mike Exp $";
+static char rcsid[] = "$Id: tmap.c 1.1 1995/05/04 20:15:38 allender Exp $";
 #pragma on (unreferenced)
 
 

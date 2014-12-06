@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/gpixel.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:20 $
+ * $Source: Smoke:miner:source:2d::RCS:gpixel.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 08:55:42 $
  *
  * Graphical routines for getting a pixel's value.
  *
  * $Log: gpixel.c $
+ * Revision 1.1  1995/03/09  08:55:42  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.5  1994/11/18  22:50:20  john
  * Changed shorts to ints in parameters.
  * 
@@ -37,54 +42,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  *
  */
 #include "mem.h"
-
-
 #include "gr.h"
 #include "grdef.h"
 
 unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
 {
-	switch(bitmap->bm_type)
-	{
-	case BM_LINEAR:
-		return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
-	case BM_MODEX:
-		x += bitmap->bm_x;
-		y += bitmap->bm_y;
-		gr_modex_setplane( x & 3 );
-		return gr_video_memory[(bitmap->bm_rowsize * y) + (x/4)];
-	case BM_SVGA:
-		{
-		unsigned int offset;
-		offset = (unsigned int)bitmap->bm_data + (unsigned int)bitmap->bm_rowsize * y + x;
-		gr_vesa_setpage( offset >> 16 );
-		return gr_video_memory[offset & 0xFFFF];
-		}
-	}
-	return 0;
+	return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
 }
 
 unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y )
 {
 	if ((x<0) || (y<0) || (x>=bitmap->bm_w) || (y>=bitmap->bm_h)) return 0;
 
-	switch(bitmap->bm_type)
-	{
-	case BM_LINEAR:
-		return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
-	case BM_MODEX:
-		x += bitmap->bm_x;
-		y += bitmap->bm_y;
-		gr_modex_setplane( x & 3 );
-		return gr_video_memory[(bitmap->bm_rowsize * y) + (x/4)];
-	case BM_SVGA:
-		{
-		unsigned int offset;
-		offset = (unsigned int)bitmap->bm_data + (unsigned int)bitmap->bm_rowsize * y + x;
-		gr_vesa_setpage( offset >> 16 );
-		return gr_video_memory[offset & 0xFFFF];
-		}
-	}
-	return 0;
+	return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
 }
-

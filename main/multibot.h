@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/multibot.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:18 $
+ * $Source: Smoke:miner:source:main::RCS:multibot.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/24 16:04:38 $
  * 
  * Header file for multiplayer robot support.
  * 
  * $Log: multibot.h $
- * Revision 2.1  1995/03/21  14:40:18  john
+ * Revision 1.2  1995/08/24  16:04:38  allender
+ * fix function prototype for compiler warning
+ *
+ * Revision 1.1  1995/05/16  15:59:53  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:40:18  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:30:57  john
@@ -96,6 +102,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifndef SHAREWARE
 
+#include "object.h"
+
 #define MAX_ROBOTS_CONTROLLED 3
 
 #define ROBOT_FIRE_AGITATION 94
@@ -130,8 +138,7 @@ void multi_dump_robots(void);
 void multi_strip_robots(int playernum);
 void multi_check_robot_timeout(void);
 
-void multi_robot_request_change(struct object *robot, int playernum);
+void multi_robot_request_change(object *robot, int playernum);
 #endif
 #endif
 #endif
-

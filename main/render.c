@@ -11,18 +11,42 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/render.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/12/19 15:31:36 $
+ * $Source: Smoke:miner:source:main::RCS:render.c $
+ * $Revision: 1.9 $
+ * $Author: allender $
+ * $Date: 1995/11/20 17:17:48 $
  *
  * Sample setup for RCS header
  *
  * $Log: render.c $
- * Revision 2.5  1995/12/19  15:31:36  john
- * Made stereo mode only record 1 eye in demo.
- * 
- * Revision 2.4  1995/03/20  18:15:53  john
+ * Revision 1.9  1995/11/20  17:17:48  allender
+ * *** empty log message ***
+ *
+ * Revision 1.8  1995/10/26  14:08:35  allender
+ * added assigment for physics optimization
+ *
+ * Revision 1.7  1995/09/22  14:28:46  allender
+ * changed render_zoom to make game match PC aspect
+ *
+ * Revision 1.6  1995/08/14  14:35:54  allender
+ * change transparency to 0
+ *
+ * Revision 1.5  1995/08/12  11:32:02  allender
+ * removed #ifdef NEWDEMO -- always in
+ *
+ * Revision 1.4  1995/07/05  16:48:31  allender
+ * kitchen stuff
+ *
+ * Revision 1.3  1995/06/23  10:22:54  allender
+ * fix outline mode
+ *
+ * Revision 1.2  1995/06/16  16:11:18  allender
+ * changed sort func to accept const parameters
+ *
+ * Revision 1.1  1995/05/16  15:30:24  allender
+ * Initial revision
+ *
+ * Revision 2.4  1995/03/20  12:15:53  john
  * Added code to not store the normals in the segment structure.
  * 
  * Revision 2.3  1995/03/13  16:11:05  john
@@ -295,7 +319,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: render.c 2.5 1995/12/19 15:31:36 john Exp $";
+static char rcsid[] = "$Id: render.c 1.9 1995/11/20 17:17:48 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -351,7 +375,8 @@ vms_vector Viewer_eye;	//valid during render
 
 int	N_render_segs;
 
-fix Render_zoom = 0x9000;							//the player's zoom factor
+//fix Render_zoom = 0x9000;							//the player's zoom factor
+fix Render_zoom = 0xB000;
 
 #ifndef NDEBUG
 ubyte object_rendered[MAX_OBJECTS];
@@ -368,6 +393,8 @@ int	Bottom_bitmap_num = 9;
 #endif
 
 fix	Face_reflectivity = (F1_0/2);
+
+void render_mine(int start_seg_num,fix eye_offset);
 
 #if 0		//this stuff could probably just be deleted
 
@@ -419,7 +446,7 @@ draw_outline(int nverts,g3s_point **pointlist)
 {
 	int i;
 
-	gr_setcolor(BM_XRGB(63,63,63));
+	gr_setcolor(TRANSPARENCY_COLOR);
 
 	for (i=0;i<nverts-1;i++)
 		g3_draw_line(pointlist[i],pointlist[i+1]);
@@ -434,8 +461,8 @@ grs_canvas * reticle_canvas = NULL;
 void free_reticle_canvas()
 {
 	if (reticle_canvas)	{
-		free( reticle_canvas->cv_bitmap.bm_data );
-		free( reticle_canvas );
+		myfree( reticle_canvas->cv_bitmap.bm_data );
+		myfree( reticle_canvas );
 		reticle_canvas	= NULL;
 	}
 }
@@ -494,7 +521,7 @@ void draw_3d_reticle(fix eye_offset)
 
 	saved_canvas = grd_curcanv;
 	gr_set_current_canvas(reticle_canvas);
-	gr_clear_canvas( 255 );		// Clear to Xparent
+	gr_clear_canvas( TRANSPARENCY_COLOR );		// Clear to Xparent
 	show_reticle(1);
 	gr_set_current_canvas(saved_canvas);
 	
@@ -514,6 +541,7 @@ fix flash_rate = FLASH_CYCLE_RATE;
 //cycle the flashing light for when mine destroyed
 flash_frame()
 {
+	fix tmp;
 	static fixang flash_ang=0;
 
 	if (!Fuelcen_control_center_destroyed)
@@ -528,7 +556,7 @@ flash_frame()
 //	flash_ang += fixmul(FLASH_CYCLE_RATE,FrameTime);
 	flash_ang += fixmul(flash_rate,FrameTime);
 
-	fix_fastsincos(flash_ang,&flash_scale,NULL);
+	fix_fastsincos(flash_ang,&flash_scale,&tmp);
 
 	flash_scale = (flash_scale + f1_0)/2;
 
@@ -806,6 +834,8 @@ render_object_search(object *obj)
 }
 #endif
 
+extern int object_rendered_last[MAX_OBJECTS];
+
 do_render_object(int objnum)
 {
 	#ifdef EDITOR
@@ -816,6 +846,8 @@ do_render_object(int objnum)
 	int n;
 
 	Assert(objnum < MAX_OBJECTS);
+
+    object_rendered_last[objnum] = FrameCount;
 
 	#ifndef NDEBUG
 	if (object_rendered[objnum]) {		//already rendered this...
@@ -969,7 +1001,7 @@ void render_segment(int segnum)
 
 	Assert(segnum!=-1 && segnum<=Highest_segment_index);
 
-	cc=rotate_list(8,&seg->verts);
+	cc=rotate_list(8,seg->verts);
 
 	if (! cc.and) {		//all off screen?
 
@@ -1050,7 +1082,7 @@ outline_seg_side(segment *seg,int _side,int edge,int vert)
 {
 	g3s_codes cc;
 
-	cc=rotate_list(8,&seg->verts);
+	cc=rotate_list(8,seg->verts);
 
 	if (! cc.and) {		//all off screen?
 		side *s;
@@ -1179,7 +1211,7 @@ int Window_clip_left,Window_clip_top,Window_clip_right,Window_clip_bot;
 
 //Given two sides of segment, tell the two verts which form the 
 //edge between them
-Two_sides_to_edge[6][6][2] = {
+int Two_sides_to_edge[6][6][2] = {
 	{ {-1,-1}, {3,7}, {-1,-1}, {2,6}, {6,7}, {2,3} },
 	{ {3,7}, {-1,-1}, {0,4}, {-1,-1}, {4,7}, {0,3} },
 	{ {-1,-1}, {0,4}, {-1,-1}, {1,5}, {4,5}, {0,1} },
@@ -1189,7 +1221,7 @@ Two_sides_to_edge[6][6][2] = {
 };
 
 //given an edge specified by two verts, give the two sides on that edge
-Edge_to_sides[8][8][2] = {
+int Edge_to_sides[8][8][2] = {
 	{ {-1,-1}, {2,5}, {-1,-1}, {1,5}, {1,2}, {-1,-1}, {-1,-1}, {-1,-1} },
 	{ {2,5}, {-1,-1}, {3,5}, {-1,-1}, {-1,-1}, {2,3}, {-1,-1}, {-1,-1} },
 	{ {-1,-1}, {3,5}, {-1,-1}, {0,5}, {-1,-1}, {-1,-1}, {0,3}, {-1,-1} },
@@ -1511,7 +1543,7 @@ sort_item sort_list[SORT_LIST_SIZE];
 int n_sort_items;
 
 //compare function for object sort. 
-int sort_func(sort_item *a,sort_item *b)
+int sort_func(const sort_item *a, const sort_item *b)
 {
 	fix delta_dist;
 	object *obj_a,*obj_b;
@@ -1689,14 +1721,10 @@ void render_frame(fix eye_offset)
 		return;
 	}
 
-#ifdef NEWDEMO
 	if ( Newdemo_state == ND_STATE_RECORDING )	{
-		if (eye_offset >= 0 )	{
-			newdemo_record_start_frame(FrameCount, FrameTime );
-			newdemo_record_viewer_object(Viewer);
-		}
+		newdemo_record_start_frame(FrameCount, FrameTime );
+		newdemo_record_viewer_object(Viewer);
 	}
-#endif
 
 	g3_start_frame();
 
@@ -1847,7 +1875,7 @@ build_segment_list(int start_seg_num)
 						ubyte codes_and=0xff;
 						int i;
 
-						rotate_list(8,&seg->verts);
+						rotate_list(8,seg->verts);
 						rotated=1;
 
 						for (i=0;i<4;i++)
@@ -1883,8 +1911,8 @@ build_segment_list(int start_seg_num)
 
 						if (rotated<2) {
 							if (!rotated)
-								rotate_list(8,&seg->verts);
-							project_list(8,&seg->verts);
+								rotate_list(8,seg->verts);
+							project_list(8,seg->verts);
 							rotated=2;
 						}
 
@@ -2068,8 +2096,9 @@ void render_mine(int start_seg_num,fix eye_offset)
 			segnum = Render_list[i];
 
 			if (segnum != -1)
-				if (visited2[segnum])
+				if (visited2[segnum]) {
 					Int3();		//get Matt
+				}
 				else
 					visited2[segnum] = 1;
 		}
@@ -2096,7 +2125,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 				if (Render_list[i] != -1) {
 					#ifndef NDEBUG
 					if ((render_windows[i].left == -1) || (render_windows[i].top == -1) || (render_windows[i].right == -1) || (render_windows[i].bot == -1))
-						Int3();
+						{Int3();}
 					else
 					#endif
 						//NOTE LINK TO ABOVE!
@@ -2262,4 +2291,3 @@ int find_seg_side_face(short x,short y,int *seg,int *side,int *face,int *poly)
 }
 
 #endif
-

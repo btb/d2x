@@ -10,21 +10,38 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
- /*
- * $Source: f:/miner/source/2d/rcs/canvas.c $
- * $Revision: 1.14 $
- * $Author: john $
- * $Date: 1995/03/06 09:18:45 $
+/*
+ * $Source: Smoke:miner:source:2d::RCS:canvas.c $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/06/15 09:51:01 $
  *
  * Graphical routines for manipulating grs_canvas's.
  *
  * $Log: canvas.c $
- * Revision 1.14  1995/03/06  09:18:45  john
- * Made modex page flipping wait for retrace be default.
- * 
- * Revision 1.13  1995/03/01  15:37:40  john
- * Better ModeX support.
- * 
+ * Revision 1.7  1995/06/15  09:51:01  allender
+ * new malloc to align canvas on 8 byte boundry
+ *
+ * Revision 1.6  1995/05/12  11:52:30  allender
+ * changed memory stuff again
+ *
+ * Revision 1.5  1995/05/04  19:59:49  allender
+ * use NewPtr instead of malloc
+ *
+ * Revision 1.4  1995/05/01  08:38:16  allender
+ * work on malloc stuff and other things
+ *
+ * Revision 1.3  1995/04/27  07:39:33  allender
+ * fix variable
+ *
+ * Revision 1.2  1995/04/19  14:40:14  allender
+ * removed pragma
+ *
+ * Revision 1.1  1995/03/09  08:50:27  allender
+ * Initial revision
+ *
+ *
+ * -----  PC Descent RCS information --------
  * Revision 1.12  1994/11/28  17:08:29  john
  * Took out some unused functions in linear.asm, moved
  * gr_linear_movsd from linear.asm to bitblt.c, made sure that
@@ -67,25 +84,27 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #include <stdlib.h>
-#include <malloc.h>
 #include <stdio.h>
+#include <Memory.h>
 
 #include "mem.h"
-
-
 #include "gr.h"
 #include "grdef.h"
 
 grs_canvas * grd_curcanv;    //active canvas
 grs_screen * grd_curscreen;  //active screen
 
+unsigned int gr_var_color, gr_var_bwidth;	// temp defs because asm file defines these
+unsigned char *gr_var_bitmap;
+int gr_wait_for_retrace = 1;
+
 grs_canvas *gr_create_canvas(int w, int h)
 {
 	unsigned char * data;
 	grs_canvas *new;
-	
-	new = (grs_canvas *)malloc( sizeof(grs_canvas) );
-	data = (unsigned char *)malloc(w*h);
+
+	new = (grs_canvas *)mymalloc( sizeof(grs_canvas) );
+	data = (unsigned char *)mymalloc_align(w*h, 8);
 
 	new->cv_bitmap.bm_x = 0;
 	new->cv_bitmap.bm_y = 0;
@@ -108,7 +127,7 @@ grs_canvas *gr_create_sub_canvas(grs_canvas *canv, int x, int y, int w, int h)
 {
     grs_canvas *new;
 
-    new = (grs_canvas *)malloc( sizeof(grs_canvas) );
+    new = (grs_canvas *)mymalloc( sizeof(grs_canvas) );
 
 	new->cv_bitmap.bm_x = x+canv->cv_bitmap.bm_x;
 	new->cv_bitmap.bm_y = y+canv->cv_bitmap.bm_y;
@@ -123,11 +142,11 @@ grs_canvas *gr_create_sub_canvas(grs_canvas *canv, int x, int y, int w, int h)
 	new->cv_bitmap.bm_data += x;
 
 	new->cv_color = canv->cv_color;
-   new->cv_drawmode = canv->cv_drawmode;
-   new->cv_font = canv->cv_font;
+	new->cv_drawmode = canv->cv_drawmode;
+	new->cv_font = canv->cv_font;
 	new->cv_font_fg_color = canv->cv_font_fg_color;
 	new->cv_font_bg_color = canv->cv_font_bg_color;
-   return new;
+	return new;
 }
 
 void gr_init_canvas(grs_canvas *canv, unsigned char * pixdata, int pixtype, int w, int h)
@@ -140,10 +159,7 @@ void gr_init_canvas(grs_canvas *canv, unsigned char * pixdata, int pixtype, int 
 
 	canv->cv_bitmap.bm_x = 0;
 	canv->cv_bitmap.bm_y = 0;
-	if (pixtype==BM_MODEX)
-		canv->cv_bitmap.bm_rowsize = w / 4;
-	else
-		canv->cv_bitmap.bm_rowsize = w;
+	canv->cv_bitmap.bm_rowsize = w;
 	canv->cv_bitmap.bm_w = w;
 	canv->cv_bitmap.bm_h = h;
 	canv->cv_bitmap.bm_flags = 0;
@@ -176,24 +192,23 @@ void gr_init_sub_canvas(grs_canvas *new, grs_canvas *src, int x, int y, int w, i
 
 void gr_free_canvas(grs_canvas *canv)
 {
-	free(canv->cv_bitmap.bm_data );
-    free(canv);
+	myfree(canv->cv_bitmap.bm_data );
+    myfree(canv);
 }
 
 void gr_free_sub_canvas(grs_canvas *canv)
 {
-    free(canv);
+    myfree(canv);
 }
-
-int gr_wait_for_retrace = 1;
 
 void gr_show_canvas( grs_canvas *canv )
 {
-	if (canv->cv_bitmap.bm_type == BM_MODEX )
-		gr_modex_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y, gr_wait_for_retrace );
+	canv = canv;
+//	if (canv->cv_bitmap.bm_type == BM_MODEX )
+//		gr_modex_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y );
 
-	else if (canv->cv_bitmap.bm_type == BM_SVGA )
-		gr_vesa_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y );
+//	else if (canv->cv_bitmap.bm_type == BM_SVGA )
+//		gr_vesa_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y );
 
 		//	else if (canv->cv_bitmap.bm_type == BM_LINEAR )
 		// Int3();		// Get JOHN!
@@ -213,7 +228,6 @@ void gr_set_current_canvas( grs_canvas *canv )
 		gr_var_color  = 0;
 	gr_var_bitmap = grd_curcanv->cv_bitmap.bm_data;
 	gr_var_bwidth = grd_curcanv->cv_bitmap.bm_rowsize;
-
 }
 
 void gr_clear_canvas(int color)
@@ -229,4 +243,3 @@ void gr_setcolor(int color)
 	gr_var_color = color;
 
 }
-

@@ -11,18 +11,63 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gauges.c $
- * $Revision: 2.7 $
- * $Author: john $
- * $Date: 1995/12/19 16:18:33 $
+ * $Source: Smoke:miner:source:main::RCS:gauges.c $
+ * $Revision: 1.15 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:22:37 $
  *
  * Inferno gauge drivers
  *
  * $Log: gauges.c $
- * Revision 2.7  1995/12/19  16:18:33  john
- * Made weapon info align with canvas width, not 315.
- * 
- * Revision 2.6  1995/03/21  14:39:25  john
+ * Revision 1.15  1995/10/31  10:22:37  allender
+ * shareware stuff
+ *
+ * Revision 1.14  1995/10/26  14:11:05  allender
+ * do copy of weapon boxes in cockpit correctly
+ *
+ * Revision 1.13  1995/10/21  22:54:56  allender
+ * fixed up player names on hud
+ *
+ * Revision 1.12  1995/10/12  17:39:27  allender
+ * fixed status bar lives display
+ *
+ * Revision 1.11  1995/09/22  15:21:46  allender
+ * fixed hud problems (reticle and kill lists) for
+ * non pixel doubled mode
+ *
+ * Revision 1.10  1995/09/13  11:38:47  allender
+ * show KB left in heap instead of piggy cache
+ *
+ * Revision 1.9  1995/09/04  15:52:28  allender
+ * fix vulcan ammo count to update without overwritting itself
+ *
+ * Revision 1.8  1995/08/31  14:11:20  allender
+ * worked on hud kill list for non pixel doubled mode
+ *
+ * Revision 1.7  1995/08/24  16:05:05  allender
+ * more gauge placement -- still not done!
+ *
+ * Revision 1.6  1995/08/18  15:44:56  allender
+ * put in PC gauges for keys, lives, and reticle when pixel doubling
+ *
+ * Revision 1.5  1995/08/18  10:24:47  allender
+ * added proper support for cockpit mode -- still needs
+ *
+ * Revision 1.4  1995/07/26  16:56:34  allender
+ * more gauge stuff for status bar.  still problem
+ * with ship
+ *
+ * Revision 1.3  1995/07/17  08:55:57  allender
+ * fix up for large status bar.  Still needs some work though
+ *
+ * Revision 1.2  1995/06/20  09:54:29  allender
+ * stopgap measure to get status bar "working" until real mac
+ * status bar gets added
+ *
+ * Revision 1.1  1995/05/16  15:26:05  allender
+ * Initial revision
+ *
+ * Revision 2.6  1995/03/21  08:39:25  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.5  1995/03/14  12:31:25  john
@@ -240,7 +285,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gauges.c 2.7 1995/12/19 16:18:33 john Exp $";
+static char rcsid[] = "$Id: gauges.c 1.15 1995/10/31 10:22:37 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -330,90 +375,105 @@ grs_canvas *Canv_NumericalGauge;
 
 #define KEY_ICON_BLUE			68
 #define KEY_ICON_YELLOW			69
-#define KEY_ICON_RED				70
+#define KEY_ICON_RED			70
+
+// PC bitmaps for scanline doubling....
+
+#define GAUGE_LIVES_PC			71
+#define RETICLE_CROSS_PC		72
+#define RETICLE_PRIMARY_PC		74
+#define RETICLE_SECONDARY_PC	77
+#define RETICLE_LAST_PC			81
+#define KEY_ICON_BLUE_PC		82
+#define KEY_ICON_YELLOW_PC		83
+#define KEY_ICON_RED_PC			84
 
 //change MAX_GAUGE_BMS when adding gauges
 
 //Coordinats for gauges
 
-#define GAUGE_BLUE_KEY_X		45
-#define GAUGE_BLUE_KEY_Y		152
-#define GAUGE_GOLD_KEY_X		44
-#define GAUGE_GOLD_KEY_Y		162
-#define GAUGE_RED_KEY_X			43
-#define GAUGE_RED_KEY_Y			172
+#define GAUGE_BLUE_KEY_X		91
+#define GAUGE_BLUE_KEY_Y		374
+#define GAUGE_GOLD_KEY_X		89
+#define GAUGE_GOLD_KEY_Y		395
+#define GAUGE_RED_KEY_X			87
+#define GAUGE_RED_KEY_Y			417
 
-#define SB_GAUGE_KEYS_X			11
+#define SB_GAUGE_KEYS_X			26
 
-#define SB_GAUGE_BLUE_KEY_Y	153
-#define SB_GAUGE_GOLD_KEY_Y	169
-#define SB_GAUGE_RED_KEY_Y		185
+//mwa#define SB_GAUGE_BLUE_KEY_Y	153
+//mwa#define SB_GAUGE_GOLD_KEY_Y	169
+//mwa#define SB_GAUGE_RED_KEY_Y	185
+#define SB_GAUGE_BLUE_KEY_Y	390
+#define SB_GAUGE_GOLD_KEY_Y	422
+#define SB_GAUGE_RED_KEY_Y	454
 
-#define LEFT_ENERGY_GAUGE_X 	70
-#define LEFT_ENERGY_GAUGE_Y 	131
-#define LEFT_ENERGY_GAUGE_W 	64
-#define LEFT_ENERGY_GAUGE_H 	8
+#define LEFT_ENERGY_GAUGE_X 	137
+#define LEFT_ENERGY_GAUGE_Y 	314
+#define LEFT_ENERGY_GAUGE_W 	133		// so say Adam
+#define LEFT_ENERGY_GAUGE_H 	21		// so say Adam
 
-#define RIGHT_ENERGY_GAUGE_X 	190
-#define RIGHT_ENERGY_GAUGE_Y 	131
-#define RIGHT_ENERGY_GAUGE_W 	64
-#define RIGHT_ENERGY_GAUGE_H 	8
+#define RIGHT_ENERGY_GAUGE_X 	380
+#define RIGHT_ENERGY_GAUGE_Y 	314
+#define RIGHT_ENERGY_GAUGE_W 	133
+#define RIGHT_ENERGY_GAUGE_H 	21
 
-#define SB_ENERGY_GAUGE_X 		98
-#define SB_ENERGY_GAUGE_Y 		155
-#define SB_ENERGY_GAUGE_W 		16
-#define SB_ENERGY_GAUGE_H 		41
+#define SB_ENERGY_GAUGE_X 		196
+//mwa#define SB_ENERGY_GAUGE_Y 		155
+#define SB_ENERGY_GAUGE_Y 		390
+#define SB_ENERGY_GAUGE_W 		32
+#define SB_ENERGY_GAUGE_H 		82
 
-#define SB_ENERGY_NUM_X 		(SB_ENERGY_GAUGE_X+2)
-#define SB_ENERGY_NUM_Y 		190
+#define SB_ENERGY_NUM_X 		(SB_ENERGY_GAUGE_X+4)
+#define SB_ENERGY_NUM_Y 		457
 
-#define SHIELD_GAUGE_X 			146
-#define SHIELD_GAUGE_Y			155
-#define SHIELD_GAUGE_W 			35
-#define SHIELD_GAUGE_H			32 
+#define SHIELD_GAUGE_X 			292
+#define SHIELD_GAUGE_Y			374
+#define SHIELD_GAUGE_W 			70		// so say Adam
+#define SHIELD_GAUGE_H			77 		// so say Adam
 
-#define SHIP_GAUGE_X 			(SHIELD_GAUGE_X+5)
-#define SHIP_GAUGE_Y				(SHIELD_GAUGE_Y+5)
+#define SHIP_GAUGE_X 			(SHIELD_GAUGE_X+11)
+#define SHIP_GAUGE_Y			(SHIELD_GAUGE_Y+10)
 
-#define SB_SHIELD_GAUGE_X 		123		//139
-#define SB_SHIELD_GAUGE_Y 		163
+#define SB_SHIELD_GAUGE_X 		247		//139
+#define SB_SHIELD_GAUGE_Y 		395
 
-#define SB_SHIP_GAUGE_X 		(SB_SHIELD_GAUGE_X+5)
-#define SB_SHIP_GAUGE_Y 		(SB_SHIELD_GAUGE_Y+5)
+#define SB_SHIP_GAUGE_X 		(SB_SHIELD_GAUGE_X+11)
+#define SB_SHIP_GAUGE_Y 		(SB_SHIELD_GAUGE_Y+10)
 
-#define SB_SHIELD_NUM_X 		(SB_SHIELD_GAUGE_X+12)	//151
-#define SB_SHIELD_NUM_Y 		156
+#define SB_SHIELD_NUM_X 		(SB_SHIELD_GAUGE_X+21)	//151
+#define SB_SHIELD_NUM_Y 		(SB_SHIELD_GAUGE_Y-16)
 
-#define NUMERICAL_GAUGE_X		154
-#define NUMERICAL_GAUGE_Y		130
-#define NUMERICAL_GAUGE_W		19
-#define NUMERICAL_GAUGE_H		22
+#define NUMERICAL_GAUGE_X		308
+#define NUMERICAL_GAUGE_Y		316
+#define NUMERICAL_GAUGE_W		38		// so say Adam
+#define NUMERICAL_GAUGE_H		55		// so say Adam
 
-#define PRIMARY_W_PIC_X			64
-#define PRIMARY_W_PIC_Y			154
-#define PRIMARY_W_TEXT_X		87
-#define PRIMARY_W_TEXT_Y		157
-#define PRIMARY_AMMO_X			(96-3)
-#define PRIMARY_AMMO_Y			171
+#define PRIMARY_W_PIC_X			135
+#define PRIMARY_W_PIC_Y			370
+#define PRIMARY_W_TEXT_X		182
+#define PRIMARY_W_TEXT_Y		400
+#define PRIMARY_AMMO_X			186
+#define PRIMARY_AMMO_Y			420
 
-#define SECONDARY_W_PIC_X		234
-#define SECONDARY_W_PIC_Y		154
-#define SECONDARY_W_TEXT_X		207
-#define SECONDARY_W_TEXT_Y		157
-#define SECONDARY_AMMO_X		213
-#define SECONDARY_AMMO_Y		171
+#define SECONDARY_W_PIC_X		405
+#define SECONDARY_W_PIC_Y		370
+#define SECONDARY_W_TEXT_X		462
+#define SECONDARY_W_TEXT_Y		400
+#define SECONDARY_AMMO_X		475
+#define SECONDARY_AMMO_Y		425
 
-#define SB_LIVES_X				266
-#define SB_LIVES_Y				185
-#define SB_LIVES_LABEL_X		237
+#define SB_LIVES_X				550
+#define SB_LIVES_Y				450
+#define SB_LIVES_LABEL_X		475
 #define SB_LIVES_LABEL_Y		(SB_LIVES_Y+1)
 
-#define SB_SCORE_RIGHT			301
-#define SB_SCORE_Y				158
-#define SB_SCORE_LABEL_X		237
+#define SB_SCORE_RIGHT			605
+#define SB_SCORE_Y				398
+#define SB_SCORE_LABEL_X		475
 
-#define SB_SCORE_ADDED_RIGHT	301
-#define SB_SCORE_ADDED_Y		165
+#define SB_SCORE_ADDED_RIGHT	605
+#define SB_SCORE_ADDED_Y		413
 
 static int score_display;
 static fix score_time;
@@ -446,132 +506,187 @@ typedef struct span {
 
 //store delta x values from left of box
 span weapon_window_left[] = {		//first span 67,154
-		{4,53},
-		{4,53},
-		{4,53},
-		{4,53},
-		{4,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{3,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{2,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{1,53},
-		{0,53},
-		{0,53},
-		{0,53},
-		{0,53},
-		{0,52},
-		{1,52},
-		{2,51},
-		{3,51},
-		{4,50},
-		{5,50},
-	};
+		{22,92},		{21,92},
+		{20,92},		{19,92},
+		{18,92},		{17,92},
+		{16,92},		{15,92},
+		{14,92},		{13,92},
+
+		{12,92},		{10,92},
+
+// start of non-beveled edges
+
+		{9,118},		{9,118},
+		{9,118},		{9,118},
+		{9,118},		{9,118},
+		{9,118},		{9,118},
+		{9,118},		{9,118},
+
+		{9,118},		{9,118},
+		{8,118},		{8,118},
+		{8,118},		{8,118},
+		{8,118},		{8,118},
+		{8,118},		{8,118},
+
+		{8,118},		{8,118},
+		{8,118},		{8,118},
+		{7,118},		{7,118},
+		{7,118},		{7,118},
+		{7,118},		{7,118},
+
+		{7,118},		{7,118},
+		{7,118},		{7,118},
+		{7,118},		{7,118},
+		{6,118},		{6,118},
+		{6,118},		{6,118},
+
+		{6,118},		{6,118},
+		{6,118},		{6,118},
+		{6,118},		{6,118},
+		{6,118},		{6,118},
+		{5,118},		{5,118},
+
+		{5,118},		{5,118},
+		{5,118},		{5,118},
+		{5,118},		{5,118},
+		{5,118},		{5,118},
+		{5,118},		{5,118},
+
+		{4,118},		{4,118},
+		{4,118},		{4,118},
+		{4,118},		{4,118},
+		{4,118},		{4,118},
+		{4,118},		{4,118},
+
+		{4,118},		{4,118},
+		{3,118},		{3,118},
+		{3,118},		{3,118},
+		{3,118},		{3,118},
+		{3,118},		{3,118},
+
+		{3,118},		{3,118},
+
+// start of bevelled edge
+
+		{3,118},		{3,118},
+		{3,118},		{4,92},
+		{5,92},			{6,92},
+		{7,92},	 		{8,92},
+		{9,92},			{10,92},
+
+		{11,92},		{12,92}
+
+};
 
 
 //store delta x values from left of box
 span weapon_window_right[] = {		//first span 207,154
-		{208-202,255-202},
-		{206-202,257-202},
-		{205-202,258-202},
-		{204-202,259-202},
-		{203-202,260-202},
-		{203-202,260-202},
-		{203-202,260-202},
-		{203-202,260-202},
-		{203-202,260-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,261-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{203-202,262-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{204-202,263-202},
-		{205-202,263-202},
-		{206-202,262-202},
-		{207-202,261-202},
-		{208-202,260-202},
-		{211-202,255-202},
-	};
+
+		{12,94},		{11, 94},
+		{10,94},		{9, 94},
+		{8,94},		{7, 94},
+		{6,94},		{5, 94},
+		{4,94},		{3, 94},
+		{2,94},		{1, 94},
+		{0,94},		{0, 94},
+
+// begin non-bevelled edges
+
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+		{0,120},		{0, 120},
+
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+		{1,120},		{1, 120},
+
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+		{2,120},		{2, 120},
+
+		{3,120},		{3, 120},
+		{3,120},		{3, 120},
+		{3,120},		{3, 120},
+		{3,120},		{3, 120},
+		{3,120},		{3, 120},
+
+		{3,120},		{3, 120},
+		{3,120},		{3, 120},
+		
+// start of bevelled edge again
+
+		{3, 94},		{4, 94},
+		{5, 94},		{6, 94},
+		{7, 94},		{8, 94},
+		{9, 94},		{10, 94},
+		{11, 94},		{12, 94},
+		{13, 94},		{14, 94},
+		{15, 94},		{16, 94},
+		{17, 94},		{18, 94},
+		{19, 94},		{20, 94},
+};
 
 											
 #define N_LEFT_WINDOW_SPANS  (sizeof(weapon_window_left)/sizeof(*weapon_window_left))
 #define N_RIGHT_WINDOW_SPANS (sizeof(weapon_window_right)/sizeof(*weapon_window_right))
 
-#define PRIMARY_W_BOX_LEFT		63
-#define PRIMARY_W_BOX_TOP		154
-#define PRIMARY_W_BOX_RIGHT	(PRIMARY_W_BOX_LEFT+58)
-#define PRIMARY_W_BOX_BOT		(PRIMARY_W_BOX_TOP+N_LEFT_WINDOW_SPANS-1)
+#define PRIMARY_W_BOX_LEFT		129
+#define PRIMARY_W_BOX_TOP		364
+#define PRIMARY_W_BOX_RIGHT		241
+#define PRIMARY_W_BOX_BOT		470
 											
-#define SECONDARY_W_BOX_LEFT	202	//207
-#define SECONDARY_W_BOX_TOP	151
-#define SECONDARY_W_BOX_RIGHT	263	//(SECONDARY_W_BOX_LEFT+54)
-#define SECONDARY_W_BOX_BOT	(SECONDARY_W_BOX_TOP+N_RIGHT_WINDOW_SPANS-1)
-
-#define SB_PRIMARY_W_BOX_LEFT		34		//50
-#define SB_PRIMARY_W_BOX_TOP		153
-#define SB_PRIMARY_W_BOX_RIGHT	(SB_PRIMARY_W_BOX_LEFT+53)
-#define SB_PRIMARY_W_BOX_BOT		(195)
-											
-#define SB_SECONDARY_W_BOX_LEFT	169	//210
-#define SB_SECONDARY_W_BOX_TOP	153
-#define SB_SECONDARY_W_BOX_RIGHT	(SB_SECONDARY_W_BOX_LEFT+54)
-#define SB_SECONDARY_W_BOX_BOT	(153+43)
+#define SB_PRIMARY_W_BOX_LEFT		68
+#define SB_PRIMARY_W_BOX_TOP		381
+#define SB_PRIMARY_W_BOX_RIGHT		179
+#define SB_PRIMARY_W_BOX_BOT		473
 
 #define SB_PRIMARY_W_PIC_X			(SB_PRIMARY_W_BOX_LEFT+1)	//51
-#define SB_PRIMARY_W_PIC_Y			154
-#define SB_PRIMARY_W_TEXT_X		(SB_PRIMARY_W_BOX_LEFT+24)	//(51+23)
-#define SB_PRIMARY_W_TEXT_Y		157
-#define SB_PRIMARY_AMMO_X			((SB_PRIMARY_W_BOX_LEFT+33)-3)	//(51+32)
-#define SB_PRIMARY_AMMO_Y			171
+#define SB_PRIMARY_W_PIC_Y			382
+#define SB_PRIMARY_W_TEXT_X			(SB_PRIMARY_W_BOX_LEFT+50)	//(51+23)
+#define SB_PRIMARY_W_TEXT_Y			390
+#define SB_PRIMARY_AMMO_X			(SB_PRIMARY_W_BOX_LEFT+58)	//(51+32)
+#define SB_PRIMARY_AMMO_Y			410
 
-#define SB_SECONDARY_W_PIC_X		(SB_SECONDARY_W_BOX_LEFT+29)	//(212+27)
-#define SB_SECONDARY_W_PIC_Y		154
+#define SECONDARY_W_BOX_LEFT	403
+#define SECONDARY_W_BOX_TOP		364
+#define SECONDARY_W_BOX_RIGHT	531
+#define SECONDARY_W_BOX_BOT		470
+
+#define SB_SECONDARY_W_BOX_LEFT		338
+#define SB_SECONDARY_W_BOX_TOP		381
+#define SB_SECONDARY_W_BOX_RIGHT	449
+#define SB_SECONDARY_W_BOX_BOT		473
+
+#define SB_SECONDARY_W_PIC_X		385
+#define SB_SECONDARY_W_PIC_Y		382
 #define SB_SECONDARY_W_TEXT_X		(SB_SECONDARY_W_BOX_LEFT+2)	//212
-#define SB_SECONDARY_W_TEXT_Y		157
-#define SB_SECONDARY_AMMO_X		(SB_SECONDARY_W_BOX_LEFT+11)	//(212+9)
-#define SB_SECONDARY_AMMO_Y		171
+#define SB_SECONDARY_W_TEXT_Y		389
+#define SB_SECONDARY_AMMO_X			(SB_SECONDARY_W_BOX_LEFT+14)	//(212+9)
+#define SB_SECONDARY_AMMO_Y			414
 
 typedef struct gauge_box {
 	int left,top;
@@ -595,7 +710,6 @@ int	Color_0_31_0 = -1;
 //copy a box from the off-screen buffer to the visible page
 copy_gauge_box(gauge_box *box,grs_bitmap *bm)
 {
-
 	if (box->spanlist) {
 		int n_spans = box->bot-box->top+1;
 		int cnt,y;
@@ -614,7 +728,7 @@ copy_gauge_box(gauge_box *box,grs_bitmap *bm)
 }
 
 //fills in the coords of the hostage video window
-get_hostage_window_coords(int *x,int *y,int *w,int *h)
+void get_hostage_window_coords(int *x,int *y,int *w,int *h)
 {
 	if (Cockpit_mode == CM_STATUS_BAR) {
 		*x = SB_SECONDARY_W_BOX_LEFT;
@@ -648,7 +762,10 @@ void hud_show_score()
 	if ((HUD_nmessages > 0) && (strlen(HUD_messages[hud_first]) > 38))
 		return;
 
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double)
+		gr_set_curfont( GAME_FONT_PC );
+	else
+		gr_set_curfont( GAME_FONT );
 
 	if ( ((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP)) ) {
 		sprintf(score_str, "%s: %5d", TXT_KILLS, Players[Player_num].net_kills_total);
@@ -676,7 +793,10 @@ void hud_show_score_added()
 	if (score_display == 0)
 		return;
 
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double)
+		gr_set_curfont( GAME_FONT_PC );
+	else
+		gr_set_curfont( GAME_FONT );
 
 	score_time -= FrameTime;
 	if (score_time > 0) {
@@ -848,19 +968,19 @@ void show_homing_warning(void)
 		if (GameTime & 0x4000) {
 			if (Last_homing_warning_shown[VR_current_page] != 1) {
 				PIGGY_PAGE_IN(Gauges[GAUGE_HOMING_WARNING_ON]);
-				gr_ubitmapm( 7, 171, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_ON].index]);
+				gr_ubitmapm( 14, 415, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_ON].index]);
 				Last_homing_warning_shown[VR_current_page] = 1;
 			}
 		} else {
 			if (Last_homing_warning_shown[VR_current_page] != 0) {
 				PIGGY_PAGE_IN(Gauges[GAUGE_HOMING_WARNING_OFF]);
-				gr_ubitmapm( 7, 171, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_OFF].index] );
+				gr_ubitmapm( 14, 415, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_OFF].index] );
 				Last_homing_warning_shown[VR_current_page] = 0;
 			}
 		}
 	} else if (Last_homing_warning_shown[VR_current_page] != 0) {
 		PIGGY_PAGE_IN(Gauges[GAUGE_HOMING_WARNING_OFF]);
-		gr_ubitmapm( 7, 171, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_OFF].index] );
+		gr_ubitmapm( 14, 415, &GameBitmaps[Gauges[GAUGE_HOMING_WARNING_OFF].index] );
 		Last_homing_warning_shown[VR_current_page] = 0;
 	}
 
@@ -874,9 +994,15 @@ void hud_show_homing_warning(void)
 
 		if (GameTime & 0x4000) {
 			//gr_set_current_canvas(&VR_render_sub_buffer[0]);	//render off-screen
-			gr_set_curfont( GAME_FONT );
+			if (Scanline_double)
+				gr_set_curfont( GAME_FONT_PC );
+			else
+				gr_set_curfont( GAME_FONT );
 			gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
-			gr_printf(0x8000, grd_curcanv->cv_h-8,TXT_LOCK);
+			if (Scanline_double)
+				gr_printf(0x8000, grd_curcanv->cv_h-8,TXT_LOCK);
+			else
+				gr_printf(0x8000, grd_curcanv->cv_h-16,TXT_LOCK);
 		}
 	}
 }
@@ -885,32 +1011,57 @@ void hud_show_keys(void)
 {
 
 	if (Players[Player_num].flags & PLAYER_FLAGS_BLUE_KEY) {
-		PIGGY_PAGE_IN(Gauges[KEY_ICON_BLUE]);
-		gr_ubitmapm(2,24,&GameBitmaps[Gauges[KEY_ICON_BLUE].index]);
+		if (Scanline_double) {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_BLUE_PC]);
+			gr_ubitmapm(2,24,&GameBitmaps[Gauges[KEY_ICON_BLUE_PC].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_BLUE]);
+			gr_ubitmapm(4,58,&GameBitmaps[Gauges[KEY_ICON_BLUE].index]);
+		}
 
 	}
 
 	if (Players[Player_num].flags & PLAYER_FLAGS_GOLD_KEY) {
-		PIGGY_PAGE_IN(Gauges[KEY_ICON_YELLOW]);
-		gr_ubitmapm(10,24,&GameBitmaps[Gauges[KEY_ICON_YELLOW].index]);
+		if (Scanline_double) {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_YELLOW_PC]);
+			gr_ubitmapm(10,24,&GameBitmaps[Gauges[KEY_ICON_YELLOW_PC].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_YELLOW]);
+			gr_ubitmapm(20,58,&GameBitmaps[Gauges[KEY_ICON_YELLOW].index]);
+		}
 	}
 
 	if (Players[Player_num].flags & PLAYER_FLAGS_RED_KEY) {
-		PIGGY_PAGE_IN(Gauges[KEY_ICON_RED]);
-		gr_ubitmapm(18,24,&GameBitmaps[Gauges[KEY_ICON_RED].index]);
+		if (Scanline_double) {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_RED_PC]);
+			gr_ubitmapm(18,24,&GameBitmaps[Gauges[KEY_ICON_RED_PC].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[KEY_ICON_RED]);
+			gr_ubitmapm(36,58,&GameBitmaps[Gauges[KEY_ICON_RED].index]);
+		}
 	}
 
 }
 
 void hud_show_energy(void)
 {
+	int h1, h2;
+	
 	//gr_set_current_canvas(&VR_render_sub_buffer[0]);	//render off-screen
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double) {
+		gr_set_curfont( GAME_FONT_PC );
+		h1 = grd_curcanv->cv_h - 40;
+		h2 = grd_curcanv->cv_h - 8;
+	} else {
+		gr_set_curfont( GAME_FONT );
+		h1 = grd_curcanv->cv_h - 96;
+		h2 = grd_curcanv->cv_h - 19;
+	}
 	gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
 	if (Game_mode & GM_MULTI)
-		gr_printf(2, grd_curcanv->cv_h-40,"%s: %i", TXT_ENERGY, f2ir(Players[Player_num].energy));
+		gr_printf(2, h1,"%s: %i", TXT_ENERGY, f2ir(Players[Player_num].energy));
 	else
-		gr_printf(2, grd_curcanv->cv_h-8,"%s: %i", TXT_ENERGY, f2ir(Players[Player_num].energy));
+		gr_printf(2, h2,"%s: %i", TXT_ENERGY, f2ir(Players[Player_num].energy));
 
 	if (Newdemo_state==ND_STATE_RECORDING ) {
 		int energy = f2ir(Players[Player_num].energy);
@@ -933,17 +1084,22 @@ void hud_show_weapons(void)
 	char	weapon_str[32], temp_str[10];
 
 //	gr_set_current_canvas(&VR_render_sub_buffer[0]);	//render off-screen
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double) {
+		gr_set_curfont( GAME_FONT_PC );
+		if (Game_mode & GM_MULTI)
+			y = grd_curcanv->cv_h-32;
+		else
+			y = grd_curcanv->cv_h;
+		y -= 16;
+	} else {
+		gr_set_curfont( GAME_FONT );
+		if (Game_mode & GM_MULTI)
+			y = grd_curcanv->cv_h-76;
+		else
+			y = grd_curcanv->cv_h;
+		y -= 38;
+	}
 	gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
-
-	if (Game_mode & GM_MULTI)
-		y = grd_curcanv->cv_h-32;
-	else
-		y = grd_curcanv->cv_h;
-
-//	#ifndef RELEASE
-	y -= 8;
-//	#endif
 
 	switch (Primary_weapon) {
 		case 0:
@@ -958,7 +1114,7 @@ void hud_show_weapons(void)
 		case 2:
 			strcpy(weapon_str, TXT_W_SPREADFIRE_S);
 			break;
-		#ifndef SHAREWARE
+		#ifndef MAC_SHAREWARE
 		case 3:
 			strcpy(weapon_str, TXT_W_PLASMA_S);
 			break;
@@ -969,7 +1125,11 @@ void hud_show_weapons(void)
 	}
 
 	gr_get_string_size(weapon_str, &w, &h, &aw );
-	gr_printf(grd_curcanv->cv_w-5-w, y-8, weapon_str);
+	gr_printf(grd_curcanv->cv_w-w-5, y, weapon_str);
+	if (Scanline_double)
+		y += 8;
+	else
+		y += 16;
 
 	if (Primary_weapon == VULCAN_INDEX) {
 
@@ -986,7 +1146,7 @@ void hud_show_weapons(void)
 		case 0:	strcpy(weapon_str, TXT_CONCUSSION);	break;
 		case 1:	strcpy(weapon_str, TXT_HOMING);	break;
 		case 2:	strcpy(weapon_str, TXT_PROXBOMB   );	break;
-		#ifndef SHAREWARE
+		#ifndef MAC_SHAREWARE
 		case 3:	strcpy(weapon_str, TXT_SMART);	break;
 		case 4:	strcpy(weapon_str, TXT_MEGA);	break;
 		#endif
@@ -1002,32 +1162,45 @@ void hud_show_weapons(void)
 #endif
 
 	strcat(weapon_str, " ");
-	strcat(weapon_str, itoa(Players[Player_num].secondary_ammo[Secondary_weapon], temp_str, 10));
+	sprintf(weapon_str, "%s%d", weapon_str, Players[Player_num].secondary_ammo[Secondary_weapon]);
+//	strcat(weapon_str, itoa(Players[Player_num].secondary_ammo[Secondary_weapon], temp_str, 10));
 	gr_get_string_size(weapon_str, &w, &h, &aw );
-	gr_printf(grd_curcanv->cv_w-5-w, y, weapon_str);
+	gr_printf(grd_curcanv->cv_w-w-5, y, weapon_str);
 }
 
 void hud_show_cloak_invuln(void)
 {
-	if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED) {
-		int	y = grd_curcanv->cv_h;
+	int	y = grd_curcanv->cv_h;
 
-		if (Game_mode & GM_MULTI)
-			y -= 72;
-		else
-			y -= 32;
+	if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED) {
+		if (Scanline_double) {
+			if (Game_mode & GM_MULTI)
+				y -= 72;
+			else
+				y -= 32;
+		} else {
+			if (Game_mode & GM_MULTI)
+				y -= 172;
+			else
+				y -= 76;
+		}
 
 		if ((Players[Player_num].cloak_time+CLOAK_TIME_MAX - GameTime > F1_0*3 ) || (GameTime & 0x8000))
 			gr_printf(2, y, "%s", TXT_CLOAKED);
 	}
 
 	if (Players[Player_num].flags & PLAYER_FLAGS_INVULNERABLE) {
-		int	y = grd_curcanv->cv_h;
-
-		if (Game_mode & GM_MULTI)
-			y -= 80;
-		else
-			y -= 40;
+		if (Scanline_double) {
+			if (Game_mode & GM_MULTI)
+				y -= 80;
+			else
+				y -= 40;
+		} else {
+			if (Game_mode & GM_MULTI)
+				y -= 192;
+			else
+				y -= 96;
+		}
 
 		if (((Players[Player_num].invulnerable_time + INVULNERABLE_TIME_MAX - GameTime) > F1_0*4) || (GameTime & 0x8000))
 			gr_printf(2, y, "%s", TXT_INVULNERABLE);
@@ -1037,19 +1210,30 @@ void hud_show_cloak_invuln(void)
 
 void hud_show_shield(void)
 {
+	int h1, h2;
+	
 //	gr_set_current_canvas(&VR_render_sub_buffer[0]);	//render off-screen
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double) {
+		gr_set_curfont( GAME_FONT_PC );
+		h1 = grd_curcanv->cv_h - 48;
+		h2 = grd_curcanv->cv_h - 16;
+	} else {
+		gr_set_curfont( GAME_FONT );
+		h1 = grd_curcanv->cv_h - 115;
+		h2 = grd_curcanv->cv_h - 38;
+	}
+
 	gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
 	if ( Players[Player_num].shields >= 0 )	{
 		if (Game_mode & GM_MULTI)
-			gr_printf(2, grd_curcanv->cv_h-48,"%s: %i", TXT_SHIELD, f2ir(Players[Player_num].shields));
+			gr_printf(2, h1,"%s: %i", TXT_SHIELD, f2ir(Players[Player_num].shields));
 		else
-			gr_printf(2, grd_curcanv->cv_h-16,"%s: %i", TXT_SHIELD, f2ir(Players[Player_num].shields));
+			gr_printf(2, h2,"%s: %i", TXT_SHIELD, f2ir(Players[Player_num].shields));
 	} else {
 		if (Game_mode & GM_MULTI)
-			gr_printf(2, grd_curcanv->cv_h-48,"%s: 0", TXT_SHIELD );
+			gr_printf(2, h1,"%s: 0", TXT_SHIELD );
 		else
-			gr_printf(2, grd_curcanv->cv_h-16,"%s: 0", TXT_SHIELD );
+			gr_printf(2, h2,"%s: 0", TXT_SHIELD );
 	}
 
 	if (Newdemo_state==ND_STATE_RECORDING ) {
@@ -1072,17 +1256,26 @@ hud_show_lives()
 	if ((HUD_nmessages > 0) && (strlen(HUD_messages[hud_first]) > 38))
 		return;
 
-	if (Game_mode & GM_MULTI) {
+	if (Scanline_double)
+		gr_set_curfont( GAME_FONT_PC );
+	else
 		gr_set_curfont( GAME_FONT );
+
+	if (Game_mode & GM_MULTI) {
 		gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
 		gr_printf(10, 3, "%s: %d", TXT_DEATHS, Players[Player_num].net_killed_total);
 	} 
 	else if (Players[Player_num].lives > 1)  {
-		gr_set_curfont( GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(0,20,0),-1 );
-		PIGGY_PAGE_IN(Gauges[GAUGE_LIVES]);
-		gr_ubitmapm(10,3,&GameBitmaps[Gauges[GAUGE_LIVES].index]);
-		gr_printf(22, 3, "x %d", Players[Player_num].lives-1);
+		if (Scanline_double) {
+			PIGGY_PAGE_IN(Gauges[GAUGE_LIVES_PC]);
+			gr_ubitmapm(10,3,&GameBitmaps[Gauges[GAUGE_LIVES_PC].index]);
+			gr_printf(22, 3, "x %d", Players[Player_num].lives-1);
+		} else {
+			PIGGY_PAGE_IN(Gauges[GAUGE_LIVES]);
+			gr_ubitmapm(20,7,&GameBitmaps[Gauges[GAUGE_LIVES].index]);
+			gr_printf(44, 7, "x %d", Players[Player_num].lives-1);
+		}
 	}
 
 }
@@ -1126,14 +1319,14 @@ sb_show_lives()
 		//erase old icons
 
 		gr_setcolor(BM_XRGB(0,0,0));
-		gr_rect(x, y, x+32, y+bm->bm_h);
+		gr_rect(x, y, x+60, y+bm->bm_h);
 
 		if (Players[Player_num].lives-1 > 0) {
 			gr_set_curfont( GAME_FONT );
 			gr_set_fontcolor(gr_getcolor(0,20,0),-1 );
 			PIGGY_PAGE_IN(Gauges[GAUGE_LIVES]);
 			gr_ubitmapm(x, y,bm);
-			gr_printf(x+12, y, "x %d", Players[Player_num].lives-1);
+			gr_printf(x+20, y, "x %d", Players[Player_num].lives-1);
 		}
 	}
 
@@ -1146,30 +1339,37 @@ sb_show_lives()
 
 #ifdef PIGGY_USE_PAGING
 extern int Piggy_bitmap_cache_next;
+extern int Free_heap_space;
 #endif
+
 
 void show_time()
 {
 	int secs = f2i(Players[Player_num].time_level) % 60;
 	int mins = f2i(Players[Player_num].time_level) / 60;
 
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double)
+		gr_set_curfont( GAME_FONT_PC );
+	else
+		gr_set_curfont( GAME_FONT );
 
 	if (Color_0_31_0 == -1)
 		Color_0_31_0 = gr_getcolor(0,31,0);
 	gr_set_fontcolor(Color_0_31_0, -1 );
 
-	gr_printf(grd_curcanv->cv_w-25,grd_curcanv->cv_h-28,"%d:%02d", mins, secs);
+	gr_printf(grd_curcanv->cv_w-25,grd_curcanv->cv_h*2/3,"%d:%02d", mins, secs);
 
 #ifdef PIGGY_USE_PAGING
 	{
 		char text[25];
 		int w,h,aw;
-		sprintf( text, "%d KB", Piggy_bitmap_cache_next/1024 );
+//		sprintf( text, "%d KB", Piggy_bitmap_cache_next/1024 );
+		sprintf( text, "%d KB", Free_heap_space/1024 );
 		gr_get_string_size( text, &w, &h, &aw );	
 		gr_printf(grd_curcanv->cv_w-10-w,grd_curcanv->cv_h/2, text );
 	}
 #endif
+
 
 }
 #endif
@@ -1199,7 +1399,7 @@ void add_points_to_score(int points)
 		newdemo_record_player_score(points);
 #endif
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI_COOP)
 		multi_send_score();
@@ -1295,18 +1495,18 @@ void draw_energy_bar(int energy)
 	gr_set_current_canvas( Canv_LeftEnergyGauge );
 	PIGGY_PAGE_IN(Gauges[GAUGE_ENERGY_LEFT]);
 	gr_ubitmapm( 0, 0, &GameBitmaps[Gauges[GAUGE_ENERGY_LEFT].index] );
-	gr_setcolor( 0 );
+	gr_setcolor( BM_XRGB(0,0,0) );
 
-	not_energy = 61 - (energy*61)/100;
+	not_energy = 125 - (energy*125)/100;
 
 	if (energy < 100)
-		for (y=0; y<8; y++) {
-			x1 = 7 - y;
-			x2 = 7 - y + not_energy;
+		for (y=0; y<21; y++) {
+			x1 = 20 - y;
+			x2 = 20 - y + not_energy;
 	
-			if ( y>=0 && y<2 ) if (x2 > LEFT_ENERGY_GAUGE_W - 1) x2 = LEFT_ENERGY_GAUGE_W - 1;
-			if ( y>=2 && y<6 ) if (x2 > LEFT_ENERGY_GAUGE_W - 2) x2 = LEFT_ENERGY_GAUGE_W - 2;
-			if ( y>=6 ) if (x2 > LEFT_ENERGY_GAUGE_W - 3) x2 = LEFT_ENERGY_GAUGE_W - 3;
+			if ( y>=0 && y<5 ) if (x2 > LEFT_ENERGY_GAUGE_W - 1) x2 = LEFT_ENERGY_GAUGE_W - 1;
+			if ( y>=5 && y<16 ) if (x2 > LEFT_ENERGY_GAUGE_W - 2) x2 = LEFT_ENERGY_GAUGE_W - 2;
+			if ( y>=16 ) if (x2 > LEFT_ENERGY_GAUGE_W - 3) x2 = LEFT_ENERGY_GAUGE_W - 3;
 			
 			if (x2 > x1) gr_uscanline( x1, x2, y ); 
 		}
@@ -1318,15 +1518,16 @@ void draw_energy_bar(int energy)
 	gr_set_current_canvas( Canv_RightEnergyGauge );
 	PIGGY_PAGE_IN(Gauges[GAUGE_ENERGY_RIGHT]);
 	gr_ubitmapm( 0, 0, &GameBitmaps[Gauges[GAUGE_ENERGY_RIGHT].index] );
+	gr_setcolor( BM_XRGB(0,0,0) );
 
 	if (energy < 100)
-		for (y=0; y<8; y++) {
-			x1 = RIGHT_ENERGY_GAUGE_W - 8 + y - not_energy;
-			x2 = RIGHT_ENERGY_GAUGE_W - 8 + y;
+		for (y=0; y<21; y++) {
+			x1 = RIGHT_ENERGY_GAUGE_W - 21 + y - not_energy;
+			x2 = RIGHT_ENERGY_GAUGE_W - 21 + y;
 	
-			if ( y>=0 && y<2 ) if (x1 < 0) x1 = 0;
-			if ( y>=2 && y<6 ) if (x1 < 1) x1 = 1;
-			if ( y>=6 ) if (x1 < 2) x1 = 2;
+			if ( y>=0 && y<5 ) if (x1 < 0) x1 = 0;
+			if ( y>=5 && y<16 ) if (x1 < 1) x1 = 1;
+			if ( y>=16 ) if (x1 < 2) x1 = 2;
 			
 			if (x2 > x1) gr_uscanline( x1, x2, y ); 
 		}
@@ -1430,10 +1631,10 @@ void draw_numerical_display(int shield, int energy)
 
 	gr_set_fontcolor(gr_getcolor(14,14,23),-1 );
 
-	gr_printf((shield>99)?3:((shield>9)?5:7),15,"%d",shield);
+	gr_printf((shield>99)?7:((shield>9)?11:15),33,"%d",shield);
 
 	gr_set_fontcolor(gr_getcolor(25,18,6),-1 );
-	gr_printf((energy>99)?3:((energy>9)?5:7),2,"%d",energy);
+	gr_printf((energy>99)?7:((energy>9)?11:15),4,"%d",energy);
 					  
 	gr_set_current_canvas( get_current_game_screen() );
 	gr_ubitmapm( NUMERICAL_GAUGE_X, NUMERICAL_GAUGE_Y, &Canv_NumericalGauge->cv_bitmap );
@@ -1473,7 +1674,7 @@ void draw_keys()
 draw_weapon_info_sub(int info_index,gauge_box *box,int pic_x,int pic_y,char *name,int text_x,int text_y)
 {
 	grs_bitmap *bm;
-	char *p;
+	char *p, tmp;
 
 	//clear the window
 	gr_setcolor(BM_XRGB(0,0,0));
@@ -1492,8 +1693,15 @@ draw_weapon_info_sub(int info_index,gauge_box *box,int pic_x,int pic_y,char *nam
 		gr_printf(text_x,text_y,name);
 		gr_printf(text_x,text_y+grd_curcanv->cv_font->ft_h+1,p+1);
 		*p='\n';
-	} else
-		gr_printf(text_x,text_y,name);
+	} else {
+		if (!stricmp(name, "spreadfire")) {
+			tmp = name[6];
+			name[6] = '\0';
+			gr_printf(text_x, text_y, name);
+			name[6] = tmp;
+		} else
+			gr_printf(text_x,text_y,name);
+	}
 
 	//	For laser, show level and quadness
 	if (info_index == 0) {
@@ -1503,11 +1711,11 @@ draw_weapon_info_sub(int info_index,gauge_box *box,int pic_x,int pic_y,char *nam
 
 		temp_str[5] = Players[Player_num].laser_level+1 + '0';
 
-		gr_printf(text_x,text_y+8, temp_str);
+		gr_printf(text_x,text_y+grd_curcanv->cv_font->ft_h+1, temp_str);
 
 		if (Players[Player_num].flags & PLAYER_FLAGS_QUAD_LASERS) {
 			strcpy(temp_str, TXT_QUAD);
-			gr_printf(text_x,text_y+16, temp_str);
+			gr_printf(text_x,text_y+grd_curcanv->cv_font->ft_h+2 + grd_curcanv->cv_font->ft_h+2, temp_str);
 		}
 
 	}
@@ -1554,9 +1762,9 @@ draw_ammo_info(int x,int y,int ammo_count,int primary)
 	int w;
 
 	if (primary)
-		w = (grd_curcanv->cv_font->ft_w*6)/2;
+		w = (grd_curcanv->cv_font->ft_w*7)/2;
 	else
-		w = (grd_curcanv->cv_font->ft_w*5)/2;
+		w = (grd_curcanv->cv_font->ft_w*4)/2;
 
 	gr_setcolor(BM_XRGB(0,0,0));
 	gr_rect(x,y,x+w,y+grd_curcanv->cv_font->ft_h);
@@ -1691,7 +1899,7 @@ sb_draw_energy_bar(energy)
 	erase_height = (100 - energy) * SB_ENERGY_GAUGE_H / 100;
 
 	if (erase_height > 0) {
-		gr_setcolor( 0 );
+		gr_setcolor( BM_XRGB(0,0,0) );
 		gr_rect(0,0,SB_ENERGY_GAUGE_W-1,erase_height-1);
 	}
 
@@ -1700,7 +1908,7 @@ sb_draw_energy_bar(energy)
 
 	//draw numbers
 	gr_set_fontcolor(gr_getcolor(25,18,6),-1 );
-	gr_printf((energy>99)?SB_ENERGY_NUM_X:((energy>9)?SB_ENERGY_NUM_X+2:SB_ENERGY_NUM_X+4),SB_ENERGY_NUM_Y,"%d",energy);
+	gr_printf((energy>99)?SB_ENERGY_NUM_X:((energy>9)?SB_ENERGY_NUM_X+5:SB_ENERGY_NUM_X+10),SB_ENERGY_NUM_Y,"%d",energy);
 					  
 }
 
@@ -1716,9 +1924,9 @@ sb_draw_shield_num(int shield)
 	//erase old one
 	PIGGY_PAGE_IN( cockpit_bitmap[Cockpit_mode] );
 	gr_setcolor(gr_gpixel(bm,SB_SHIELD_NUM_X,SB_SHIELD_NUM_Y-(VR_render_height-bm->bm_h)));
-	gr_rect(SB_SHIELD_NUM_X,SB_SHIELD_NUM_Y,SB_SHIELD_NUM_X+13,SB_SHIELD_NUM_Y+GAME_FONT->ft_h);
+	gr_rect(SB_SHIELD_NUM_X,SB_SHIELD_NUM_Y,SB_SHIELD_NUM_X+31,SB_SHIELD_NUM_Y+GAME_FONT->ft_h);
 
-	gr_printf((shield>99)?SB_SHIELD_NUM_X:((shield>9)?SB_SHIELD_NUM_X+2:SB_SHIELD_NUM_X+4),SB_SHIELD_NUM_Y,"%d",shield);
+	gr_printf((shield>99)?SB_SHIELD_NUM_X:((shield>9)?SB_SHIELD_NUM_X+5:SB_SHIELD_NUM_X+10),SB_SHIELD_NUM_Y,"%d",shield);
 }
 
 sb_draw_shield_bar(int shield)
@@ -1850,14 +2058,58 @@ show_reticle(int force_big_one)
 	Assert(primary_bm_num <= 2);
 	Assert(secondary_bm_num <= 4);
 	Assert(cross_bm_num <= 1);
+	
+	if (!Scanline_double) {
+		if (grd_curcanv->cv_bitmap.bm_w > 400 || force_big_one) {
+			PIGGY_PAGE_IN(Gauges[RETICLE_CROSS + cross_bm_num]);
+			gr_ubitmapm(x-8 ,y-5,&GameBitmaps[Gauges[RETICLE_CROSS + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY + primary_bm_num]);
+			gr_ubitmapm(x-30,y+14,&GameBitmaps[Gauges[RETICLE_PRIMARY + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY + secondary_bm_num]);
+			gr_ubitmapm(x-24,y+2,&GameBitmaps[Gauges[RETICLE_SECONDARY + secondary_bm_num].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[RETICLE_CROSS_PC + cross_bm_num]);
+			gr_ubitmapm(x-4 ,y-2,&GameBitmaps[Gauges[RETICLE_CROSS_PC + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY_PC + primary_bm_num]);
+			gr_ubitmapm(x-15,y+6,&GameBitmaps[Gauges[RETICLE_PRIMARY_PC + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY_PC + secondary_bm_num]);
+			gr_ubitmapm(x-12,y+1,&GameBitmaps[Gauges[RETICLE_SECONDARY_PC + secondary_bm_num].index]);
+		}
+	} else {
+		if (grd_curcanv->cv_bitmap.bm_w > 200 || force_big_one) {
+			PIGGY_PAGE_IN(Gauges[RETICLE_CROSS_PC + cross_bm_num]);
+			gr_ubitmapm(x-4 ,y-2,&GameBitmaps[Gauges[RETICLE_CROSS_PC + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY_PC + primary_bm_num]);
+			gr_ubitmapm(x-15,y+6,&GameBitmaps[Gauges[RETICLE_PRIMARY_PC + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY_PC + secondary_bm_num]);
+			gr_ubitmapm(x-12,y+1,&GameBitmaps[Gauges[RETICLE_SECONDARY_PC + secondary_bm_num].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[SML_RETICLE_CROSS + cross_bm_num]);
+			gr_ubitmapm(x-2,y-1,&GameBitmaps[Gauges[SML_RETICLE_CROSS + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[SML_RETICLE_PRIMARY + primary_bm_num]);
+			gr_ubitmapm(x-8,y+2,&GameBitmaps[Gauges[SML_RETICLE_PRIMARY + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[SML_RETICLE_SECONDARY + secondary_bm_num]);
+			gr_ubitmapm(x-6,y-2,&GameBitmaps[Gauges[SML_RETICLE_SECONDARY + secondary_bm_num].index]);
+		}
+	}
 
+#if 0
 	if (grd_curcanv->cv_bitmap.bm_w > 200 || force_big_one) {
-		PIGGY_PAGE_IN(Gauges[RETICLE_CROSS + cross_bm_num]);
-		gr_ubitmapm(x-4 ,y-2,&GameBitmaps[Gauges[RETICLE_CROSS + cross_bm_num].index]);
-		PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY + primary_bm_num]);
-		gr_ubitmapm(x-15,y+6,&GameBitmaps[Gauges[RETICLE_PRIMARY + primary_bm_num].index]);
-		PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY + secondary_bm_num]);
-		gr_ubitmapm(x-12,y+1,&GameBitmaps[Gauges[RETICLE_SECONDARY + secondary_bm_num].index]);
+		if (Scanline_double) {
+			PIGGY_PAGE_IN(Gauges[RETICLE_CROSS_PC + cross_bm_num]);
+			gr_ubitmapm(x-4 ,y-2,&GameBitmaps[Gauges[RETICLE_CROSS_PC + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY_PC + primary_bm_num]);
+			gr_ubitmapm(x-15,y+6,&GameBitmaps[Gauges[RETICLE_PRIMARY_PC + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY_PC + secondary_bm_num]);
+			gr_ubitmapm(x-12,y+1,&GameBitmaps[Gauges[RETICLE_SECONDARY_PC + secondary_bm_num].index]);
+		} else {
+			PIGGY_PAGE_IN(Gauges[RETICLE_CROSS + cross_bm_num]);
+			gr_ubitmapm(x-8 ,y-5,&GameBitmaps[Gauges[RETICLE_CROSS + cross_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_PRIMARY + primary_bm_num]);
+			gr_ubitmapm(x-30,y+14,&GameBitmaps[Gauges[RETICLE_PRIMARY + primary_bm_num].index]);
+			PIGGY_PAGE_IN(Gauges[RETICLE_SECONDARY + secondary_bm_num]);
+			gr_ubitmapm(x-24,y+2,&GameBitmaps[Gauges[RETICLE_SECONDARY + secondary_bm_num].index]);
+		}
 	}
 	else {
 		PIGGY_PAGE_IN(Gauges[SML_RETICLE_CROSS + cross_bm_num]);
@@ -1867,8 +2119,9 @@ show_reticle(int force_big_one)
 		PIGGY_PAGE_IN(Gauges[SML_RETICLE_SECONDARY + secondary_bm_num]);
 		gr_ubitmapm(x-6,y-2,&GameBitmaps[Gauges[SML_RETICLE_SECONDARY + secondary_bm_num].index]);
 	}
+#endif
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if ((Newdemo_state == ND_STATE_PLAYBACK) || (((Game_mode & GM_MULTI_COOP) || (Game_mode & GM_TEAM)) && Show_reticle_name))
 	{
@@ -1904,6 +2157,11 @@ show_reticle(int force_big_one)
 			if ((Game_mode & GM_TEAM) && (get_team(pnum) != get_team(Player_num)) && (Newdemo_state != ND_STATE_PLAYBACK))
 				return;
 
+			if (Scanline_double)
+				gr_set_curfont( GAME_FONT_PC );
+			else
+				gr_set_curfont( GAME_FONT );
+			
 			if (Game_mode & GM_TEAM)
 				color_num = get_team(pnum);
 			else
@@ -1913,6 +2171,8 @@ show_reticle(int force_big_one)
 			gr_set_fontcolor(gr_getcolor(player_rgb[color_num].r,player_rgb[color_num].g,player_rgb[color_num].b),-1 );
 			x1 = x-(w/2);
 			y1 = y+12;
+			if (!Scanline_double)
+				y1 += 12;
 			gr_string (x1, y1, s);
 //	 		}
 		}
@@ -1950,7 +2210,7 @@ hud_show_kill_list()
 			Show_kill_list = 0;
 	}
 	
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI_COOP)
 	{
 		Show_kill_list = 0;
@@ -1958,7 +2218,13 @@ hud_show_kill_list()
 	}
 #endif
 
-	gr_set_curfont( GAME_FONT );
+	if (Scanline_double) {
+		gr_set_curfont( GAME_FONT_PC );
+		fth = GAME_FONT_PC->ft_h;
+	} else {
+		gr_set_curfont( GAME_FONT );
+		fth = GAME_FONT->ft_h;
+	}
 
 	n_players = multi_get_kill_list(player_list);
 
@@ -1971,27 +2237,32 @@ hud_show_kill_list()
 		n_left = (n_players+1)/2;
 
 	//If font size changes, this code might not work right anymore 
-	Assert(GAME_FONT->ft_h==5 && GAME_FONT->ft_w==7);
-
-	fth = GAME_FONT->ft_h;
+//	Assert(GAME_FONT->ft_h==5 && GAME_FONT->ft_w==7);
 
 	x0 = 1; x1 = 43;
 
-#ifndef SHAREWARE
-	if (Game_mode & GM_MULTI_COOP)
+#ifndef MAC_SHAREWARE
+	if (Game_mode & GM_MULTI_COOP) {
 		x1 = 31;
+	}
 #endif
 
 	save_y = y = grd_curcanv->cv_h - n_left*(fth+1);
 
 	if (Cockpit_mode == CM_FULL_COCKPIT) {
 		save_y = y -= 6;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		if (Game_mode & GM_MULTI_COOP)
 			x1 = 33;
 		else
 #endif
 			x1 = 43;
+	}
+	
+	if (!Scanline_double) {
+		x0 *= 2;
+		x1 *= 2;
+		save_y = y -= 6;
 	}
 
 	for (i=0;i<n_players;i++) {
@@ -2004,13 +2275,26 @@ hud_show_kill_list()
 				x0 = grd_curcanv->cv_w - 53;
 			else
 				x0 = grd_curcanv->cv_w - 60;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 			if (Game_mode & GM_MULTI_COOP)
 				x1 = grd_curcanv->cv_w - 27;
 			else
 #endif
 				x1 = grd_curcanv->cv_w - 15;
 			y = save_y;
+			
+			if (!Scanline_double) {
+				if (Cockpit_mode == CM_FULL_COCKPIT)
+					x0 -= 53;
+				else
+					x0 -=  60;
+#ifndef MAC_SHAREWARE
+				if (Game_mode & GM_MULTI_COOP)
+					x1 -= 27;
+				else
+#endif
+					x1 -= 15;
+			}
 		}
 	
 		if (Show_kill_list == 2)
@@ -2051,13 +2335,15 @@ hud_show_kill_list()
 		gr_printf(x0,y,"%s",name);
 		if (Show_kill_list == 2)	
 			gr_printf(x1,y,"%3d",team_kills[i]);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		else if (Game_mode & GM_MULTI_COOP)
 			gr_printf(x1,y,"%-6d",Players[player_num].score);
 #endif
 		else
 			gr_printf(x1,y,"%3d",Players[player_num].net_kills_total);
 		y += fth+1;
+		if (!Scanline_double)
+			y++;
 
 	}
 }
@@ -2111,12 +2397,22 @@ void draw_hud()
 
 	if (Rear_view && Cockpit_mode!=CM_REAR_VIEW) {
 		HUD_render_message_frame();
-		gr_set_curfont( GAME_FONT );
-		gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
-		if (Newdemo_state == ND_STATE_PLAYBACK)
-			gr_printf(0x8000,grd_curcanv->cv_h-14,TXT_REAR_VIEW);
+		if (Scanline_double)
+			gr_set_curfont( GAME_FONT_PC );
 		else
-			gr_printf(0x8000,grd_curcanv->cv_h-10,TXT_REAR_VIEW);
+			gr_set_curfont( GAME_FONT );
+		gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
+		if (Newdemo_state == ND_STATE_PLAYBACK) {
+			if (Scanline_double)
+				gr_printf(0x8000,grd_curcanv->cv_h-14,TXT_REAR_VIEW);
+			else
+				gr_printf(0x8000,grd_curcanv->cv_h-28,TXT_REAR_VIEW);
+		} else {
+			if (Scanline_double)
+				gr_printf(0x8000,grd_curcanv->cv_h-10,TXT_REAR_VIEW);
+			else
+				gr_printf(0x8000,grd_curcanv->cv_h-20,TXT_REAR_VIEW);
+		}
 	}
 
 }
@@ -2280,4 +2576,3 @@ void update_laser_weapon_info(void)
 		old_weapon[0][VR_current_page] = -1;
 }
 
-

@@ -1,124 +1,175 @@
 #
-# $Source: f:/miner/source/2d/rcs/makefile $
-# $Revision: 1.35 $
-# $Author: john $
-# $Date: 1995/01/29 17:08:57 $
+# $Source: Smoke:miner:source:2d::RCS:makefile $
+# $Revision: 1.9 $
+# $Author: allender $
+# $Date: 1995/09/14 16:39:56 $
 #
-# Makefile for bios functions
-#
-
-LIBDIR = ..\main
-
+# Makefile for graphics functions
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
-# What to install, and where to install it
-INSTALL_TARGS = effect2d.h gr.h gr.lib grdef.h gr.inc palette.h ibitblt.h rle.h pcx.h
-
-# What to clean
-CLEAN_TARGS = $(OBJDIR)\*.obj
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
 # What libs to make
-LIBS = gr
+LIB = gr.lib
 
-# What test programs to make
-#TEST_PROGS = testg testp vesatest
-PROGS = testg
+# includes to copy to lib directory
+GLOBAL_INCLUDES = gr.h palette.h grdef.h rle.h pcx.h effect2d.h ibitblt.h
 
-# What object files for the lib
-GR_OBJS = linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
-	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
-#effects.obj roller.obj 
+# test file libraries needed
+TEST_LIBS = {LIBDIR}gr.lib {LIBDIR}mem.lib {LIBDIR}io.lib {LIBDIR}cfile.lib ¶
+	{LIBDIR}misc.lib {LIBDIR}macsys.lib {LIBDIR}fix.lib
+	
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-# What object files and libs for the test programs
-TESTG_SRCS = testg.c tmapbits.c
-TESTG_LIBS = io.lib gr.lib misc.lib mem.lib iff.lib  cfile.lib
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r {LIBDIR}macsys.r
 
-#TESTP_OBJS = testp.obj
-#TESTP_LIBS = io.lib gr.lib misc.lib mem.lib cflib.lib 
+OBJ_DIR = :obj:
 
-#VESATEST_OBJS = vesatest.obj
-#VESATEST_LIBS = io.lib gr.lib misc.lib mem.lib cflib.lib 
+# C compiler options
+CFLAGS = {SYM_FLAG}
+	
+LDFLAGS = ¶
+	{SYM_FLAG}
 
-gr.lib: linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
-	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
+GR_OBJS = ¶
+	{OBJDIR}palette.c.o {OBJDIR}gr.c.o {OBJDIR}canvas.c.o ¶
+	{OBJDIR}pixel.c.o {OBJDIR}rect.c.o {OBJDIR}scanline.c.o {OBJDIR}line.c.o ¶
+	{OBJDIR}box.c.o {OBJDIR}poly.c.o {OBJDIR}disc.c.o {OBJDIR}gpixel.c.o ¶
+	{OBJDIR}font.c.o {OBJDIR}bitmap.c.o {OBJDIR}bitblt.c.o {OBJDIR}pcx.c.o ¶
+	{OBJDIR}rle.c.o {OBJDIR}scale.c.o {OBJDIR}blit.a.o {OBJDIR}ibitblt.c.o {OBJDIR}blit68k.a.o
+	
+All Ä {LIB}
 
-	wlib gr.lib linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-		bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-		gpixel.obj palette.obj line.obj lbitblt.obj        \
-		scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
-	copy *.lib $(LIBDIR)
+update	Ä
+	for Header in Å.h Å.c
+		if `Exists -f "{RCSDIR}{Header}"`
+			if `Newer "{RCSDIR}{Header}" "{Header}"`
+				if `Exists -w "{Header}"`
+					echo "{header} is writeable...aboring co"
+					Exit 1
+				end
+				co -q {header}
+			end
+		end
+	end
 
-bitblt.obj: bitblt.c
-	wcc386 $(CCFLAGS) bitblt.c
-bitmap.obj: bitmap.c
-	wcc386 $(CCFLAGS) bitmap
-box.obj: box.c
-	wcc386 $(CCFLAGS) box
-canvas.obj: canvas.c
-	wcc386 $(CCFLAGS) canvas.c
-circle.obj: circle.c
-	wcc386 $(CCFLAGS) circle.c
-disc.obj: disc.c
-	wcc386 $(CCFLAGS) disc.c
-effects.obj: effects.c
-	wcc386 $(CCFLAGS) effects.c
-fdraw.obj: fdraw.c
-	wcc386 $(CCFLAGS) fdraw.c
-font.obj: font.c
-	wcc386 $(CCFLAGS) font.c
-gpixel.obj: gpixel.c
-	wcc386 $(CCFLAGS) gpixel.c
-gr.obj:  gr.c
-	wcc386 $(CCFLAGS) gr.c
-ibitblt.obj: ibitblt.c
-	wcc386 $(CCFLAGS) ibitblt.c
-inv_cmap.obj: inv_cmap.c
-	wcc386 $(CCFLAGS) inv_cmap.c
-l.obj:   l.obj
-	wcc386 $(CCFLAGS) l.c
-lbitblt.obj: lbitblt.asm
-	masm lbitblt.asm
-line.obj: line.c
-	wcc386 $(CCFLAGS) line.c
-linear.obj: linear.asm
-	masm linear.asm linear.obj
-median.obj: median.c
-	wcc386 $(CCFLAGS) median.c
-mspeed.obj: mspeed.c
-	wcc386 $(CCFLAGS) mspeed.c
-modex.obj: modex.asm
-	masm modex.asm
-palette.obj: palette.c
-	wcc386 $(CCFLAGS) palette.c
-pcx.obj: pcx.c
-	wcc386 $(CCFLAGS) pcx.c
-pixel.obj: pixel.c
-	wcc386 $(CCFLAGS) pixel.c
-poly.obj: poly.c
-	wcc386 $(CCFLAGS) poly.c
-rect.obj: rect.c
-	wcc386 $(CCFLAGS) rect.c
-rle.obj: rle.c
-	wcc386 $(CCFLAGS) rle.c
-roller.obj: roller.c
-	wcc386 $(CCFLAGS) roller.c
-scale.obj: scale.c
-	wcc386 $(CCFLAGS) scale.c
-scalea.obj: scalea.asm
-	masm scalea.asm scalea.obj 
-scanline.obj: scanline.c
-	wcc386 $(CCFLAGS) scanline.c
-testg.obj: testg.c
-	wcc386 $(CCFLAGS) testg.c
-vesa.obj: vesa.asm
-	masm vesa.asm
-vesalib.obj: vesalib.c
-	wcc386 $(CCFLAGS) vesalib.c
-vesatest.obj: vesatest.c
-	wcc386 $(CCFLAGS) vesatest.c
+{LIB} Ä {GR_OBJS}
+	Echo "# `Date -t` ----- Building GR library..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+testc Ä testc.c.o {TEST_LIBS}
+	Link -t 'APPL' -c '????' -sym on -model far -mf ¶
+		testc.c.o {STD_LIBS} ¶
+		{TEST_LIBS} ¶
+		-o {Targ}
+	Rez {TEST_RESOURCES} -rd -append -o {Targ}
+
+clean Ä
+	del -i :obj:Å
+	del -i gr.lib
+
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
+
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+:obj:blit.a.o	Ä	blit.a
+	if "{Asm}" == "PPCAsm"
+		Echo "# `Date -t` ----- Assembling blit.a..."
+		rm -i :obj:blit.a.o
+		{Asm} "blit.a"		{AFLAGS}	¶
+			-o ":obj:blit.a.o"		¶
+			|| ( Echo "#####   ### ERROR ###   #####" )
+	end
+
+:obj:blit68k.a.o	Ä	blit68k.a
+	if "{Asm}" == "Asm"
+		Echo "# `Date -t` ----- Assembling blit68k.a..."
+		rm -i :obj:blit68k.a.o
+		{Asm} "blit68k.a"		{AFLAGS}	¶
+			-o ":obj:blit68k.a.o"		¶
+			|| ( Echo "#####   ### ERROR ###   #####" )
+	end
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+bitblt.obj Ä fix.h gr.h grdef.h mem.h mono.h rle.h types.h
+
+bitmap.obj Ä dpmi.h fix.h gr.h grdef.h malloc.h mem.h stdio.h stdlib.h \
+	 types.h
+
+box.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+canvas.obj Ä fix.h gr.h grdef.h malloc.h mem.h stdio.h stdlib.h types.h
+
+circle.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+disc.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+effects.obj Ä effect2d.h fix.h gr.h grdef.h mem.h stdio.h stdlib.h types.h
+
+font.obj Ä cfile.h conio.h error.h fcntl.h fix.h gr.h grdef.h io.h mem.h \
+	 mono.h stat.h stdarg.h stdio.h stdlib.h types.h
+
+gpixel.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+gr.obj Ä	 conio.h dos.h dpmi.h error.h fix.h gr.h grdef.h i86.h malloc.h \
+	 mem.h mono.h palette.h stdio.h stdlib.h string.h types.h
+
+ibitblt.obj Ä conio.h dos.h error.h fix.h gr.h i86.h ibitblt.h mem.h stdio.h \
+	 stdlib.h types.h
+
+lbitblt.obj Ä fix.inc gr.inc psmacros.inc types.inc
+
+line.obj Ä clip.h fix.h gr.h grdef.h mem.h stdlib.h types.h
+
+linear.obj Ä psmacros.inc
+
+mspeed.obj Ä conio.h fix.h gr.h grdef.h math.h stdio.h stdlib.h types.h
+
+paging.obj Ä psmacros.inc types.inc
+
+palette.obj Ä cfile.h conio.h error.h fix.h gr.h grdef.h io.h key.h mem.h \
+	 mono.h stat.h stdio.h stdlib.h types.h
+
+pflow.obj Ä psmacros.inc types.inc
+
+pixel.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+poly.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+rect.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+rle.obj Ä dpmi.h error.h fix.h gr.h grdef.h key.h malloc.h mem.h mono.h \
+	 stdio.h stdlib.h string.h types.h
+
+roller.obj Ä 3d.h conio.h error.h fix.h gr.h limits.h math.h mono.h stdio.h \
+	 stdlib.h types.h vecmat.h
+
+scale.obj Ä conio.h error.h fix.h gr.h limits.h math.h mono.h rle.h stdio.h \
+	 stdlib.h types.h
+
+scalea.obj Ä psmacros.inc types.inc
+
+scanline.obj Ä fix.h gr.h grdef.h mem.h types.h
+
+selector.obj Ä psmacros.inc types.inc
+
+testg.obj Ä conio.h fix.h gr.h grdef.h key.h math.h mono.h palette.h stdio.h \
+	 stdlib.h types.h

@@ -11,14 +11,49 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/bitmap.c $
- * $Revision: 1.17 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:25 $
+ * $Source: Smoke:miner:source:2d::RCS:bitmap.c $
+ * $Revision: 1.11 $
+ * $Author: allender $
+ * $Date: 1995/08/23 18:46:06 $
  *
  * Graphical routines for manipulating grs_bitmaps.
  *
  * $Log: bitmap.c $
+ * Revision 1.11  1995/08/23  18:46:06  allender
+ * fixed compiler warning
+ *
+ * Revision 1.10  1995/08/14  14:25:45  allender
+ * changed transparency color to 0
+ *
+ * Revision 1.9  1995/07/05  16:04:51  allender
+ * transparency/game kitchen changes
+ *
+ * Revision 1.8  1995/06/15  09:50:48  allender
+ * new malloc to align bitmap on 8 byte bountry
+ *
+ * Revision 1.7  1995/05/12  11:52:19  allender
+ * changed memory stuff again
+ *
+ * Revision 1.6  1995/05/11  12:48:34  allender
+ * nge transparency color
+ *
+ * Revision 1.5  1995/05/04  19:59:21  allender
+ * use NewPtr instead of malloc
+ *
+ * Revision 1.4  1995/04/27  07:33:04  allender
+ * rearrange functions
+ *
+ * Revision 1.3  1995/04/19  14:37:17  allender
+ * removed dead asm code
+ *
+ * Revision 1.2  1995/04/18  12:04:51  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  08:48:06  allender
+ * Initial revision
+ *
+ *
+ * -------  PC version RCS information
  * Revision 1.17  1994/11/18  22:50:25  john
  * Changed shorts to ints in parameters.
  * 
@@ -75,31 +110,28 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #include <stdlib.h>
-#include <malloc.h>
 #include <stdio.h>
+#include <Memory.h>
 
 #include "mem.h"
-
-
 #include "gr.h"
 #include "grdef.h"
-#include "dpmi.h"
 
 grs_bitmap *gr_create_bitmap(int w, int h )
 {
     grs_bitmap *new;
 
-    new = (grs_bitmap *)malloc( sizeof(grs_bitmap) );
+    new = (grs_bitmap *)mymalloc( sizeof(grs_bitmap) );
 	new->bm_x = 0;
 	new->bm_y = 0;
     new->bm_w = w;
     new->bm_h = h;
-	new->bm_type = 0;
 	new->bm_flags = 0;
+	new->bm_type = 0;
 	new->bm_rowsize = w;
 	new->bm_selector = 0;
 
-    new->bm_data = (unsigned char *)malloc( w*h );
+    new->bm_data = (unsigned char *)mymalloc_align( w*h, 8 );
 
     return new;
 }
@@ -108,7 +140,7 @@ grs_bitmap *gr_create_bitmap_raw(int w, int h, unsigned char * raw_data )
 {
 	grs_bitmap *new;
 
-	new = (grs_bitmap *)malloc( sizeof(grs_bitmap) );
+	new = (grs_bitmap *)mymalloc( sizeof(grs_bitmap) );
 	new->bm_x = 0;
 	new->bm_y = 0;
 	new->bm_w = w;
@@ -140,7 +172,7 @@ grs_bitmap *gr_create_sub_bitmap(grs_bitmap *bm, int x, int y, int w, int h )
 {
     grs_bitmap *new;
 
-    new = (grs_bitmap *)malloc( sizeof(grs_bitmap) );
+    new = (grs_bitmap *)mymalloc( sizeof(grs_bitmap) );
 	new->bm_x = x+bm->bm_x;
 	new->bm_y = y+bm->bm_y;
 	new->bm_w = w;
@@ -155,81 +187,30 @@ grs_bitmap *gr_create_sub_bitmap(grs_bitmap *bm, int x, int y, int w, int h )
 }
 
 
-gr_free_bitmap(grs_bitmap *bm )
+void gr_free_bitmap(grs_bitmap *bm )
 {
 	if (bm->bm_data!=NULL)	
-    free(bm->bm_data);
+    	myfree(bm->bm_data);
 	bm->bm_data = NULL;
 	if (bm!=NULL)
-    free(bm);
+    	myfree(bm);
 }
 
-gr_free_sub_bitmap(grs_bitmap *bm )
+void gr_free_sub_bitmap(grs_bitmap *bm )
 {
 	if (bm!=NULL)
-    free(bm);
+    	myfree(bm);
 }
 
-//NO_INVERSE_TABLE void build_colormap_asm( ubyte * palette, ubyte * cmap, int * count );
-//NO_INVERSE_TABLE #pragma aux build_colormap_asm parm [esi] [edi] [edx] modify exact [eax ebx ecx edx esi edi] = \
-//NO_INVERSE_TABLE 	"mov  ecx, 256"			\
-//NO_INVERSE_TABLE 	"xor	eax,eax"				\
-//NO_INVERSE_TABLE "again2x:"						\
-//NO_INVERSE_TABLE 	"mov	al,[esi]"			\
-//NO_INVERSE_TABLE 	"inc	esi"					\
-//NO_INVERSE_TABLE 	"shr	eax, 1"				\
-//NO_INVERSE_TABLE 	"shl	eax, 5"				\
-//NO_INVERSE_TABLE 	"mov	bl,[esi]"			\
-//NO_INVERSE_TABLE 	"inc	esi"					\
-//NO_INVERSE_TABLE 	"shr	bl, 1"				\
-//NO_INVERSE_TABLE 	"or	al, bl"				\
-//NO_INVERSE_TABLE 	"shl	eax, 5"				\
-//NO_INVERSE_TABLE 	"mov	bl,[esi]"			\
-//NO_INVERSE_TABLE 	"inc	esi"					\
-//NO_INVERSE_TABLE 	"shr	bl, 1"				\
-//NO_INVERSE_TABLE 	"or 	al, bl"				\
-//NO_INVERSE_TABLE 	"mov	al, gr_inverse_table[eax]"			\
-//NO_INVERSE_TABLE 	"mov	[edi], al"			\
-//NO_INVERSE_TABLE 	"inc	edi"					\
-//NO_INVERSE_TABLE 	"xor	eax,eax"				\
-//NO_INVERSE_TABLE 	"mov	[edx], eax"			\
-//NO_INVERSE_TABLE 	"add	edx, 4"					\
-//NO_INVERSE_TABLE 	"dec	ecx"					\
-//NO_INVERSE_TABLE 	"jne	again2x"				\
-
-void decode_data_asm(ubyte *data, int num_pixels, ubyte * colormap, int * count );
-#pragma aux decode_data_asm parm [esi] [ecx] [edi] [ebx] modify exact [esi edi eax ebx ecx] = \
-"again_ddn:"							\
-	"xor	eax,eax"				\
-	"mov	al,[esi]"			\
-	"inc	dword ptr [ebx+eax*4]"		\
-	"mov	al,[edi+eax]"		\
-	"mov	[esi],al"			\
-	"inc	esi"					\
-	"dec	ecx"					\
-	"jne	again_ddn"
-
-void gr_remap_bitmap( grs_bitmap * bmp, ubyte * palette, int transparent_color, int super_transparent_color )
+void decode_data_asm(ubyte *data, int num_pixels, ubyte *colormap, int *count)
 {
-	ubyte colormap[256];
-	int freq[256];
-
-	// This should be build_colormap_asm, but we're not using invert table, so...
-	build_colormap_good( palette, colormap, freq );
-
-	if ( (super_transparent_color>=0) && (super_transparent_color<=255))
-		colormap[super_transparent_color] = 254;
-
-	if ( (transparent_color>=0) && (transparent_color<=255))
-		colormap[transparent_color] = 255;
-
-	decode_data_asm(bmp->bm_data, bmp->bm_w * bmp->bm_h, colormap, freq );
-
-	if ( (transparent_color>=0) && (transparent_color<=255) && (freq[transparent_color]>0) )
-		bmp->bm_flags |= BM_FLAG_TRANSPARENT;
-
-	if ( (super_transparent_color>=0) && (super_transparent_color<=255) && (freq[super_transparent_color]>0) )
-		bmp->bm_flags |= BM_FLAG_SUPER_TRANSPARENT;
+	int i;
+	
+	for (i = 0; i < num_pixels; i++) {
+		count[*data]++;
+		*data = colormap[*data];
+		data++;
+	}
 }
 
 void build_colormap_good( ubyte * palette, ubyte * colormap, int * freq )
@@ -245,6 +226,31 @@ void build_colormap_good( ubyte * palette, ubyte * colormap, int * freq )
 	}
 }
 
+void gr_remap_bitmap( grs_bitmap * bmp, ubyte * palette, int transparent_color, int super_transparent_color )
+{
+	ubyte colormap[256];
+	int freq[256], i, n;
+
+	// This should be build_colormap_asm, but we're not using invert table, so...
+	build_colormap_good( palette, colormap, freq );
+
+	if ( (super_transparent_color>=0) && (super_transparent_color<=255))
+		colormap[super_transparent_color] = 254;
+
+	if ( (transparent_color>=0) && (transparent_color<=255))
+		colormap[transparent_color] = TRANSPARENCY_COLOR;
+
+	n = bmp->bm_w * bmp->bm_h;
+	for (i = 0; i < n; i++)
+		bmp->bm_data[i] = colormap[bmp->bm_data[i]];
+	decode_data_asm(bmp->bm_data, bmp->bm_w * bmp->bm_h, colormap, freq );
+
+	if ( (transparent_color>=0) && (transparent_color<=255) && (freq[transparent_color]>0) )
+		bmp->bm_flags |= BM_FLAG_TRANSPARENT;
+
+	if ( (super_transparent_color>=0) && (super_transparent_color<=255) && (freq[super_transparent_color]>0) )
+		bmp->bm_flags |= BM_FLAG_SUPER_TRANSPARENT;
+}
 
 void gr_remap_bitmap_good( grs_bitmap * bmp, ubyte * palette, int transparent_color, int super_transparent_color )
 {
@@ -257,7 +263,7 @@ void gr_remap_bitmap_good( grs_bitmap * bmp, ubyte * palette, int transparent_co
 		colormap[super_transparent_color] = 254;
 
 	if ( (transparent_color>=0) && (transparent_color<=255))
-		colormap[transparent_color] = 255;
+		colormap[transparent_color] = TRANSPARENCY_COLOR;
 
 	decode_data_asm(bmp->bm_data, bmp->bm_w * bmp->bm_h, colormap, freq );
 
@@ -271,10 +277,7 @@ void gr_remap_bitmap_good( grs_bitmap * bmp, ubyte * palette, int transparent_co
 
 int gr_bitmap_assign_selector( grs_bitmap * bmp )
 {
-	if (!dpmi_allocate_selector( bmp->bm_data, bmp->bm_w*bmp->bm_h, &bmp->bm_selector )) {
-		bmp->bm_selector = 0;
-		return 1;
-	}
+	bmp->bm_selector = 0;
 	return 0;
 }
 
@@ -287,7 +290,7 @@ void gr_bitmap_check_transparency( grs_bitmap * bmp )
 	
 	for (y=0; y<bmp->bm_h; y++ )	{
 		for (x=0; x<bmp->bm_w; x++ )	{
-			if (*data++ == 255 )	{
+			if (*data++ == TRANSPARENCY_COLOR )	{
 				bmp->bm_flags = BM_FLAG_TRANSPARENT;
 				return;
 			}
@@ -298,4 +301,3 @@ void gr_bitmap_check_transparency( grs_bitmap * bmp )
 	bmp->bm_flags = 0;
 
 }
-

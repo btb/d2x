@@ -14,14 +14,35 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define NEW_FVI_STUFF 1
 
 /*
- * $Source: f:/miner/source/main/rcs/fvi.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/03/24 14:49:04 $
+ * $Source: Smoke:miner:source:main::RCS:fvi.c $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/10/21 23:52:18 $
  * 
  * New home for find_vector_intersection()
  * 
  * $Log: fvi.c $
+ * Revision 1.7  1995/10/21  23:52:18  allender
+ * #ifdef'ed out stack debug stuff
+ *
+ * Revision 1.6  1995/10/10  12:07:42  allender
+ * add forgotten ;
+ *
+ * Revision 1.5  1995/10/10  11:47:27  allender
+ * put in stack space check
+ *
+ * Revision 1.4  1995/08/23  21:34:08  allender
+ * fix mcc compiler warning
+ *
+ * Revision 1.3  1995/08/14  14:35:18  allender
+ * changed transparency to 0
+ *
+ * Revision 1.2  1995/07/05  16:50:51  allender
+ * transparency/kitchen change
+ *
+ * Revision 1.1  1995/05/16  15:24:59  allender
+ * Initial revision
+ *
  * Revision 2.3  1995/03/24  14:49:04  john
  * Added cheat for player to go thru walls.
  * 
@@ -211,12 +232,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: fvi.c 2.3 1995/03/24 14:49:04 john Exp $";
+static char rcsid[] = "$Id: fvi.c 1.7 1995/10/21 23:52:18 allender Exp $";
 #pragma on (unreferenced)
 
+#include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
 #include <string.h>
+#include <Memory.h>
 
 #include "error.h"
 #include "mono.h"
@@ -236,8 +258,12 @@ extern int Physics_cheat_flag;
 
 #define face_type_num(nfaces,face_num,tri_edge) ((nfaces==1)?0:(tri_edge*2 + face_num))
 
-int oflow_check(fix a,fix b);
+int oflow_check(fix a,fix b)
+{
+	return 0;
+}
 
+#if 0
 #pragma aux oflow_check parm [eax] [ebx] value [eax] modify exact [eax ebx edx] = \
    "cdq"				\
 	"xor eax,edx"	\
@@ -251,7 +277,7 @@ int oflow_check(fix a,fix b);
 	"or   dx,dx"	\
 	"setnz al"		\
 	"movzx eax,al";
-
+#endif
 
 //find the point on the specified plane where the line intersects
 //returns true if point found, false if line parallel to plane
@@ -884,7 +910,7 @@ int find_vector_intersection(fvi_query *fq,fvi_info *hit_data)
 	vms_vector hit_pnt;
 	int i;
 
-	Assert(fq->ignore_obj_list != -1);
+//	Assert(fq->ignore_obj_list != -1);
 	Assert((fq->startseg <= Highest_segment_index) && (fq->startseg >= 0));
 
 	fvi_hit_seg = -1;
@@ -1019,6 +1045,10 @@ obj_in_list(int objnum,int *obj_list)
 
 int check_trans_wall(vms_vector *pnt,segment *seg,int sidenum,int facenum);
 
+#ifndef NDEBUG
+static int stack_space = 65536;
+#endif
+
 int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p1,fix rad,short thisobjnum,int *ignore_obj_list,int flags,int *seglist,int *n_segs,int entry_seg)
 {
 	segment *seg;				//the segment we're looking at
@@ -1038,11 +1068,21 @@ int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p
 
 	//fvi_hit_object = -1;
 
-	if ( stackavail() < 1024 )                      
+#if 0
+	if ( StackSpace() < stack_space ) {
+		FILE *fp;
+		fp = fopen("stack.out", "wt");
+		stack_space = StackSpace();
+		fprintf(fp, "stack space now -- %d\n", stack_space);
+		fclose(fp);
+	}
+
+	if ( StackSpace() < 1024 )                      
 	{
 		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));
 		Int3();
 	}
+#endif
 
 	if (flags&FQ_GET_SEGLIST)
 		*seglist = startseg; 
@@ -1342,7 +1382,7 @@ quit_looking:
 
 //finds the uv coords of the given point on the given seg & side
 //fills in u & v
-find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum)
+void find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum)
 {
 	vms_vector_array *pnt_array;
 	vms_vector_array normal_array;
@@ -1459,7 +1499,7 @@ int check_trans_wall(vms_vector *pnt,segment *seg,int sidenum,int facenum)
 
 	//mprintf(0," bmx,y  = %d,%d, color=%x\n",bmx,bmy,bm->bm_data[bmy*64+bmx]);
 
-	return (bm->bm_data[bmy*bm->bm_w+bmx] == 255);
+	return (bm->bm_data[bmy*bm->bm_w+bmx] == TRANSPARENCY_COLOR);
 }
 
 //new function for Mike
@@ -1532,4 +1572,3 @@ int object_intersects_wall(object *objp)
 	return sphere_intersects_wall(&objp->pos,objp->segnum,objp->size);
 }
 
-

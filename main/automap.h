@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/automap.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:29:35 $
+ * $Source: Smoke:miner:source:main::RCS:automap.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/07/12 12:48:33 $
  * 
  * Prototypes for auto-map stuff.
  * 
  * $Log: automap.h $
+ * Revision 1.2  1995/07/12  12:48:33  allender
+ * moved edge_list structure into here for mallocing in mglobal
+ *
+ * Revision 1.1  1995/05/16  15:54:31  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:29:35  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -45,6 +51,19 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifndef _AUTOMAP_H
 #define _AUTOMAP_H
+
+typedef struct Edge_info {
+	short verts[2];		// 4 bytes
+	ubyte sides[4];			// 4 bytes
+	short segnum[4];			// 8 bytes	// This might not need to be stored... If you can access the normals of a side.
+	ubyte flags;				// 1 bytes 	// See the EF_??? defines above.
+	ubyte color;				// 1 bytes
+	ubyte num_faces;			// 1 bytes	// 19 bytes...
+} Edge_info;
+
+extern Edge_info *Edges;
+
+#define MAX_EDGES 6000		// Determined by loading all the levels by John & Mike, Feb 9, 1995
 
 extern void do_automap(int key_code);
 extern void automap_clear_visited();

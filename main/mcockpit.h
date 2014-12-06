@@ -11,18 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/mcockpit.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:24 $
+ * $Source: Smoke:miner:source:main::RCS:MCOCKPIT.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:59:06 $
  * 
  * .
  * 
- * $Log: mcockpit.h $
- * Revision 2.0  1995/02/27  11:30:24  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
+ * $Log: MCOCKPIT.H $
+ * Revision 1.1  1995/05/16  15:59:06  allender
+ * Initial revision
+ *
  * Revision 1.3  1994/05/30  19:28:16  john
  * Moved functionality of mcockpit into 2d, ibitblt.
  * 
@@ -48,4 +47,3 @@ void mcockpit_find_extents( grs_bitmap * bmp, int *minx, int *miny, int *maxx, i
 */
 
 #endif
-

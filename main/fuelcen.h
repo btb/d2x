@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/fuelcen.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:43 $
+ * $Source: Smoke:miner:source:main::RCS:FUELCEN.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:56:31 $
  * 
  * Definitions for fueling centers.
  * 
- * $Log: fuelcen.h $
+ * $Log: FUELCEN.H $
+ * Revision 1.1  1995/05/16  15:56:31  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:43  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -250,4 +253,3 @@ extern void init_all_matcens(void);
 extern fix EnergyToCreateOneRobot;
 
 #endif
-

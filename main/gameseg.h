@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gameseg.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:20 $
+ * $Source: Smoke:miner:source:main::RCS:GAMESEG.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:57:18 $
  * 
  * Header file for stuff moved from segment.c to gameseg.c.
  * 
- * $Log: gameseg.h $
+ * $Log: GAMESEG.H $
+ * Revision 1.1  1995/05/16  15:57:18  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:20  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -106,7 +109,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _GAMESEG_H
 #define _GAMESEG_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "fix.h"
 #include "vecmat.h"
 #include "segment.h"
@@ -216,4 +219,3 @@ extern void create_walls_on_side(segment *sp, int sidenum);
 extern void pick_random_point_in_seg(vms_vector *new_pos, int segnum);
 
 #endif
-

@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/vfx.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/10 12:58:04 $
+ * $Source: Smoke:miner:source:main::RCS:VFX.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:04:51 $
  * 
  * Prototypes for vfx.c
  * 
- * $Log: vfx.h $
+ * $Log: VFX.H $
+ * Revision 1.1  1995/05/16  16:04:51  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/10  12:58:04  john
  * Added vfx_set_palette_sub function.
  * 
@@ -62,4 +65,3 @@ extern void vfx_set_palette();		//download palette into VFX
 extern void vfx_set_palette_sub(ubyte * palette);
 
 #endif
-

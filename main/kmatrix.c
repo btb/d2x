@@ -11,18 +11,33 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/kmatrix.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/05/02 17:01:22 $
+ * $Source: Smoke:miner:source:main::RCS:kmatrix.c $
+ * $Revision: 1.6 $
+ * $Author: allender $
+ * $Date: 1995/09/24 10:57:48 $
  * 
  * Kill matrix displayed at end of level.
  * 
  * $Log: kmatrix.c $
- * Revision 2.3  1995/05/02  17:01:22  john
- * Fixed bug with kill list not showing up in VFX mode.
- * 
- * Revision 2.2  1995/03/21  14:38:20  john
+ * Revision 1.6  1995/09/24  10:57:48  allender
+ * made any key move off of kill matrix screen as text indicates it should
+ *
+ * Revision 1.5  1995/08/18  08:33:05  allender
+ * fixed text problem with top level player names
+ *
+ * Revision 1.4  1995/07/26  17:03:05  allender
+ * sort of fixed spacing for mac
+ *
+ * Revision 1.3  1995/06/06  15:36:14  allender
+ * be sure to bitblt to screen inside of kmatrix loop
+ *
+ * Revision 1.2  1995/06/02  07:47:15  allender
+ * removed bogus include files
+ *
+ * Revision 1.1  1995/05/16  15:27:07  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/21  08:38:20  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.1  1995/03/06  15:22:54  john
@@ -95,7 +110,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: kmatrix.c 2.3 1995/05/02 17:01:22 john Exp $";
+static char rcsid[] = "$Id: kmatrix.c 1.6 1995/09/24 10:57:48 allender Exp $";
 #pragma on (unreferenced)
 
 #ifdef NETWORK
@@ -104,13 +119,10 @@ static char rcsid[] = "$Id: kmatrix.c 2.3 1995/05/02 17:01:22 john Exp $";
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <io.h>
 #include <stdarg.h>
-#include <dos.h>
-#include <conio.h>
 
 #include "error.h"
-#include "types.h"
+#include "dtypes.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"
@@ -133,7 +145,9 @@ static char rcsid[] = "$Id: kmatrix.c 2.3 1995/05/02 17:01:22 john Exp $";
 #include "pcx.h"
 #include "network.h"
 
-#define CENTERING_OFFSET(x) ((300 - (70 + (x)*25 ))/2)
+#include "macsys.h"
+
+#define CENTERING_OFFSET(x) ((600 - (140 + (x)*50 ))/2)
 
 int kmatrix_kills_changed = 0;
 
@@ -141,7 +155,7 @@ void kmatrix_draw_item( int  i, int *sorted )
 {
 	int j, x, y;
 
-	y = 50+i*9;
+	y = 100+i*18;
 
 	// Print player name.
 
@@ -149,7 +163,7 @@ void kmatrix_draw_item( int  i, int *sorted )
 
 	for (j=0; j<N_players; j++) {
 
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
+		x = 140 + CENTERING_OFFSET(N_players) + j*50;
 
 		if (sorted[i]==sorted[j]) {
 			if (kill_matrix[sorted[i]][sorted[j]] == 0) {
@@ -171,7 +185,7 @@ void kmatrix_draw_item( int  i, int *sorted )
 
 	}
 	
-	x = 70 + CENTERING_OFFSET(N_players) + N_players*25;
+	x = 140 + CENTERING_OFFSET(N_players) + N_players*50;
 	gr_set_fontcolor( BM_XRGB(25,25,25),-1 );
 	gr_printf( x ,y,"%4d",Players[sorted[i]].net_kills_total);
 }
@@ -188,14 +202,14 @@ void kmatrix_draw_names(int *sorted)
 		else
 			color = sorted[j];
 
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
+		x = 140 + CENTERING_OFFSET(N_players) + j*50;
 		gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
-		gr_printf( x, 40, "%c", Players[sorted[j]].callsign[0] );
+		gr_printf( x, 80, "%c", Players[sorted[j]].callsign[0] );
 	}
 
-	x = 70 + CENTERING_OFFSET(N_players) + N_players*25;
+	x = 140 + CENTERING_OFFSET(N_players) + N_players*50;
 	gr_set_fontcolor( BM_XRGB(31,31,31),-1 );
-	gr_printf( x, 40, TXT_KILLS);
+	gr_printf( x, 80, TXT_KILLS);
 		
 }
 
@@ -204,7 +218,7 @@ void kmatrix_draw_deaths(int *sorted)
 {
 	int j, x, y;
 	
-	y = 55 + N_players * 9;
+	y = 110 + N_players * 18;
 
 //	gr_set_fontcolor(gr_getcolor(player_rgb[j].r,player_rgb[j].g,player_rgb[j].b),-1 );
 	gr_set_fontcolor( BM_XRGB(31,31,31),-1 );
@@ -213,17 +227,17 @@ void kmatrix_draw_deaths(int *sorted)
 	gr_printf( x, y, TXT_DEATHS );
 
 	for (j=0; j<N_players; j++) {
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
+		x = 140 + CENTERING_OFFSET(N_players) + j*50;
 		gr_printf( x, y, "%d", Players[sorted[j]].net_killed_total );
 	}
 
-	y = 55 + 72 + 12;
-	x = 35;
+	y = 278;
+	x = 70;
 
 	{
 		int sw, sh, aw;
 		gr_get_string_size(TXT_PRESS_ANY_KEY2, &sw, &sh, &aw);	
-		gr_printf( 160-(sw/2), y, TXT_PRESS_ANY_KEY2);
+		gr_printf( 320-(sw/2), y, TXT_PRESS_ANY_KEY2);
 	}
 }
 
@@ -242,7 +256,7 @@ void kmatrix_redraw()
 
 	grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_3];
 
-	gr_string( 0x8000, 15, TXT_KILL_MATRIX_TITLE	);
+	gr_string( 0x8000, 30, TXT_KILL_MATRIX_TITLE);
 
 	grd_curcanv->cv_font = Gamefonts[GFONT_SMALL];
 
@@ -274,9 +288,9 @@ void kmatrix_view(int network)
 	fix entry_time = timer_get_approx_seconds();
 	int key;
 
-	set_screen_mode( SCREEN_MENU );
-
 	kmatrix_redraw();
+
+	set_screen_mode( SCREEN_MENU );
 
 	gr_palette_fade_in( gr_palette,32, 0);
 	game_flush_inputs();
@@ -285,17 +299,14 @@ void kmatrix_view(int network)
 
 	while(!done)	{
 
-		for (i=0; i<4; i++ )	
-			if (joy_get_button_down_cnt(i)>0) done=1;
+//		for (i=0; i<4; i++ )	
+//			if (joy_get_button_down_cnt(i)>0) done=1;
 		for (i=0; i<3; i++ )	
 			if (mouse_button_down_count(i)>0) done=1;
 
 		k = key_inkey();
 		switch( k )	{
-			case KEY_ENTER:
-			case KEY_SPACEBAR:
-			case KEY_ESC:
-				done=1;
+			case 0:
 				break;
 			case KEY_PRINT_SCREEN:
 				save_screen_shot(0);
@@ -303,7 +314,15 @@ void kmatrix_view(int network)
 			case KEY_BACKSP:
 				Int3();
 				break;
+#if 0
+			case KEY_ENTER:
+			case KEY_SPACEBAR:
+			case KEY_ESC:
+				done=1;
+				break;
+#endif
 			default:
+				done = 1;
 				break;
 		}
 		if (timer_get_approx_seconds() > entry_time+MAX_VIEW_TIME)
@@ -319,6 +338,7 @@ void kmatrix_view(int network)
 			if (key < -1)
 				done = 1;
 		}
+		bitblt_to_screen();
 	}
 
 // Restore background and exit
@@ -327,4 +347,3 @@ void kmatrix_view(int network)
 	game_flush_inputs();
 }
 #endif
-

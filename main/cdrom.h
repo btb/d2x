@@ -11,15 +11,18 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/cdrom.h $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1995/03/20 15:01:12 $
+ * $Source: Smoke:miner:source:main::RCS:CDROM.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:54:46 $
  * 
  * Prototypes for cdrom.c
  * 
- * $Log: cdrom.h $
- * Revision 1.2  1995/03/20  15:01:12  john
+ * $Log: CDROM.H $
+ * Revision 1.1  1995/05/16  15:54:46  allender
+ * Initial revision
+ *
+ * Revision 1.2  1995/03/20  09:01:12  john
  * Initial revision.
  * 
  * Revision 1.1  1995/03/14  17:01:37  john
@@ -38,4 +41,3 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 int find_descent_cd();
 
 #endif
-

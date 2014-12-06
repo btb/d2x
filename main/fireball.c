@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/fireball.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:39:57 $
+ * $Source: Smoke:miner:source:main::RCS:fireball.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:23:56 $
  * 
  * Code for rendering & otherwise dealing with explosions
  * 
  * $Log: fireball.c $
- * Revision 2.2  1995/03/21  14:39:57  john
+ * Revision 1.2  1995/10/31  10:23:56  allender
+ * shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:24:41  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/21  08:39:57  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.1  1995/03/20  18:15:47  john
@@ -103,7 +109,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: fireball.c 2.2 1995/03/21 14:39:57 john Exp $";
+static char rcsid[] = "$Id: fireball.c 1.2 1995/10/31 10:23:56 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -361,7 +367,10 @@ object *object_create_debris(object *parent, int subobj_num)
 
 	vm_vec_add2(&obj->mtype.phys_info.velocity,&parent->mtype.phys_info.velocity);
 
-	vm_vec_make(&obj->mtype.phys_info.rotvel,10*0x2000/3,10*0x4000/3,10*0x7000/3);
+	obj->mtype.phys_info.rotvel.x = 10*0x2000/3;
+	obj->mtype.phys_info.rotvel.y = 10*0x4000/3;
+	obj->mtype.phys_info.rotvel.z = 10*0x7000/3;
+//	vm_vec_make(&obj->mtype.phys_info.rotvel,10*0x2000/3,10*0x4000/3,10*0x7000/3);
 	vm_vec_zero(&obj->mtype.phys_info.rotthrust);
 
 	obj->lifeleft = DEBRIS_LIFE;
@@ -553,7 +562,7 @@ void maybe_drop_net_powerup(int powerup_type)
 		if (objnum < 0)
 			return;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		pick_random_point_in_seg(&new_pos, segnum);
 #else
 		compute_segment_center(&new_pos, &Segments[segnum]);
@@ -639,7 +648,7 @@ void maybe_replace_powerup_with_energy(object *del_obj)
 	switch (del_obj->contains_id) {
 		case POW_VULCAN_WEAPON:			weapon_index = VULCAN_INDEX;		break;
 		case POW_SPREADFIRE_WEAPON:	weapon_index = SPREADFIRE_INDEX;	break;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		case POW_PLASMA_WEAPON:			weapon_index = PLASMA_INDEX;		break;
 		case POW_FUSION_WEAPON:			weapon_index = FUSION_INDEX;		break;
 #endif
@@ -1282,4 +1291,3 @@ void do_exploding_wall_frame()
 
 }
 
-

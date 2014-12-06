@@ -11,17 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/cfile/rcs/cfile.h $
- * $Revision: 1.10 $
- * $Author: john $
- * $Date: 1995/03/13 15:16:47 $
+ * $Source: Buggin:miner:source:cfile::RCS:cfile.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/30 10:25:08 $
  * 
  * Prototypes for compressed file functions...
  * 
  * $Log: cfile.h $
- * Revision 1.10  1995/03/13  15:16:47  john
- * Added alternate directory stuff.
- * 
+ * Revision 1.1  1995/03/30  10:25:08  allender
+ * Initial revision
+ *
+ *
+ * -- PC RCS Information ---
  * Revision 1.9  1995/02/01  20:56:40  john
  * Added cfexist function
  * 
@@ -84,9 +86,5 @@ int cfexist( char * filename );	// Returns true if file exists on disk (1) or in
 // Passing NULL disables this.
 void cfile_use_alternate_hogfile( char * name );
 
-// All cfile functions will check this directory if no file exists
-// in the current directory.
-void cfile_use_alternate_hogdir( char * path );
 
 #endif
-

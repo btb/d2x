@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/aipath.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:48 $
+ * $Source: Smoke:miner:source:main::RCS:aipath.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/10/26 14:12:03 $
  * 
  * AI path forming stuff.
  * 
  * $Log: aipath.c $
+ * Revision 1.5  1995/10/26  14:12:03  allender
+ * prototype functions for mcc compiler
+ *
+ * Revision 1.4  1995/10/25  09:38:22  allender
+ * prototype some functions causing mcc grief
+ *
+ * Revision 1.3  1995/10/10  11:48:43  allender
+ * PC ai code
+ *
  * Revision 2.0  1995/02/27  11:30:48  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -138,7 +147,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: aipath.c 2.0 1995/02/27 11:30:48 john Exp $";
+static char rcsid[] = "$Id: aipath.c 1.5 1995/10/26 14:12:03 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>		//	for printf()
@@ -156,10 +165,14 @@ static char rcsid[] = "$Id: aipath.c 2.0 1995/02/27 11:30:48 john Exp $";
 #include "fvi.h"
 #include "physics.h"
 #include "wall.h"
-#include "editor\editor.h"
 #include "player.h"
 #include "fireball.h"
 #include "game.h"
+
+void maybe_ai_path_garbage_collect(void);
+void ai_multi_send_robot_position(int objnum, int force);
+void ai_path_set_orient_and_vel(object *objp, vms_vector *goal_point);
+void validate_all_paths(void);
 
 #define	PARALLAX	0		//	If !0, then special debugging for Parallax eyes enabled.
 
@@ -612,12 +625,7 @@ point_seg *pseg0 = Point_segs_free_ptr;
 		create_path_points(objp, start_seg, end_seg, Point_segs_free_ptr, &aip->path_length, max_length, 1, safety_flag, -1);
 		aip->hide_index = Point_segs_free_ptr - Point_segs;
 		aip->cur_path_index = 0;
-#ifndef NDEBUG
-//Enclosed this Assert in an ifdef, because if NDEBUG isn't defined,
-//pseg0 doesn't exist!  -KRB
 Assert(Point_segs_free_ptr == pseg0);
-#endif
-
 #ifndef NDEBUG
 		validate_path(6, Point_segs_free_ptr, aip->path_length);
 #endif
@@ -1056,7 +1064,7 @@ typedef struct {
 	short	path_start, objnum;
 } obj_path;
 
-int path_index_compare(obj_path *i1, obj_path *i2)
+int path_index_compare(const obj_path *i1, const obj_path *i2)
 {
 	if (i1->path_start < i2->path_start)
 		return -1;
@@ -1594,4 +1602,3 @@ void check_create_player_path(void)
 //					DEBUG FUNCTIONS ENDED
 //	----------------------------------------------------------------------------------------------------------
 
-

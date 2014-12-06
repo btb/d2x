@@ -1,55 +1,80 @@
 #
-# $Source: f:/miner/source/misc/rcs/makefile $
+# $Source: Smoke:miner:source:misc::RCS:makefile $
 # $Revision: 1.4 $
-# $Author: matt $
-# $Date: 1994/11/27 22:27:23 $
+# $Author: allender $
+# $Date: 1995/08/24 10:34:38 $
 #
-# Makefile for misc libaray
-#
-
-LIBDIR = ..\main
-
+# Makefile for graphics functions
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
-# What to install
-INSTALL_TARGS = misc.lib parsarg.h error.h
+# What libs to make
+LIB = misc.lib
 
-# What libs to build
-LIBS = misc
+# includes to copy to lib directory
+GLOBAL_INCLUDES = strutil.h byteswap.h fileutil.h error.h direct.h
 
-# What objs in the lib
-MISC_OBJS = parsarg.obj error.obj
+# test file libraries needed
+TEST_LIBS = {LIBDIR}gr.lib {LIBDIR}mem.lib {LIBDIR}io.lib {LIBDIR}cfile.lib
 
-# What to clean
-CLEAN_TARGS = $(OBJDIR)\*.obj
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-# What test programs to make
-TEST_PROGS = errtest parstest
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r
 
-# What object files and libs for the test programs
-PARSTEST_SRCS = parstest.c
-PARSTEST_LIBS = misc.lib
+OBJ_DIR = :obj:
 
-ERRTEST_SRCS = errtest.c
-ERRTEST_LIBS = misc.lib
+# C compiler options
+CFLAGS = {SYM_FLAG}
+	
+LDFLAGS = ¶
+	{SYM_FLAG}
+	
+MISC_OBJS = ¶
+	{OBJDIR}strutil.c.o {OBJDIR}byteswap.c.o {OBJDIR}fileutil.c.o ¶
+	{OBJDIR}error.c.o {OBJDIR}misc.c.o {OBJDIR}direct.c.o
+	
+All Ä {LIB}
 
-misc.lib: $(MISC_OBJS)
-	wlib misc.lib $(MISC_OBJS)
-	copy *.lib $(LIBDIR)
+{LIB} Ä {MISC_OBJS}
+	Echo "# `Date -t` ----- Building MISC library..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB} {SYM_FLAG}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+testg Ä testg.c.o
+	Link -t 'APPL' -c '????' -sym on -model far -mf ¶
+		testg.c.o {STD_LIBS} ¶
+		{TEST_LIBS} ¶
+		-o {Targ}
+	Rez {TEST_RESOURCES} -rd -append -o {Targ}
 
-error.obj: error.c error.h 
-	wcc386 $(CCFLAGS) error.c
+clean Ä
+	del -i :obj:Å
+	del -i misc.lib
 
-errtest.obj: errtest.c error.h 
-	wcc386 $(CCFLAGS) errtest.c
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
 
-parsarg.obj: parsarg.c parsarg.h
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
 
-	wcc386 $(CCFLAGS) parsarg.c
-
-parstest.obj: parstest.c parsarg.h 
-
-	wcc386 $(CCFLAGS) parstest.c
+.a.o	Ä	.a
+	Echo "# `Date -t` ----- Assembling {default}.a..."
+	Asm "{depDir}{default}.a"			¶
+		-o "{targDir}{default}.a.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
 

@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/text.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:09 $
+ * $Source: Smoke:miner:source:main::RCS:TEXT.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:31:44 $
  * 
  * Code for localizable text
  * 
- * $Log: text.c $
+ * $Log: TEXT.C $
+ * Revision 1.1  1995/05/16  15:31:44  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:33:09  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -61,13 +64,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: text.c 2.0 1995/02/27 11:33:09 john Exp $";
+static char rcsid[] = "$Id: TEXT.C 1.1 1995/05/16 15:31:44 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <io.h>
+//#include <io.h>
 
 //#include "cfile.h"
 #include "cfile.h"
@@ -83,9 +86,9 @@ char *text;
 
 char *Text_string[N_TEXT_STRINGS];
 
-free_text()
+void free_text()
 {
-	free(text);
+	myfree(text);
 }
 
 // rotates a byte left one bit, preserving the bit falling off the right
@@ -122,8 +125,8 @@ void load_text()
 
 		len = cfilelength(ifile);
 
-		//MALLOC(text,char,len);//Won't compile... working on it..-KRB
-		text=malloc(len*sizeof(char));//my hack -KRB
+		MALLOC(text,char,len);
+
 		atexit(free_text);
 
 		cfread(text,1,len,ifile);
@@ -136,8 +139,7 @@ void load_text()
 
 		len = cfilelength(tfile);
 
-		//MALLOC(text,char,len);//Won't compile... working on it..-KRB
-		text=malloc(len*sizeof(char));//my hack -KRB
+		MALLOC(text,char,len);
 
 		atexit(free_text);
 
@@ -157,7 +159,7 @@ void load_text()
 
 		Text_string[i] = tptr;
 
-		tptr = strchr(tptr,'\n');
+		tptr = strchr(tptr,0x0a);
 
 		if (!tptr)
 			Error("Not enough strings in text file - expecting %d, found %d",N_TEXT_STRINGS,i);

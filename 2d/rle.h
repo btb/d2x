@@ -11,17 +11,22 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/rle.h $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1995/01/14 11:32:20 $
+ * $Source: Smoke:miner:source:2d::RCS:rle.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/05/05 16:34:54 $
  * 
  * Protypes for rle functions.
  * 
  * $Log: rle.h $
- * Revision 1.5  1995/01/14  11:32:20  john
- * Added rle_cache_flush function.
- * 
+ * Revision 1.2  1995/05/05  16:34:54  allender
+ * changed types.h to dtypes.h
+ *
+ * Revision 1.1  1995/03/09  09:23:32  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.4  1994/11/10  13:16:01  matt
  * Added includes
  * 
@@ -42,7 +47,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _RLE_H
 #define _RLE_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "gr.h"
 
 void gr_rle_decode( ubyte * src, ubyte * dest );
@@ -55,7 +60,4 @@ void gr_rle_expand_scanline( ubyte *dest, ubyte *src, int x1, int x2  );
 
 grs_bitmap * rle_expand_texture( grs_bitmap * bmp );
 
-rle_cache_flush();
-
 #endif
-

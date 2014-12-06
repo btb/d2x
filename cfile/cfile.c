@@ -11,14 +11,37 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/cfile/rcs/cfile.c $
- * $Revision: 1.24 $
- * $Author: john $
- * $Date: 1995/03/15 14:20:27 $
+ * $Source: BigRed:miner:source:cfile::RCS:cfile.c $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/10/27 15:18:20 $
  * 
  * Functions for accessing compressed files.
  * 
  * $Log: cfile.c $
+ * Revision 1.7  1995/10/27  15:18:20  allender
+ * get back to descent directory before trying to read a hog file
+ *
+ * Revision 1.6  1995/10/21  23:48:24  allender
+ * hogfile(s) are now in :Data: folder
+ *
+ * Revision 1.5  1995/08/14  09:27:31  allender
+ * added byteswap header
+ *
+ * Revision 1.4  1995/05/12  11:54:33  allender
+ * changed memory stuff again
+ *
+ * Revision 1.3  1995/05/04  20:03:38  allender
+ * added code that was missing...use NewPtr instead of malloc
+ *
+ * Revision 1.2  1995/04/03  09:59:49  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/30  10:25:02  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS Information ---
  * Revision 1.24  1995/03/15  14:20:27  john
  * Added critical error checker.
  * 
@@ -100,7 +123,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: cfile.c 1.24 1995/03/15 14:20:27 john Exp $";
+static char rcsid[] = "$Id: cfile.c 1.7 1995/10/27 15:18:20 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <time.h>
@@ -109,16 +132,13 @@ static char rcsid[] = "$Id: cfile.c 1.24 1995/03/15 14:20:27 john Exp $";
 #include <string.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include <conio.h>
-#include <dos.h>
-#include <fcntl.h>
-#include <io.h>
-#include <sys\types.h>
-#include <sys\stat.h>
 #include <errno.h>
 #include <string.h>
+#include <Memory.h>
 
 #include "cfile.h"
+#include "mem.h"
+#include "byteswap.h"
 
 typedef struct hogfile {
 	char	name[13];
@@ -157,6 +177,7 @@ FILE * cfile_get_filehandle( char * filename, char * mode )
 	FILE * fp;
 	char temp[128];
 	
+	CDToDescentDir();
 	descent_critical_error = 0;
 	fp = fopen( filename, mode );
 	if ( fp && descent_critical_error )	{
@@ -184,6 +205,7 @@ void cfile_init_hogfile(char *fname, hogfile * hog_files, int * nfiles )
 
 	*nfiles = 0;
 
+	CDToDescentDir();
 	fp = cfile_get_filehandle( fname, "rb" );
 	if ( fp == NULL ) return;
 
@@ -196,7 +218,7 @@ void cfile_init_hogfile(char *fname, hogfile * hog_files, int * nfiles )
 	while( 1 )	
 	{	
 		if ( *nfiles >= MAX_HOGFILES ) {
-			printf( "ERROR: HOGFILE IS LIMITED TO %d FILES\n",  MAX_HOGFILES );
+			Warning( "ERROR: HOGFILE IS LIMITED TO %d FILES\n",  MAX_HOGFILES );
 			fclose(fp);
 			exit(1);
 		}
@@ -210,11 +232,13 @@ void cfile_init_hogfile(char *fname, hogfile * hog_files, int * nfiles )
 			fclose(fp);
 			return;
 		}
-		hog_files[*nfiles].length = len;
+		hog_files[*nfiles].length = swapint(len);
+		if (hog_files[*nfiles].length < 0)
+			Warning ("Hogfile length < 0");
 		hog_files[*nfiles].offset = ftell( fp );
 		*nfiles = (*nfiles) + 1;
 		// Skip over
-		i = fseek( fp, len, SEEK_CUR );
+		i = fseek( fp, swapint(len), SEEK_CUR );
 	}
 }
 
@@ -236,13 +260,13 @@ FILE * cfile_find_libfile(char * name, int * length)
 	}
 
 	if ( !Hogfile_initialized ) 	{
-		cfile_init_hogfile( "DESCENT.HOG", HogFiles, &Num_hogfiles );
+		cfile_init_hogfile( ":Data:descent.hog", HogFiles, &Num_hogfiles );
 		Hogfile_initialized = 1;
 	}
 
 	for (i=0; i<Num_hogfiles; i++ )	{
 		if ( !stricmp( HogFiles[i].name, name ))	{
-			fp = cfile_get_filehandle( "DESCENT.HOG", "rb" );
+			fp = cfile_get_filehandle( ":Data:descent.hog", "rb" );
 			if ( fp == NULL ) return NULL;
 			fseek( fp,  HogFiles[i].offset, SEEK_SET );
 			*length = HogFiles[i].length;
@@ -289,18 +313,26 @@ CFILE * cfopen(char * filename, char * mode )
 	int length;
 	FILE * fp;
 	CFILE *cfile;
-	
-	if (strcmpi( mode, "rb"))	{
-		printf( "CFILES CAN ONLY BE OPENED WITH RB\n" );
+	char new_filename[256], *p;
+		
+	if (stricmp( mode, "rb"))	{
+		Warning( "CFILES CAN ONLY BE OPENED WITH RB\n" );
 		exit(1);
 	}
+	
+	strcpy(new_filename, filename);
+	while ( (p = strchr(new_filename, 13) ) )
+		*p = '\0';
+
+	while ( (p = strchr(new_filename, 10) ) )
+		*p = '\0';
 
 	fp = cfile_get_filehandle( filename, mode );		// Check for non-hog file first...
 	if ( !fp ) {
 		fp = cfile_find_libfile(filename, &length );
 		if ( !fp )
 			return NULL;		// No file found
-		cfile = malloc ( sizeof(CFILE) );
+		cfile = (CFILE *)mymalloc ( sizeof(CFILE) );
 		if ( cfile == NULL ) {
 			fclose(fp);
 			return NULL;
@@ -311,7 +343,7 @@ CFILE * cfopen(char * filename, char * mode )
 		cfile->raw_position = 0;
 		return cfile;
 	} else {
-		cfile = malloc ( sizeof(CFILE) );
+		cfile = (CFILE *)mymalloc ( sizeof(CFILE) );
 		if ( cfile == NULL ) {
 			fclose(fp);
 			return NULL;
@@ -360,6 +392,8 @@ char * cfgets( char * buf, size_t n, CFILE * fp )
 			fp->raw_position++;
 		} while ( c == 13 );
 		*buf++ = c;
+		if ( c == 10 )
+			c = '\n';
 		if ( c=='\n' ) break;
 	}
 	*buf++ = 0;
@@ -406,10 +440,9 @@ int cfseek( CFILE *fp, long int offset, int where )
 void cfclose( CFILE * fp ) 
 {	
 	fclose(fp->file);
-	free(fp);
+	myfree(fp);
 	return;
 }
 
 
 
-

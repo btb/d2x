@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/text.h $
- * $Revision: 2.2 $
- * $Author: mike $
- * $Date: 1995/03/30 16:36:22 $
+ * $Source: Smoke:miner:source:main::RCS:text.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/10/18 23:30:29 $
  * 
  * Header for text.c, including symbolics for text messages
  * 
  * $Log: text.h $
+ * Revision 1.3  1995/10/18  23:30:29  allender
+ * fixed horrendous misspelling
+ *
+ * Revision 1.2  1995/10/18  23:27:33  allender
+ * added new printscreen line to end of text string
+ *
+ * Revision 1.1  1995/05/16  16:04:11  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/30  16:36:22  mike
  * text localization.
  * 
@@ -799,8 +808,9 @@ extern char *Text_string[];
 #define TXT_LUNACY				Text_string[618]
 #define TXT_ROBOT_PAINTING_OFF Text_string[619]
 #define TXT_ROBOT_PAINTING_ON Text_string[620]
+#define TXT_PRINTSCREEN1		Text_string[621]
 
-#define N_TEXT_STRINGS			621
+#define N_TEXT_STRINGS			622
 
 // Constants for keyboard configuration
 #define TNUM_REAR_VIEW			(319-8)

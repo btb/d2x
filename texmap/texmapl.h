@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/texmap/rcs/texmapl.h $
- * $Revision: 1.14 $
- * $Author: john $
- * $Date: 1995/02/20 18:23:02 $
+ * $Source: Buggin:miner:source:texmap::RCS:texmapl.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/04 20:15:25 $
  *
  * Local include file for texture mapper library -- NOT to be included by users.
  *
  * $Log: texmapl.h $
+ * Revision 1.1  1995/05/04  20:15:25  allender
+ * Initial revision
+ *
  * Revision 1.14  1995/02/20  18:23:02  john
  * Put all the externs in the assembly modules into tmap_inc.asm.
  * Also, moved all the C versions of the inner loops into a new module, 
@@ -137,4 +140,3 @@ extern void init_interface_vars_to_assembler(void);
 extern int prevmod(int val,int modulus);
 
 #define FIX_RECIP_TABLE_SIZE	321
-

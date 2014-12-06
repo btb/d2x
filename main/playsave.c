@@ -11,18 +11,47 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/playsave.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:23 $
+ * $Source: BigRed:miner:source:main::RCS:playsave.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 16:05:47 $
  * 
  * Functions to load & save player games
  * 
  * $Log: playsave.c $
- * Revision 2.3  1995/05/26  16:16:23  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
+ * Revision 1.1  1995/12/05  16:05:47  allender
+ * Initial revision
+ *
+ * Revision 1.10  1995/11/03  12:53:24  allender
+ * shareware changes
+ *
+ * Revision 1.9  1995/10/31  10:19:12  allender
+ * shareware stuff
+ *
+ * Revision 1.8  1995/10/23  14:50:11  allender
+ * set control type for new player *before* calling kc_set_controls
+ *
+ * Revision 1.7  1995/10/21  22:25:31  allender
+ * *** empty log message ***
+ *
+ * Revision 1.6  1995/10/17  15:57:42  allender
+ * removed line setting wrong COnfig_control_type
+ *
+ * Revision 1.5  1995/10/17  13:16:44  allender
+ * new controller support
+ *
+ * Revision 1.4  1995/08/24  16:03:38  allender
+ * call joystick code when player file uses joystick
+ *
+ * Revision 1.3  1995/08/03  15:15:39  allender
+ * got player save file working (more to go for shareware)
+ *
+ * Revision 1.2  1995/08/01  13:57:20  allender
+ * macified the player file stuff -- in a seperate folder
+ *
+ * Revision 1.1  1995/05/16  15:30:00  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/24  17:48:21  john
  * Made player files from saturn excrement the highest level for
  * normal descent levels.
@@ -220,13 +249,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: playsave.c 2.3 1995/05/26 16:16:23 john Exp $";
+static char rcsid[] = "$Id: playsave.c 1.1 1995/12/05 16:05:47 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <io.h>
+#include <Files.h>
+//#include <io.h>
 
 #include "error.h"
 
@@ -245,17 +275,9 @@ static char rcsid[] = "$Id: playsave.c 2.3 1995/05/26 16:16:23 john Exp $";
 #include "text.h"
 #include "mono.h"
 #include "state.h"
+#include "byteswap.h"
 
 #define SAVE_FILE_ID			'DPLR'
-
-//this is for version 5 and below
-typedef struct save_info_v5 {
-	int	id;
-	short	saved_game_version,player_struct_version;
-	int 	highest_level;
-	int	default_difficulty_level;
-	int	default_leveling_on;
-} save_info_v5;
 
 //this is for version 6 and above 
 typedef struct save_info {
@@ -315,31 +337,48 @@ int new_player_config()
 	newmenu_item m[7];
 
 RetrySelection:
-	for (i=0; i<CONTROL_MAX_TYPES; i++ )	{
-		m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
-	}
-	m[0].text = TXT_CONTROL_KEYBOARD;
+//	for (i=0; i<CONTROL_MAX_TYPES; i++ )	{
+//		m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
+//	}
+
+	m[0].type = NM_TYPE_MENU; m[0].text = CONTROL_TEXT(0);
+	m[1].type = NM_TYPE_MENU; m[1].text = CONTROL_TEXT(1);
+	m[2].type = NM_TYPE_MENU; m[2].text = CONTROL_TEXT(3);
+	m[3].type = NM_TYPE_MENU; m[3].text = CONTROL_TEXT(4);
+	m[4].type = NM_TYPE_MENU; m[4].text = CONTROL_TEXT(5);
 
 	control_choice = Config_control_type;				// Assume keyboard
 
-	control_choice = newmenu_do1( NULL, TXT_CHOOSE_INPUT, CONTROL_MAX_TYPES, m, NULL, control_choice );
+	control_choice = newmenu_do1( NULL, TXT_CHOOSE_INPUT, 5, m, NULL, control_choice );
 
 	if ( control_choice < 0 )
 		return 0;
+
+	if (control_choice == 0)
+		Config_control_type = CONTROL_NONE;
+	else if (control_choice == 1)
+		Config_control_type = CONTROL_JOYSTICK;
+	else if (control_choice == 2)
+		Config_control_type = CONTROL_THRUSTMASTER_FCS;
+	else if (control_choice == 3)
+		Config_control_type = CONTROL_GRAVIS_GAMEPAD;
+	else if (control_choice == 4)
+		Config_control_type = CONTROL_MOUSE;
 
 	for (i=0;i<CONTROL_MAX_TYPES; i++ )
 		for (j=0;j<MAX_CONTROLS; j++ )
 			kconfig_settings[i][j] = default_kconfig_settings[i][j];
 	kc_set_controls();
 
-	Config_control_type = control_choice;
+//	Config_control_type = control_choice;
 
-	if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)	{
-		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, TXT_FCS );
-		if (i==0) goto RetrySelection;
-	}
+//	if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)	{
+//		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, TXT_FCS );
+//		if (i==0) goto RetrySelection;
+//	}
 	
 	if ( (Config_control_type>0) && 	(Config_control_type<5) )	{
+		joydefs_set_type(Config_control_type);
 		joydefs_calibrate();
 	}
 
@@ -364,16 +403,17 @@ RetrySelection:
 //read in the player's saved games.  returns errno (0 == no error)
 int read_player_file()
 {
-	char filename[13];
+	char filename[64];
 	FILE *file;
 	save_info info;
-	int errno_ret = EZERO;
+	int errno_ret = 0;
 
 	Assert(Player_num>=0 && Player_num<MAX_PLAYERS);
 
-	sprintf(filename,"%8s.plr",Players[Player_num].callsign);
+	sprintf(filename,":Players:%s.plr",Players[Player_num].callsign);
 	file = fopen(filename,"rb");
 
+#if 0
 	//check filename
 	if (file && isatty(fileno(file))) {
 		//if the callsign is the name of a tty device, prepend a char
@@ -381,6 +421,7 @@ int read_player_file()
 		sprintf(filename,"$%.7s.plr",Players[Player_num].callsign);
 		file = fopen(filename,"rb");
 	}
+#endif
 
 	if (!file) {
 		return errno;
@@ -391,6 +432,12 @@ int read_player_file()
 		fclose(file);
 		return errno_ret;
 	}
+	info.id = swapint(info.id);
+	info.saved_game_version = swapshort(info.saved_game_version);
+	info.player_struct_version = swapshort(info.player_struct_version);
+	info.n_highest_levels = swapint(info.n_highest_levels);
+	info.default_difficulty_level = swapint(info.default_difficulty_level);
+	info.default_leveling_on = swapint(info.default_leveling_on);
 
 	if (info.id!=SAVE_FILE_ID) {
 		nm_messagebox(TXT_ERROR, 1, TXT_OK, "Invalid player file");
@@ -436,18 +483,39 @@ int read_player_file()
 	Default_leveling_on = info.default_leveling_on;
 
 	if ( info.saved_game_version < 7 )	{			// Read old saved games.
+#if 0			// NEED TO FIX THIS!!!!!!!!!!!!!!!!!!!!
+typedef struct saved_game {
+	char		name[GAME_NAME_LEN+1];		//extra char for terminating zero
+	player	player;
+} saved_game;
 		if (fread(saved_games,sizeof(saved_games),1,file) != 1) {
 			errno_ret = errno;
 			fclose(file);
 			return errno_ret;
 		}
+		for (i = 0; i < N_SAVE_SLOTS; i++) {
+			saved_games[i].difficulty = swapint(saved_games[i].difficulty);
+			saved_games[i].primary_weapon = swapint(saved_games[i].primary_weapon);
+			saved_games[i].secondary_weapon = swapint(saved_games[i].secondary_weapon);
+			saved_games[i].cockpit_mode = swapint(saved_games[i].cockpit_mode);
+			saved_games[i].window_w = swapint(saved_games[i].window_w);
+			saved_games[i].window_h = swapint(saved_games[i].window_h);
+			saved_games[i].window_h = swapint(saved_games[i].window_h);
+			saved_games[i].next_level_num = swapint(saved_games[i].next_level_num);
+			saved_games[i].auto_leveling_on = swapint(saved_games[i].auto_leveling_on);
+		}
+#endif
 	}
 
 	//read taunt macros
 	{
 		int i,len;
 
+#ifdef MAC_SHAREWARE
+		len = 35;
+#else
 		len = (info.saved_game_version == 4)?SHAREWARE_MAX_MESSAGE_LEN:MAX_MESSAGE_LEN;
+#endif
 
 		#ifdef NETWORK
 		for (i = 0; i < 4; i++)
@@ -468,12 +536,20 @@ int read_player_file()
 		else if (fread(&Config_joystick_sensitivity, sizeof(ubyte), 1, file )!=1)
 			errno_ret=errno;
 
-		if (errno_ret==EZERO)	{
+		if (Config_control_type == CONTROL_CYBERMAN)
+			Config_control_type = CONTROL_MOUSE;
+		else if (Config_control_type == CONTROL_FLIGHTSTICK_PRO)
+			Config_control_type = CONTROL_JOYSTICK;
+		if (errno_ret==0)	{
+//			if ( (Config_control_type>0) && 	(Config_control_type<5) )	{
+//				joydefs_calibrate();
+//			}
+			joydefs_set_type(Config_control_type);
 			kc_set_controls();
 		}
 	}
 
-	if (fclose(file) && errno_ret==EZERO)
+	if (fclose(file) && errno_ret==0)
 		errno_ret = errno;
 
 	if ( info.saved_game_version == COMPATIBLE_SAVED_GAME_VERSION )		{
@@ -501,10 +577,19 @@ int find_hli_entry()
 {
 	int i;
 
-	for (i=0;i<n_highest_levels;i++)
+	for (i=0;i<n_highest_levels;i++) {
+#ifdef MAC_SHAREWARE
+		if (!stricmp(highest_levels[i].shortname,""))
+			break;
+#else
 		if (!stricmp(highest_levels[i].shortname,Mission_list[Current_mission_num].filename))
 			break;
+#endif
+	}
 
+#ifdef MAC_SHAREWARE
+	Assert( i < n_highest_levels );			// should *always* have built in mission highest level num
+#else
 	if (i==n_highest_levels) {		//not found.  create entry
 
 		if (i==MAX_MISSIONS)
@@ -515,6 +600,7 @@ int find_hli_entry()
 		strcpy(highest_levels[i].shortname,Mission_list[Current_mission_num].filename);
 		highest_levels[i].level_num = 0;
 	}
+#endif
 
 	return i;
 }
@@ -524,8 +610,8 @@ void set_highest_level(int levelnum)
 {
 	int ret,i;
 
-	if ((ret=read_player_file()) != EZERO)
-		if (ret != ENOENT)		//if file doesn't exist, that's ok
+	if ((ret=read_player_file()) != 0)
+//		if (ret != ENOENT)		//if file doesn't exist, that's ok
 			return;
 
 	i = find_hli_entry();
@@ -542,14 +628,18 @@ int get_highest_level(void)
 	int i;
 	int highest_saturn_level = 0;
 	read_player_file();
-#ifndef DEST_SAT
+
+#ifndef MAC_SHAREWARE
+#ifndef SATURN
 	if (strlen(Mission_list[Current_mission_num].filename)==0 )	{
 		for (i=0;i<n_highest_levels;i++)
 			if (!stricmp(highest_levels[i].shortname, "DESTSAT")) 	//	Destination Saturn.
 		 		highest_saturn_level = highest_levels[i].level_num; 
 	}
 #endif
-   i = highest_levels[find_hli_entry()].level_num;
+#endif
+
+	i = highest_levels[find_hli_entry()].level_num;
 	if ( highest_saturn_level > i )
    	i = highest_saturn_level;
 	return i;
@@ -559,26 +649,32 @@ int get_highest_level(void)
 //write out player's saved games.  returns errno (0 == no error)
 int write_player_file()
 {
-	char filename[13];
+	char filename[64];
 	FILE *file;
 	save_info info;
 	int errno_ret;
+	FInfo finfo;
+	Str255 pfilename;
+	OSErr err;
 
+	#ifdef APPLE_OEM		// no saving of player files in Apple OEM version
+	return 0;
+	#endif
+	
 	errno_ret = WriteConfigFile();
 
-	info.id = SAVE_FILE_ID;
-	info.saved_game_version = SAVED_GAME_VERSION;
-	info.player_struct_version = PLAYER_STRUCT_VERSION;
-	info.saved_game_version = SAVED_GAME_VERSION;
-	info.player_struct_version = PLAYER_STRUCT_VERSION;
-	info.default_difficulty_level = Player_default_difficulty;
-	info.default_leveling_on = Auto_leveling_on;
+	info.id = swapint(SAVE_FILE_ID);
+	info.saved_game_version = swapshort(SAVED_GAME_VERSION);
+	info.player_struct_version = swapshort(PLAYER_STRUCT_VERSION);
+	info.default_difficulty_level = swapint(Player_default_difficulty);
+	info.default_leveling_on = swapint(Auto_leveling_on);
 
-	info.n_highest_levels = n_highest_levels;
+	info.n_highest_levels = swapint(n_highest_levels);
 
-	sprintf(filename,"%s.plr",Players[Player_num].callsign);
+	sprintf(filename,":Players:%s.plr",Players[Player_num].callsign);
 	file = fopen(filename,"wb");
 
+#if 0
 	//check filename
 	if (file && isatty(fileno(file))) {
 
@@ -588,11 +684,12 @@ int write_player_file()
 		sprintf(filename,"$%.7s.plr",Players[Player_num].callsign);
 		file = fopen(filename,"wb");
 	}
+#endif
 
 	if (!file)
 		return errno;
 
-	errno_ret = EZERO;
+	errno_ret = 0;
 
 	if (fwrite(&info,sizeof(info),1,file) != 1) {
 		errno_ret = errno;
@@ -636,7 +733,14 @@ int write_player_file()
 	if (fclose(file))
 		errno_ret = errno;
 
-	if (errno_ret != EZERO) {
+	strcpy(pfilename, filename);
+	c2pstr(pfilename);
+	err = HGetFInfo(0, 0, pfilename, &finfo);
+	finfo.fdType = 'PLYR';
+	finfo.fdCreator = 'DCNT';
+	err = HSetFInfo(0, 0, pfilename, &finfo);
+
+	if (errno_ret != 0) {
 		remove(filename);			//delete bogus file
 		nm_messagebox(TXT_ERROR, 1, TXT_OK, "%s\n\n%s",TXT_ERROR_WRITING_PLR, strerror(errno_ret));
 	}
@@ -651,8 +755,8 @@ int save_player_game(int slot_num,char *text)
 {
 	int ret;
 
-	if ((ret=read_player_file()) != EZERO)
-		if (ret != ENOENT)		//if file doesn't exist, that's ok
+	if ((ret=read_player_file()) != 0)
+//		if (ret != ENOENT)		//if file doesn't exist, that's ok
 			return ret;
 
 	Assert(slot_num < N_SAVE_SLOTS);
@@ -682,7 +786,7 @@ int load_player_game(int slot_num)
 
 	Assert(slot_num < N_SAVE_SLOTS);
 
-	if ((ret=read_player_file()) != EZERO)
+	if ((ret=read_player_file()) != 0)
 		return ret;
 
 	Assert(saved_games[slot_num].name[0] != 0);
@@ -701,7 +805,7 @@ int load_player_game(int slot_num)
 
 	Players[Player_num].level = saved_games[slot_num].next_level_num;
 
-	return EZERO;
+	return 0;
 }
 
 //fills in a list of pointers to strings describing saved games
@@ -721,7 +825,7 @@ int get_game_list(char *game_text[N_SAVE_SLOTS])
 			count++;
 	}
 
-	return (ret==EZERO)?count:-1;		//-1 means new file was created
+	return (ret==0)?count:-1;		//-1 means new file was created
 
 }
 
@@ -730,10 +834,9 @@ int update_player_file()
 {
 	int ret;
 
-	if ((ret=read_player_file()) != EZERO)
-		if (ret != ENOENT)		//if file doesn't exist, that's ok
+	if ((ret=read_player_file()) != 0)
+//		if (ret != ENOENT)		//if file doesn't exist, that's ok
 			return ret;
 
 	return write_player_file();
 }
-

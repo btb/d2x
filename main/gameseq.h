@@ -11,14 +11,26 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gameseq.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:03 $
+ * $Source: Smoke:miner:source:main::RCS:gameseq.h $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:22:55 $
  * 
  * Prototypes for functions for game sequencing.
  * 
  * $Log: gameseq.h $
+ * Revision 1.4  1995/10/31  10:22:55  allender
+ * shareware stuff
+ *
+ * Revision 1.3  1995/09/14  14:13:14  allender
+ * initplayerobject have void return
+ *
+ * Revision 1.2  1995/08/24  15:36:17  allender
+ * fixed prototypes warnings
+ *
+ * Revision 1.1  1995/05/16  15:57:26  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:03  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -172,9 +184,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define SUPER_SMARTBOMB		2
 #define SUPER_SHOCKWAVE		3
 
-#ifdef SHAREWARE
-#define Last_level
-#define Last_level			7			//the number of the very last level for shareware
+#ifdef MAC_SHAREWARE
+#define Last_level			3			//the number of the very last level for shareware
 #define Last_secret_level	0 			// No secret levels!
 #else
 extern int Last_level,Last_secret_level;	//set by mission code
@@ -200,32 +211,32 @@ extern int Player_highest_level;
 //
 
 //called once at program startup to get the player's name
-RegisterPlayer();
+int RegisterPlayer();
 
 //Inputs the player's name, without putting up the background screen
-RegisterPlayerSub(int allow_abort_flag);
+//RegisterPlayerSub(int allow_abort_flag);
 
 //starts a new game on the given level
-StartNewGame(int start_level);
+void StartNewGame(int start_level);
 
 //starts the next level
-StartNewLevel(int level_num);
+void StartNewLevel(int level_num);
 
 // Actually does the work to start new level
-StartNewLevelSub(int level_num, int page_in_textures);
+void StartNewLevelSub(int level_num, int page_in_textures);
 
-InitPlayerObject();				//make sure player's object set up
-init_player_stats_game();		//clear all stats
+void InitPlayerObject();				//make sure player's object set up
+void init_player_stats_game();		//clear all stats
 
 //starts a resumed game loaded from disk
-ResumeSavedGame(int start_level);
+void ResumeSavedGame(int start_level);
 
 //called when the player has finished a level
 //if secret flag is true, advance to secret level, else next normal level
-PlayerFinishedLevel(int secret_flag);
+void PlayerFinishedLevel(int secret_flag);
 
 //called when the player has died
-DoPlayerDead();
+void DoPlayerDead();
 
 //load a level off disk. level numbers start at 1.  
 //Secret levels are -1,-2,-3
@@ -243,7 +254,7 @@ extern void draw_high_scores( int place );
 extern int add_player_to_high_scores(player *pp);
 extern void input_name ( int place );
 extern int reset_high_scores();
-extern init_player_stats_level();
+extern void init_player_stats_level();
 
 void open_message_window(void);
 void close_message_window(void);
@@ -265,4 +276,3 @@ extern int MaxNumNetPlayers;
 extern int NumNetPlayerPositions;
 
 #endif
-

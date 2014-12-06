@@ -11,10 +11,10 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/menu.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/10/07 13:19:09 $
+ * $Source: BigRed:miner:source:main::RCS:menu.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 16:03:00 $
  *
  * Inferno main menu.
  *
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
+static char rcsid[] = "$Id: menu.c 1.1 1995/12/05 16:03:00 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <time.h>
@@ -32,8 +32,8 @@ static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
 #include <string.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include <conio.h>
-#include <dos.h>
+//#include <conio.h>
+//#include <dos.h>
 #include <errno.h>
 
 #include "menu.h"
@@ -47,7 +47,7 @@ static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
 #include "bm.h"
 #include "screens.h"
 #include "mono.h"
-#include "cflib.h"
+//#include "cflib.h"
 #include "joy.h"
 #include "vecmat.h"
 #include "effects.h"
@@ -78,6 +78,7 @@ static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
 #include "mission.h"
 #include "songs.h"
 #include "config.h"
+#include "macsys.h"		// for hiding cursor before automatic demo starting
 
 #ifdef EDITOR
 #include "editor\editor.h"
@@ -108,6 +109,8 @@ static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
 #define MENU_SHOW_CREDITS			23
 #define MENU_ORDER_INFO				24
 #define MENU_PLAY_SONG				25
+#define MENU_START_APPLE_NETGAME	26
+#define MENU_JOIN_APPLE_NETGAME		27
 
 //ADD_ITEM("Start netgame...", MENU_START_NETGAME, -1 );
 //ADD_ITEM("Send net message...", MENU_SEND_NET_MESSAGE, -1 );
@@ -115,8 +118,10 @@ static char rcsid[] = "$Id: menu.c 2.5 1995/10/07 13:19:09 john Exp $";
 #define ADD_ITEM(t,value,key)  do { m[num_options].type=NM_TYPE_MENU; m[num_options].text=t; menu_choice[num_options]=value;num_options++; } while (0)
 
 extern int last_joy_time;		//last time the joystick was used
+extern int Scanline_double;		// double scanlines???
 #ifndef NDEBUG
-extern int speedtest_on;
+//extern int speedtest_on;
+#define speedtest_on 0
 #else
 #define speedtest_on 0
 #endif
@@ -125,6 +130,10 @@ ubyte do_auto_demo = 1;			// Flag used to enable auto demo starting in main menu
 int Player_default_difficulty; // Last difficulty level chosen by the player
 int Auto_leveling_on = 0;
 int Menu_draw_copyright = 0;
+
+void do_option ( int select);
+void do_detail_level_menu_custom(void);
+void do_multi_player_menu();
 
 void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int citem )
 {
@@ -147,9 +156,10 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 	if (*last_key==KEY_ESC) *last_key = 0;
 
 	if ( do_auto_demo )	{
-		curtime = timer_get_approx_seconds();
+		curtime = timer_get_fixed_seconds();
 		//if ( ((keyd_time_when_last_pressed+i2f(20)) < curtime) && ((last_joy_time+i2f(20)) < curtime) && (!speedtest_on)  ) {
 		if ( ((keyd_time_when_last_pressed+i2f(45)) < curtime) && (!speedtest_on)  ) {
+			hide_cursor();
 			keyd_time_when_last_pressed = curtime;			// Reset timer so that disk won't thrash if no demos.
 			newdemo_start_playback(NULL);		// Randomly pick a file
 			if (Newdemo_state == ND_STATE_PLAYBACK)	{
@@ -199,7 +209,7 @@ void create_main_menu(newmenu_item *m, int *menu_choice, int *callers_num_option
 	ADD_ITEM(TXT_CHANGE_PILOTS,MENU_NEW_PLAYER,unused);
 	ADD_ITEM(TXT_VIEW_DEMO,MENU_DEMO_PLAY,0);
 	ADD_ITEM(TXT_VIEW_SCORES,MENU_VIEW_SCORES,KEY_V);
-	#ifdef SHAREWARE
+	#ifdef MAC_SHAREWARE
 	ADD_ITEM(TXT_ORDERING_INFO,MENU_ORDER_INFO,-1);
 	#endif
 	ADD_ITEM(TXT_CREDITS,MENU_SHOW_CREDITS,-1);
@@ -217,7 +227,7 @@ void create_main_menu(newmenu_item *m, int *menu_choice, int *callers_num_option
 		#endif
 	}
 
-	ADD_ITEM( "  Play song", MENU_PLAY_SONG, -1 );
+//	ADD_ITEM( "  Play song", MENU_PLAY_SONG, -1 );
 	#endif
 
 	*callers_num_options = num_options;
@@ -273,7 +283,7 @@ void do_option ( int select)
 		case MENU_DEMO_PLAY:
 			{ 
 				char demo_file[16];
-				if (newmenu_get_filename( TXT_SELECT_DEMO, "*.dem", demo_file, 1 ))	{
+				if (newmenu_get_filename( TXT_SELECT_DEMO, ":Demos:*.dem", demo_file, 1 ))	{
 					newdemo_start_playback(demo_file);
 				}
 			}
@@ -295,7 +305,7 @@ void do_option ( int select)
 			gr_palette_fade_out( gr_palette,32,0 );
 			scores_view(-1);
 			break;
-		#ifdef SHAREWARE
+		#ifdef MAC_SHAREWARE
 		case MENU_ORDER_INFO:
 			show_order_form();
 			break;
@@ -317,6 +327,7 @@ void do_option ( int select)
 
 		#ifndef RELEASE
 
+#if 0
 		case MENU_PLAY_SONG:	{
 				int i;
 				char * m[MAX_SONGS];
@@ -331,6 +342,7 @@ void do_option ( int select)
 				}
 			}
 			break;
+#endif
 		case MENU_LOAD_LEVEL: {
 			newmenu_item m;
 			char text[10]="";
@@ -355,15 +367,35 @@ void do_option ( int select)
 		case MENU_START_NETGAME:
 #ifdef NETWORK
 //temp!
+#ifndef MAC_SHAREWARE
 			load_mission(0);
-			network_start_game();
+#endif
+			network_start_game(IPX_GAME);
 #endif
 			break;
 		case MENU_JOIN_NETGAME:
 //temp!
 #ifdef NETWORK
+#ifndef MAC_SHAREWARE
 			load_mission(0);
-			network_join_game();
+#endif
+			network_join_game(IPX_GAME);
+#endif
+			break;
+		case MENU_START_APPLE_NETGAME:
+#ifdef NETWORK
+#ifndef MAC_SHAREWARE
+			load_mission(0);
+#endif
+			network_start_game(APPLETALK_GAME);
+#endif
+			break;
+		case MENU_JOIN_APPLE_NETGAME:
+#ifdef NETWORK
+#ifndef MAC_SHAREWARE
+			load_mission(0);
+#endif
+			network_join_game(APPLETALK_GAME);
 #endif
 			break;
 		case MENU_START_SERIAL:
@@ -399,7 +431,7 @@ int do_difficulty_menu()
 	m[3].type=NM_TYPE_MENU; m[3].text=MENU_DIFFICULTY_TEXT(3);
 	m[4].type=NM_TYPE_MENU; m[4].text=MENU_DIFFICULTY_TEXT(4);
 
-	s = newmenu_do1( NULL, TXT_DIFFICULTY_LEVEL, NDL, m, NULL, Difficulty_level);
+	s = newmenu_do4( NULL, TXT_DIFFICULTY_LEVEL, NDL, m, NULL, Difficulty_level, NULL, -1, -1, 1);
 
 	if (s > -1 )	{
 		if (s != Difficulty_level)
@@ -420,14 +452,15 @@ int	Max_linear_depth_objects;
 byte	Object_complexity=2, Object_detail=2;
 byte	Wall_detail=2, Wall_render_depth=2, Debris_amount=2, SoundChannels = 2;
 
-byte	Render_depths[NUM_DETAIL_LEVELS-1] =								{ 6,  9, 12, 15, 20};
-byte	Max_perspective_depths[NUM_DETAIL_LEVELS-1] =					{ 1,  2,  3,  5,  8};
-byte	Max_linear_depths[NUM_DETAIL_LEVELS-1] =							{ 3,  5,  7, 10, 17};
+byte	Render_depths[NUM_DETAIL_LEVELS-1] =							{ 6,  9, 12, 15, 20};
+//byte	Max_perspective_depths[NUM_DETAIL_LEVELS-1] =					{ 1,  2,  3,  5,  8};
+byte	Max_perspective_depths[NUM_DETAIL_LEVELS-1] =					{ 1,  2,  3,  4,  5};
+byte	Max_linear_depths[NUM_DETAIL_LEVELS-1] =						{ 3,  5,  7, 10, 17};
 byte	Max_linear_depths_objects[NUM_DETAIL_LEVELS-1] =				{ 1,  2,  3,  5, 12};
 byte	Max_debris_objects_list[NUM_DETAIL_LEVELS-1] =					{ 2,  4,  7, 10, 15};
-byte	Max_objects_onscreen_detailed_list[NUM_DETAIL_LEVELS-1] =	{ 2,  4,  7, 10, 15};
-byte	Smts_list[NUM_DETAIL_LEVELS-1] =										{ 2,  4,  8, 16, 50};	//	threshold for models to go to lower detail model, gets multiplied by obj->size
-byte	Max_sound_channels[NUM_DETAIL_LEVELS-1] =							{ 2,  4,  8, 12, 16};
+byte	Max_objects_onscreen_detailed_list[NUM_DETAIL_LEVELS-1] =		{ 2,  4,  7, 10, 15};
+byte	Smts_list[NUM_DETAIL_LEVELS-1] =								{ 2,  4,  8, 16, 50};	//	threshold for models to go to lower detail model, gets multiplied by obj->size
+byte	Max_sound_channels[NUM_DETAIL_LEVELS-1] =						{ 2,  4,  8, 10, 16};
 
 //	-----------------------------------------------------------------------------
 //	Set detail level based stuff.
@@ -474,7 +507,7 @@ void do_detail_level_menu(void)
 	m[5].type=NM_TYPE_TEXT; m[5].text="";
 	m[6].type=NM_TYPE_MENU; m[6].text=MENU_DETAIL_TEXT(5);
 
-	s = newmenu_do1( NULL, TXT_DETAIL_LEVEL , NDL+2, m, NULL, Detail_level);
+	s = newmenu_do4( NULL, TXT_DETAIL_LEVEL , NDL+2, m, NULL, Detail_level, NULL, -1, -1, 1);
 
 	if (s > -1 )	{
 		switch (s)	{
@@ -574,7 +607,7 @@ void do_detail_level_menu_custom(void)
 		m[6].type = NM_TYPE_TEXT;
 		m[6].text= TXT_LO_HI;
 
-		s = newmenu_do1( NULL, TXT_DETAIL_CUSTOM, 7, m, do_detail_level_menu_custom_menuset, s);
+		s = newmenu_do4( NULL, TXT_DETAIL_CUSTOM, 7, m, do_detail_level_menu_custom_menuset, s, NULL, -1, -1, 1);
 	} while (s > -1);
 
 	set_custom_detail_vars();
@@ -584,7 +617,7 @@ do_new_game_menu()
 {
 	int n_missions,new_level_num,player_highest_level;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	n_missions = build_mission_list(0);
 
 	if (n_missions > 1) {
@@ -598,7 +631,7 @@ do_new_game_menu()
 				default_mission = i;
 		}
 
-		new_mission_num = newmenu_listbox1( "New Game\n\nSelect mission", n_missions, m, 1, default_mission, NULL );
+		new_mission_num = newmenu_listbox1( "New Game\n\nSelect mission", n_missions, m, 1, default_mission, NULL, 1 );
 
 		if (new_mission_num == -1)
 			return;		//abort!
@@ -633,7 +666,7 @@ try_again:
 
 		strcpy(num_text,"1");
 
-		choice = newmenu_do( NULL, TXT_SELECT_START_LEV, 2, &m, NULL );
+		choice = newmenu_do4( NULL, TXT_SELECT_START_LEV, 2, m, NULL, 0, NULL, -1, -1, 1 );
 
 		if (choice==-1 || m[1].text[0]==0)
 			return;
@@ -653,17 +686,6 @@ try_again:
 		return;
 
 	gr_palette_fade_out( gr_palette, 32, 0 );
-
-#ifdef PSX_BUILD_TOOLS
-	{
-		int i;
-		for (i=Last_secret_level; i<=Last_level; i++ )	{
-			if ( i!=0 )	
-				StartNewGame(i);
-		}		
-	}
-#endif
-
 	StartNewGame(new_level_num);
 
 }
@@ -688,12 +710,12 @@ do_load_game_menu()
 		}
 	}
 
-	choice = newmenu_do( NULL, TXT_LOAD_GAME, N_SAVE_SLOTS, m, NULL );
+	choice = newmenu_do4( NULL, TXT_LOAD_GAME, N_SAVE_SLOTS, m, NULL, 0, NULL, -1, -1, 1 );
 
 	if (choice != -1) {
 		int ret;
 
-		if ((ret=load_player_game(choice)) == EZERO)
+		if ((ret=load_player_game(choice)) == 0)
 			ResumeSavedGame(Players[Player_num].level);
 		else {
 			newmenu_item m1[3];
@@ -730,37 +752,54 @@ do_save_game_menu()
 
 	}
 
-	choice = newmenu_do( NULL, TXT_SAVE_GAME_SLOTS, N_SAVE_SLOTS, m, NULL );
+	choice = newmenu_do4( NULL, TXT_SAVE_GAME_SLOTS, N_SAVE_SLOTS, m, NULL, 0, NULL, -1, -1, 1 );
 
 	if (choice != -1) {
 		int ret;
 
-		if ((ret=save_player_game(choice,m[choice].text)) != EZERO)
+		if ((ret=save_player_game(choice,m[choice].text)) != 0)
 			nm_messagebox( NULL,1, TXT_CONTINUE,"%s\n%s\n\n", TXT_SAVE_ERROR, strerror(ret));
 	}
 
 }
 
 extern void GameLoop(int, int );
+extern ubyte Config_master_volume;
+
+
+void sound_menuset( int nitems, newmenu_item *items, int *last_key, int citem )
+{
+	nitems = nitems;
+	*last_key=*last_key;
+	
+	if ( Config_digi_volume != items[0].value )	{
+		Config_digi_volume = items[0].value;
+		digi_set_digi_volume( (Config_digi_volume*256)/8 );
+		digi_play_sample_once( SOUND_DROP_BOMB, F1_0 );
+	}
+
+	if ( Config_midi_volume != items[1].value )	{
+		Config_midi_volume = items[1].value;
+		digi_set_midi_volume( (Config_midi_volume*256)/8 );
+	}
+	
+	if ( Config_master_volume != items[2].value ) {
+		Config_master_volume = items[2].value;
+		digi_set_master_volume( items[2].value );
+		digi_play_sample_once( SOUND_DROP_BOMB, F1_0 );
+	}
+	
+	if (shuffle_levels != items[5].value)
+		shuffle_levels = items[5].value;
+}
 
 void joydef_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	nitems=nitems;		
 	*last_key = *last_key;
 
-	if ( citem==4)	{
-		gr_palette_set_gamma(items[4].value);
-	}
-
-	if ( Config_digi_volume != items[0].value )	{
-		Config_digi_volume = items[0].value;
-		digi_set_digi_volume( (Config_digi_volume*32768)/8 );
-		digi_play_sample_once( SOUND_DROP_BOMB, F1_0 );
-	}
-
-	if (Config_midi_volume != items[1].value )	{
-		Config_midi_volume = items[1].value;
-		digi_set_midi_volume( (Config_midi_volume*128)/8 );
+	if ( citem==2)	{
+		gr_palette_set_gamma(items[2].value);
 	}
 }
 
@@ -771,50 +810,81 @@ void joydef_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 #define	TXT_JOYS_SENSITIVITY "Joystick/Mouse\nSensitivity"
 #endif
 
+void do_sound_menu()
+{
+	newmenu_item m[6];
+	int i = 0;
+	int count = 0;
+	
+	do {
+		count = 0;
+		m[0].type = NM_TYPE_SLIDER; m[0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; count++;
+		m[1].type = NM_TYPE_SLIDER; m[1].text=TXT_MUSIC_VOLUME; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8; count++;
+		m[2].type = NM_TYPE_SLIDER; m[2].text="Master Volume"; m[2].value=Config_master_volume;m[2].min_value=0;m[2].max_value=8; count++;
+		m[3].type = NM_TYPE_CHECK; m[3].text=TXT_REVERSE_STEREO; m[3].value=Config_channels_reversed; count++;
+#ifndef MAC_SHAREWARE
+		m[4].type = NM_TYPE_TEXT; m[4].text=""; count++;
+		m[5].type = NM_TYPE_CHECK; m[5].text="Shuffle Play Descent CD\nLevel Songs";m[5].value = shuffle_levels; count++;
+#endif
+		
+		i = newmenu_do4( NULL, "Sound/Music Options", count, m, sound_menuset, i, NULL, -1, -1, 1 );
+
+		Config_channels_reversed = m[3].value;
+	} while( i>-1 );
+}
+
 void do_options_menu()
 {
 	newmenu_item m[13];
 	int i = 0;
 
 	do {
-		m[0].type = NM_TYPE_SLIDER; m[0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; 
-		m[1].type = NM_TYPE_SLIDER; m[1].text=TXT_MUSIC_VOLUME; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8; 
-		m[2].type = NM_TYPE_CHECK; m[2].text=TXT_REVERSE_STEREO; m[2].value=Config_channels_reversed; 
+//		m[0].type = NM_TYPE_SLIDER; m[0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; 
+//		m[1].type = NM_TYPE_SLIDER; m[1].text=TXT_MUSIC_VOLUME; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8; 
+//		m[2].type = NM_TYPE_CHECK; m[2].text=TXT_REVERSE_STEREO; m[2].value=Config_channels_reversed; 
+		m[0].type = NM_TYPE_MENU; m[0].text="Sound/Music Controls...";
+		m[1].type = NM_TYPE_TEXT; m[1].text="";
+		m[2].type = NM_TYPE_SLIDER; m[2].text=TXT_BRIGHTNESS; m[2].value=gr_palette_get_gamma();m[2].min_value=0; m[2].max_value=8; 
 		m[3].type = NM_TYPE_TEXT; m[3].text="";
-		m[4].type = NM_TYPE_SLIDER; m[4].text=TXT_BRIGHTNESS; m[4].value=gr_palette_get_gamma();m[4].min_value=0; m[4].max_value=8; 
-		m[5].type = NM_TYPE_TEXT; m[5].text="";
-		m[6].type = NM_TYPE_MENU; m[6].text=TXT_CONTROLS_;
-		m[7].type = NM_TYPE_MENU; m[7].text=TXT_DETAIL_LEVELS;
-		m[8].type = NM_TYPE_MENU; m[8].text=TXT_CAL_JOYSTICK;
+		#ifndef APPLE_OEM
+		m[4].type = NM_TYPE_MENU; m[4].text=TXT_CONTROLS_;
+		#else
+		m[4].type = NM_TYPE_TEXT; m[4].text = "";
+		#endif
+		m[5].type = NM_TYPE_MENU; m[5].text=TXT_DETAIL_LEVELS;
+		m[6].type = NM_TYPE_MENU; m[6].text=TXT_CAL_JOYSTICK;
+		m[7].type = NM_TYPE_TEXT; m[7].text="";
+		m[8].type = NM_TYPE_SLIDER; m[8].text=TXT_JOYS_SENSITIVITY; m[8].value=Config_joystick_sensitivity; m[8].min_value =0; m[8].max_value = 8;
 		m[9].type = NM_TYPE_TEXT; m[9].text="";
-		m[10].type = NM_TYPE_SLIDER; m[10].text=TXT_JOYS_SENSITIVITY; m[10].value=Config_joystick_sensitivity; m[10].min_value =0; m[10].max_value = 8;
-		m[11].type = NM_TYPE_TEXT; m[11].text="";
-		m[12].type = NM_TYPE_CHECK; m[12].text="Ship auto-leveling"; m[12].value=Auto_leveling_on; 
+		m[10].type = NM_TYPE_CHECK; m[10].text="Pixel Double"; m[10].value=Scanline_double;
+		m[11].type = NM_TYPE_CHECK; m[11].text="Ship auto-leveling"; m[11].value=Auto_leveling_on; 
 				
-		i = newmenu_do1( NULL, TXT_OPTIONS, 13, m, joydef_menuset, i );
+		i = newmenu_do4( NULL, TXT_OPTIONS, 12, m, joydef_menuset, i, NULL, -1, -1, 1 );
 			
 		switch(i)	{
-			case 6: joydefs_config(); 			break;
-			case 7: do_detail_level_menu();	break;
-			case 8: joydefs_calibrate();		break;
+			case 0: do_sound_menu();			break;
+			case 4: joydefs_config(); 			break;
+			case 5: do_detail_level_menu();		break;
+			case 6: joydefs_calibrate();		break;
 		}
 
-		Config_channels_reversed = m[2].value;
-		Config_joystick_sensitivity = m[10].value;
-		Auto_leveling_on = m[12].value;
+//		Config_channels_reversed = m[2].value;
+		Config_joystick_sensitivity = m[8].value;
+		Auto_leveling_on = m[11].value;
+		Scanline_double = m[10].value;
 	} while( i>-1 );
 
-	if ( Config_midi_volume < 1 )	{
-		digi_play_midi_song( NULL, NULL, NULL, 0 );
-	}
+//	if ( Config_midi_volume < 1 )	{
+//		digi_play_midi_song( NULL, NULL, NULL, 0 );
+//	}
 
 	write_player_file();
 }
 
 void do_multi_player_menu()
 {
-	int menu_choice[3];
-	newmenu_item m[3];
+	int menu_choice[5];
+	newmenu_item m[5];
 	int choice = 0, num_options = 0;
 	int old_game_mode;
 
@@ -824,9 +894,11 @@ void do_multi_player_menu()
 
 		ADD_ITEM(TXT_START_NET_GAME, MENU_START_NETGAME, -1 );
 		ADD_ITEM(TXT_JOIN_NET_GAME, MENU_JOIN_NETGAME, -1 );
+		ADD_ITEM("Start Appletalk Game...", MENU_START_APPLE_NETGAME, -1 );
+		ADD_ITEM("Join Appletalk Game...\n", MENU_JOIN_APPLE_NETGAME, -1 );
 		ADD_ITEM(TXT_MODEM_GAME, MENU_START_SERIAL, -1);
 
-		choice = newmenu_do1( NULL, TXT_MULTIPLAYER, num_options, m, NULL, choice );
+		choice = newmenu_do4( NULL, TXT_MULTIPLAYER, num_options, m, NULL, choice, NULL, -1, -1, 1 );
 		
 		if ( choice > -1 )	
 			do_option(menu_choice[choice]);
@@ -839,4 +911,3 @@ void do_multi_player_menu()
 }
 
 
-

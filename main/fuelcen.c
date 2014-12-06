@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/fuelcen.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/03/21 14:38:40 $
+ * $Source: Smoke:miner:source:main::RCS:fuelcen.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:23:40 $
  * 
  * Functions for refueling centers.
  * 
  * $Log: fuelcen.c $
- * Revision 2.3  1995/03/21  14:38:40  john
+ * Revision 1.2  1995/10/31  10:23:40  allender
+ * shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:24:50  allender
+ * Initial revision
+ *
+ * Revision 2.3  1995/03/21  08:38:40  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.2  1995/03/06  15:23:09  john
@@ -236,7 +242,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: fuelcen.c 2.3 1995/03/21 14:38:40 john Exp $";
+static char rcsid[] = "$Id: fuelcen.c 1.2 1995/10/31 10:23:40 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -605,7 +611,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 
 	//	No robot making in multiplayer mode.
 #ifdef NETWORK
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if ((Game_mode & GM_MULTI) && (!(Game_mode & GM_MULTI_ROBOTS) || !network_i_am_master()))
 		return;
 #else
@@ -755,7 +761,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 				mprintf((0, "Morph: (type = %i) (seg = %i) (capacity = %08x)\n", type, robotcen->segnum, robotcen->Capacity));
 				obj = create_morph_robot(&Segments[robotcen->segnum], &cur_object_loc, type );
 				if (obj != NULL) {
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 					if (Game_mode & GM_MULTI)
 						multi_send_create_robot(robotcen-Station, obj-Objects, type);
@@ -1325,4 +1331,3 @@ void init_all_matcens(void)
 #endif
 
 }
-

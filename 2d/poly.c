@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/poly.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/13 13:03:43 $
+ * $Source: Buggin:miner:source:2d::RCS:poly.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 09:21:47 $
  *
  * Graphical routines for drawing polygons.
  *
  * $Log: poly.c $
+ * Revision 1.1  1995/03/09  09:21:47  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information --
  * Revision 1.5  1994/11/13  13:03:43  john
  * Added paged out bit in bitmap structure.  Commented out the
  * poly code that is never used.
@@ -298,4 +303,3 @@ void gr_poly(int nverts, int *vert )
 }
 
 #endif
-

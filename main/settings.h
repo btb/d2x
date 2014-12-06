@@ -18,18 +18,15 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define NEWDEMO			//Demo is always IN 
 
 //#define EDITOR			//Editor is OUT 
-//#define RELEASE			//This IS a release version 
+//#define RELEASE			//This is NOT a release version 
 //#define ARCADE			//Arcade (ATW) code is OUT 
 //#define DEMO_ONLY		//Game is playable 
-//#define NDEBUG  1			//NDEBUG is ON 
-#define NMONO  			//NMONO is ON 
+//#define NDEBUG			//NDEBUG is OFF 
+//#define NMONO			//NMONO is OFF 
 //#define _MARK_ON		//MARKS are OFF 
 //#define PASSWORD		//PASSWORD is OFF 
 //#define STORE_DEMO 1	//STORE_DEMO is OFF 
 #define PIGGY_USE_PAGING 1		//Don't use paging from pig file 
-//#define DEST_SAT 1		// Not building for Destination Saturn (OEM version) 
-//#define REQUIRE_CD 1	// Doesn't require a CD in drive 
-//#define USE_CD 1	// Doesn't use a CD in drive 
-//#define ROCKWELL_CODE 1	// Rockwell psuedo shareware 
+//#define SATURN 1		// Not building for Destination Saturn (OEM version) 
 //#define COMPACT_SEGS 1		// Not building for Destination Saturn (OEM version) 
-#define NETWORK 1		// Not building for Destination Saturn (OEM version) 
+//#define NETWORK 1		// Not building for Destination Saturn (OEM version) 

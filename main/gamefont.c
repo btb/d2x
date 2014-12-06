@@ -11,14 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gamefont.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:14 $
+ * $Source: Smoke:miner:source:main::RCS:gamefont.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/18 10:23:25 $
  * 
  * Fonts for the game.
  * 
  * $Log: gamefont.c $
+ * Revision 1.2  1995/08/18  10:23:25  allender
+ * remove refernce to big font -- add PC small font for pixel
+ * doubling display
+ *
+ * Revision 1.1  1995/05/16  15:25:22  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:30:14  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -53,7 +60,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gamefont.c 2.0 1995/02/27 11:30:14 john Exp $";
+static char rcsid[] = "$Id: gamefont.c 1.2 1995/08/18 10:23:25 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -61,11 +68,12 @@ static char rcsid[] = "$Id: gamefont.c 2.0 1995/02/27 11:30:14 john Exp $";
 #include "gr.h"
 #include "gamefont.h"
 
-char * Gamefont_filenames[] = { 	"font1-1.fnt",			// Font 0
-											"font2-1.fnt",			// Font 1
-											"font2-2.fnt",			// Font 2
-											"font2-3.fnt",			// Font 3
-											"font3-1.fnt",			// Font 4
+char * Gamefont_filenames[] = {				//			 	"font1-1.fnt",			// Font 0
+											"font2-1.fnt",			// Font 0
+											"font2-2.fnt",			// Font 1
+											"font2-3.fnt",			// Font 2
+											"font3-1.fnt",			// Font 3
+											"font3-1a.fnt",			// Font 4  PC small font for hud pixel doubling
 										};
 
 grs_font *Gamefonts[MAX_FONTS];
@@ -99,4 +107,3 @@ void gamefont_close()
 	}
 
 }
-

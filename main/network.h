@@ -11,14 +11,35 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/network.h $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:58:09 $
+ * $Source: Smoke:miner:source:main::RCS:network.h $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:20:04 $
  * 
  * Prototypes for network management functions.
  * 
  * $Log: network.h $
+ * Revision 1.7  1995/10/31  10:20:04  allender
+ * shareware stuff
+ *
+ * Revision 1.6  1995/09/21  14:31:18  allender
+ * new appltalk type packet which contains shortpos
+ *
+ * Revision 1.5  1995/09/18  08:07:08  allender
+ * added function prototype to remove netgame NBP
+ *
+ * Revision 1.4  1995/08/31  15:51:55  allender
+ * new prototypes for join and start games
+ *
+ * Revision 1.3  1995/07/26  17:02:29  allender
+ * implemented and working on mac
+ *
+ * Revision 1.2  1995/06/02  07:42:34  allender
+ * fixed prototype for network_endlevel_poll2
+ *
+ * Revision 1.1  1995/05/16  16:00:15  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/21  14:58:09  john
  * *** empty log message ***
  * 
@@ -280,18 +301,31 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define CONNECT_ESCAPE_TUNNEL		5
 #define CONNECT_END_MENU			6
 
+#define IPX_GAME		1
+#define APPLETALK_GAME	2
+
+typedef struct endlevel_info {
+	ubyte					type;
+	ubyte					player_num;
+	byte					connected;
+	short					kill_matrix[MAX_PLAYERS][MAX_PLAYERS];
+	short					kills;
+	short					killed;
+	ubyte					seconds_left;
+} endlevel_info;
+
 typedef struct sequence_packet {
 	ubyte					type;
 	netplayer_info		player;
 } sequence_packet;
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 #define NET_XDATA_SIZE 256
 #else
 #define NET_XDATA_SIZE 454
 #endif
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 typedef struct frame_info {
 	ubyte				type;						// What type of p
 	int				numpackets;			
@@ -324,14 +358,26 @@ typedef struct frame_info {
 } frame_info;
 #endif
 
+// frame info structure for appletalk frame packet since we
+// have a problem with localtalk packets
 
+typedef struct appletalk_frame_info {
+	ubyte		type;
+	ubyte		playernum;
+	ubyte		obj_render_type;
+	ubyte		level_num;
+	int			numpackets;
+	shortpos	obj_info;
+	short		data_size;
+	ubyte		data[NET_XDATA_SIZE];
+} appletalk_frame_info;
 
-void network_start_game();
-void network_join_game();
+void network_start_game(int game_type);
+void network_join_game(int game_type);
 void network_rejoin_game();
 void network_leave_game();
 int network_endlevel(int *secret);
-int network_endlevel_poll2( int nitems, struct newmenu_item * menus, int * key, int citem );
+void network_endlevel_poll2( int nitems, struct newmenu_item * menus, int * key, int citem );
 
 
 int network_level_sync();
@@ -368,6 +414,9 @@ void network_do_frame(int force, int listen);
 // packet that we're transmitting.
 void network_send_data( ubyte * ptr, int len, int urgent );
 
+// routine mainly for appletalk to release the name binding done
+// for the netgame
+void network_release_registered_game(void);
+
 #endif
 #endif
-

@@ -11,25 +11,55 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/titles.c $
- * $Revision: 2.10 $
- * $Author: john $
- * $Date: 1995/06/15 12:14:16 $
+ * $Source: Smoke:miner:source:main::RCS:titles.c $
+ * $Revision: 1.13 $
+ * $Author: allender $
+ * $Date: 1995/11/03 12:52:23 $
  * 
  * Routines to display title screens...
  * 
  * $Log: titles.c $
- * Revision 2.10  1995/06/15  12:14:16  john
- * Made end game, win game and title sequences all go
- * on after 5 minutes automatically.
- * 
- * Revision 2.9  1995/06/14  17:25:48  john
- * Fixed bug with VFX palette not getting loaded for credits, titles.
- * 
- * Revision 2.8  1995/05/26  16:16:30  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
+ * Revision 1.13  1995/11/03  12:52:23  allender
+ * shareware changes
+ *
+ * Revision 1.12  1995/10/31  10:17:56  allender
+ * shareware stuff
+ *
+ * Revision 1.11  1995/10/24  18:12:02  allender
+ * don't do special processing on do_appl_quit anymore
+ *
+ * Revision 1.10  1995/10/21  22:25:02  allender
+ * added bald guy cheat
+ *
+ * Revision 1.9  1995/10/17  13:14:30  allender
+ * mouse will now move through title stuff
+ *
+ * Revision 1.8  1995/10/15  23:00:34  allender
+ * made mouse move through screens and do event processing
+ * at title screens
+ *
+ * Revision 1.7  1995/10/10  11:52:10  allender
+ * use appropriate end01 file for registered
+ *
+ * Revision 1.6  1995/09/24  10:53:09  allender
+ * added cmd-q to quit during titles screens and briefing screens
+ *
+ * Revision 1.5  1995/08/25  15:39:37  allender
+ * save and resotre interpolation method during briefing screens
+ *
+ * Revision 1.4  1995/08/24  16:10:57  allender
+ * endgame screen changes, and fixups to other stuff
+ *
+ * Revision 1.3  1995/08/14  14:40:37  allender
+ * fixed up briefing screens to look correct.
+ * made robot canvas smaller for now for speec
+ *
+ * Revision 1.2  1995/06/13  13:07:05  allender
+ * do a bitblt during tight loops to get spinning robots and cursor flashing
+ *
+ * Revision 1.1  1995/05/16  15:31:52  allender
+ * Initial revision
+ *
  * Revision 2.7  1995/03/24  13:11:36  john
  * Added save game during briefing screens.
  * 
@@ -161,16 +191,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: titles.c 2.10 1995/06/15 12:14:16 john Exp $";
+static char rcsid[] = "$Id: titles.c 1.13 1995/11/03 12:52:23 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <process.h>
-#include <io.h>
 
-#include "types.h"
+#include "dtypes.h"
 #include "timer.h"
 #include "key.h"
 #include "gr.h"
@@ -184,7 +212,6 @@ static char rcsid[] = "$Id: titles.c 2.10 1995/06/15 12:14:16 john Exp $";
 #include "mono.h"
 #include "gamefont.h"
 #include "cfile.h"
-#include "mem.h"
 #include "error.h"
 #include "polyobj.h"
 #include "textures.h"
@@ -200,6 +227,10 @@ static char rcsid[] = "$Id: titles.c 2.10 1995/06/15 12:14:16 john Exp $";
 #include "vfx.h"
 #include "newmenu.h"
 #include "state.h"
+#include "gameseq.h"
+#include "texmap.h"
+#include "macsys.h"		// for bitblt_to_screen()
+#include "redbook.h"
 
 ubyte New_pal[768];
 int	New_pal_254_bash;
@@ -209,6 +240,7 @@ char	* Briefing_text;
 #define	MAX_BRIEFING_COLORS	2
 
 char Ending_text_filename[13] = "endreg.tex";
+
 char Briefing_text_filename[13] = "briefing.tex";
 
 #define	SHAREWARE_ENDING_FILENAME	"ending.tex"
@@ -218,6 +250,91 @@ int	Skip_briefing_screens=0;
 int	Briefing_foreground_colors[MAX_BRIEFING_COLORS], Briefing_background_colors[MAX_BRIEFING_COLORS];
 int	Current_color = 0;
 int	Erase_color;
+
+typedef struct {
+	char	bs_name[14];						//	filename, eg merc01.  Assumes .lbm suffix.
+	byte	level_num;
+	byte	message_num;
+	short	text_ulx, text_uly;		 	//	upper left x,y of text window
+	short	text_width, text_height; 	//	width and height of text window
+} briefing_screen;
+
+#define BRIEFING_SECRET_NUM	31			//	This must correspond to the first secret level which must come at the end of the list.
+#define BRIEFING_OFFSET_NUM	4			// This must correspond to the first level screen (ie, past the bald guy briefing screens)
+
+//#ifdef SHAREWARE
+//#define SHAREWARE_ENDGAME_NUM	11			//	Shareware briefing screen name.
+//#else
+//#define SHAREWARE_ENDGAME_NUM	34			//	Shareware briefing screen name.
+//#define REGISTERED_ENDGAME_NUM	35					//	Registered briefing screen name.
+//#define NUM_REGISTERED_ENDGAME_SCREENS	3			//	Number of registered endgame screens
+//#endif
+
+#define	SHAREWARE_ENDING_LEVEL_NUM		0x7f
+#define	REGISTERED_ENDING_LEVEL_NUM	0x7e
+
+#define NEW_END_GUY1	1
+#define NEW_END_GUY2	3
+
+briefing_screen Briefing_screens[] = {
+	{ "brief01.pcx",   0,  1,  31, 336, 696, 141 },
+	{ "brief02.pcx",   0,  2,  64,  81, 616, 424 },
+	{ "brief03.pcx",   0,  3,  48,  52, 616, 424 },
+	{ "brief02.pcx",   0,  4,  64,  81, 616, 424 },
+	{ "moon01.pcx",    1,  5,  24,  24, 720, 408 },
+	{ "moon01.pcx",    2,  6,  24,  24, 720, 408 },
+	{ "moon01.pcx",    3,  7,  24,  24, 720, 408 },
+#ifndef MAC_SHAREARE
+	{ "venus01.pcx",   4,  8,  36,  36, 720, 480 },
+	{ "venus01.pcx",   5,  9,  36,  36, 720, 480 },
+	{ "brief03.pcx",   6, 10,  48,  52, 616, 424 },
+	{ "merc01.pcx",    6, 11,  24,  36, 720, 480 },
+	{ "merc01.pcx",    7, 12,  24,  36, 720, 480 },
+	{ "brief03.pcx",   8, 13,  48,  52, 616, 424 },
+	{ "mars01.pcx",    8, 14,  24, 240, 720, 480 },
+	{ "mars01.pcx",    9, 15,  24, 240, 720, 480 },
+	{ "brief03.pcx",  10, 16,  48,  52, 616, 424 },
+	{ "mars01.pcx",   10, 17,  24, 240, 720, 480 },
+	{ "jup01.pcx",    11, 18,  24,  96, 720, 480 },
+	{ "jup01.pcx",    12, 19,  24,  96, 720, 480 },
+	{ "brief03.pcx",  13, 20,  48,  52, 616, 424 },
+	{ "jup01.pcx",    13, 21,  24,  96, 720, 480 },
+	{ "jup01.pcx",    14, 22,  24,  96, 720, 480 },
+	{ "saturn01.pcx", 15, 23,  24,  96, 720, 480 },
+	{ "brief03.pcx",  16, 24,  48,  52, 616, 424 },
+	{ "saturn01.pcx", 16, 25,  24,  96, 720, 480 },
+	{ "brief03.pcx",  17, 26,  48,  52, 616, 424 },
+	{ "saturn01.pcx", 17, 27,  24,  96, 720, 480 },
+	{ "uranus01.pcx", 18, 28, 240, 240, 720, 480 },
+	{ "uranus01.pcx", 19, 29, 240, 240, 720, 480 },
+	{ "uranus01.pcx", 20, 30, 240, 240, 720, 480 },
+	{ "uranus01.pcx", 21, 31, 240, 240, 720, 480 },
+	{ "neptun01.pcx", 22, 32,  24,  48, 720, 480 },
+	{ "neptun01.pcx", 23, 33,  24,  48, 720, 480 },
+	{ "neptun01.pcx", 24, 34,  24,  48, 720, 480 },
+	{ "pluto01.pcx",  25, 35,  24,  48, 720, 480 },
+	{ "pluto01.pcx",  26, 36,  24,  48, 720, 480 },
+	{ "pluto01.pcx",  27, 37,  24,  48, 720, 480 },
+	{ "aster01.pcx",  -1, 38,  24, 216, 720, 480 },
+	{ "aster01.pcx",  -2, 39,  24, 216, 720, 480 },
+	{ "aster01.pcx",  -3, 40,  24, 216, 720, 480 },
+#endif
+	{ "end01.pcx",   127,  1,  55,  96, 768, 480 },
+#ifndef MAC_SHAREWARE
+	{ "end02.pcx",   126,  1,  12,  12, 720, 480 },
+	{ "end01.pcx",   126,  2,  55,  96, 768, 480 },
+//	{ "brief03.pcx",   126,  2,  55,  96, 768, 480 },
+	{ "end02.pcx",   126,  3,  12,  12, 720, 480 }
+//	{ "end01.pcx",   126,  2,  55,  96, 768, 480 },
+//	{ "end03.pcx",   126,  3,  12,  12, 720, 480 }
+#endif
+
+};
+
+#define	MAX_BRIEFING_SCREEN	(sizeof(Briefing_screens) / sizeof(Briefing_screens[0]))
+
+
+void title_save_game();
 
 int local_key_inkey(void)
 {
@@ -230,10 +347,16 @@ int local_key_inkey(void)
 		return 0;
 	}
 
-	if (rval == KEY_PRINT_SCREEN) {
+	if ( (rval == KEY_PRINT_SCREEN) || (rval == KEY_COMMAND + KEY_SHIFTED + KEY_3) ) {
 		save_screen_shot(0);
 		return 0;				//say no key pressed
 	}
+	
+	if ( rval == KEY_Q+KEY_COMMAND )
+		do_appl_quit();
+		
+	if (!rval && mouse_went_down(0))
+		rval = KEY_ENTER;
 
 	return rval;
 }
@@ -241,21 +364,22 @@ int local_key_inkey(void)
 int show_title_screen( char * filename, int allow_keys )	
 {
 	fix timer;
-	int pcx_error;
+	int pcx_error, i;
 	grs_bitmap title_bm;
 
 	title_bm.bm_data=NULL;
 	if ((pcx_error=pcx_read_bitmap( filename, &title_bm, BM_LINEAR, New_pal ))!=PCX_ERROR_NONE)	{
-		printf( "File '%s', PCX load error: %s (%i)\n  (No big deal, just no title screen.)\n",filename, pcx_errormsg(pcx_error), pcx_error);
+//		printf( "File '%s', PCX load error: %s (%i)\n  (No big deal, just no title screen.)\n",filename, pcx_errormsg(pcx_error), pcx_error);
 		mprintf((0, "File '%s', PCX load error: %s (%i)\n  (No big deal, just no title screen.)\n",filename, pcx_errormsg(pcx_error), pcx_error));
 		Int3();
 		return 0;
 	}
 
-	vfx_set_palette_sub( New_pal );
+//	vfx_set_palette_sub( New_pal );
 	gr_palette_clear();	
 	gr_set_current_canvas( NULL );
 	gr_bitmap( 0, 0, &title_bm );
+	bitblt_to_screen();
 	if (gr_palette_fade_in( New_pal, 32, allow_keys ))	
 		return 1;
 
@@ -280,97 +404,9 @@ int show_title_screen( char * filename, int allow_keys )
 	}			
 	if (gr_palette_fade_out( New_pal, 32, allow_keys ))
 		return 1;
-	free(title_bm.bm_data);
+	myfree(title_bm.bm_data);
 	return 0;
 }
-
-typedef struct {
-	char	bs_name[14];						//	filename, eg merc01.  Assumes .lbm suffix.
-	byte	level_num;
-	byte	message_num;
-	short	text_ulx, text_uly;		 	//	upper left x,y of text window
-	short	text_width, text_height; 	//	width and height of text window
-} briefing_screen;
-
-#define BRIEFING_SECRET_NUM	31			//	This must correspond to the first secret level which must come at the end of the list.
-#define BRIEFING_OFFSET_NUM	4			// This must correspond to the first level screen (ie, past the bald guy briefing screens)
-
-//#ifdef SHAREWARE
-//#define SHAREWARE_ENDGAME_NUM	11			//	Shareware briefing screen name.
-//#else
-//#define SHAREWARE_ENDGAME_NUM	34			//	Shareware briefing screen name.
-//#define REGISTERED_ENDGAME_NUM	35					//	Registered briefing screen name.
-//#define NUM_REGISTERED_ENDGAME_SCREENS	3			//	Number of registered endgame screens
-//#endif
-
-#define	SHAREWARE_ENDING_LEVEL_NUM		0x7f
-#define	REGISTERED_ENDING_LEVEL_NUM	0x7e
-
-briefing_screen Briefing_screens[] = {
-	{	"brief01.pcx",   0,  1,  13, 140, 290,  59 },
-	{	"brief02.pcx",   0,  2,  27,  34, 257, 177 },
-	{	"brief03.pcx",   0,  3,  20,  22, 257, 177 },
-	{	"brief02.pcx",   0,  4,  27,  34, 257, 177 },
-
-	{	"moon01.pcx",    1,  5,  10,  10, 300, 170 },	// level 1
-	{	"moon01.pcx",    2,  6,  10,  10, 300, 170 },	// level 2
-	{	"moon01.pcx",    3,  7,  10,  10, 300, 170 },	// level 3
-
-	{	"venus01.pcx",   4,  8,  15, 15, 300,  200 },	// level 4
-	{	"venus01.pcx",   5,  9,  15, 15, 300,  200 },	// level 5
-
-	{	"brief03.pcx",   6, 10,  20,  22, 257, 177 },
-	{	"merc01.pcx",    6, 11,  10, 15, 300, 200 },	// level 6
-	{	"merc01.pcx",    7, 12,  10, 15, 300, 200 },	// level 7
-
-#ifndef SHAREWARE
-	{	"brief03.pcx",   8, 13,  20,  22, 257, 177 },
-	{	"mars01.pcx",    8, 14,  10, 100, 300,  200 },	// level 8
-	{	"mars01.pcx",    9, 15,  10, 100, 300,  200 },	// level 9
-	{	"brief03.pcx",  10, 16,  20,  22, 257, 177 },
-	{	"mars01.pcx",   10, 17,  10, 100, 300,  200 },	// level 10
-
-	{	"jup01.pcx",    11, 18,  10, 40, 300,  200 },	// level 11
-	{	"jup01.pcx",    12, 19,  10, 40, 300,  200 },	// level 12
-	{	"brief03.pcx",  13, 20,  20,  22, 257, 177 },
-	{	"jup01.pcx",    13, 21,  10, 40, 300,  200 },	// level 13
-	{	"jup01.pcx",    14, 22,  10, 40, 300,  200 },	// level 14
-
-	{	"saturn01.pcx", 15, 23,  10, 40, 300,  200 },	// level 15
-	{	"brief03.pcx",  16, 24,  20,  22, 257, 177 },
-	{	"saturn01.pcx", 16, 25,  10, 40, 300,  200 },	// level 16
-	{	"brief03.pcx",  17, 26,  20,  22, 257, 177 },
-	{	"saturn01.pcx", 17, 27,  10, 40, 300,  200 },	// level 17
-
-	{	"uranus01.pcx", 18, 28,  100, 100, 300,  200 },	// level 18
-	{	"uranus01.pcx", 19, 29,  100, 100, 300,  200 },	// level 19
-	{	"uranus01.pcx", 20, 30,  100, 100, 300,  200 },	// level 20
-	{	"uranus01.pcx", 21, 31,  100, 100, 300,  200 },	// level 21
-
-	{	"neptun01.pcx", 22, 32,  10, 20, 300,  200 },	// level 22
-	{	"neptun01.pcx", 23, 33,  10, 20, 300,  200 },	// level 23
-	{	"neptun01.pcx", 24, 34,  10, 20, 300,  200 },	// level 24
-
-	{	"pluto01.pcx",  25, 35,  10, 20, 300,  200 },	// level 25
-	{	"pluto01.pcx",  26, 36,  10, 20, 300,  200 },	// level 26
-	{	"pluto01.pcx",  27, 37,  10, 20, 300,  200 },	// level 27
-
-	{	"aster01.pcx",  -1, 38,  10, 90, 300,  200 },	// secret level -1
-	{	"aster01.pcx",  -2, 39,  10, 90, 300,  200 },	// secret level -2
-	{	"aster01.pcx",  -3, 40,  10, 90, 300,  200 }, 	// secret level -3
-#endif
-
-	{	"end01.pcx",   SHAREWARE_ENDING_LEVEL_NUM,  1,  23, 40, 320, 200 }, 	// shareware end
-#ifndef SHAREWARE
-	{	"end02.pcx",   REGISTERED_ENDING_LEVEL_NUM,  1,  5, 5, 300, 200 }, 		// registered end
-	{	"end01.pcx",   REGISTERED_ENDING_LEVEL_NUM,  2,  23, 40, 320, 200 }, 		// registered end
-	{	"end03.pcx",   REGISTERED_ENDING_LEVEL_NUM,  3,  5, 5, 300, 200 }, 		// registered end
-#endif
-
-};
-
-#define	MAX_BRIEFING_SCREEN	(sizeof(Briefing_screens) / sizeof(Briefing_screens[0]))
-
 
 char * get_briefing_screen( int level_num )
 {
@@ -400,6 +436,7 @@ void init_char_pos(int x, int y)
 
 grs_canvas	*Robot_canv = NULL;
 vms_angvec	Robot_angles;
+short		Robot_pitch_value = 0;
 
 char	Bitmap_name[32] = "";
 #define	EXIT_DOOR_MAX	14
@@ -432,12 +469,13 @@ void show_bitmap_frame(void)
 			New_pal[254*3+1] = 0;
 			New_pal[254*3+2] = 0;
 			gr_palette_load( New_pal );
-			vfx_set_palette_sub( New_pal );
 		}
 
 		switch (Animating_bitmap_type) {
-			case 0:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, 64, 64);	break;
-			case 1:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, 94, 94);	break;	//	Adam: Change here for your new animating bitmap thing. 94, 94 are bitmap size.
+//			case 0:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, 64, 64);	break;
+//			case 1:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, 94, 94);	break;	//	Adam: Change here for your new animating bitmap thing. 94, 94 are bitmap size.
+			case 0:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 440, 110, 128, 128);	break;
+			case 1:	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 440, 160, 150, 150);	break;	//	Adam: Change here for your new animating bitmap thing. 94, 94 are bitmap size.
 			default:	Int3();	//	Impossible, illegal value for Animating_bitmap_type
 		}
 
@@ -491,7 +529,7 @@ void show_bitmap_frame(void)
 
 		gr_bitmapm(0, 0, bitmap_ptr);
 		grd_curcanv = curcanv_save;
-		free(bitmap_canv);
+		myfree(bitmap_canv);
 
 		switch (Animating_bitmap_type) {
 			case 0:
@@ -515,12 +553,17 @@ void show_briefing_bitmap(grs_bitmap *bmp)
 {
 	grs_canvas	*curcanv_save, *bitmap_canv;
 
+#ifdef MAC_SHAREWARE
+	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 440, 108, 332, 331);
+#else
 	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, 166, 138);
+#endif
 	curcanv_save = grd_curcanv;
 	grd_curcanv = bitmap_canv;
 	gr_bitmapm(0, 0, bmp);
+	bitblt_to_screen();
 	grd_curcanv = curcanv_save;
-	free(bitmap_canv);
+	myfree(bitmap_canv);
 }
 
 //	-----------------------------------------------------------------------------
@@ -529,7 +572,14 @@ void show_spinning_robot_frame(int robot_num)
 	grs_canvas	*curcanv_save;
 
 	if (robot_num != -1) {
-		Robot_angles.h += 150;
+		Robot_angles.h += 300;
+#if 0
+		Robot_angles.p += Robot_pitch_value;
+		if ((Robot_pitch_value > 0) && (Robot_angles.p > 1820))
+			Robot_pitch_value = -Robot_pitch_value;
+		else if ((Robot_pitch_value < 0) && (Robot_angles.p < -1820))
+			Robot_pitch_value = -Robot_pitch_value;
+#endif
 
 		curcanv_save = grd_curcanv;
 		grd_curcanv = Robot_canv;
@@ -543,17 +593,15 @@ void show_spinning_robot_frame(int robot_num)
 //	-----------------------------------------------------------------------------
 void init_spinning_robot(void)
 {
-	Robot_angles.p += 0;
-	Robot_angles.b += 0;
-	Robot_angles.h += 0;
+	Robot_angles.p = 0;
+	Robot_angles.b = 0;
+	Robot_angles.h = 0;
+	
+	Robot_pitch_value = 90;
 
-	Robot_canv = gr_create_sub_canvas(grd_curcanv, 138, 55, 166, 138);
-}
-
-//	-----------------------------------------------------------------------------
-void init_briefing_bitmap(void)
-{
-	Robot_canv = gr_create_sub_canvas(grd_curcanv, 138, 55, 166, 138);
+//	Robot_canv = gr_create_sub_canvas(grd_curcanv, 138, 55, 166, 138);
+//	Robot_canv = gr_create_sub_canvas(grd_curcanv, 276, 110, 322, 276);
+	Robot_canv = gr_create_sub_canvas(grd_curcanv, 288, 110, 312, 276);
 }
 
 //	-----------------------------------------------------------------------------
@@ -613,14 +661,25 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 	return w;
 }
 
+#ifndef MAC_SHAREWARE
+extern char new_baldguy_pcx[];
+ubyte baldguy_cheat = 0;
+#endif
+
 //	-----------------------------------------------------------------------------
 int load_briefing_screen( int screen_num )
 {
 	int	pcx_error;
 
-	if ((pcx_error=pcx_read_bitmap( &Briefing_screens[screen_num].bs_name, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, New_pal ))!=PCX_ERROR_NONE)	{
-		printf( "File '%s', PCX load error: %s\n  (It's a briefing screen.  Does this cause you pain?)\n",Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error));
-		printf(0, "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n",Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error), pcx_error);
+#ifndef MAC_SHAREWARE
+	if ( ((screen_num == NEW_END_GUY1) || (screen_num == NEW_END_GUY2)) && baldguy_cheat) {
+		if ( bald_guy_load(new_baldguy_pcx, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, New_pal) == 0)
+			return 0;
+	}
+#endif
+	if ((pcx_error=pcx_read_bitmap( Briefing_screens[screen_num].bs_name, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, New_pal ))!=PCX_ERROR_NONE)	{
+//		printf( "File '%s', PCX load error: %s\n  (It's a briefing screen.  Does this cause you pain?)\n",Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error));
+		mprintf((0, "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n",Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error), pcx_error));
 		Int3();
 		return 0;
 	}
@@ -754,7 +813,7 @@ int show_briefing_message(int screen_num, char *message)
 				prev_ch = 10;							//	read to eoln
 			} else if (ch == 'R') {
 				if (Robot_canv != NULL)
-					{free(Robot_canv); Robot_canv=NULL;}
+					{myfree(Robot_canv); Robot_canv=NULL;}
 
 				init_spinning_robot();
 				robot_num = get_message_num(&message);
@@ -762,7 +821,7 @@ int show_briefing_message(int screen_num, char *message)
 			} else if (ch == 'N') {
 				//--grs_bitmap	*bitmap_ptr;
 				if (Robot_canv != NULL)
-					{free(Robot_canv); Robot_canv=NULL;}
+					{myfree(Robot_canv); Robot_canv=NULL;}
 
 				get_message_name(&message, Bitmap_name);
 				strcat(Bitmap_name, "#0");
@@ -770,7 +829,7 @@ int show_briefing_message(int screen_num, char *message)
 				prev_ch = 10;
 			} else if (ch == 'O') {
 				if (Robot_canv != NULL)
-					{free(Robot_canv); Robot_canv=NULL;}
+					{myfree(Robot_canv); Robot_canv=NULL;}
 
 				get_message_name(&message, Bitmap_name);
 				strcat(Bitmap_name, "#0");
@@ -783,7 +842,7 @@ int show_briefing_message(int screen_num, char *message)
 				int			iff_error;
 
 				if (Robot_canv != NULL)
-					{free(Robot_canv); Robot_canv=NULL;}
+					{myfree(Robot_canv); Robot_canv=NULL;}
 
 				get_message_name(&message, bitmap_name);
 				strcat(bitmap_name, ".bbm");
@@ -792,11 +851,11 @@ int show_briefing_message(int screen_num, char *message)
 				Assert(iff_error == IFF_NO_ERROR);
 
 				show_briefing_bitmap(&guy_bitmap);
-				free(guy_bitmap.bm_data);
+				myfree(guy_bitmap.bm_data);
 				prev_ch = 10;
 //			} else if (ch == 'B') {
 //				if (Robot_canv != NULL)
-//					{free(Robot_canv); Robot_canv=NULL;}
+//					{myfree(Robot_canv); Robot_canv=NULL;}
 //
 //				bitmap_num = get_message_num(&message);
 //				if (bitmap_num != -1)
@@ -805,23 +864,20 @@ int show_briefing_message(int screen_num, char *message)
 			} else if (ch == 'S') {
 				int	keypress;
 				fix	start_time;
-				fix 	time_out_value;
 
 				start_time = timer_get_fixed_seconds();
-				start_time = timer_get_approx_seconds();
-				time_out_value = start_time + i2f(60*5);		// Wait 1 minute...
-
 				while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
-					if ( timer_get_approx_seconds() > time_out_value ) {
-						keypress = 0;
-						break;					// Time out after 1 minute..
-					}
 					while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
 						;
 					flash_cursor(flashing_cursor);
 					show_spinning_robot_frame(robot_num);
 					show_bitmap_frame();
+#ifndef MAC_SHAREWARE
+					redbook_restart_track();
+#endif
 					start_time += KEY_DELAY_DEFAULT/2;
+					bitblt_to_screen();
+						
 				}
 
 #ifndef NDEBUG
@@ -853,7 +909,7 @@ int show_briefing_message(int screen_num, char *message)
 		} else if (ch == 10) {
 			if (prev_ch != '\\') {
 				prev_ch = ch;
-				Briefing_text_y += 8;
+				Briefing_text_y += 16;
 				Briefing_text_x = bsp->text_ulx;
 				if (Briefing_text_y > bsp->text_uly + bsp->text_height) {
 					load_briefing_screen(screen_num);
@@ -885,28 +941,26 @@ int show_briefing_message(int screen_num, char *message)
 
 		if (Briefing_text_x > bsp->text_ulx + bsp->text_width) {
 			Briefing_text_x = bsp->text_ulx;
-			Briefing_text_y += 8;
+			Briefing_text_y += 16;
 		}
 
 		if ((new_page) || (Briefing_text_y > bsp->text_uly + bsp->text_height)) {
 			fix	start_time = 0;
-			fix	time_out_value = 0;
 			int	keypress;
 
 			new_page = 0;
-			start_time = timer_get_approx_seconds();
-			time_out_value = start_time + i2f(60*5);		// Wait 1 minute...
+			start_time = timer_get_fixed_seconds();
 			while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
-				if ( timer_get_approx_seconds() > time_out_value ) {
-					keypress = 0;
-					break;					// Time out after 1 minute..
-				}
-				while (timer_get_approx_seconds() < start_time + KEY_DELAY_DEFAULT/2)
+				while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
 					;
 				flash_cursor(flashing_cursor);
 				show_spinning_robot_frame(robot_num);
 				show_bitmap_frame();
+#ifndef MAC_SHAREWARE
+				redbook_restart_track();
+#endif
 				start_time += KEY_DELAY_DEFAULT/2;
+				bitblt_to_screen();
 			}
 
 			robot_num = -1;
@@ -925,10 +979,11 @@ int show_briefing_message(int screen_num, char *message)
 			Briefing_text_y = bsp->text_uly;
 			delay_count = KEY_DELAY_DEFAULT;
 		}
+		bitblt_to_screen();
 	}
 
 	if (Robot_canv != NULL)
-		{free(Robot_canv); Robot_canv=NULL;}
+		{myfree(Robot_canv); Robot_canv=NULL;}
 
 	return rval;
 }
@@ -976,14 +1031,12 @@ void load_screen_text(char *filename, char **buf)
 		have_binary = 1;
 
 		len = cfilelength(ifile);
-		//MALLOC(*buf,char, len);//Unable to get this to compile...is it a case issue? -KRB
-		*buf=(char *)malloc(len*sizeof(char));//My hack -KRB
+		MALLOC(*buf, char, len);
 		cfread(*buf, 1, len, ifile);
 		cfclose(ifile);
 	} else {
 		len = cfilelength(tfile);
-		//MALLOC(*buf, char, len);-KRB
-		*buf=(char *)malloc(len*sizeof(char));//-KRB
+		MALLOC(*buf, char, len);
 		cfread(*buf, 1, len, tfile);
 		cfclose(tfile);
 	}
@@ -992,7 +1045,7 @@ void load_screen_text(char *filename, char **buf)
 		char *ptr;
 
 		for (i = 0, ptr = *buf; i < len; i++, ptr++) {
-			if (*ptr != '\n') {
+			if (*ptr != 0x0a) {
 				encode_rotate_left(ptr);
 				*ptr = *ptr ^ BITMAP_TBL_XOR;
 				encode_rotate_left(ptr);
@@ -1030,6 +1083,7 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	int	rval=0;
 	int	pcx_error;
 	grs_bitmap briefing_bm;
+	int imsave;
 
 	New_pal_254_bash = 0;
 
@@ -1039,26 +1093,37 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	}
 
 	briefing_bm.bm_data=NULL;	
-	if ((pcx_error=pcx_read_bitmap( &Briefing_screens[screen_num].bs_name, &briefing_bm, BM_LINEAR, New_pal ))!=PCX_ERROR_NONE)	{
-		printf( "PCX load error: %s.  File '%s'\n\n", pcx_errormsg(pcx_error), Briefing_screens[screen_num].bs_name);
+#ifndef MAC_SHAREWARE
+	if ( ((screen_num == NEW_END_GUY1) || (screen_num == NEW_END_GUY2)) && baldguy_cheat) {
+		if ( bald_guy_load(new_baldguy_pcx, &briefing_bm, BM_LINEAR, New_pal) == PCX_ERROR_NONE)
+			goto do_screen;
+	}
+#endif
+	if ((pcx_error=pcx_read_bitmap( Briefing_screens[screen_num].bs_name, &briefing_bm, BM_LINEAR, New_pal ))!=PCX_ERROR_NONE)	{
+//		printf( "PCX load error: %s.  File '%s'\n\n", pcx_errormsg(pcx_error), Briefing_screens[screen_num].bs_name);
 		mprintf((0, "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n",Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error), pcx_error));
 		Int3();
 		return 0;
 	}
 
-	vfx_set_palette_sub( New_pal );
+do_screen:
+//	vfx_set_palette_sub( New_pal );
 	gr_palette_clear();
 	gr_bitmap( 0, 0, &briefing_bm );
-
+	bitblt_to_screen();
+	
 	if (gr_palette_fade_in( New_pal, 32, allow_keys ))	
 		return 1;
 
+	imsave = Interpolation_method;
+	Interpolation_method = 1;
 	rval = show_briefing_text(screen_num);
+	Interpolation_method = imsave;
 
 	if (gr_palette_fade_out( New_pal, 32, allow_keys ))
 		return 1;
 
-	free(briefing_bm.bm_data);
+	myfree(briefing_bm.bm_data);
 
 	return rval;
 }
@@ -1102,12 +1167,12 @@ void do_briefing_screens(int level_num)
 	}
 
 
-	free(Briefing_text);
+	myfree(Briefing_text);
 
 	key_flush();
 }
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 void do_registered_end_game(void)
 {
 	int	cur_briefing_screen;
@@ -1120,8 +1185,7 @@ void do_registered_end_game(void)
 		// Special ending for deathmatch!!
 		int len = 40;
 		
-		//MALLOC(Briefing_text, char, len);//Unable to compile -KRB
-		Briefing_text=(char *)malloc(len*sizeof(char));//my hack -KRB
+		MALLOC(Briefing_text, char, len);
 		sprintf(Briefing_text, "Test");
 	}
 		
@@ -1157,17 +1221,16 @@ void do_shareware_end_game(void)
 //			}
 //		}
 //
-		//MALLOC(Briefing_text, char, 4); // Dummy //Can't compile -KRB
-		Briefing_text=(char *)malloc(4*sizeof(char));//my hack -KRB
+		MALLOC(Briefing_text, char, 4); // Dummy
 //		sprintf(Briefing_text, "$S1\n$C1\n\n%s!\n\n%s has won with %d kills.\n\n$S2\n", TXT_SHAREWARE_DONE,Players[winner].callsign, Players[winner].net_kills_total);
 
-		kmatrix_view();
+		kmatrix_view(0);		// for shareware only -- don't do network processing at the end
 		return;
 	}
 	else 
 #endif
 	{
-#ifdef DEST_SAT
+#ifdef SATURN
 			load_screen_text(Ending_text_filename, &Briefing_text);
 #else
 			load_screen_text(SHAREWARE_ENDING_FILENAME, &Briefing_text);
@@ -1190,10 +1253,10 @@ void do_end_game(void)
 
 	key_flush();
 
-	#ifdef SHAREWARE
+	#ifdef MAC_SHAREWARE
 	do_shareware_end_game();		//hurrah! you win!
 	#else
-		#ifdef DEST_SAT
+		#ifdef SATURN
 			do_shareware_end_game();		//hurrah! you win!
 		#else
 			do_registered_end_game();		//hurrah! you win!
@@ -1201,7 +1264,7 @@ void do_end_game(void)
 	#endif
 
 	if (Briefing_text) {
-		free(Briefing_text);
+		myfree(Briefing_text);
 		Briefing_text = NULL;
 	}
 
@@ -1214,14 +1277,13 @@ void do_end_game(void)
 	else
 		Game_mode = GM_GAME_OVER;
 
-#ifdef DEST_SAT
+#ifdef SATURN
 		show_order_form();
 #endif
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	show_order_form();
 #endif
 
 }
 
-

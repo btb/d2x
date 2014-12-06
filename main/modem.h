@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/modem.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:38 $
+ * $Source: Smoke:miner:source:main::RCS:modem.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/05 14:06:40 $
  * 
  * Header file for modem support
  * 
  * $Log: modem.h $
- * Revision 2.1  1995/03/21  14:40:38  john
+ * Revision 1.2  1995/09/05  14:06:40  allender
+ * checkpoint again
+ *
+ * Revision 1.1  1995/05/16  15:59:29  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:40:38  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:31:34  john
@@ -94,7 +100,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define MISSILE_ADJUST 6
 
-int com_enable(void);
+int com_enable(int async);
 void com_disable(void);
 void com_do_frame(void);
 void com_process_input(void);
@@ -114,4 +120,3 @@ extern int com_baud_rate;
 #endif
 #endif
 
-

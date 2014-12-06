@@ -11,15 +11,18 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/cfile/rcs/nocfile.h $
- * $Revision: 1.4 $
- * $Author: john $
- * $Date: 1994/12/09 17:53:52 $
+ * $Source: Smoke:miner:source:cfile::RCS:nocfile.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/05 09:32:06 $
  * 
  * Prototypes to *NOT* use cfile, but use cfile calling parameters.
  * For debugging.
  * 
  * $Log: nocfile.h $
+ * Revision 1.1  1995/05/05  09:32:06  allender
+ * Initial revision
+ *
  * Revision 1.4  1994/12/09  17:53:52  john
  * Added error checking to number of hogfiles..
  * 
@@ -60,4 +63,3 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define CF_WRITE_MODE "wb"
 
 #endif
-

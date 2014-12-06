@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/newmenu.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:28 $
+ * $Source: Smoke:miner:source:main::RCS:newmenu.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/10/17 13:15:19 $
  * 
  * Routines for menus.
  * 
  * $Log: newmenu.h $
+ * Revision 1.3  1995/10/17  13:15:19  allender
+ * new call to nm_listbox for close_box
+ *
+ * Revision 1.2  1995/09/13  08:48:50  allender
+ * new prototype for newmenu -- have close box
+ *
+ * Revision 1.1  1995/05/16  16:00:32  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:28  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -157,6 +166,9 @@ extern int newmenu_do2( char * title, char * subtitle, int nitems, newmenu_item 
 // Same as above, only you can pass through the width & height
 extern int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height );
 
+// Same as above, only you can specify whether or not to have close box
+extern int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height, int close_box );
+
 
 // Sample Code:
 /*
@@ -223,9 +235,8 @@ extern char *Newmenu_allowed_chars;
 // }
 
 extern int newmenu_listbox( char * title, int nitems, char * items[], int allow_abort_flag, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ) );
-extern int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_flag, int default_item, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ) );
+extern int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_flag, int default_item, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ), int close_box );
 
 extern int newmenu_filelist( char * title, char * filespace, char * filename );
 
 #endif
-

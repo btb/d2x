@@ -11,14 +11,24 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/controls.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:27:11 $
+ * $Source: Smoke:miner:source:main::RCS:controls.c $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/11/20 17:17:27 $
  * 
  * Code for controlling player movement
  * 
  * $Log: controls.c $
+ * Revision 1.3  1995/11/20  17:17:27  allender
+ * call fix_fastsincos with tmp variable to prevent
+ * writing to NULL
+ *
+ * Revision 1.2  1995/08/11  16:00:04  allender
+ * fixed bug we think we never saw (overflow on max_rotthrust
+ *
+ * Revision 1.1  1995/05/16  15:23:53  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:27:11  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -187,7 +197,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: controls.c 2.0 1995/02/27 11:27:11 john Exp $";
+static char rcsid[] = "$Id: controls.c 1.3 1995/11/20 17:17:27 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -250,8 +260,8 @@ void read_flying_controls( object * obj )
 	vm_vec_scale_add2(&obj->mtype.phys_info.thrust,&obj->orient.uvec, Controls.vertical_thrust_time );
 
 	if (obj->mtype.phys_info.flags & PF_WIGGLE) {
-		fix swiggle;
-		fix_fastsincos(GameTime, &swiggle, NULL);
+		fix swiggle, tmp;
+		fix_fastsincos(GameTime, &swiggle, &tmp);
 		vm_vec_scale_add2(&obj->mtype.phys_info.velocity,&obj->orient.uvec,fixmul(swiggle,Player_ship->wiggle));
 	}
 
@@ -276,11 +286,10 @@ void read_flying_controls( object * obj )
 
 		if ((ft < F1_0/2) && (ft << 15 <= Player_ship->max_rotthrust)) {
 			mprintf((0, "Preventing divide overflow in controls.c for max_rotthrust!\n"));
-			ft = (Player_ship->max_thrust >> 15) + 1;
+			ft = (Player_ship->max_rotthrust >> 15) + 1;
 		}
 
 		vm_vec_scale( &obj->mtype.phys_info.rotthrust, fixdiv(Player_ship->max_rotthrust,ft) );
 	}
 
 }
-

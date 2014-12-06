@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gauges.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:45 $
+ * $Source: Smoke:miner:source:main::RCS:gauges.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/08/23 21:37:13 $
  * 
  * Prototypes and defines for gauges
  * 
  * $Log: gauges.h $
+ * Revision 1.3  1995/08/23  21:37:13  allender
+ * fix mcc compiler warmings
+ *
+ * Revision 1.2  1995/08/18  15:45:24  allender
+ * upped max gauges
+ *
+ * Revision 1.1  1995/05/16  15:57:34  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:45  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -119,7 +128,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //from gauges.c
 
-#define MAX_GAUGE_BMS 80	//	increased from 56 to 80 by a very unhappy MK on 10/24/94.
+#define MAX_GAUGE_BMS 85	//	increased from 56 to 80 by a very unhappy MK on 10/24/94.
+							//  increased to 85 for macintosh.
 
 extern bitmap_index Gauges[MAX_GAUGE_BMS];   // Array of all gauge bitmaps.
 
@@ -148,7 +158,7 @@ extern void player_dead_message(void);
 // extern void say_afterburner_status(void);
 
 //fills in the coords of the hostage video window
-get_hostage_window_coords(int *x,int *y,int *w,int *h);
+void get_hostage_window_coords(int *x,int *y,int *w,int *h);
 
 //from testgaug.c
 
@@ -163,4 +173,3 @@ typedef struct {
 extern rgb player_rgb[];
 
 #endif
-

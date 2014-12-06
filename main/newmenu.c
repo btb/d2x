@@ -11,22 +11,102 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/newmenu.c $
- * $Revision: 2.8 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:28 $
+ * $Source: BigRed:miner:source:main::RCS:newmenu.c $
+ * $Revision: 1.26 $
+ * $Author: allender $
+ * $Date: 1996/04/14 21:07:35 $
  * 
  * Routines for menus.
  * 
  * $Log: newmenu.c $
- * Revision 2.8  1995/05/26  16:16:28  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
- * Revision 2.7  1995/04/23  14:54:17  john
- * Fixed bug with background breaking in first menu.
- * 
- * Revision 2.6  1995/03/21  14:38:46  john
+ * Revision 1.26  1996/04/14  21:07:35  allender
+ * some change for update
+ *
+ * Revision 1.25  1995/10/31  10:19:25  allender
+ * shareware stuff
+ *
+ * Revision 1.24  1995/10/27  11:09:04  allender
+ * always cd to descent dir before any menu processing --
+ * sanity check because of way mac does volume mounting and
+ * other file stuff
+ *
+ * Revision 1.23  1995/10/24  18:11:19  allender
+ * do_appl_quit saves and restores background -- don't
+ * do any special processing.  fixed newmenu_do3 to pass width
+ * and height to ...do_4
+ *
+ * Revision 1.22  1995/10/21  23:26:25  allender
+ * can't do cmd-q in multiplayer games
+ *
+ * Revision 1.21  1995/10/21  22:53:25  allender
+ * menus need to be 8 byte multiple wide -- printscreen stuff
+ *
+ * Revision 1.20  1995/10/20  00:50:15  allender
+ * redbook stuff and make esc leave menu always
+ *
+ * Revision 1.19  1995/10/17  13:14:52  allender
+ * mouse support for other menus now operational -- dragging
+ * mouse will also move sliders
+ *
+ * Revision 1.18  1995/10/12  17:35:19  allender
+ * mouse support for pilot and demos
+ *
+ * Revision 1.17  1995/10/11  12:17:47  allender
+ * removed event loop processing
+ *
+ * Revision 1.16  1995/10/10  11:51:29  allender
+ * align menus to 8 byte boundry
+ *
+ * Revision 1.15  1995/10/05  14:09:36  allender
+ * lowered starting x location on menus to fixup network
+ * status screen chopping off characters
+ *
+ * Revision 1.14  1995/09/24  10:52:27  allender
+ * made close boxes work
+ * maybe some other minor stuff?
+ *
+ * Revision 1.13  1995/09/15  09:02:04  allender
+ * started putting mouse support in listboxes
+ *
+ * Revision 1.12  1995/09/13  08:50:14  allender
+ * close box in this rev?  Worked on getting list box better
+ * looking
+ *
+ * Revision 1.11  1995/09/01  10:52:37  allender
+ * fixed up list boxes
+ *
+ * Revision 1.10  1995/08/24  16:23:08  allender
+ * mouse support for most menus
+ *
+ * Revision 1.9  1995/08/08  13:46:56  allender
+ * added macsys header file
+ *
+ * Revision 1.8  1995/08/01  16:03:54  allender
+ * added file list with Desalvo's directory stuff
+ *
+ * Revision 1.7  1995/07/26  17:03:37  allender
+ * show then hide cursor during newmenu operations -- not quite
+ * right yet
+ *
+ * Revision 1.6  1995/07/17  08:56:26  allender
+ * fixed up menus to look better with new high res fonts
+ *
+ * Revision 1.5  1995/07/12  10:35:52  allender
+ * removed old debug thing
+ *
+ * Revision 1.4  1995/06/23  10:23:21  allender
+ * menus should work in any resolution now
+ *
+ * Revision 1.3  1995/06/20  09:11:19  allender
+ * changed menu system to support 640x480 instead of 320x200
+ *
+ * Revision 1.2  1995/06/13  13:07:30  allender
+ * added special key to move 320x200 window to upper left corner of screen
+ *
+ * Revision 1.1  1995/05/16  15:29:13  allender
+ * Initial revision
+ *
+ * Revision 2.6  1995/03/21  08:38:46  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.5  1995/03/15  14:33:29  john
@@ -477,19 +557,18 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: newmenu.c 2.8 1995/05/26 16:16:28 john Exp $";
+static char rcsid[] = "$Id: newmenu.c 1.26 1996/04/14 21:07:35 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dos.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <io.h>
+#include <Memory.h>
 
 #include "error.h"
-#include "types.h"
+#include "dtypes.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"
@@ -513,6 +592,10 @@ static char rcsid[] = "$Id: newmenu.c 2.8 1995/05/26 16:16:28 john Exp $";
 #include "vfx.h"
 #include "kconfig.h"
 #include "player.h"
+#include "macsys.h"
+#include "direct.h"		// Thanks Chris!
+#include "macsys.h"
+#include "redbook.h"
 
 #define TITLE_FONT  		(Gamefonts[GFONT_BIG_1])
 
@@ -521,6 +604,7 @@ static char rcsid[] = "$Id: newmenu.c 2.8 1995/05/26 16:16:28 john Exp $";
 #define NORMAL_FONT  	(Gamefonts[GFONT_MEDIUM_1])
 #define TEXT_FONT  		(Gamefonts[GFONT_MEDIUM_3])
 
+#if 0
 #define NORMAL_CHECK_BOX	""
 #define CHECKED_CHECK_BOX	"‚"
 #define NORMAL_RADIO_BOX	""
@@ -530,6 +614,17 @@ static char rcsid[] = "$Id: newmenu.c 2.8 1995/05/26 16:16:28 john Exp $";
 #define SLIDER_RIGHT			"„"		// 132
 #define SLIDER_MIDDLE		"…"		// 133
 #define SLIDER_MARKER		"†"		// 134
+#endif
+
+#define CURSOR_STRING		"_"
+unsigned char NORMAL_CHECK_BOX[2];
+unsigned char CHECKED_CHECK_BOX[2];
+unsigned char NORMAL_RADIO_BOX[2];
+unsigned char CHECKED_RADIO_BOX[2];
+unsigned char SLIDER_LEFT[2];
+unsigned char SLIDER_RIGHT[2];
+unsigned char SLIDER_MIDDLE[2];
+unsigned char SLIDER_MARKER[2];
 
 int Newmenu_first_time = 1;
 //--unused-- int Newmenu_fade_in = 1;
@@ -542,14 +637,17 @@ typedef struct bkg {
 
 grs_bitmap nm_background;
 
-#define MESSAGEBOX_TEXT_SIZE 300		// How many characters in messagebox
-#define MAX_TEXT_WIDTH 	200				// How many pixels wide a input box can be
+//#define MESSAGEBOX_TEXT_SIZE 300		// How many characters in messagebox
+//#define MAX_TEXT_WIDTH 	200				// How many pixels wide a input box can be
+
+#define MESSAGEBOX_TEXT_SIZE 600		// How many characters in messagebox
+#define MAX_TEXT_WIDTH 	400				// How many pixels wide a input box can be
 
 extern void gr_bm_bitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 
 void newmenu_close()	{
 	if ( nm_background.bm_data )
-		free(nm_background.bm_data);
+		myfree(nm_background.bm_data);
 	Newmenu_first_time = 1;
 }
 
@@ -558,12 +656,13 @@ void nm_draw_background1(char * filename)
 	int pcx_error;
 	grs_bitmap *bmp;
 	int x, y;
+	ubyte pal[768];
 
 	gr_clear_canvas( BM_XRGB(0,0,0) );
-	x = (grd_curcanv->cv_bitmap.bm_w - 320) / 2;
-	y = (grd_curcanv->cv_bitmap.bm_h - 200) / 2;
-	bmp = gr_create_sub_bitmap( &grd_curcanv->cv_bitmap, x, y, 320, 200 );
-	pcx_error = pcx_read_bitmap(filename,bmp,bmp->bm_type,NULL);
+	x = (grd_curcanv->cv_bitmap.bm_w - grd_curscreen->sc_w) / 2;
+	y = (grd_curcanv->cv_bitmap.bm_h - grd_curscreen->sc_h) / 2;
+	bmp = gr_create_sub_bitmap( &grd_curcanv->cv_bitmap, x, y, grd_curscreen->sc_w, grd_curscreen->sc_h );
+	pcx_error = pcx_read_bitmap(filename,bmp,bmp->bm_type,pal);
 	Assert(pcx_error == PCX_ERROR_NONE);
 	
 	gr_free_sub_bitmap(bmp);
@@ -584,6 +683,16 @@ void nm_draw_background(int x1, int y1, int x2, int y2 )
 		Assert(pcx_error == PCX_ERROR_NONE);
 
 		gr_remap_bitmap_good( &nm_background, newpal, -1, -1 );
+		
+//  Assign character values to special characters;
+		sprintf (NORMAL_RADIO_BOX, "%c", 127);
+		sprintf (CHECKED_RADIO_BOX, "%c", 128);
+		sprintf (NORMAL_CHECK_BOX, "%c", 129);
+		sprintf (CHECKED_CHECK_BOX, "%c", 130);
+		sprintf (SLIDER_LEFT, "%c", 131);
+		sprintf (SLIDER_RIGHT, "%c", 132);
+		sprintf (SLIDER_MIDDLE, "%c", 133);
+		sprintf (SLIDER_MARKER, "%c", 134);
 	}
 
 	if ( x1 < 0 ) x1 = 0;
@@ -728,7 +837,7 @@ void nm_rstring( bkg * b,int w1,int x, int y, char * s )
 {
 	int w,h,aw;
 	gr_get_string_size(s, &w, &h, &aw  );
-	x -= 3;
+	x -= 6;
 
 	if (w1 == 0) w1 = w;
 
@@ -746,7 +855,8 @@ void nm_rstring( bkg * b,int w1,int x, int y, char * s )
 update_cursor( newmenu_item *item)
 {
 	int w,h,aw;
-	fix time = timer_get_approx_seconds();
+//	fix time = timer_get_approx_seconds();
+	fix time = timer_get_fixed_seconds();
 	int x,y;
 	char * text = item->text;
 
@@ -808,6 +918,7 @@ void draw_item( bkg * b, newmenu_item *item, int is_current )
 		break;
 	case NM_TYPE_SLIDER:	{
 		int j;
+		
 		if (item->value < item->min_value) item->value=item->min_value;
 		if (item->value > item->max_value) item->value=item->max_value;
 		sprintf( item->saved_text, "%s\t%s", item->text, SLIDER_LEFT );
@@ -817,7 +928,6 @@ void draw_item( bkg * b, newmenu_item *item, int is_current )
 		sprintf( item->saved_text, "%s%s", item->saved_text,SLIDER_RIGHT );
 		
 		item->saved_text[item->value+1+strlen(item->text)+1] = SLIDER_MARKER[0];
-		
 		nm_string_slider( b, item->w, item->x, item->y, item->saved_text );
 		}
 		break;
@@ -880,12 +990,14 @@ char_allowed(char c)
 	return 0;
 }
 
+
 void strip_end_whitespace( char * text )
 {
 	int i,l;
 	l = strlen( text );
 	for (i=l-1; i>=0; i-- )	{
-		if ( isspace(text[i]) )
+//		if ( isspace(text[i]) )
+		if ( (text[i] == ' ') || (text[i] == '\t'))
 			text[i] = 0;
 		else
 			return;
@@ -894,32 +1006,42 @@ void strip_end_whitespace( char * text )
 
 int newmenu_do( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem) )
 {
-	return newmenu_do3( title, subtitle, nitems, item, subfunction, 0, NULL, -1, -1 );
+	return newmenu_do4( title, subtitle, nitems, item, subfunction, 0, NULL, -1, -1, 0 );
 }
 
 int newmenu_do1( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem )
 {
-	return newmenu_do3( title, subtitle, nitems, item, subfunction, citem, NULL, -1, -1 );
+	return newmenu_do4( title, subtitle, nitems, item, subfunction, citem, NULL, -1, -1, 0 );
 }
 
 
 int newmenu_do2( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename )
 {
-	return newmenu_do3( title, subtitle, nitems, item, subfunction, citem, filename, -1, -1 );
+	return newmenu_do4( title, subtitle, nitems, item, subfunction, citem, filename, -1, -1, 0 );
 }
 
 int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height )
 {
+	return newmenu_do4( title, subtitle, nitems, item, subfunction, citem, filename, width, height, 0);
+}
+
+int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height, int close_box )
+{
+	int mx, my, x1, x2, y1, y2;
 	int old_keyd_repeat, done;
 	int  choice,old_choice,i,j,x,y,w,h,aw, tw, th, twidth,fm,right_offset;
-	int k, nmenus, nothers;
+	int k, nmenus, nothers, mouse_state, omouse_state;
 	grs_canvas * save_canvas;
 	grs_font * save_font;
 	int string_width, string_height, average_width;
+	int close_x, close_y, close_size;
 	int ty;
 	bkg bg;
 	int all_text=0;		//set true if all text items
 	int time_stopped=0;
+	int r;
+
+	CDToDescentDir();								// safety check to get back where to need to
 
 	if (nitems < 1 )
 		return -1;
@@ -936,6 +1058,8 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		time_stopped = 1;
 		stop_time();
 	}
+
+total_redraw:		
 
 	save_canvas = grd_curcanv;
 	gr_set_current_canvas( NULL );			
@@ -957,7 +1081,8 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		th += string_height;
 	}
 
-	th += 8;		//put some space between titles & body
+//	th += 8;		//put some space between titles & body
+	th += 16;		//put some space between titles & body
 
 	grd_curcanv->cv_font = NORMAL_FONT;
 
@@ -1065,8 +1190,10 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		if (item[i].right_offset > right_offset )
 			right_offset = item[i].right_offset;
 	}
+//mwa	if (right_offset > 0 )
+//mwa		right_offset += 3;
 	if (right_offset > 0 )
-		right_offset += 3;
+		right_offset += 6;
 	
 	//mprintf( 0, "Right offset = %d\n", right_offset );
 
@@ -1084,18 +1211,26 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 //	x = (grd_curscreen->sc_w-w)/2;
 //	y = (grd_curscreen->sc_h-h)/2;
 
-	w += 30;
-	h += 30;
+//mwa	w += 30;
+//mwa	h += 30;
+	w += 60;
+	h += 60;
 
-	if ( w > 320 ) w = 320;
-	if ( h > 200 ) h = 200;
+	
+	if (r = (w & 0x7))
+		w += (8-r);			// align width to 8 byte boundry
+		
+	if (w > grd_curcanv->cv_bitmap.bm_w) w = grd_curcanv->cv_bitmap.bm_w;
+	if (h > grd_curcanv->cv_bitmap.bm_h) h = grd_curcanv->cv_bitmap.bm_h;
 
 	x = (grd_curcanv->cv_bitmap.bm_w-w)/2;
+	if (r = (x & 0x7))
+		x -= r;				// align x to 8 byte boundry
 	y = (grd_curcanv->cv_bitmap.bm_h-h)/2;
 
 	if ( x < 0 ) x = 0;
 	if ( y < 0 ) y = 0;
-		
+
 	if ( filename != NULL )	{
 		nm_draw_background1( filename );
 	}
@@ -1109,9 +1244,9 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		bg.saved = gr_create_bitmap( w, h );
 		Assert( bg.saved != NULL );
 		gr_bm_bitblt(w, h, 0, 0, 0, 0, &grd_curcanv->cv_bitmap, bg.saved );
+		bg.background = gr_create_sub_bitmap(&nm_background,0,0,w,h);
 		gr_set_current_canvas( NULL );
 		nm_draw_background(x,y,x+w-1,y+h-1);
-		bg.background = gr_create_sub_bitmap(&nm_background,0,0,w,h);
 		gr_set_current_canvas( bg.menu_canvas );
 	} else {
 		bg.saved = NULL;
@@ -1122,7 +1257,18 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 // ty = 15 + (yborder/4);
 
-	ty = 15;
+	ty = 30;
+
+// draw a close box on the menu
+
+	if (close_box) {
+		close_x = close_y = 15;
+		close_size = 10;
+		gr_setcolor( BM_XRGB(0, 0, 0) );
+		gr_rect(close_x, close_y, close_x + close_size, close_y + close_size);
+		gr_setcolor( BM_XRGB(21, 21, 21) );
+		gr_rect( close_x + 2, close_y + 2, close_x + close_size - 2, close_y + close_size -2 );
+	}
 
 	if ( title )	{
 		grd_curcanv->cv_font = TITLE_FONT;
@@ -1148,8 +1294,10 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 	
 	// Update all item's x & y values.
 	for (i=0; i<nitems; i++ )	{
-		item[i].x = 15 + twidth + right_offset;
-		item[i].y += 15;
+		item[i].x = 30 + twidth + right_offset;
+		item[i].y += 36;
+//		item[i].x = 30 + twidth + right_offset;
+//		item[i].y += 30;
 		if ( item[i].type==NM_TYPE_RADIO )	{
 			fm = -1;	// find first marked one
 			for ( j=0; j<nitems; j++ )	{
@@ -1192,10 +1340,20 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 	// Clear mouse, joystick to clear button presses.
 	game_flush_inputs();
+	show_cursor();
 
+	mouse_state = omouse_state = 0;
+	
 	while(!done)	{
 		//network_listen();
-	
+		
+#ifndef MAC_SHAREWARE
+		redbook_restart_track();		// restart any music that should be looping
+#endif
+
+// read mouse button every 1/10 second
+		omouse_state = mouse_state;	
+		mouse_state = mouse_button_state(0);
 
 		k = key_inkey();
 
@@ -1215,28 +1373,30 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 			k = -1;
 			done = 1;
 		}
-				
+
+#if 0			// DON'T NEED THIS CODE.   MOUSE ON MACINTOSH IS ABLE TO SELECT MENU ITEMS			
 		switch (Config_control_type) {
 		case	CONTROL_JOYSTICK:
 		case	CONTROL_FLIGHTSTICK_PRO:
 		case	CONTROL_THRUSTMASTER_FCS:
 		case	CONTROL_GRAVIS_GAMEPAD:
-			for (i=0; i<4; i++ )	
-		 		if (joy_get_button_down_cnt(i)>0) done=1;
-			break;
+//			for (i=0; i<4; i++ )	
+//		 		if (joy_get_button_down_cnt(i)>0) done=1;
+//			break;
 		case	CONTROL_MOUSE:
 		case	CONTROL_CYBERMAN:
 			for (i=0; i<3; i++ )	
 				if (mouse_button_down_count(i)>0) done=1;
 			break;
 		}
+#endif
 	
 
 //		if ( (nmenus<2) && (k>0) && (nothers==0) )
 //			done=1;
 
 		old_choice = choice;
-	
+
 		switch( k )	{
 		case KEY_TAB + KEY_SHIFTED:
 		case KEY_UP:
@@ -1311,6 +1471,7 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 			if ( (choice>-1) && (item[choice].type==NM_TYPE_INPUT_MENU) && (item[choice].group==0))	{
 				item[choice].group = 1;
 				item[choice].redraw = 1;
+//				if ( !strnicmp( item[choice].saved_text, TXT_EMPTY, strlen(TXT_EMPTY) ) )	{
 				if ( !strnicmp( item[choice].saved_text, TXT_EMPTY, strlen(TXT_EMPTY) ) )	{
 					item[choice].text[0] = 0;
 					item[choice].value = -1;
@@ -1332,8 +1493,42 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 				choice = -1;
 			}
 			break;
+			
+		case KEY_PRINT_SCREEN:
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
+			hide_cursor();
+			save_screen_shot(0);
+			show_cursor();
+			break;
 
-		case KEY_PRINT_SCREEN: 		save_screen_shot(0); break;
+// CD controls follow here
+
+#ifndef MAC_SHAREWARE
+		case KEY_COMMAND+KEY_E:
+			redbook_eject_disk();
+			break;
+		case KEY_COMMAND+KEY_RIGHT:
+			redbook_next_track();
+			break;
+		case KEY_COMMAND+KEY_LEFT:
+			redbook_previous_track();
+			break;
+		case KEY_COMMAND+KEY_UP:
+			redbook_start_play();
+			break;
+		case KEY_COMMAND+KEY_DOWN:
+			stop_redbook();
+			break;
+		case KEY_COMMAND+KEY_M:
+			redbook_mount_disk();
+			break;
+#endif
+			
+		case KEY_COMMAND+KEY_Q:
+			if ( !(Game_mode & GM_MULTI) )
+				do_appl_quit();
+			show_cursor();
+			break;
 
 		#ifndef NDEBUG
 		case KEY_BACKSP:	
@@ -1343,9 +1538,143 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		#endif
 
 		}
+		
+		if ( !done && mouse_state && !omouse_state && !all_text ) {
+			mouse_get_pos(&mx, &my);
+			for (i=0; i<nitems; i++ )	{
+				x1 = grd_curcanv->cv_bitmap.bm_x + item[i].x - item[i].right_offset - 6;
+				x2 = x1 + item[i].w;
+				y1 = grd_curcanv->cv_bitmap.bm_y + item[i].y;
+				y2 = y1 + item[i].h;
+				if (((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2))) {
+					choice = i;
+					switch( item[choice].type )	{
+					case NM_TYPE_CHECK:
+						if ( item[choice].value )
+							item[choice].value = 0;
+						else
+							item[choice].value = 1;
+						item[choice].redraw=1;
+						break;
+					case NM_TYPE_RADIO:
+						for (i=0; i<nitems; i++ )	{
+							if ((i!=choice) && (item[i].type==NM_TYPE_RADIO) && (item[i].group==item[choice].group) && (item[i].value) )	{
+								item[i].value = 0;
+								item[i].redraw = 1;
+							}
+						}
+						item[choice].value = 1;
+						item[choice].redraw = 1;
+						break;
+					}
+					item[old_choice].redraw=1;
+					break;
+				}
+			}
+		}
 
+		if (mouse_state && all_text)
+			done = 1;
+		
+		if ( !done && mouse_state && !all_text ) {
+			mouse_get_pos(&mx, &my);
+			for (i=0; i<nitems; i++ )	{
+				x1 = grd_curcanv->cv_bitmap.bm_x + item[i].x - item[i].right_offset - 6;
+				x2 = x1 + item[i].w;
+				y1 = grd_curcanv->cv_bitmap.bm_y + item[i].y;
+				y2 = y1 + item[i].h;
+				if (((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) && (item[i].type != NM_TYPE_TEXT) ) {
+					choice = i;
+					if ( item[choice].type == NM_TYPE_SLIDER ) {
+						char slider_text[NM_MAX_TEXT_LEN+1], *p, *s1;
+						int string_width, slider_width, height, aw, sleft_width, sright_width, smiddle_width;
+						
+						strcpy(slider_text, item[choice].saved_text);
+						p = strchr(slider_text, '\t');
+						if (p) {
+							*p = '\0';
+							s1 = p+1;
+						}
+						if (p) {
+							gr_get_string_size(s1, &slider_width, &height, &aw);
+							gr_get_string_size(SLIDER_LEFT, &sleft_width, &height, &aw);
+							gr_get_string_size(SLIDER_RIGHT, &sright_width, &height, &aw);
+							gr_get_string_size(SLIDER_MIDDLE, &smiddle_width, &height, &aw);
+
+							x1 = grd_curcanv->cv_bitmap.bm_x + item[choice].x + item[choice].w - slider_width;
+							x2 = x1 + slider_width + sright_width;
+							if ( (mx > x1) && (mx < (x1 + sleft_width)) && (item[choice].value != item[choice].min_value) ) {
+								item[choice].value = item[choice].min_value;
+								item[choice].redraw = 2;
+							} else if ( (mx < x2) && (mx > (x2 - sright_width)) && (item[choice].value != item[choice].max_value) ) {
+								item[choice].value = item[choice].max_value;
+								item[choice].redraw = 2;
+							} else if ( (mx > (x1 + sleft_width)) && (mx < (x2 - sright_width)) ) {
+								int num_values, value_width, new_value;
+								
+								num_values = item[choice].max_value - item[choice].min_value + 1;
+								value_width = (slider_width - sleft_width - sright_width) / num_values;
+								new_value = (mx - x1 - sleft_width) / value_width;
+								if ( item[choice].value != new_value ) {
+									item[choice].value = new_value;
+									item[choice].redraw = 2;
+								}
+							}
+							*p = '\t';
+						}
+					}
+					if (choice == old_choice)
+						break;
+					if ((item[choice].type==NM_TYPE_INPUT) && (choice!=old_choice))	
+						item[choice].value = -1;
+					if ((old_choice>-1) && (item[old_choice].type==NM_TYPE_INPUT_MENU) && (old_choice!=choice))	{
+						item[old_choice].group=0;
+						strcpy(item[old_choice].text, item[old_choice].saved_text );
+						item[old_choice].value = -1;
+					}
+					if (old_choice>-1) 
+						item[old_choice].redraw = 1;
+					item[choice].redraw=1;
+					break;
+				}
+			}
+		}
+		
+		if ( !done && !mouse_state && omouse_state && !all_text && (choice != -1) && (item[choice].type == NM_TYPE_MENU) ) {
+			mouse_get_pos(&mx, &my);
+			x1 = grd_curcanv->cv_bitmap.bm_x + item[choice].x;
+			x2 = x1 + item[choice].w;
+			y1 = grd_curcanv->cv_bitmap.bm_y + item[choice].y;
+			y2 = y1 + item[choice].h;
+			if (((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)))
+				done = 1;
+		}
+		
+		if ( !done && !mouse_state && omouse_state && (choice>-1) && (item[choice].type==NM_TYPE_INPUT_MENU) && (item[choice].group==0))	{
+			item[choice].group = 1;
+			item[choice].redraw = 1;
+			if ( !strnicmp( item[choice].saved_text, TXT_EMPTY, strlen(TXT_EMPTY) ) )	{
+				item[choice].text[0] = 0;
+				item[choice].value = -1;
+			} else {	
+				strip_end_whitespace(item[choice].text);
+			}
+		}
+		
+		if ( !done && !mouse_state && omouse_state && close_box ) {
+			mouse_get_pos(&mx, &my);
+			x1 = grd_curcanv->cv_bitmap.bm_x + close_x + 2;
+			x2 = x1 + close_size - 2;
+			y1 = grd_curcanv->cv_bitmap.bm_y + close_y + 2;
+			y2 = y1 + close_size - 2;
+			if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+				choice = -1;
+				done = 1;
+			}
+		}
+			
 		if ( choice > -1 )	{
-			int ascii;
+			unsigned char ascii;
 
 			if ( ((item[choice].type==NM_TYPE_INPUT)||((item[choice].type==NM_TYPE_INPUT_MENU)&&(item[choice].group==1)) )&& (old_choice==choice) )	{
 				if ( k==KEY_LEFT || k==KEY_BACKSP || k==KEY_PAD4 )	{
@@ -1442,17 +1771,20 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		// Redraw everything...
 		for (i=0; i<nitems; i++ )	{
 			if (item[i].redraw)	{
+				hide_cursor();
 				draw_item( &bg, &item[i], (i==choice && !all_text) );
+				show_cursor();
 				item[i].redraw=0;
 			}
 			else if (i==choice && (item[i].type==NM_TYPE_INPUT || (item[i].type==NM_TYPE_INPUT_MENU && item[i].group)))
 				update_cursor( &item[i]);
 		}
-
+		bitblt_to_screen();
 		if ( gr_palette_faded_out )	{
 			gr_palette_fade_in( gr_palette, 32, 0 );
 		}
 	}
+	hide_cursor();
 	
 	// Restore everything...
 	gr_set_current_canvas(bg.menu_canvas);
@@ -1460,7 +1792,7 @@ int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item * item,
 		// Save the background under the menu...
 		gr_bitmap(0, 0, bg.saved); 	
 		gr_free_bitmap(bg.saved);
-		free( bg.background );
+		myfree( bg.background );
 	} else {
 		gr_bitmap(0, 0, bg.background); 	
 		gr_free_bitmap(bg.background);
@@ -1553,7 +1885,7 @@ void newmenu_file_sort( int n, char *list )
 		for (i=incr; i<n; i++ )		{
 			j = i - incr;
 			while (j>=0 )			{
-				if (strncmp(&list[j*14], &list[(j+incr)*14], 12) > 0)				{
+				if (strnicmp(&list[j*14], &list[(j+incr)*14], 12) > 0)				{
 					memcpy( t, &list[j*14], 13 );
 					memcpy( &list[j*14], &list[(j+incr)*14], 13 );
 					memcpy( &list[(j+incr)*14], t, 13 );
@@ -1570,22 +1902,24 @@ void newmenu_file_sort( int n, char *list )
 void delete_player_saved_games(char * name)
 {
 	int i;
-	char filename[16];
+	char filename[64];
 	
 	for (i=0;i<10; i++)	{
-		sprintf( filename, "%s.sg%d", name, i );
+		sprintf( filename, ":Players:%s.sg%d", name, i );
 		unlink( filename );
 	}
 }
 
-#define MAX_FILES 100
+#define MAX_FILES 200
 
 int MakeNewPlayerFile(int allow_abort);
 
 int newmenu_get_filename( char * title, char * filespec, char * filename, int allow_abort_flag )
 {
 	int i;
-	struct find_t find;
+	DIRPtr dir;
+	direntPtr entry;
+	int mx, my, x1, x2, y1, y2, mouse_state, omouse_state, r;
 	int NumFiles=0, key,done, citem, ocitem;
 	char * filenames = NULL;
 	int NumFiles_displayed = 8;
@@ -1597,44 +1931,52 @@ int newmenu_get_filename( char * title, char * filespec, char * filename, int al
 	int initialized = 0;
 	int exit_value = 0;
 	int w_x, w_y, w_w, w_h;
+	int close_x, close_y, close_size, close_box;
 
-	filenames = malloc( MAX_FILES * 14 );
+	close_box = allow_abort_flag;
+	filenames = mymalloc( MAX_FILES * 14 );
 	if (filenames==NULL) return 0;
 
+ReadFileNames:
 	citem = 0;
+	first_item = -1;
 	keyd_repeat = 1;
 
-	if (!stricmp( filespec, "*.plr" ))
+	CDToDescentDir();								// safety check to get back where to need to
+	if (!stricmp( filespec, ":Players:*.plr" ))
 		player_mode = 1;
-	else if (!stricmp( filespec, "*.dem" ))
+	else if (!stricmp( filespec, ":Demos:*.dem" ))
 		demo_mode = 1;
 
-ReadFileNames:
+//ReadFileNames:
 	done = 0;
 	NumFiles=0;
 
+#ifndef APPLE_OEM		// no new pilots for special apple oem version
 	if (player_mode)	{
 		strncpy( &filenames[NumFiles*14], TXT_CREATE_NEW, 13 );
 		NumFiles++;
 	}
+#endif
 
-	if( !_dos_findfirst( filespec, 0, &find ) )	{
-		do	{
-			if (NumFiles<MAX_FILES)	{
-				strncpy( &filenames[NumFiles*14], find.name, 13 );
-				if ( player_mode )	{
-					char * p;
-					p = strchr(&filenames[NumFiles*14],'.');
-					if (p) *p = '\0';
-				}
-				NumFiles++;
-			} else {
-				break;
+	dir = opendir(filespec);
+	while ((entry = readdir(dir))) {
+		if (NumFiles<MAX_FILES)	{
+			strncpy( &filenames[NumFiles*14], entry->d_name, 13 );
+			if ( player_mode )	{
+				char * p;
+				p = strchr(&filenames[NumFiles*14],'.');
+				if (p) *p = '\0';
 			}
-		} while( !_dos_findnext( &find ) );
+			NumFiles++;
+		} else {
+			break;
+		}
 	}
+	closedir(dir);
 
-#ifdef USE_CD
+#if 0
+#ifdef SATURN
 	// Seach CD for files if demo_mode and cd_mode
 	if ( strlen(destsat_cdpath) && demo_mode )	{
 		char temp_spec[128];
@@ -1665,6 +2007,7 @@ ReadFileNames:
 		}
 	}
 #endif
+#endif // #if 0
 
 	if ( (NumFiles < 1) && demos_deleted )	{
 		exit_value = 0;
@@ -1676,10 +2019,12 @@ ReadFileNames:
 		goto ExitFileMenu;
 	}
 
+	#ifndef APPLE_OEM			// really for testing, but this is true since we cannot add players
 	if ( (NumFiles < 2) && player_mode ) {
 		citem = 0;
 		goto ExitFileMenuEarly;
 	}
+	#endif
 
 	if ( NumFiles<1 )	{
 		nm_messagebox( NULL, 1, "Ok", "%s\n '%s' %s", TXT_NO_FILES_MATCHING, filespec, TXT_WERE_FOUND);
@@ -1691,56 +2036,99 @@ ReadFileNames:
 		set_screen_mode(SCREEN_MENU);
 		gr_set_current_canvas(NULL);
 
-		w_w = 230 - 90 + 1 + 30;
-		w_h = 170 - 30 + 1 + 30;
-	
-		if ( w_w > 320 ) w_w = 320;
-		if ( w_h > 200 ) w_h = 200;
-	
+//mwa		w_w = 230 - 90 + 1 + 30;
+//mwa		w_h = 170 - 30 + 1 + 30;
+//mwa		if ( w_w > 320 ) w_w = 320;
+//mwa		if ( w_h > 200 ) w_h = 200;
+		w_w = 342;
+		w_h = 410;
+		if (w_w > grd_curcanv->cv_bitmap.bm_w) w_w = grd_curcanv->cv_bitmap.bm_w;
+		if (w_h > grd_curcanv->cv_bitmap.bm_h) w_h = grd_curcanv->cv_bitmap.bm_h;
+
 		w_x = (grd_curcanv->cv_bitmap.bm_w-w_w)/2;
+		if ((r = w_x & 0x7)) {
+			for (i = 0; i < r; i++)
+				w_x--;
+		}
 		w_y = (grd_curcanv->cv_bitmap.bm_h-w_h)/2;
-	
+
 		if ( w_x < 0 ) w_x = 0;
 		if ( w_y < 0 ) w_y = 0;
 
-		gr_bm_bitblt(320, 200, 0, 0, 0, 0, &(grd_curcanv->cv_bitmap), &(VR_offscreen_buffer->cv_bitmap) );
+		gr_bm_bitblt(grd_curscreen->sc_w, grd_curscreen->sc_h, 0, 0, 0, 0, &(grd_curcanv->cv_bitmap), &(VR_offscreen_buffer->cv_bitmap) );
 		nm_draw_background( w_x,w_y,w_x+w_w-1,w_y+w_h-1 );
+		bitblt_to_screen();
 
 		grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_3];
-		gr_string( 0x8000, w_y+10, title );
+		gr_string( 0x8000, w_y+20, title );
+
+		if (close_box) {
+			close_x = close_y = 15;
+			close_size = 10;
+			gr_setcolor( BM_XRGB(0, 0, 0) );
+			gr_rect(w_x+close_x, w_y+close_y, w_x+close_x + close_size, w_y+close_y + close_size);
+			gr_setcolor( BM_XRGB(21, 21, 21) );
+			gr_rect( w_x+close_x + 2, w_y+close_y + 2, w_x+close_x + close_size - 2, w_y+close_y + close_size -2 );
+		}
+	
 		initialized = 1;
 	}
 
 	if ( !player_mode )	{
 		newmenu_file_sort( NumFiles, filenames );
 	} else {
+		#ifndef APPLE_OEM
 		newmenu_file_sort( NumFiles-1, &filenames[14] );		// Don't sort first one!
+		#else
+		newmenu_file_sort( NumFiles, &filenames[14] );		// sort the first one for apple oem version since you can't add pilots
+		#endif
 		for ( i=0; i<NumFiles; i++ )	{
 			if (!stricmp(Players[Player_num].callsign, &filenames[i*14]) )
 				citem = i;
 		}
 	}
 
+	omouse_state = mouse_state = 0;
+	show_cursor();
+	
 	while(!done)	{
 		ocitem = citem;
 		ofirst_item = first_item;
+		omouse_state = mouse_state;
+		mouse_state = mouse_button_state(0);
 		key = key_inkey();
 		switch(key)	{
-		case KEY_PRINT_SCREEN: 		save_screen_shot(0); break;
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
+		case KEY_PRINT_SCREEN:
+			hide_cursor();
+			save_screen_shot(0);
+			show_cursor();
+			break;
+
+		#ifndef APPLE_OEM			// not allowed to delete players in Apple OEM version
 		case KEY_CTRLED+KEY_D:
 			if ( ((player_mode)&&(citem>0)) || ((demo_mode)&&(citem>=0)) )	{
 				int x = 1;
+				hide_cursor();
 				if (player_mode)
 					x = nm_messagebox( NULL, 2, TXT_YES, TXT_NO, "%s %s?", TXT_DELETE_PILOT, &filenames[citem*14]+((player_mode && filenames[citem*14]=='$')?1:0) );
 				else if (demo_mode)
 					x = nm_messagebox( NULL, 2, TXT_YES, TXT_NO, "%s %s?", TXT_DELETE_DEMO, &filenames[citem*14]+((demo_mode && filenames[citem*14]=='$')?1:0) );
+				show_cursor();
  				if (x==0)	{
+					char long_name[64];
 					char * p;
 					int ret;
+					long_name[0] = '\0';
 					p = &filenames[(citem*14)+strlen(&filenames[citem*14])];
-					if (player_mode)
+					if (player_mode) {
 						*p = '.';
-					ret = unlink( &filenames[citem*14] );
+						strcpy(long_name, ":Players:");
+					} else if (demo_mode) {
+						strcpy(long_name, ":Demos:");
+					}
+					strcat(long_name, &filenames[citem*14]);
+					ret = unlink(long_name);
 					if (player_mode)
 						*p = 0;
 
@@ -1760,6 +2148,13 @@ ReadFileNames:
 				}
 			}
 			break;
+		#endif				// ifndef APPLE_OEM
+		
+#ifndef NDEBUG
+		case KEY_BACKSP:
+			Int3();
+			break;
+#endif
 		case KEY_HOME:
 		case KEY_PAD7:
 			citem = 0;
@@ -1794,6 +2189,11 @@ ReadFileNames:
 		case KEY_PADENTER:
 			done = 1;
 			break;
+		case KEY_COMMAND+KEY_Q:
+			if ( !(Game_mode & GM_MULTI) )
+				do_appl_quit();
+			show_cursor();
+			break;
 		default:	
 			{
 				int ascii = key_to_ascii(key);
@@ -1818,7 +2218,6 @@ ReadFileNames:
 		}
 		if ( done ) break;
 
-
 		if (citem<0)
 			citem=0;
 
@@ -1838,53 +2237,98 @@ ReadFileNames:
 			first_item = NumFiles-NumFiles_displayed;
 		if (first_item < 0 ) first_item = 0;
 
+		if (mouse_state) {
+			mouse_get_pos(&mx, &my);
+			for (i=first_item; i<first_item+NumFiles_displayed; i++ )	{
+				x1 = 210;
+				x2 = 440;
+				y1 = (i-first_item)*29+w_y+108;
+				y2 = y1+26;
+				if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+					if (i == citem)
+						break;
+					citem = i;
+					break;
+				}
+			}
+		}
+		
+		if (!mouse_state && omouse_state) {
+			mouse_get_pos(&mx, &my);
+			x1 = 210;
+			x2 = 440;
+			y1 = (citem-first_item)*29+w_y+108;
+			y2 = y1+26;
+			if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+				done = 1;
+			}
+		}
+
+		if ( !mouse_state && omouse_state && close_box ) {
+			mouse_get_pos(&mx, &my);
+			x1 = w_x + close_x + 2;
+			x2 = x1 + close_size - 2;
+			y1 = w_y + close_y + 2;
+			y2 = y1 + close_size - 2;
+			if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+				citem = -1;
+				done = 1;
+			}
+		}
+			
 		if (ofirst_item != first_item )	{
 			gr_setcolor( BM_XRGB( 0,0,0)  );
+			hide_cursor();
 			for (i=first_item; i<first_item+NumFiles_displayed; i++ )	{
 				int w, h, aw, y;
-				y = (i-first_item)*12+w_y+45;
+				y = (i-first_item)*29+w_y+108;
 				if ( i >= NumFiles )	{
 					gr_setcolor( BM_XRGB(0,0,0));
-					gr_rect( 100, y-1, 220, y+11 );
+					gr_rect( 200, y-2, 440, y+26 );
 				} else {
 					if ( i == citem )	
 						grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 					else	
 						grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 					gr_get_string_size(&filenames[i*14], &w, &h, &aw  );
-					gr_rect( 100, y-1, 220, y+11 );
-					gr_string( 105, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
+					gr_rect( 200, y-2, 440, y+26 );
+					gr_string( 210, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
 				}
-			}		
+			}
+			show_cursor();
 		} else if ( citem != ocitem )	{
 			int w, h, aw, y;
 
+			hide_cursor();
 			i = ocitem;
 			if ( (i>=0) && (i<NumFiles) )	{
-				y = (i-first_item)*12+w_y+45;
+				y = (i-first_item)*29+w_y+108;
 				if ( i == citem )	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 				else	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 				gr_get_string_size(&filenames[i*14], &w, &h, &aw  );
-				gr_rect( 100, y-1, 220, y+11 );
-				gr_string( 105, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
+				gr_rect( 200, y-2, 440, y+26 );
+				gr_string( 210, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
 			}
 			i = citem;
 			if ( (i>=0) && (i<NumFiles) )	{
-				y = (i-first_item)*12+w_y+45;
+				y = (i-first_item)*29+w_y+108;
 				if ( i == citem )	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 				else	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 				gr_get_string_size(&filenames[i*14], &w, &h, &aw  );
-				gr_rect( 100, y-1, 220, y+11 );
-				gr_string( 105, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
+				gr_rect( 200, y-2, 440, y+26 );
+				gr_string( 210, y, (&filenames[i*14])+((player_mode && filenames[i*14]=='$')?1:0)  );
 			}
+			show_cursor();
 		}
+		bitblt_to_screen();
 	}
 
 ExitFileMenuEarly:
+	hide_cursor();
 	if ( citem > -1 )	{
 		strncpy( filename, (&filenames[citem*14])+((player_mode && filenames[citem*14]=='$')?1:0), 13 );
 		exit_value = 1;
@@ -1896,11 +2340,12 @@ ExitFileMenu:
 	keyd_repeat = old_keyd_repeat;
 
 	if ( initialized )	{
-		gr_bm_bitblt(320, 200, 0, 0, 0, 0, &(VR_offscreen_buffer->cv_bitmap), &(grd_curcanv->cv_bitmap) );
+		gr_bm_bitblt(grd_curscreen->sc_w, grd_curscreen->sc_h, 0, 0, 0, 0, &(VR_offscreen_buffer->cv_bitmap), &(grd_curcanv->cv_bitmap) );
+		bitblt_to_screen();
 	}
 
 	if ( filenames )
-		free(filenames);
+		myfree(filenames);
 
 	return exit_value;
 
@@ -1932,15 +2377,19 @@ ExitFileMenu:
 
 int newmenu_listbox( char * title, int nitems, char * items[], int allow_abort_flag, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ) )
 {
-	return newmenu_listbox1( title, nitems, items, allow_abort_flag, 0, listbox_callback );
+	return newmenu_listbox1( title, nitems, items, allow_abort_flag, 0, listbox_callback, 1 );
 }
 
-int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_flag, int default_item, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ) )
+int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_flag, int default_item, int (*listbox_callback)( int * citem, int *nitems, char * items[], int *keypress ), int close_box )
 {
 	int i;
+	int mx, my, x1, x2, y1, y2;
 	int done, ocitem,citem, ofirst_item, first_item, key, redraw;
 	int old_keyd_repeat = keyd_repeat;
 	int width, height, wx, wy, title_height;
+	int mouse_state, omouse_state;
+	int close_x, close_y, close_size;
+
 	keyd_repeat = 1;
 
 	set_screen_mode(SCREEN_MENU);
@@ -1954,29 +2403,39 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 		if ( w > width )
 			width = w;
 	}
-	height = 12 * LB_ITEMS_ON_SCREEN;
+	height = 26 * LB_ITEMS_ON_SCREEN;
 
 	{
 		int w, h, aw;
 		gr_get_string_size( title, &w, &h, &aw );		
 		if ( w > width )
 			width = w;
-		title_height = h + 5;
+		title_height = h + 13;
 	}
 		
-	width += 10;
-	if ( width > 320 - 30 )
-		width = 320 - 30;
+	width += 20;
+	if ( width > grd_curcanv->cv_bitmap.bm_w - 60 )
+		width = grd_curcanv->cv_bitmap.bm_w - 60;
 	
 	wx = (grd_curcanv->cv_bitmap.bm_w-width)/2;
 	wy = (grd_curcanv->cv_bitmap.bm_h-(height+title_height))/2 + title_height;
 	if ( wy < title_height )
 		wy = title_height;
 
-	gr_bm_bitblt(320, 200, 0, 0, 0, 0, &(grd_curcanv->cv_bitmap), &(VR_offscreen_buffer->cv_bitmap) );
-	nm_draw_background( wx-15,wy-title_height-15,wx+width+15,wy+height+15 );
+	gr_bm_bitblt(grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h, 0, 0, 0, 0, &(grd_curcanv->cv_bitmap), &(VR_offscreen_buffer->cv_bitmap) );
+	nm_draw_background( wx-30,wy-title_height-36,wx+width+30,wy+height+36 );
 
 	gr_string( 0x8000, wy - title_height, title );
+
+	if (close_box) {
+		close_x = wx - 30 + 15;
+		close_y = wy - title_height - 36 + 15;
+		close_size = 10;
+		gr_setcolor( BM_XRGB(0, 0, 0) );
+		gr_rect(close_x, close_y, close_x + close_size, close_y + close_size);
+		gr_setcolor( BM_XRGB(21, 21, 21) );
+		gr_rect( close_x + 2, close_y + 2, close_x + close_size - 2, close_y + close_size - 2 );
+	}
 
 	done = 0;
 	citem = default_item;
@@ -1985,9 +2444,14 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 
 	first_item = -1;
 
+	omouse_state = mouse_state = 0;
+	show_cursor();
+	
 	while(!done)	{
 		ocitem = citem;
 		ofirst_item = first_item;
+		omouse_state = mouse_state;
+		mouse_state = mouse_button_state(0);
 		key = key_inkey();
 
 		if ( listbox_callback )
@@ -2003,7 +2467,10 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 
 		switch(key)	{
 		case KEY_PRINT_SCREEN: 		
+		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
+			hide_cursor();
 			save_screen_shot(0); 
+			show_cursor();
 			break;
 		case KEY_HOME:
 		case KEY_PAD7:
@@ -2038,6 +2505,12 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 		case KEY_ENTER:
 		case KEY_PADENTER:
 			done = 1;
+			break;
+			
+		case KEY_COMMAND+KEY_Q:
+			if ( !(Game_mode & GM_MULTI) )
+				do_appl_quit();
+			show_cursor();
 			break;
 		default:	
 			if ( key > 0 )	{
@@ -2082,79 +2555,127 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 			first_item = nitems-LB_ITEMS_ON_SCREEN;
 		if (first_item < 0 ) first_item = 0;
 
+		if (mouse_state) {
+			mouse_get_pos(&mx, &my);
+			for (i=first_item; i<first_item+LB_ITEMS_ON_SCREEN; i++ )	{
+				x1 = wx;
+				x2 = wx + width;
+				y1 = (i-first_item)*29+wy;
+				y2 = y1+26;
+				if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+					if (i == citem)
+						break;
+					citem = i;
+					break;
+				}
+			}
+		}
+		
+		if (!mouse_state && omouse_state) {
+			mouse_get_pos(&mx, &my);
+			x1 = wx;
+			x2 = wx + width;
+			y1 = (citem-first_item)*29+wy;
+			y2 = y1+26;
+			if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+				done = 1;
+			}
+		}
+
+		if ( !mouse_state && omouse_state && close_box ) {
+			mouse_get_pos(&mx, &my);
+			x1 = close_x + 2;
+			x2 = x1 + close_size - 2;
+			y1 = close_y + 2;
+			y2 = y1 + close_size - 2;
+			if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
+				citem = -1;
+				done = 1;
+			}
+		}
+			
 		if ( (ofirst_item != first_item) || redraw)	{
+			hide_cursor();
 			gr_setcolor( BM_XRGB( 0,0,0)  );
 			for (i=first_item; i<first_item+LB_ITEMS_ON_SCREEN; i++ )	{
 				int w, h, aw, y;
-				y = (i-first_item)*12+wy;
+				y = (i-first_item)*29+wy;
 				if ( i >= nitems )	{
 					gr_setcolor( BM_XRGB(0,0,0));
-					gr_rect( wx, y-1, wx+width-1, y+11 );
+					gr_rect( wx, y-2, wx+width-2, y+26 );
 				} else {
 					if ( i == citem )	
 						grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 					else	
 						grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 					gr_get_string_size(items[i], &w, &h, &aw  );
-					gr_rect( wx, y-1, wx+width-1, y+11 );
-					gr_string( wx+5, y, items[i]  );
+					gr_rect( wx, y-2, wx+width-2, y+26 );
+					gr_string( wx+10, y, items[i]  );
 				}
 			}		
+			show_cursor();
 		} else if ( citem != ocitem )	{
 			int w, h, aw, y;
 
+			hide_cursor();
 			i = ocitem;
 			if ( (i>=0) && (i<nitems) )	{
-				y = (i-first_item)*12+wy;
+				y = (i-first_item)*29+wy;
 				if ( i == citem )	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 				else	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 				gr_get_string_size(items[i], &w, &h, &aw  );
-				gr_rect( wx, y-1, wx+width-1, y+11 );
-				gr_string( wx+5, y, items[i]  );
+				gr_rect( wx, y-2, wx+width-2, y+26 );
+				gr_string( wx+10, y, items[i]  );
 			}
 			i = citem;
 			if ( (i>=0) && (i<nitems) )	{
-				y = (i-first_item)*12+wy;
+				y = (i-first_item)*29+wy;
 				if ( i == citem )	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_2];
 				else	
 					grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_1];
 				gr_get_string_size( items[i], &w, &h, &aw  );
-				gr_rect( wx, y-1, wx+width-1, y+11 );
-				gr_string( wx+5, y, items[i]  );
+				gr_rect( wx, y-2, wx+width-2, y+26 );
+				gr_string( wx+10, y, items[i]  );
 			}
+			show_cursor();
 		}
+		bitblt_to_screen();
 	}
+	hide_cursor();
 	keyd_repeat = old_keyd_repeat;
 
-	gr_bm_bitblt(320, 200, 0, 0, 0, 0, &(VR_offscreen_buffer->cv_bitmap), &(grd_curcanv->cv_bitmap) );
+	gr_bm_bitblt(grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h, 0, 0, 0, 0, &(VR_offscreen_buffer->cv_bitmap), &(grd_curcanv->cv_bitmap) );
+	bitblt_to_screen();
 
 	return citem;
 }
 
+
+// assume chdir'ed to this directory
 
 int newmenu_filelist( char * title, char * filespec, char * filename )
 {
 	int i, NumFiles;
 	char * Filenames[MAX_FILES];
 	char FilenameText[MAX_FILES][14];
-	struct find_t find;
+	DIRPtr dir;
+	direntPtr entry;
 
 	NumFiles = 0;
-	if( !_dos_findfirst( filespec, 0, &find ) )	{
-		do	{
-			if (NumFiles<MAX_FILES)	{
-				strncpy( FilenameText[NumFiles], find.name, 13 );
-				Filenames[NumFiles] = FilenameText[NumFiles];
-				NumFiles++;
-			} else {
-				break;
-			}
-		} while( !_dos_findnext( &find ) );
+	dir = opendir(filespec);
+	while ((entry = readdir(dir))) {
+		if (NumFiles<MAX_FILES)	{
+			strncpy( FilenameText[NumFiles], entry->d_name, 13 );
+			Filenames[NumFiles] = FilenameText[NumFiles];
+			NumFiles++;
+		} else {
+			break;
+		}
 	}
-
+	closedir(dir);
 	i = newmenu_listbox( title, NumFiles, Filenames, 1, NULL );
 	if ( i > -1 )	{
 		strcpy( filename, Filenames[i] );
@@ -2163,4 +2684,3 @@ int newmenu_filelist( char * title, char * filespec, char * filename )
 	return 0;
 }
 
-

@@ -11,14 +11,32 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/texmap/rcs/ntmap.c $
- * $Revision: 1.52 $
- * $Author: john $
- * $Date: 1995/03/14 15:13:06 $
+ * $Source: Smoke:miner:source:texmap::RCS:ntmap.c $
+ * $Revision: 1.8 $
+ * $Author: allender $
+ * $Date: 1995/09/13 08:43:11 $
  * 
  * Start of conversion to new texture mapper.
  * 
  * $Log: ntmap.c $
+ * Revision 1.8  1995/09/13  08:43:11  allender
+ * put in Mike's check to help with overflow
+ *
+ * Revision 1.7  1995/09/04  14:21:50  allender
+ * brute force texture points inbetween buffer bounds
+ *
+ * Revision 1.6  1995/08/31  15:48:41  allender
+ * call assembly on no light texture map
+ *
+ * Revision 1.5  1995/08/14  14:28:05  allender
+ * has quadtratic interpolator
+ *
+ * Revision 1.54  1995/05/26  16:08:03  matt
+ * Took out evil include of Descent main directory header file
+ * 
+ * Revision 1.53  1995/04/18  14:36:14  matt
+ * Moved window_clip vars to texmap library from Descent main source
+ * 
  * Revision 1.52  1995/03/14  15:13:06  john
  * Increased MAX_Y_Pointers to 480.
  * 
@@ -122,7 +140,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: ntmap.c 1.52 1995/03/14 15:13:06 john Exp $";
+static char rcsid[] = "$Id: ntmap.c 1.8 1995/09/13 08:43:11 allender Exp $";
 #pragma on (unreferenced)
 
 #define VESA 0
@@ -136,7 +154,6 @@ static char rcsid[] = "$Id: ntmap.c 1.52 1995/03/14 15:13:06 john Exp $";
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 
 #include "mono.h"
@@ -151,9 +168,11 @@ static char rcsid[] = "$Id: ntmap.c 1.52 1995/03/14 15:13:06 john Exp $";
 #include "rle.h"
 #include "scanline.h"
 
-#include "..\main\textures.h"
+#ifndef __powerc
+#define NASM 1
+#endif
 
-#define	EDITOR_TMAP	1		//if in, include extra stuff
+//#define	EDITOR_TMAP	1		//if in, include extra stuff
 
 #define F15_5 (F1_0*15 + F0_5)
 
@@ -169,7 +188,11 @@ grs_bitmap Texmap4_ptrs[NUM_TMAPS];
 
 fix Range_max=0; // debug, kill me
 
+#ifdef __powerc
 int	Interpolation_method=0;	// 0 = choose best method
+#else
+int Interpolation_method=1;
+#endif
 int	Lighting_on;				// initialize to no lighting
 int	Tmap_flat_flag = 0;		//	1 = render texture maps as flat shaded polygons.
 int	Current_seg_depth;		// HACK INTERFACE: how far away the current segment (& thus texture) is
@@ -177,6 +200,9 @@ int	Max_perspective_depth;
 int	Max_linear_depth;
 int	Max_flat_depth;
 
+int	C_Scanline_subdivision = 0;
+
+//variables for clipping the texture-mapper to screen region
 extern int Window_clip_left, Window_clip_bot, Window_clip_right, Window_clip_top;
 
 // These variables are the interface to assembler.  They get set for each texture map, which is a real waste of time.
@@ -190,7 +216,6 @@ int	window_top;
 int	window_bottom;
 int  	window_width;
 int  	window_height;
-int	write_buffer;
 #ifdef EDITOR_TMAP
 #define	MAX_Y_POINTERS	480
 #else
@@ -206,7 +231,7 @@ int	Lighting_enabled;
 int	Fix_recip_table_computed=0;
 
 fix fx_l, fx_u, fx_v, fx_z, fx_du_dx, fx_dv_dx, fx_dz_dx, fx_dl_dx;
-int fx_xleft, fx_xright, fx_y;
+int fx_xleft, fx_xright, fx_y, fx_xright_quadratic;
 unsigned char * pixptr;
 int per2_flag = 0;
 int Transparency_on = 0;
@@ -463,7 +488,99 @@ fix compute_dz_dy(g3ds_tmap *t, int top_vertex,int bottom_vertex, fix recip_dy)
 	return fixmul(t->verts[bottom_vertex].z - t->verts[top_vertex].z, recip_dy);
 
 }
-int Skip_short_flag=0;
+
+void c_tmap_scanline_per_quadratic(int y, fix xleft, fix uleft, fix vleft, fix zleft, fix xright, fix uright, fix vright, fix zright, fix lleft, fix dl_dx)
+{
+	ubyte *dest;
+	uint	c;
+	int	x;
+	fix	u,v,l,dudx, dvdx, dldx;
+	fix	u1, v1;
+	int	dx;
+	fix	a1, a2, b1, b2, dudx1, dvdx1;
+	fix	u0, u2, v0, v2, w0, w2;
+
+	// Quadratic setup stuff:
+	dx = f2i(xright) - f2i(xleft);
+
+	if (dx > 0) {
+		fix	recip_dx;
+		fix	recip_dx2;
+
+		u0 = uleft;
+		v0 = vleft;
+		w0 = zleft;
+
+		u2 = uright;	//fx_u + fx_du_dx*(fx_xright-fx_xleft);
+		v2 = vright;	//fx_v + fx_dv_dx*(fx_xright-fx_xleft);
+		w2 = zright;	//fx_z + fx_dz_dx*(fx_xright-fx_xleft);
+
+		u1 = fixdiv((u0+u2),(w0+w2));						
+		v1 = fixdiv((v0+v2),(w0+w2));
+
+		u0 = fixdiv( u0, w0 );
+		v0 = fixdiv( v0, w0 );
+		u2 = fixdiv( u2, w2 );
+		v2 = fixdiv( v2, w2 );
+
+		//	Note: If you compute recip_dx2 by doing the multiply, you lose precision for large dx.
+ 		if (dx < FIX_RECIP_TABLE_SIZE)
+ 			recip_dx = fix_recip[dx];
+ 		else
+ 			recip_dx = F1_0/dx;
+ 
+ 		a1 = fixmul(-3*u0+4*u1-u2, recip_dx);
+ 		b1 = fixmul(-3*v0+4*v1-v2, recip_dx);
+ 		a2 = fixmul(fixmul(2*(u0-2*u1+u2), recip_dx), recip_dx);
+ 		b2 = fixmul(fixmul(2*(v0-2*v1+v2), recip_dx), recip_dx);
+
+		dudx = a1 + a2;
+		dvdx = b1 + b2;
+		dudx1 = 2*a2;
+		dvdx1 = 2*b2;
+	} else {
+		u0 = fixdiv( uleft, zleft );
+		v0 = fixdiv( vleft, zleft );
+	}
+
+	u = u0;
+	v = v0;
+
+	// Normal lighting setup
+	l = lleft>>8;
+	dldx = dl_dx>>8;
+	
+	// Normal destination pointer setup
+	dest = (ubyte *)(write_buffer + f2i(xleft) + (bytes_per_row * y)  );
+
+	if (!Transparency_on)	{
+		for (x= dx; x > 0; --x ) {
+			*dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[  (f2i(v)&63)*64 + (f2i(u)&63) ] ];
+			l += dldx;
+			u += dudx;
+			v += dvdx;
+			dudx += dudx1;		// Extra add for quadratic!
+			dvdx += dvdx1;		// Extra add for quadratic!
+		}
+		*dest = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[  (f2i(v)&63)*64 + (f2i(u)&63) ] ];
+	} else {
+		for (x= dx ; x > 0; --x ) {
+			c = (uint)pixptr[  (f2i(v)&63)*64 + (f2i(u)&63) ];
+			if ( c!=TRANSPARENCY_COLOR)
+				*dest = gr_fade_table[ (l&(0xff00)) + c ];
+			dest++;
+			l += dldx;
+			u += dudx;
+			v += dvdx;
+			dudx += dudx1;		// Extra add for quadratic!
+			dvdx += dvdx1;		// Extra add for quadratic!
+		}
+
+		c = (uint)pixptr[  (f2i(v)&63)*64 + (f2i(u)&63) ];
+		if ( c!=TRANSPARENCY_COLOR)
+			*dest = gr_fade_table[ (l&(0xff00)) + c ];
+	}
+}
 
 // -------------------------------------------------------------------------------------
 //	Texture map current scanline in perspective.
@@ -544,9 +661,11 @@ void ntmap_scanline_lighted(grs_bitmap *srcb, int y, fix xleft, fix xright, fix 
 				return;
 			if (fx_xright < Window_clip_left)
 				return;
+			fx_xright_quadratic = fx_xright;		//	Hack for quadratic interpolation, needs to know original right x coordinate.
+// -- Commented out by MK: Screws up quadratic interpolator.  Need to recompute uright, vright, zright!			if (fx_xright > Window_clip_right)
+// -- Commented out by MK: Screws up quadratic interpolator.  Need to recompute uright, vright, zright!				fx_xright = Window_clip_right;
 			if (fx_xright > Window_clip_right)
 				fx_xright = Window_clip_right;
-
 			#ifdef NASM
 				c_tmap_scanline_per();
 			#else
@@ -807,7 +926,8 @@ void ntmap_scanline_lighted_linear(grs_bitmap *srcb, int y, fix xleft, fix xrigh
 				#ifdef NASM
 					c_tmap_scanline_lin_nolight();
 				#else
-					asm_tmap_scanline_lin();
+					c_tmap_scanline_lin_nolight();
+//					asm_tmap_scanline_lin();
 				#endif
 				break;
 			case 1:
@@ -827,7 +947,8 @@ void ntmap_scanline_lighted_linear(grs_bitmap *srcb, int y, fix xleft, fix xrigh
 				#ifdef NASM
 					c_tmap_scanline_lin();
 				#else
-					asm_tmap_scanline_lin_lighted();
+					c_tmap_scanline_lin();
+//					asm_tmap_scanline_lin_lighted();
 				#endif
 				break;
 			case 2:
@@ -1021,6 +1142,7 @@ extern void draw_tmap_flat(grs_bitmap *bp,int nverts,g3s_point **vertbuf);
 void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 {
 	int	i;
+	fix	maxtvpz;
 
 	//	These variables are used in system which renders texture maps which lie on one scanline as a line.
 #if SC2000K
@@ -1069,13 +1191,24 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 #endif
 // 	div_numerator = DivNum;	//f1_0*3;
 
+	maxtvpz = 0;
+
 	for (i=0; i<nverts; i++) {
 		g3ds_vertex	*tvp = &Tmap1.verts[i];
 		g3s_point	*vp = vertbuf[i];
 
 		tvp->x2d = vp->p3_sx;
 		tvp->y2d = vp->p3_sy;
-
+		
+		if ( tvp->x2d < 0 )
+			tvp->x2d = 0;
+		else if (tvp->x2d > FIX_XLIMIT)
+			tvp->x2d = FIX_XLIMIT;
+		if (tvp->y2d < 0)
+			tvp->y2d = 0;
+		else if (tvp->y2d > FIX_YLIMIT)
+			tvp->y2d = FIX_YLIMIT;
+		
 #if SC2000K
 		//	If y coordinates are not the same (in integer portion), then this texture map is not all on one scan line
 		if (f2i(tvp->y2d) != last_y)
@@ -1091,20 +1224,33 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 		}
 #endif
 		//	Check for overflow on fixdiv.  Will overflow on vp->z <= something small.  Allow only as low as 256.
-		if (vp->z < 256) {
-			vp->z = 256;
+		if (vp->p3_z < 256) {
+			vp->p3_z = 256;
 			// Int3();		// we would overflow if we divided!
 		}
 
-		tvp->z = fixdiv(F1_0*12, vp->z);
+		tvp->z = fixdiv(F1_0*12, vp->p3_z);
  		tvp->u = vp->p3_u << 6; //* bp->bm_w;
 		tvp->v = vp->p3_v << 6; //* bp->bm_h;
+
+		if (tvp->z > maxtvpz)
+			maxtvpz = tvp->z;
 
 		Assert(Lighting_on < 3);
 
 		if (Lighting_on)
 			tvp->l = vp->p3_l * NUM_LIGHTING_LEVELS;
 	}
+
+	while (maxtvpz > F1_0*64) {
+		mprintf((0, "!"));
+		maxtvpz /= 4;
+		for (i=0; i<nverts; i++) {
+			g3ds_vertex	*tvp = &Tmap1.verts[i];
+			tvp->z /= 4;
+		}
+	}
+
 
 #if SC2000K
 	// Render a horizontal line instead of a texture map if flat_flag still set (all vertices on one scanline).
@@ -1185,4 +1331,3 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 
 }
 
-

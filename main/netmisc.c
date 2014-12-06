@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/netmisc.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:27:24 $
+ * $Source: Smoke:miner:source:main::RCS:NETMISC.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:28:41 $
  * 
  * Misc routines for network.
  * 
- * $Log: netmisc.c $
+ * $Log: NETMISC.C $
+ * Revision 1.1  1995/05/16  15:28:41  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:27:24  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -37,12 +40,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: netmisc.c 2.0 1995/02/27 11:27:24 john Exp $";
+static char rcsid[] = "$Id: NETMISC.C 1.1 1995/05/16 15:28:41 allender Exp $";
 #pragma on (unreferenced)
 
 #include <string.h>
 
-#include "types.h"
+#include "dtypes.h"
 #include "mono.h"
 
 // Calculates the checksum of a block of memory.

@@ -11,10 +11,10 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/inferno.h $
- * $Revision: 2.4 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:17 $
+ * $Source: Smoke:miner:source:main::RCS:INFERNO.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:58:12 $
  *
  * Header file for Inferno.  Should be included in all source files. 
  *
@@ -50,11 +50,10 @@ extern int Function_mode;			//in game or editor?
 extern int Screen_mode;				//editor screen or game screen?
 extern char Menu_pcx_name[13];
 
-#ifdef USE_CD
+#ifdef SATURN
 extern char destsat_cdpath[128];
 #endif
 
 #endif
 
 
-

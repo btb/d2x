@@ -11,18 +11,37 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/state.c $
- * $Revision: 2.14 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:10 $
+ * $Source: Smoke:miner:source:main::RCS:state.c $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:18:25 $
  * 
  * Functions to save/restore game state.
  * 
  * $Log: state.c $
- * Revision 2.14  1995/05/26  16:16:10  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
+ * Revision 1.7  1995/10/31  10:18:25  allender
+ * shareware stuff
+ *
+ * Revision 1.6  1995/10/21  22:25:45  allender
+ * put in creator code and file type for saved games.
+ * put save games in players folder
+ *
+ * Revision 1.5  1995/10/20  00:51:21  allender
+ * close boxes and proper mouse support on save game stuff
+ *
+ * Revision 1.4  1995/10/17  13:19:02  allender
+ * close boxes for load and save game
+ *
+ * Revision 1.3  1995/09/18  08:09:15  allender
+ * made larger thumbnail and handled NULL gr_bitmap pointers
+ * better
+ *
+ * Revision 1.2  1995/08/14  14:36:12  allender
+ * change transparency to 0
+ *
+ * Revision 1.1  1995/05/16  15:31:12  allender
+ * Initial revision
+ *
  * Revision 2.13  1995/04/06  15:12:20  john
  * Fixed bug with lunacy not working.
  * 
@@ -211,13 +230,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: state.c 2.14 1995/05/26 16:16:10 john Exp $";
+static char rcsid[] = "$Id: state.c 1.7 1995/10/31 10:18:25 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <Files.h>
 
 #include "mono.h"
 #include "inferno.h"
@@ -293,12 +313,18 @@ grs_bitmap *sc_bmp[NUM_SAVES];
 
 char dgss_id[4] = "DGSS";
 
+#ifdef MAC_SHAREWARE
+char mission_save[9] = "\0\0\0\0\0\0\0\0\0";
+#endif
+
 int state_default_item = 0;
 
 uint state_game_id;
 
 void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 {
+	grs_canvas *save_canv;
+
 	nitems = nitems;
 	last_key = last_key;
 	
@@ -306,8 +332,10 @@ void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 //		sc_last_item = citem;
 		if ( citem > 0 )	{
 			if ( sc_bmp[citem-1] )	{
+				save_canv = grd_curcanv;;
 				gr_set_current_canvas( NULL );
 				gr_bitmap( (grd_curcanv->cv_bitmap.bm_w-THUMBNAIL_W)/2,items[0].y-5, sc_bmp[citem-1] );
+				gr_set_current_canvas(save_canv);
 			}
 		}
 //	}	
@@ -333,7 +361,7 @@ int state_get_save_file(char * fname, char * dsc, int multi )
 	FILE * fp;
 	int i, choice, version;
 	newmenu_item m[NUM_SAVES+1];
-	char filename[NUM_SAVES][20];
+	char filename[NUM_SAVES][64];
 	char desc[NUM_SAVES][DESC_LENGTH+16];
 	char id[5];
 	int valid=0;
@@ -341,9 +369,9 @@ int state_get_save_file(char * fname, char * dsc, int multi )
 	for (i=0;i<NUM_SAVES; i++ )	{
 		sc_bmp[i] = NULL;
 		if ( !multi )
-			sprintf( filename[i], "%s.sg%d", Players[Player_num].callsign, i );
+			sprintf( filename[i], ":Players:%s.sg%d", Players[Player_num].callsign, i );
 		else
-			sprintf( filename[i], "%s.mg%d", Players[Player_num].callsign, i );
+			sprintf( filename[i], ":Players:%s.mg%d", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = fopen( filename[i], "rb" );
 		if ( fp ) {
@@ -372,7 +400,7 @@ int state_get_save_file(char * fname, char * dsc, int multi )
 	}
 
 	sc_last_item = -1;
-	choice = newmenu_do1( NULL, "Save Game", NUM_SAVES, m, NULL, state_default_item );
+	choice = newmenu_do4( NULL, "Save Game", NUM_SAVES, m, NULL, state_default_item, NULL, -1, -1, 1 );
 
 	for (i=0; i<NUM_SAVES; i++ )	{
 		if ( sc_bmp[i] )
@@ -393,7 +421,7 @@ int state_get_restore_file(char * fname, int multi )
 	FILE * fp;
 	int i, choice, version, nsaves;
 	newmenu_item m[NUM_SAVES+1];
-	char filename[NUM_SAVES][20];
+	char filename[NUM_SAVES][64];
 	char desc[NUM_SAVES][DESC_LENGTH + 16];
 	char id[5];
 	int valid;
@@ -403,9 +431,9 @@ int state_get_restore_file(char * fname, int multi )
 	for (i=0;i<NUM_SAVES; i++ )	{
 		sc_bmp[i] = NULL;
 		if (!multi)
-			sprintf( filename[i], "%s.sg%d", Players[Player_num].callsign, i );
+			sprintf( filename[i], ":Players:%s.sg%d", Players[Player_num].callsign, i );
 		else
-			sprintf( filename[i], "%s.mg%d", Players[Player_num].callsign, i );
+			sprintf( filename[i], ":Players:%s.mg%d", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = fopen( filename[i], "rb" );
 		if ( fp ) {
@@ -421,7 +449,10 @@ int state_get_restore_file(char * fname, int multi )
 					m[i+1].type = NM_TYPE_MENU; m[i+1].text = desc[i];;
 					// Read thumbnail
 					sc_bmp[i] = gr_create_bitmap(THUMBNAIL_W,THUMBNAIL_H );
-					fread( sc_bmp[i]->bm_data, THUMBNAIL_W * THUMBNAIL_H, 1, fp );
+					if (sc_bmp[i])
+						fread( sc_bmp[i]->bm_data, THUMBNAIL_W * THUMBNAIL_H, 1, fp );
+					else
+						fseek( fp, THUMBNAIL_W * THUMBNAIL_H, SEEK_CUR );
 					nsaves++;
 					valid = 1;
 				} 
@@ -441,7 +472,8 @@ int state_get_restore_file(char * fname, int multi )
 	}
 
 	sc_last_item = -1;
-	choice = newmenu_do3( NULL, "Select Game to Restore", NUM_SAVES+1, m, state_callback, state_default_item+1, NULL, 190, -1 );
+//	choice = newmenu_do4( NULL, "Select Game to Restore", NUM_SAVES+1, m, state_callback, state_default_item+1, NULL, 380, -1, 1 );
+	choice = newmenu_do4( NULL, "Select Game to Restore", NUM_SAVES+1, m, state_callback, state_default_item+1, NULL, -1, -1, 1 );
 
 	for (i=0; i<NUM_SAVES; i++ )	{
 		if ( sc_bmp[i] )
@@ -498,13 +530,13 @@ int state_save_old_game(int slotnum, char * sg_name, player * sg_player,
 			bmp.bm_data = NULL;
 			if (pcx_read_bitmap( pcx_file, &bmp, BM_LINEAR, pcx_palette )==PCX_ERROR_NONE)	{
 				grs_point vertbuf[3];
-				gr_clear_canvas( 255 );
+				gr_clear_canvas( TRANSPARENCY_COLOR );
 				vertbuf[0].x = vertbuf[0].y = -F1_0*6;		// -6 pixel rows for ascpect
 				vertbuf[1].x = vertbuf[1].y = 0;
 				vertbuf[2].x = i2f(THUMBNAIL_W); vertbuf[2].y = i2f(THUMBNAIL_H+7);	// + 7 pixel rows for ascpect
 				scale_bitmap(&bmp, vertbuf );
 				gr_remap_bitmap_good( &cnv->cv_bitmap, pcx_palette, -1, -1 );
-				free( bmp.bm_data );
+				myfree( bmp.bm_data );
 			}
 		}
 		fwrite( cnv->cv_bitmap.bm_data, THUMBNAIL_W*THUMBNAIL_H, 1, fp );
@@ -520,7 +552,11 @@ int state_save_old_game(int slotnum, char * sg_name, player * sg_player,
 	fwrite( &temp_int, sizeof(int), 1, fp );
 
 // Save the mission info...
+#ifdef MAC_SHAREWARE
+	fwrite( mission_save, sizeof(char)*9, 1, fp);
+#else
 	fwrite( &Mission_list[0], sizeof(char)*9, 1, fp );
+#endif
 
 //Save level info
 	temp_int = sg_player->level;
@@ -595,6 +631,9 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	int i,j;
 	FILE * fp;
 	grs_canvas * cnv;
+	FInfo finfo;
+	OSErr err;
+	Str255 pfilename;
 
 	if ( Game_mode & GM_MULTI )	{
 #ifdef MULTI_SAVE
@@ -634,13 +673,13 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 				bmp.bm_data = NULL;
 				if (pcx_read_bitmap( pcx_file, &bmp, BM_LINEAR, pcx_palette )==PCX_ERROR_NONE)	{
 					grs_point vertbuf[3];
-					gr_clear_canvas( 255 );
+					gr_clear_canvas( TRANSPARENCY_COLOR );
 					vertbuf[0].x = vertbuf[0].y = -F1_0*6;		// -6 pixel rows for ascpect
 					vertbuf[1].x = vertbuf[1].y = 0;
 					vertbuf[2].x = i2f(THUMBNAIL_W); vertbuf[2].y = i2f(THUMBNAIL_H+7);	// + 7 pixel rows for ascpect
 					scale_bitmap(&bmp, vertbuf );
 					gr_remap_bitmap_good( &cnv->cv_bitmap, pcx_palette, -1, -1 );
-					free( bmp.bm_data );
+					myfree( bmp.bm_data );
 				}
 			}
 		} else {
@@ -658,7 +697,11 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	fwrite( &between_levels, sizeof(int), 1, fp );
 
 // Save the mission info...
+#ifdef MAC_SHAREWARE
+	fwrite( mission_save, sizeof(char)*9, 1, fp);
+#else
 	fwrite( &Mission_list[Current_mission_num], sizeof(char)*9, 1, fp );
+#endif
 
 //Save level info
 	fwrite( &Current_level_num, sizeof(int), 1, fp );
@@ -762,6 +805,15 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	fwrite( &Lunacy, sizeof(int), 1, fp );
 
 	fclose(fp);
+	
+// set the type and creator of the saved game file
+
+	strcpy(pfilename, filename);
+	c2pstr(pfilename);
+	err = HGetFInfo(0, 0, pfilename, &finfo);
+	finfo.fdType = 'SVGM';
+	finfo.fdCreator = 'DCNT';
+	err = HSetFInfo(0, 0, pfilename, &finfo);
 
 	start_time();
 
@@ -858,11 +910,19 @@ int state_restore_all_sub(char *filename, int multi)
 // Read the mission info...
 	fread( mission, sizeof(char)*9, 1, fp );
 
+#ifdef MAC_SHAREWARE
+	if (strcmp(mission, "") ) {
+		nm_messagebox( NULL, 1, "Ok", "Error!\nUnable to load mission\n'%s'\n", mission );
+		fclose(fp);
+		return 0;
+	}
+#else
 	if (!load_mission_by_name( mission ))	{
 		nm_messagebox( NULL, 1, "Ok", "Error!\nUnable to load mission\n'%s'\n", mission );
 		fclose(fp);
 		return 0;
 	}
+#endif
 
 //Read level info
 	fread( &current_level, sizeof(int), 1, fp );
@@ -1067,4 +1127,3 @@ RetryObjectLoading:
 
 
 #endif
-

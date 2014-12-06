@@ -11,14 +11,30 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*                                        
- * $Source: f:/miner/source/main/rcs/physics.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/24 14:48:54 $
+ * $Source: Smoke:miner:source:main::RCS:physics.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/10/12 17:28:08 $
  * 
  * Code for flying through the mines
  * 
  * $Log: physics.c $
+ * Revision 1.5  1995/10/12  17:28:08  allender
+ * put in code to move and object to center of segment in
+ * do_physics sim when fvi fails with bad point
+ *
+ * Revision 1.4  1995/08/23  21:32:44  allender
+ * fix mcc compiler warnings
+ *
+ * Revision 1.3  1995/07/28  15:38:56  allender
+ * removed isqrt thing -- not required here
+ *
+ * Revision 1.2  1995/07/28  15:13:29  allender
+ * fixed vector magnitude thing
+ *
+ * Revision 1.1  1995/05/16  15:29:42  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/24  14:48:54  john
  * Added cheat for player to go thru walls.
  * 
@@ -239,10 +255,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: physics.c 2.2 1995/03/24 14:48:54 john Exp $";
+static char rcsid[] = "$Id: physics.c 1.5 1995/10/12 17:28:08 allender Exp $";
 #pragma on (unreferenced)
 
-//@@#include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -263,6 +278,7 @@ static char rcsid[] = "$Id: physics.c 2.2 1995/03/24 14:48:54 john Exp $";
 #include "ai.h"
 #include "wall.h"
 #include "laser.h"
+#include "fix.h"
 
 //Global variables for physics system
 
@@ -389,7 +405,7 @@ void do_physics_align_object( object * obj )
 
 			if (abs(delta_ang) < roll_ang) roll_ang = delta_ang;
 			else if (delta_ang<0) roll_ang = -roll_ang;
-
+			
 			tangles.p = tangles.h = 0;  tangles.b = roll_ang;
 			vm_angles_2_matrix(&rotmat,&tangles);
 
@@ -550,7 +566,7 @@ void do_physics_sim_rot(object *obj)
 
 //	-----------------------------------------------------------------------------------------------------------
 //Simulate a physics object for this frame
-do_physics_sim(object *obj)
+void do_physics_sim(object *obj)
 {
 	int ignore_obj_list[MAX_IGNORE_OBJS],n_ignore_objs;
 	int iseg;
@@ -745,7 +761,7 @@ if (Dont_move_ai_objects)
 save_p0 = *fq.p0;
 save_p1 = *fq.p1;
 
-
+do_fvi:
 		fate = find_vector_intersection(&fq,&hit_info);
 		//	Matt: Mike's hack.
 		if (fate == HIT_OBJECT) {
@@ -758,7 +774,9 @@ save_p1 = *fq.p1;
 		#ifndef NDEBUG
 		if (fate == HIT_BAD_P0) {
 			mprintf((0,"Warning: Bad p0 in physics!  Object = %i, type = %i [%s]\n", obj-Objects, obj->type, Object_type_names[obj->type]));
-			Int3();
+			move_towards_segment_center(obj);
+			goto do_fvi;
+//			Int3();
 		}
 		#endif
 
@@ -1160,7 +1178,7 @@ save_p1 = *fq.p1;
 
 //Applies an instantaneous force on an object, resulting in an instantaneous
 //change in velocity.
-phys_apply_force(object *obj,vms_vector *force_vec)
+void phys_apply_force(object *obj,vms_vector *force_vec)
 {
 
 	if (obj->movement_type != MT_PHYSICS)
@@ -1236,7 +1254,7 @@ void physics_turn_towards_vector(vms_vector *goal_vector, object *obj, fix rate)
 //	-----------------------------------------------------------------------------
 //	Applies an instantaneous whack on an object, resulting in an instantaneous
 //	change in orientation.
-phys_apply_rot(object *obj,vms_vector *force_vec)
+void phys_apply_rot(object *obj,vms_vector *force_vec)
 {
 	fix	rate, vecmag;
 
@@ -1269,7 +1287,7 @@ phys_apply_rot(object *obj,vms_vector *force_vec)
 
 //this routine will set the thrust for an object to a value that will
 //(hopefully) maintain the object's current velocity
-set_thrust_from_velocity(object *obj)
+void set_thrust_from_velocity(object *obj)
 {
 	fix k;
 
@@ -1281,4 +1299,3 @@ set_thrust_from_velocity(object *obj)
 
 }
 
-

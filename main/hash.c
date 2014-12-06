@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/hash.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:01 $
+ * $Source: Smoke:miner:source:main::RCS:HASH.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:26:16 $
  * 
  * Functions to do hash table lookup.
  * 
- * $Log: hash.c $
+ * $Log: HASH.C $
+ * Revision 1.1  1995/05/16  15:26:16  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:01  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -42,17 +45,19 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: hash.c 2.0 1995/02/27 11:28:01 john Exp $";
+static char rcsid[] = "$Id: HASH.C 1.1 1995/05/16 15:26:16 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <Memory.h>
 
 #include "error.h"
 #include "mono.h"
 #include "hash.h"
 #include "key.h"
+#include "mem.h"
 	
 int hashtable_init( hashtable *ht, int size )	{
 	int i;
@@ -71,7 +76,7 @@ int hashtable_init( hashtable *ht, int size )	{
 	if (ht->size==0)
 		Error( "Hashtable has size of 0" );
 
-	ht->key = (char **)malloc( size * sizeof(char *) );
+	ht->key = (char **)mymalloc( size * sizeof(char *) );
 	if (ht->key==NULL)
 		Error( "Not enough memory to create a hash table of size %d", size );
 
@@ -79,9 +84,9 @@ int hashtable_init( hashtable *ht, int size )	{
 		ht->key[i] = NULL;
 
 	// Use calloc cause we want zero'd array.
-	ht->value = malloc( size*sizeof(int) );
+	ht->value = (int *)mymalloc( size*sizeof(int) );
 	if (ht->value==NULL)	{
-		free(ht->key);
+		myfree(ht->key);
 		Error( "Not enough memory to create a hash table of size %d\n", size );
 	}
 
@@ -92,9 +97,9 @@ int hashtable_init( hashtable *ht, int size )	{
 
 void hashtable_free( hashtable *ht )	{
 	if (ht->key != NULL )
-		free( ht->key );
+		myfree( ht->key );
 	if (ht->value != NULL )
-		free( ht->value );
+		myfree( ht->value );
 	ht->size = 0;
 }
 

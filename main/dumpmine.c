@@ -1,14 +1,29 @@
 /*
- * $Source: f:/miner/source/main/rcs/dumpmine.c $
- * $Revision: 2.1 $
- * $Author: mike $
- * $Date: 1995/04/06 12:21:50 $
+THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+*/
+/*
+ * $Source: Smoke:miner:source:main::RCS:DUMPMINE.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:24:16 $
  * 
  * Functions to dump text description of mine.
  * An editor-only function, called at mine load time.
  * To be read by a human to verify the correctness and completeness of a mine.
  * 
- * $Log: dumpmine.c $
+ * $Log: DUMPMINE.C $
+ * Revision 1.1  1995/05/16  15:24:16  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/04/06  12:21:50  mike
  * Add texture map information to txm files.
  * 
@@ -95,7 +110,7 @@
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: dumpmine.c 2.1 1995/04/06 12:21:50 mike Exp $";
+static char rcsid[] = "$Id: DUMPMINE.C 1.1 1995/05/16 15:24:16 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>

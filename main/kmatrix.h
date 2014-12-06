@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/kmatrix.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:51 $
+ * $Source: Smoke:miner:source:main::RCS:KMATRIX.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:58:35 $
  * 
  * Kill matrix.
  * 
- * $Log: kmatrix.h $
+ * $Log: KMATRIX.H $
+ * Revision 1.1  1995/05/16  15:58:35  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:51  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -45,4 +48,3 @@ extern int kmatrix_kills_changed;
 void kmatrix_view();
 
 #endif
-

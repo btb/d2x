@@ -11,14 +11,26 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/hud.c $
- * $Revision: 2.2 $
- * $Author: mike $
- * $Date: 1995/03/30 16:36:40 $
+ * $Source: Smoke:miner:source:main::RCS:hud.c $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/08/24 16:03:09 $
  * 
  * Routines for displaying HUD messages...
  * 
  * $Log: hud.c $
+ * Revision 1.4  1995/08/24  16:03:09  allender
+ * fix up message placement
+ *
+ * Revision 1.3  1995/08/18  10:25:21  allender
+ * added support for pixel doubling using PC game font
+ *
+ * Revision 1.2  1995/08/12  11:33:22  allender
+ * removed #ifdef NEWDEMO -- always in
+ *
+ * Revision 1.1  1995/05/16  15:26:32  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/30  16:36:40  mike
  * text localization.
  * 
@@ -122,7 +134,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: hud.c 2.2 1995/03/30 16:36:40 mike Exp $";
+static char rcsid[] = "$Id: hud.c 1.4 1995/08/24 16:03:09 allender Exp $";
 #pragma on (unreferenced)
 
 
@@ -231,7 +243,7 @@ void HUD_render_message_frame()
 				int	ycrd;
 				grs_canvas	*canv_save = grd_curcanv;
 
-				ycrd = grd_curcanv->cv_bitmap.bm_y - 9;
+				ycrd = grd_curcanv->cv_bitmap.bm_y - 13;
 
 				if (ycrd < 0)
 					ycrd = 0;
@@ -251,6 +263,9 @@ void HUD_render_message_frame()
 		} else {
 			y = 3;
 
+			if (Scanline_double)
+				gr_set_curfont( GAME_FONT_PC );
+				
 		  	for (i=0; i<HUD_nmessages; i++ )	{	
 				n = (hud_first+i) % HUD_MAX_NUM;
 				if ((n < 0) || (n >= HUD_MAX_NUM))
@@ -308,10 +323,8 @@ void HUD_init_message(char * format, ... )
 		// Check if memory has been overwritten at this point.
 		if (strlen(message) >= HUD_MESSAGE_LENGTH)
 			Error( "Your message to HUD is too long.  Limit is %i characters.\n", HUD_MESSAGE_LENGTH);
-		#ifdef NEWDEMO
 		if (Newdemo_state == ND_STATE_RECORDING )
 			newdemo_record_hud_message( message );
-		#endif
 		HUD_message_timer = F1_0*3;		// 1 second per 5 characters
 		HUD_nmessages++;
 }
@@ -320,12 +333,18 @@ void HUD_init_message(char * format, ... )
 void player_dead_message(void)
 {
 	if (!Arcade_mode && Player_exploded) { //(ConsoleObject->flags & OF_EXPLODING)) {
-		gr_set_curfont( Gamefonts[GFONT_SMALL] );    
+		if (Scanline_double)
+			gr_set_curfont( GAME_FONT_PC );
+		else
+			gr_set_curfont( Gamefonts[GFONT_SMALL] );    
 		if (HUD_color == -1)
 			HUD_color = BM_XRGB(0,28,0);
 		gr_set_fontcolor( HUD_color, -1);
 
-		gr_printf(0x8000, grd_curcanv->cv_bitmap.bm_h-8, TXT_PRESS_ANY_KEY);
+		if (Scanline_double)
+			gr_printf(0x8000, grd_curcanv->cv_bitmap.bm_h-8, TXT_PRESS_ANY_KEY);
+		else
+			gr_printf(0x8000, grd_curcanv->cv_bitmap.bm_h-16, TXT_PRESS_ANY_KEY);
 		gr_set_curfont( GAME_FONT );    
 	}
 

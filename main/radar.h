@@ -11,18 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/radar.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:07 $
+ * $Source: Smoke:miner:source:main::RCS:RADAR.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:01:43 $
  * 
  * Prototypes for radar.
  * 
- * $Log: radar.h $
- * Revision 2.0  1995/02/27  11:33:07  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
+ * $Log: RADAR.H $
+ * Revision 1.1  1995/05/16  16:01:43  allender
+ * Initial revision
+ *
  * Revision 1.3  1994/07/07  14:59:03  john
  * Made radar powerups.
  * 
@@ -44,4 +43,3 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 void radar_render_frame();
 
 #endif
-

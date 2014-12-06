@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/weapon.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:10 $
+ * $Source: Smoke:miner:source:main::RCS:WEAPON.H $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:07:10 $
  * 
  * Protypes for weapon stuff.
  * 
- * $Log: weapon.h $
+ * $Log: WEAPON.H $
+ * Revision 1.2  1995/09/14  14:07:10  allender
+ * fixed prototypes to have return value
+ *
+ * Revision 1.1  1995/05/16  16:05:22  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:10  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -268,14 +274,13 @@ extern int player_has_weapon(int weapon_num, int secondary_flag);
 
 //called when one of these weapons is picked up
 //when you pick up a secondary, you always get the weapon & ammo for it
-pick_up_secondary(int weapon_index,int count);
+int pick_up_secondary(int weapon_index,int count);
 
 //called when a primary weapon is picked up
 //returns true if actually picked up
 int pick_up_primary(int weapon_index);
 
 //called when ammo (for the vulcan cannon) is picked up
-pick_up_ammo(int class_flag,int weapon_index,int ammo_count);
+int pick_up_ammo(int class_flag,int weapon_index,int ammo_count);
 
 #endif
-

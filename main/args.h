@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/args.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:09 $
+ * $Source: Smoke:miner:source:main::RCS:ARGS.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:54:24 $
  * 
  * Prototypes for accessing arguments.
  * 
- * $Log: args.h $
+ * $Log: ARGS.H $
+ * Revision 1.1  1995/05/16  15:54:24  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:33:09  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.

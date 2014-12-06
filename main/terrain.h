@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/terrain.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:53 $
+ * $Source: Smoke:miner:source:main::RCS:TERRAIN.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:03:56 $
  * 
  * Header for terrain.c
  * 
- * $Log: terrain.h $
+ * $Log: TERRAIN.H $
+ * Revision 1.1  1995/05/16  16:03:56  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:53  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.

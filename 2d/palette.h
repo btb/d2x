@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/palette.h $
- * $Revision: 1.11 $
- * $Author: john $
- * $Date: 1994/11/15 17:55:10 $
+ * $Source: Buggin:miner:source:2d::RCS:palette.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 09:20:45 $
  * 
  * Protoypes for palette functions
  * 
  * $Log: palette.h $
+ * Revision 1.1  1995/03/09  09:20:45  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.11  1994/11/15  17:55:10  john
  * Made text palette fade in when game over.
  * 
@@ -60,16 +65,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _PALETTE_H
 #define _PALETTE_H
 
+#include "dtypes.h"
+
 extern void gr_palette_set_gamma( int gamma );
 extern int gr_palette_get_gamma();
 extern ubyte gr_palette_faded_out;
 extern void gr_palette_clear();
 extern int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys );
 extern int gr_palette_fade_in(ubyte *pal,int nsteps, int allow_keys );
-extern void gr_palette_load( ubyte * pal );
+extern void gr_palette_load( ubyte *pal );
 extern void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b );
 extern int gr_find_closest_color_current( int r, int g, int b );
-extern void gr_palette_read(ubyte * palette);
+extern void gr_palette_read(ubyte *palette);
 
 #endif
-

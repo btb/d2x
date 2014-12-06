@@ -11,35 +11,30 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/paging.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/10/07 13:18:21 $
+ * $Source: Smoke:miner:source:main::RCS:paging.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/10/30 11:06:58 $
  * 
  * Routines for paging in/out textures.
  * 
  * $Log: paging.c $
- * Revision 2.5  1995/10/07  13:18:21  john
- * Added PSX debugging stuff that builds .PAG files.
- * 
- * Revision 2.4  1995/08/24  13:40:03  john
- * Added code to page in vclip for powerup disapperance and to 
- * fix bug that made robot makers not page in the correct bot
- * textures.
- * 
- * Revision 2.3  1995/07/26  12:09:19  john
- * Made code that pages in weapon_info->robot_hit_vclip not
- * page in unless it is a badass weapon.  Took out old functionallity
- * of using this if no robot exp1_vclip, since all robots have these.
- * 
- * Revision 2.2  1995/07/24  13:22:11  john
- * Made sure everything gets paged in at the
- * level start.  Fixed bug with robot effects not
- * getting paged in correctly.
- * 
- * Revision 2.1  1995/05/12  15:50:16  allender
- * fix to check effects dest_bm_num > -1 before paging in
- * 
+ * Revision 1.5  1995/10/30  11:06:58  allender
+ * added change to paging code ala John -- check tmap_override
+ * when paging in robots
+ *
+ * Revision 1.4  1995/09/13  08:48:28  allender
+ * John's new paging code
+ *
+ * Revision 1.3  1995/08/18  10:20:31  allender
+ * changed hard coded black pixel value to use BM_XRGB
+ *
+ * Revision 1.2  1995/07/26  17:02:10  allender
+ * small fix to page in effect bitmaps correctly
+ *
+ * Revision 1.1  1995/05/16  15:29:35  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:27:39  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -105,9 +100,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: paging.c 2.5 1995/10/07 13:18:21 john Exp $";
+static char rcsid[] = "$Id: paging.c 1.5 1995/10/30 11:06:58 allender Exp $";
 #pragma on (unreferenced)
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -267,7 +261,11 @@ void paging_touch_object( object * obj )
 		case RT_NONE:	break;		//doesn't render, like the player
 
 		case RT_POLYOBJ:
-			paging_touch_model(obj->rtype.pobj_info.model_num);
+			if ( obj->rtype.pobj_info.tmap_override != -1 ) {
+				PIGGY_PAGE_IN( Textures[obj->rtype.pobj_info.tmap_override] );
+			} else {
+				paging_touch_model(obj->rtype.pobj_info.model_num);
+			}
 			break;
 
 		case RT_POWERUP: 
@@ -388,7 +386,6 @@ void paging_touch_walls()
 	}
 }
 
-
 void paging_touch_all()
 {
 	int black_screen;
@@ -399,7 +396,7 @@ void paging_touch_all()
 	black_screen = gr_palette_faded_out;
 
 	if ( gr_palette_faded_out )	{
-		gr_clear_canvas( 0 );
+		gr_clear_canvas( BM_XRGB(0, 0, 0) );
 		gr_palette_load( gr_palette );
 	}
 	
@@ -440,43 +437,9 @@ void paging_touch_all()
 
 	if ( black_screen )	{
 		gr_palette_clear();
-		gr_clear_canvas( 0 );
+		gr_clear_canvas( BM_XRGB(0, 0, 0) );
 	}
 	start_time();
 	reset_cockpit();		//force cockpit redraw next time
 
-#ifdef PSX_BUILD_TOOLS
-	{
-		extern int Current_level_num;
-		extern ushort GameBitmapXlat[MAX_BITMAP_FILES];
-		FILE * fp;
-		char fname[128];
-		int i;
-
-		if ( Current_level_num < 0 )
-			sprintf( fname, "levels%d.pag", -Current_level_num );
-		else	
-			sprintf( fname, "level%02d.pag", Current_level_num );
-		fp = fopen( fname, "wt" );
-		for (i=0; i<MAX_BITMAP_FILES;i++ )	{
-			int paged_in = 1;
-			piggy_get_bitmap_name(i,fname);
-
-			if (GameBitmaps[i].bm_flags & BM_FLAG_PAGED_OUT) 
-				paged_in = 0;
-			if (GameBitmapXlat[i]!=i)
-				paged_in = 0;
-			if ( (i==47) || (i==48) )		// Mark red mplayer ship textures as paged in.
-				paged_in = 1;
-	
-			if ( !paged_in )
-				fprintf( fp, "0,\t// Bitmap %d (%s)\n", i, fname );
-			else
-				fprintf( fp, "1,\t// Bitmap %d (%s)\n", i, fname );
-		}
-		fclose(fp);
-	}
-#endif
-
 }
-

@@ -11,15 +11,41 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/automap.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:41:26 $
+ * $Source: Smoke:miner:source:main::RCS:automap.c $
+ * $Revision: 1.8 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:24:54 $
  * 
  * Routines for displaying the auto-map.
  * 
  * $Log: automap.c $
- * Revision 2.2  1995/03/21  14:41:26  john
+ * Revision 1.8  1995/10/31  10:24:54  allender
+ * shareware stuff
+ *
+ * Revision 1.7  1995/10/21  16:18:20  allender
+ * blit pcx background directly to Page canvas instead of creating
+ * seperate bitmap for it -- hope to solve VM bug on some macs
+ *
+ * Revision 1.6  1995/10/20  00:49:16  allender
+ * added redbook check during automap
+ *
+ * Revision 1.5  1995/09/13  08:44:07  allender
+ * Dave Denhart's changes to speed up the automap
+ *
+ * Revision 1.4  1995/08/18  15:46:00  allender
+ * put text all on upper bar -- and fixed background since
+ * changing xparency color
+ *
+ * Revision 1.3  1995/08/03  15:15:18  allender
+ * fixed edge hashing problem causing automap to crash
+ *
+ * Revision 1.2  1995/07/12  12:49:27  allender
+ * works in 640x480 mode
+ *
+ * Revision 1.1  1995/05/16  15:22:59  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/21  08:41:26  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.1  1995/03/20  18:16:06  john
@@ -171,13 +197,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: automap.c 2.2 1995/03/21 14:41:26 john Exp $";
+static char rcsid[] = "$Id: automap.c 1.8 1995/10/31 10:24:54 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <Memory.h>
 
 #include "error.h"
 #include "3d.h"
@@ -195,10 +222,10 @@ static char rcsid[] = "$Id: automap.c 2.2 1995/03/21 14:41:26 john Exp $";
 #include "key.h"
 #include "screens.h"
 #include "textures.h"
-#include "mouse.h"
+//#include "mouse.h"
 #include "timer.h"
 #include "segpoint.h"
-#include "joy.h"
+//#include "joy.h"
 #include "iff.h"
 #include "pcx.h"
 #include "palette.h"
@@ -215,6 +242,9 @@ static char rcsid[] = "$Id: automap.c 2.2 1995/03/21 14:41:26 john Exp $";
 #include "gauges.h"
 #include "powerup.h"
 #include "network.h" 
+#include "automap.h"
+#include "redbook.h"
+#include "macsys.h"
 
 #define EF_USED			1		// This edge is used
 #define EF_DEFINING		2		// A structure defining edge that should always draw.
@@ -224,26 +254,12 @@ static char rcsid[] = "$Id: automap.c 2.2 1995/03/21 14:41:26 john Exp $";
 #define EF_NO_FADE		32		// An edge that doesn't fade with distance
 #define EF_TOO_FAR		64		// An edge that is too far away
 
-typedef struct Edge_info {
-	union {
-		short	verts[2];		// 4 bytes
-		long vv;
-	};
-	ubyte sides[4];			// 4 bytes
-	short segnum[4];			// 8 bytes	// This might not need to be stored... If you can access the normals of a side.
-	ubyte flags;				// 1 bytes 	// See the EF_??? defines above.
-	ubyte color;				// 1 bytes
-	ubyte num_faces;			// 1 bytes	// 19 bytes...
-} Edge_info;
-
 //OLD BUT GOOD -- #define MAX_EDGES_FROM_VERTS(v)   ((v*5)/2)
 // THE following was determined by John by loading levels 1-14 and recording
 // numbers on 10/26/94. 
 //#define MAX_EDGES_FROM_VERTS(v)   (((v)*21)/10)
 #define MAX_EDGES_FROM_VERTS(v)		((v)*4)
 //#define MAX_EDGES (MAX_EDGES_FROM_VERTS(MAX_VERTICES))
-
-#define MAX_EDGES 6000		// Determined by loading all the levels by John & Mike, Feb 9, 1995
 
 #define	WALL_NORMAL_COLOR 				BM_XRGB( 29, 29, 29 )
 #define	WALL_DOOR_COLOR					BM_XRGB( 21, 31, 11 )
@@ -258,8 +274,10 @@ ubyte Automap_visited[MAX_SEGMENTS];
 static int Num_edges=0;
 static int Max_edges;		//set each frame
 static int Highest_edge_index = -1;
-static Edge_info Edges[MAX_EDGES];
+//static Edge_info Edges[MAX_EDGES];
+Edge_info *Edges;
 static short DrawingListBright[MAX_EDGES];
+static short DrawingListBrightZ[MAX_EDGES];
 
 //static short DrawingListBright[MAX_EDGES];
 //static short Edge_used_list[MAX_EDGES];				//which entries in edge_list have been used
@@ -275,9 +293,8 @@ static short DrawingListBright[MAX_EDGES];
 #define ROT_SPEED_DIVISOR		(115000)
 
 // Screen anvas variables
-static int current_page=0;
-static grs_canvas Pages[2];
-static grs_canvas DrawingPages[2];
+static grs_canvas Page;
+static grs_canvas DrawingPage;
 
 // Flags
 static int Automap_cheat = 0;		// If set, show everything
@@ -288,6 +305,10 @@ static vms_vector view_target;
 static fix Automap_farthest_dist = (F1_0 * 20 * 50);		// 50 segments away
 static vms_matrix	ViewMatrix;
 static fix ViewDist=0;
+
+void adjust_segment_limit(int SegmentLimit);
+void draw_all_edges();
+void automap_build_edge_list();
 
 void automap_clear_visited()	
 {
@@ -339,10 +360,9 @@ void draw_automap()
 	vms_vector viewer_position;
 	g3s_point sphere_point;
 
-	current_page ^= 1;
-	gr_set_current_canvas(&DrawingPages[current_page]);
+	gr_set_current_canvas(&DrawingPage);
 
-	gr_clear_canvas(0);
+	gr_clear_canvas(BM_XRGB(0,0,0));
 
 	g3_start_frame();
 	render_start_frame();
@@ -409,8 +429,7 @@ void draw_automap()
 
 	gr_bitmapm(5,5,&name_canv->cv_bitmap);
 
-	gr_show_canvas( &Pages[current_page] );
-	
+	gr_bm_ubitblt( Page.cv_bitmap.bm_w, Page.cv_bitmap.bm_h, Page.cv_bitmap.bm_x, Page.cv_bitmap.bm_y, 0, 0, &Page.cv_bitmap, &VR_screen_pages[0].cv_bitmap );
 }
 
 #define LEAVE_TIME 0x4000
@@ -429,10 +448,11 @@ grs_canvas *print_to_canvas(char *s,grs_font *font, int fc, int bc)
 
 	gr_set_current_canvas(temp_canv);
 	gr_set_curfont(font);
-	gr_clear_canvas(255);						//trans color
+	gr_clear_canvas(TRANSPARENCY_COLOR);						//trans color
 	gr_set_fontcolor(fc,bc);
 	gr_printf(0,0,s);
 
+#if 0
 	//now double it, since we're drawing to 400-line modex screen
 
 	data = temp_canv->cv_bitmap.bm_data;
@@ -442,6 +462,7 @@ grs_canvas *print_to_canvas(char *s,grs_font *font, int fc, int bc)
 		memcpy(data+(rs*y*2),data+(rs*y),temp_canv->cv_bitmap.bm_w);
 		memcpy(data+(rs*(y*2+1)),data+(rs*y),temp_canv->cv_bitmap.bm_w);
 	}
+#endif
 
 	gr_set_current_canvas(save_canv);
 
@@ -473,23 +494,20 @@ create_name_canv()
 
 	gr_set_fontcolor(BM_XRGB(0,31,0),-1);
 	name_canv = print_to_canvas(name_level,Gamefonts[GFONT_SMALL], BM_XRGB(0,31,0), -1);
-
 }
 
 void modex_print_message(int x, int y, char *str)
 {
 	int	i;
 
-	for (i=0; i<2; i++ )	{
-		gr_set_current_canvas(&Pages[i]);
-		modex_printf(x, y, str, GFONT_MEDIUM_1);
-	}
-
-	gr_set_current_canvas(&DrawingPages[current_page]);
+	gr_set_current_canvas(&Page);
+	modex_printf(x, y, str, GFONT_MEDIUM_1);
+	gr_set_current_canvas(&DrawingPage);
 }
 
 extern void GameLoop(int, int );
 extern int set_segment_depths(int start_seg, ubyte *segbuf);
+ubyte automap_do_pcx = 1;
 
 void do_automap( int key_code )	{
 	int done=0;
@@ -505,7 +523,6 @@ void do_automap( int key_code )	{
 	int pause_game=1;		// Set to 1 if everything is paused during automap...No pause during net.
 	fix t1, t2;
 	control_info saved_control_info;
-	grs_bitmap Automap_background;
 	int Max_segments_away = 0;
 	int SegmentLimit = 1;
 
@@ -534,35 +551,35 @@ void do_automap( int key_code )	{
 	mprintf( (0, "Num_vertices=%d, Max_edges=%d, (MAX:%d)\n", Num_vertices, Max_edges, MAX_EDGES ));
 	mprintf( (0, "Allocated %d K for automap edge list\n", (sizeof(Edge_info)+sizeof(short))*Max_edges/1024 ));
 
-	gr_set_mode( SM_320x400U );
 	gr_palette_clear();
+	gr_init_sub_canvas(&Page,&VR_render_buffer[0],0, 0, 640, 480);
+	gr_init_sub_canvas(&DrawingPage,&Page,38,77,564,381);
 
+#if 0
 	gr_init_sub_canvas(&Pages[0],grd_curcanv,0,0,320,400);
 	gr_init_sub_canvas(&Pages[1],grd_curcanv,0,401,320,400);
 	gr_init_sub_canvas(&DrawingPages[0],&Pages[0],16,69,288,272);
 	gr_init_sub_canvas(&DrawingPages[1],&Pages[1],16,69,288,272);
+#endif
 
-	Automap_background.bm_data = NULL;
-	pcx_error = pcx_read_bitmap(filename,&Automap_background,BM_LINEAR,NULL);
+	gr_set_current_canvas(&Page);
+	pcx_error = pcx_read_bitmap(filename,&(grd_curcanv->cv_bitmap),BM_LINEAR,NULL);
 	if ( pcx_error != PCX_ERROR_NONE )	{
 		printf("File %s - PCX error: %s",filename,pcx_errormsg(pcx_error));
 		Error("File %s - PCX error: %s",filename,pcx_errormsg(pcx_error));
 		return;
 	}
 
-	for (i=0; i<2; i++ )	{
-		gr_set_current_canvas(&Pages[i]);
-		gr_bitmap( 0, 0, &Automap_background );
-		modex_printf( 40, 22,TXT_AUTOMAP,GFONT_BIG_1);
-		modex_printf( 70,353,TXT_TURN_SHIP,GFONT_SMALL);
-		modex_printf( 70,369,TXT_SLIDE_UPDOWN,GFONT_SMALL);
-		modex_printf( 70,385,TXT_VIEWING_DISTANCE,GFONT_SMALL);
-	}
-	if ( Automap_background.bm_data )
-		free( Automap_background.bm_data );
-	Automap_background.bm_data = NULL;
+	gr_set_curfont(Gamefonts[GFONT_BIG_1]);
+	gr_set_fontcolor(BM_XRGB(20, 20, 20), -1);
+	gr_printf( 80, 36,TXT_AUTOMAP,GFONT_BIG_1);
+	gr_set_curfont(Gamefonts[GFONT_SMALL]);
+	gr_set_fontcolor(BM_XRGB(20, 20, 20), -1);
+	gr_printf( 265, 27,TXT_TURN_SHIP);
+	gr_printf( 265, 44,TXT_SLIDE_UPDOWN);
+	gr_printf( 265, 61,TXT_VIEWING_DISTANCE);
 
-	gr_set_current_canvas(&DrawingPages[current_page]);
+	gr_set_current_canvas(&DrawingPage);
 
 	automap_build_edge_list();
 
@@ -588,6 +605,10 @@ void do_automap( int key_code )	{
 	adjust_segment_limit(SegmentLimit);
 
 	while(!done)	{
+#ifndef MAC_SHAREWARE
+		redbook_restart_track();
+#endif
+		
 		if ( leave_mode==0 && Controls.automap_state && (timer_get_fixed_seconds()-entry_time)>LEAVE_TIME)
 			leave_mode = 1;
 
@@ -596,6 +617,7 @@ void do_automap( int key_code )	{
 
 		if (!pause_game)	{
 			ushort old_wiggle;
+
 			saved_control_info = Controls;				// Save controls so we can zero them
 			memset(&Controls,0,sizeof(control_info));	// Clear everything...
 			old_wiggle = ConsoleObject->mtype.phys_info.flags & PF_WIGGLE;	// Save old wiggle
@@ -742,7 +764,6 @@ void adjust_segment_limit(int SegmentLimit)
 			}
 		}
 	}
-	
 }
 
 void draw_all_edges()	
@@ -772,7 +793,7 @@ void draw_all_edges()
 		}
 
 		cc=rotate_list(2,e->verts);
-		distance = Segment_points[e->verts[1]].z;
+		distance = Segment_points[e->verts[1]].p3_z;
 
 		if (min_distance>distance )
 			min_distance = distance;
@@ -797,7 +818,9 @@ void draw_all_edges()
 
 			if ( nfacing && nnfacing )	{
 				// a contour line
-				DrawingListBright[nbright++] = e-Edges;
+				DrawingListBright[nbright] = e-Edges;
+				DrawingListBrightZ[nbright] = Segment_points[Edges[e-Edges].verts[0]].p3_z;
+				nbright++;
 			} else if ( e->flags&(EF_DEFINING|EF_GRATE) )	{
 				if ( nfacing == 0 )	{
 					if ( e->flags & EF_NO_FADE )
@@ -806,7 +829,9 @@ void draw_all_edges()
 						gr_setcolor( gr_fade_table[e->color+256*8] );
 					g3_draw_line( &Segment_points[e->verts[0]], &Segment_points[e->verts[1]] );
 				} 	else {
-					DrawingListBright[nbright++] = e-Edges;
+					DrawingListBright[nbright] = e-Edges;
+					DrawingListBrightZ[nbright] = Segment_points[Edges[e-Edges].verts[0]].p3_z;
+					nbright++;
 				}
 			}
 		}
@@ -818,8 +843,8 @@ void draw_all_edges()
 
 	// Sort the bright ones using a shell sort
 	{
-		int t;
-		int i, j, incr, v1, v2;
+		short t;
+		int i, j, incr;
 	
 		incr = nbright / 2;
 		while( incr > 0 )	{
@@ -827,14 +852,16 @@ void draw_all_edges()
 				j = i - incr;
 				while (j>=0 )	{
 					// compare element j and j+incr
-					v1 = Edges[DrawingListBright[j]].verts[0];
-					v2 = Edges[DrawingListBright[j+incr]].verts[0];
-
-					if (Segment_points[v1].z < Segment_points[v2].z) {
+					if (DrawingListBrightZ[j] < DrawingListBrightZ[j+incr]) {
 						// If not in correct order, them swap 'em
-						t=DrawingListBright[j+incr];
-						DrawingListBright[j+incr]=DrawingListBright[j];
-						DrawingListBright[j]=t;
+						t = DrawingListBright[j];
+						DrawingListBright[j] = DrawingListBright[j+incr];
+						DrawingListBright[j+incr] = t;
+
+						t = DrawingListBrightZ[j];
+						DrawingListBrightZ[j] = DrawingListBrightZ[j+incr];
+						DrawingListBrightZ[j+incr] = t;
+
 						j -= incr;
 					}
 					else
@@ -852,7 +879,7 @@ void draw_all_edges()
 		e = &Edges[DrawingListBright[i]];
 		p1 = &Segment_points[e->verts[0]];
 		p2 = &Segment_points[e->verts[1]];
-		dist = p1->z - min_distance;
+		dist = p1->p3_z - min_distance;
 		// Make distance be 1.0 to 0.0, where 0.0 is 10 segments away;
 		if ( dist < 0 ) dist=0;
 		if ( dist >= Automap_farthest_dist ) continue;
@@ -866,7 +893,6 @@ void draw_all_edges()
 		}
 		g3_draw_line( p1, p2 );
 	}
-
 }
 
 
@@ -878,21 +904,24 @@ void draw_all_edges()
 
 
 //finds edge, filling in edge_ptr. if found old edge, returns index, else return -1
-static int automap_find_edge(int v0,int v1,Edge_info **edge_ptr)
+static int automap_find_edge(short v0,short v1,Edge_info **edge_ptr)
 {
-	long vv;
-	short hash,oldhash;
-	int ret;
+	int vv, evv, hash, oldhash;
+	int ret, ev0, ev1;
 
-	vv = (v1<<16) + v0;
+	vv = ((int)v1<<16) + (int)v0;
 
-	oldhash = hash = ((v0*5+v1) % Max_edges);
-
+	oldhash = hash = (((int)v0*5+(int)v1) % Max_edges);
+	
 	ret = -1;
 
 	while (ret==-1) {
+		ev0 = (int)(Edges[hash].verts[0]);
+		ev1 = (int)(Edges[hash].verts[1]);
+		evv = (ev1<<16)+ev0;
 		if (Edges[hash].num_faces == 0 ) ret=0;
-		else if (Edges[hash].vv == vv) ret=1;
+		else if (evv == vv)
+			ret=1;
 		else {
 			if (++hash==Max_edges) hash=0;
 			if (hash==oldhash) Error("Edge list full!");
@@ -905,7 +934,6 @@ static int automap_find_edge(int v0,int v1,Edge_info **edge_ptr)
 		return -1;
 	else
 		return hash;
-
 }
 
 
@@ -966,7 +994,8 @@ void add_one_edge( short va, short vb, ubyte color, ubyte side, short segnum, in
 		e->flags |= EF_NO_FADE;
 }
 
-void add_one_unknown_edge( short va, short vb )	{
+void add_one_unknown_edge( short va, short vb )
+{
 	int found;
 	Edge_info *e;
 	short tmp;
@@ -1088,7 +1117,6 @@ void add_segment_edges(segment *seg)
 			}
 		}
 	}
-
 }
 
 
@@ -1114,11 +1142,10 @@ void add_unknown_segment_edges(segment *seg)
 
 
 	}
-
 }
 
 void automap_build_edge_list()
-{	
+{
 	int	i,e1,e2,s;
 	Edge_info * e;
 
@@ -1190,6 +1217,4 @@ void automap_build_edge_list()
 	}	
 
 	mprintf( (0, "Automap used %d / %d edges\n", Num_edges, Max_edges  ));
-
 }
-

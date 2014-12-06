@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/iff/rcs/iff.h $
- * $Revision: 1.12 $
- * $Author: matt $
- * $Date: 1994/11/07 21:26:53 $
+ * $Source: Smoke:miner:source:iff::RCS:iff.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/05/05 16:33:22 $
  *
  * Header for IFF routines
  *
  * $Log: iff.h $
+ * Revision 1.2  1995/05/05  16:33:22  allender
+ * changed types.h to dtypes.h
+ *
+ * Revision 1.1  1995/05/05  08:59:45  allender
+ * Initial revision
+ *
  * Revision 1.12  1994/11/07  21:26:53  matt
  * Added new function iff_read_into_bitmap()
  * 
@@ -62,7 +68,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _IFF_H
 #define _IFF_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "gr.h"
 
 //Prototypes for IFF library functions
@@ -82,7 +88,7 @@ int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,ubyte *palett
 
 //like iff_read_bitmap(), but reads into a bitmap that already exists,
 //without allocating memory for the bitmap. 
-int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette);
+int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,ubyte *palette);
 
 //read in animator brush (.abm) file
 //fills in array of pointers, and n_bitmaps.

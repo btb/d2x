@@ -1,12 +1,27 @@
 /*
- * $Source: f:/miner/source/main/rcs/robot.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/07 16:52:00 $
+THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+*/
+/*
+ * $Source: Smoke:miner:source:main::RCS:ROBOT.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:01:59 $
  * 
  * Header for robot.c
  * 
- * $Log: robot.h $
+ * $Log: ROBOT.H $
+ * Revision 1.1  1995/05/16  16:01:59  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/07  16:52:00  john
  * Fixed robots not moving without edtiro bug.
  * 
@@ -222,4 +237,3 @@ void calc_gun_point(vms_vector *gun_point,object *obj,int gun_num);
 extern int robot_get_anim_state(jointpos **jp_list_ptr,int robot_type,int gun_num,int state);
 
 #endif
-

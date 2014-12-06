@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/kconfig.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:29:38 $
+ * $Source: Smoke:miner:source:main::RCS:kconfig.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:58:27 $
  * 
  * Prototypes for reading controls
  * 
  * $Log: kconfig.h $
+ * Revision 1.1  1995/05/16  15:58:27  allender
+ * Initial revision
+ *
+ * Revision 1.1  1995/05/16  15:58:27  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:29:38  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -179,4 +185,3 @@ extern void kconfig_init_external_controls(int intno, int address);
 
 
 #endif
-

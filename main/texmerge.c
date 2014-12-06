@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/texmerge.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:08 $
+ * $Source: Buggin:miner:source:main::RCS:TEXMERGE.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:31:36 $
  * 
  * Routines to cache merged textures.
  * 
- * $Log: texmerge.c $
+ * $Log: TEXMERGE.C $
+ * Revision 1.1  1995/05/16  15:31:36  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:08  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -116,7 +119,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: texmerge.c 2.0 1995/02/27 11:31:08 john Exp $";
+static char rcsid[] = "$Id: TEXMERGE.C 1.1 1995/05/16 15:31:36 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -149,6 +152,8 @@ static int cache_hits = 0;
 static int cache_misses = 0;
 
 void texmerge_close();
+void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp, ubyte * dest_data );
+void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp, ubyte * dest_data );
 
 //----------------------------------------------------------------------
 
@@ -276,8 +281,8 @@ grs_bitmap * texmerge_get_cached_bitmap( int tmap_bottom, int tmap_top )
 
 void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp, ubyte * dest_data )
 {
-//	ubyte c;
-//	int x,y;
+	ubyte c;
+	int x,y;
 	ubyte * top_data, *bottom_data;
 
 	if ( top_bmp->bm_flags & BM_FLAG_RLE )
@@ -300,38 +305,45 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
 			// Normal
 			
 
-			gr_merge_textures( bottom_data, top_data, dest_data );
+//			gr_merge_textures( bottom_data, top_data, dest_data );
+			for (y=0; y<64; y++ )
+				for (x=0; x<64; x++ )	{
+					c = top_data[ 64*y+x ];		
+					if (c==TRANSPARENCY_COLOR)
+						c = bottom_data[ 64*y+x ];
+					*dest_data++ = c;
+				}
 			break;
 		case 1:
-			gr_merge_textures_1( bottom_data, top_data, dest_data );
+//			gr_merge_textures_1( bottom_data, top_data, dest_data );
 
-//			for (y=0; y<64; y++ )
-//				for (x=0; x<64; x++ )	{
-//					c = top_data[ 64*x+(63-y) ];		
-//					if (c==255)
-//						c = bottom_data[ 64*y+x ];
-//					*dest_data++ = c;
-//				}
+			for (y=0; y<64; y++ )
+				for (x=0; x<64; x++ )	{
+					c = top_data[ 64*x+(63-y) ];		
+					if (c==TRANSPARENCY_COLOR)
+						c = bottom_data[ 64*y+x ];
+					*dest_data++ = c;
+				}
 			break;
 		case 2:
-			gr_merge_textures_2( bottom_data, top_data, dest_data );
-//			for (y=0; y<64; y++ )
-//				for (x=0; x<64; x++ )	{
-//					c = top_data[ 64*(63-y)+(63-x) ];
-//					if (c==255)
-//						c = bottom_data[ 64*y+x ];
-//					*dest_data++ = c;
-//				}
+//			gr_merge_textures_2( bottom_data, top_data, dest_data );
+			for (y=0; y<64; y++ )
+				for (x=0; x<64; x++ )	{
+					c = top_data[ 64*(63-y)+(63-x) ];
+					if (c==TRANSPARENCY_COLOR)
+						c = bottom_data[ 64*y+x ];
+					*dest_data++ = c;
+				}
 			break;
 		case 3:
-			gr_merge_textures_3( bottom_data, top_data, dest_data );
-//			for (y=0; y<64; y++ )
-//				for (x=0; x<64; x++ )	{
-//					c = top_data[ 64*(63-x)+y  ];
-//					if (c==255)
-//						c = bottom_data[ 64*y+x ];
-//					*dest_data++ = c;
-//				}
+//			gr_merge_textures_3( bottom_data, top_data, dest_data );
+			for (y=0; y<64; y++ )
+				for (x=0; x<64; x++ )	{
+					c = top_data[ 64*(63-x)+y  ];
+					if (c==TRANSPARENCY_COLOR)
+						c = bottom_data[ 64*y+x ];
+					*dest_data++ = c;
+				}
 			break;
 	}
 }
@@ -365,10 +377,10 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
 			for (y=0; y<64; y++ )
 				for (x=0; x<64; x++ )	{
 					c = top_data[ 64*y+x ];		
-					if (c==255)
+					if (c==TRANSPARENCY_COLOR)
 						c = bottom_data[ 64*y+x ];
 					else if (c==254)
-						c = 255;
+						c = TRANSPARENCY_COLOR;
 					*dest_data++ = c;
 				}
 			break;
@@ -377,10 +389,10 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
 			for (y=0; y<64; y++ )
 				for (x=0; x<64; x++ )	{
 					c = top_data[ 64*x+(63-y) ];		
-					if (c==255)
+					if (c==TRANSPARENCY_COLOR)
 						c = bottom_data[ 64*y+x ];
 					else if (c==254)
-						c = 255;
+						c = TRANSPARENCY_COLOR;
 					*dest_data++ = c;
 				}
 			break;
@@ -389,10 +401,10 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
 			for (y=0; y<64; y++ )
 				for (x=0; x<64; x++ )	{
 					c = top_data[ 64*(63-y)+(63-x) ];
-					if (c==255)
+					if (c==TRANSPARENCY_COLOR)
 						c = bottom_data[ 64*y+x ];
 					else if (c==254)
-						c = 255;
+						c = TRANSPARENCY_COLOR;
 					*dest_data++ = c;
 				}
 			break;
@@ -401,13 +413,12 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
 			for (y=0; y<64; y++ )
 				for (x=0; x<64; x++ )	{
 					c = top_data[ 64*(63-x)+y  ];
-					if (c==255)
+					if (c==TRANSPARENCY_COLOR)
 						c = bottom_data[ 64*y+x ];
 					else if (c==254)
-						c = 255;
+						c = TRANSPARENCY_COLOR;
 					*dest_data++ = c;
 				}
 			break;
 	}
 }
-

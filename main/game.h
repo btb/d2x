@@ -11,14 +11,24 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/game.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/06 15:23:22 $
+ * $Source: Smoke:miner:source:main::RCS:game.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/09/14 13:44:34 $
  * 
  * Constants & prototypes which pertain to the game only
  * 
  * $Log: game.h $
+ * Revision 1.3  1995/09/14  13:44:34  allender
+ * fixed function prototypes to have void return value to satify
+ * moto compiler
+ *
+ * Revision 1.2  1995/08/17  09:25:05  allender
+ * externed Scanline_double variable
+ *
+ * Revision 1.1  1995/05/16  15:56:46  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/06  15:23:22  john
  * New screen techniques.
  * 
@@ -283,7 +293,7 @@ void close_game(void);
 
 void calc_frame_time(void);
 
-do_flythrough(object *obj,int first_time);
+void do_flythrough(object *obj,int first_time);
 
 extern jmp_buf LeaveGame;					// Do a long jump to this when game is over.
 extern int	Difficulty_level;				//	Difficulty level in 0..NDL-1, 0 = easiest, NDL-1 = hardest
@@ -365,15 +375,16 @@ void palette_restore(void);
 void do_show_help();
 
 //show a message in a nice little box
-show_boxed_message(char *msg);
+void show_boxed_message(char *msg);
 
 //erases message drawn with show_boxed_message()
-clear_boxed_message();
+void clear_boxed_message();
 
 //turns off rear view & rear view cockpit
 void reset_rear_view(void);
 
 extern int Game_turbo_mode;
+extern int Scanline_double;		// are we currently scanline_doubling the view?
 
 #define VR_NONE			0	//viewing the game screen
 #define VR_AREA_DET		1	//viewing with the stereo area determined method
@@ -399,4 +410,3 @@ void game_init_render_buffers(int screen_mode, int render_max_w, int render_max_
 
 #endif
 
-

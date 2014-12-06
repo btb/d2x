@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/netmisc.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:18 $
+ * $Source: Smoke:miner:source:main::RCS:NETMISC.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:00:08 $
  * 
  * .
  * 
- * $Log: netmisc.h $
+ * $Log: NETMISC.H $
+ * Revision 1.1  1995/05/16  16:00:08  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:30:18  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -47,4 +50,3 @@ extern int netmisc_find_diff( void *block1, void *block2, int block_size, void *
 extern int netmisc_apply_diff(void *block1, void *diff_buffer, int diff_size );
 
 #endif
-

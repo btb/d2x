@@ -1,128 +1,103 @@
 #
-# $Source: f:/miner/source/texmap/rcs/makefile $
-# $Revision: 1.23 $
-# $Author: john $
-# $Date: 1995/02/20 18:23:00 $
+# $Source: Buggin:miner:source:texmap::RCS:makefile $
+# $Revision: 1.2 $
+# $Author: allender $
+# $Date: 1995/06/25 21:52:45 $
 #
-# Makefile for hack3df testbed
-#
-
-LIBDIR = ..\main
+# Makefile for graphics functions
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
+# What libs to make
+LIB = texmap.lib
 
-#Uncomment the following 3 lines if you want to build with only C code.
-#NASM = 1
-#GLOBAL_CFLAGS+=/dNASM
-#GLOBAL_AFLAGS+=/DNASM
+# includes to copy to lib directory
+GLOBAL_INCLUDES = texmap.h
 
-# What to install
-INSTALL_TARGS = texmap.lib texmap.h
+# test file libraries needed
+TEST_LIBS = {LIBDIR}gr.lib {LIBDIR}mem.lib {LIBDIR}io.lib {LIBDIR}cfile.lib ¶
+	{LIBDIR}misc.lib {LIBDIR}macsys.lib
 
-# What libs to build
-LIBS = texmap
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-# What objs in the TEXMAP lib
-#TEXMAP_OBJS = ntmap.obj tmapsky.obj tmapv.obj tmapflat.obj tmap_per.obj tmap_p2.obj tmap_lin.obj tmap_ll.obj tmap_kl.obj\
-#		tmap_ld.obj tmap_flt.obj tmap_sky.obj tmap_skv.obj tmap_fl1.obj tmapz.obj tmap_z.obj tmapfade.obj tmap_mul.obj
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r {LIBDIR}macsys.r
 
-TEXMAP_OBJS = 	ntmap.obj tmapflat.obj  
+OBJ_DIR = :obj:
 
-#%if !%defined(NASM)
-TEXMAP_OBJS +=	tmap_per.obj tmap_lin.obj tmap_ll.obj tmap_flt.obj tmapfade.obj tmap_fl1.obj
-#%else
-TEXMAP_OBJS += scanline.obj
-#%endif
+# C compiler options
+#CFLAGS = {SYM_FLAG} -d NASM
+CFLAGS = {SYM_FLAG}
 
-# What to clean
-CLEAN_TARGS = $(OBJDIR)\*.obj
-
-# What test programs to make
-TEST_PROGS = textest
-
-# What object files and libs for the test programs
-TEXTEST_SRCS = TEXTEST.obj
-TEXTEST_LIBS = TEXMAP.lib
-
-texmap.lib: $(TEXMAP_OBJS)
-	wlib texmap.lib $(TEXMAP_OBJS)
-	copy *.lib $(LIBDIR)
-lightabs.obj: lightabs.asm
-	masm lightabs.asm
-
-ntmap.obj: ntmap.c
-	wcc386 $(CCFLAGS) ntmap.c
-scanline.obj: scanline.c
-	wcc386 $(CCFLAGS) scanline.c
-tmap_16.obj: tmap_16.asm
-	masm tmap_16.asm
-tmap_16g.obj: tmap_16g.asm
-	masm tmap_16g.asm
-tmap_16l.obj: tmap_16l.asm
-	masm tmap_16l.asm
-
-tmap_16p.obj: tmap_16p.asm
-	masm tmap_16p.asm
+# Asm compiler options
+AFLAGS = -sym on
 	
-tmap_16r.obj: tmap_16r.asm
-	masm tmap_16r.asm
+LDFLAGS = ¶
+	{SYM_FLAG}
+	
+TEXMAP_OBJS = ¶
+	{OBJDIR}ntmap.c.o {OBJDIR}tmapflat.c.o {OBJDIR}scanline.c.o {OBJDIR}tmap_per.a.o
+#	{OBJDIR}ntmap.c.o {OBJDIR}tmapflat.c.o {OBJDIR}scanline.c.o
+	
+All Ä {LIB}
 
-tmap_aa.obj: tmap_aa.asm
-	masm tmap_aa.asm
+{LIB} Ä {TEXMAP_OBJS}
+	Echo "# `Date -t` ----- Building {LIB}"
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+testg Ä testg.c.o {TEST_LIBS}
+	Link -t 'APPL' -c '????' -sym on -model far -mf ¶
+		testg.c.o {STD_LIBS} ¶
+		{TEST_LIBS} ¶
+		-o {Targ}
+	Rez {TEST_RESOURCES} -rd -append -o {Targ}
 
-tmap_fl1.obj: tmap_fl1.asm
-	masm tmap_fl1.asm
+clean Ä
+	del -i :obj:Å
+	del -i {LIB}
 
-tmap_flt.obj: tmap_flt.asm
-	masm tmap_flt.asm
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
 
-tmap_kl.obj: tmap_kl.asm
-	masm tmap_kl.asm
-tmap_ld.obj: tmap_ld.asm
-	masm tmap_ld.asm
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{depDir}{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
 
-tmap_lin.obj: tmap_lin.asm
-	masm tmap_lin.asm
+.a.o	Ä	.a
+	if "{Asm}" == "PPCAsm"
+		Echo "# `Date -t` ----- Assembling {default}.a..."
+		{Asm} "{depDir}{default}.a"	{MyAsmFlags}	¶
+			-o "{targDir}{default}.a.o"		¶
+			|| ( Echo "#####   ### ERROR ###   #####" )
+	end
+	
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
 
-tmap_ll.obj: tmap_ll.asm
-	masm tmap_ll.asm
+ntmap.c.o Ä makefile ntmap.c ::lib:mono.h ::lib:fix.h ::lib:dtypes.h ::lib:3d.h ::lib:vecmat.h ::lib:gr.h ::lib:error.h ::lib:key.h texmap.h texmapl.h scanline.h
 
-tmap_mul.obj: tmap_mul.asm
-	masm tmap_mul.asm
+scanline.c.o Ä makefile scanline.c ::lib:fix.h ::lib:dtypes.h ::lib:mono.h ::lib:gr.h texmap.h ::lib:3d.h ::lib:vecmat.h texmapl.h scanline.h
 
-tmap_p2.obj: tmap_p2.asm
-	masm tmap_p2.asm
+tmap.c.o Ä makefile tmap.c
 
-tmap_per.obj: tmap_per.asm
-	masm tmap_per.asm
+tmapflat.c.o Ä makefile tmapflat.c ::lib:fix.h ::lib:dtypes.h ::lib:mono.h ::lib:gr.h texmap.h ::lib:3d.h ::lib:vecmat.h texmapl.h scanline.h ::lib:error.h
 
-tmap_rgb.obj: tmap_rgb.asm
-	masm tmap_rgb.asm
+tmapsky.c.o Ä makefile tmapsky.c ::lib:mono.h ::lib:fix.h ::lib:dtypes.h ::lib:3d.h ::lib:vecmat.h ::lib:gr.h ::lib:error.h texmap.h texmapl.h
 
-tmap_skv.obj: tmap_skv.asm
-	masm tmap_skv.asm
+tmapv.c.o Ä makefile tmapv.c ::lib:mono.h ::lib:fix.h ::lib:dtypes.h ::lib:3d.h ::lib:vecmat.h ::lib:gr.h ::lib:error.h texmap.h texmapl.h
 
-tmap_sky.obj: tmap_sky.asm
-	masm tmap_sky.asm
-tmap_z.obj: tmap_z.asm
-	masm tmap_z.asm
+tmapz.c.o Ä makefile tmapz.c ::lib:fix.h ::lib:dtypes.h ::lib:mono.h ::lib:gr.h texmap.h ::lib:3d.h ::lib:vecmat.h texmapl.h ::lib:error.h
 
-tmapdith.obj: tmapdith.asm
-	masm tmapdith.asm
-
-tmapfade.obj: tmapfade.asm
-	masm tmapfade.asm
-
-tmapflat.obj: tmapflat.c
-	wcc386 $(CCFLAGS) tmapflat.c
-
-tmapsky.obj: tmapsky.asm
-	masm tmapsky.asm
-
-tmapv.obj: tmapv.asm
-	masm tmapv.asm
-tmapz.obj: tmapz.asm
-	masm tmapz.asm
-

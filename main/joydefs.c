@@ -11,17 +11,47 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/joydefs.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/06/30 12:30:22 $
+ * $Source: Smoke:miner:source:main::RCS:joydefs.c $
+ * $Revision: 1.10 $
+ * $Author: allender $
+ * $Date: 1995/10/18 22:21:21 $
  * 
  * .
  * 
  * $Log: joydefs.c $
- * Revision 2.2  1995/06/30  12:30:22  john
- * Added -Xname command line.
- * 
+ * Revision 1.10  1995/10/18  22:21:21  allender
+ * fixed bug with gravis mousestick and call key_flush when
+ * calibrating joystick since it used keystrokes for the trigger
+ * (at least most of them do)
+ *
+ * Revision 1.9  1995/10/17  13:12:32  allender
+ * fixed up controller support for mac world
+ *
+ * Revision 1.8  1995/10/15  19:27:04  allender
+ * new Dave Denhart controller code
+ *
+ * Revision 1.7  1995/10/15  16:14:59  allender
+ * fixed axis value for Thrustmaster rudders
+ *
+ * Revision 1.6  1995/09/13  11:39:39  allender
+ * made joystick cal menu all text so buttons will work properly
+ *
+ * Revision 1.5  1995/09/01  13:13:13  allender
+ * added close box on controls menu
+ *
+ * Revision 1.4  1995/08/18  10:22:47  allender
+ * if thrustmaster choosen, set joystick at thrustmaster type
+ * for proper reading in joyc.c
+ *
+ * Revision 1.3  1995/07/26  17:00:34  allender
+ * put back in code to make joysticks work
+ *
+ * Revision 1.2  1995/07/17  08:52:21  allender
+ * put back in code that was taken out previously
+ *
+ * Revision 1.1  1995/05/16  15:26:48  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/04/06  12:13:20  john
  * Made so you can calibrate Gravis Gamepad.
  * 
@@ -269,15 +299,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: joydefs.c 2.2 1995/06/30 12:30:22 john Exp $";
+static char rcsid[] = "$Id: joydefs.c 1.10 1995/10/18 22:21:21 allender Exp $";
 #pragma on (unreferenced)
 
-#include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
 #include <string.h>
-#include <dos.h>
 
 #include "mono.h"
 #include "key.h"
@@ -306,11 +333,13 @@ int joydefs_calibrate_flag = 0;
 
 void joy_delay()
 {
-	int t1 = TICKER + 19/4;			// Wait 1/4 second...
+	fix t1 = timer_get_fixed_seconds() + (F1_0/4);
 	stop_time();
-	while( TICKER < t1 );
+	while (t1 < timer_get_fixed_seconds()) ;
 	joy_flush();
+	key_flush();
 	start_time();
+	
 }
 
 
@@ -319,8 +348,8 @@ int joycal_message( char * title, char * text )
 	int i;
 	newmenu_item	m[2];
 	m[0].type = NM_TYPE_TEXT; m[0].text = text;
-	m[1].type = NM_TYPE_MENU; m[1].text = TXT_OK;
-	i = newmenu_do( title, NULL, 2, m, NULL );
+//	m[1].type = NM_TYPE_MENU; m[1].text = TXT_OK;
+	i = newmenu_do( title, NULL, 1, m, NULL );
 	if ( i < 0 ) 
 		return 1;
 	return 0;
@@ -346,18 +375,32 @@ void joydefs_calibrate()
 
 	joydefs_calibrate_flag = 0;
 
-	if ( (Config_control_type!=CONTROL_JOYSTICK) && (Config_control_type!=CONTROL_FLIGHTSTICK_PRO) && (Config_control_type!=CONTROL_THRUSTMASTER_FCS) && (Config_control_type!=CONTROL_GRAVIS_GAMEPAD) )	
+	if (   (Config_control_type!=CONTROL_JOYSTICK)
+		&& (Config_control_type!=CONTROL_FLIGHTSTICK_PRO)
+		&& (Config_control_type!=CONTROL_THRUSTMASTER_FCS)
+		&& (Config_control_type!=CONTROL_GRAVIS_GAMEPAD) )	
 		return;
-
+	
+	if ( Config_control_type == CONTROL_THRUSTMASTER_FCS ) {
+		axis_cen[0] = axis_cen[1] = axis_cen[2] = 0;
+		axis_min[0] = axis_min[1] = axis_min[2] = -127;
+		axis_max[0] = axis_max[1] = axis_max[2] = 127;
+		axis_min[3] = 0;
+		axis_max[3] = 255;
+		axis_cen[3] = 128;
+		joy_set_cal_vals(axis_min, axis_cen, axis_max);
+		return;
+	}
+		
 	joy_get_cal_vals(org_axis_min, org_axis_center, org_axis_max);
 
 	joy_set_cen();
 	joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
 
-	if (!joy_present)	{
-		nm_messagebox( NULL, 1, TXT_OK, TXT_NO_JOYSTICK );
-		return;
-	}
+//MWA	if (!joy_present)	{
+//MWA		nm_messagebox( NULL, 1, TXT_OK, TXT_NO_JOYSTICK );
+//MWA		return;
+//MWA	}
 	
 	masks = joy_get_present_mask();
 	if ( masks == JOY_ALL_AXIS )
@@ -494,9 +537,6 @@ void joydefs_calibrate()
 	WriteConfigFile();	
 }
 
-
-//char *control_text[CONTROL_MAX_TYPES] = { "Keyboard only", "Joystick", "Flightstick Pro", "Thrustmaster FCS", "Gravis Gamepad", "Mouse", "Cyberman" };
-
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	int i;
@@ -506,66 +546,74 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 	last_key = last_key;
 	citem = citem;		
 
-	for (i=0; i<CONTROL_MAX_TYPES; i++ )
-		if (items[i].value) Config_control_type = i;
+//	for (i=0; i<CONTROL_MAX_TYPES; i++ )
+//		if (items[i].value) Config_control_type = i;
 
-	if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_THRUSTMASTER_FCS ) )	{
-		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
+	if (items[0].value)
+		Config_control_type = CONTROL_NONE;
+	else if (items[1].value)
+		Config_control_type = CONTROL_JOYSTICK;
+	else if (items[2].value)
+		Config_control_type = CONTROL_THRUSTMASTER_FCS;
+	else if (items[3].value)
+		Config_control_type = CONTROL_GRAVIS_GAMEPAD;
+	else if (items[4].value)
+		Config_control_type = CONTROL_MOUSE;
+	else {
+		Int3();
+		Config_control_type = CONTROL_NONE;
 	}
+
+//	if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_THRUSTMASTER_FCS ) )	{
+//		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
+//	}
 
 	if (oc_type != Config_control_type) {
 		switch (Config_control_type) {
-	//		case	CONTROL_NONE:
 			case	CONTROL_JOYSTICK:
 			case	CONTROL_FLIGHTSTICK_PRO:
-			case	CONTROL_THRUSTMASTER_FCS:
-			case	CONTROL_GRAVIS_GAMEPAD:
-	//		case	CONTROL_MOUSE:
-	//		case	CONTROL_CYBERMAN:
 				joydefs_calibrate_flag = 1;
 		}
 		kc_set_controls();
+		joydefs_set_type(Config_control_type);
 	}
-
 }
-
-extern ubyte kc_use_external_control;
-extern ubyte kc_enable_external_control;
-extern ubyte *kc_external_name;
 
 void joydefs_config()
 {
-	char xtext[128];
 	int i, old_masks, masks;
-	newmenu_item m[13];
-	int i1=9;
-	int nitems;
+	newmenu_item m[12];
+	int i1=7;
 
 	do {
-		nitems = 10;
 		m[0].type = NM_TYPE_RADIO; m[0].text = CONTROL_TEXT(0); m[0].value = 0; m[0].group = 0;
 		m[1].type = NM_TYPE_RADIO; m[1].text = CONTROL_TEXT(1); m[1].value = 0; m[1].group = 0;
-		m[2].type = NM_TYPE_RADIO; m[2].text = CONTROL_TEXT(2); m[2].value = 0; m[2].group = 0;
-		m[3].type = NM_TYPE_RADIO; m[3].text = CONTROL_TEXT(3); m[3].value = 0; m[3].group = 0;
-		m[4].type = NM_TYPE_RADIO; m[4].text = CONTROL_TEXT(4); m[4].value = 0; m[4].group = 0;
-		m[5].type = NM_TYPE_RADIO; m[5].text = CONTROL_TEXT(5); m[5].value = 0; m[5].group = 0;
-		m[6].type = NM_TYPE_RADIO; m[6].text = CONTROL_TEXT(6); m[6].value = 0; m[6].group = 0;
-		m[7].type = NM_TYPE_MENU; m[7].text=TXT_CUST_ABOVE;
-		m[8].type = NM_TYPE_TEXT; m[8].text="";
-		m[9].type = NM_TYPE_MENU; m[9].text=TXT_CUST_KEYBOARD;
-	
-		if ( kc_use_external_control )	{
-			sprintf( xtext, "Enable %s", kc_external_name );
-			m[10].type = NM_TYPE_CHECK; m[10].text = xtext; m[10].value = kc_enable_external_control;
-			nitems = nitems + 1;
-		}
-		
-		m[Config_control_type].value = 1;
+// CH Flightstick Pro not directly supported		m[2].type = NM_TYPE_RADIO; m[2].text = CONTROL_TEXT(2); m[2].value = 0; m[2].group = 0;
+		m[2].type = NM_TYPE_RADIO; m[2].text = CONTROL_TEXT(3); m[2].value = 0; m[2].group = 0;
+		m[3].type = NM_TYPE_RADIO; m[3].text = CONTROL_TEXT(4); m[3].value = 0; m[3].group = 0;
+		m[4].type = NM_TYPE_RADIO; m[4].text = CONTROL_TEXT(5); m[4].value = 0; m[4].group = 0;
+//  CYBERMAN NOT USED!!!		m[6].type = NM_TYPE_RADIO; m[6].text = CONTROL_TEXT(6); m[6].value = 0; m[6].group = 0;
+		m[5].type = NM_TYPE_MENU; m[5].text=TXT_CUST_ABOVE;
+		m[6].type = NM_TYPE_TEXT; m[6].text="";
+		m[7].type = NM_TYPE_MENU; m[7].text=TXT_CUST_KEYBOARD;
+		if ( Config_control_type == CONTROL_NONE )
+			m[0].value = 1;
+		else if ( Config_control_type == CONTROL_JOYSTICK )
+			m[1].value = 1;
+		else if ( Config_control_type == CONTROL_THRUSTMASTER_FCS )
+			m[2].value = 1;
+		else if ( Config_control_type == CONTROL_GRAVIS_GAMEPAD )
+			m[3].value = 1;
+		else if ( Config_control_type == CONTROL_MOUSE)
+			m[4].value = 1;
+		else
+			m[0].value = 1;
 	 
-		i1 = newmenu_do1( NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1 );
+		i1 = newmenu_do4( NULL, TXT_CONTROLS, 8, m, joydef_menuset_1, i1, NULL, -1, -1, 1 );
 
 		switch(i1)	{
-		case 7: {
+
+		case 5: {
 				old_masks = 0;
 				for (i=0; i<4; i++ )		{
 					if (kconfig_is_axes_used(i))
@@ -599,16 +647,12 @@ void joydefs_config()
 				}
 			}
 			break;
-		case 9: 
+		case 7: 
 			kconfig(0, TXT_KEYBOARD); 
 			break;
 		} 
-
-		if ( kc_use_external_control )	{
-			kc_enable_external_control = m[10].value;
-		}
-
 	} while(i1>-1);
+
 
 	switch (Config_control_type) {
 	case	CONTROL_JOYSTICK:
@@ -622,4 +666,19 @@ void joydefs_config()
 
 }
 
-
+void joydefs_set_type(ubyte type)
+{
+	ubyte joy_type;
+	
+	switch (type)
+	{
+		case	CONTROL_NONE:				joy_type = JOY_AS_NONE;					break;
+		case	CONTROL_JOYSTICK:			joy_type = JOY_AS_MOUSE;				break;
+		case	CONTROL_FLIGHTSTICK_PRO:	joy_type = JOY_AS_FLIGHTSTICK_PRO;		break;
+		case	CONTROL_THRUSTMASTER_FCS:	joy_type = JOY_AS_THRUSTMASTER;			break;
+		case	CONTROL_GRAVIS_GAMEPAD:		joy_type = JOY_AS_GRAVIS_MOUSESTICK;	break;
+		case	CONTROL_MOUSE:				joy_type = JOY_AS_MOUSE;				break;
+		case	CONTROL_CYBERMAN:			joy_type = JOY_AS_MOUSE;				break;
+	}
+	joy_set_type(joy_type);
+}

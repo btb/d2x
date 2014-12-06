@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/disc.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:16 $
+ * $Source: Smoke:miner:source:2d::RCS:disc.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 08:52:14 $
  *
  * Graphical routines for drawing a disk.
  *
  * $Log: disc.c $
+ * Revision 1.1  1995/03/09  08:52:14  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.5  1994/11/18  22:50:16  john
  * Changed shorts to ints in parameters.
  * 
@@ -38,7 +43,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #include "mem.h"
-
 #include "gr.h"
 #include "grdef.h"
 
@@ -117,4 +121,3 @@ int gr_udisk(fix xc1,fix yc1,fix r1)
 	}
 	return 0;
 }
-

@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/slew.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:33:05 $
+ * $Source: Smoke:miner:source:main::RCS:SLEW.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:03:09 $
  * 
  * Prototypes, etc., for slew system
  * 
- * $Log: slew.h $
+ * $Log: SLEW.H $
+ * Revision 1.1  1995/05/16  16:03:09  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:33:05  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -60,8 +63,8 @@ int	slew_frame(int dont_check_keys);		// Does slew frame
 #define slew_init(obj)
 #define slew_stop(obj)
 #define slew_reset_orient()
-//#define slew_frame(dont_check_keys) //KRB hack
-int	slew_frame(int dont_check_keys);		// Does slew frame
+#define slew_frame(dont_check_keys)
+
 #endif
 
 #endif

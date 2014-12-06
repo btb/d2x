@@ -1,43 +1,74 @@
 #
-# $Source: f:/miner/source/iff/rcs/makefile $
-# $Revision: 1.5 $
-# $Author: john $
-# $Date: 1994/02/15 12:51:20 $
+# $Source: Buggin:miner:source:iff::RCS:makefile $
+# $Revision: 1.2 $
+# $Author: allender $
+# $Date: 1995/08/23 17:00:45 $
 #
-# Makefile for IFF library
-#
-
-LIBDIR = ..\main
+# Makefile for iff library
 #
 
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
+LIBDIR = ::lib:
+OBJDIR = :obj:
+SRCDIR = :
 
-# What to install
-INSTALL_TARGS = iff.lib iff.h
+# What libs to make
+LIB = iff.lib
 
-# What libs to build
-LIBS = iff
+# includes to copy to lib directory
+GLOBAL_INCLUDES = iff.h
 
-# What objs in the iff lib
-IFF_OBJS = iff.obj
+# test file libraries needed
+TEST_LIBS = {LIBDIR}gr.lib {LIBDIR}mem.lib {LIBDIR}io.lib {LIBDIR}cfile.lib ¶
+	{LIBDIR}misc.lib {LIBDIR}macsys.lib
 
-# What test programs to make
-TEST_PROGS = ifftest ifftestv
+# standard libs to link anything with
+STD_LIBS = ¶
+	"{CLibraries}"CSANELib.o ¶
+	"{CLibraries}"Math.o ¶
+	"{CLibraries}"StdClib.o ¶
+	"{Libraries}"Runtime.o ¶
+	"{Libraries}"Interface.o
 
-# What object files and libs for the test programs
-IFFTEST_SRCS = ifftest.c
-IFFTEST_LIBS = iff.lib gr.lib mem.lib bm.lib misc.lib cflib.lib cfile.lib
+# resource files to be used in test file
+TEST_RESOURCES = {LIBDIR}bios.r {LIBDIR}macsys.r
 
-IFFTESTV_SRCS = ifftestv.c
-IFFTESTV_LIBS = iff.lib vesa.lib cflib.lib cfile.lib
+OBJ_DIR = :obj:
 
-iff.lib: $(IFF_OBJS)
-	wlib iff.lib $(IFF_OBJS)
-	copy *.lib $(LIBDIR)
-iff.obj: iff.c
-	wcc386 $(CCFLAGS) iff.c
+# C compiler options
+CFLAGS = {SYM_FLAG}
+	
+LDFLAGS = ¶
+	{SYM_FLAG}
+	
+IFF_OBJS = ¶
+	{OBJDIR}iff.c.o
 
-ifftest.obj: conio.h fix.h gr.h iff.h stdio.h stdlib.h types.h
+All Ä {LIB}
 
-ifftestv.obj: conio.h fix.h gr.h iff.h stdio.h types.h vesa.h
-
+{LIB} Ä {IFF_OBJS}
+	Echo "# `Date -t` ----- Building {LIB}..."
+	{Linker} {LibraryFlags} {OBJ_DIR}Å -o {LIB}
+	Echo "# Copying files to lib directory..."
+	duplicate -y {LIB} ::lib
+	duplicate -y {GLOBAL_INCLUDES} ::lib
+	
+clean Ä
+	del -i :obj:Å
+	del -i "{LIB}"
+
+# dependency for obj and source directories
+"{OBJDIR}"		Ä	"{SRCDIR}"
+
+.c.o	Ä	.c
+	Echo `Date -t` ---- Compiling {default}.c
+	{C} "{depDir}{default}.c" {MyCFlags} {CFlags} ¶
+		-o "{targDir}{default}.c.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+.a.o	Ä	.a
+	Echo "# `Date -t` ----- Assembling {default}.a..."
+	Asm "{depDir}{default}.a"			¶
+		-o "{targDir}{default}.a.o"		¶
+		|| ( Echo "#####   ### ERROR ###   #####" )
+
+#  Dependencies below this line

@@ -11,14 +11,38 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/ai.c $
- * $Revision: 2.11 $
- * $Author: john $
- * $Date: 1995/07/09 11:15:48 $
+ * $Source: Smoke:miner:source:main::RCS:ai.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 14:15:37 $
  *
  * Autonomous Individual movement.
  *
  * $Log: ai.c $
+ * Revision 1.1  1995/12/05  14:15:37  allender
+ * Initial revision
+ *
+ * Revision 1.10  1995/11/09  09:36:12  allender
+ * cheats not active during demo playback
+ *
+ * Revision 1.9  1995/11/03  12:51:55  allender
+ * shareware changes
+ *
+ * Revision 1.8  1995/10/31  10:25:07  allender
+ * shareware stuff
+ *
+ * Revision 1.7  1995/10/26  14:01:38  allender
+ * optimization for doing robot stuff only if anim angles done last frame
+ *
+ * Revision 1.6  1995/10/25  09:35:43  allender
+ * prototype some functions causing mcc problems
+ *
+ * Revision 1.5  1995/10/17  13:11:40  allender
+ * fix in ai code that makes bots only look for you every so often
+ *
+ * Revision 1.4  1995/10/10  11:48:10  allender
+ * PC ai code
+ *
  * Revision 2.11  1995/07/09  11:15:48  john
  * Put in Mike's code to fix bug where bosses don't gate in bots after
  * 32767 seconds of playing.
@@ -242,7 +266,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: ai.c 2.11 1995/07/09 11:15:48 john Exp $";
+static char rcsid[] = "$Id: ai.c 1.1 1995/12/05 14:15:37 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -283,6 +307,7 @@ static char rcsid[] = "$Id: ai.c 2.11 1995/07/09 11:15:48 john Exp $";
 #include "powerup.h"
 #include "gauges.h"
 #include "text.h"
+#include "newdemo.h"
 
 #ifdef EDITOR
 #include "editor\editor.h"
@@ -293,6 +318,10 @@ static char rcsid[] = "$Id: ai.c 2.11 1995/07/09 11:15:48 john Exp $";
 #include <time.h>
 #endif
 
+void init_boss_segments(short segptr[], int *num_segs, int size_check);
+void ai_multi_send_robot_position(int objnum, int force);
+
+#ifndef MAC_SHAREWARE
 #define	JOHN_CHEATS_SIZE_1	6
 #define	JOHN_CHEATS_SIZE_2	6
 #define	JOHN_CHEATS_SIZE_3	6
@@ -303,19 +332,24 @@ ubyte	john_cheats_1[JOHN_CHEATS_SIZE_1] = { 	KEY_P ^ 0x00 ^ 0x34,
 															KEY_O ^ 0x30 ^ 0x34, 
 															KEY_Y ^ 0x40 ^ 0x34, 
 															KEY_S ^ 0x50 ^ 0x34 };
+#endif
 
 #define	PARALLAX	0		//	If !0, then special debugging info for Parallax eyes only enabled.
 
 #define MIN_D 0x100
 
 int	Flinch_scale = 4;
+#ifndef MAC_SHAREWARE
 int	john_cheats_index_1;		//	POBOYS		detonate reactor
+#endif
 int	Attack_scale = 24;
 #define	ANIM_RATE		(F1_0/16)
 #define	DELTA_ANG_SCALE	16
 
 byte Mike_to_matt_xlate[] = {AS_REST, AS_REST, AS_ALERT, AS_ALERT, AS_FLINCH, AS_FIRE, AS_RECOIL, AS_REST};
+#ifndef MAC_SHAREWARE
 int	john_cheats_index_2;		//	PORGYS		high speed weapon firing
+#endif
 
 // int	No_ai_flag=0;
 
@@ -338,12 +372,14 @@ typedef struct {
 
 int	Num_boss_teleport_segs;
 short	Boss_teleport_segs[MAX_BOSS_TELEPORT_SEGS];
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 int	Num_boss_gate_segs;
 short	Boss_gate_segs[MAX_BOSS_TELEPORT_SEGS];
 #endif
 
+#ifndef MAC_SHAREWARE
 int	john_cheats_index_3;		//	LUNACY		lunacy (insane behavior, rookie firing)
+#endif
 
 //	---------- John: These variables must be saved as part of gamesave. ----------
 int				Ai_initialized = 0;
@@ -367,10 +403,12 @@ int				Boss_been_hit=0;
 
 //	---------- John: End of variables which must be saved as part of gamesave. ----------
 
+#ifndef MAC_SHAREWARE
 int	john_cheats_index_4;		//	PLETCHnnn	paint robots
+#endif
 int				ai_evaded=0;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 //	0	mech
 //	1	green claw
 //	2	spider
@@ -404,6 +442,7 @@ byte	Super_boss_gate_list[] = {0, 1, 8, 9, 10, 11, 12, 15, 16, 18, 19, 20, 22, 0
 int	Ai_info_enabled=0;
 int	Robot_firing_enabled = 1;
 
+#ifndef MAC_SHAREWARE
 extern	int	Ugly_robot_cheat, Ugly_robot_texture, Laser_rapid_fire;
 extern	byte	Enable_john_cheat_1, Enable_john_cheat_2, Enable_john_cheat_3, Enable_john_cheat_4;
 
@@ -414,6 +453,7 @@ ubyte	john_cheats_3[2*JOHN_CHEATS_SIZE_3+1] = { KEY_Y ^ 0x67,
 																KEY_N ^ 0x63, 
 																KEY_U ^ 0x62, 
 																KEY_L ^ 0x61 };
+#endif
 
 
 #define	MAX_AWARENESS_EVENTS	64
@@ -533,12 +573,14 @@ byte Ai_transition_table[AI_MAX_EVENT][AI_MAX_STATE][AI_MAX_STATE] = {
 	}
 };
 
+#ifndef MAC_SHAREWARE
 ubyte	john_cheats_2[2*JOHN_CHEATS_SIZE_2] = { 	KEY_P ^ 0x00 ^ 0x43, 0x66, 
 																KEY_O ^ 0x10 ^ 0x43, 0x11, 
 																KEY_R ^ 0x20 ^ 0x43, 0x8, 
 																KEY_G ^ 0x30 ^ 0x43, 0x2, 
 																KEY_Y ^ 0x40 ^ 0x43, 0x0, 
 																KEY_S ^ 0x50 ^ 0x43 };
+#endif
 
 // ---------------------------------------------------------
 //	On entry, N_robot_types had darn sure better be set.
@@ -565,11 +607,15 @@ void init_ai_system(void)
 
 }
 
+#ifndef MAC_SHAREWARE
 void john_cheat_func_1(int key)
 {
 	if (!Cheats_enabled)
 		return;
 
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
+		return;
+		
 	if (key == (john_cheats_1[john_cheats_index_1] ^ (john_cheats_index_1 << 4) ^ 0x34)) {
 		john_cheats_index_1++;
 		if (john_cheats_index_1 == JOHN_CHEATS_SIZE_1)	{
@@ -580,6 +626,7 @@ void john_cheat_func_1(int key)
 	} else
 		john_cheats_index_1 = 0;
 }
+#endif
 
 // ---------------------------------------------------------------------------------------------------------------------
 //	Given a behavior, set initial mode.
@@ -675,11 +722,15 @@ void init_ai_object(int objnum, int behavior, int hide_segment)
 	aip->REMOTE_OWNER = -1;
 }
 
+#ifndef MAC_SHAREWARE
 void john_cheat_func_2(int key)
 {
 	if (!Cheats_enabled)
 		return;
 
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
+		return;
+		
 	if (key == (john_cheats_2[2*john_cheats_index_2] ^ (john_cheats_index_2 << 4) ^ 0x43)) {
 		john_cheats_index_2++;
 		if (john_cheats_index_2 == JOHN_CHEATS_SIZE_2) {
@@ -691,6 +742,7 @@ void john_cheat_func_2(int key)
 	} else
 		john_cheats_index_2 = 0;
 }
+#endif
 
 // ---------------------------------------------------------------------------------------------------------------------
 void init_ai_objects(void)
@@ -708,14 +760,14 @@ void init_ai_objects(void)
 
 	init_boss_segments(Boss_teleport_segs, &Num_boss_teleport_segs, 1);
 
-	#ifndef SHAREWARE
+	#ifndef MAC_SHAREWARE
 		init_boss_segments(Boss_gate_segs, &Num_boss_gate_segs, 0);
 	#endif
 
 	Boss_dying_sound_playing = 0;
 	Boss_dying = 0;
 	Boss_been_hit = 0;
-	#ifndef SHAREWARE
+	#ifndef MAC_SHAREWARE
 	Gate_interval = F1_0*5 - Difficulty_level*F1_0/2;
 	#endif
 
@@ -761,11 +813,15 @@ void do_lunacy_off(void)
 	}
 }
 
+#ifndef MAC_SHAREWARE
 void john_cheat_func_3(int key)
 {
 	if (!Cheats_enabled)
 		return;
 
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
+		return;
+		
 	if (key == (john_cheats_3[JOHN_CHEATS_SIZE_3 - john_cheats_index_3] ^ (0x61 + john_cheats_index_3))) {
 		if (john_cheats_index_3 == 4)
 			john_cheats_index_3++;
@@ -784,6 +840,7 @@ void john_cheat_func_3(int key)
 	} else
 		john_cheats_index_3 = 0;
 }
+#endif
 
 //	----------------------------------------------------------------
 //	Do *dest = *delta unless:
@@ -907,11 +964,15 @@ void ai_turn_randomly(vms_vector *vec_to_player, object *obj, fix rate, int prev
 //		Increases distance to which robot will search to create path to player by Overall_agitation/8 segments.
 //		Decreases wait between fire times by Overall_agitation/64 seconds.
 
+#ifndef MAC_SHAREWARE
 void john_cheat_func_4(int key)
 {
 	if (!Cheats_enabled)
 		return;
 
+	if ( Newdemo_state == ND_STATE_PLAYBACK )
+		return;
+		
 	switch (john_cheats_index_4) {
 		case 3:
 			if (key == KEY_T)
@@ -982,6 +1043,10 @@ void john_cheat_func_4(int key)
 			john_cheats_index_4 = 0;
 	}
 }
+#endif
+
+ubyte vis_skip_init = 0;
+ubyte vis_skip[MAX_OBJECTS];
 
 // --------------------------------------------------------------------------------------------------------------------
 //	Returns:
@@ -990,10 +1055,39 @@ void john_cheat_func_4(int key)
 //		2		Player is visible and in field of view.
 //	Note: Uses Believed_player_pos as player's position for cloak effect.
 //	NOTE: Will destructively modify *pos if *pos is outside the mine.
-int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_view, vms_vector *vec_to_player)
+int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_view, vms_vector *vec_to_player, int prev_vis )
 {
 	fix			dot;
 	fvi_query	fq;
+	int objnum;
+
+	objnum = objp - Objects;
+	
+	if (!vis_skip_init)	{
+		memset( (void *)vis_skip, 0, MAX_OBJECTS );
+		vis_skip_init = 1;
+	}
+
+	vis_skip[objnum]++;
+
+	if ( prev_vis == 0 )	{
+		if (vis_skip[objnum]>1)
+			goto Compute;
+		return prev_vis;
+	}
+	if ( prev_vis == 1 )	{
+		if (vis_skip[objnum]>2)
+			goto Compute;
+		return prev_vis;
+	}
+	if ( prev_vis == 2 )	{
+		if (vis_skip[objnum]>10)
+			goto Compute;
+		return prev_vis;
+	}
+
+Compute:
+	vis_skip[objnum] = 0;
 
 	fq.p0						= pos;
 	if ((pos->x != objp->pos.x) || (pos->y != objp->pos.y) || (pos->z != objp->pos.z)) {
@@ -1380,7 +1474,7 @@ void ai_fire_laser_at_player(object *obj, vms_vector *fire_point)
 
 	Laser_create_new_easy( &fire_vec, fire_point, obj-Objects, robptr->weapon_type, 1);
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
 	{
@@ -1843,7 +1937,7 @@ void compute_vis_and_vec(object *objp, vms_vector *pos, ai_local *ailp, vms_vect
 			}
 
 			dist = vm_vec_normalized_dir_quick(vec_to_player, &Ai_cloak_info[cloak_index].last_position, pos);
-			*player_visibility = player_is_visible_from_object(objp, pos, robptr->field_of_view[Difficulty_level], vec_to_player);
+			*player_visibility = player_is_visible_from_object(objp, pos, robptr->field_of_view[Difficulty_level], vec_to_player, ailp->previous_visibility);
 			// *player_visibility = 2;
 
 			if ((ailp->next_misc_sound_time < GameTime) && (ailp->next_fire < F1_0) && (dist < F1_0*20)) {
@@ -1858,7 +1952,7 @@ void compute_vis_and_vec(object *objp, vms_vector *pos, ai_local *ailp, vms_vect
 				mprintf((0, "Warning: Player and robot at exactly the same location.\n"));
 				vec_to_player->x = F1_0;
 			}
-			*player_visibility = player_is_visible_from_object(objp, pos, robptr->field_of_view[Difficulty_level], vec_to_player);
+			*player_visibility = player_is_visible_from_object(objp, pos, robptr->field_of_view[Difficulty_level], vec_to_player, ailp->previous_visibility);
 
 			//	This horrible code added by MK in desperation on 12/13/94 to make robots wake up as soon as they
 			//	see you without killing frame rate.
@@ -2108,7 +2202,7 @@ int check_object_object_intersection(vms_vector *pos, fix size, segment *segp)
 
 }
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 
 // --------------------------------------------------------------------------------------------------------------------
 //	Return true if object created, else return false.
@@ -2367,7 +2461,7 @@ void teleport_boss(object *objp)
 	rand_segnum = Boss_teleport_segs[rand_seg];
 	Assert((rand_segnum >= 0) && (rand_segnum <= Highest_segment_index));
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
 		multi_send_boss_actions(objp-Objects, 1, rand_seg, 0);
@@ -2437,7 +2531,7 @@ void do_boss_dying_frame(object *objp)
 	}
 }
 
-#ifndef SHAREWARE 
+#ifndef MAC_SHAREWARE 
 #ifdef NETWORK
 // --------------------------------------------------------------------------------------------------------------------
 //	Called for an AI object if it is fairly aware of the player.
@@ -2453,7 +2547,7 @@ int ai_multiplayer_awareness(object *objp, int awareness_level)
 {
 	int	rval=1;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	if (Game_mode & GM_MULTI) {
 		if (awareness_level == 0)
 			return 0;
@@ -2513,7 +2607,7 @@ void do_boss_stuff(object *objp)
 					Boss_cloak_start_time = GameTime;
 					Boss_cloak_end_time = GameTime+Boss_cloak_duration;
 					objp->ctype.ai_info.CLOAKED = 1;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 					if (Game_mode & GM_MULTI)
 						multi_send_boss_actions(objp-Objects, 2, 0, 0);
@@ -2529,7 +2623,7 @@ void do_boss_stuff(object *objp)
 
 #define	BOSS_TO_PLAYER_GATE_DISTANCE	(F1_0*150)
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 
 // --------------------------------------------------------------------------------------------------------------------
 //	Do special stuff for a boss.
@@ -2547,7 +2641,7 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 	if ((dist_to_player < BOSS_TO_PLAYER_GATE_DISTANCE) || player_visibility || (Game_mode & GM_MULTI)) {
 		if (GameTime - Last_gate_time > Gate_interval/2) {
 			restart_effect(BOSS_ECLIP_NUM);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 			if (eclip_state == 0) {
 				multi_send_boss_actions(objp-Objects, 4, 0, 0);
@@ -2558,7 +2652,7 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 		}
 		else {
 			stop_effect(BOSS_ECLIP_NUM);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 			if (eclip_state == 1) {
 				multi_send_boss_actions(objp-Objects, 5, 0, 0);
@@ -2578,7 +2672,7 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 				Assert(randtype < N_robot_types);
 
 				rtval = gate_in_robot(randtype, -1);
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 				if (rtval && (Game_mode & GM_MULTI))
 				{
@@ -2598,10 +2692,10 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 //	return 0;
 //}
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 void ai_multi_send_robot_position(int objnum, int force)
 {
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI) 
 	{
@@ -2698,6 +2792,9 @@ void ai_do_actual_firing_stuff(object *obj, ai_static *aip, ai_local *ailp, robo
 		}
 	}
 }
+
+extern int object_rendered_last[MAX_OBJECTS];
+
 
 // --------------------------------------------------------------------------------------------------------------------
 void do_ai_frame(object *obj)
@@ -2960,7 +3057,17 @@ void do_ai_frame(object *obj)
 
 	//	- -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -
 	//	Note: Should only do these two function calls for objects which animate
+	//	- -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -
+	//	Note: Should only do these two function calls for objects which animate
+#if 0
 	if ((dist_to_player < F1_0*100)) { // && !(Game_mode & GM_MULTI)) {
+		object_animates = do_silly_animation(obj);
+		if (object_animates)
+			ai_frame_animation(obj);
+		//mprintf((0, "Object %i: goal=%i, current=%i\n", obj-Objects, obj->ctype.ai_info.GOAL_STATE, obj->ctype.ai_info.CURRENT_STATE));
+	} else {
+#endif
+	if ((dist_to_player < F1_0*100) && (object_rendered_last[objnum]==FrameCount-1) ) { // && !(Game_mode & GM_MULTI)) {
 		object_animates = do_silly_animation(obj);
 		if (object_animates)
 			ai_frame_animation(obj);
@@ -2992,7 +3099,7 @@ void do_ai_frame(object *obj)
 			do_boss_stuff(obj);
 			dist_to_player *= 4;
 			break;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		case 2:
 			if (aip->GOAL_STATE == AIS_FLIN)
 				aip->GOAL_STATE = AIS_FIRE;
@@ -3217,6 +3324,7 @@ void do_ai_frame(object *obj)
 				Laser_create_new_easy( &fire_vec, &fire_pos, obj-Objects, PROXIMITY_ID, 1);
 				ailp->next_fire = F1_0*5;		//	Drop a proximity bomb every 5 seconds.
 				
+				#ifndef MAC_SHAREWARE
 				#ifdef NETWORK
 				if (Game_mode & GM_MULTI)
 				{
@@ -3224,6 +3332,7 @@ void do_ai_frame(object *obj)
 					multi_send_robot_fire(obj-Objects, -1, &fire_vec);
 				}				  
 				#endif	
+				#endif
 			}
 			break;
 
@@ -3531,7 +3640,6 @@ void do_ai_frame(object *obj)
 		if (aip->CURRENT_GUN >= Robot_info[obj->id].n_guns)
 			aip->CURRENT_GUN = 0;
 	}
-
 }
 
 //--mk, 121094 -- // ----------------------------------------------------------------------------------
@@ -3825,4 +3933,3 @@ int ai_restore_state( FILE * fp )
 
 // -- }
 
-

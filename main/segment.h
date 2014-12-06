@@ -11,15 +11,27 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/segment.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:22 $
+ * $Source: Smoke:miner:source:main::RCS:segment.h $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/11/03 12:53:11 $
  *
  * Include file for functions which need to access segment data structure.
  *
  * $Log: segment.h $
- * Revision 2.1  1995/03/20  18:15:22  john
+ * Revision 1.4  1995/11/03  12:53:11  allender
+ * shareware changes
+ *
+ * Revision 1.3  1995/07/26  16:53:45  allender
+ * put sides and segment structure back the PC way for checksumming reasons
+ *
+ * Revision 1.2  1995/06/19  07:55:22  allender
+ * rearranged structure members for possible better alignment
+ *
+ * Revision 1.1  1995/05/16  16:02:22  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/20  12:15:22  john
  * Added code to not store the normals in the segment structure.
  * 
  * Revision 2.0  1995/02/27  11:26:49  john
@@ -99,7 +111,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _SEGMENT_H
 #define _SEGMENT_H
 
-#include	"types.h"
+#include	"dtypes.h"
 #include	"fix.h"
 #include "vecmat.h"
 //#include "3d.h"
@@ -123,8 +135,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define	WBACK								4
 #define	WFRONT							5
 
+#ifdef MAC_SHAREWARE
+#define	MAX_GAME_SEGMENTS				500
+#define	MAX_GAME_VERTICES				1800
+#else
 #define	MAX_GAME_SEGMENTS				800
 #define	MAX_GAME_VERTICES				2800
+#endif
 
 #if defined(SHAREWARE) && !defined(EDITOR)
   #define	MAX_SEGMENTS					MAX_GAME_SEGMENTS
@@ -156,17 +173,12 @@ typedef struct uvl {
 	fix u,v,l;
 } uvl;
 
-#ifdef COMPACT_SEGS
-typedef struct side {
-	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
-	ubyte		pad;									//keep us longword alligned
-	short		wall_num;
-	short		tmap_num;
-	short		tmap_num2;
-	uvl		uvls[4];
-	// vms_vector	normals[2];						// 2 normals, if quadrilateral, both the same.
-} side;
-#else
+// size of side:
+//		normals == 2 * 3 * 4 	24 bytes		(8 byte aligned)
+//		uvls    == 4 * 3 * 4    48 bytes		(8 byte aligned)
+//		*_nums	== 3 * 2		6  bytes
+//				== 2 * 1		2  bytes		(8 byte aligned) here
+
 typedef struct side {
 	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
 	ubyte		pad;									//keep us longword alligned
@@ -176,32 +188,29 @@ typedef struct side {
 	uvl		uvls[4];
 	vms_vector	normals[2];						// 2 normals, if quadrilateral, both the same.
 } side;
-#endif
+
+// size of segment:
+//		side		== 6 * 80	480 bytes		(8 byte aligned)
+//		s_light		== 1 * 4	  4 bytes		(4 byte aligned)
+//		children	== 6 * 2	 12 bytes		(2 byte aligned)
+//		verts		== 8 * 2	 16 bytes				""
+//		objects		== 1 * 2	  2 bytes				""
+//		sp/matcen	== 2 * 1	  2 bytes				""
+//		value		== 1 * 2	  2 bytes				""
+//		pad			== 2 * 1	  2 bytes		(8 byte aligned)
 
 typedef struct segment {
-	#ifdef	EDITOR
-	short		segnum;								// segment number, not sure what it means
-	#endif
 	side		sides[MAX_SIDES_PER_SEGMENT];	// 6 sides
 	short		children[MAX_SIDES_PER_SEGMENT];	// indices of 6 children segments, front, left, top, right, bottom, back
 	short		verts[MAX_VERTICES_PER_SEGMENT];	// vertex ids of 4 front and 4 back vertices
-	#ifdef	EDITOR
-	short		group;								// group number to which the segment belongs.
-	#endif
 	short		objects;								// pointer to objects in this segment
 	ubyte		special;								// special property of a segment (such as damaging, trigger, etc.)
 	byte		matcen_num;							//	which center segment is associated with.
 	short		value;
 	fix		static_light;						//average static light in segment
-	#ifndef	EDITOR
 	short		pad;			//make structure longword aligned
-	#endif
 } segment;
 
-#ifdef COMPACT_SEGS
-extern void get_side_normal(segment *sp, int sidenum, int normal_num, vms_vector * vm );
-extern void get_side_normals(segment *sp, int sidenum, vms_vector * vm1, vms_vector *vm2 );
-#endif
 
 //	Local segment data.
 //	This is stuff specific to a segment that does not need to get written to disk.
@@ -222,8 +231,11 @@ typedef struct {
 } group;
 
 // Globals from mglobal.c
-extern	vms_vector	Vertices[];
-extern	segment		Segments[];
+//extern	vms_vector	Vertices[];
+//extern	segment		Segments[];
+extern vms_vector *Vertices;
+extern segment *Segments;
+
 //--repair-- extern	lsegment		Lsegments[];
 extern	int			Num_segments;
 extern	int			Num_vertices;
@@ -266,4 +278,3 @@ extern void med_check_all_vertices();
 
 #endif
 
-

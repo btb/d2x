@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/compbit.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:46 $
+ * $Source: Smoke:miner:source:main::RCS:COMPBIT.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:55:16 $
  * 
  * Contains encryption key for bitmaps.tbl
  * 
- * $Log: compbit.h $
+ * $Log: COMPBIT.H $
+ * Revision 1.1  1995/05/16  15:55:16  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:46  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -46,4 +49,3 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern void encode_rotate_left(char *);
 
 #endif
-

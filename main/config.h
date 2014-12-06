@@ -11,14 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/config.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:48 $
+ * $Source: Smoke:miner:source:main::RCS:config.h $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/09/08 17:12:26 $
  * 
  * prototype definitions for descent.cfg reading/writing
  * 
  * $Log: config.h $
+ * Revision 1.3  1995/09/08  17:12:26  allender
+ * added modem tool stuff for prefs file
+ *
+ * Revision 1.2  1995/09/05  08:47:48  allender
+ * prefs file working
+ *
+ * Revision 1.1  1995/05/16  15:55:23  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:48  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -49,8 +58,8 @@ extern int ReadConfigFile(void);
 extern int WriteConfigFile(void);
 
 extern char config_last_player[CALLSIGN_LEN+1];
-
 extern char config_last_mission[];
+extern char config_last_ctb_cfg[];
+extern int  config_last_ctb_tool;
 
 #endif
-

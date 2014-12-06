@@ -11,19 +11,27 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/mission.c $
- * $Revision: 2.9 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:32 $
+ * $Source: BigRed:miner:source:main::RCS:mission.c $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:21:40 $
  * 
  * Code to handle multiple missions
  * 
  * $Log: mission.c $
- * Revision 2.9  1995/05/26  16:16:32  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
- * Revision 2.8  1995/03/20  15:49:31  mike
+ * Revision 1.4  1995/10/31  10:21:40  allender
+ * no mission support in shareware
+ *
+ * Revision 1.3  1995/10/21  22:53:04  allender
+ * moved missions to data folder
+ *
+ * Revision 1.2  1995/09/13  08:47:29  allender
+ * made to work with Chris' direct stuff
+ *
+ * Revision 1.1  1995/05/16  15:27:48  allender
+ * Initial revision
+ *
+ * Revision 2.8  1995/03/20  09:49:31  mike
  * Remove eof char from comment which confused make depend, causing
  * no mission.obj: line in makefile.  Pretty stupid tool, huh?
  * 
@@ -102,13 +110,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: mission.c 2.9 1995/05/26 16:16:32 john Exp $";
+static char rcsid[] = "$Id: mission.c 1.4 1995/10/31 10:21:40 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dos.h>
+//#include <dos.h>
 #include <ctype.h>
 
 #include "cfile.h"
@@ -119,6 +127,9 @@ static char rcsid[] = "$Id: mission.c 2.9 1995/05/26 16:16:32 john Exp $";
 #include "titles.h"
 #include "mono.h"
 #include "error.h"
+#include "direct.h"
+
+#ifndef MAC_SHAREWARE
 
 mle Mission_list[MAX_MISSIONS];
 
@@ -157,6 +168,9 @@ add_term(char *s)
 	*s = 0;		//terminate!
 }
 
+#undef isspace
+#define isspace(c)	((c == ' ') || (c == '\t'))
+
 //returns ptr to string after '=' & white space, or NULL if no '='
 //adds 0 after parm at first white space
 char *get_value(char *buf)
@@ -189,7 +203,7 @@ char *get_parm_value(char *parm,FILE *f)
 		return NULL;
 }
 
-ml_sort_func(mle *e0,mle *e1)
+ml_sort_func(const mle *e0,const mle *e1)
 {
 	return strcmp(e0->mission_name,e1->mission_name);
 
@@ -202,11 +216,13 @@ ml_sort_func(mle *e0,mle *e1)
 int build_mission_list(int anarchy_mode)
 {
 	int count=0;
-	struct find_t find;
+	DIRPtr dir;
+	direntPtr entry;
+
 
 	//fill in built-in level
 
-#ifndef DEST_SAT
+#ifndef SATURN
 		strcpy(Mission_list[0].filename,"");		//no filename for builtin
 		strcpy(Mission_list[0].mission_name,"Descent: First Strike");
 		count = 1;
@@ -215,57 +231,58 @@ int build_mission_list(int anarchy_mode)
 
 	//now search for levels on disk
 
-	if( !_dos_findfirst( "*.MSN", 0, &find ) )	{
-		do	{
-			FILE *mfile;
-			int is_anarchy;
-			char temp[13],*t;
+	dir = opendir(":Data:*.msn");
+	while ((entry = readdir(dir)) && (count < MAX_MISSIONS) ) {
+		FILE *mfile;
+		int is_anarchy;
+		char temp[13],*t, msn_path[128];
 
-			strcpy(temp,find.name);
-			if ((t = strchr(temp,'.')) == NULL)
-				continue;
-			*t = 0;			//kill extension
+		strcpy(temp,entry->d_name);
+		if ((t = strchr(temp,'.')) == NULL)
+			continue;
+		*t = 0;			//kill extension
 
-			strncpy( Mission_list[count].filename, temp, 9 );
-			Mission_list[count].anarchy_only_flag = is_anarchy = 0;
+		strncpy( Mission_list[count].filename, temp, 9 );
+		Mission_list[count].anarchy_only_flag = is_anarchy = 0;
 
-			mfile = fopen(find.name,"rt");
+		strcpy(msn_path, ":Data:");
+		strcat(msn_path, entry->d_name);
+		mfile = fopen(msn_path,"rt");
 
-			if (mfile) {
-				char *p;
+		if (mfile) {
+			char *p;
 
-				p = get_parm_value("name",mfile);
+			p = get_parm_value("name",mfile);
 
-				if (p) {
-					char *t;
-					if ((t=strchr(p,';'))!=NULL)
-						*t=0;
-					t = p + strlen(p)-1;
-					while (isspace(*t)) t--;
-					strncpy(Mission_list[count].mission_name,p,MISSION_NAME_LEN);
-				}
-				else {
-					fclose(mfile);
-					continue;			//abort this mission file
-				}
-
-				p = get_parm_value("type",mfile);
-
-				//get mission type 
-				if (p)
-					Mission_list[count].anarchy_only_flag = is_anarchy = istok(p,"anarchy");
-
+			if (p) {
+				char *t;
+				if ((t=strchr(p,';'))!=NULL)
+					*t=0;
+				t = p + strlen(p)-1;
+				while (isspace(*t)) t--;
+				strncpy(Mission_list[count].mission_name,p,MISSION_NAME_LEN);
+			}
+			else {
 				fclose(mfile);
-
-				if (!anarchy_mode && is_anarchy)
-					continue;		//skip this mission
-
-				count++;
+				continue;			//abort this mission file
 			}
 
-		} while( !_dos_findnext( &find ) && count<MAX_MISSIONS);
+			p = get_parm_value("type",mfile);
+
+			//get mission type 
+			if (p)
+				Mission_list[count].anarchy_only_flag = is_anarchy = istok(p,"anarchy");
+
+			fclose(mfile);
+
+			if (!anarchy_mode && is_anarchy)
+				continue;		//skip this mission
+
+			count++;
+		}
 	}
-#ifdef USE_CD
+	closedir(dir);
+#ifdef SATURN
 	if ( strlen(destsat_cdpath) )	{
 		int i;
 		char temp_spec[128];
@@ -292,11 +309,14 @@ int build_mission_list(int anarchy_mode)
 				Mission_list[count].anarchy_only_flag = is_anarchy = 0;
 	
 				mfile = fopen(find.name,"rt");
+#ifdef SATURN
 				if (!mfile)	{
 					strcpy( temp_spec, destsat_cdpath );
 					strcat( temp_spec, find.name );
 					mfile = fopen(temp_spec,"rt");
 				}
+#endif
+
 				if (mfile) {
 					char *p;
 	
@@ -354,22 +374,18 @@ int build_mission_list(int anarchy_mode)
 //does not need to be called.  Returns true if mission loaded ok, else false.
 int load_mission(int mission_num)
 {
+#ifdef MAC_SHAREWARE
+	return 0;
+#endif
+
 	Current_mission_num = mission_num;
 
 	mprintf(( 0, "Loading mission %d\n", mission_num ));
 
-#ifndef DEST_SAT
+#ifndef SATURN
 	if (mission_num == 0) {		//built-in mission
 		int i;
 
-#ifdef ROCKWELL_CODE
-		Last_level = 7;
-		Last_secret_level = 0;
-
-		//build level names
-		for (i=0;i<Last_level;i++)
-			sprintf(Level_names[i], "LEVEL%02d.RDL", i+1);
-#else
 		Last_level = BIM_LAST_LEVEL;
 		Last_secret_level = BIM_LAST_SECRET_LEVEL;
 
@@ -379,12 +395,13 @@ int load_mission(int mission_num)
 		for (i=0;i<-Last_secret_level;i++)
 			sprintf(Secret_level_names[i], "LEVELS%1d.RDL", i+1);
 
+		strcpy(Briefing_text_filename,BIM_BRIEFING_FILE);
+		strcpy(Ending_text_filename,BIM_ENDING_FILE);
+
 		Secret_level_table[0] = 10;
 		Secret_level_table[1] = 21;
 		Secret_level_table[2] = 24;
-#endif
-		strcpy(Briefing_text_filename,BIM_BRIEFING_FILE);
-		strcpy(Ending_text_filename,BIM_ENDING_FILE);
+
 		cfile_use_alternate_hogfile(NULL);		//disable alternate
 	} else 
 #endif
@@ -393,15 +410,17 @@ int load_mission(int mission_num)
 		FILE *mfile;
 		char buf[80], tmp[80], *v;
 
-		strcpy(buf,Mission_list[mission_num].filename);
+		strcpy(buf, ":Data:");
+		strcat(buf,Mission_list[mission_num].filename);
 		strcat(buf,".MSN");
 
-		strcpy(tmp,Mission_list[mission_num].filename);
+		strcpy(tmp, ":Data:");
+		strcat(tmp,Mission_list[mission_num].filename);
 		strcat(tmp,".HOG");
 		cfile_use_alternate_hogfile(tmp);
 
 		mfile = fopen(buf,"rt");
-#ifdef USE_CD
+#ifdef SATURN
 		if (mfile == NULL) {
 			if ( strlen(destsat_cdpath) )	{
 				char temp_spec[128];
@@ -416,13 +435,15 @@ int load_mission(int mission_num)
 			return 0;		//error!
 		}
 
+#ifndef MAC_SHAREWARE
 		//init vars
 		Last_level = 		0;
 		Last_secret_level = 0;
+#endif
 		Briefing_text_filename[0] = 0;
 		Ending_text_filename[0] = 0;
 	
-#ifdef DEST_SAT
+#ifdef SATURN
 		if (!stricmp(Mission_list[mission_num].filename, "DESTSAT")) {		//	Destination Saturn.
 			strcpy(Briefing_text_filename,"briefsat.tex");
 			strcpy(Ending_text_filename,"endsat.tex");
@@ -436,6 +457,7 @@ int load_mission(int mission_num)
 			else if (istok(buf,"type"))
 				continue;						//already have name, go to next line				
 			else if (istok(buf,"hog")) {
+				char new_path[128];
 				char	*bufp = buf;
 
 				while (*(bufp++) != '=')
@@ -445,7 +467,9 @@ int load_mission(int mission_num)
 					while (*(++bufp) == ' ')
 						;
 
-				cfile_use_alternate_hogfile(bufp);
+				strcpy(new_path, ":Data:");
+				strcat(new_path, bufp);
+				cfile_use_alternate_hogfile(new_path);
 				mprintf((0, "Hog file override = [%s]\n", bufp));
 			} else if (istok(buf,"briefing")) {
 				if ((v = get_value(buf)) != NULL) {
@@ -541,4 +565,4 @@ int load_mission_by_name(char *mission_name)
 	return 0;		//couldn't find mission
 }
 
-
+#endif

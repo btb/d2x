@@ -10,18 +10,37 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/credits.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/06/14 17:26:08 $
+ /*
+ * $Source: Smoke:miner:source:main::RCS:credits.c $
+ * $Revision: 1.8 $
+ * $Author: allender $
+ * $Date: 1995/11/07 13:54:56 $
  * 
  * Routines to display the credits.
  * 
  * $Log: credits.c $
- * Revision 2.2  1995/06/14  17:26:08  john
- * Fixed bug with VFX palette not getting loaded for credits, titles.
- * 
+ * Revision 1.8  1995/11/07  13:54:56  allender
+ * loop shareware song since it is too short
+ *
+ * Revision 1.7  1995/10/31  10:24:25  allender
+ * shareware stuff
+ *
+ * Revision 1.6  1995/10/27  15:17:57  allender
+ * minor fix to get them to look right at top and bottom
+ * of screens
+ *
+ * Revision 1.5  1995/10/21  22:50:49  allender
+ * credits is way cool!!!!
+ *
+ * Revision 1.3  1995/08/08  13:45:26  allender
+ * added macsys header file
+ *
+ * Revision 1.2  1995/07/17  08:49:48  allender
+ * make work in 640x480 -- still needs major work!!
+ *
+ * Revision 1.1  1995/05/16  15:24:01  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/06  15:23:30  john
  * New screen techniques.
  * 
@@ -139,18 +158,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: credits.c 2.2 1995/06/14 17:26:08 john Exp $";
+static char rcsid[] = "$Id: credits.c 1.8 1995/11/07 13:54:56 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dos.h>
 #include <stdarg.h>
 #include <ctype.h>
 
 #include "error.h"
-#include "types.h"
+#include "dtypes.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"
@@ -173,25 +191,50 @@ static char rcsid[] = "$Id: credits.c 2.2 1995/06/14 17:26:08 john Exp $";
 #include "compbit.h"
 #include "vfx.h"
 #include "songs.h"
+#include "macsys.h"
+#include "redbook.h"
 
-#define ROW_SPACING 11
-#define NUM_LINES 20			//19
+//#define ROW_SPACING 30 //24		//11
+//#define NUM_LINES 16 //21			//19
+#define ROW_SPACING 24		//11
+#define NUM_LINES 22			//19
 
-ubyte fade_values[200] = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,9,9,10,10,
-11,11,12,12,12,13,13,14,14,15,15,15,16,16,17,17,17,18,18,19,19,19,20,20,
-20,21,21,22,22,22,23,23,23,24,24,24,24,25,25,25,26,26,26,26,27,27,27,27,
-28,28,28,28,28,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,31,31,31,31,
-31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,30,30,30,30,30,
-30,30,30,30,29,29,29,29,29,29,28,28,28,28,28,27,27,27,27,26,26,26,26,25,
-25,25,24,24,24,24,23,23,23,22,22,22,21,21,20,20,20,19,19,19,18,18,17,17,
-17,16,16,15,15,15,14,14,13,13,12,12,12,11,11,10,10,9,9,8,8,8,7,7,6,6,5,
-5,4,4,3,3,2,2,1 };
+ubyte fade_values[480] = { 1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,
+5,5,5,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,9,9,9,9,9,10,10,10,10,10,10,11,11,11,11,11,12,12,12,12,12,12,
+13,13,13,13,13,14,14,14,14,14,14,15,15,15,15,15,15,16,16,16,16,16,17,17,17,17,17,17,18,18,
+18,18,18,18,18,19,19,19,19,19,19,20,20,20,20,20,20,20,21,21,21,21,21,21,22,22,22,22,22,22,
+22,22,23,23,23,23,23,23,23,24,24,24,24,24,24,24,24,25,25,25,25,25,25,25,25,25,26,26,26,26,
+26,26,26,26,26,27,27,27,27,27,27,27,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28,29,29,29,
+29,29,29,29,29,29,29,29,29,29,29,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,
+30,30,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,
+31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,30,30,30,
+30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,29,29,29,29,29,29,29,29,29,29,29,29,
+29,29,28,28,28,28,28,28,28,28,28,28,28,28,27,27,27,27,27,27,27,27,27,27,26,26,26,26,26,26,
+26,26,26,25,25,25,25,25,25,25,25,25,24,24,24,24,24,24,24,24,23,23,23,23,23,23,23,22,22,22,
+22,22,22,22,22,21,21,21,21,21,21,20,20,20,20,20,20,20,19,19,19,19,19,19,18,18,18,18,18,18,
+18,17,17,17,17,17,17,16,16,16,16,16,15,15,15,15,15,15,14,14,14,14,14,14,13,13,13,13,13,12,
+12,12,12,12,12,11,11,11,11,11,10,10,10,10,10,10,9,9,9,9,9,8,8,8,8,8,7,7,7,7,7,6,6,6,6,6,5,5,5,5,
+5,5,4,4,4,4,4,3,3,3,3,3,2,2,2,2,2,1,1};
 
 extern ubyte *gr_bitblt_fade_table;
 
 grs_font * header_font;
 grs_font * title_font;
 grs_font * names_font;
+
+typedef struct box {
+	uint	left;
+	uint	top;
+	uint	width;
+	uint	height;
+} box;
+
+typedef struct rect {
+	uint	left;
+	uint	top;
+	uint	right;
+	uint	bottom;
+} rect;
 
 void credits_show()
 {
@@ -203,15 +246,22 @@ void credits_show()
 	int pcx_error;
 	int buffer_line = 0;
 	fix last_time;
-	fix time_delay = 4180;			// ~ F1_0 / 12.9
+	fix time_delay = 4900;	//2180;			// ~ F1_0 / 12.9
 	int first_line_offset,extra_inc=0;
 	int have_bin_file = 0;
 	char * tempp;
+	box	dirty_box[NUM_LINES];
 
 	set_screen_mode(SCREEN_MENU);
 
 	// Clear out all tex buffer lines.
 	for (i=0; i<NUM_LINES; i++ ) buffer[i][0] = 0;
+
+	// Clear out all dirty boxes.
+	for (i=0; i<NUM_LINES; i++ )
+	{
+		dirty_box[i].top = dirty_box[i].left = dirty_box[i].width = dirty_box[i].height = 0;
+	}
 
 	have_bin_file = 0;
 	file = cfopen( "credits.tex", "rb" );
@@ -223,7 +273,7 @@ void credits_show()
 	}
 
 	gr_use_palette_table( "credits.256" );
-	header_font = gr_init_font( "font1-1.fnt" );
+	header_font = gr_init_font( "font2-3.fnt" );
 	title_font = gr_init_font( "font2-3.fnt" );
 	names_font = gr_init_font( "font2-2.fnt" );
 	backdrop.bm_data=NULL;
@@ -233,16 +283,21 @@ void credits_show()
 		return;
 	}
 
-	songs_play_song( SONG_CREDITS, 0 );
+#ifdef MAC_SHAREWARE
+	songs_play_song( SONG_CREDITS, 1 );			// shareware song is too short!!!
+#else
+	songs_play_song( SONG_CREDITS, 0 );			// registered song is just right!!!
+#endif
 
 	gr_remap_bitmap_good( &backdrop,backdrop_palette, -1, -1 );
 
 	gr_set_current_canvas(NULL);
 	gr_bitmap(0,0,&backdrop);
+	bitblt_to_screen();
 	gr_palette_fade_in( gr_palette, 32, 0 );
-	vfx_set_palette_sub( gr_palette );
+	gr_set_current_canvas(VR_offscreen_buffer);
+	gr_bitmap(0,0,&backdrop);
 
-	//gr_clear_canvas(BM_XRGB(0,0,0));
 	key_flush();
 	last_time = timer_get_fixed_seconds();
 	done = 0;
@@ -250,6 +305,10 @@ void credits_show()
 	while( 1 )	{
 		int k;
 
+#ifndef MAC_SHAREWARE
+		redbook_restart_track();			// maybe kill the credits music if at the end
+#endif
+		
 		do {
 			buffer_line = (buffer_line+1) % NUM_LINES;
 			if (cfgets( buffer[buffer_line], 80, file ))	{
@@ -271,13 +330,12 @@ void credits_show()
 		} while (extra_inc--);
 		extra_inc = 0;
 
-		for (i=0; i<ROW_SPACING; i++ )	{
+		for (i=0; i<ROW_SPACING; i += 2 )	{
 			int y;
 
 			y = first_line_offset - i;
 
 			gr_set_current_canvas(VR_offscreen_buffer);
-			gr_bitmap(0,0,&backdrop);
 			for (j=0; j<NUM_LINES; j++ )	{
 				char *s;
 
@@ -297,16 +355,13 @@ void credits_show()
 
 				gr_bitblt_fade_table = fade_values;
 
-				tempp = strchr( s, '\t' );
-				if ( tempp )	{
+				{
 					int w, h, aw;
-					*tempp = 0;
 					gr_get_string_size( s, &w, &h, &aw );
-					gr_printf( (160-w)/2, y, s );
-					gr_get_string_size( &tempp[1], &w, &h, &aw );
-					gr_printf( 160+((160-w)/2), y, &tempp[1] );
-					*tempp = '\t';
-				} else {
+					dirty_box[j].width = w;
+					dirty_box[j].height = h;
+					dirty_box[j].top = y;
+					dirty_box[j].left = (640 - w) / 2;
 					gr_printf( 0x8000, y, s );
 				}
 				gr_bitblt_fade_table = NULL;
@@ -315,7 +370,35 @@ void credits_show()
 				else
 					y += ROW_SPACING;
 			}
-			gr_bm_ubitblt(320, 200, 0, 0, 0, 0, &(VR_offscreen_buffer->cv_bitmap), &(grd_curscreen->sc_canvas.cv_bitmap) );
+
+			{
+				box	*new_box;
+				
+				for (j=0; j<NUM_LINES; j++ )
+				{
+					new_box = &dirty_box[j];
+
+					gr_bm_bitblt( new_box->width + 1, new_box->height + 2,
+									new_box->left, new_box->top, new_box->left, new_box->top,
+									&(VR_offscreen_buffer->cv_bitmap), &(grd_curscreen->sc_canvas.cv_bitmap) );
+				}
+
+				bitblt_to_screen();
+
+				for (j=0; j<NUM_LINES; j++ )
+				{
+					new_box = &dirty_box[j];
+					gr_bm_bitblt(   new_box->width
+									,new_box->height + 2
+									,new_box->left
+									,new_box->top
+									,new_box->left
+									,new_box->top
+									,&backdrop
+									,&(VR_offscreen_buffer->cv_bitmap) );
+				}
+				
+			}
 
 			while( timer_get_fixed_seconds() < last_time+time_delay );
 			last_time = timer_get_fixed_seconds();
@@ -349,7 +432,7 @@ void credits_show()
 					gr_close_font(names_font);
 					gr_palette_fade_out( gr_palette, 32, 0 );
 					gr_use_palette_table( "palette.256" );
-					free(backdrop.bm_data);
+					myfree(backdrop.bm_data);
 					cfclose(file);
 					songs_play_song( SONG_TITLE, 1 );
 					return;
@@ -368,4 +451,3 @@ void credits_show()
 }
 
 
-

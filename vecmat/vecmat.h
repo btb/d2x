@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/vecmat/rcs/vecmat.h $
- * $Revision: 1.37 $
- * $Author: john $
- * $Date: 1995/02/22 13:23:22 $
+ * $Source: Buggin:miner:source:vecmat::RCS:vecmat.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/04/17 16:18:05 $
  *
  * Header file for vector/matrix library
  *
  * $Log: vecmat.h $
+ * Revision 1.1  1995/04/17  16:18:05  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS Information ---
  * Revision 1.37  1995/02/22  13:23:22  john
  * Added the vms_vector_array structure, to access a vms_vector
  * with an array.
@@ -343,17 +348,14 @@ fix vm_vec_mag_quick(vms_vector *v);
 //uses dist = largest + next_largest*3/8 + smallest*3/16
 fix vm_vec_dist_quick(vms_vector *v0,vms_vector *v1);
 
-//normalize a vector in place.  returns mag of source vec
-fix vm_vec_normalize(vms_vector *v);
-
-//normalize a vector in place.  returns mag of source vec. used approx mag.
-fix vm_vec_normalize_quick(vms_vector *v);
 
 //normalize a vector. returns mag of source vec
 fix vm_vec_copy_normalize(vms_vector *dest,vms_vector *src);
+fix vm_vec_normalize(vms_vector *v);
 
 //normalize a vector. returns mag of source vec. uses approx mag
 fix vm_vec_copy_normalize_quick(vms_vector *dest,vms_vector *src);
+fix vm_vec_normalize_quick(vms_vector *v);
 
 //return the normalized direction vector between two points
 //dest = normalized(end - start).  Returns mag of direction vector
@@ -361,17 +363,12 @@ fix vm_vec_copy_normalize_quick(vms_vector *dest,vms_vector *src);
 fix vm_vec_normalized_dir(vms_vector *dest,vms_vector *end,vms_vector *start);
 fix vm_vec_normalized_dir_quick(vms_vector *dest,vms_vector *end,vms_vector *start);
 
-#ifndef INLINE
-
 ////returns dot product of two vectors
 fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
-fix vm_vec_dot(vms_vector *v0,vms_vector *v1);
+#define vm_vec_dot(v0,v1) vm_vec_dotprod((v0),(v1))
 
-#else
+#ifdef INLINE
 
-#define vm_vec_dotprod(v0,v1) vm_vec_dot((v0),(v1))
-
-fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
 #pragma aux vm_vec_dotprod parm [esi] [edi] value [eax] modify exact [eax ebx ecx edx] = \
 	"mov	eax,[esi]"				\
 	"imul	dword ptr [edi]"		\
@@ -394,8 +391,8 @@ fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
 
 //computes cross product of two vectors. returns ptr to dest
 //dest CANNOT equal either source
-vms_vector *vm_vec_crossprod(vms_vector *dest,vms_vector *src0,vms_vector *scr1);
-vms_vector *vm_vec_cross(vms_vector *dest,vms_vector *src0,vms_vector *scr1);
+vms_vector *vm_vec_crossprod(vms_vector *dest,vms_vector *src0,vms_vector *src1);
+#define vm_vec_cross(dest,src0,src1) vm_vec_crossprod((dest),(src0),(src1))
 
 //computes surface normal from three points. result is normalized
 //returns ptr to dest
@@ -440,12 +437,12 @@ vms_vector *vm_vec_rotate(vms_vector *dest,vms_vector *src,vms_matrix *m);
 
 //transpose a matrix in place. returns ptr to matrix
 vms_matrix *vm_transpose_matrix(vms_matrix *m);
-vms_matrix *vm_transpose(vms_matrix *m);	//same as vm_transpose_matrix()
+#define vm_transpose(m) vm_transpose_matrix(m)
 
 //copy and transpose a matrix. returns ptr to matrix
 //dest CANNOT equal source. use vm_transpose_matrix() if this is the case
 vms_matrix *vm_copy_transpose_matrix(vms_matrix *dest,vms_matrix *src);
-vms_matrix *vm_copy_transpose(vms_matrix *dest,vms_matrix *src);
+#define vm_copy_transpose(dest,src) vm_copy_transpose_matrix((dest),(src))
 
 //mulitply 2 matrices, fill in dest.  returns ptr to dest
 //dest CANNOT equal either source
@@ -463,65 +460,5 @@ vms_angvec *vm_extract_angles_vector(vms_angvec *a,vms_vector *v);
 //distance is signed, so negative dist is on the back of the plane
 fix vm_dist_to_plane(vms_vector *checkp,vms_vector *norm,vms_vector *planep);
 
-//Pragmas for functions
-
-#ifndef INLINE
-#pragma aux vm_vec_add "*" parm [eax] [esi] [edi] value [eax] modify exact [];
-#pragma aux vm_vec_sub "*" parm [eax] [esi] [edi] value [eax] modify exact [];
-#pragma aux vm_vec_add2 "*" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux vm_vec_sub2 "*" parm [edi] [esi] value [edi] modify exact [];
-#endif
-#pragma aux vm_vec_avg "*" parm [eax] [esi] [edi] value [eax] modify exact [];
-#pragma aux vm_vec_avg4 "*" parm [eax] [esi] [edi] [ecx] [edx] value [eax] modify exact [];
-#pragma aux vm_vec_scale "*" parm [ebx] [ecx] value [ebx] modify exact [];
-#pragma aux vm_vec_copy_scale "*" parm [edi] [ebx] [ecx] value [edi] modify exact [];
-#pragma aux vm_vec_scale2 "*" parm [edi] [ebx] [ecx] value [edi] modify exact [];
-#pragma aux vm_vec_mag "*" parm [esi] value [eax] modify exact [eax];
-#pragma aux vm_vec_dist "*" parm [esi] [edi] value [eax] modify exact [eax];
-#pragma aux vm_vec_mag_quick "*" parm [esi] value [eax] modify exact [eax];
-#pragma aux vm_vec_dist_quick "*" parm [esi] [edi] value [eax] modify exact [eax];
-#pragma aux vm_vec_normalize "*" parm [esi] value [ecx] modify exact [ecx];
-#pragma aux vm_vec_normalize_quick "*" parm [esi] value [ecx] modify exact [ecx];
-#pragma aux vm_vec_copy_normalize "*" parm [edi] [esi] value [ecx] modify exact [ecx];
-#pragma aux vm_vec_copy_normalize_quick "*" parm [edi] [esi] value [ecx] modify exact [ecx];
-#ifndef INLINE
-#pragma aux vm_vec_dotprod "*" parm [esi] [edi] value [eax] modify exact [eax];
-#pragma aux vm_vec_dot "vm_vec_dotprod" parm [esi] [edi] value [eax] modify exact [eax];
-#endif
-#pragma aux vm_vec_crossprod "*" parm [eax esi edi] value [eax] modify exact [];
-#pragma aux vm_vec_cross "vm_vec_crossprod" parm [eax esi edi] value [eax] modify exact [];
-#pragma aux vm_vec_normal "*" parm [ebx] [eax] [esi] [edi] value [eax] modify exact [eax];
-#pragma aux vm_vec_perp "*" parm [ebx] [eax] [esi] [edi] value [eax] modify exact [eax];
-#pragma aux vm_angles_2_matrix "*" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux vm_vector_2_matrix "*" parm [edi] [esi] [eax] [ebx] value [edi] modify exact [eax ebx esi];
-#pragma aux vm_vector_2_matrix_norm "*" parm [edi] [esi] [eax] [ebx] value [edi] modify exact [eax ebx esi];
-#pragma aux vm_vec_rotate "*" parm [eax] [esi] [edi] value [eax] modify exact [];
-#pragma aux vm_transpose_matrix "*" parm [edi] value [edi] modify exact [];
-#pragma aux vm_transpose "vm_transpose_matrix" parm [edi] value [edi] modify exact [];
-#pragma aux vm_copy_transpose_matrix "*" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux vm_copy_transpose "vm_copy_transpose_matrix" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux vm_matrix_x_matrix "*" parm [eax] [esi] [edi] value [eax] modify exact [];
-#pragma aux vm_vec_delta_ang "*" parm [esi] [edi] [eax] value [ax] modify exact [eax];
-#pragma aux vm_vec_delta_ang_norm "*" parm [esi] [edi] [eax] value [ax] modify exact [eax];
-#pragma aux vm_vec_ang_2_matrix "*" parm [edi] [esi] [eax] value [edi] modify exact [];
-#pragma aux vm_dist_to_plane "*" parm [esi] [ebx] [edi] value [eax] modify exact [eax];
-#pragma aux vm_extract_angles_matrix "*" parm [edi] [esi] value [edi] modify exact [];
-#pragma aux vm_vec_scale_add "*" parm [edi] [ebx] [esi] [ecx] value [edi] modify exact [];
-#pragma aux vm_vec_scale_add2 "*" parm [edi] [esi] [ecx] value [edi] modify exact [];
-
-#pragma aux vm_vec_normalized_dir "*" parm [edi] [esi] [ebx] value [ecx] modify exact [ecx];
-#pragma aux vm_vec_normalized_dir_quick "*" parm [edi] [esi] [ebx] value [ecx] modify exact [ecx];
-
-#pragma aux vm_extract_angles_vector "*" parm [edi] [esi] value [edi] modify exact [esi];
-#pragma aux vm_extract_angles_vector_normalized "*" parm [edi] [esi] value [edi] modify exact [];
-
-/*
-	Questions:
-
-	should simple functions like vec_add() and vec_sub() be macros?
-
-*/
-
 #endif
 
-

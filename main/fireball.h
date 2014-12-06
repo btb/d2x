@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/fireball.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:27:03 $
+ * $Source: Smoke:miner:source:main::RCS:FIREBALL.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:56:23 $
  * 
  * Header for fireball.c
  * 
- * $Log: fireball.h $
+ * $Log: FIREBALL.H $
+ * Revision 1.1  1995/05/16  15:56:23  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:27:03  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -107,4 +110,3 @@ extern void maybe_replace_powerup_with_energy(object *del_obj);
 extern int get_explosion_vclip(object *obj,int stage);
 
 #endif
-

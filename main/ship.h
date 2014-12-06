@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/ship.h $
- * $Revision: 1.2 $
- * $Author: yuan $
- * $Date: 1994/03/01 18:12:56 $
+ * $Source: Smoke:miner:source:main::RCS:SHIP.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:03:01 $
  * 
  * Functions that affect the ship (Player_stats)
  * 
- * $Log: ship.h $
+ * $Log: SHIP.H $
+ * Revision 1.1  1995/05/16  16:03:01  allender
+ * Initial revision
+ *
  * Revision 1.2  1994/03/01  18:12:56  yuan
  * Walls, switches, and triggers...
  * 
@@ -48,4 +51,3 @@ void ship_energy_drain(fix damage);
 void ship_energy_empty();
 
 #endif
-

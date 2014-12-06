@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/weapon.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:38:43 $
+ * $Source: Smoke:miner:source:main::RCS:weapon.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:17:39 $
  * 
  * Functions for weapons...
  * 
  * $Log: weapon.c $
- * Revision 2.1  1995/03/21  14:38:43  john
+ * Revision 1.2  1995/10/31  10:17:39  allender
+ * new shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:32:16  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:38:43  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:27:25  john
@@ -193,7 +199,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: weapon.c 2.1 1995/03/21 14:38:43 john Exp $";
+static char rcsid[] = "$Id: weapon.c 1.2 1995/10/31 10:17:39 allender Exp $";
 #pragma on (unreferenced)
 
 #include "game.h"
@@ -364,7 +370,7 @@ void do_weapon_select(int weapon_num, int secondary_flag)
 	char	*weapon_name;
 
 
-	#ifdef SHAREWARE	// do special hud msg. for picking registered weapon in shareware version.
+	#ifdef MAC_SHAREWARE	// do special hud msg. for picking registered weapon in shareware version.
 	if (weapon_num >= NUM_SHAREWARE_WEAPONS) {
 		weapon_name = secondary_flag?SECONDARY_WEAPON_NAMES(weapon_num):PRIMARY_WEAPON_NAMES(weapon_num);
 		HUD_init_message("%s %s!", weapon_name,TXT_NOT_IN_SHAREWARE);
@@ -583,4 +589,3 @@ int pick_up_ammo(int class_flag,int weapon_index,int ammo_count)
 	return 1;
 }
 
-

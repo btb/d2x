@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/serial.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:33 $
+ * $Source: Smoke:miner:source:main::RCS:SERIAL.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:02:46 $
  * 
  * .
  * 
- * $Log: serial.h $
+ * $Log: SERIAL.H $
+ * Revision 1.1  1995/05/16  16:02:46  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:33  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -37,11 +40,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _SERIAL_H
 #define _SERIAL_H
 
+#ifdef NETWORK
 extern void serial_test();
 extern void serial_open(int number, long speed, char parity, int data,	int stopbits );
 extern void serial_close();
 extern int serial_putc( unsigned char c );
 extern int serial_getc();
+#endif
 
 #endif
-

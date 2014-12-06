@@ -11,15 +11,31 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/endlevel.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:14 $
+ * $Source: Smoke:miner:source:main::RCS:endlevel.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:24:09 $
  * 
  * Code for rendering external scenes
  * 
  * $Log: endlevel.c $
- * Revision 2.2  1995/03/21  14:40:14  john
+ * Revision 1.5  1995/10/31  10:24:09  allender
+ * shareware stuff
+ *
+ * Revision 1.4  1995/09/14  16:33:54  allender
+ * fixed function return values for those that didn't
+ * have them...thanks matt!
+ *
+ * Revision 1.3  1995/07/28  15:36:26  allender
+ * reverse inverse sqrt change
+ *
+ * Revision 1.2  1995/07/28  15:17:40  allender
+ * inverse magnitude fixup
+ *
+ * Revision 1.1  1995/05/16  15:24:32  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/21  08:40:14  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.1  1995/03/20  18:15:50  john
@@ -223,7 +239,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
+static char rcsid[] = "$Id: endlevel.c 1.5 1995/10/31 10:24:09 allender Exp $";
 #pragma on (unreferenced)
 
 //#define SLEW_ON 1
@@ -231,7 +247,7 @@ static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
 //#define _MARK_ON
 
 #include <stdlib.h>
-//#include <wsample.h> //This file not included in public domain release -KRB
+//#include <wsample.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -354,16 +370,16 @@ int matt_find_connect_side(int seg0,int seg1)
 	return -1;
 }
 
-free_endlevel_data()
+void free_endlevel_data()
 {
 	if (terrain_bm_instance.bm_data)
-		free(terrain_bm_instance.bm_data);
+		myfree(terrain_bm_instance.bm_data);
 
 	if (satellite_bm_instance.bm_data)
-		free(satellite_bm_instance.bm_data);
+		myfree(satellite_bm_instance.bm_data);
 }
 
-init_endlevel()
+void init_endlevel()
 {
 	//##satellite_bitmap = bm_load("earth.bbm");
 	//##terrain_bitmap = bm_load("moon.bbm");
@@ -404,7 +420,7 @@ vms_matrix surface_orient;
 
 int endlevel_data_loaded=0;
 
-start_endlevel_sequence()
+void start_endlevel_sequence()
 {
 	int last_segnum,exit_side,tunnel_length;
 
@@ -596,7 +612,7 @@ int chase_angles(vms_angvec *cur_angles,vms_angvec *desired_angles)
 	return mask;
 }
 
-stop_endlevel_sequence()
+void stop_endlevel_sequence()
 {
 	Interpolation_method = 0;
 
@@ -624,7 +640,7 @@ get_angs_to_object(vms_angvec *av,vms_vector *targ_pos,vms_vector *cur_pos)
 	vm_extract_angles_vector(av,&tv);
 }
 
-do_endlevel_frame()
+void do_endlevel_frame()
 {
 	static fix timer;
 	vms_vector save_last_pos;
@@ -825,7 +841,7 @@ do_endlevel_frame()
 
 				ConsoleObject->control_type = endlevel_camera->control_type = CT_NONE;
 
-				//_MARK_("Starting outside");//Commented out by KRB
+//				_MARK_("Starting outside");
 
 #ifdef SLEW_ON
  slew_obj = endlevel_camera;
@@ -934,7 +950,7 @@ do_endlevel_frame()
 
 				Endlevel_sequence = EL_CHASING;
 
-				//_MARK_("Done outside");//Commented out -KRB
+//				_MARK_("Done outside");
 
 				vm_vec_normalized_dir_quick(&tvec,&station_pos,&ConsoleObject->pos);
 				vm_vector_2_matrix(&ConsoleObject->orient,&tvec,&surface_orient.uvec,NULL);
@@ -1033,7 +1049,7 @@ extern vms_vector Viewer_eye;	//valid during render
 
 void render_mine(int start_seg_num,fix eye_offset);
 
-draw_exit_model()
+void draw_exit_model()
 {
 	vms_vector model_pos;
 	int f=15,u=0;	//21;
@@ -1053,7 +1069,7 @@ fix satellite_size = i2f(400);
 #define SATELLITE_WIDTH		satellite_size
 #define SATELLITE_HEIGHT	((satellite_size*9)/4)		//((satellite_size*5)/2)
 
-render_external_scene(fix eye_offset)
+void render_external_scene(fix eye_offset)
 {
 
 	Viewer_eye = Viewer->pos;
@@ -1513,6 +1529,9 @@ int convert_ext( char *dest, char *ext )
 		return 0;
 }
 
+#undef isspace
+#define isspace(c)		((c == ' ') || (c == '\t') || (c == '\r'))
+
 //called for each level to load & setup the exit sequence
 load_endlevel_data(int level_num)
 {
@@ -1528,6 +1547,9 @@ load_endlevel_data(int level_num)
 try_again:
 	;
 
+#ifdef MAC_SHAREWARE
+	sprintf(filename, "level%02d.end", level_num);
+#else
 	if (level_num<0)		//secret level
 		strcpy(filename,Secret_level_names[-level_num-1]);
 	else					//normal level
@@ -1535,6 +1557,7 @@ try_again:
 
 	if (!convert_ext(filename,"END"))
 		return;
+#endif
 
 	ifile = cfopen(filename,"rb");
 
@@ -1589,7 +1612,7 @@ try_again:
 				ubyte pal[768];
 
 				if (terrain_bm_instance.bm_data)
-					free(terrain_bm_instance.bm_data);
+					myfree(terrain_bm_instance.bm_data);
 
 				iff_error = iff_read_bitmap(p,&terrain_bm_instance,BM_LINEAR,pal);
 				if (iff_error != IFF_NO_ERROR) {
@@ -1624,7 +1647,7 @@ try_again:
 				ubyte pal[768];
 
 				if (satellite_bm_instance.bm_data)
-					free(satellite_bm_instance.bm_data);
+					myfree(satellite_bm_instance.bm_data);
 
 				iff_error = iff_read_bitmap(p,&satellite_bm_instance,BM_LINEAR,pal);
 				if (iff_error != IFF_NO_ERROR) {
@@ -1723,4 +1746,3 @@ vm_vec_copy_scale(&satellite_upvec,&tm.uvec,SATELLITE_HEIGHT);
 }
 
 
-

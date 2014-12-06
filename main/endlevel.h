@@ -11,14 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/endlevel.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:37 $
+ * $Source: Smoke:miner:source:main::RCS:endlevel.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 16:36:34 $
  * 
  * Header for newfile.c
  * 
  * $Log: endlevel.h $
+ * Revision 1.2  1995/09/14  16:36:34  allender
+ * fixed function prototype for those functions that didn't
+ * have them...thanks matt
+ *
+ * Revision 1.1  1995/05/16  15:56:16  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:37  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -52,13 +59,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 extern int Endlevel_sequence;
 
-start_endlevel_sequence();
-render_external_scene();
+void start_endlevel_sequence();
+void render_external_scene();
 void render_endlevel_frame(fix eye_offset);
-do_endlevel_frame();
-draw_exit_model();
-init_endlevel();
-stop_endlevel_sequence();
+void do_endlevel_frame();
+void draw_exit_model();
+void init_endlevel();
+void stop_endlevel_sequence();
 
 
 extern vms_vector mine_exit_point;

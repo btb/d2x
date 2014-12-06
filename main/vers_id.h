@@ -16,6 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // 
 
 
-#define VERSION_NAME	"Registered v1.5 Jan 5, 1996" 
+#define VERSION_NAME	"Internal Development Version" 
 #define VERSION_TYPE	"REGISTERED" 
 

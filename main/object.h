@@ -11,14 +11,33 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/object.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/31 12:24:10 $
+ * $Source: Smoke:miner:source:main::RCS:object.h $
+ * $Revision: 1.6 $
+ * $Author: allender $
+ * $Date: 1995/09/20 14:24:45 $
  * 
  * object system definitions
  * 
  * $Log: object.h $
+ * Revision 1.6  1995/09/20  14:24:45  allender
+ * swap bytes on extractshortpos
+ *
+ * Revision 1.5  1995/09/14  14:11:42  allender
+ * fix_object_segs returns void
+ *
+ * Revision 1.4  1995/08/12  12:02:44  allender
+ * added flag to create_shortpos
+ *
+ * Revision 1.3  1995/07/12  12:55:08  allender
+ * move structures back to original form as found on PC because
+ * of network play
+ *
+ * Revision 1.2  1995/06/19  07:55:06  allender
+ * rearranged structure members for possible better alignment
+ *
+ * Revision 1.1  1995/05/16  16:00:40  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/31  12:24:10  john
  * I had changed alt_textures from a pointer to a byte. This hosed old
  * saved games, so I restored it to an int.
@@ -221,7 +240,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "vecmat.h"
 #include "segment.h"
 #include "gameseg.h"
@@ -341,6 +360,17 @@ typedef struct shortpos {
 #define	MATRIX_PRECISION	9
 #define	MATRIX_MAX			0x7f		//	This is based on MATRIX_PRECISION, 9 => 0x7f
 
+// size of physics_info
+//		velocity	== 3 * 4		12 bytes
+//		thrust		== 3 * 4		12 bytes		(8 byte aligned)
+//		rotvel		== 3 * 4		12 bytes
+//		rotthrust	== 3 * 4		12 bytes		(8 byte aligned)
+//		mass		== 1 * 4
+//		drag		== 1 * 4						(8 byte aligned)
+//		brakes		== 1 * 4
+//		turnroll	== 1 * 4						(8 byte aligned)
+//		flags		== 1 * 2
+
 //information for physics sim for an object
 typedef struct physics_info {
 	vms_vector	velocity;		//velocity vector of this object
@@ -354,6 +384,21 @@ typedef struct physics_info {
 	ushort		flags;			//misc physics flags
 } physics_info;
 
+#if 0
+typedef struct physics_info {
+	vms_vector	velocity;		//velocity vector of this object
+	vms_vector	thrust;			//constant force applied to this object
+	vms_vector	rotvel;			//rotational velecity (angles)
+	vms_vector	rotthrust;		//rotational acceleration
+	fix			mass;			//the mass of this object
+	fix			drag;			//how fast this slows down
+	fix			brakes;			//how much brakes applied
+	fixang		turnroll;		//rotation caused by turn banking
+	ushort		flags;			//misc physics flags
+	ubyte		pad[6];			// pad to make 8 byte aligned
+} physics_info;
+#endif
+
 //stuctures for different kinds of simulation
 
 typedef struct laser_info {
@@ -366,13 +411,26 @@ typedef struct laser_info {
 	fix			multiplier;			//	Power if this is a fusion bolt (or other super weapon to be added).
 } laser_info;
 
+#if 0
+typedef struct laser_info {
+	fix			creation_time;		//	Absolute time of creation.
+	fix			multiplier;			//	Power if this is a fusion bolt (or other super weapon to be added).
+	int			parent_signature;	//  The object's parent's signature...
+	short		parent_type;	 	//  The type of the parent of this object
+	short		parent_num; 		//  The object's parent's number
+	short		last_hitobj;		//	For persistent weapons (survive object collision), object it most recently hit.
+	short		track_goal;			//	Object this object is tracking.
+	ubyte		pad[4];				//  pad for 8 byte alignment
+} laser_info;
+#endif
+
 typedef struct explosion_info {
 	fix			spawn_time;			// when lifeleft is < this, spawn another
 	fix			delete_time;		// when to delete object
-	short			delete_objnum;		// and what object to delete
-	short			attach_parent;		// explosion is attached to this object
-	short			prev_attach;		// previous explosion in attach list
-	short			next_attach;		// next explosion in attach list
+	short		delete_objnum;		// and what object to delete
+	short		attach_parent;		// explosion is attached to this object
+	short		prev_attach;		// previous explosion in attach list
+	short		next_attach;		// next explosion in attach list
 } explosion_info;
 
 typedef struct light_info {
@@ -386,10 +444,14 @@ typedef struct powerup_info {
 typedef struct vclip_info {
 	int			vclip_num;
 	fix			frametime;
-	byte			framenum;
+	byte		framenum;
 } vclip_info;
 
 //structures for different kinds of rendering
+
+// polyobj size
+//		anim_angles	==	3 * 4 * 10	120 bytes	(8 byte aligned)
+//					==	4 * 4		 16 bytes	(8 byte aligned)
 
 typedef struct polyobj_info {
 	int			model_num;						//which polygon model
@@ -398,6 +460,16 @@ typedef struct polyobj_info {
 	int			tmap_override;					//if this is not -1, map all face to this
 	int			alt_textures;					//if not -1, use these textures instead
 } polyobj_info;
+
+#if 0
+typedef struct polyobj_info {
+	vms_angvec	anim_angles[MAX_SUBMODELS];		//angles for each subobject
+	int			model_num;						//which polygon model
+	int			subobj_flags;					//specify which subobjs to draw
+	int			tmap_override;					//if this is not -1, map all face to this
+	int			alt_textures;					//if not -1, use these textures instead
+} polyobj_info;
+#endif
 
 typedef struct object {
 	int			signature;		// Every object ever has a unique signature...
@@ -445,6 +517,59 @@ typedef struct object {
 
 } object;
 
+#if 0
+typedef struct object {
+	int			signature;		// Every object ever has a unique signature...
+	vms_vector  pos;			// absolute x,y,z coordinate of center of object
+// 8 byte here
+	vms_matrix  orient;			// orientation of object in world
+	short		next,prev;		// id of next and previous connected object in Objects, -1 = no connection
+// 8 byte aligned here
+	fix			size;			// 3d size of object - for collision detection
+	fix			shields; 		// Starts at maximum, when <0, object dies..
+// 8 byte here
+	vms_vector  last_pos;		// where object was last frame
+	short		segnum;			// segment number containing object
+	short		attached_obj;	// number of attached fireball object
+// 8 byte aligned here
+	fix			lifeleft;		// how long until goes away, or 7fff if immortal
+	ubyte		type;			// what type of object this is... robot, weapon, hostage, powerup, fireball
+	ubyte		id;				// which form of object...which powerup, robot, etc.
+	ubyte		control_type;	// how this object is controlled
+	ubyte		movement_type;	// how this object moves
+// 8 byte aligned here
+	ubyte		render_type;	//	how this object renders
+	ubyte		flags;			// misc flags
+	byte		contains_type;	//	Type of object this object contains (eg, spider contains powerup)
+	byte		contains_id;	//	ID of object this object contains (eg, id = blue type = key)
+	byte		contains_count;	// number of objects of type:id this object contains
+	byte		matcen_creator;	//	Materialization center that created this object, high bit set if matcen-created
+	byte		pad[2];			//  align to 8 byte boundry
+// 8 byte aligned here
+	//movement info, determined by MOVEMENT_TYPE
+	union {
+		physics_info phys_info;			//a physics object
+		vms_vector	 spin_rate;			//for spinning objects
+	} mtype;
+
+	//control info, determined by CONTROL_TYPE
+	union {								
+		laser_info 		laser_info;
+		explosion_info	expl_info;		//NOTE: debris uses this also
+		ai_static		ai_info;
+		light_info		light_info;		//why put this here?  Didn't know what else to do with it.
+		powerup_info	powerup_info;
+	} ctype;
+
+	//render info, determined by RENDER_TYPE
+	union {
+		polyobj_info pobj_info;			//polygon model
+		vclip_info	 vclip_info;		//vclip
+	} rtype;
+
+} object;
+#endif
+
 typedef struct obj_position {
 	vms_vector  pos;				// absolute x,y,z coordinate of center of object
 	vms_matrix  orient;			// orientation of object in world
@@ -460,7 +585,7 @@ extern int Object_next_signature;		// The next signature for the next newly crea
 extern ubyte CollisionResult[MAX_OBJECT_TYPES][MAX_OBJECT_TYPES];
 // ie CollisionResult[a][b]==  what happens to a when it collides with b
 
-extern object Objects[];
+extern object *Objects;
 extern int Highest_object_index;		//highest objnum
 
 extern char *robot_names[];			//name of each robot
@@ -566,7 +691,7 @@ extern int find_object_seg(object * obj );
 
 //go through all objects and make sure they have the correct segment numbers
 //used when debugging is on
-fix_object_segs();
+void fix_object_segs();
 
 //	Drops objects contained in objp.
 int object_create_egg(object *objp);
@@ -578,10 +703,10 @@ extern void dead_player_end(void);
 
 //	Extract information from an object (objp->orient, objp->pos, objp->segnum), stuff in a shortpos structure.
 // See typedef shortpos.
-extern void create_shortpos(shortpos *spp, object *objp);
+extern void create_shortpos(shortpos *spp, object *objp, int swap_bytes);
 
 //	Extract information from a shortpos, stuff in objp->orient (matrix), objp->pos, objp->segnum
-extern void extract_shortpos(object *objp, shortpos *spp);
+extern void extract_shortpos(object *objp, shortpos *spp, int swap_bytes);
 
 //delete objects, such as weapons & explosions, that shouldn't stay between levels
 //if clear_all is set, clear even proximity bombs
@@ -610,4 +735,3 @@ void obj_attach(object *parent,object *sub);
 extern void create_small_fireball_on_object(object *objp, fix size_scale, int sound_flag);
 
 #endif
-

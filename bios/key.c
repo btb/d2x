@@ -11,17 +11,76 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/bios/rcs/key.c $
- * $Revision: 1.35 $
- * $Author: john $
- * $Date: 1995/01/25 20:13:30 $
+ * $Source: Smoke:miner:source:bios::RCS:key.c $
+ * $Revision: 1.19 $
+ * $Author: allender $
+ * $Date: 1995/11/14 14:23:17 $
  * 
  * Functions for keyboard handler.
  * 
  * $Log: key.c $
- * Revision 1.35  1995/01/25  20:13:30  john
- * Took out not passing keys to debugger if w10.
- * 
+ * Revision 1.19  1995/11/14  14:23:17  allender
+ * reallocate UPP when initing keyboard
+ *
+ * Revision 1.18  1995/10/21  23:47:49  allender
+ * call GetOSEvent with all events -- screwed up thrustmaster stuff
+ *
+ * Revision 1.17  1995/10/17  15:35:45  allender
+ * only get keyup and keydown events in GetOSEvent
+ *
+ * Revision 1.16  1995/09/06  13:08:31  allender
+ * fixed command modifier for keys
+ *
+ * Revision 1.15  1995/08/25  11:06:43  allender
+ * changed handler to key apprpriate track of time keys held down
+ *
+ * Revision 1.14  1995/08/25  09:38:36  allender
+ * installed handler in key_inkey_time when not installed
+ *
+ * Revision 1.13  1995/08/18  10:15:52  allender
+ * use vbl interrupt for keyboard handler to get keystrokes
+ * more often because of high frame rate
+ *
+ * Revision 1.12  1995/07/26  16:57:35  allender
+ * new style keyboard handler using getOSEvent ala DF
+ *
+ * Revision 1.11  1995/07/13  15:11:25  allender
+ * fixed totally bogus key_shifted array
+ *
+ * Revision 1.10  1995/07/13  11:24:23  allender
+ * trap checking for scancodes at 128 and not 256
+ *
+ * Revision 1.9  1995/05/15  13:55:40  allender
+ * change prototypes for keyboard_proc
+ *
+ * Revision 1.8  1995/05/12  14:54:09  allender
+ * make key_to_ascii returned unsigned char instead of char
+ *
+ * Revision 1.7  1995/05/12  12:19:13  allender
+ * added call to mouse handler to get button pressed during
+ * interrupt time
+ *
+ * Revision 1.6  1995/05/11  13:04:44  allender
+ * fixed keyboard handling.   Removed gestalt handing -- should be in
+ * macinit
+ *
+ * Revision 1.5  1995/05/04  20:02:43  allender
+ * still working
+ *
+ * Revision 1.4  1995/04/05  13:49:48  allender
+ * *** empty log message ***
+ *
+ * Revision 1.3  1995/03/21  13:39:51  allender
+ * *** empty log message ***
+ *
+ * Revision 1.2  1995/03/21  13:28:11  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:32:25  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.34  1995/01/14  19:19:31  john
  * Made so when you press Shift+Baskspace, it release keys autmatically.
  * 
@@ -135,48 +194,118 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * 
  */
 
-//#define PASS_KEYS_TO_BIOS	1			//if set, bios gets keys
-
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: key.c 1.35 1995/01/25 20:13:30 john Exp $";
-#pragma on (unreferenced)
+//#pragma off (unreferenced)
+static char rcsid[] = "$Id: key.c 1.19 1995/11/14 14:23:17 allender Exp $";
+//#pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
-#include <dos.h>
-#include <i86.h>
+#include <Events.h>
+#include <Timer.h>
+#include <GestaltEqu.h>
+#include <LowMem.h>
+#include <Retrace.h>
 
-//#define WATCOM_10
-
-#include "error.h"
+//#include "error.h"
+#include "dtypes.h"
 #include "key.h"
-#include "timer.h"
-#include "dpmi.h"
+#include "gtimer.h"
 
 #define KEY_BUFFER_SIZE 16
+#define KEYBOARD_BITMAP	(volatile char *)0x0174
+#define KEYBOARD_TIME	25		// 40 times a second
+//#define USE_TIMER_TASK	1
+
+#ifdef USE_TIMER_TASK
+
+timer_info ktimer_info;
+
+#else
+
+typedef struct keytimer_info
+{
+	VBLTask timer_task;
+#ifndef __powerc
+	ulong current_a5;
+#endif
+} keytimer_info;
+keytimer_info ktimer_info;
+
+#endif		// USE_TIMER_TASK
+
+#ifdef __powerc
+UniversalProcPtr keyboard_proc = NULL;
+#else
+TimerUPP	keyboard_proc = NULL;
+#endif
+
+#ifdef USE_TIMER_TASK
+
+#define _disable_key()	RmvTime((QElemPtr)(&ktimer_info))
+#ifdef __powerc
+#define _enable_key() \
+	ktimer_info.timer_task.tmAddr = keyboard_proc; \
+	ktimer_info.timer_task.tmWakeUp = 0; \
+	ktimer_info.timer_task.tmReserved = 0; \
+	InsXTime((QElemPtr)(&ktimer_info)); \
+	PrimeTime((QElemPtr)(&ktimer_info), KEYBOARD_TIME);
+#else
+#define _enable_key() \
+	ktimer_info.timer_task.tmAddr = keyboard_proc; \
+	ktimer_info.timer_task.tmWakeUp = 0; \
+	ktimer_info.timer_task.tmReserved = 0; \
+	ktimer_info.current_a5 = SetCurrentA5(); \
+	InsXTime((QElemPtr)(&ktimer_info)); \
+	PrimeTime((QElemPtr)(&ktimer_info), KEYBOARD_TIME);
+#endif
+
+#else
+
+#define _disable_key()	VRemove((QElemPtr)(&ktimer_info))
+#ifdef __powerc
+#define _enable_key() \
+	ktimer_info.timer_task.qType = vType;\
+	ktimer_info.timer_task.vblAddr = keyboard_proc;\
+	ktimer_info.timer_task.vblCount = 1;\
+	ktimer_info.timer_task.vblPhase = 0;\
+	VInstall((QElemPtr)(&ktimer_info));
+#else
+#define _enable_key() \
+	ktimer_info.timer_task.qType = vType;\
+	ktimer_info.timer_task.vblAddr = keyboard_proc;\
+	ktimer_info.timer_task.vblCount = 1;\
+	ktimer_info.timer_task.vblPhase = 0;\
+	ktimer_info.current_a5 = SetCurrentA5(); \
+	VInstall((QElemPtr)(&ktimer_info));
+#endif
+
+
+#endif		// USE_TIMER_TASK
 
 //-------- Variable accessed by outside functions ---------
 unsigned char 				keyd_buffer_type;		// 0=No buffer, 1=buffer ASCII, 2=buffer scans
 unsigned char 				keyd_repeat;
-unsigned char 				keyd_editor_mode;
+
 volatile unsigned char 	keyd_last_pressed;
 volatile unsigned char 	keyd_last_released;
-volatile unsigned char	keyd_pressed[256];
-volatile int				keyd_time_when_last_pressed;
+volatile unsigned char	keyd_pressed[128];
+volatile int			keyd_time_when_last_pressed;
+
+typedef struct Key_info {
+	ubyte		state;			// state of key 1 == down, 0 == up
+	ubyte		last_state;		// previous state of key
+	int			counter;		// incremented each time key is down in handler
+	fix			timewentdown;	// simple counter incremented each time in interrupt and key is down
+	fix			timehelddown;	// counter to tell how long key is down -- gets reset to 0 by key routines
+	ubyte		downcount;		// number of key counts key was down
+	ubyte		upcount;		// number of times key was released
+} Key_info;
 
 typedef struct keyboard	{
 	unsigned short		keybuffer[KEY_BUFFER_SIZE];
+	Key_info			keys[128];
 	fix					time_pressed[KEY_BUFFER_SIZE];
-	fix					TimeKeyWentDown[256];
-	fix					TimeKeyHeldDown[256];
-	unsigned int		NumDowns[256];
-	unsigned int		NumUps[256];
 	unsigned int 		keyhead, keytail;
-	unsigned char 		E0Flag;
-	unsigned char 		E1Flag;
-	int 					in_key_handler;
-	void (__interrupt __far *prev_int_9)();
 } keyboard;
 
 static volatile keyboard key_data;
@@ -184,29 +313,190 @@ static volatile keyboard key_data;
 static unsigned char Installed=0;
 
 unsigned char ascii_table[128] = 
-{ 255, 255, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',255,255,
-  'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 255, 255,
-  'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', 39, '`',
-  255, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 255,'*',
-  255, ' ', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,255,255,
-  255, 255, 255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255 };
+{ 255, 's', 'd', 'f', 'h', 'g', 'z', 'x', 'c', 'v', 255, 'b', 'q', 'w', 'e', 'r',
+  'y', 't', '1', '2', '3', '4', '6', '5', '=', '9', '7', '-', '8', '0', ']', 'o',
+  'u', '[', 'i', 'p', 255, 'l', 'j', 39, 'k', ';', '\\', ',', '/', 'n', 'm', '.',
+  255, ' ', '`', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 'a',
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
 
 unsigned char shifted_ascii_table[128] = 
-{ 255, 255, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',255,255,
-  'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 255, 255,
-  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~', 
-  255, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 255,255,
-  255, ' ', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,255,255,
-  255, 255, 255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-  255,255,255,255,255,255,255,255 };
+{ 255, 'S', 'D', 'F', 'H', 'G', 'Z', 'X', 'C', 'V', 255, 'B', 'Q', 'W', 'E', 'R',
+  'Y', 'T', '!', '@', '#', '$', '^', '%', '+', '(', '&', '_', '*', ')', '}', 'O',
+  'U', '{', 'I', 'P', 255, 'L', 'J', '"', 'K', ':', '|', '<', '?', 'N', 'M', '>',
+  255, ' ', '~', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 'A',
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 };
 
+// keyboard handler which runs KEY_TIMER times a second.  The timer routines will ensure
+// that our process is the current one before calling this function.
 
-extern char key_to_ascii(int keycode )
+void keyboard_handler()
+{
+	ubyte state;
+	EventRecord event;
+	int i, keycode, event_key, key_state;
+	Key_info *key;
+	unsigned char temp;
+
+	event_key = -1;
+	GetOSEvent(everyEvent - diskMask, &event);
+	if ((event.what == keyDown) || (event.what == keyUp)) {
+		event_key = (event.message & keyCodeMask) >> 8;
+		if (event.what == keyDown)
+			key_state = 1;
+		else
+			key_state = 0;
+	}
+	
+	for (i = 127; i >= 0; i--) {
+		if (i == KEY_A)
+			continue;
+		keycode = i;
+		if (i == 0)
+			keycode = KEY_A;
+		key = &(key_data.keys[keycode]);
+		
+		if (i == KEY_LSHIFT)
+			state = (event.modifiers & shiftKey) >> 9;
+		else if (i == KEY_LALT)
+			state = (event.modifiers & optionKey) >> 11;
+		else if (i == KEY_LCTRL)
+			state = (event.modifiers & controlKey) >> 12;
+		else if (i == KEY_CMD)
+			state = (event.modifiers & cmdKey) >> 8;
+		else if (i == event_key)
+			state = key_state;
+		else
+			state = key->last_state;
+			
+		if ( key->last_state == state )	{
+			if (state) {
+				key->counter++;
+				keyd_last_pressed = keycode;
+				keyd_time_when_last_pressed = timer_get_fixed_seconds();
+			}
+		} else {
+			if (state)	{
+				keyd_last_pressed = keycode;
+				keyd_pressed[keycode] = 1;
+				key->downcount += state;
+				key->state = 1;
+				key->timewentdown = keyd_time_when_last_pressed = timer_get_fixed_seconds();
+				key->counter++;
+			} else {	
+				keyd_pressed[keycode] = 0;
+				keyd_last_released = keycode;
+				key->upcount += key->state;
+				key->state = 0;
+				key->counter = 0;
+				key->timehelddown += timer_get_fixed_seconds() - key->timewentdown;
+			}
+		}
+		if ( (state && !key->last_state) || (state && key->last_state && (key->counter > 30) && (key->counter & 0x01)) ) {
+			if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
+				keycode |= KEY_SHIFTED;
+			if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT])
+				keycode |= KEY_ALTED;
+			if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL])
+				keycode |= KEY_CTRLED;
+			if ( keyd_pressed[KEY_CMD] )
+				keycode |= KEY_COMMAND;
+#ifndef NDEBUG
+			if ( keyd_pressed[KEY_DELETE] )
+				keycode |= KEY_DEBUGGED;
+#endif
+			temp = key_data.keytail+1;
+			if ( temp >= KEY_BUFFER_SIZE ) temp=0;
+			if (temp!=key_data.keyhead)	{
+				key_data.keybuffer[key_data.keytail] = keycode;
+				key_data.time_pressed[key_data.keytail] = keyd_time_when_last_pressed;
+				key_data.keytail = temp;
+			}
+		}
+		key->last_state = state;
+	}
+}
+
+extern void mouse_handler(void);			// handler routine for the mouse
+
+#ifndef __powerc
+timer_info *GetTMInfo(void) = { 0x2e89 };
+#endif
+
+#ifndef __powerc
+pascal void keyboard_timer()
+#else
+void keyboard_timer(timer_info *tminfo)
+#endif
+{
+#ifndef __powerc
+	timer_info *tminfo;
+	long olda5;
+	
+	tminfo = GetTMInfo();
+	olda5 = SetA5(tminfo->current_a5);
+#endif
+	keyboard_handler();
+	mouse_handler();
+#ifdef USE_TIMER_TASK
+	PrimeTime((QElemPtr)(&ktimer_info), KEYBOARD_TIME);
+#else
+	ktimer_info.timer_task.vblCount = 1;
+#endif
+
+#ifndef __powerc
+	olda5 = SetA5(olda5);
+#endif
+}
+
+void key_close()
+{
+	if (!Installed)
+		return;
+//	RmvTime((QElemPtr)(&ktimer_info));
+	_disable_key();
+	Installed = 0;
+}
+
+void key_init()
+{
+	long tm_ver;
+
+	// Initialize queue
+
+	keyd_time_when_last_pressed = timer_get_fixed_seconds();
+	keyd_buffer_type = 1;
+	keyd_repeat = 1;
+
+	if (Installed) return;
+	Installed = 1;
+	
+	SetEventMask(0xffff);
+	LMSetSysEvtMask(0xffff);
+	
+//  now set up the structure for the keyboard timer
+	if (keyboard_proc == NULL) {
+#ifdef 	USE_TIMER_TASK
+		keyboard_proc = NewTimerProc(keyboard_timer);
+#else
+		keyboard_proc = NewVBLProc(keyboard_timer);
+#endif
+	}
+	
+	_enable_key();
+	
+	// Clear the keyboard array
+	key_flush();
+
+	atexit(key_close);
+}
+
+unsigned char key_to_ascii(int keycode)
 {
 	int shifted;
 
@@ -222,30 +512,15 @@ extern char key_to_ascii(int keycode )
 		return ascii_table[keycode];
 }
 
-void key_clear_bios_buffer_all()
-{
-	// Clear keyboard buffer...
-	*(ushort *)0x41a=*(ushort *)0x41c;
-	// Clear the status bits...
-	*(ubyte *)0x417 = 0;
-	*(ubyte *)0x418 = 0;
-}
-
-void key_clear_bios_buffer()
-{
-	// Clear keyboard buffer...
-	*(ushort *)0x41a=*(ushort *)0x41c;
-}
-
 void key_flush()
 {
 	int i;
-	fix CurTime;
+	fix curtime;
 
-	_disable();
-
-	// Clear the BIOS buffer
-	key_clear_bios_buffer();
+	if (!Installed)
+		key_init();
+		
+	_disable_key();
 
 	key_data.keyhead = key_data.keytail = 0;
 
@@ -255,18 +530,21 @@ void key_flush()
 		key_data.time_pressed[i] = 0;
 	}
 	
-	//Clear the keyboard array
-
-	CurTime =timer_get_fixed_secondsX();
-
-	for (i=0; i<256; i++ )	{
+	curtime = timer_get_fixed_seconds();
+	
+	for (i=0; i<128; i++ )	{
 		keyd_pressed[i] = 0;
-		key_data.TimeKeyWentDown[i] = CurTime;
-		key_data.TimeKeyHeldDown[i] = 0;
-		key_data.NumDowns[i]=0;
-		key_data.NumUps[i]=0;
+		key_data.keys[i].state = 1;
+		key_data.keys[i].last_state = 0;
+		key_data.keys[i].timewentdown = curtime;
+		key_data.keys[i].downcount=0;
+		key_data.keys[i].upcount=0;
+		key_data.keys[i].timehelddown = 0;
+		key_data.keys[i].counter = 0;
 	}
-	_enable();
+	
+	FlushEvents(everyEvent, 0);
+	_enable_key();
 }
 
 int add_one( int n )
@@ -281,13 +559,12 @@ int key_checkch()
 {
 	int is_one_waiting = 0;
 
-	_disable();
-
-	key_clear_bios_buffer();
+//	_disable_key();
 
 	if (key_data.keytail!=key_data.keyhead)
 		is_one_waiting = 1;
-	_enable();
+
+//	_enable_key();
 	return is_one_waiting;
 }
 
@@ -295,15 +572,17 @@ int key_inkey()
 {
 	int key = 0;
 
-	_disable();
+	if (!Installed)
+		key_init();
+		
+//	_disable_key();
 
-	key_clear_bios_buffer();
-
-	if (key_data.keytail!=key_data.keyhead)	{
+	if (key_data.keytail!=key_data.keyhead) {
 		key = key_data.keybuffer[key_data.keyhead];
 		key_data.keyhead = add_one(key_data.keyhead);
 	}
-	_enable();
+
+//	_enable_key();
 	return key;
 }
 
@@ -311,16 +590,17 @@ int key_inkey_time(fix * time)
 {
 	int key = 0;
 
-	_disable();
+	if (!Installed)
+		key_init();
 
-	key_clear_bios_buffer();
+//	_disable_key();
 
 	if (key_data.keytail!=key_data.keyhead)	{
 		key = key_data.keybuffer[key_data.keyhead];
 		*time = key_data.time_pressed[key_data.keyhead];
 		key_data.keyhead = add_one(key_data.keyhead);
 	}
-	_enable();
+//	_enable_key();
 	return key;
 }
 
@@ -330,14 +610,12 @@ int key_peekkey()
 {
 	int key = 0;
 
-	_disable();
+//	_disable_key();
 
-	key_clear_bios_buffer();
-
-	if (key_data.keytail!=key_data.keyhead)	{
+	if (key_data.keytail!=key_data.keyhead)
 		key = key_data.keybuffer[key_data.keyhead];
-	}
-	_enable();
+
+//	_enable_key();
 	return key;
 }
 
@@ -346,9 +624,10 @@ int key_peekkey()
 int key_getch()
 {
 	int dummy=0;
-	
+
 	if (!Installed)
-		return getch();
+		return 0;
+//		return getch();
 
 	while (!key_checkch())
 		dummy++;
@@ -359,9 +638,7 @@ unsigned int key_get_shift_status()
 {
 	unsigned int shift_status = 0;
 
-	_disable();
-
-	key_clear_bios_buffer();
+//	_disable_key();
 
 	if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT] )
 		shift_status |= KEY_SHIFTED;
@@ -377,33 +654,50 @@ unsigned int key_get_shift_status()
 		shift_status |=KEY_DEBUGGED;
 #endif
 
-	_enable();
-
+//	_enable_key();
 	return shift_status;
 }
 
+#if 0
 // Returns the number of seconds this key has been down since last call.
-fix key_down_time(int scancode)	{
+fix key_down_time(int scancode)
+{
+	int count;
 	fix time_down, time;
 
-	if ((scancode<0)|| (scancode>255)) return 0;
+	if ((scancode<0)|| (scancode>127)) return 0;
 
-#ifndef NDEBUG
-	if (keyd_editor_mode && key_get_shift_status() )
-		return 0;  
+//	_disable_key();
+	count = key_data.keys[scancode].timehelddown;
+	key_data.keys[scancode].timehelddown = 0;
+//	_enable_key();
+
+#ifdef USE_TIMER_TASK	
+	return fixmuldiv(count, 65536, 40 );
+#else
+	return fixmuldiv(count, F1_0, 60);
+#endif
+}
 #endif
 
-	_disable();
+// Returns the number of seconds this key has been down since last call.
+fix key_down_time(int scancode)
+{
+	int count;
+	fix time_down, time;
 
-	if ( !keyd_pressed[scancode] )	{
-		time_down = key_data.TimeKeyHeldDown[scancode];
-		key_data.TimeKeyHeldDown[scancode] = 0;
-	} else	{
-		time = timer_get_fixed_secondsX();
-		time_down =  time - key_data.TimeKeyWentDown[scancode];
-		key_data.TimeKeyWentDown[scancode] = time;
+	if ((scancode<0)|| (scancode>127)) return 0;
+
+//	_disable_key();
+	if (!keyd_pressed[scancode]) {
+		time_down = key_data.keys[scancode].timehelddown;
+		key_data.keys[scancode].timehelddown = 0;
+	} else {
+		time = timer_get_fixed_seconds();
+		time_down = time - key_data.keys[scancode].timewentdown;
+		key_data.keys[scancode].timewentdown = time;
 	}
-	_enable();
+//	_enable_key();
 
 	return time_down;
 }
@@ -412,12 +706,12 @@ fix key_down_time(int scancode)	{
 unsigned int key_down_count(int scancode)	{
 	int n;
 
-	if ((scancode<0)|| (scancode>255)) return 0;
+	if ((scancode<0)|| (scancode>127)) return 0;
 
-	_disable();
-	n = key_data.NumDowns[scancode];
-	key_data.NumDowns[scancode] = 0;
-	_enable();
+//	_disable_key();
+	n = key_data.keys[scancode].downcount;
+	key_data.keys[scancode].downcount = 0;
+//	_enable_key();
 
 	return n;
 }
@@ -427,221 +721,13 @@ unsigned int key_down_count(int scancode)	{
 unsigned int key_up_count(int scancode)	{
 	int n;
 
-	if ((scancode<0)|| (scancode>255)) return 0;
+	if ((scancode<0)|| (scancode>127)) return 0;
 
-	_disable();
-	n = key_data.NumUps[scancode];
-	key_data.NumUps[scancode] = 0;
-	_enable();
+//	_disable_key();
+	n = key_data.keys[scancode].upcount;
+	key_data.keys[scancode].upcount = 0;
+//	_enable_key();
 
 	return n;
 }
 
-// Use intrinsic forms so that we stay in the locked interrup code.
-
-void Int5();
-#pragma aux Int5 = "int 5";
-
-#pragma off (check_stack)
-void __interrupt __far key_handler()
-{
-	unsigned char scancode, breakbit, temp;
-	unsigned short keycode;
-
-#ifndef WATCOM_10
-#ifndef NDEBUG
-	ubyte * MONO = (ubyte *)(0x0b0000+24*80*2);
-	if (  ((MONO[0]=='D') && (MONO[2]=='B') && (MONO[4]=='G') && (MONO[6]=='>')) ||
-			((MONO[14]=='<') && (MONO[16]=='i') && (MONO[18]=='>') && (MONO[20]==' ') && (MONO[22]=='-')) ||
-			((MONO[0]==200 ) && (MONO[2]==27) && (MONO[4]==17) )
-		)
- 		_chain_intr( key_data.prev_int_9 );
-#endif
-#endif
-
-	// Read in scancode
-	scancode = inp( 0x60 );
-
-	switch( scancode )	{
-	case 0xE0:
-		key_data.E0Flag = 0x80;
-		break;
-	default:
-		// Parse scancode and break bit
-		if (key_data.E1Flag > 0 )	{		// Special code for Pause, which is E1 1D 45 E1 9D C5
-			key_data.E1Flag--;
-			if ( scancode == 0x1D )	{
-				scancode	= KEY_PAUSE;
-				breakbit	= 0;
-			} else if ( scancode == 0x9d ) {
-				scancode	= KEY_PAUSE;
-				breakbit	= 1;
-			} else {
-				break;		// skip this keycode
-			}
-		} else if ( scancode==0xE1 )	{
-			key_data.E1Flag = 2;
-			break;
-		} else {
-			breakbit	= scancode & 0x80;		// Get make/break bit
-			scancode &= 0x7f;						// Strip make/break bit off of scancode
-			scancode |= key_data.E0Flag;					// Add in extended key code
-		}
-		key_data.E0Flag = 0;								// Clear extended key code
-
-		if (breakbit)	{
-			// Key going up
-			keyd_last_released = scancode;
-			keyd_pressed[scancode] = 0;
-			key_data.NumUps[scancode]++;
-			temp = 0;
-			temp |= keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT];
-			temp |= keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT];
-			temp |= keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL];
-#ifndef NDEBUG
-			temp |= keyd_pressed[KEY_DELETE];
-			if ( !(keyd_editor_mode && temp) )
-#endif		// NOTICE LINK TO ABOVE IF!!!!
-				key_data.TimeKeyHeldDown[scancode] += timer_get_fixed_secondsX() - key_data.TimeKeyWentDown[scancode];
-		} else {
-			// Key going down
-			keyd_last_pressed = scancode;
-			keyd_time_when_last_pressed = timer_get_fixed_secondsX();
-			if (!keyd_pressed[scancode])	{
-				// First time down
-				key_data.TimeKeyWentDown[scancode] = timer_get_fixed_secondsX();
-				keyd_pressed[scancode] = 1;
-				key_data.NumDowns[scancode]++;
-#ifndef NDEBUG
-				if ( (keyd_pressed[KEY_LSHIFT]) && (scancode == KEY_BACKSP) ) 	{
-					keyd_pressed[KEY_LSHIFT] = 0;
-					Int5();
-				}
-#endif
-			} else if (!keyd_repeat) {
-				// Don't buffer repeating key if repeat mode is off
-				scancode = 0xAA;		
-			} 
-
-			if ( scancode!=0xAA ) {
-				keycode = scancode;
-
-				if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT] )
-					keycode |= KEY_SHIFTED;
-
-				if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT] )
-					keycode |= KEY_ALTED;
-
-				if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL] )
-					keycode |= KEY_CTRLED;
-
-#ifndef NDEBUG
-				if ( keyd_pressed[KEY_DELETE] )
-					keycode |= KEY_DEBUGGED;
-#endif
-
-				temp = key_data.keytail+1;
-				if ( temp >= KEY_BUFFER_SIZE ) temp=0;
-
-				if (temp!=key_data.keyhead)	{
-					key_data.keybuffer[key_data.keytail] = keycode;
-					key_data.time_pressed[key_data.keytail] = keyd_time_when_last_pressed;
-					key_data.keytail = temp;
-				}
-			}
-		}
-	}
-
-#ifndef NDEBUG
-#ifdef PASS_KEYS_TO_BIOS
-	_chain_intr( key_data.prev_int_9 );
-#endif
-#endif
-
-	temp = inp(0x61);		// Get current port 61h state
-	temp |= 0x80;			// Turn on bit 7 to signal clear keybrd
-	outp( 0x61, temp );	// Send to port
-	temp &= 0x7f;			// Turn off bit 7 to signal break
-	outp( 0x61, temp );	// Send to port
-	outp( 0x20, 0x20 );	// Reset interrupt controller
-}
-
-#pragma on (check_stack)
-
-void key_handler_end()	{		// Dummy function to help calculate size of keyboard handler function
-}
-
-void key_init()
-{
-	// Initialize queue
-
-	keyd_time_when_last_pressed = timer_get_fixed_seconds();
-	keyd_buffer_type = 1;
-	keyd_repeat = 1;
-	key_data.in_key_handler = 0;
-	key_data.E0Flag = 0;
-	key_data.E1Flag = 0;
-
-	// Clear the keyboard array
-	key_flush();
-
-	if (Installed) return;
-	Installed = 1;
-
-	//--------------- lock everything for the virtal memory ----------------------------------
-	if (!dpmi_lock_region ((void near *)key_handler, (char *)key_handler_end - (char near *)key_handler))	{
-		printf( "Error locking keyboard handler!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&key_data, sizeof(keyboard)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_buffer_type, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_repeat, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_editor_mode, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_last_pressed, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_last_released, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_pressed, sizeof(char)*256))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-	if (!dpmi_lock_region (&keyd_time_when_last_pressed, sizeof(int)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
-	}
-
-	key_data.prev_int_9 = _dos_getvect( 9 );
-	_dos_setvect( 9, key_handler );
-
-	atexit( key_close );
-}
-
-void key_close()
-{
-	if (!Installed) return;
-	Installed = 0;
-	
-	_dos_setvect( 9, key_data.prev_int_9 );
-
-	_disable();
-	key_clear_bios_buffer_all();
-	_enable();
-
-}
-

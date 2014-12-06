@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/hash.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:26:46 $
+ * $Source: Smoke:miner:source:main::RCS:HASH.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:57:42 $
  * 
  * .
  * 
- * $Log: hash.h $
+ * $Log: HASH.H $
+ * Revision 1.1  1995/05/16  15:57:42  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:26:46  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -52,4 +55,3 @@ int hashtable_search( hashtable *ht, char *key );
 void hashtable_insert( hashtable *ht, char *key, int value );
 
 #endif
-

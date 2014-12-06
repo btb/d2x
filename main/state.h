@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/state.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/27 21:40:35 $
+ * $Source: Smoke:miner:source:main::RCS:STATE.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:03:40 $
  * 
  * Prototypes for state saving functions.
  * 
- * $Log: state.h $
+ * $Log: STATE.H $
+ * Revision 1.1  1995/05/16  16:03:40  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/27  21:40:35  john
  * Added code to verify that the proper multi save file
  * is used when restoring a network game.
@@ -71,4 +74,3 @@ int state_get_save_file(char * fname, char * dsc, int multi );
 int state_get_restore_file(char * fname, int multi );
 
 #endif
-

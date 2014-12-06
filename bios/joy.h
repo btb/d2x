@@ -11,18 +11,26 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/bios/rcs/joy.h $
- * $Revision: 1.17 $
- * $Author: john $
- * $Date: 1995/10/07 13:22:30 $
+ * $Source: Smoke:miner:source:bios::RCS:joy.h $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/10/17 15:36:25 $
  *
  * Headers for joystick functions
  *
  * $Log: joy.h $
- * Revision 1.17  1995/10/07  13:22:30  john
- * Added new method of reading joystick that allows higher-priority
- * interrupts to go off.
- * 
+ * Revision 1.4  1995/10/17  15:36:25  allender
+ * flightstick pro code removed
+ *
+ * Revision 1.3  1995/08/18  10:17:25  allender
+ * new functions and structures for joystick reading
+ *
+ * Revision 1.2  1995/05/05  16:34:05  allender
+ * changes types.h to dtypes.h
+ *
+ * Revision 1.1  1995/05/05  09:30:03  allender
+ * Initial revision
+ *
  * Revision 1.16  1995/02/14  11:17:13  john
  * Added BIOS readings for stick.
  * 
@@ -83,7 +91,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _JOY_H
 #define _JOY_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "fix.h"
 
 #define JOY_1_BUTTON_A	1
@@ -98,10 +106,15 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define JOY_2_Y_AXIS		8
 #define JOY_ALL_AXIS		(1+2+4+8)
 
-#define JOY_SLOW_READINGS 			1
-#define JOY_POLLED_READINGS 		2
-#define JOY_BIOS_READINGS 			4
-#define JOY_FRIENDLY_READINGS 	8
+#define JOY_SLOW_READINGS 	1
+#define JOY_POLLED_READINGS 	2
+#define JOY_BIOS_READINGS 	4
+
+#define JOY_AS_NONE					0
+#define JOY_AS_MOUSE				1
+#define JOY_AS_THRUSTMASTER			2
+#define JOY_AS_GRAVIS_MOUSESTICK	3
+#define JOY_AS_FLIGHTSTICK_PRO		4
 
 //==========================================================================
 // This initializes the joy and does a "quick" calibration which
@@ -115,6 +128,7 @@ extern void joy_close();
 
 extern char joy_installed;
 extern char joy_present;
+extern char joy_type;
 
 //==========================================================================
 // The following 3 routines can be used to zero in on better joy
@@ -174,7 +188,15 @@ extern void joy_set_btn_values( int btn, int state, fix timedown, int downcount,
 extern int joy_get_scaled_reading( int raw, int axn );
 extern void joy_set_slow_reading( int flag );
 
+extern void joy_set_type(ubyte type);
+
+// THE MOUSE MODES (RELATIVE MOUSE MODES ARE NEGATIVE)
+enum {
+	noMouseMode			= 0,
+	absoluteMouseMode	= 1,
+	msfsMouseMode		= 2
+};	/// Microsoft mode selection is defeated for now
+
 
 #endif
 
-

@@ -11,182 +11,115 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/misc/rcs/error.c $
- * $Revision: 1.12 $
- * $Author: matt $
- * $Date: 1994/12/07 18:49:39 $
- *
- * Error handling/printing/exiting code
- *
+ * $Source: Smoke:miner:source:misc::RCS:error.c $
+ * $Revision: 1.10 $
+ * $Author: allender $
+ * $Date: 1995/10/13 14:42:34 $
+ * 
+ * functions to deal with error and warning dialogs
+ * 
  * $Log: error.c $
- * Revision 1.12  1994/12/07  18:49:39  matt
- * error_init() can now take NULL as parm
- * 
- * Revision 1.11  1994/11/29  15:42:07  matt
- * Added newline before error message
- * 
- * Revision 1.10  1994/11/27  23:20:39  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.9  1994/06/20  21:20:56  matt
- * Allow NULL for warn func, to kill warnings
- * 
- * Revision 1.8  1994/05/20  15:11:35  mike
- * mprintf Warning message so you can actually see it.
- * 
- * Revision 1.7  1994/02/10  18:02:38  matt
- * Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
- * 
- * Revision 1.6  1993/10/17  18:19:10  matt
- * If error_init() not called, Error() now prints the error message before
- * calling exit()
- * 
- * Revision 1.5  1993/10/14  15:29:11  matt
- * Added new function clear_warn_func()
- * 
- * Revision 1.4  1993/10/08  16:17:19  matt
- * Made Assert() call function _Assert(), rather to do 'if...' inline.
- * 
- * Revision 1.3  1993/09/28  12:45:25  matt
- * Fixed wrong print call, and made Warning() not append a CR to string
- * 
- * Revision 1.2  1993/09/27  11:46:35  matt
- * Added function set_warn_func()
- * 
- * Revision 1.1  1993/09/23  20:17:33  matt
+ * Revision 1.10  1995/10/13  14:42:34  allender
+ * *** empty log message ***
+ *
+ * Revision 1.9  1995/10/12  17:40:45  allender
+ * fixed code so error/warning dialogs will display properly
+ * on second monitor
+ *
+ * Revision 1.8  1995/07/31  15:25:53  allender
+ * *** empty log message ***
+ *
+ * Revision 1.7  1995/07/28  13:11:52  allender
+ * cursor manipulation during warning and error dialogs
+ *
+ * Revision 1.6  1995/07/13  11:16:13  allender
+ * call to debug_video mode on error or warning
+ *
+ * Revision 1.5  1995/07/05  16:21:45  allender
+ * extern definitions
+ *
+ * Revision 1.4  1995/06/06  12:19:14  allender
+ * call comm_close on error to close the comm port
+ *
+ * Revision 1.3  1995/05/12  13:06:24  allender
+ * removed Error call from MyAssert so tracing out of this
+ * function is possible
+ *
+ * Revision 1.2  1995/05/11  12:57:22  allender
+ * added MyAssert function
+ *
+ * Revision 1.1  1995/05/04  20:12:23  allender
  * Initial revision
- * 
+ *
+ * Revision 1.2  1995/03/17  09:40:01  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:30:21  allender
+ * Initial revision
+ *
  *
  */
-
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: error.c 1.12 1994/12/07 18:49:39 matt Exp $";
-#pragma on (unreferenced)
-
+ 
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
-
-#include "mono.h"
+#include <Quickdraw.h>
+#include <Dialogs.h>
+#include <SegLoad.h>		// for ExitToShell
+#include <TextUtils.h>
+#include "dtypes.h"
 #include "error.h"
+#include "resource.h"
+#include "macsys.h"
+#include "palette.h"
 
-#define MAX_MSG_LEN 256
+#define ESTRING (unsigned char const *)" "
 
-int initialized=0;
+extern void debug_video_mode();
+extern void reset_debug_video_mode();
 
-char exit_message[MAX_MSG_LEN]="";
-char warn_message[MAX_MSG_LEN];
-
-//takes string in register, calls printf with string on stack
-void warn_printf(char *s)
+void Error(char *format, ...)
 {
-	printf("%s\n",s);
-}
+	short item;
+	va_list args;
+	char tmp_buf[256];
 
-void (*warn_func)(char *s)=warn_printf;
-
-//provides a function to call with warning messages
-void set_warn_func(void (*f)(char *s))
-{
-	warn_func = f;
-}
-
-//uninstall warning function - install default printf
-void clear_warn_func(void (*f)(char *s))
-{
-	warn_func = warn_printf;
-}
-
-void set_exit_message(char *fmt,...)
-{
-	va_list arglist;
-	int len;
-
-	va_start(arglist,fmt);
-	len = vsprintf(exit_message,fmt,arglist);
-	va_end(arglist);
-
-	if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in set_exit_message (len=%d, max=%d)",len,MAX_MSG_LEN);
-
-}
-
-void _Assert(int expr,char *expr_text,char *filename,int linenum)
-{
-	if (!(expr)) Error("Assertion failed: %s, file %s, line %d",expr_text,filename,linenum);
-
-}
-//#ifdef NDEBUG		//macros for debugging
-//Assert and Int3 Added by KRB because I couldn't get the macros to link 
-void Assert(int my_expr)
-{
-	//if (!(expr)) Error("Assertion failed: %s, file %s, line %d",expr_text,filename,linenum);
+	show_cursor();
+	debug_video_mode();
+	memset(tmp_buf, 0, 256);	
+	va_start(args, format);
+	vsprintf(tmp_buf, format, args);
+	ParamText((unsigned char const *)c2pstr(tmp_buf), ESTRING, ESTRING, ESTRING);
 	
-	return;
-}
-void Int3()
-{
-	return;
-}
-//#endif
+	item = StopAlert(ERROR_ALERT, nil);
 
-void print_exit_message()
-{
-	if (*exit_message)
-		printf("%s\n",exit_message);
+	exit(1);	
 }
 
-//terminates with error code 1, printing message
-void Error(char *fmt,...)
+void Warning(char *format, ...)
 {
-	va_list arglist;
+	short item;
+	va_list args;
+	char tmp_buf[256];
+	int reset_device = 0;
 
-	strcpy(exit_message,"\nError: ");
+	show_cursor();
+	if ( gr_palette_faded_out )
+		debug_video_mode();
+	memset(tmp_buf, 0, 256);	
+	va_start(args, format);
+	vsprintf(tmp_buf, format, args);
+	ParamText((unsigned char const *)c2pstr(tmp_buf), ESTRING, ESTRING, ESTRING);
 
-	va_start(arglist,fmt);
-	vsprintf(exit_message+strlen(exit_message),fmt,arglist);
-	va_end(arglist);
-
-	if (!initialized) print_exit_message();
-
-	exit(1);
+	item = CautionAlert(WARN_ALERT, nil);
+	hide_cursor();
+	if ( gr_palette_faded_out )
+		reset_debug_video_mode();
 }
 
-//print out warning message to user
-void Warning(char *fmt,...)
+void MyAssert(int expr, char *expr_text, char *filename, int linenum)
 {
-	va_list arglist;
-
-	if (warn_func == NULL)
-		return;
-
-	strcpy(warn_message,"Warning: ");
-
-	va_start(arglist,fmt);
-	vsprintf(warn_message+strlen(warn_message),fmt,arglist);
-	va_end(arglist);
-
-	mprintf((0, "%s\n", warn_message));
-	(*warn_func)(warn_message);
-
-}
-
-//initialize error handling system, and set default message. returns 0=ok
-int error_init(char *fmt,...)
-{
-	va_list arglist;
-	int len;
-
-	atexit(print_exit_message);		//last thing at exit is print message
-
-	if (fmt != NULL) {
-		va_start(arglist,fmt);
-		len = vsprintf(exit_message,fmt,arglist);
-		va_end(arglist);
-		if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in error_init (len=%d, max=%d)",len,MAX_MSG_LEN);
+	if (!(expr)) {
+		Int3();
+//		Error("Assertion failed: %s, file %s, line %d", expr_text, filename, linenum);
 	}
-
-	initialized=1;
-
-	return 0;
 }

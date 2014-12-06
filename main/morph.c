@@ -11,14 +11,29 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/morph.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/02/27 18:26:33 $
+ * $Source: Smoke:miner:source:main::RCS:morph.c $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/08/23 21:36:10 $
  * 
  * Morphing code
  * 
  * $Log: morph.c $
+ * Revision 1.5  1995/08/23  21:36:10  allender
+ * mcc compiler warnings fixed
+ *
+ * Revision 1.4  1995/08/12  11:34:19  allender
+ * removed #ifdef NEWDEMO -- always in
+ *
+ * Revision 1.3  1995/07/28  15:39:51  allender
+ * removed fixdiv thing
+ *
+ * Revision 1.2  1995/07/28  15:21:23  allender
+ * inverse magnitude fixup thing
+ *
+ * Revision 1.1  1995/05/16  15:28:05  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/02/27  18:26:33  john
  * Fixed bug that was caused by externing Polygon_models, and I had
  * changed the type of it in polyobj.c, thus causing page faults.
@@ -125,7 +140,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: morph.c 2.1 1995/02/27 18:26:33 john Exp $";
+static char rcsid[] = "$Id: morph.c 1.5 1995/08/23 21:36:10 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -153,12 +168,10 @@ morph_data *find_morph_data(object *obj)
 {
 	int i;
 
-	#ifdef NEWDEMO
 	if (Newdemo_state == ND_STATE_PLAYBACK) {
 		morph_objects[0].obj = obj;
 		return &morph_objects[0];
 	}
-	#endif
 
 	for (i=0;i<MAX_MORPH_OBJECTS;i++)
 		if (morph_objects[i].obj == obj)
@@ -323,7 +336,7 @@ update_points(polymodel *pm,int submodel_num,morph_data *md)
 
 
 //process the morphing object for one frame
-do_morph_frame(object *obj)
+void do_morph_frame(object *obj)
 {
 	int i;
 	polymodel *pm;
@@ -384,7 +397,7 @@ do_morph_frame(object *obj)
 
 vms_vector morph_rotvel = {0x4000,0x2000,0x1000};
 
-init_morphs()
+void init_morphs()
 {
 	int i;
 
@@ -564,10 +577,7 @@ void draw_morph_object(object *obj)
 
 	g3_done_instance();
 
-	#ifdef NEWDEMO
 	if (Newdemo_state == ND_STATE_RECORDING)
 		newdemo_record_morph_frame(md);
-	#endif
 
 }
-

@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/polyobj.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/02/27 18:21:54 $
+ * $Source: Smoke:miner:source:main::RCS:POLYOBJ.H $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:10:30 $
  * 
  * Header for polyobj.c, the polygon object code
  * 
- * $Log: polyobj.h $
+ * $Log: POLYOBJ.H $
+ * Revision 1.2  1995/09/14  14:10:30  allender
+ * two functions should be void
+ *
+ * Revision 1.1  1995/05/16  16:01:27  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/02/27  18:21:54  john
  * Added extern for robot_points.
  * 
@@ -161,7 +167,8 @@ typedef struct polymodel {
 } polymodel;
 
 //array of pointers to polygon objects
-extern polymodel Polygon_models[];
+//extern polymodel Polygon_models[];
+extern polymodel *Polygon_models;
 
 //switch to simpler model when the object has depth 
 //greater than this value times its radius.   
@@ -174,7 +181,7 @@ extern int N_polygon_models;
 //array of names of currently-loaded models
 extern char Pof_names[MAX_POLYGON_MODELS][13];
 
-init_polygon_models();
+void init_polygon_models();
 
 #ifndef DRIVE
 int load_polygon_model(char *filename,int n_textures,int first_texture,robot_info *r);
@@ -192,12 +199,11 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
 //more-or-less fill the canvas.  Note that this routine actually renders
 //into an off-screen canvas that it creates, then copies to the current
 //canvas.
-draw_model_picture(int mn,vms_angvec *orient_angles);
+void draw_model_picture(int mn,vms_angvec *orient_angles);
 
 #define MAX_POLYOBJ_TEXTURES 50
 extern grs_bitmap *texture_list[MAX_POLYOBJ_TEXTURES];
 extern bitmap_index texture_list_index[MAX_POLYOBJ_TEXTURES];
-extern g3s_point robot_points[];
+extern g3s_point *robot_points;
 
 #endif
-

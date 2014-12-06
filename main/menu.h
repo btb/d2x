@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/menu.h $
- * $Revision: 2.1 $
- * $Author: mike $
- * $Date: 1995/03/06 16:47:41 $
+ * $Source: Smoke:miner:source:main::RCS:MENU.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:59:14 $
  * 
  * Menu prototypes and variables
  * 
- * $Log: menu.h $
+ * $Log: MENU.H $
+ * Revision 1.1  1995/05/16  15:59:14  allender
+ * Initial revision
+ *
  * Revision 2.1  1995/03/06  16:47:41  mike
  * destination saturn
  * 

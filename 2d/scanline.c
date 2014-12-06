@@ -11,14 +11,34 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/scanline.c $
- * $Revision: 1.7 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:48 $
+ * $Source: Smoke:miner:source:2d::RCS:scanline.c $
+ * $Revision: 1.6 $
+ * $Author: allender $
+ * $Date: 1995/09/14 14:24:03 $
  *
  * Graphical routines for drawing solid scanlines.
  *
  * $Log: scanline.c $
+ * Revision 1.6  1995/09/14  14:24:03  allender
+ * fixed MW compile error
+ *
+ * Revision 1.5  1995/09/14  13:45:17  allender
+ * quick optimization for scanline
+ *
+ * Revision 1.4  1995/04/27  07:36:05  allender
+ * remove some memsets since all old is here now
+ *
+ * Revision 1.3  1995/04/19  14:35:33  allender
+ * *** empty log message ***
+ *
+ * Revision 1.2  1995/04/18  12:03:40  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:24:06  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.7  1994/11/18  22:50:48  john
  * Changed a bunch of shorts to ints in calls.
  * 
@@ -45,51 +65,46 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #include "mem.h"
-
 #include "gr.h"
 #include "grdef.h"
 
 int Gr_scanline_darkening_level = GR_FADE_LEVELS;
 
-void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fade_table );
-#pragma aux gr_linear_darken parm [edi] [eax] [ecx] [edx] modify exact [eax ebx ecx edx edi] = \
-"					xor	ebx, ebx					"	\
-"					mov	bh, al					"  \
-"gld_loop:		mov	bl, [edi]				"	\
-"					mov	al, [ebx+edx]			"	\
-"					mov	[edi], al				"	\
-"					inc	edi						"	\
-"					dec	ecx						"	\
-"					jnz	gld_loop					"	
+void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fade_table )
+{
+	int i;
+
+	for (i=0; i<count; i++ )	{
+		*dest = fade_table[*dest+(darkening_level*256)];
+		dest++;
+	}
+}
+
+void gr_linear_stosd( ubyte * dest, ubyte color, int count )
+{
+	int i, x;
+
+	if (count > 3) {			
+		while ((int)(dest) & 0x3) { *dest++ = color; count--; };
+		if (count >= 4) {
+			x = (color << 24) | (color << 16) | (color << 8) | color;
+			while (count > 4) { *(int *)dest = x; dest += 4; count -= 4; };
+		}
+		while (count > 0) { *dest++ = color; count--; };
+	} else {
+		for (i=0; i<count; i++ )
+			*dest++ = color;
+	}
+}
 
 void gr_uscanline( int x1, int x2, int y )
 {
+//	memset(DATA + ROWSIZE*y + x1, COLOR, x2-x1+0);
+//
 	if (Gr_scanline_darkening_level >= GR_FADE_LEVELS )	{
-		switch(TYPE)
-		{
-		case BM_LINEAR:
-			gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
-			break;
-		case BM_MODEX:
-			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		}
+		gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
 	} else {
-		switch(TYPE)
-		{
-		case BM_LINEAR:
-			gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
-			break;
-		case BM_MODEX:
-			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		}
+		gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
 	}
 }
 
@@ -105,33 +120,12 @@ void gr_scanline( int x1, int x2, int y )
 	if (x1 < MINX) x1 = MINX;
 	if (x2 > MAXX) x2 = MAXX;
 
+//	memset(DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
+//	
 	if (Gr_scanline_darkening_level >= GR_FADE_LEVELS )	{
-		switch(TYPE)
-		{
-		case BM_LINEAR:
-			gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
-			break;
-		case BM_MODEX:
-			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		}
+		gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
 	} else {
-		switch(TYPE)
-		{
-		case BM_LINEAR:
-			gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
-			break;
-		case BM_MODEX:
-			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
-			break;
-		}
+		gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
 	}
 }
 
-

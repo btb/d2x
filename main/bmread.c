@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/bmread.c $
- * $Revision: 2.4 $
- * $Author: john $
- * $Date: 1995/03/28 18:05:29 $
+ * $Source: Smoke:miner:source:main::RCS:BMREAD.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:23:16 $
  * 
  * Routines to parse bitmaps.tbl
  * 
- * $Log: bmread.c $
+ * $Log: BMREAD.C $
+ * Revision 1.1  1995/05/16  15:23:16  allender
+ * Initial revision
+ *
  * Revision 2.4  1995/03/28  18:05:29  john
  * Fixed it so you don't have to delete pig after changing bitmaps.tbl
  * 
@@ -43,7 +46,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: bmread.c 2.4 1995/03/28 18:05:29 john Exp $";
+static char rcsid[] = "$Id: BMREAD.C 1.1 1995/05/16 15:23:16 allender Exp $";
 #pragma on (unreferenced)
 
 #include "settings.h"
@@ -226,8 +229,7 @@ bitmap_index bm_load_sub( char * filename )
 		return bitmap_num;
 	}
 
-	//MALLOC( new, grs_bitmap, 1 );//hack KRB
-	new = (grs_bitmap *)malloc(1*sizeof(grs_bitmap));
+	MALLOC( new, grs_bitmap, 1 );
 	iff_error = iff_read_bitmap(filename,new,BM_LINEAR,newpal);
 	new->bm_selector=0;
 	if (iff_error != IFF_NO_ERROR)		{
@@ -334,8 +336,7 @@ int ds_load( char * filename )	{
 
 	if (cfp!=NULL) {
 		new.length	= cfilelength( cfp );
-		//MALLOC( new.data, ubyte, new.length );//hack by KRB
-		new.data = (ubyte *)malloc(new.length*sizeof(ubyte));
+		MALLOC( new.data, ubyte, new.length );
 		cfread( new.data, 1, new.length, cfp );
 		cfclose(cfp);
 		mprintf( (0, "S" ));
@@ -1996,4 +1997,3 @@ void bm_write_all(FILE *fp)
 }
 
 #endif
-

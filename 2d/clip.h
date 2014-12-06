@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/clip.h $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1993/10/15 16:22:28 $
+ * $Source: Buggin:miner:source:2d::RCS:clip.h $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 08:51:39 $
  *
  * Macros used for clipping
  *
  * $Log: clip.h $
+ * Revision 1.1  1995/03/09  08:51:39  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.3  1993/10/15  16:22:28  john
  * *** empty log message ***
  * 
@@ -47,13 +52,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
     if((a) > (b)) EXCHG(a,b);                                           \
 } while(0)
 
-# define SCALE(var,arg,num,den)                                         \
+#define SCALE(var,arg,num,den)                                         \
     ((var) = ((arg) * (num)) / (den))
 
-# define USCALE(var,arg,num,den)                                        \
+#define USCALE(var,arg,num,den)                                        \
 	((var) = ((unsigned)(arg) * (unsigned)(num)) / (unsigned)(den))
 
-# define FSCALE(var,arg,num,den) ((var) = fixmuldiv((arg),(num),(den)))
+#define FSCALE(var,arg,num,den) ((var) = fixmuldiv((arg),(num),(den)))
 
 #define CLIPDOT(xx,yy,WHEN_OUTSIDE,WHEN_CLIPPED) {                                              \
     if((xx > XMAX) || (xx < XMIN)) { WHEN_OUTSIDE; }  \

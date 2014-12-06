@@ -11,15 +11,18 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/wall.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:39:04 $
+ * $Source: Smoke:miner:source:main::RCS:WALL.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:32:08 $
  * 
  * Destroyable wall stuff
  * 
- * $Log: wall.c $
- * Revision 2.1  1995/03/21  14:39:04  john
+ * $Log: WALL.C $
+ * Revision 1.1  1995/05/16  15:32:08  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:39:04  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:28:32  john
@@ -105,7 +108,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: wall.c 2.1 1995/03/21 14:39:04 john Exp $";
+static char rcsid[] = "$Id: WALL.C 1.1 1995/05/16 15:32:08 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -118,7 +121,6 @@ static char rcsid[] = "$Id: wall.c 2.1 1995/03/21 14:39:04 john Exp $";
 #include "wall.h"
 #include "switch.h"
 #include "inferno.h"
-#include "editor\editor.h"
 #include "segment.h"
 #include "error.h"
 #include "gameseg.h"
@@ -168,6 +170,10 @@ char	Wall_names[7][10] = {
 	"EXTERNAL "
 };
 #endif
+
+int	Num_stuck_objects=0;
+
+stuckobj	Stuck_objects[MAX_STUCK_OBJECTS];
 
 // This function determines whether the current segment/side is transparent
 //		1 = YES
@@ -324,6 +330,30 @@ void wall_set_tmap_num(segment *seg,int side,segment *csegp,int cside,int anim_n
 	}
 }
 
+
+//	----------------------------------------------------------------------------------------------------
+//	Door with wall index wallnum is opening, kill all objects stuck in it.
+void kill_stuck_objects(int wallnum)
+{
+	int	i;
+
+	if (Num_stuck_objects == 0)
+		return;
+
+	Num_stuck_objects=0;
+
+	for (i=0; i<MAX_STUCK_OBJECTS; i++)
+		if (Stuck_objects[i].wallnum == wallnum) {
+			if (Objects[Stuck_objects[i].objnum].type == OBJ_WEAPON) {
+				Objects[Stuck_objects[i].objnum].lifeleft = F1_0/4;
+				mprintf((0, "Removing object %i from wall %i\n", Stuck_objects[i].objnum, wallnum));
+			} else
+				mprintf((0, "Warning: Stuck object of type %i, expected to be of type %i, see wall.c\n", Objects[Stuck_objects[i].objnum].type, OBJ_WEAPON));
+				// Int3();	//	What?  This looks bad.  Object is not a weapon and it is stuck in a wall!
+			Stuck_objects[i].wallnum = -1;
+		} else if (Stuck_objects[i].wallnum != -1)
+			Num_stuck_objects++;
+}
 
 // -------------------------------------------------------------------------------
 //when the wall has used all its hitpoints, this will destroy it
@@ -970,10 +1000,6 @@ void wall_frame_process()
 	} 
 }
 
-int	Num_stuck_objects=0;
-
-stuckobj	Stuck_objects[MAX_STUCK_OBJECTS];
-
 //	An object got stuck in a door (like a flare).
 //	Add global entry.
 void add_stuck_object(object *objp, int segnum, int sidenum)
@@ -1023,28 +1049,3 @@ void remove_obsolete_stuck_objects(void)
 
 }
 
-//	----------------------------------------------------------------------------------------------------
-//	Door with wall index wallnum is opening, kill all objects stuck in it.
-void kill_stuck_objects(int wallnum)
-{
-	int	i;
-
-	if (Num_stuck_objects == 0)
-		return;
-
-	Num_stuck_objects=0;
-
-	for (i=0; i<MAX_STUCK_OBJECTS; i++)
-		if (Stuck_objects[i].wallnum == wallnum) {
-			if (Objects[Stuck_objects[i].objnum].type == OBJ_WEAPON) {
-				Objects[Stuck_objects[i].objnum].lifeleft = F1_0/4;
-				mprintf((0, "Removing object %i from wall %i\n", Stuck_objects[i].objnum, wallnum));
-			} else
-				mprintf((0, "Warning: Stuck object of type %i, expected to be of type %i, see wall.c\n", Objects[Stuck_objects[i].objnum].type, OBJ_WEAPON));
-				// Int3();	//	What?  This looks bad.  Object is not a weapon and it is stuck in a wall!
-			Stuck_objects[i].wallnum = -1;
-		} else if (Stuck_objects[i].wallnum != -1)
-			Num_stuck_objects++;
-}
-
-

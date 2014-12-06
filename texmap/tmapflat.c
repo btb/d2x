@@ -11,14 +11,27 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/texmap/rcs/tmapflat.c $
- * $Revision: 1.13 $
- * $Author: john $
- * $Date: 1995/02/20 18:23:24 $
+ * $Source: Smoke:miner:source:texmap::RCS:tmapflat.c $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/09/04 14:22:26 $
  *
  * Flat shader derived from texture mapper (a little slow)
  *
  * $Log: tmapflat.c $
+ * Revision 1.4  1995/09/04  14:22:26  allender
+ * brute force texture points to stay in buffer bounds
+ *
+ * Revision 1.3  1995/08/10  16:22:43  allender
+ * conditional compile NASM being defined
+ *
+ * Revision 1.2  1995/06/25  21:52:24  allender
+ * call c versions of asm routines for now since some asm not
+ * implemented yet
+ *
+ * Revision 1.1  1995/05/04  20:15:55  allender
+ * Initial revision
+ *
  * Revision 1.13  1995/02/20  18:23:24  john
  * Added new module for C versions of inner loops.
  * 
@@ -65,7 +78,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: tmapflat.c 1.13 1995/02/20 18:23:24 john Exp $";
+static char rcsid[] = "$Id: tmapflat.c 1.4 1995/09/04 14:22:26 allender Exp $";
 #pragma on (unreferenced)
 
 
@@ -73,7 +86,6 @@ static char rcsid[] = "$Id: tmapflat.c 1.13 1995/02/20 18:23:24 john Exp $";
 // #include <graph.h>
 #include <limits.h>
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 
 // #include "hack3df.h"
@@ -87,6 +99,10 @@ static char rcsid[] = "$Id: tmapflat.c 1.13 1995/02/20 18:23:24 john Exp $";
 #include "scanline.h"
 
 //#include "tmapext.h"
+
+#ifndef __powerc
+#define NASM 1
+#endif
 
 void (*scanline_func)();
 
@@ -111,14 +127,16 @@ void tmap_scanline_flat(int y, fix xleft, fix xright)
 		#ifdef NASM
 			c_tmap_scanline_flat();
 		#else
-			asm_tmap_scanline_flat();
+//			asm_tmap_scanline_flat();
+			c_tmap_scanline_flat();
 		#endif
 	else	{
 		tmap_flat_shade_value = Gr_scanline_darkening_level;
 		#ifdef NASM
 			c_tmap_scanline_shaded();
 		#else
-			asm_tmap_scanline_shaded();
+//			asm_tmap_scanline_shaded();
+			c_tmap_scanline_shaded();
 		#endif
 	}	
 }
@@ -302,7 +320,7 @@ void draw_tmap_flat(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 //	-----------------------------------------------------------------------------------------
 //This is like gr_upoly_tmap() but instead of drawing, it calls the specified
 //function with ylr values
-void gr_upoly_tmap_ylr(int nverts, int *vert, void *ylr_func() )
+void gr_upoly_tmap_ylr(int nverts, int *vert, void (*ylr_func)() )
 {
 	g3ds_tmap	my_tmap;
 	int			i;
@@ -314,6 +332,14 @@ void gr_upoly_tmap_ylr(int nverts, int *vert, void *ylr_func() )
 	for (i=0; i<nverts; i++) {
 		my_tmap.verts[i].x2d = *vert++;
 		my_tmap.verts[i].y2d = *vert++;
+		if (my_tmap.verts[i].x2d < 0)
+			my_tmap.verts[i].x2d = 0;
+		else if (my_tmap.verts[i].x2d > FIX_XLIMIT)
+			my_tmap.verts[i].x2d = FIX_XLIMIT;
+		if (my_tmap.verts[i].y2d < 0)
+			my_tmap.verts[i].y2d = 0;
+		else if (my_tmap.verts[i].y2d > FIX_YLIMIT)
+			my_tmap.verts[i].y2d = FIX_YLIMIT;
 	}
 
 	scanline_func = ylr_func;
@@ -321,4 +347,3 @@ void gr_upoly_tmap_ylr(int nverts, int *vert, void *ylr_func() )
 	texture_map_flat(&my_tmap, COLOR);
 }
 
-

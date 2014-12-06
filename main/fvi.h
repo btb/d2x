@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/fvi.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:58 $
+ * $Source: Smoke:miner:source:main::RCS:fvi.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/23 21:34:29 $
  * 
  * Header for fvi.c
  * 
  * $Log: fvi.h $
- * Revision 2.1  1995/03/20  18:15:58  john
+ * Revision 1.2  1995/08/23  21:34:29  allender
+ * fix mcc compiler warning
+ *
+ * Revision 1.1  1995/05/16  15:56:38  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/20  12:15:58  john
  * Added code to not store the normals in the segment structure.
  * 
  * Revision 2.0  1995/02/27  11:32:02  john
@@ -125,10 +131,9 @@ int find_vector_intersection(fvi_query *fq,fvi_info *hit_data);
 
 //finds the uv coords of the given point on the given seg & side
 //fills in u & v
-find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum);
+void find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum);
 
 //Returns true if the object is through any walls
 int object_intersects_wall(object *objp);
 
 #endif
-

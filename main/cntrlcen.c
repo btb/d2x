@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/cntrlcen.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:25 $
+ * $Source: Smoke:miner:source:main::RCS:cntrlcen.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/17 13:12:13 $
  * 
  * Code for the control center
  * 
  * $Log: cntrlcen.c $
- * Revision 2.1  1995/03/21  14:40:25  john
+ * Revision 1.2  1995/10/17  13:12:13  allender
+ * added param to ai call
+ *
+ * Revision 1.1  1995/05/16  15:23:27  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:40:25  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:31:25  john
@@ -101,7 +107,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: cntrlcen.c 2.1 1995/03/21 14:40:25 john Exp $";
+static char rcsid[] = "$Id: cntrlcen.c 1.2 1995/10/17 13:12:13 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -275,7 +281,7 @@ void do_controlcen_frame(object *obj)
 			vm_vec_sub(&vec_to_player, &ConsoleObject->pos, &obj->pos);
 			dist_to_player = vm_vec_normalize_quick(&vec_to_player);
 			if (dist_to_player < F1_0*200) {
-				Control_center_player_been_seen = player_is_visible_from_object(obj, &obj->pos, 0, &vec_to_player);
+				Control_center_player_been_seen = player_is_visible_from_object(obj, &obj->pos, 0, &vec_to_player, 0);
 				Control_center_next_fire_time = 0;
 			}
 		}			
@@ -404,4 +410,3 @@ void init_controlcen_for_level(void)
 	Dead_controlcen_object_num = -1;
 }
 
-

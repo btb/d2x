@@ -11,16 +11,22 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/lighting.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/07/24 13:21:56 $
+ * $Source: Smoke:miner:source:main::RCS:lighting.c $
+ * $Revision: 1.4 $
+ * $Author: allender $
+ * $Date: 1995/09/20 14:26:12 $
  * 
  * Lighting functions.
  * 
  * $Log: lighting.c $
- * Revision 2.1  1995/07/24  13:21:56  john
- * Added new lighting calculation code to speed things up.
+ * Revision 1.4  1995/09/20  14:26:12  allender
+ * more optimizations(?) ala MK
+ *
+ * Revision 1.2  1995/07/05  21:27:31  allender
+ * new and improved lighting code by MK!
+ *
+ * Revision 2.1  1995/05/22  15:37:51  champaign
+ * FROM MIKE: New lighting code, maybe don't leave in
  * 
  * Revision 2.0  1995/02/27  11:27:33  john
  * New version 2.0, which has no anonymous unions, builds with
@@ -126,7 +132,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: lighting.c 2.1 1995/07/24 13:21:56 john Exp $";
+static char rcsid[] = "$Id: lighting.c 1.4 1995/09/20 14:26:12 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -146,6 +152,7 @@ static char rcsid[] = "$Id: lighting.c 2.1 1995/07/24 13:21:56 john Exp $";
 #include "player.h"
 #include "weapon.h"
 #include "powerup.h"
+#include "fvi.h"
 
 //global saying how bright the light beam is
 fix	Beam_brightness = (F1_0/2);
@@ -153,11 +160,13 @@ fix	Beam_brightness = (F1_0/2);
 int	use_beam;		//flag for beam effect
 
 int	Do_dynamic_light=1;
+int	Use_fvi_lighting = 0;
 
 fix	Dynamic_light[MAX_VERTICES];
 
+#define	LIGHTING_CACHE_SIZE	4096	//	Must be power of 2!
 // ----------------------------------------------------------------------------------------------
-void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_render_vertices, short *render_vertices)
+void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_render_vertices, short *render_vertices, int objnum)
 {
 	int	vv;
 
@@ -189,12 +198,15 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
 				int			vertnum;
 				vms_vector	*vertpos;
 				fix			dist;
+				int			apply_light;
 
 				vertnum = render_vertices[vv];
 				vertpos = &Vertices[vertnum];
 				dist = vm_vec_dist_quick(obj_pos, vertpos);
+				apply_light = 0;
 
 				if (dist < obji_64) {
+
 					if (dist < MIN_LIGHT_DIST)
 						dist = MIN_LIGHT_DIST;
 
@@ -221,7 +233,7 @@ void cast_muzzle_flash_light(int n_render_vertices, short *render_vertices)
 		if (Muzzle_data[i].create_time) {
 			time_since_flash = current_time - Muzzle_data[i].create_time;
 			if (time_since_flash < FLASH_LEN_FIXED_SECONDS)
-				apply_light((FLASH_LEN_FIXED_SECONDS - time_since_flash) * FLASH_SCALE, Muzzle_data[i].segnum, &Muzzle_data[i].pos, n_render_vertices, render_vertices);
+				apply_light((FLASH_LEN_FIXED_SECONDS - time_since_flash) * FLASH_SCALE, Muzzle_data[i].segnum, &Muzzle_data[i].pos, n_render_vertices, render_vertices, -1);
 			else
 				Muzzle_data[i].create_time = 0;		// turn off this muzzle flash
 		}
@@ -235,14 +247,61 @@ fix	Obj_light_xlate[16] =
 	 0x2123, 0x39af, 0x0f03, 0x132a,
 	 0x3123, 0x29af, 0x1f03, 0x032a};
 
+//	Flag array of objects lit last frame.  Guaranteed to process this frame if lit last frame.
+byte	Lighting_objects[MAX_OBJECTS];
+
+// ---------------------------------------------------------
+fix compute_light_intensity(int objnum)
+{
+	object		*obj = &Objects[objnum];
+	int			objtype = obj->type;
+          
+	switch (objtype) {
+		case OBJ_FIREBALL:
+			if (obj->id != 0xff) {
+				if (obj->lifeleft < F1_0*4)
+					return fixmul(fixdiv(obj->lifeleft, Vclip[obj->id].play_time), Vclip[obj->id].light_value);
+				else
+					return Vclip[obj->id].light_value;
+			} else
+				 return 0;
+			break;
+		case OBJ_ROBOT:
+//			return F1_0*Robot_info[obj->id].lightcast;
+			return (F1_0 / 2);
+			break;
+		case OBJ_WEAPON: {
+			fix tval = Weapon_info[obj->id].light;
+			if (obj->id == FLARE_ID )
+				return 2* (min(tval, obj->lifeleft) + ((GameTime ^ Obj_light_xlate[objnum&0x0f]) & 0x3fff));
+			else
+				return tval;
+			}
+			break;
+		case OBJ_POWERUP:
+			return Powerup_info[obj->id].light;
+			break;
+		case OBJ_DEBRIS:
+			return F1_0/4;
+			break;
+		case OBJ_LIGHT:
+			return obj->ctype.light_info.intensity;
+			break;
+		default:
+			return 0;
+			break;
+	}
+}
+
 // ----------------------------------------------------------------------------------------------
 void set_dynamic_light(void)
 {
-	int	objnum,vertnum;
+	int	i, objnum,vertnum;
 	int	n_render_vertices;
 	short	render_vertices[MAX_VERTICES];
 	byte	render_vertex_flags[MAX_VERTICES];
 	int	render_seg,segnum, v;
+	byte	new_lighting_objects[MAX_OBJECTS];
 
 	if (!Do_dynamic_light)
 		return;
@@ -281,9 +340,13 @@ void set_dynamic_light(void)
 
 	cast_muzzle_flash_light(n_render_vertices, render_vertices);
 
-	//	Note, starting at 1 to skip player, whose light is handled by a different system, of course.
-//	for (objnum=1; objnum<=Highest_object_index; objnum++) {
+	for (objnum=0; objnum<=Highest_object_index; objnum++)
+		new_lighting_objects[objnum] = 0;
 
+	//	July 5, 1995: New faster dynamic lighting code.  About 5% faster on the PC (un-optimized).
+	//	Only objects which are in rendered segments cast dynamic light.  We might want to extend this
+	//	one or two segments if we notice light changing as objects go offscreen.  I couldn't see any
+	//	serious visual degradation.  In fact, I could see no humorous degradation, either. --MK
 	for (render_seg=0; render_seg<N_render_segs; render_seg++) {
 		int	segnum = Render_list[render_seg];
 
@@ -292,49 +355,43 @@ void set_dynamic_light(void)
 		while (objnum != -1) {
 			object		*obj = &Objects[objnum];
 			vms_vector	*objpos = &obj->pos;
-			int			objtype = obj->type;
 			fix			obj_intensity;
-	
-			switch (objtype) {
-				case OBJ_FIREBALL:
-					if (obj->id != 0xff) {
-						if (obj->lifeleft < F1_0*4)
-							obj_intensity = fixmul(fixdiv(obj->lifeleft, Vclip[obj->id].play_time), Vclip[obj->id].light_value);
-						else
-							obj_intensity = Vclip[obj->id].light_value;
-					} else
-						obj_intensity = 0;
-					break;
-				case OBJ_ROBOT:
-					obj_intensity = F1_0/2;	// + (FrameCount & 0x1f)*F1_0/16;
-					break;
-				case OBJ_WEAPON:
-					obj_intensity = Weapon_info[obj->id].light;
-					if (obj->id == FLARE_ID )
-						obj_intensity = 2* (min(obj_intensity, obj->lifeleft) + ((GameTime ^ Obj_light_xlate[objnum&0x0f]) & 0x3fff));
-					break;
-				case OBJ_POWERUP:
-					obj_intensity = Powerup_info[obj->id].light;
-					break;
-				case OBJ_DEBRIS:
-					obj_intensity = F1_0/4;
-					break;
-				case OBJ_LIGHT:
-					obj_intensity = obj->ctype.light_info.intensity;
-					break;
-				default:
-					obj_intensity = 0;
-					break;
+
+			obj_intensity = compute_light_intensity(objnum);
+
+			if (obj_intensity) {
+				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, obj-Objects);
+				new_lighting_objects[objnum] = 1;
 			}
-	
-			if (obj_intensity)
-				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices);
 
 			objnum = obj->next;
 		}
 	}
 
+	//	Now, process all lights from last frame which haven't been processed this frame.
+	for (objnum=0; objnum<=Highest_object_index; objnum++) {
+		if (Lighting_objects[objnum]) {
+			if (!new_lighting_objects[objnum]) {
+				//	Lighted last frame, but not this frame.  Get intensity...
+				object		*obj = &Objects[objnum];
+				vms_vector	*objpos = &obj->pos;
+				fix			obj_intensity;
+
+				obj_intensity = compute_light_intensity(objnum);
+
+				if (obj_intensity)
+					apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, objnum);
+				else
+					Lighting_objects[objnum] = 0;
+			}
+		} else {
+			//	Not lighted last frame, so we don't need to light it.  (Already lit if casting light this frame.)
+			//	But copy value from new_lighting_objects to update Lighting_objects array.
+			Lighting_objects[objnum] = new_lighting_objects[objnum];
+		}
+	}
 }
+
 
 // ---------------------------------------------------------
 
@@ -485,4 +542,3 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 }
 
 
-

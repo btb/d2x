@@ -11,17 +11,22 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/collide.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/07/26 12:07:46 $
+ * $Source: Smoke:miner:source:main::RCS:collide.c $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/11/08 17:15:21 $
  * 
  * $Log: collide.c $
- * Revision 2.5  1995/07/26  12:07:46  john
- * Made code that pages in weapon_info->robot_hit_vclip not
- * page in unless it is a badass weapon.  Took out old functionallity
- * of using this if no robot exp1_vclip, since all robots have these.
- * 
+ * Revision 1.3  1995/11/08  17:15:21  allender
+ * make collide_player_and_weapon play player_hit_sound if
+ * shareware and not my playernum
+ *
+ * Revision 1.2  1995/10/31  10:24:37  allender
+ * shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:23:34  allender
+ * Initial revision
+ *
  * Revision 2.4  1995/03/30  16:36:09  mike
  * text localization.
  * 
@@ -404,7 +409,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: collide.c 2.5 1995/07/26 12:07:46 john Exp $";
+static char rcsid[] = "$Id: collide.c 1.3 1995/11/08 17:15:21 allender Exp $";
 #pragma on (unreferenced)
 
 #pragma off (unreferenced)	//for all the standard-tempate rountines
@@ -798,7 +803,7 @@ int check_effect_blowup(segment *seg,int side,vms_vector *pnt)
 				if (bm->bm_flags & BM_FLAG_RLE)
 					bm = rle_expand_texture(bm);
 
-				if (bm->bm_data[y*bm->bm_w+x] != 255) {		//not trans, thus on effect
+				if (bm->bm_data[y*bm->bm_w+x] != 0) {		//not trans, thus on effect
 					int vc,sound_num;
 
 					//mprintf((0,"  HIT!\n"));
@@ -1055,9 +1060,11 @@ void collide_robot_and_player( object * robot, object * player, vms_vector *coll
 		do_ai_robot_hit_attack(robot, player, collision_point);
 		do_ai_robot_hit(robot, PA_WEAPON_ROBOT_COLLISION);
 	} 
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	else
 		multi_robot_request_change(robot, player->id);
+#endif
 #endif
 
 	digi_link_sound_to_pos( SOUND_ROBOT_HIT_PLAYER, player->segnum, 0, collision_point, 0, F1_0 );
@@ -1101,6 +1108,7 @@ void apply_damage_to_controlcen(object *controlcen, fix damage, short who)
 		return;
 	}
 
+#ifndef MAC_SHAREWARE
 	#ifdef NETWORK
 	if ((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP) && (Players[Player_num].time_level < Netgame.control_invul_time))
 	{
@@ -1112,6 +1120,7 @@ void apply_damage_to_controlcen(object *controlcen, fix damage, short who)
 		return;
 	}
 	#endif
+#endif
 
 	if (Objects[who].id == Player_num) {
 		Control_center_been_hit = 1;
@@ -1246,7 +1255,7 @@ int apply_damage_to_robot(object *robot, fix damage, int killer_objnum)
 
 	if (robot->shields < 0) {
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 		if (Game_mode & GM_MULTI) {
 			if (multi_explode_robot_sub(robot-Objects, killer_objnum))
@@ -1312,17 +1321,19 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 			create_awareness_event(weapon, PA_WEAPON_ROBOT_COLLISION);			// object "weapon" can attract attention to player
 			do_ai_robot_hit(robot, PA_WEAPON_ROBOT_COLLISION);
 		} 
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 		else
 			multi_robot_request_change(robot, Objects[weapon->ctype.laser_info.parent_num].id);
+#endif
 #endif
 
 //--mk, 121094 -- 		spin_robot(robot, collision_point);
 
 		if ( Robot_info[robot->id].exp1_vclip_num > -1 )
 			expl_obj = object_create_explosion( weapon->segnum, collision_point, (robot->size/2*3)/4, Robot_info[robot->id].exp1_vclip_num );
-//NOT_USED		else if ( Weapon_info[weapon->id].robot_hit_vclip > -1 )
-//NOT_USED			expl_obj = object_create_explosion( weapon->segnum, collision_point, Weapon_info[weapon->id].impact_size, Weapon_info[weapon->id].robot_hit_vclip );
+		else if ( Weapon_info[weapon->id].robot_hit_vclip > -1 )
+			expl_obj = object_create_explosion( weapon->segnum, collision_point, Weapon_info[weapon->id].impact_size, Weapon_info[weapon->id].robot_hit_vclip );
 
 		if (expl_obj)
 			obj_attach(robot,expl_obj);
@@ -1599,6 +1610,11 @@ void collide_player_and_weapon( object * player, object * weapon, vms_vector *co
 	fix		damage = weapon->shields;
 	object * killer=NULL;
 
+#ifdef MAC_SHAREWARE
+	if (player->id != Player_num)
+		digi_link_sound_to_pos( SOUND_PLAYER_GOT_HIT, player->segnum, 0, collision_point, 0, F1_0 );
+#endif
+
 	damage = fixmul(damage, weapon->ctype.laser_info.multiplier);
 
 	if (weapon->mtype.phys_info.flags & PF_PERSISTENT)
@@ -1750,7 +1766,7 @@ void collide_player_and_powerup( object * player, object * powerup, vms_vector *
 			#endif
 		}
 	}
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	else if ((Game_mode & GM_MULTI_COOP) && (player->id != Player_num))
 	{
 		switch (powerup->id) {
@@ -2059,4 +2075,3 @@ void collide_object_with_wall( object * A, fix hitspeed, short hitseg, short hit
 
 
 
-

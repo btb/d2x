@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/segment2.h $
- * $Revision: 1.2 $
- * $Author: mike $
- * $Date: 1993/09/20 15:17:49 $
+ * $Source: Smoke:miner:source:main::RCS:SEGMENT2.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:02:31 $
  *
  * Include file for makeseg program, not necessary for game or editor.
  *
- * $Log: segment2.h $
+ * $Log: SEGMENT2.H $
+ * Revision 1.1  1995/05/16  16:02:31  allender
+ * Initial revision
+ *
  * Revision 1.2  1993/09/20  15:17:49  mike
  * Define constants: NUM_FACES, NUM_VERTICES, NUM_UVS, NUM_RGBS, NUM_FACE_VERTS
  * 

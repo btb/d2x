@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/collide.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:59 $
+ * $Source: Smoke:miner:source:main::RCS:COLLIDE.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:55:09 $
  * 
  * .
  * 
- * $Log: collide.h $
+ * $Log: COLLIDE.H $
+ * Revision 1.1  1995/05/16  15:55:09  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:28:59  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.

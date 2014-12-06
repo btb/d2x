@@ -11,18 +11,54 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/newdemo.c $
- * $Revision: 2.7 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:06 $
+ * $Source: Smoke:miner:source:main::RCS:newdemo.c $
+ * $Revision: 1.12 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:19:43 $
  * 
  * Code to make a complete demo playback system.
  * 
  * $Log: newdemo.c $
- * Revision 2.7  1995/05/26  16:16:06  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
+ * Revision 1.12  1995/10/31  10:19:43  allender
+ * shareware stuff
+ *
+ * Revision 1.11  1995/10/17  13:19:16  allender
+ * close boxes for demo save
+ *
+ * Revision 1.10  1995/10/05  10:36:07  allender
+ * fixed calls to digi_play_sample to account for differing volume and angle calculations
+ *
+ * Revision 1.9  1995/09/12  15:49:13  allender
+ * define __useAppleExts__ if not already defined
+ *
+ * Revision 1.8  1995/09/05  14:28:32  allender
+ * fixed previous N_players bug in newdemo_goto_end
+ *
+ * Revision 1.7  1995/09/05  14:16:51  allender
+ * added space to allowable demo filename characters
+ * and fixed bug with netgame demos N_players got getting
+ * set correctly
+ *
+ * Revision 1.6  1995/09/01  16:10:47  allender
+ * fixed bug with reading in N_players variable on
+ * netgame demo playback
+ *
+ * Revision 1.5  1995/08/24  16:04:11  allender
+ * fix signed byte problem
+ *
+ * Revision 1.4  1995/08/12  12:21:59  allender
+ * made call to create_shortpos not swap the shortpos
+ * elements
+ *
+ * Revision 1.3  1995/08/01  16:04:19  allender
+ * made random picking of demo work
+ *
+ * Revision 1.2  1995/08/01  13:56:56  allender
+ * demo system working on the mac
+ *
+ * Revision 1.1  1995/05/16  15:28:59  allender
+ * Initial revision
+ *
  * Revision 2.6  1995/03/21  14:39:38  john
  * Ifdef'd out the NETWORK code.
  * 
@@ -687,19 +723,20 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * 
  */
 
+#if !(defined __useAppleExts__)
+#define __useAppleExts__	1
+#endif
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: newdemo.c 2.7 1995/05/26 16:16:06 john Exp $";
+static char rcsid[] = "$Id: newdemo.c 1.12 1995/10/31 10:19:43 allender Exp $";
 #pragma on (unreferenced)
 
-#include <dos.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
 #include <string.h>	// for memset
 #include <ctype.h>
-#include <malloc.h>
 #include <limits.h>
+#include <Memory.h>
 
 #include "inferno.h"
 #include "game.h"
@@ -754,12 +791,13 @@ static char rcsid[] = "$Id: newdemo.c 2.7 1995/05/26 16:16:06 john Exp $";
 #include "aistruct.h"
 #include "mission.h"
 #include "piggy.h"
+#include "mem.h"
+#include "byteswap.h"
+#include "direct.h"
 
 #ifdef EDITOR
 #include "editor\editor.h"
 #endif
-
-//#include "nocfile.h"
 
 //Does demo start automatically?
 int Auto_demo = 0;
@@ -822,7 +860,7 @@ int Auto_demo = 0;
 #define DEMO_VERSION				13
 #endif
 
-#define DEMO_FILENAME			"tmpdemo.dem"
+#define DEMO_FILENAME			":Demos:tmpdemo.dem"
 #define DEMO_MAX_LEVELS			29
 
 #ifdef SHAREWARE
@@ -916,18 +954,12 @@ int newdemo_write( void *buffer, int elsize, int nelem )
 	frame_bytes_written += total_size;
 	Newdemo_num_written += total_size;
 	num_written = fwrite( buffer, elsize, nelem, outfile );
-//	if ((Newdemo_num_written > Newdemo_size) && !Newdemo_no_space) {
-//		Newdemo_no_space=1;
-//		newdemo_stop_recording();
-//		return -1;
-//	}
 	if ((Newdemo_num_written > Newdemo_size) && !Newdemo_no_space)
 		Newdemo_no_space=1;
 	if (num_written == nelem)
 		return num_written;
 
 	Newdemo_no_space=2;
-	newdemo_stop_recording();
 	return -1;
 }
 
@@ -944,12 +976,18 @@ static void nd_write_byte(byte b)
 
 static void nd_write_short(short s)
 {
-	newdemo_write(&s, 2, 1);
+	short ss;
+	
+	ss = swapshort(s);
+	newdemo_write(&ss, 2, 1);
 }
 
 static void nd_write_int(int i)
 {
-	newdemo_write(&i, 4, 1);
+	int si;
+	
+	si = swapint(i);
+	newdemo_write(&si, 4, 1);
 }
 
 static void nd_write_string(char *str)
@@ -960,12 +998,18 @@ static void nd_write_string(char *str)
 
 static void nd_write_fix(fix f)
 {
-	newdemo_write(&f, sizeof(fix), 1);
+	int si;
+	
+	si = swapint((int)f);
+	newdemo_write(&si, sizeof(fix), 1);
 }
 
 static void nd_write_fixang(fixang f)
 {
-	newdemo_write(&f, sizeof(fixang), 1);
+	int si;
+	
+	si = swapint((int)f);
+	newdemo_write(&si, sizeof(fixang), 1);
 }
 
 static void nd_write_vector(vms_vector *v)
@@ -988,7 +1032,7 @@ void nd_write_shortpos(object *obj)
 	shortpos sp;
 	ubyte render_type;
 
-	create_shortpos(&sp, obj);
+	create_shortpos(&sp, obj, 0);
 
 	render_type = obj->render_type;
 	if (((render_type == RT_POLYOBJ) || (render_type == RT_HOSTAGE) || (render_type == RT_MORPH)) || (obj->type == OBJ_CAMERA)) {
@@ -1002,7 +1046,7 @@ void nd_write_shortpos(object *obj)
 			Int3();			// contact Allender about this.
 		}
 	}
-
+	
 	nd_write_short(sp.xo);
 	nd_write_short(sp.yo);
 	nd_write_short(sp.zo);
@@ -1019,12 +1063,16 @@ static void nd_read_byte(byte *b)
 
 static void nd_read_short(short *s)
 {
-	newdemo_read(s, 2, 1);
+	short ss;
+	newdemo_read(&ss, 2, 1);
+	*s = swapshort(ss);
 }
 
 static void nd_read_int(int *i)
 {
-	newdemo_read(i, 4, 1);
+	int si;
+	newdemo_read(&si, 4, 1);
+	*i = swapint(si);
 }
 
 static void nd_read_string(char *str)
@@ -1037,18 +1085,22 @@ static void nd_read_string(char *str)
 
 static void nd_read_fix(fix *f)
 {
-	newdemo_read(f, sizeof(fix), 1);
+	int si;
+	newdemo_read(&si, sizeof(fix), 1);
+	*f = (fix)swapint(si);
 }
 
 static void nd_read_fixang(fixang *f)
 {
-	newdemo_read(f, sizeof(fixang), 1);
+	int si;
+	newdemo_read(&si, sizeof(fixang), 1);
+	*f = (fixang)swapint(si);
 }
 
 static void nd_read_vector(vms_vector *v)
 {
-  	nd_read_fix(&(v->x));
-   nd_read_fix(&(v->y));
+	nd_read_fix(&(v->x));
+	nd_read_fix(&(v->y));
 	nd_read_fix(&(v->z));
 }
 
@@ -1089,6 +1141,9 @@ object *prev_obj=NULL;		//ptr to last object read in
  	
 void nd_read_object(object *obj)
 {
+	ubyte b;
+	short s;
+	
 	memset(obj, 0, sizeof(object));
 
 /*
@@ -1102,7 +1157,9 @@ void nd_read_object(object *obj)
 
 	nd_read_byte(&(obj->id));
 	nd_read_byte(&(obj->flags));
-	nd_read_short((short *)&(obj->signature));
+	nd_read_short(&s);
+	obj->signature = (int)s;
+//	nd_read_short((short *)&(obj->signature));
 	nd_read_shortpos(obj);
 
 	obj->attached_obj		= -1;
@@ -1158,7 +1215,9 @@ void nd_read_object(object *obj)
 	if ((obj->type == OBJ_WEAPON) && (obj->render_type == RT_WEAPON_VCLIP))
 		nd_read_fix(&(obj->lifeleft));
 	else {
-		nd_read_byte((ubyte *)&(obj->lifeleft));
+		nd_read_byte(&b);
+		obj->lifeleft = (fix)b;
+//		nd_read_byte((ubyte *)&(obj->lifeleft));
 		obj->lifeleft = (fix)((int)obj->lifeleft << 12);
 	}
 
@@ -1483,7 +1542,7 @@ void newdemo_record_start_demo()
 #ifndef SHAREWARE
 
 	if (Game_mode & GM_MULTI) {
-		nd_write_byte((byte)N_players);
+		nd_write_byte((ubyte)N_players);
 		for (i = 0; i < N_players; i++) {
 			nd_write_string(Players[i].callsign);
 			nd_write_byte(Players[i].connected);
@@ -1508,15 +1567,19 @@ void newdemo_record_start_demo()
 
 //  Support for missions added here
 
+#ifdef MAC_SHAREWARE
+	nd_write_string("");
+#else
 	nd_write_string(Current_mission_filename);
+#endif
 
 #endif
 
-	nd_write_byte((byte)(f2ir(Players[Player_num].energy)));
-	nd_write_byte((byte)(f2ir(Players[Player_num].shields)));
+	nd_write_byte((ubyte)(f2ir(Players[Player_num].energy)));
+	nd_write_byte((ubyte)(f2ir(Players[Player_num].shields)));
 	nd_write_int(Players[Player_num].flags);		// be sure players flags are set
-	nd_write_byte((byte)Primary_weapon);
-	nd_write_byte((byte)Secondary_weapon);
+	nd_write_byte((ubyte)Primary_weapon);
+	nd_write_byte((ubyte)Secondary_weapon);
 	Newdemo_start_frame = FrameCount;
 	newdemo_set_new_level(Current_level_num);
 	start_time();
@@ -1628,11 +1691,6 @@ void newdemo_record_morph_frame(morph_data *md)	{
 	stop_time();
 
 	nd_write_byte( ND_EVENT_MORPH_FRAME );
-#if 0
-	newdemo_write( md->morph_vecs, sizeof(md->morph_vecs), 1 );
-	newdemo_write( md->submodel_active, sizeof(md->submodel_active), 1 );
-	newdemo_write( md->submodel_startpoints, sizeof(md->submodel_startpoints), 1 );
-#endif
 	nd_write_object( md->obj );
 	start_time();
 }
@@ -1680,9 +1738,9 @@ void newdemo_record_player_energy(int old_energy, int energy)
 	stop_time();
 	nd_write_byte( ND_EVENT_PLAYER_ENERGY );
 #ifndef SHAREWARE
-	nd_write_byte((byte) old_energy);
+	nd_write_byte((ubyte) old_energy);
 #endif
-	nd_write_byte((byte) energy);
+	nd_write_byte((ubyte) energy);
 	start_time();
 }
 
@@ -1695,9 +1753,9 @@ void newdemo_record_player_shields(int old_shield, int shield)
 	stop_time();
 	nd_write_byte( ND_EVENT_PLAYER_SHIELD );
 #ifndef SHAREWARE
-	nd_write_byte((byte)old_shield);
+	nd_write_byte((ubyte)old_shield);
 #endif
-	nd_write_byte((byte)shield);
+	nd_write_byte((ubyte)shield);
 	start_time();
 }
 
@@ -1713,13 +1771,13 @@ void newdemo_record_player_weapon(int weapon_type, int weapon_num)
 {
 	stop_time();
 	nd_write_byte( ND_EVENT_PLAYER_WEAPON );
-	nd_write_byte((byte)weapon_type);
-	nd_write_byte((byte)weapon_num);
+	nd_write_byte((ubyte)weapon_type);
+	nd_write_byte((ubyte)weapon_num);
 #ifndef SHAREWARE
 	if (weapon_type)
-		nd_write_byte((byte)Secondary_weapon);
+		nd_write_byte((ubyte)Secondary_weapon);
 	else
-		nd_write_byte((byte)Primary_weapon);
+		nd_write_byte((ubyte)Primary_weapon);
 #endif
 	start_time();
 }
@@ -1729,7 +1787,7 @@ void newdemo_record_effect_blowup(short segment, int side, vms_vector *pnt)
 	stop_time();
 	nd_write_byte (ND_EVENT_EFFECT_BLOWUP);
 	nd_write_short(segment);
-	nd_write_byte((byte)side);
+	nd_write_byte((ubyte)side);
 	nd_write_vector(pnt);
 	start_time();
 }
@@ -1798,7 +1856,7 @@ void newdemo_record_multi_cloak(int pnum)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_CLOAK);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	start_time();
 }
 
@@ -1806,7 +1864,7 @@ void newdemo_record_multi_decloak(int pnum)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_DECLOAK);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	start_time();
 }
 
@@ -1816,7 +1874,7 @@ void newdemo_record_multi_death(int pnum)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_DEATH);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	start_time();
 }
 
@@ -1824,7 +1882,7 @@ void newdemo_record_multi_kill(int pnum, byte kill)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_KILL);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	nd_write_byte(kill);
 	start_time();
 }
@@ -1833,8 +1891,8 @@ void newdemo_record_multi_connect(int pnum, int new_player, char *new_callsign)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_CONNECT);
-	nd_write_byte((byte)pnum);
-	nd_write_byte((byte)new_player);
+	nd_write_byte((ubyte)pnum);
+	nd_write_byte((ubyte)new_player);
 	if (!new_player) {
 		nd_write_string(Players[pnum].callsign);
 		nd_write_int(Players[pnum].net_killed_total);
@@ -1848,7 +1906,7 @@ void newdemo_record_multi_reconnect(int pnum)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_RECONNECT);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	start_time();
 }
 
@@ -1856,7 +1914,7 @@ void newdemo_record_multi_disconnect(int pnum)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_DISCONNECT);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	start_time();
 }
 
@@ -1872,7 +1930,7 @@ void newdemo_record_multi_score(int pnum, int score)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_MULTI_SCORE);
-	nd_write_byte((byte)pnum);
+	nd_write_byte((ubyte)pnum);
 	nd_write_int(score - Players[pnum].score);		// called before score is changed!!!!
 	start_time();
 }
@@ -1906,7 +1964,7 @@ void newdemo_record_door_opening(int segnum, int side)
 	stop_time();
 	nd_write_byte(ND_EVENT_DOOR_OPENING);
 	nd_write_short((short)segnum);
-	nd_write_byte((byte)side);
+	nd_write_byte((ubyte)side);
 	start_time();
 }
 
@@ -1925,16 +1983,17 @@ void newdemo_set_new_level(int level_num)
 {
 	stop_time();
 	nd_write_byte(ND_EVENT_NEW_LEVEL);
-	nd_write_byte((byte)level_num);
-	nd_write_byte((byte)Current_level_num);
+	nd_write_byte((ubyte)level_num);
+	nd_write_byte((ubyte)Current_level_num);
 	start_time();
 }
 
 int newdemo_read_demo_start(int rnd_demo)
 {
-	byte i, version, game_type, laser_level;
-	char c, energy, shield;
+	ubyte i, version, game_type, laser_level;
+	ubyte c, energy, shield;
 	char text[50], current_mission[9];
+	short s;
 
 	nd_read_byte(&c);
 	if ((c != ND_EVENT_START_DEMO) || nd_bad_read) {
@@ -2000,7 +2059,8 @@ int newdemo_read_demo_start(int rnd_demo)
 	if (Newdemo_game_mode & GM_MULTI) {
 
 		multi_new_game();
-		nd_read_byte((byte *)&N_players);
+		nd_read_byte(&c);
+		N_players = (int)c;
 		for (i = 0 ; i < N_players; i++) {
 			Players[i].cloak_time = 0;
 			Players[i].invulnerable_time = 0;
@@ -2010,8 +2070,8 @@ int newdemo_read_demo_start(int rnd_demo)
 			if (Newdemo_game_mode & GM_MULTI_COOP) {
 				nd_read_int(&(Players[i].score));
 			} else {
-				nd_read_short((short *)&(Players[i].net_killed_total));
-				nd_read_short((short *)&(Players[i].net_kills_total));
+				nd_read_short(&(Players[i].net_killed_total));
+				nd_read_short(&(Players[i].net_kills_total));
 			}
 		}
 		Game_mode = Newdemo_game_mode;
@@ -2036,10 +2096,21 @@ int newdemo_read_demo_start(int rnd_demo)
 // Support for missions
 
 	nd_read_string(current_mission);
-#ifdef DEST_SAT
+#ifdef SATURN
 	if (!strcmp(current_mission, ""))
 		strcpy(current_mission, "DESTSAT");
 #endif
+
+#ifdef MAC_SHAREWARE
+	if (strcmp(current_mission, "")) {
+		newmenu_item m[1];
+
+		sprintf(text, TXT_NOMISSION4DEMO, current_mission);
+		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
+		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
+		return 1;
+	}
+#else
 	if (!load_mission_by_name(current_mission)) {
 		newmenu_item m[1];
 
@@ -2048,6 +2119,7 @@ int newdemo_read_demo_start(int rnd_demo)
 		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
 		return 1;
 	}
+#endif
 
 #endif
 
@@ -2238,7 +2310,7 @@ int newdemo_read_frame_information()
 			nd_read_int(&volume);
 			if (nd_bad_read) { done = -1; break; }
 			if (Newdemo_vcr_state == ND_STATE_PLAYBACK)
-				digi_play_sample_3d( soundno, angle, volume, 0 );
+				digi_play_sample_3d( soundno, fixmuldiv(angle, 255, F1_0), volume, 0 );
 			break;
 
 		case ND_EVENT_SOUND_3D_ONCE:
@@ -2247,7 +2319,7 @@ int newdemo_read_frame_information()
 			nd_read_int(&volume);
 			if (nd_bad_read) { done = -1; break; }
 			if (Newdemo_vcr_state == ND_STATE_PLAYBACK)
-				digi_play_sample_3d( soundno, angle, volume, 1 );
+				digi_play_sample_3d( soundno, fixmuldiv(angle, 255, F1_0), volume, 1 );
 			break;
 
 		case ND_EVENT_WALL_HIT_PROCESS: {
@@ -2284,14 +2356,6 @@ int newdemo_read_frame_information()
 		}
 
 		case ND_EVENT_MORPH_FRAME: {
-#if 0
-			morph_data *md;
-
-			md = &morph_objects[0];
-			if (newdemo_read( md->morph_vecs, sizeof(md->morph_vecs), 1 )!=1) { done=-1; break; }
-			if (newdemo_read( md->submodel_active, sizeof(md->submodel_active), 1 )!=1) { done=-1; break; }
-			if (newdemo_read( md->submodel_startpoints, sizeof(md->submodel_startpoints), 1 )!=1) { done=-1; break; }
-#endif
 			objnum = obj_allocate();
 			if (objnum==-1)
 				break;
@@ -2804,7 +2868,7 @@ int newdemo_read_frame_information()
 					Players[i].flags &= ~PLAYER_FLAGS_CLOAKED;
 				}
 			}
-#ifdef DEST_SAT
+#ifdef SATURN
 			if ( (loaded_level < Last_secret_level) || (loaded_level > Last_level - 1) ) {
 				newmenu_item m[1];
 
@@ -2935,7 +2999,7 @@ void newdemo_goto_end()
 {
 	short frame_length, byte_count, bshort;
 	byte level, bbyte, laser_level;
-	ubyte energy, shield;
+	ubyte energy, shield, c;
 	int i, loc, bint;
 
 	fseek(infile, -2, SEEK_END);
@@ -2993,7 +3057,8 @@ void newdemo_goto_end()
 	}
 
 	if (Newdemo_game_mode & GM_MULTI) {
-		nd_read_byte((byte *)&N_players);
+		nd_read_byte(&c);
+		N_players = c;
 		for (i = 0; i < N_players; i++) {
 			nd_read_string(Players[i].callsign);
 			nd_read_byte(&(Players[i].connected));
@@ -3066,7 +3131,7 @@ void interpolate_frame(fix d_play, fix d_recorded)
 		factor = F1_0;
 
 	num_cur_objs = Highest_object_index;
-	cur_objs = (object *)malloc(sizeof(object) * (num_cur_objs + 1));
+	cur_objs = (object *)mymalloc(sizeof(object) * (num_cur_objs + 1));
 	if (cur_objs == NULL) {
 		mprintf((0,"Couldn't get %d bytes for cur_objs in interpolate_frame\n", sizeof(object) * num_cur_objs));
 		Int3();
@@ -3077,7 +3142,7 @@ void interpolate_frame(fix d_play, fix d_recorded)
 
 	Newdemo_vcr_state = ND_STATE_PAUSED;
 	if (newdemo_read_frame_information() == -1) {
-		free(cur_objs);
+		myfree(cur_objs);
 		newdemo_stop_playback();
 		return;
 	}
@@ -3195,7 +3260,7 @@ if (mag1 > F1_0/256) {
 	for (i = 0; i <= num_cur_objs; i++)
 		memcpy(&(Objects[i]), &(cur_objs[i]), sizeof(object));
 	Highest_object_index = num_cur_objs;
-	free(cur_objs);
+	myfree(cur_objs);
 }
 
 void newdemo_playback_one_frame()
@@ -3318,7 +3383,7 @@ void newdemo_playback_one_frame()
 					int i, j, num_objs, level;
 
 					num_objs = Highest_object_index;
-					cur_objs = (object *)malloc(sizeof(object) * (num_objs + 1));
+					cur_objs = (object *)mymalloc(sizeof(object) * (num_objs + 1));
 					if (cur_objs == NULL) {
 						Warning ("Couldn't get %d bytes for objects in interpolate playback\n", sizeof(object) * num_objs);
 						break;
@@ -3328,12 +3393,12 @@ void newdemo_playback_one_frame()
 
 					level = Current_level_num;
 					if (newdemo_read_frame_information() == -1) {
-						free(cur_objs);
+						myfree(cur_objs);
 						newdemo_stop_playback();
 						return;
 					}
 					if (level != Current_level_num) {
-						free(cur_objs);
+						myfree(cur_objs);
 						if (newdemo_read_frame_information() == -1)
 							newdemo_stop_playback();
 						break;
@@ -3353,7 +3418,7 @@ void newdemo_playback_one_frame()
 							}
 						}
 					}
-					free(cur_objs);
+					myfree(cur_objs);
 					d_recorded += nd_recorded_time;
 					base_interpol_time = nd_playback_total - FrameTime;
 				}
@@ -3384,6 +3449,7 @@ void newdemo_playback_one_frame()
 
 void newdemo_start_recording()
 {
+#if 0
 	struct diskfree_t dfree;
 	unsigned drive;
 
@@ -3398,6 +3464,9 @@ void newdemo_start_recording()
 		nm_messagebox(NULL, 1, TXT_OK, TXT_DEMO_NO_SPACE);
 		return;
 	}
+#endif
+	Newdemo_size = ULONG_MAX;		// see above code commented out
+	
 	Newdemo_size -= 100000;
 	Newdemo_num_written = 0;
 	Newdemo_no_space=0;
@@ -3406,7 +3475,7 @@ void newdemo_start_recording()
 	newdemo_record_start_demo();
 }
 
-char demoname_allowed_chars[] = "azAZ09__--";
+char demoname_allowed_chars[] = "azAZ09__--  ";
 void newdemo_stop_recording()
 {
 	newmenu_item m[6];
@@ -3414,7 +3483,7 @@ void newdemo_stop_recording()
 	static char filename[9] = "", *s;
 	static ubyte tmpcnt = 0;
 	ubyte cloaked = 0;
-	char fullname[15];
+	char fullname[64];
 #ifndef SHAREWARE
 	unsigned short byte_count = 0;
 #endif
@@ -3509,26 +3578,27 @@ try_again:
 	Newmenu_allowed_chars = demoname_allowed_chars;
 	if (!Newdemo_no_space) {
 		m[0].type=NM_TYPE_INPUT; m[0].text_len = 8; m[0].text = filename;
-		exit = newmenu_do( NULL, TXT_SAVE_DEMO_AS, 1, &(m[0]), NULL );
+		exit = newmenu_do4( NULL, TXT_SAVE_DEMO_AS, 1, &(m[0]), NULL, 0, NULL, -1, -1, 1 );
 	} else if (Newdemo_no_space == 1) {
 		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_DEMO_SAVE_BAD;
 		m[ 1].type = NM_TYPE_INPUT;m[ 1].text_len = 8; m[1].text = filename;
-		exit = newmenu_do( NULL, NULL, 2, m, NULL );
+		exit = newmenu_do4( NULL, NULL, 2, m, NULL, 0, NULL, -1, -1, 1 );
 	} else if (Newdemo_no_space == 2) {
 		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_DEMO_SAVE_NOSPACE;
 		m[ 1].type = NM_TYPE_INPUT;m[ 1].text_len = 8; m[1].text = filename;
-		exit = newmenu_do( NULL, NULL, 2, m, NULL );
+		exit = newmenu_do4( NULL, NULL, 2, m, NULL, 0, NULL, -1, -1, 1 );
 	}
 	Newmenu_allowed_chars = NULL;
 
 	if (exit == -2) {					// got bumped out from network menu
-		char save_file[15];
+		char save_file[64];
 
 		if (filename[0] != '\0') {
-			strcpy(save_file, filename);
+			strcpy(save_file, ":Demos:");
+			strcat(save_file, filename);
 			strcat(save_file, ".dem");
 		} else 
-			sprintf (save_file, "tmp%d.dem", tmpcnt++);
+			sprintf (save_file, ":Demos:tmp%d.dem", tmpcnt++);
 		remove(save_file);
 		rename(DEMO_FILENAME, save_file);
 		return;
@@ -3548,10 +3618,11 @@ try_again:
 			goto try_again;
 		}
 
+	strcpy(fullname, ":Demos:");
 	if (Newdemo_no_space)
-		strcpy(fullname, m[1].text);
+		strcat(fullname, m[1].text);
 	else
-		strcpy(fullname, m[0].text);
+		strcat(fullname, m[0].text);
 	strcat(fullname, ".dem");
 	remove(fullname);
 	rename(DEMO_FILENAME, fullname);
@@ -3559,19 +3630,22 @@ try_again:
 
 void newdemo_start_playback(char * filename)
 {
-	struct find_t find;
+	DIRPtr dir;
+	direntPtr entry;
 	int rnd_demo = 0;
+	char name[64];
 
 	if (filename==NULL) {
 		// Randomly pick a filename 
 		int NumFiles = 0, RandFileNum;
 		rnd_demo = 1;
-		if( !_dos_findfirst( "*.DEM", _A_NORMAL, &find ) )	{
-			do	{
-				NumFiles++;
-			} while( !_dos_findnext( &find ) );
+		dir = opendir(":Demos:*.dem");
+		while ((entry = readdir(dir))) {
+			NumFiles++;
 		}
-#ifdef USE_CD
+		closedir(dir);
+		
+#ifdef SATURN
 		if ( strlen(destsat_cdpath) )	{
 			char temp_spec[128];
 			strcpy( temp_spec, destsat_cdpath );
@@ -3589,16 +3663,16 @@ void newdemo_start_playback(char * filename)
 		}
 		RandFileNum = rand() % NumFiles;
 		NumFiles = 0;
-		if( !_dos_findfirst( "*.DEM", _A_NORMAL, &find ) )	{
-			do	{
-				if ( NumFiles==RandFileNum )	{
-					filename = &find.name;
-					break;
-				}
-				NumFiles++;
-			} while( !_dos_findnext( &find ) );
+		dir = opendir(":Demos:*.dem");
+		while ((entry = readdir(dir))) {
+			if ( NumFiles==RandFileNum )	{
+				filename = entry->d_name;
+				break;
+			}
+			NumFiles++;
 		}
-#ifdef USE_CD
+		closedir(dir);
+#ifdef SATURN
 		if ( strlen(destsat_cdpath) )	{
 			char temp_spec[128];
 			strcpy( temp_spec, destsat_cdpath );
@@ -3618,10 +3692,12 @@ void newdemo_start_playback(char * filename)
 	}
 
 	if (!filename)
-
 		return;
-	infile = fopen( filename, "rb" );
-#ifdef USE_CD
+
+	strcpy(name, ":Demos:");
+	strcat(name, filename);
+	infile = fopen( name, "rb" );
+#ifdef SATURN
 	if (infile==NULL)	{
 		// Read demo from CD??
 		if ( strlen(destsat_cdpath) )	{
@@ -3677,78 +3753,3 @@ void newdemo_stop_playback()
 	longjmp(LeaveGame,0);			// Exit game loop
 }
 
-
-#ifndef NDEBUG
-
-#define BUF_SIZE 16384
-
-void newdemo_strip_frames(char *outname, int bytes_to_strip)
-{
-	FILE *outfile;
-	char *buf;
-	int total_size, bytes_done, read_elems, bytes_back;
-	int trailer_start, loc1, loc2, stop_loc, bytes_to_read;
-	short last_frame_length;
-
-	bytes_done = 0;
-	total_size = filelength(fileno(infile));
-	outfile = fopen(outname, "wb");
-	if (outfile == NULL) {
-		newmenu_item m[1];
-
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = "Can't open output file";
-		newmenu_do( NULL, NULL, 1, m, NULL );
-		newdemo_stop_playback();
-		return;
-	}
-	buf = malloc(BUF_SIZE);
-	if (buf == NULL) {
-		newmenu_item m[1];
-
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = "Can't malloc output buffer";
-		newmenu_do( NULL, NULL, 1, m, NULL );
-		fclose(outfile);
-		newdemo_stop_playback();
-		return;
-	}
-	newdemo_goto_end();
-	trailer_start = ftell(infile);
-	fseek(infile, 11, SEEK_CUR);
-	bytes_back = 0;
-	while (bytes_back < bytes_to_strip) {
-		loc1 = ftell(infile);
-//		fseek(infile, -10, SEEK_CUR);
-//		nd_read_short(&last_frame_length);			
-//		fseek(infile, 8 - last_frame_length, SEEK_CUR);
-		newdemo_back_frames(1);
-		loc2 = ftell(infile);
-		bytes_back += (loc1 - loc2);
-	}
-	fseek(infile, -10, SEEK_CUR);
-	nd_read_short(&last_frame_length);
-	fseek(infile, -3, SEEK_CUR);
-	stop_loc = ftell(infile);
-	fseek(infile, 0, SEEK_SET);
-	while (stop_loc > 0) {
-		if (stop_loc < BUF_SIZE)
-			bytes_to_read = stop_loc;
-		else
-			bytes_to_read = BUF_SIZE;
-		read_elems = fread(buf, 1, bytes_to_read, infile);
-		fwrite(buf, 1, read_elems, outfile);
-		stop_loc -= read_elems;
-	}
-	stop_loc = ftell(outfile);
-	fseek(infile, trailer_start, SEEK_SET);
-	while ((read_elems = fread(buf, 1, BUF_SIZE, infile)) != 0)
-		fwrite(buf, 1, read_elems, outfile);
-	fseek(outfile, stop_loc, SEEK_SET);
-	fseek(outfile, 1, SEEK_CUR);
-	fwrite(&last_frame_length, 2, 1, outfile);
-	fclose(outfile);
-	newdemo_stop_playback();
-
-}
-
-#endif
-

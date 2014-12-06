@@ -11,14 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/rect.c $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:19 $
+ * $Source: Buggin:miner:source:2d::RCS:rect.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 09:22:22 $
  *
  * Graphical routines for drawing rectangles.
  *
  * $Log: rect.c $
+ * Revision 1.1  1995/03/09  09:22:22  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.3  1994/11/18  22:50:19  john
  * Changed shorts to ints in parameters.
  * 
@@ -51,4 +56,3 @@ void gr_rect(int left,int top,int right,int bot)
 	for ( i=top; i<=bot; i++ )
 		gr_scanline( left, right, i );
 }
-

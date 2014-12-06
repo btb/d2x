@@ -11,15 +11,43 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/gameseg.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:39 $
+ * $Source: Smoke:miner:source:main::RCS:gameseg.c $
+ * $Revision: 1.9 $
+ * $Author: allender $
+ * $Date: 1995/11/08 16:26:04 $
  * 
  * Functions moved from segment.c to make editor separable from game.
  * 
  * $Log: gameseg.c $
- * Revision 2.2  1995/03/20  18:15:39  john
+ * Revision 1.9  1995/11/08  16:26:04  allender
+ * minor bug fix in find_connected_distance
+ *
+ * Revision 1.8  1995/10/12  17:36:55  allender
+ * made trace_segs only recurse 100 times max
+ *
+ * Revision 1.7  1995/10/11  18:29:01  allender
+ * removed Int3 from trace_segs
+ *
+ * Revision 1.6  1995/10/11  14:13:54  allender
+ * put in stack check code into trace-segs
+ *
+ * Revision 1.5  1995/09/23  09:40:25  allender
+ * put in casts in extract_shortpos to try and solve shortpos problem
+ * with appletalk
+ *
+ * Revision 1.4  1995/09/20  14:26:50  allender
+ * added flag to swap bytes on extract shortpot
+ *
+ * Revision 1.3  1995/08/12  12:01:27  allender
+ * added flag to create_shortpos to swap bytes
+ *
+ * Revision 1.2  1995/06/06  10:42:07  allender
+ * made shortpos routines swap bytes when extracting and making shortpos structures
+ *
+ * Revision 1.1  1995/05/16  15:25:46  allender
+ * Initial revision
+ *
+ * Revision 2.2  1995/03/20  12:15:39  john
  * Added code to not store the normals in the segment structure.
  * 
  * Revision 2.1  1995/03/08  12:11:39  allender
@@ -204,8 +232,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <malloc.h>	//for stackavail()
 #include <string.h>	//	for memset()
+#include <Memory.h>	// for StackSpace()
 
 #include "inferno.h"
 #include "game.h"
@@ -216,8 +244,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "wall.h"
 #include "fuelcen.h"
 
+#include "byteswap.h"
+
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gameseg.c 2.2 1995/03/20 18:15:39 john Exp $";
+static char rcsid[] = "$Id: gameseg.c 1.9 1995/11/08 16:26:04 allender Exp $";
 #pragma on (unreferenced)
 
 // How far a point can be from a plane, and still be "in" the plane
@@ -910,9 +940,11 @@ int	Doing_lighting_hack_flag=0;
 #define Doing_lighting_hack_flag 0
 #endif
 
+#define MAX_TRACESEGS_LEVEL	100
+
 //figure out what seg the given point is in, tracing through segments
 //returns segment number, or -1 if can't find segment
-int trace_segs(vms_vector *p0,int oldsegnum)
+int trace_segs(vms_vector *p0,int oldsegnum, int level)
 {
 	int centermask;
 	segment *seg;
@@ -920,10 +952,10 @@ int trace_segs(vms_vector *p0,int oldsegnum)
 
 	Assert((oldsegnum <= Highest_segment_index) && (oldsegnum >= 0));
 
-	if (stackavail() < 1024) {		//if no debugging, we'll get past assert
+	if (StackSpace() < 8192) {		//if no debugging, we'll get past assert
 
 		#ifndef NDEBUG
-		if (!Doing_lighting_hack_flag)
+//		if (!Doing_lighting_hack_flag)
 			Int3();	// Please get Matt, or if you cannot, then type 
 						// "?p0->xyz,segnum" at the DBG prompt, write down
 						// the values (a 3-element vector and a segment number), 
@@ -931,6 +963,11 @@ int trace_segs(vms_vector *p0,int oldsegnum)
 		#endif
 
 		return oldsegnum;				//just say we're in this segment and be done with it
+	}
+	
+	if ( level == MAX_TRACESEGS_LEVEL ) {
+	
+		return oldsegnum;
 	}
 
 
@@ -963,7 +1000,7 @@ int trace_segs(vms_vector *p0,int oldsegnum)
 
 				side_dists[biggest_side] = 0;
 
-				check = trace_segs(p0,seg->children[biggest_side]);	//trace into adjacent segment
+				check = trace_segs(p0,seg->children[biggest_side], level+1);	//trace into adjacent segment
 
 				if (check != -1)		//we've found a segment
 					return check;	
@@ -993,7 +1030,7 @@ int find_point_seg(vms_vector *p,int segnum)
 	Assert((segnum <= Highest_segment_index) && (segnum >= -1));
 
 	if (segnum != -1) {
-		newseg = trace_segs(p,segnum);
+		newseg = trace_segs(p,segnum, 0);
 
 		if (newseg != -1)			//we found a segment!
 			return newseg;
@@ -1132,7 +1169,7 @@ fix find_connected_distance(vms_vector *p0, int seg0, vms_vector *p1, int seg1, 
 //		depth[i] = 0;
 //	}
 memset(visited, 0, Highest_segment_index+1);
-memset(depth, 0, Highest_segment_index+1);
+memset(depth, 0, sizeof(depth[0]) * (Highest_segment_index+1));
 
 	cur_seg = seg0;
 	visited[cur_seg] = 1;
@@ -1267,7 +1304,7 @@ byte convert_to_byte(fix f)
 //	Extract the matrix into byte values.
 //	Create a position relative to vertex 0 with 1/256 normal "fix" precision.
 //	Stuff segment in a short.
-void create_shortpos(shortpos *spp, object *objp)
+void create_shortpos(shortpos *spp, object *objp, int swap_bytes)
 {
 	// int	segnum;
 	byte	*sp;
@@ -1293,6 +1330,18 @@ void create_shortpos(shortpos *spp, object *objp)
  	spp->velx = (objp->mtype.phys_info.velocity.x) >> VEL_PRECISION;
 	spp->vely = (objp->mtype.phys_info.velocity.y) >> VEL_PRECISION;
 	spp->velz = (objp->mtype.phys_info.velocity.z) >> VEL_PRECISION;
+	
+// swap the short values for the big-endian machines.
+
+	if (swap_bytes) {
+		spp->xo = swapshort(spp->xo);
+		spp->yo = swapshort(spp->yo);
+		spp->zo = swapshort(spp->zo);
+		spp->segment = swapshort(spp->segment);
+		spp->velx = swapshort(spp->velx);
+		spp->vely = swapshort(spp->vely);
+		spp->velz = swapshort(spp->velz);
+	}
 
 //	mprintf((0, "Matrix: %08x %08x %08x    %08x %08x %08x\n", objp->orient.m1,objp->orient.m2,objp->orient.m3,
 //					spp->bytemat[0] << MATRIX_PRECISION,spp->bytemat[1] << MATRIX_PRECISION,spp->bytemat[2] << MATRIX_PRECISION));
@@ -1311,7 +1360,7 @@ void create_shortpos(shortpos *spp, object *objp)
 
 }
 
-void extract_shortpos(object *objp, shortpos *spp)
+void extract_shortpos(object *objp, shortpos *spp, int swap_bytes)
 {
 	int	segnum;
 	byte	*sp;
@@ -1328,17 +1377,29 @@ void extract_shortpos(object *objp, shortpos *spp)
 	objp->orient.uvec.z = *sp++ << MATRIX_PRECISION;
 	objp->orient.fvec.z = *sp++ << MATRIX_PRECISION;
 
-	segnum = spp->segment;
+// swap the short values for the big-endian machines.
+
+	if (swap_bytes) {
+		spp->xo = swapshort(spp->xo);
+		spp->yo = swapshort(spp->yo);
+		spp->zo = swapshort(spp->zo);
+		spp->segment = swapshort(spp->segment);
+		spp->velx = swapshort(spp->velx);
+		spp->vely = swapshort(spp->vely);
+		spp->velz = swapshort(spp->velz);
+	}
+
+	segnum = (int)(spp->segment);
 
 	Assert((segnum >= 0) && (segnum <= Highest_segment_index));
 
-	objp->pos.x = (spp->xo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].x;
-	objp->pos.y = (spp->yo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].y;
-	objp->pos.z = (spp->zo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].z;
+	objp->pos.x = ((fix)spp->xo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].x;
+	objp->pos.y = ((fix)spp->yo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].y;
+	objp->pos.z = ((fix)spp->zo << RELPOS_PRECISION) + Vertices[Segments[segnum].verts[0]].z;
 
-	objp->mtype.phys_info.velocity.x = (spp->velx << VEL_PRECISION);
-	objp->mtype.phys_info.velocity.y = (spp->vely << VEL_PRECISION);
-	objp->mtype.phys_info.velocity.z = (spp->velz << VEL_PRECISION);
+	objp->mtype.phys_info.velocity.x = ((fix)spp->velx << VEL_PRECISION);
+	objp->mtype.phys_info.velocity.y = ((fix)spp->vely << VEL_PRECISION);
+	objp->mtype.phys_info.velocity.z = ((fix)spp->velz << VEL_PRECISION);
 
 	obj_relink(objp-Objects, segnum);
 
@@ -2029,4 +2090,3 @@ int set_segment_depths(int start_seg, ubyte *segbuf)
 //--	set_segment_depths(0, Segbuf);
 //--}
 
-

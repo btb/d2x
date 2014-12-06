@@ -11,17 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/bios/rcs/mouse.h $
- * $Revision: 1.10 $
- * $Author: john $
- * $Date: 1995/02/02 10:22:29 $
+ * $Source: Smoke:miner:source:bios::RCS:mouse.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/17 11:31:57 $
  *
  * Header for mouse functions
  *
  * $Log: mouse.h $
- * Revision 1.10  1995/02/02  10:22:29  john
- * Added cyberman init parameter.
- * 
+ * Revision 1.2  1995/10/17  11:31:57  allender
+ * added new function to return mouse button state
+ *
+ * Revision 1.1  1995/05/05  09:30:33  allender
+ * Initial revision
+ *
  * Revision 1.9  1994/11/18  23:18:09  john
  * Changed some shorts to ints.
  * 
@@ -56,7 +59,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include "types.h"
+#include "dtypes.h"
 #include "fix.h"
 
 #define MB_LEFT			0
@@ -79,8 +82,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // Check for mouse driver, reset driver if installed. returns number of
 // buttons if driver is present.
 
-extern int mouse_init(int enable_cyberman);
-extern int mouse_set_limits( int x1, int y1, int x2, int y2 );
+extern int mouse_init();
+extern void mouse_set_limits( int x1, int y1, int x2, int y2 );
 extern void mouse_flush();	// clears all mice events...
 
 //========================================================================
@@ -103,6 +106,8 @@ extern int mouse_button_down_count(int button);
 // Returns 1 if this button is currently down
 extern int mouse_button_state(int button);
 
+// return 1 if the button went down since last call
+extern int mouse_went_down(int button);
+
 
 #endif
-

@@ -11,23 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/effects.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 22:51:04 $
+ * $Source: Smoke:miner:source:2d::RCS:effects.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/03/09 08:53:09 $
  * 
  * special effects stuff
  * 
  * $Log: effects.c $
- * Revision 1.5  1994/11/18  22:51:04  john
- * Changed a bunch of shorts to ints in calls.
- * 
- * Revision 1.4  1994/04/22  11:16:00  john
- * *** empty log message ***
- * 
- * Revision 1.3  1994/02/01  13:18:45  john
- * *** empty log message ***
- * 
+ * Revision 1.1  1995/03/09  08:53:09  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.2  1993/10/26  13:18:15  john
  * *** empty log message ***
  * 
@@ -39,17 +35,18 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: effects.c 1.5 1994/11/18 22:51:04 john Exp $";
+static char rcsid[] = "$Id: effects.c 1.1 1995/03/09 08:53:09 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "effects.h"
 
 #include "mem.h"
 #include "gr.h"
 #include "grdef.h"
-#include "effect2d.h"
+#include "bm.h"
 
 int bitwidth(unsigned int n)
 {
@@ -107,7 +104,7 @@ void dissolve_in(grs_bitmap * bitmap )
 		if ((row < height) && (column < width)) {
 			// Draw the (r,c)'th pixel
 			gr_setcolor(gr_ugpixel( bitmap, column, row ));
- 			gr_upixel(column, row);
+			gr_upixel(column, row);
 		}
 
 		/* Compute the next sequence element */
@@ -123,4 +120,142 @@ void dissolve_in(grs_bitmap * bitmap )
 
 }
 
-
+void gr_snow_out(int num_dots)
+{
+	int num_done;
+	int height, width;
+	int rwidth, cwidth;     /* bit width for rows, for columns */
+	int regwidth;           /* "width" of sequence generator */
+	long mask;     /* mask to XOR with to create sequence */
+	int rowshift;  /* shift distance to get row  */
+													/* from element */
+	int colmask; /* mask to extract column from element */
+	unsigned long element; /* one element of random */                                                                 /* sequence */
+	int row, column;    /* row and column for one pixel */
+
+	/* Find the mask to produce all rows and columns. */
+	height = grd_curcanv->cv_bitmap.bm_h;
+	width = grd_curcanv->cv_bitmap.bm_w;
+
+	rwidth = bitwidth (height); /* how many bits needed for height? */
+	cwidth = bitwidth (width);  /* how many bits needed for width? */
+	regwidth = rwidth + cwidth; /* how wide must the register be? */
+	mask = randmasks[regwidth]; /* which mask is for that width? */
+
+	/* Find values to extract row and col numbers from each element. */
+	rowshift = cwidth; /* find dist to shift to get top bits (row) */
+	colmask = (1<<cwidth)-1;        /* find mask to extract  */
+									/* bottom bits (col) */
+
+	/* Now cycle through all sequence elements. */
+
+	element = 1;    /* 1st element (could be any nonzero) */
+
+	num_done = 0;
+
+	do {
+		row = element >> rowshift; /* find row number for this pixel */
+		column = element & colmask; /* and how many columns across? */
+		/* does element fall in the array? */
+		/* ...must check row AND column */
+
+		if ((row < height) && (column < width)) {
+			// Draw the (r,c)'th pixel
+			gr_upixel(column, row);
+		}
+
+		/* Compute the next sequence element */
+		if (element & 1)                /* is the low bit set? */
+			element = (element >>1)^mask; /* yes: shift value, */
+		else
+			element = (element >>1); /* no: just shift the value */
+	} while ((element != 1)  && (num_done++ < num_dots) );         /* loop until we return to */
+									/*  original element */
+	gr_upixel(0,0);
+
+}
+
+
+// Fade = 0: blacken,  15:no change.
+
+void gr_fade_canvas(int fade)
+{
+	int height, width;
+	int x, y, pixel;
+	
+	height = grd_curcanv->cv_bitmap.bm_h;
+	width = grd_curcanv->cv_bitmap.bm_w;
+
+	fade = (15-fade)*256;
+						
+	for (y=0; y<height; y++ )
+		for (x=0; x<width; x++ )
+		{
+			pixel = gr_ugpixel( &grd_curcanv->cv_bitmap, x, y );
+			gr_setcolor(bmd_fade_table[ pixel + fade ] );
+			gr_upixel( x, y );
+		}
+}
+
+void gr_deaccent_canvas()
+{
+	int height, width;
+	int x, y, pixel;
+	
+	height = grd_curcanv->cv_bitmap.bm_h;
+	width = grd_curcanv->cv_bitmap.bm_w;
+
+	for (y=0; y<height; y++ )
+		for (x=0; x<width; x++ )
+		{
+			if ( (x+y) & 1 )
+				gr_upixel( x, y );
+		}
+}
+
+static char ygrey[800];
+
+void gr_grey_canvas()
+{
+	int height, width;
+	int x, y, pixel;
+	int r,g,b, grey, lastgrey, diff;
+	grs_bitmap * bm;
+	unsigned int offset;
+
+	bm = &grd_curcanv->cv_bitmap;
+	height = grd_curcanv->cv_bitmap.bm_h;
+	width = grd_curcanv->cv_bitmap.bm_w;
+
+	for (x=0; x<width; x++ )
+		ygrey[x] = 16;
+
+	offset = (unsigned int)bm->bm_data;
+
+	for (y=0; y<height; y++ )
+	{
+		for (x=0; x<width; x++ )
+		{
+			gr_vesa_setpage( offset >> 16 );
+
+			pixel = gr_video_memory[offset & 0xFFFF];
+
+			r = grd_curscreen->pal[pixel*3+0];
+			g = grd_curscreen->pal[pixel*3+1];
+			b = grd_curscreen->pal[pixel*3+2];
+
+			lastgrey = grey;
+			grey = (r+g+b)/6;
+
+			diff = (grey-lastgrey) + (grey-ygrey[x]) + 16;
+			ygrey[x] = grey;
+
+			if (diff<0) diff=0;
+			if (diff>31) diff=31;
+
+			gr_video_memory[offset & 0xFFFF] = bmd_inverse_table[ (diff<<10) | (diff<<5) | (diff) ];
+			offset++;
+		}
+		offset += bm->bm_rowsize - width;
+	}
+}

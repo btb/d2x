@@ -11,14 +11,37 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/gr.h $
- * $Revision: 1.45 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:21 $
+ * $Source: Smoke:miner:source:2d::RCS:gr.h $
+ * $Revision: 1.7 $
+ * $Author: allender $
+ * $Date: 1995/09/13 08:39:44 $
  *
  * Definitions for graphics lib.
  *
  * $Log: gr.h $
+ * Revision 1.7  1995/09/13  08:39:44  allender
+ * added prototype for gr_bitblt_cockpit
+ *
+ * Revision 1.6  1995/08/23  18:47:01  allender
+ * fixed compiler warnings on mcc
+ *
+ * Revision 1.5  1995/08/14  15:51:01  allender
+ * added #define for transparency color
+ *
+ * Revision 1.4  1995/06/13  13:03:55  allender
+ * added graphics mode
+ *
+ * Revision 1.3  1995/04/18  09:50:16  allender
+ * *** empty log message ***
+ *
+ * Revision 1.2  1995/04/07  07:32:33  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:04:16  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.45  1994/11/18  22:50:21  john
  * Changed shorts to ints in parameters.
  * 
@@ -159,8 +182,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _GR_H
 #define _GR_H
 
-#include "types.h"
+#include <QDOffscreen.h>
+#include "dtypes.h"
 #include "fix.h"
+
+#define SWAP_0_255			1			// swap black and white
+#define TRANSPARENCY_COLOR	0			// palette entry of transparency color -- 255 on the PC
 
 #define GR_FADE_LEVELS 34
 #define GR_ACTUAL_FADE_LEVELS 32
@@ -185,10 +212,6 @@ typedef struct _grs_font {
 } grs_font;
 
 #define BM_LINEAR   0
-#define BM_MODEX    1
-#define BM_SVGA     2
-#define BM_RGB15    3   //5 bits each r,g,b stored at 16 bits
-#define BM_SVGA15   4
 
 #define BM_FLAG_TRANSPARENT			1
 #define BM_FLAG_SUPER_TRANSPARENT	2
@@ -200,17 +223,17 @@ typedef struct _grs_bitmap {
 	short       bm_x,bm_y;      // Offset from parent's origin
 	short       bm_w,bm_h;      // width,height
 	byte       	bm_type;        // 0=Linear, 1=ModeX, 2=SVGA
-	byte			bm_flags;		// bit 0 on means it has transparency.
-										// bit 1 on means it has supertransparency
-										// bit 2 on means it doesn't get passed through lighting.
+	byte		bm_flags;		// bit 0 on means it has transparency.
+								// bit 1 on means it has supertransparency
+								// bit 2 on means it doesn't get passed through lighting.
 	short	    bm_rowsize;     // unsigned char offset to next row
-	unsigned char *      bm_data;	     // ptr to pixel data...
+	unsigned char *bm_data;		// ptr to pixel data...
 								//   Linear = *parent+(rowsize*y+x)
 								//   ModeX = *parent+(rowsize*y+x/4)
 								//   SVGA = *parent+(rowsize*y+x)
 	unsigned short bm_selector;
-	ubyte			avg_color;		//	Average color of all pixels in texture map.
-	byte			unused;			//	to 4-byte align.
+	ubyte			avg_color;	//	Average color of all pixels in texture map.
+	byte			unused;		//	to 4-byte align.
 } grs_bitmap;
 
 typedef struct _grs_canvas {
@@ -252,8 +275,8 @@ typedef struct _grs_screen {     // This is a video screen
 // 18  800  600  15  V    1.0   1.0
 
 #define SM_ORIGINAL		-1
-#define SM_320x200C     0
-#define SM_320x200U     1
+//#define SM_320x200C     0
+//#define SM_320x200U     1
 #define SM_320x240U     2
 #define SM_360x200U     3
 #define SM_360x240U     4
@@ -272,14 +295,17 @@ typedef struct _grs_screen {     // This is a video screen
 #define SM_640x480V15   17
 #define SM_800x600V15   18
 
-//=========================================================================
+#define SM_320x200x8	1
+#define SM_320x200x8UL	2
+#define SM_320x200x16	3
+
+////=========================================================================
 // System functions:
 // setup and set mode. this creates a grs_screen structure and sets
 // grd_curscreen to point to it.  grs_curcanv points to this screen's
 // canvas.  Saves the current VGA state and screen mode.
 
-int gr_init(int mode);
-int gr_set_mode(int mode);
+int gr_init();
 void gr_enable_default_palette_loading();
 void gr_disable_default_palette_loading();
 
@@ -290,11 +316,8 @@ extern void gr_pal_clear();
 extern void gr_pal_setblock( int start, int number, unsigned char * pal );
 extern void gr_pal_getblock( int start, int number, unsigned char * pal );
 
-extern int gr_init_A0000();         // Initializes _A0000. Returns true if failed.
-extern unsigned short _A0000;       // Selector for screen segment
-
 //shut down the 2d.  Restore the screen mode.
-int gr_close();
+void gr_close();
 
 //  0=Mode set OK
 //  1=No VGA adapter installed
@@ -311,9 +334,6 @@ int gr_close();
 // Returns one of the above without setting mode
 int gr_check_mode(int mode);	
 
-
-extern int gr_save_mode();
-extern void gr_restore_mode();
 
 //=========================================================================
 // Canvas functions:
@@ -332,23 +352,23 @@ grs_canvas *gr_create_sub_canvas(grs_canvas *canv,int x,int y,int w, int h);
 // Initialize the specified canvas. the raw pixel data buffer is passed as
 // a parameter. no memory allocation is performed.
 
-gr_init_canvas(grs_canvas *canv,unsigned char *pixdata,int pixtype, int w,int h);
+void gr_init_canvas(grs_canvas *canv,unsigned char *pixdata,int pixtype, int w,int h);
 
 // Initialize the specified sub canvas. no memory allocation is performed.
 
-gr_init_sub_canvas(grs_canvas *new,grs_canvas *src,int x,int y,int w, int h);
+void gr_init_sub_canvas(grs_canvas *new,grs_canvas *src,int x,int y,int w, int h);
 
 // Free up the canvas and its pixel data.
 
-gr_free_canvas(grs_canvas *canv);
+void gr_free_canvas(grs_canvas *canv);
 
 // Free up the canvas. do not free the pixel data, which belongs to the
 // parent canvas.
 
-gr_free_sub_canvas(grs_canvas *canv);
+void gr_free_sub_canvas(grs_canvas *canv);
 
 // Clear the current canvas to the specified color
-gr_clear_canvas(int color);
+void gr_clear_canvas(int color);
 
 //=========================================================================
 // Bitmap functions:
@@ -363,15 +383,17 @@ grs_bitmap *gr_create_bitmap_raw(int w, int h, unsigned char * raw_data );
 grs_bitmap *gr_create_sub_bitmap(grs_bitmap *bm,int x,int y,int w, int h);
 
 // Free the bitmap and its pixel data
-gr_free_bitmap(grs_bitmap *bm);
+void gr_free_bitmap(grs_bitmap *bm);
 
 // Free the bitmap, but not the pixel data buffer
-gr_free_sub_bitmap(grs_bitmap *bm);
+void gr_free_sub_bitmap(grs_bitmap *bm);
 
 void gr_bm_pixel( grs_bitmap * bm, int x, int y, unsigned char color );
 void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color );
 void gr_bm_ubitblt( int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 void gr_bm_ubitbltm(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
+
+void gr_bitblt_cockpit(grs_bitmap *bm);
 
 void gr_update_buffer( void * sbuf1, void * sbuf2, void * dbuf, int size );
 
@@ -387,7 +409,7 @@ void gr_use_palette_table(char * filename );
 // Drawing functions:
 
 // For solid, XOR, or other fill modes.
-gr_set_drawmode(int mode);
+void gr_set_drawmode(int mode);
 
 // Sets the color in the current canvas.  should be a macro
 // Use: gr_setcolor(int color);
@@ -399,13 +421,13 @@ void gr_setcolor(int color);
 // but not necessarily shaded as a concave polygon. It shouldn't hang.
 // probably good solution is to shade from minx to maxx on each scan line.
 // int should really be fix
-gr_poly(int nverts,int *verts);
-gr_upoly(int nverts,int *verts);
+void gr_poly(int nverts,int *verts);
+void gr_upoly(int nverts,int *verts);
 
 
 // Draws a point into the current canvas in the current color and drawmode.
-gr_pixel(int x,int y);
-gr_upixel(int x,int y);
+void gr_pixel(int x,int y);
+void gr_upixel(int x,int y);
 
 // Gets a pixel;
 unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y );
@@ -420,27 +442,27 @@ int gr_aaline(fix x0,fix y0,fix x1,fix y1);
 int gr_uaaline(fix x0,fix y0,fix x1,fix y1);
 
 // Draw the bitmap into the current canvas at the specified location.
-gr_bitmap(int x,int y,grs_bitmap *bm);
-gr_ubitmap(int x,int y,grs_bitmap *bm);
+void gr_bitmap(int x,int y,grs_bitmap *bm);
+void gr_ubitmap(int x,int y,grs_bitmap *bm);
 // bitmap function with transparency
-gr_bitmapm( int x, int y, grs_bitmap *bm );
-gr_ubitmapm( int x, int y, grs_bitmap *bm );
+void gr_bitmapm( int x, int y, grs_bitmap *bm );
+void gr_ubitmapm( int x, int y, grs_bitmap *bm );
 
 // Draw a rectangle into the current canvas.
-gr_rect(int left,int top,int right,int bot);
-gr_urect(int left,int top,int right,int bot);
+void gr_rect(int left,int top,int right,int bot);
+void gr_urect(int left,int top,int right,int bot);
 
 // Draw a filled circle
 int gr_disk(fix x,fix y,fix r);
 int gr_udisk(fix x,fix y,fix r);
 
 // Draw an outline circle
-gr_circle(fix x,fix y,fix r);
-gr_ucircle(fix x,fix y,fix r);
+void gr_circle(fix x,fix y,fix r);
+void gr_ucircle(fix x,fix y,fix r);
 
 // Draw an unfilled rectangle into the current canvas
-gr_box(int left,int top,int right,int bot);
-gr_ubox(int left,int top,int right,int bot);
+void gr_box(int left,int top,int right,int bot);
+void gr_ubox(int left,int top,int right,int bot);
 
 void gr_scanline( int x1, int x2, int y );
 void gr_uscanline( int x1, int x2, int y );
@@ -481,8 +503,6 @@ extern void gr_set_current_canvas( grs_canvas *canv );
 #define FT_COLOR			1
 #define FT_PROPORTIONAL	2
 #define FT_KERNED			4
-
-extern void gr_vesa_update( grs_bitmap * source1, grs_bitmap * dest, grs_bitmap * source2 );
 
 // Special effects
 extern void gr_snow_out(int num_dots);
@@ -546,5 +566,3 @@ extern void gr_merge_textures_2( ubyte * lower, ubyte * upper, ubyte * dest );
 extern void gr_merge_textures_3( ubyte * lower, ubyte * upper, ubyte * dest );
 
 #endif
-
-

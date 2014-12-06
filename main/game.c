@@ -10,40 +10,137 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/game.c $
- * $Revision: 2.36 $
- * $Author: john $
- * $Date: 1996/01/05 16:52:05 $
+/*											   
+ * $Source: BigRed:miner:source:main::RCS:game.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 16:01:09 $
  *
  * Game loop for Inferno
  *
  * $Log: game.c $
- * Revision 2.36  1996/01/05  16:52:05  john
- * Improved 3d stuff.
- * 
- * Revision 2.35  1995/10/09  22:17:10  john
- * Took out the page flipping in set_screen_mode, which shouldn't
- * be there.  This was hosing the modex stuff.
- * 
- * Revision 2.34  1995/10/09  19:46:34  john
- * Fixed bug with modex paging with lcdbios.
- * 
- * Revision 2.33  1995/10/08  11:46:09  john
- * Fixed bug with 2d offset in interlaced mode in low res.
- * Made LCDBIOS with pageflipping using VESA set start
- * Address function.  X=CRTC offset, Y=0.
- * 
- * Revision 2.32  1995/10/07  13:20:51  john
- * Added new modes for LCDBIOS, also added support for -JoyNice,
- * and added Shift+F1-F4 to controls various stereoscopic params.
- * 
- * Revision 2.31  1995/05/31  14:34:43  unknown
- * fixed warnings.
- * 
- * Revision 2.30  1995/05/08  11:23:45  john
- * Made 3dmax work like Kasan wants it to.
- * 
+ * Revision 1.1  1995/12/05  16:01:09  allender
+ * Initial revision
+ *
+ * Revision 1.38  1995/11/13  13:02:35  allender
+ * put up HUD message when player starts tournament
+ *
+ * Revision 1.37  1995/11/13  09:21:05  allender
+ * ved and shorted tournament mode messages
+ *
+ * Revision 1.36  1995/11/09  17:27:00  allender
+ * took out cheats during demo playback
+ *
+ * Revision 1.35  1995/11/07  17:05:41  allender
+ * move registered cheats
+ *
+ * Revision 1.34  1995/11/03  12:55:45  allender
+ * shareware changes
+ *
+ * Revision 1.33  1995/10/29  20:15:00  allender
+ * took out frame rate cheat.  Pause for at least a second because
+ * of cmd-P problem
+ *
+ * Revision 1.32  1995/10/26  14:11:26  allender
+ * fix up message box stuff to align correctly
+ *
+ * Revision 1.31  1995/10/24  18:09:41  allender
+ * ixed cockpit weirdness -- don't update cockpit when do_appl_quit
+ * is called -- screen saved in mevent.c
+ *
+ * Revision 1.30  1995/10/21  23:39:10  allender
+ * ruise marking indicator
+ *
+ * Revision 1.29  1995/10/21  22:52:27  allender
+ * bald guy cheat -- print screen stuff
+ *
+ * Revision 1.28  1995/10/20  00:54:28  allender
+ * new help menus and redbook checking in outer game loop
+ *
+ * Revision 1.27  1995/10/17  15:34:19  allender
+ * pixel double is now default mode
+ *
+ * Revision 1.26  1995/10/12  17:34:44  allender
+ * bigger message box -- command key equivs for function keys
+ *
+ * Revision 1.25  1995/10/11  12:17:14  allender
+ * removed event loop processing
+ *
+ * Revision 1.24  1995/10/11  00:58:47  allender
+ * removed debugging code
+ *
+ * Revision 1.23  1995/10/10  11:50:32  allender
+ * fixed boxed message to align on 8 byte boundry,
+ * and some debug code
+ *
+ * Revision 1.22  1995/09/24  10:51:26  allender
+ * cannot go to finder in network..added cmd-q for quit
+ *
+ * Revision 1.21  1995/09/22  15:05:18  allender
+ * *more* hud and font type stuff (messages)
+ *
+ * Revision 1.20  1995/09/22  14:39:57  allender
+ * ved framerate counter up
+ *
+ * Revision 1.19  1995/09/18  17:01:28  allender
+ * start of compatibility stuff
+ *
+ * Revision 1.18  1995/09/15  15:53:13  allender
+ * better handling of PICT screen shots
+ *
+ * Revision 1.17  1995/09/14  15:27:41  allender
+ * fixed function type on message_box routiens
+ *
+ * Revision 1.16  1995/09/13  11:37:47  allender
+ * put in call to dump PICT file instead of PCX
+ *
+ * Revision 1.15  1995/09/08  17:13:28  allender
+ * put back in ibitblt.h and start of PICT picture dump
+ *
+ * Revision 1.14  1995/09/07  10:20:58  allender
+ * make cockpit mode default
+ *
+ * Revision 1.13  1995/09/07  10:17:34  allender
+ * added command key equivalents for function keys
+ *
+ * Revision 1.12  1995/09/04  11:36:47  allender
+ * fixed pixel double mode to have correct number of rendered
+ * lines
+ *
+ * Revision 1.11  1995/09/01  15:47:07  allender
+ * cap frame rate at 60 fps
+ *
+ * Revision 1.10  1995/08/26  16:25:59  allender
+ * whole buncha' stuff!!!!
+ *
+ * Revision 1.9  1995/08/01  16:04:47  allender
+ * put in ctrl_esc sequence to go to menubar
+ *
+ * Revision 1.8  1995/07/28  14:15:11  allender
+ * added FRAME cheat to display frame rate
+ *
+ * Revision 1.7  1995/07/17  08:54:19  allender
+ * *** empty log message ***
+ *
+ * Revision 1.6  1995/07/12  12:54:06  allender
+ * removed some debug keys
+ *
+ * Revision 1.5  1995/07/05  16:44:35  allender
+ * changed some debug keys
+ *
+ * Revision 1.4  1995/06/23  10:24:57  allender
+ * added scanline doubling routine
+ *
+ * Revision 1.3  1995/06/13  13:08:26  allender
+ * added special debug key to move window into upper left corner.
+ * also added debug key to put game in 640x480 mode
+ *
+ * Revision 1.2  1995/06/12  11:10:31  allender
+ * added DEL_SHIFT_M to move window to corner of screen
+ *
+ * Revision 1.1  1995/05/16  15:25:08  allender
+ * Initial revision
+ *
  * Revision 2.29  1995/04/06  13:47:39  yuan
  * Restored rear view to original.
  * 
@@ -279,21 +376,24 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * 
  * Revision 1.726  1995/01/23  22:07:09  john
  * Added flush to game inputs during F8.
- *
+ * 
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: game.c 2.36 1996/01/05 16:52:05 john Exp $";
+static char rcsid[] = "$Id: game.c 1.1 1995/12/05 16:01:09 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
-#include <conio.h>
 #include <stdarg.h>
-#include <dos.h>
 
+#ifdef PROFILE
+#include <profiler.h>
+#endif
+
+#include "dtypes.h"
+#include "macsys.h"
 #include "inferno.h"
 #include "game.h"
 #include "key.h"
@@ -354,11 +454,11 @@ static char rcsid[] = "$Id: game.c 2.36 1996/01/05 16:52:05 john Exp $";
 #include "desc_id.h"
 #include "cntrlcen.h"
 #include "pcx.h"
-#include "dpmi.h"
 #include "state.h"
 #include "piggy.h"
 #include "multibot.h"
 #include "ai.h"
+#include "redbook.h"
 
 //#define TEST_TIMER	1		//if this is set, do checking on timer
 
@@ -379,11 +479,13 @@ static char rcsid[] = "$Id: game.c 2.36 1996/01/05 16:52:05 john Exp $";
 #include "editor\editor.h"
 #endif
 
+extern int	C_Scanline_subdivision;
+
 //#define _MARK_ON 1
 //#include <wsample.h>            //should come after inferno.h to get mark setting
-//Above file is missing in the release version of the source. -KRB
 
 int	Speedtest_on = 0;
+int Scanline_double = 1;
 
 #ifndef NDEBUG
 int	Mark_count = 0;                 // number of debugging marks set
@@ -396,27 +498,29 @@ int	Speedtest_count=0;				//	number of times to do the debug test.
 
 static fix last_timer_value=0;
 
+#define TIMER_TEST 1
+
 #if defined(TIMER_TEST) && !defined(NDEBUG)
 fix _timer_value,actual_last_timer_value,_last_frametime;
 int stop_count,start_count;
 int time_stopped,time_started;
 #endif
 
-ubyte * Game_cockpit_copy_code = NULL;
+ubyte Game_cockpit_copy_code = 0;
 
+#ifndef MAC_SHAREWARE
 ubyte new_cheats[]= {KEY_B^0xaa, KEY_B^0xaa, KEY_B^0xaa, KEY_F^0xaa, KEY_A^0xaa,
 							KEY_U^0xaa, KEY_I^0xaa, KEY_R^0xaa, KEY_L^0xaa, KEY_H^0xaa,
 							KEY_G^0xaa, KEY_G^0xaa, KEY_U^0xaa, KEY_A^0xaa, KEY_I^0xaa,
 							KEY_G^0xaa, KEY_R^0xaa, KEY_I^0xaa, KEY_S^0xaa, KEY_M^0xaa,
 							KEY_I^0xaa, KEY_E^0xaa, KEY_N^0xaa, KEY_H^0xaa, KEY_S^0xaa,
 							KEY_N^0xaa, KEY_D^0xaa, KEY_X^0xaa, KEY_X^0xaa, KEY_A^0xaa };
+#endif
 
 ubyte			VR_use_paging		= 0;
 ubyte			VR_current_page	= 0;
 ubyte			VR_switch_eyes		= 0;
 fix			VR_eye_width		= F1_0;
-int			VR_eye_offset		= 0;
-int			VR_eye_offset_changed	= 0;
 int			VR_screen_mode		= 0;
 int			VR_render_width	= 0;
 int			VR_render_height	= 0;
@@ -454,7 +558,8 @@ char faded_in;
 
 int Game_double_buffer = 1;     //double buffer by default
 fix fixed_frametime=0;          //if non-zero, set frametime to this
-
+extern void reset_debug_video_mode();
+int Sound_suspended = 0;
 #endif
 
 int Game_suspended=0;           //if non-zero, nothing moves but player
@@ -463,30 +568,6 @@ int Game_vfx_flag = 0;
 int Game_victor_flag = 0;
 int Game_vio_flag = 0;
 int Game_3dmax_flag = 0;
-
-
-#define VR_SEPARATION F1_0*7/10
-#define VR_PIXEL_SHIFT -6
-#define VR_DEFAULT_OFFSET_RATIO F1_0
-#define VR_MIN_SEPARATION F1_0/20
-#define VR_MAX_SEPARATION F1_0*2
-#define VR_DEFAULT_OFFSET_RATIO F1_0
-#define VR_MIN_OFFSET_RATIO F1_0/5
-#define VR_MAX_OFFSET_RATIO F1_0*2
-
-			// basically, if pixel-shift equals -6, this adjustment factor
-			//	  equals 7/6 (fixed-point);
-#define VR_ADJUST_OFFSET_RATIO (F1_0*(VR_PIXEL_SHIFT-1)/VR_PIXEL_SHIFT)
-
-int simuleyes_offset_ratio = VR_DEFAULT_OFFSET_RATIO;
-int simuleyes_adjusted_offset_ratio;
-int simuleyes_right_eye_view;
-int Game_simuleyes_flag = 0;
-
-int svr_black = 0x00;
-int svr_white = 0xFF;
-
-void vr_reset_display();
 
 fix 	RealFrameTime;
 fix	Auto_fire_fusion_cannon_time = 0;
@@ -505,7 +586,10 @@ grs_bitmap background_bitmap;
 
 int Game_aborted;
 
-extern void newdemo_strip_frames(char *, int);
+void game_init_render_sub_buffers( int x, int y, int w, int h );
+void draw_centered_text( int y, char * s );
+void GameLoop(int RenderFlag, int ReadControlsFlag );
+void powerup_grab_cheat_all(void);
 
 #define BACKGROUND_NAME "statback.pcx"
 
@@ -614,7 +698,7 @@ game_show_warning(char *s)
 #define cv_w  cv_bitmap.bm_w
 #define cv_h  cv_bitmap.bm_h
 
-#define LETTERBOX_HEIGHT 140
+#define LETTERBOX_HEIGHT 320
 
 int Game_window_w = 0;
 int Game_window_h = 0;
@@ -629,6 +713,11 @@ void update_cockpits(int force_redraw)
 {
 	int x, y, w, h;
 
+// force cockpit to status bar if in compatibility mode
+
+	if ( Compatibility_mode && ((Cockpit_mode == CM_FULL_COCKPIT) || (Cockpit_mode == CM_REAR_VIEW)) )
+		Cockpit_mode = CM_STATUS_BAR;
+
 	if (Cockpit_mode != last_drawn_cockpit[VR_current_page] || force_redraw )
 		last_drawn_cockpit[VR_current_page] = Cockpit_mode;
 	else
@@ -640,9 +729,14 @@ void update_cockpits(int force_redraw)
 	switch( Cockpit_mode )	{
 	case CM_FULL_COCKPIT:
 	case CM_REAR_VIEW:
-		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode]);
-		gr_ubitmapm(0,0, &GameBitmaps[cockpit_bitmap[Cockpit_mode].index]);	
+//		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
+//		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode]);
+//		gr_bitblt_cockpit( &GameBitmaps[cockpit_bitmap[Cockpit_mode].index] );
+		gr_set_current_canvas(VR_offscreen_buffer);
+		VR_offscreen_buffer->cv_bitmap.bm_flags = BM_FLAG_TRANSPARENT;
+		gr_set_current_canvas(NULL);
+		gr_bitmapm( 0, 0, &(VR_offscreen_buffer->cv_bitmap) );
+		VR_offscreen_buffer->cv_bitmap.bm_flags = 0;		// Clear all flags for offscreen canvas
 		break;
 	case CM_FULL_SCREEN:
 		break;
@@ -680,27 +774,26 @@ void init_cockpit()
 	if ( VR_render_mode != VR_NONE )
 		Cockpit_mode = CM_FULL_SCREEN;
 
-	if ( VR_screen_mode != SM_320x200C )	{		// This really should be 'if VR_screen_mode isn't linear'
-		// We can only use cockpit or rearview mode in mode 13h
-		//if ( (Cockpit_mode==CM_FULL_COCKPIT) || (Cockpit_mode==CM_REAR_VIEW) )	{
-		//	if (Game_window_h > max_window_h)			//too big for scalable
-		//		Cockpit_mode = CM_FULL_SCREEN;
-		//	else
-		//		Cockpit_mode = CM_STATUS_BAR;
-		//}
-		//if ( (grd_curscreen->sc_w > 320) || (VR_use_paging) )
-		//		Cockpit_mode = CM_FULL_SCREEN;
-		Cockpit_mode = CM_FULL_SCREEN;
-	}
-
-	if ( Screen_mode == SCREEN_EDITOR )
-		Cockpit_mode = CM_FULL_SCREEN;
+//mwa	if ( VR_screen_mode != SM_320x200x8 )	{		// This really should be 'if VR_screen_mode isn't linear'
+//mwa		// We can only use cockpit or rearview mode in mode 13h
+//mwa		//if ( (Cockpit_mode==CM_FULL_COCKPIT) || (Cockpit_mode==CM_REAR_VIEW) )	{
+//mwa		//	if (Game_window_h > max_window_h)			//too big for scalable
+//mwa		//		Cockpit_mode = CM_FULL_SCREEN;
+//mwa		//	else
+//mwa		//		Cockpit_mode = CM_STATUS_BAR;
+//mwa		//}
+//mwa		//if ( (grd_curscreen->sc_w > 320) || (VR_use_paging) )
+//mwa		//		Cockpit_mode = CM_FULL_SCREEN;
+//mwa		Cockpit_mode = CM_FULL_SCREEN;
+//mwa	}
 
 	gr_set_curfont( GAME_FONT );
+	
+	if ( Compatibility_mode && ((Cockpit_mode == CM_FULL_COCKPIT) || (Cockpit_mode == CM_REAR_VIEW)) )
+		Cockpit_mode = CM_STATUS_BAR;
 
 	if (Game_cockpit_copy_code)
-		free(Game_cockpit_copy_code);
-	Game_cockpit_copy_code  = NULL;
+		Game_cockpit_copy_code  = 0;
 
 	switch( Cockpit_mode )	{
 	case CM_FULL_COCKPIT:
@@ -709,11 +802,12 @@ void init_cockpit()
 
 		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode]);
 		gr_set_current_canvas(VR_offscreen_buffer);
-		gr_bitmap( 0, 0, bm );
+		gr_bitblt_cockpit( bm );
 		bm = &VR_offscreen_buffer->cv_bitmap;
 		bm->bm_flags = BM_FLAG_TRANSPARENT;
 		gr_ibitblt_find_hole_size ( bm, &minx, &miny, &maxx, &maxy );
-		Game_cockpit_copy_code  = gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
+		Game_cockpit_copy_code  = 1;
+		gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize);
 		bm->bm_flags = 0;		// Clear all flags for offscreen canvas
 		game_init_render_sub_buffers( 0, 0, maxx-minx+1, maxy-miny+1 );
 		break;
@@ -800,10 +894,11 @@ toggle_cockpit()
 	HUD_clear_messages();
 }
 
-#define WINDOW_W_DELTA 24	//20
-#define WINDOW_H_DELTA 12	//10
+#define WINDOW_W_DELTA 32	//24	//20
+#define WINDOW_H_DELTA 16	//12	//10
 
-#define WINDOW_MIN_W		160
+//#define WINDOW_MIN_W		160
+#define WINDOW_MIN_W		320
 
 grow_window()
 {
@@ -846,8 +941,6 @@ grow_window()
 
 	HUD_clear_messages();	//	@mk, 11/11/94
 }
-
-grs_bitmap background_bitmap;
 
 copy_background_rect(int left,int top,int right,int bot)
 {
@@ -946,8 +1039,13 @@ shrink_window()
 
 void game_init_render_sub_buffers( int x, int y, int w, int h )
 {
-	gr_init_sub_canvas( &VR_render_sub_buffer[0], &VR_render_buffer[0], x, y, w, h );
-	gr_init_sub_canvas( &VR_render_sub_buffer[1], &VR_render_buffer[1], x, y, w, h );
+	if (!Scanline_double) {
+		gr_init_sub_canvas( &VR_render_sub_buffer[0], &VR_render_buffer[0], x, y, w, h );
+		gr_init_sub_canvas( &VR_render_sub_buffer[1], &VR_render_buffer[1], x, y, w, h );
+	} else {
+		gr_init_sub_canvas( &VR_render_sub_buffer[0], &VR_render_buffer[0], x, y, w/2, (h/2) + 1);
+		gr_init_sub_canvas( &VR_render_sub_buffer[1], &VR_render_buffer[1], x, y, w/2, (h/2) + 1);
+	}
 }
 
 
@@ -957,12 +1055,7 @@ void game_init_render_buffers(int screen_mode, int render_w, int render_h, int u
 	if (!VR_offscreen_buffer)	{
 		VR_use_paging 		= use_paging;
 		VR_switch_eyes		= 0;
-
-		VR_eye_width		= VR_SEPARATION;    // 11/9/95
-		VR_eye_offset = VR_PIXEL_SHIFT;		   // 11/9/95
-		simuleyes_adjusted_offset_ratio = fixdiv (VR_DEFAULT_OFFSET_RATIO *
-					VR_PIXEL_SHIFT, VR_SEPARATION); // 11/10/95
-
+		VR_eye_width		= F1_0;
 		VR_screen_mode		= screen_mode;
 		VR_render_mode 	= render_method;
 		VR_render_width	= render_w;
@@ -972,135 +1065,99 @@ void game_init_render_buffers(int screen_mode, int render_w, int render_h, int u
 		Game_window_w 		= render_w;
 		Game_window_h		= render_h;
 
-		if ( (VR_render_mode==VR_AREA_DET) || (VR_render_mode==VR_INTERLACED ) )	{
-			if ( render_h*2 < 200 )
-				VR_offscreen_buffer = gr_create_canvas( render_w, 200 );
-			else
-				VR_offscreen_buffer = gr_create_canvas( render_w, render_h*2 );
-			gr_init_sub_canvas( &VR_render_buffer[0], VR_offscreen_buffer, 0, 0, render_w, render_h );
-			gr_init_sub_canvas( &VR_render_buffer[1], VR_offscreen_buffer, 0, render_h, render_w, render_h );
-		} else {
-			if ( render_h < 200 )
-				VR_offscreen_buffer = gr_create_canvas( render_w, 200 );
-			else
-				VR_offscreen_buffer = gr_create_canvas( render_w, render_h );
-			gr_init_sub_canvas( &VR_render_buffer[0], VR_offscreen_buffer, 0, 0, render_w, render_h );
-			gr_init_sub_canvas( &VR_render_buffer[1], VR_offscreen_buffer, 0, 0, render_w, render_h );
-		}
+		if (!Compatibility_mode) 
+			VR_offscreen_buffer = gr_create_canvas( render_w, render_h );
+		else
+			VR_offscreen_buffer = mac_get_gworld_data( render_w, render_h );
+		gr_init_sub_canvas( &VR_render_buffer[0], VR_offscreen_buffer, 0, 0, render_w, render_h );
+		gr_init_sub_canvas( &VR_render_buffer[1], VR_offscreen_buffer, 0, 0, render_w, render_h );
 		game_init_render_sub_buffers( 0, 0, render_w, render_h );
 	}
 }
 
 void game_3dmax_off()
 {
+#if 0
 	union REGS regs;
 
-//	memset(&regs,0,sizeof(regs));
-//	regs.w.ax = 0x4fd0;
-//	regs.w.bx =	0x3d08;		// I
-//	int386 (0x10, &regs, &regs);
-
 	memset(&regs,0,sizeof(regs));
 	regs.w.ax = 0x4fd0;
-	regs.w.bx =	0x3d00;		// Interlace off
+	regs.w.bx =	0x3d08;		// Glasses off
 	int386 (0x10, &regs, &regs);
-
-	memset(&regs,0,sizeof(regs));
-	regs.w.ax = 0x4fd0;
-	regs.w.bx =	0x3d02;		// Glasses off
-	int386 (0x10, &regs, &regs);
-
 	mprintf(( 0, "3dmax off\n" ));
 	return;
+#endif
 }
 
 void game_3dmax_on()
 {
+#if 0
 	union REGS regs;
 
-//	memset(&regs,0,sizeof(regs));
-//	regs.w.ax = 0x4fd0;
-// regs.w.bx =	0x3d09;		// Glasses on
-//	int386 (0x10, &regs, &regs);
-
 	memset(&regs,0,sizeof(regs));
 	regs.w.ax = 0x4fd0;
-   regs.w.bx =	0x3d01;		// Interlace on
+   regs.w.bx =	0x3d09;		// Glasses on
 	int386 (0x10, &regs, &regs);
-
-	memset(&regs,0,sizeof(regs));
-	regs.w.ax = 0x4fd0;
-	regs.w.bx =	0x3d03;		// Glasses on
-	int386 (0x10, &regs, &regs);
-
 	mprintf(( 0, "3dmax on\n" ));
 	return;
+#endif
 }
-
-
-
 
 //called to change the screen mode. Parameter sm is the new mode, one of
 //SMODE_GAME or SMODE_EDITOR. returns mode acutally set (could be other
 //mode if cannot init requested mode)
 int set_screen_mode(int sm)
 {
-	if ( (sm==SCREEN_MENU) && (Screen_mode==SCREEN_GAME) && VR_compatible_menus )	{
+	if ( (sm==SCREEN_MENU) && (Screen_mode==SCREEN_GAME) && VR_compatible_menus )
 		sm = SCREEN_GAME;
-	}
-
-#ifdef EDITOR
-	if ( (sm==SCREEN_MENU) && (Screen_mode==SCREEN_EDITOR) )	{
-		gr_set_current_canvas( Canv_editor );
-		return 1;
-	}
-#endif
 
 	if ( Screen_mode == sm ) {
 		gr_set_current_canvas( &VR_screen_pages[VR_current_page] );
-//		if ( VR_use_paging )	gr_show_canvas( &VR_screen_pages[VR_current_page] );
+		if ( VR_use_paging )	gr_show_canvas( &VR_screen_pages[VR_current_page] );
 		return 1;
 	}
 
 	Screen_mode = sm;
 
-#ifdef EDITOR
-	Canv_editor = NULL;
-#endif
-
 	switch( Screen_mode )	{
 	case SCREEN_MENU:
-
-		if (grd_curscreen->sc_mode != SM_320x200C)	{
-			if (gr_set_mode(SM_320x200C)) Error("Cannot set screen mode for game!");
-	 		gr_palette_load( gr_palette );
-		}
-
 		if ( Game_3dmax_flag )
 			game_3dmax_off();
 
+//mwa		if ((grd_curscreen->sc_mode != SM_320x200x8)||Game_3dmax_flag)	{
+//mwa			if (gr_set_mode(SM_320x200C)) Error("Cannot set screen mode for game!");
+//mwa	 		gr_palette_load( gr_palette );
+//mwa		}
+
+#if 0
 		if ( Game_vfx_flag )
 			vfx_close_graphics();
+#endif
 
 		gr_init_sub_canvas( &VR_screen_pages[0], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 		gr_init_sub_canvas( &VR_screen_pages[1], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 		break;
 	case SCREEN_GAME:
-		if (grd_curscreen->sc_mode != VR_screen_mode)	
+		if ( Game_3dmax_flag )
+			game_3dmax_on();
+
+#if 0
+		if ((grd_curscreen->sc_mode != VR_screen_mode)||Game_3dmax_flag)	
 			if (gr_set_mode(VR_screen_mode))	{
 				if ( VR_screen_mode != SM_640x480V )	
 					Error("Cannot set screen mode for game!");
 				else
 					Error( "Cannot set screen mode for game!\nMake sure that you have a VESA driver loaded\nthat can display 640x480 in 256 colors.\n" );
 			}
+#endif
 
-		if ( Game_3dmax_flag )
-			game_3dmax_on();
 
+#if 0
 		if ( Game_vfx_flag )		{
 			vfx_init_graphics();
 			Beam_brightness=0x38000;
 		}
+#endif
 
 		if ( VR_render_mode == VR_NONE )	{
 			if ( max_window_h == 0 )	{
@@ -1118,25 +1175,6 @@ int set_screen_mode(int sm)
 		else
 			gr_init_sub_canvas( &VR_screen_pages[1], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 		break;
-	#ifdef EDITOR
-	case SCREEN_EDITOR:
-		if (grd_curscreen->sc_mode != SM_800x600V)	{
-			int gr_error;
-			if ((gr_error=gr_set_mode(SM_800x600V))!=0) { //force into game scrren
-				Warning("Cannot init editor screen (error=%d)",gr_error);
-				return 0;
-			}
-		}
-		gr_palette_load( gr_palette );
-
-		gr_init_sub_canvas( &VR_editor_canvas, &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
-		Canv_editor = &VR_editor_canvas;
-		gr_init_sub_canvas( &VR_screen_pages[0], Canv_editor, 0, 0, Canv_editor->cv_w, Canv_editor->cv_h );
-		gr_init_sub_canvas( &VR_screen_pages[1], Canv_editor, 0, 0, Canv_editor->cv_w, Canv_editor->cv_h );
-		gr_set_current_canvas( Canv_editor );
-		init_editor_screen();   //setup other editor stuff
-		break;
-	#endif
 	default:
 		Error("Invalid screen mode %d",sm);
 	}
@@ -1151,7 +1189,7 @@ int set_screen_mode(int sm)
 	return 1;
 }
 
-#ifndef RELEASE
+//#ifndef RELEASE
 fix frame_time_list[8] = {0,0,0,0,0,0,0,0};
 fix frame_time_total=0;
 int frame_time_cntr=0;
@@ -1179,13 +1217,19 @@ show_framerate()
 
 	rate = fixdiv(f1_0*8,frame_time_total);
 
-	gr_set_curfont( GAME_FONT );	
+	if (Scanline_double)
+		gr_set_curfont( GAME_FONT_PC);
+	else
+		gr_set_curfont( GAME_FONT );
 	gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
 
 	ftoa( temp, rate );	// Convert fixed to string
-	gr_printf(grd_curcanv->cv_w-50,grd_curcanv->cv_h-20,"FPS: %s ", temp );
+	if (Scanline_double)
+		gr_printf(grd_curcanv->cv_w-50,grd_curcanv->cv_h-25,"FPS: %s ", temp );
+	else
+		gr_printf(grd_curcanv->cv_w-100,grd_curcanv->cv_h-25,"FPS: %s ", temp );
 }
-#endif
+//#endif
 
 static timer_paused=0;		
 
@@ -1220,7 +1264,7 @@ void start_time()
 		fix time;
 		time = timer_get_fixed_seconds();
 		#if defined(TIMER_TEST) && !defined(NDEBUG)
-		if (last_timer_value < 0)
+		if (last_timer_value < 0) {
 			Int3();		//get Matt!!!!
 		}
 		#endif
@@ -1239,7 +1283,7 @@ void game_flush_inputs()
 {
 	int dx,dy;
 	key_flush();
-	joy_flush();			
+//	joy_flush();	
 	mouse_flush();
 	mouse_get_delta( &dx, &dy );	// Read mouse
 	memset(&Controls,0,sizeof(control_info));
@@ -1267,13 +1311,13 @@ void calc_frame_time()
 	#endif
 	
 	#ifndef NDEBUG
-	if (!(((FrameTime > 0) && (FrameTime <= F1_0)) || (Function_mode == FMODE_EDITOR) || (Newdemo_state == ND_STATE_PLAYBACK))) {
-		mprintf((1,"Bad FrameTime - value = %x\n",FrameTime));
-		if (FrameTime == 0)
-			Int3();	//	Call Mike or Matt or John!  Your interrupts are probably trashed!
-//		if ( !dpmi_virtual_memory )
-//			Int3();		//Get MATT if hit this!
-	}
+//	if (!(((FrameTime > 0) && (FrameTime <= F1_0)) || (Function_mode == FMODE_EDITOR) || (Newdemo_state == ND_STATE_PLAYBACK))) {
+//		mprintf((1,"Bad FrameTime - value = %x\n",FrameTime));
+//		if (FrameTime == 0)
+//			Int3();	//	Call Mike or Matt or John!  Your interrupts are probably trashed!
+////		if ( !dpmi_virtual_memory )
+////			Int3();		//Get MATT if hit this!
+//	}
 	#endif
 
 	#if defined(TIMER_TEST) && !defined(NDEBUG)
@@ -1285,7 +1329,7 @@ void calc_frame_time()
 
 	// Limit frametime to be between 5 and 150 fps.
 	RealFrameTime = FrameTime;
-	if ( FrameTime < F1_0/150 ) FrameTime = F1_0/150;
+	if ( FrameTime < F1_0/60 ) FrameTime = F1_0/60;
 	if ( FrameTime > F1_0/5 ) FrameTime = F1_0/5;
 
 	last_timer_value = timer_value;
@@ -1396,12 +1440,14 @@ void render_countdown_gauge()
 {
 	if (!Endlevel_sequence && Fuelcen_control_center_destroyed  && (Fuelcen_seconds_left>-1) && (Fuelcen_seconds_left<127))	{
 		int	y;
-		gr_set_curfont( Gamefonts[4] );    //GAME_FONT );
+		if (Scanline_double)
+			gr_set_curfont(GAME_FONT_PC);
+		else
+			gr_set_curfont( GAME_FONT );    //GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(0,63,0), -1 );
-		y = 20;
-		if (!((Cockpit_mode == CM_STATUS_BAR) && (Game_window_w >= 19)))
-			y += 5;
-
+		y = 25;
+//		if (!((Cockpit_mode == CM_STATUS_BAR) && (Game_window_w >= 19)))
+//			y += 5;
 		gr_printf(0x8000, y, "T-%d s", Fuelcen_seconds_left );
 	}
 }
@@ -1412,7 +1458,10 @@ void game_draw_multi_message()
 	char temp_string[MAX_MULTI_MESSAGE_LEN+25];
 
 	if ( (Game_mode&GM_MULTI) && (multi_sending_message))	{
-		gr_set_curfont( GAME_FONT );    //GAME_FONT );
+		if (Scanline_double)
+			gr_set_curfont( GAME_FONT_PC);
+		else
+			gr_set_curfont( GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(0,63,0), -1 );
 		sprintf( temp_string, "%s: %s_", TXT_MESSAGE, Network_message );
 		draw_centered_text(grd_curcanv->cv_bitmap.bm_h/2-16, temp_string );
@@ -1420,7 +1469,10 @@ void game_draw_multi_message()
 	}
 
 	if ( (Game_mode&GM_MULTI) && (multi_defining_message))	{
-		gr_set_curfont( GAME_FONT );    //GAME_FONT );
+		if (Scanline_double)
+			gr_set_curfont( GAME_FONT_PC);
+		else
+			gr_set_curfont( GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(0,63,0), -1 );
 		sprintf( temp_string, "%s #%d: %s_", TXT_MACRO, multi_defining_message, Network_message );
 		draw_centered_text(grd_curcanv->cv_bitmap.bm_h/2-16, temp_string );
@@ -1446,7 +1498,6 @@ void draw_centered_text( int y, char * s )
 {
 	int i, l;
 	char p;
-
 
 	l = strlen(s);
 
@@ -1506,15 +1557,24 @@ void game_draw_hud_stuff()
 		} else 
 			sprintf (message, TXT_DEMO_RECORDING);
 
-		gr_set_curfont( GAME_FONT );    //GAME_FONT );
+		if (Scanline_double)
+			gr_set_curfont( GAME_FONT_PC );
+		else
+			gr_set_curfont( GAME_FONT );    //GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(27,0,0), -1 );
 
 		gr_get_string_size(message, &w, &h, &aw );
-		if (Cockpit_mode == CM_FULL_COCKPIT)
-			h += 15;
-		else if ( Cockpit_mode == CM_LETTERBOX )
-			h += 7;
-
+		if (Cockpit_mode == CM_FULL_COCKPIT) {
+			if (Scanline_double)
+				h += 20;
+			else
+				h += 40;
+		} else if ( Cockpit_mode == CM_LETTERBOX ) {
+			if (Scanline_double)
+				h += 7;
+			else
+				h += 14;
+		}
 		if (Cockpit_mode != CM_REAR_VIEW)
 			gr_printf((grd_curcanv->cv_bitmap.bm_w-w)/2, grd_curcanv->cv_bitmap.bm_h - h - 2, message );
 	}
@@ -1527,7 +1587,13 @@ void game_draw_hud_stuff()
 
 		gr_set_curfont( GAME_FONT );
 		gr_set_fontcolor( gr_getcolor(0, 31, 0), -1 );
-		if (Cruise_speed > 0)
+		if (Cruise_speed > 0) {
+
+			if (!Scanline_double)
+				gr_set_curfont( GAME_FONT_PC );
+			else
+				gr_set_curfont( GAME_FONT );    //GAME_FONT );
+				
 			if (Cockpit_mode==CM_FULL_SCREEN) {
 				if (Game_mode & GM_MULTI)
 					y -= 64;
@@ -1544,6 +1610,7 @@ void game_draw_hud_stuff()
 			}
 
 			gr_printf( x, y, "%s %2d%%", TXT_CRUISE, f2i(Cruise_speed) );
+		}
 
 	}
 
@@ -1551,10 +1618,10 @@ void game_draw_hud_stuff()
 	arcade_frame_info();
 	#endif
 
-#ifndef RELEASE
+//#ifndef RELEASE
 	if (framerate_on)
 		show_framerate();
-#endif
+//#endif
 
 #ifndef SHAREWARE
 	if ( (Newdemo_state == ND_STATE_PLAYBACK) )
@@ -1637,12 +1704,13 @@ game_render_frame_stereo_vfx()
 	gr_bitblt_double = 0;
 	gr_bitblt_dest_step_shift = 0;
 
+#if 0
 	if ( Game_vfx_flag )
 		vfx_set_page(VR_current_page);		// 0 or 1
+#endif
 
 	grd_curscreen->sc_aspect = save_aspect; //restore aspect
 }
-
 
 
 //render a frame for the game in stereo
@@ -1675,113 +1743,24 @@ game_render_frame_stereo_interlaced()
 		gr_set_current_canvas(&RenderCanvas[1]);
 	else
 		gr_set_current_canvas(&RenderCanvas[0]);
+	render_frame(-VR_eye_width);		// Left eye
 
-	if (Rear_view)
-		render_frame(VR_eye_width);	// switch eye positions for rear view
-	else
-		render_frame(-VR_eye_width);		// Left eye
-
-	if (VR_eye_offset > 0 ) {
-		gr_setcolor( gr_getcolor(0,0,0) );
-		gr_rect( grd_curcanv->cv_bitmap.bm_w-labs(VR_eye_offset)*2, 0, 
-               grd_curcanv->cv_bitmap.bm_w-1, grd_curcanv->cv_bitmap.bm_h );
-	} else if (VR_eye_offset < 0 ) {
-		gr_setcolor( gr_getcolor(0,0,0) );
-		gr_rect( 0, 0, labs(VR_eye_offset)*2-1, grd_curcanv->cv_bitmap.bm_h );
-	}
-
-	if ( VR_show_hud )	{
-		grs_canvas tmp;
-		if (VR_eye_offset < 0 ) {
-			gr_init_sub_canvas( &tmp, grd_curcanv, labs(VR_eye_offset*2), 0, grd_curcanv->cv_bitmap.bm_w-(labs(VR_eye_offset)*2), grd_curcanv->cv_bitmap.bm_h );
-		} else {
-			gr_init_sub_canvas( &tmp, grd_curcanv, 0, 0, grd_curcanv->cv_bitmap.bm_w-(labs(VR_eye_offset)*2), grd_curcanv->cv_bitmap.bm_h );
-		}
-		gr_set_current_canvas( &tmp );
+	if ( VR_show_hud )
 		game_draw_hud_stuff();
-	}
-
 
 	// Draw the right eye's view
 	if (VR_switch_eyes)	
 		gr_set_current_canvas(&RenderCanvas[0]);
 	else
 		gr_set_current_canvas(&RenderCanvas[1]);
-
-	if (Rear_view)
-		render_frame(-VR_eye_width);	// switch eye positions for rear view
-	else
-		render_frame(VR_eye_width);		// Right eye
-
-	if (VR_eye_offset>0) {
-		gr_setcolor( gr_getcolor(0,0,0) );
-		gr_rect( 0, 0, labs(VR_eye_offset)*2-1, grd_curcanv->cv_bitmap.bm_h );
-	} else if ( VR_eye_offset < 0 )	{
-		gr_setcolor( gr_getcolor(0,0,0) );
-		gr_rect( grd_curcanv->cv_bitmap.bm_w-labs(VR_eye_offset)*2, 0, 
-               grd_curcanv->cv_bitmap.bm_w-1, grd_curcanv->cv_bitmap.bm_h );
-	}
-
-	if ( VR_show_hud )	{
-		grs_canvas tmp;
-		if (VR_eye_offset > 0 ) {
-			gr_init_sub_canvas( &tmp, grd_curcanv, labs(VR_eye_offset*2), 0, grd_curcanv->cv_bitmap.bm_w-(labs(VR_eye_offset)*2), grd_curcanv->cv_bitmap.bm_h );
-		} else {
-			gr_init_sub_canvas( &tmp, grd_curcanv, 0, 0, grd_curcanv->cv_bitmap.bm_w-(labs(VR_eye_offset)*2), grd_curcanv->cv_bitmap.bm_h );
-		}
-		gr_set_current_canvas( &tmp );
-		game_draw_hud_stuff();
-	}
-
-
-	// Draws white and black registration encoding lines
-	// and Accounts for pixel-shift adjustment in upcoming bitblts
-	if (Game_simuleyes_flag)	{
-		int width, height, quarter, nibble;
-		void *pixptr, *drawptr;
-
-		width = RenderCanvas[0].cv_bitmap.bm_w;
-		height = RenderCanvas[0].cv_bitmap.bm_h;
-		pixptr = RenderCanvas[0].cv_bitmap.bm_data;
-		quarter = width / 4;
-		nibble = labs(VR_eye_offset); // pixel-shift amount
-
-		// black out left-hand side of left page
-
-		// draw registration code for left eye
-		drawptr = (void*)((int)pixptr + width*(height-1) - VR_eye_offset);
-		memset(drawptr, svr_white, quarter);
-		drawptr = (void*)((int)drawptr + quarter);
-		if (VR_eye_offset < 0) // stay within buffer limit
-			memset(drawptr, svr_black, 3*quarter - nibble);
-		else
-			memset(drawptr, svr_black, 3*quarter);
-
-		// black out right-hand side of right page
-		pixptr = RenderCanvas[1].cv_bitmap.bm_data;
-
-
-		// draw registration code for right eye
-		drawptr = (void*)((int)pixptr + width*(height-1) + VR_eye_offset);
-		memset(drawptr, svr_white, 3*quarter);
-		drawptr = (void*)((int)drawptr + 3*quarter);
-		if (VR_eye_offset > 0) // stay within buffer limit
-			memset(drawptr, svr_black, quarter - nibble);
-		else
-			memset(drawptr, svr_black, quarter);
-   }
+	render_frame(VR_eye_width);		// Right eye
 
 		// Copy left eye, then right eye
-	if (  VR_use_paging   )
+	if ( VR_use_paging )
 		VR_current_page = !VR_current_page;
 	else 
 		VR_current_page = 0;
 	gr_set_current_canvas( &VR_screen_pages[VR_current_page] );
-
-	if ( VR_eye_offset_changed > 0 )	{
-		VR_eye_offset_changed--;
-		gr_clear_canvas(0);
-	}
 
 	if ( VR_low_res & 2 )		// Horizontal stretch
 		gr_bitblt_double = 1;
@@ -1789,67 +1768,26 @@ game_render_frame_stereo_interlaced()
 	// Copy left eye, then right eye
 	if ( VR_low_res & 1 )	{
 		gr_bitblt_dest_step_shift = 2;	// Skip every 4 scanlines.
-		if ( VR_eye_offset > 0 )	{
-			int xoff = labs(VR_eye_offset);
-			gr_bm_ubitblt( dw-xoff, dh/2, xoff, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, 0, 1, xoff, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, xoff, 2, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, 0, 3, xoff, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		} else if ( VR_eye_offset < 0 )	{
-			int xoff = labs(VR_eye_offset);
-			gr_bm_ubitblt( dw-xoff, dh/2, 0, 0, xoff, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, xoff, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, 0, 2, xoff, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh/2, xoff, 3, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		} else {
-			gr_bm_ubitblt( dw, dh/2, 0, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw, dh/2, 0, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw, dh/2, 0, 2, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw, dh/2, 0, 3, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		}
+		gr_bm_ubitblt( dw, dh/2, 0, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
+		gr_bm_ubitblt( dw, dh/2, 0, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
+		gr_bm_ubitblt( dw, dh/2, 0, 2, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
+		gr_bm_ubitblt( dw, dh/2, 0, 3, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
 	} else {
 		gr_bitblt_dest_step_shift = 1;		// Skip every other scanline.
-		if ( VR_eye_offset > 0 )	{
-			int xoff = labs(VR_eye_offset);
-			gr_bm_ubitblt( dw-xoff, dh, xoff, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh, 0, 1, xoff, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		} else if ( VR_eye_offset < 0 )	{
-			int xoff = labs(VR_eye_offset);
-			gr_bm_ubitblt( dw-xoff, dh, 0, 0, xoff, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw-xoff, dh, xoff, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		} else {
-			gr_bm_ubitblt( dw, dh, 0, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-			gr_bm_ubitblt( dw, dh, 0, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
-		}
+		gr_bm_ubitblt( dw, dh, 0, 0, 0, 0, &RenderCanvas[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
+		gr_bm_ubitblt( dw, dh, 0, 1, 0, 0, &RenderCanvas[1].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap);
 	}
 
 	gr_bitblt_double = 0;
 	gr_bitblt_dest_step_shift = 0;
 
-	if (  VR_use_paging  )	{
+	if ( VR_use_paging )	{
 		gr_wait_for_retrace = 0;
-
-		if ( (VR_screen_pages[VR_current_page].cv_bitmap.bm_type == BM_MODEX) && (Game_3dmax_flag==3) )	{
-			int old_x, old_y, new_x;
-			old_x = VR_screen_pages[VR_current_page].cv_bitmap.bm_x;
-			old_y = VR_screen_pages[VR_current_page].cv_bitmap.bm_y;
-			new_x = old_y*VR_screen_pages[VR_current_page].cv_bitmap.bm_rowsize;
-			new_x += old_x/4;
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_x = new_x;
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_y = 0;
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_type = BM_SVGA;
-			gr_show_canvas( &VR_screen_pages[VR_current_page] );
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_type = BM_MODEX;
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_x = old_x;
-			VR_screen_pages[VR_current_page].cv_bitmap.bm_y = old_y;
-		} else {
-			gr_show_canvas( &VR_screen_pages[VR_current_page] );
-		}
+		gr_show_canvas( &VR_screen_pages[VR_current_page] );
 		gr_wait_for_retrace = 1;
 	}
 	grd_curscreen->sc_aspect=save_aspect;
 }
-
 
 
 //render a frame for the game
@@ -1857,10 +1795,7 @@ void game_render_frame_mono(void)
 {
 	grs_canvas Screen_3d_window;
 
-	gr_init_sub_canvas( &Screen_3d_window, &VR_screen_pages[0],
-			VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].
-			cv_bitmap.bm_y, VR_render_sub_buffer[0].cv_bitmap.bm_w,
-			VR_render_sub_buffer[0].cv_bitmap.bm_h);
+	gr_init_sub_canvas( &Screen_3d_window, &VR_screen_pages[0], VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, VR_render_sub_buffer[0].cv_bitmap.bm_w, VR_render_sub_buffer[0].cv_bitmap.bm_h);
 
 	if ( Game_double_buffer )	
 		gr_set_current_canvas(&VR_render_sub_buffer[0]);
@@ -1870,26 +1805,33 @@ void game_render_frame_mono(void)
 
 	render_frame(0);
 
-	game_draw_hud_stuff();
+//	if (!Scanline_double)
+		game_draw_hud_stuff();
 
 	if ( Game_double_buffer ) {		//copy to visible screen
-		if ( Game_cockpit_copy_code==NULL )	{
+		if ( Game_cockpit_copy_code == 0 )	{
 			if ( VR_use_paging )	{		
 				VR_current_page = !VR_current_page;
 				gr_set_current_canvas( &VR_screen_pages[VR_current_page] );
-				gr_bm_ubitblt( VR_render_sub_buffer[0].cv_w,
-					  VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].
-					  cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y,
-					  0, 0, &VR_render_sub_buffer[0].cv_bitmap,
-					  &VR_screen_pages[VR_current_page].cv_bitmap );
+				gr_bm_ubitblt( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[VR_current_page].cv_bitmap );
 				gr_wait_for_retrace = 0;
 				gr_show_canvas( &VR_screen_pages[VR_current_page] );
 				gr_wait_for_retrace = 1;
+			} else if (!Compatibility_mode) {
+				if (!Scanline_double)
+					gr_bm_ubitblt( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap );
+				else {
+					gr_bm_ubitblt_double( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap );
+				}
 			} else {
-				gr_bm_ubitblt( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap );
+//				if (!Scanline_double) 
+//					mac_copybits( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap );
+//				else {
+//					gr_bm_ubitblt_double( VR_render_sub_buffer[0].cv_w, VR_render_sub_buffer[0].cv_h, VR_render_sub_buffer[0].cv_bitmap.bm_x, VR_render_sub_buffer[0].cv_bitmap.bm_y, 0, 0, &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap );
+//				}
 			}
 		} else	{
-			gr_ibitblt( &VR_render_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap, Game_cockpit_copy_code );
+			gr_ibitblt( &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap, Scanline_double );
 		}
 	}
 
@@ -1907,7 +1849,7 @@ void game_render_frame_mono(void)
 			Game_mode = GM_NORMAL;
 #endif
 	}
-
+	bitblt_to_screen();
 }
 
 void game_render_frame()
@@ -1918,9 +1860,9 @@ void game_render_frame()
 
 	play_homing_warning();
 
-	if (VR_render_mode == VR_INTERLACED )
+	if (VR_render_mode == VR_INTERLACED ) 
 		game_render_frame_stereo_interlaced();
-	else if (VR_render_mode == VR_AREA_DET)
+	else if (VR_render_mode == VR_AREA_DET) 
 		game_render_frame_stereo_vfx();
 	else if (VR_render_mode == VR_NONE )
 		game_render_frame_mono();		
@@ -1937,61 +1879,39 @@ void level_with_floor();
 
 void save_screen_shot(int automap_flag)
 {
-	fix t1;
-	char message[100];
-	grs_canvas *screen_canv=&grd_curscreen->sc_canvas;
-	grs_font *save_font;
-	static savenum=0;
-	grs_canvas *temp_canv,*save_canv;
-	char savename[13];
-	ubyte pal[768];
-	int w,h,aw,x,y;
-
+	grs_canvas *screen_canv = &grd_curscreen->sc_canvas;
+	grs_canvas *temp_canv, *save_canv;
+	
 	// Can't do screen shots in VR modes.
 	if ( VR_render_mode != VR_NONE )
 		return;
 
 	stop_time();
 
-	save_canv = grd_curcanv;
-	temp_canv = gr_create_canvas(screen_canv->cv_bitmap.bm_w,screen_canv->cv_bitmap.bm_h);
-	gr_set_current_canvas(temp_canv);
-	gr_ubitmap(0,0,&screen_canv->cv_bitmap);
+	save_canv = grd_curcanv;	
+	temp_canv = gr_create_canvas( screen_canv->cv_bitmap.bm_w, screen_canv->cv_bitmap.bm_h );
+	if (!temp_canv)
+		goto shot_done;
+	gr_set_current_canvas( temp_canv );
+	gr_ubitmap( 0, 0, &screen_canv->cv_bitmap );
+	gr_set_current_canvas( &VR_screen_pages[VR_current_page] );
 
-	if ( savenum > 99 ) savenum = 0;
-	sprintf(savename,"screen%02d.pcx",savenum++);
-	sprintf( message, "%s '%s'", TXT_DUMPING_SCREEN, savename );
-
-	gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-	save_font = grd_curcanv->cv_font;
-	gr_set_curfont(GAME_FONT);
-	gr_set_fontcolor(gr_find_closest_color_current(0,31,0),-1);
-	gr_get_string_size(message,&w,&h,&aw);
-	x = (VR_screen_pages[VR_current_page].cv_w-w)/2;
-	y = (VR_screen_pages[VR_current_page].cv_h-h)/2;
-
-	if (automap_flag) {
-		modex_print_message(32, y, message);
-	} else {
-		gr_setcolor(gr_find_closest_color_current(0,0,0));
-		gr_rect(x-2,y-2,x+w+2,y+h+2);
-		gr_printf(x,y,message);
-		gr_set_curfont(save_font);
-	}
-	t1 = timer_get_fixed_seconds() + F1_0;
-
-	gr_palette_read(pal);		//get actual palette from the hardware
-	pcx_write_bitmap(savename,&temp_canv->cv_bitmap,pal);
-
-	while ( timer_get_fixed_seconds() < t1 );		// Wait so that messag stays up at least 1 second.
+	show_cursor();
+	key_close();
+	if (Game_mode & GM_MULTI)
+		SavePictScreen(1);
+	else
+		SavePictScreen(0);
+	key_init();
+	hide_cursor();
 
 	gr_set_current_canvas(screen_canv);
-
-	if (!automap_flag)
-		gr_ubitmap(0,0,&temp_canv->cv_bitmap);
+	
+//	if (!automap_flag)
+		gr_ubitmap( 0, 0, &temp_canv->cv_bitmap);
 
 	gr_free_canvas(temp_canv);
-
+shot_done:
 	gr_set_current_canvas(save_canv);
 	key_flush();
 	start_time();
@@ -2184,22 +2104,6 @@ void diminish_palette_towards_normal(void)
 	gr_palette_step_up( PaletteRedAdd, PaletteGreenAdd, PaletteBlueAdd );
 
 	//mprintf(0, "%2i %2i %2i\n", PaletteRedAdd, PaletteGreenAdd, PaletteBlueAdd);
-
-	// need to reset black and white palette colors for SVR registration
-	if (Game_simuleyes_flag)  {
-		// make black be black		
-		outp( 0x3c6, 0xff );
-		outp( 0x3c8, svr_black );
-		outp( 0x3c9, 0 );
-		outp( 0x3c9, 0 );
-		outp( 0x3c9, 0 );
-		// make white be white
-		outp( 0x3c6, 0xff );
-		outp( 0x3c8, svr_white );
-		outp( 0x3c9, 63 );
-		outp( 0x3c9, 63 );
-		outp( 0x3c9, 63 );
-	}
 }
 
 int	Redsave, Bluesave, Greensave;
@@ -2315,10 +2219,10 @@ typedef struct bkg {
 bkg bg = {0,0,0,0,NULL};
 
 //show a message in a nice little box
-show_boxed_message(char *msg)
+void show_boxed_message(char *msg)
 {	
 	int w,h,aw;
-	int x,y;
+	int x,y,r,i;
 
 	gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 	gr_set_curfont( HELP_FONT );
@@ -2326,6 +2230,10 @@ show_boxed_message(char *msg)
 	gr_get_string_size(msg,&w,&h,&aw);
 
 	x = (grd_curscreen->sc_w-w)/2;
+	if ( r = ((x-30) & 0x7) ) {
+		for (i = 0; i < r; i++)
+			x--;
+	}
 	y = (grd_curscreen->sc_h-h)/2;
 
 	if (bg.bmp) {
@@ -2336,26 +2244,29 @@ show_boxed_message(char *msg)
 	// Save the background of the display
 	bg.x=x; bg.y=y; bg.w=w; bg.h=h;
 
-	bg.bmp = gr_create_bitmap( w+30, h+30 );
-	gr_bm_ubitblt(w+30, h+30, 0, 0, x-15, y-15, &(grd_curscreen->sc_canvas.cv_bitmap), bg.bmp );
+	bg.bmp = gr_create_bitmap( w+60, h+72 );
+	gr_bm_ubitblt(w+60, h+72, 0, 0, x-30, y-36, &(grd_curscreen->sc_canvas.cv_bitmap), bg.bmp );
 
-	nm_draw_background(x-15,y-15,x+w+15-1,y+h+15-1);
+	nm_draw_background(x-30,y-36,x+w+30-1,y+h+36-1);
 
 	gr_set_fontcolor( gr_getcolor(31, 31, 31), -1 );
 	gr_ustring( 0x8000, y, msg );
 
+	bitblt_to_screen();
 }
 
-clear_boxed_message()
+void clear_boxed_message()
 {
 
 	if (bg.bmp) {
 
-		gr_bitmap(bg.x-15, bg.y-15, bg.bmp);
+		gr_bitmap(bg.x-30, bg.y-36, bg.bmp);
 
 		gr_free_bitmap(bg.bmp);
 
 		bg.bmp = NULL;
+		
+		bitblt_to_screen();
 	}
 }
 
@@ -2387,10 +2298,13 @@ int do_game_pause(int allow_menu)
 	gr_palette_load( gr_palette );
 
 	show_boxed_message(TXT_PAUSE);
+	
+	delay(1000);
+	game_flush_inputs();
 
 	while (paused) {
 
-		key = key_getch();
+		key = key_inkey();
 
 		switch (key) {
 			case 0:
@@ -2410,6 +2324,7 @@ int do_game_pause(int allow_menu)
 				break;
 
 			case KEY_PRINT_SCREEN:
+			case KEY_COMMAND + KEY_SHIFTED + KEY_3:
 				save_screen_shot(0);
 				break;
 
@@ -2436,42 +2351,52 @@ int do_game_pause(int allow_menu)
 	return key;
 }
 
+#define NEW_HELPS	8
+#define F2_HELP		0
+#define F3_HELP		1
+#define F4_HELP		2
+#define F5_HELP		3
+#define PAUSE_HELP	4
+#define PRINT_HELP	5
+#define SAVE_HELP	6
+#define LOAD_HELP	7
+
+static ubyte help_initialized = 0;
+char new_help_text[NEW_HELPS][64];
 
 void show_help()
 {
-	newmenu_item m[14];
-
-	if ( VR_render_mode != VR_NONE )	{
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_HELP_ESC;
-		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = TXT_HELP_ALT_F2;
-		m[ 2].type = NM_TYPE_TEXT; m[ 2].text = TXT_HELP_ALT_F3;
-		m[ 3].type = NM_TYPE_TEXT; m[ 3].text = TXT_HELP_F2;
-		m[ 4].type = NM_TYPE_TEXT; m[ 4].text = TXT_HELP_F4;
-		m[ 5].type = NM_TYPE_TEXT; m[ 5].text = TXT_HELP_F5;
-		m[ 6].type = NM_TYPE_TEXT; m[ 6].text = TXT_HELP_PAUSE;
-		m[ 7].type = NM_TYPE_TEXT; m[ 7].text = TXT_HELP_1TO5;
-		m[ 8].type = NM_TYPE_TEXT; m[ 8].text = TXT_HELP_6TO10;
-		m[ 9].type = NM_TYPE_TEXT; m[ 9].text = "";
-		m[10].type = NM_TYPE_TEXT; m[10].text = TXT_HELP_TO_VIEW;
-		newmenu_do( NULL, TXT_KEYS, 11, m, NULL );
-	} else {
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_HELP_ESC;
-		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = TXT_HELP_ALT_F2;
-		m[ 2].type = NM_TYPE_TEXT; m[ 2].text = TXT_HELP_ALT_F3;
-		m[ 3].type = NM_TYPE_TEXT; m[ 3].text = TXT_HELP_F2;
-		m[ 4].type = NM_TYPE_TEXT; m[ 4].text = TXT_HELP_F3;
-		m[ 5].type = NM_TYPE_TEXT; m[ 5].text = TXT_HELP_F4;
-		m[ 6].type = NM_TYPE_TEXT; m[ 6].text = TXT_HELP_F5;
-		m[ 7].type = NM_TYPE_TEXT; m[ 7].text = TXT_HELP_PAUSE;
-		m[ 8].type = NM_TYPE_TEXT; m[ 8].text = TXT_HELP_MINUSPLUS;
-		m[ 9].type = NM_TYPE_TEXT; m[ 9].text = TXT_HELP_PRTSCN;
-		m[10].type = NM_TYPE_TEXT; m[10].text = TXT_HELP_1TO5;
-		m[11].type = NM_TYPE_TEXT; m[11].text = TXT_HELP_6TO10;
-		m[12].type = NM_TYPE_TEXT; m[12].text = "";
-		m[13].type = NM_TYPE_TEXT; m[13].text = TXT_HELP_TO_VIEW;
-		newmenu_do( NULL, TXT_KEYS, 14, m, NULL );
+	newmenu_item m[15];
+	
+	if (!help_initialized) {
+		sprintf(new_help_text[F2_HELP], TXT_HELP_F2, 135);
+		sprintf(new_help_text[F3_HELP], TXT_HELP_F3, 135);
+		sprintf(new_help_text[F4_HELP], TXT_HELP_F4, 135);
+		sprintf(new_help_text[F5_HELP], TXT_HELP_F5, 135);
+		sprintf(new_help_text[PAUSE_HELP], TXT_HELP_PAUSE, 135);
+		sprintf(new_help_text[PRINT_HELP], TXT_PRINTSCREEN1, 135 );	
+		sprintf(new_help_text[SAVE_HELP], TXT_HELP_ALT_F2, 135);
+		sprintf(new_help_text[LOAD_HELP], TXT_HELP_ALT_F3, 135);
+		help_initialized = 1;
 	}
 
+	m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_HELP_ESC;
+	m[ 1].type = NM_TYPE_TEXT; m[ 1].text = new_help_text[SAVE_HELP];
+	m[ 2].type = NM_TYPE_TEXT; m[ 2].text = new_help_text[LOAD_HELP];
+	m[ 3].type = NM_TYPE_TEXT; m[ 3].text = new_help_text[F2_HELP];
+	m[ 4].type = NM_TYPE_TEXT; m[ 4].text = new_help_text[F3_HELP];
+	m[ 5].type = NM_TYPE_TEXT; m[ 5].text = new_help_text[F4_HELP];
+	m[ 6].type = NM_TYPE_TEXT; m[ 6].text = new_help_text[F5_HELP];
+	m[ 7].type = NM_TYPE_TEXT; m[ 7].text = new_help_text[PAUSE_HELP];
+	m[ 8].type = NM_TYPE_TEXT; m[ 8].text = TXT_HELP_MINUSPLUS;
+	m[ 9].type = NM_TYPE_TEXT; m[ 9].text = TXT_HELP_PRTSCN;
+	m[10].type = NM_TYPE_TEXT; m[10].text = new_help_text[PRINT_HELP];
+	m[11].type = NM_TYPE_TEXT; m[11].text = TXT_HELP_1TO5;
+	m[12].type = NM_TYPE_TEXT; m[12].text = TXT_HELP_6TO10;
+	m[13].type = NM_TYPE_TEXT; m[13].text = "";
+	m[14].type = NM_TYPE_TEXT; m[14].text = TXT_HELP_TO_VIEW;
+
+	newmenu_do( NULL, TXT_KEYS, sizeof(m)/sizeof(*m), m, NULL );
 }
 
 
@@ -2585,7 +2510,9 @@ jmp_buf LeaveGame;
 ubyte cheat_enable_keys[] = {KEY_G,KEY_A,KEY_B,KEY_B,KEY_A,KEY_G,KEY_A,KEY_B,KEY_B,KEY_A,KEY_H,KEY_E,KEY_Y};
 #endif
 
+#ifndef MAC_SHAREWARE
 byte	Enable_john_cheat_1, Enable_john_cheat_2, Enable_john_cheat_3, Enable_john_cheat_4;
+#endif
 
 int cheat_enable_index;
 #define CHEAT_ENABLE_LENGTH (sizeof(cheat_enable_keys) / sizeof(*cheat_enable_keys))
@@ -2601,7 +2528,9 @@ ubyte cheat_shield[] = {KEY_T,KEY_W,KEY_I,KEY_L,KEY_I,KEY_G,KEY_H,KEY_T};
 ubyte cheat_warp[] = {KEY_F,KEY_A,KEY_R,KEY_M,KEY_E,KEY_R,KEY_J,KEY_O,KEY_E};
 ubyte cheat_astral[] = {KEY_A,KEY_S,KEY_T,KEY_R,KEY_A,KEY_L};
 
+#ifndef MAC_SHAREWARE
 #define NUM_NEW_CHEATS 5
+#endif
 
 #define CHEAT_WOWIE_LENGTH (sizeof(cheat_wowie) / sizeof(*cheat_wowie))
 #define CHEAT_ALLKEYS_LENGTH (sizeof(cheat_allkeys) / sizeof(*cheat_allkeys))
@@ -2617,11 +2546,13 @@ ubyte cheat_astral[] = {KEY_A,KEY_S,KEY_T,KEY_R,KEY_A,KEY_L};
 #define CHEAT_EXITPATH_OFS		3
 #define CHEAT_ROBOTPAUSE_OFS	4
 
+#ifndef MAC_SHAREWARE
 #define CHEAT_TURBOMODE_LENGTH	6
 #define CHEAT_WOWIE2_LENGTH		6
 #define CHEAT_NEWLIFE_LENGTH		5
 #define CHEAT_EXITPATH_LENGTH		5
 #define CHEAT_ROBOTPAUSE_LENGTH	6
+#endif
 
 int cheat_wowie_index;
 int cheat_allkeys_index;
@@ -2690,7 +2621,7 @@ void game()
 	keys_override = FindArg("-keys");
 	#endif
 
-	set_warn_func(game_show_warning);
+//	set_warn_func(game_show_warning);
 
 	init_cockpit();
 	init_gauges();
@@ -2699,7 +2630,7 @@ void game()
 	//keyd_repeat = 0;                // Don't allow repeat in game
 	keyd_repeat = 1;                // Do allow repeat in game
 
-	//_MARK_("start of game");Commented out -KRB
+//	_MARK_("start of game");
 
 	#ifdef EDITOR
 		if (Segments[ConsoleObject->segnum].segnum == -1)      //segment no longer exists
@@ -2736,10 +2667,6 @@ void game()
 	game_flush_inputs();
 
 	if ( setjmp(LeaveGame)==0 )	{
-
-		if (VR_screen_mode != SCREEN_MENU)
-			vr_reset_display();
-
 		while (1) {
 			// GAME LOOP!
 			Automap_flag = 0;
@@ -2748,28 +2675,29 @@ void game()
 			Assert( ConsoleObject == &Objects[Players[Player_num].objnum] );
 
 			GameLoop( 1, 1 );		// Do game loop with rendering and reading controls.
+			
+#ifndef MAC_SHAREWARE
+			redbook_restart_track();		// possibly restart redbook track if done playing
+#endif
 
-			if (Config_menu_flag)	{
+			if (Config_menu_flag) 	{
+				int double_save = Scanline_double;
+				
 				if (!(Game_mode&GM_MULTI)) palette_save();
 				do_options_menu();
-				if (!(Game_mode&GM_MULTI)) palette_restore();		
+				if (Scanline_double != double_save)
+					init_cockpit();
+				if (!(Game_mode&GM_MULTI)) palette_restore();
 			}
 
 			if (Automap_flag) {
 				int save_w=Game_window_w,save_h=Game_window_h;
-				if ( Game_3dmax_flag )
-					game_3dmax_off();
 				do_automap(0);
 				Screen_mode=-1; set_screen_mode(SCREEN_GAME);
 				Game_window_w=save_w; Game_window_h=save_h;
 				init_cockpit();
 				last_drawn_cockpit[0] = -1;
 				last_drawn_cockpit[1] = -1;
-				if ( Game_3dmax_flag )
-					game_3dmax_on();
-
-				if (VR_screen_mode != SCREEN_MENU)
-					vr_reset_display();
 			}
 
 			if ( (Function_mode != FMODE_GAME) && Auto_demo && (Newdemo_state != ND_STATE_NORMAL) )	{
@@ -2795,10 +2723,18 @@ void game()
 				Function_mode = fmode;
 				if (choice != 0)
 					Function_mode = FMODE_GAME;
+#ifdef PROFILE
+				ProfilerSetStatus(0);
+#endif
 			}
 
 			if (Function_mode != FMODE_GAME)
 				longjmp(LeaveGame,0);
+				
+			#ifdef APPLE_OEM
+			if ( (keyd_time_when_last_pressed + (F1_0 * 60)) < timer_get_fixed_seconds() )		// idle in game for 1 minutes means exit
+				longjmp(LeaveGame,0);
+			#endif
 		}
 	} 
 
@@ -2821,17 +2757,16 @@ void game()
 	//@@	scores_maybe_add_player(Game_aborted);
 	//@@}
 
-	//_MARK_("end of game");//Commented out -KRB
+//	_MARK_("end of game");
 
-	clear_warn_func(game_show_warning);     //don't use this func anymore
+//	clear_warn_func(game_show_warning);     //don't use this func anymore
 
 	game_disable_cheats();
+	
+	#ifdef APPLE_OEM
+	Function_mode = FMODE_EXIT;		// get out of game in Apple OEM version
+	#endif
 }
-
-extern void john_cheat_func_1(int);
-extern void john_cheat_func_2(int);
-extern void john_cheat_func_3(int);
-extern void john_cheat_func_4(int);
 
 //called at the end of the program
 void close_game() 
@@ -2846,14 +2781,13 @@ void close_game()
 	restore_effect_bitmap_icons();
 
 	if (Game_cockpit_copy_code)	{
-		free(Game_cockpit_copy_code);
-		Game_cockpit_copy_code = NULL;
+		Game_cockpit_copy_code = 0;
 	}
 
 	if (background_bitmap.bm_data)
-		free(background_bitmap.bm_data);
+		myfree(background_bitmap.bm_data);
 
-	clear_warn_func(game_show_warning);     //don't use this func anymore
+//	clear_warn_func(game_show_warning);     //don't use this func anymore
 }
 
 grs_canvas * get_current_game_screen()
@@ -2865,6 +2799,12 @@ ubyte exploding_flag = 0;
 
 extern dump_used_textures_all();
 extern kconfig_center_headset();
+extern ubyte automap_do_pcx;
+
+#ifdef MAC_SHAREWARE
+extern ubyte contest_active;
+extern void multi_contest_start( void );
+#endif
 
 void ReadControls()
 {
@@ -2966,14 +2906,16 @@ void ReadControls()
 					Int3();
 				if (key_down_count(KEY_PRINT_SCREEN))
 					save_screen_shot(0);
-				for (i=0; i<4; i++ )	
-					if (joy_get_button_down_cnt(i)>0) Death_sequence_aborted = 1;
+//				for (i=0; i<4; i++ )	
+//					if (joy_get_button_down_cnt(i)>0) Death_sequence_aborted = 1;
 				for (i=0; i<3; i++ )	
-					if (mouse_button_down_count(i)>0) Death_sequence_aborted = 1;
+					if (mouse_button_down_count(i)>0) Death_sequence_aborted = 1+i;
 				for (i=0; i<256; i++ )	
-					if (key_down_count(i)>0) Death_sequence_aborted = 1;
-				if (Death_sequence_aborted)
+					if (key_down_count(i)>0) Death_sequence_aborted = 100+i;
+				if (Death_sequence_aborted) {
+//					Int3();
 					game_flush_inputs();
+				}
 			}
 		} else {
 			exploding_flag=0;
@@ -2994,7 +2936,9 @@ void ReadControls()
 
 		while ((key=key_inkey_time(&key_time)) != 0)	{
 
+#ifndef MAC_SHAREWARE
 			john_cheat_func_1(key);
+#endif
 
 			#ifdef NETWORK
 			if ( (Game_mode&GM_MULTI) && (multi_sending_message || multi_defining_message ))	{
@@ -3014,12 +2958,13 @@ void ReadControls()
 			else
 				cheat_enable_index = 0;
 
-
+#ifndef MAC_SHAREWARE
 			john_cheat_func_2(key);
+#endif
 
 #ifdef FINAL_CHEATS
 		if (Cheats_enabled) {
-			if (!(Game_mode&GM_MULTI) && key == cheat_wowie[cheat_wowie_index]) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_wowie[cheat_wowie_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_wowie_index == CHEAT_WOWIE_LENGTH) {
 					int i;
 
@@ -3049,7 +2994,8 @@ void ReadControls()
 			else
 				cheat_wowie_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_wowie2_index*NUM_NEW_CHEATS+CHEAT_WOWIE2_OFS])) {
+#ifndef MAC_SHAREWARE
+			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_wowie2_index*NUM_NEW_CHEATS+CHEAT_WOWIE2_OFS]) && Newdemo_state != ND_STATE_PLAYBACK ) {
 				if (++cheat_wowie2_index == CHEAT_WOWIE2_LENGTH) {
 					int i;
 
@@ -3078,9 +3024,10 @@ void ReadControls()
 			}
 			else
 				cheat_wowie2_index = 0;
+#endif
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_allkeys[cheat_allkeys_index]) {
-				if (++cheat_allkeys_index == CHEAT_ALLKEYS_LENGTH) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_allkeys[cheat_allkeys_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
+				if ( ++cheat_allkeys_index == CHEAT_ALLKEYS_LENGTH) {
 					HUD_init_message(TXT_ALL_KEYS);
 					digi_play_sample( SOUND_CHEATER, F1_0);
 					Players[Player_num].flags |= PLAYER_FLAGS_BLUE_KEY | PLAYER_FLAGS_RED_KEY | PLAYER_FLAGS_GOLD_KEY;
@@ -3092,7 +3039,7 @@ void ReadControls()
 				cheat_allkeys_index = 0;
 
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_invuln[cheat_invuln_index]) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_invuln[cheat_invuln_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_invuln_index == CHEAT_INVULN_LENGTH) {
 					Players[Player_num].flags ^= PLAYER_FLAGS_INVULNERABLE;
 					HUD_init_message("%s %s!", TXT_INVULNERABILITY, (Players[Player_num].flags&PLAYER_FLAGS_INVULNERABLE)?TXT_ON:TXT_OFF);
@@ -3105,7 +3052,7 @@ void ReadControls()
 			else
 				cheat_invuln_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_cloak[cheat_cloak_index]) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_cloak[cheat_cloak_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_cloak_index == CHEAT_CLOAK_LENGTH) {
 					Players[Player_num].flags ^= PLAYER_FLAGS_CLOAKED;
 					HUD_init_message("%s %s!", TXT_CLOAK, (Players[Player_num].flags&PLAYER_FLAGS_CLOAKED)?TXT_ON:TXT_OFF);
@@ -3121,7 +3068,7 @@ void ReadControls()
 			else
 				cheat_cloak_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_shield[cheat_shield_index]) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_shield[cheat_shield_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_shield_index == CHEAT_SHIELD_LENGTH) {
 					HUD_init_message(TXT_FULL_SHIELDS);
 					digi_play_sample( SOUND_CHEATER, F1_0);
@@ -3133,8 +3080,8 @@ void ReadControls()
 			else
 				cheat_shield_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_warp[cheat_warp_index]) {
-				if (++cheat_warp_index == CHEAT_WARP_LENGTH) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_warp[cheat_warp_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
+				if ( (++cheat_warp_index == CHEAT_WARP_LENGTH) && !Endlevel_sequence ) {
 					newmenu_item m;
 					char text[10]="";
 					int new_level_num;
@@ -3154,8 +3101,8 @@ void ReadControls()
 			else
 				cheat_warp_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == cheat_astral[cheat_astral_index]) {
-				if (++cheat_astral_index == CHEAT_ASTRAL_LENGTH) {
+			if (!(Game_mode&GM_MULTI) && key == cheat_astral[cheat_astral_index] && (Newdemo_state != ND_STATE_PLAYBACK) ) {
+				if ( (++cheat_astral_index == CHEAT_ASTRAL_LENGTH) && !Endlevel_sequence ) {
 					digi_play_sample( SOUND_CHEATER, F1_0);
 					if ( Physics_cheat_flag==0xBADA55 )	{
 						Physics_cheat_flag = 0;
@@ -3169,6 +3116,7 @@ void ReadControls()
 			else
 				cheat_astral_index = 0;
 
+#ifndef MAC_SHAREWARE				
 			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_turbomode_index*NUM_NEW_CHEATS+CHEAT_TURBOMODE_OFS])) {
 				if (++cheat_turbomode_index == CHEAT_TURBOMODE_LENGTH) {
 					Game_turbo_mode ^= 1;
@@ -3179,7 +3127,7 @@ void ReadControls()
 			else
 				cheat_turbomode_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_newlife_index*NUM_NEW_CHEATS+CHEAT_NEWLIFE_OFS])) {
+			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_newlife_index*NUM_NEW_CHEATS+CHEAT_NEWLIFE_OFS]) && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_newlife_index == CHEAT_NEWLIFE_LENGTH) {
 					if (Players[Player_num].lives<50) {
 						Players[Player_num].lives++;
@@ -3193,7 +3141,7 @@ void ReadControls()
 			else
 				cheat_newlife_index = 0;
 
-			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_exitpath_index*NUM_NEW_CHEATS+CHEAT_EXITPATH_OFS])) {
+			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_exitpath_index*NUM_NEW_CHEATS+CHEAT_EXITPATH_OFS]) && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_exitpath_index == CHEAT_EXITPATH_LENGTH) {
 					#ifdef SHOW_EXIT_PATH
 					if (create_special_path()) {
@@ -3209,7 +3157,7 @@ void ReadControls()
 				cheat_exitpath_index = 0;
 
 
-			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_robotpause_index*NUM_NEW_CHEATS+CHEAT_ROBOTPAUSE_OFS])) {
+			if (!(Game_mode&GM_MULTI) && key == (0xaa^new_cheats[cheat_robotpause_index*NUM_NEW_CHEATS+CHEAT_ROBOTPAUSE_OFS]) && (Newdemo_state != ND_STATE_PLAYBACK) ) {
 				if (++cheat_robotpause_index == CHEAT_ROBOTPAUSE_LENGTH) {
 					Robot_firing_enabled = !Robot_firing_enabled;
 					HUD_init_message("%s %s!", "Robot firing", Robot_firing_enabled?TXT_ON:TXT_OFF);
@@ -3221,12 +3169,15 @@ void ReadControls()
 			}
 			else
 				cheat_robotpause_index = 0;
+#endif		// MAC_SHAREWARE
 
 
 		}
 #endif
 
+#ifndef MAC_SHAREWARE
 			john_cheat_func_3(key);
+#endif
 
 			#ifndef RELEASE
 			#ifdef NETWORK
@@ -3239,10 +3190,10 @@ void ReadControls()
 	
 			if (Endlevel_sequence) {
 
-	  			if (key==KEY_PRINT_SCREEN)
+	  			if ( (key==KEY_PRINT_SCREEN) || (key==KEY_COMMAND+KEY_SHIFTED+KEY_3) )
 					save_screen_shot(0);
 
-				if (key == KEY_PAUSE)
+				if ( (key == KEY_PAUSE) || (key==KEY_COMMAND+KEY_P) )
 					key = do_game_pause(0);		//so esc from pause will end level
 
 				if (key == KEY_ESC)	{
@@ -3258,14 +3209,16 @@ void ReadControls()
 				break;		//don't process any other keys
 			}
 
+#ifndef MAC_SHAREWARE
 			john_cheat_func_4(key);
+#endif
 
 			if (Player_is_dead) {
 
-	  			if (key==KEY_PRINT_SCREEN)
+	  			if ( (key==KEY_PRINT_SCREEN) || (key==KEY_COMMAND+KEY_SHIFTED+KEY_3) )
 					save_screen_shot(0);
 
-				if (key == KEY_PAUSE)	{
+				if ( (key == KEY_PAUSE)	|| (key==KEY_COMMAND+KEY_P) ){
 					key = do_game_pause(0);		//so esc from pause will end level
 					Death_sequence_aborted  = 0;		// Clear because code above sets this for any key.
 				}
@@ -3283,6 +3236,10 @@ void ReadControls()
 				break;		//don't process any other keys
 			}
 
+#ifndef MAC_SHAREWARE			
+			bald_guy_cheat(key);
+#endif
+
 			if (Newdemo_state == ND_STATE_PLAYBACK )	{
 				switch (key) {
 
@@ -3293,32 +3250,6 @@ void ReadControls()
 					else
 						mprintf ((0, "demo playback interpolation now off\n"));
 					break;
-#ifndef NDEBUG
-				case KEY_DEBUGGED + KEY_K: {
-					int how_many, c;
-					char filename[13], num[16];
-					newmenu_item m[6];
-
-					filename[0] = '\0';
-					m[ 0].type = NM_TYPE_TEXT; m[ 0].text = "output file name";
-					m[ 1].type = NM_TYPE_INPUT;m[ 1].text_len = 8; m[1].text = filename;
-					c = newmenu_do( NULL, NULL, 2, m, NULL );
-					if (c == -2)
-						break;
-					strcat(filename, ".dem");
-					num[0] = '\0';
-					m[ 0].type = NM_TYPE_TEXT; m[ 0].text = "strip how many bytes";
-					m[ 1].type = NM_TYPE_INPUT;m[ 1].text_len = 16; m[1].text = num;
-					c = newmenu_do( NULL, NULL, 2, m, NULL );
-					if (c == -2)
-						break;
-					how_many = atoi(num);
-					if (how_many <= 0)
-						break;
-					newdemo_strip_frames(filename, how_many);
-				}
-				break;
-#endif
 
 				case KEY_F3:				toggle_cockpit();			break;
 				case KEY_SHIFTED+KEY_MINUS:
@@ -3358,9 +3289,12 @@ void ReadControls()
 					newdemo_goto_beginning();
 					break;
 				case KEY_PAUSE:
+				case KEY_COMMAND + KEY_P:
 					do_game_pause(0);
 					break;
-	  			case KEY_PRINT_SCREEN: {
+	  			case KEY_PRINT_SCREEN:
+				case KEY_COMMAND + KEY_SHIFTED + KEY_3:
+				{
 					int old_state;
 			
 					old_state = Newdemo_vcr_state;
@@ -3374,7 +3308,6 @@ void ReadControls()
 				break;
 	  		}
 
-
 #ifndef FINAL_CHEATS
 			//Here are the "legal" cheats
 			if (Cheats_enabled && !(Game_mode&GM_MULTI))
@@ -3384,7 +3317,7 @@ void ReadControls()
 
 						HUD_init_message(TXT_WOWIE_ZOWIE);
 
-						#ifndef SHAREWARE
+						#ifndef MAC_SHAREWARE
 							Players[Player_num].primary_weapon_flags = 0xff;
 							Players[Player_num].secondary_weapon_flags = 0xff;
 						#else
@@ -3442,7 +3375,7 @@ void ReadControls()
 						m.type=NM_TYPE_INPUT; m.text_len = 10; m.text = text;
 						item = newmenu_do( NULL, TXT_WARP_TO_LEVEL, 1, &m, NULL );
 						if (item != -1) {
-							new_level_num = atoi(m.text);
+ 							new_level_num = atoi(m.text);
 							if (new_level_num!=0 && new_level_num>=0 && new_level_num<=LAST_LEVEL)
 								StartNewLevel(new_level_num);
 						}
@@ -3453,6 +3386,9 @@ void ReadControls()
 #endif
 
 			//--killed--Players[Player_num].flags &= ~PLAYER_FLAGS_AFTERBURNER;	//	Turn off, keypress might turn it on.
+			
+			if (key == KEY_C && (keyd_pressed[KEY_LALT]))
+				do_show_help();
 
 			switch (key) {
 
@@ -3461,30 +3397,48 @@ void ReadControls()
 
 				//--killed--case KEY_SHIFTED+KEY_A:	toggle_afterburner_status();	break;
 				case KEY_ESC:
-					Game_aborted=1;
+					Game_aborted=1; 				
 					Function_mode = FMODE_MENU;
 					break;
-				case KEY_F1: 				do_show_help();			break;
-				case KEY_F2:				Config_menu_flag = 1;	break;
-				case KEY_F3:				toggle_cockpit();			break;
-				case KEY_F4:				palette_save(); joydefs_calibrate(); palette_restore(); break;
-				case KEY_F5:	
+				case KEY_F1:
+				case KEY_1 + KEY_COMMAND:
+					do_show_help();
+					break;
+				case KEY_F2:
+				case KEY_2 + KEY_COMMAND:
+					Config_menu_flag = 1;
+					break;
+				case KEY_F3:
+				case KEY_3 + KEY_COMMAND:
+					toggle_cockpit();
+					break;
+				case KEY_F4:
+				case KEY_4 + KEY_COMMAND:
+					palette_save();
+					joydefs_calibrate();
+					palette_restore();
+					break;
+				case KEY_F5:
+				case KEY_5 + KEY_COMMAND:
 						if ( Newdemo_state == ND_STATE_RECORDING )
 							newdemo_stop_recording();
 						else if ( Newdemo_state == ND_STATE_NORMAL )			
 							newdemo_start_recording();
 						break;
-				case KEY_F6:				
+				case KEY_F6:
+				case KEY_6 + KEY_COMMAND:
 					#ifdef NETWORK
 					Show_reticle_name = (Show_reticle_name+1)%2;
 					#endif
 					break;	
-				case KEY_F7:				
+				case KEY_F7:
+				case KEY_7 + KEY_COMMAND:
 					#ifdef NETWORK
 					Show_kill_list = (Show_kill_list+1) % ((Game_mode & GM_TEAM) ? 3 : 2);
 					#endif
 					break;
-				case KEY_F8:	
+				case KEY_F8:
+				case KEY_8 + KEY_COMMAND:
 					#ifdef NETWORK
 					multi_send_message_start();
 					#endif
@@ -3498,6 +3452,20 @@ void ReadControls()
 					#endif
 					break;		// send taunt macros
 	
+				case KEY_9 + KEY_COMMAND:
+					multi_send_macro(KEY_F9);
+					break;
+				case KEY_0 + KEY_COMMAND:
+					multi_send_macro(KEY_F10);
+					break;
+				case KEY_1 + KEY_COMMAND + KEY_CTRLED:
+					multi_send_macro(KEY_F11);
+					break;
+				case KEY_2 + KEY_COMMAND + KEY_CTRLED:
+					multi_send_macro(KEY_F12);
+					break;
+
+#if 0				
 				case KEY_ALTED + KEY_F9:
 					#ifdef NETWORK
 					multi_send_audio_taunt(0);
@@ -3518,6 +3486,7 @@ void ReadControls()
 					multi_send_audio_taunt(3);
 					#endif
 					break;
+#endif
 
 				case KEY_SHIFTED + KEY_F9:
 				case KEY_SHIFTED + KEY_F10:
@@ -3528,8 +3497,28 @@ void ReadControls()
 					#endif
 					break;		// redefine taunt macros
 
-				case KEY_PAUSE:			do_game_pause(1); 		break;
-	  			case KEY_PRINT_SCREEN: 	save_screen_shot(0);		break;
+				case KEY_9 + KEY_SHIFTED + KEY_COMMAND:
+					multi_define_macro(KEY_F9);
+					break;
+				case KEY_0 + KEY_SHIFTED + KEY_COMMAND:
+					multi_define_macro(KEY_F10);
+					break;
+				case KEY_1 + KEY_SHIFTED + KEY_COMMAND + KEY_CTRLED:
+					multi_define_macro(KEY_F11);
+					break;
+				case KEY_2 + KEY_SHIFTED + KEY_COMMAND + KEY_CTRLED:
+					multi_define_macro(KEY_F12);
+					break;
+
+				case KEY_PAUSE:
+				case KEY_COMMAND + KEY_P:
+					do_game_pause(1);
+					break;
+					
+	  			case KEY_PRINT_SCREEN:
+				case KEY_COMMAND + KEY_SHIFTED + KEY_3:
+					save_screen_shot(0);
+					break;
 
 				case KEY_SHIFTED+KEY_MINUS:
 				case KEY_MINUS:			shrink_window();			break;
@@ -3538,24 +3527,38 @@ void ReadControls()
 
 				//	Select primary or secondary weapon.
 				case KEY_1:
+					do_weapon_select(0, 0);
+					break;
 				case KEY_2:
+					do_weapon_select(1, 0);
+					break;
 				case KEY_3:
+					do_weapon_select(2, 0);
+					break;
 				case KEY_4:
+					do_weapon_select(3, 0);
+					break;
 				case KEY_5:
-
-					do_weapon_select(key - KEY_1 , 0);
+					do_weapon_select(4 , 0);
 					break;
 
 				case KEY_6:
+					do_weapon_select(0 , 1);
+					break;
 				case KEY_7:
+					do_weapon_select(1 , 1);
+					break;
 				case KEY_8:
+					do_weapon_select(2 , 1);
+					break;
 				case KEY_9:
+					do_weapon_select(3 , 1);
+					break;
 				case KEY_0:
-
-					do_weapon_select(key - KEY_6 , 1);
+					do_weapon_select(4 , 1);
 					break;
 
-				case KEY_SHIFTED + KEY_ESC: //quick exit
+				case KEY_SHIFTED + KEY_ESC:	//quick exit
 					#ifdef EDITOR
 						if (! SafetyCheck()) break;
 						close_editor_screen();
@@ -3565,6 +3568,46 @@ void ReadControls()
 					Function_mode=FMODE_EXIT;
 					break;
 
+// CD controls follow here
+
+#ifndef MAC_SHAREWARE
+				case KEY_COMMAND+KEY_E:
+					redbook_eject_disk();
+					break;
+				case KEY_COMMAND+KEY_RIGHT:
+					redbook_next_track();
+					break;
+				case KEY_COMMAND+KEY_LEFT:
+					redbook_previous_track();
+					break;
+				case KEY_COMMAND+KEY_UP:
+					redbook_start_play();
+					break;
+				case KEY_COMMAND+KEY_DOWN:
+					stop_redbook();
+					break;
+				case KEY_COMMAND+KEY_M:
+					redbook_mount_disk();
+					break;
+#endif
+					
+				case KEY_COMMAND+KEY_Q:
+					if ( !(Game_mode & GM_MULTI) )
+						do_appl_quit();
+					break;
+					
+#ifdef MAC_SHAREWARE
+				case KEY_COMMAND+KEY_T:
+					if ( (Game_mode & GM_MULTI) && !contest_active ) {
+						HUD_init_message("Tournament started!!!");
+						Network_message_reciever = 100;		// Send to everyone...
+						sprintf( Network_message, "Tournament started!!!");
+						multi_contest_start();
+						contest_active = 1;
+					}
+					break;
+#endif
+
 #ifdef SHAREWARE
 				case KEY_ALTED+KEY_F2:
 				case KEY_ALTED+KEY_F3:
@@ -3572,128 +3615,72 @@ void ReadControls()
 					digi_play_sample( SOUND_BAD_SELECTION, F1_0 );
 					break;
 #else
-				case KEY_ALTED+KEY_F2:	state_save_all( 0 );		break;	// 0 means not between levels.
-				case KEY_ALTED+KEY_F3:	state_restore_all(1);		break;
+				case KEY_ALTED+KEY_F2:
+				case KEY_ALTED+KEY_COMMAND+KEY_2:
+				case KEY_COMMAND+KEY_S:
+					state_save_all( 0 );
+					break;	// 0 means not between levels.
+					
+				case KEY_ALTED+KEY_F3:
+				case KEY_ALTED+KEY_COMMAND+KEY_3:
+				case KEY_COMMAND+KEY_O:
+					state_restore_all(1);
+					break;
 #endif
-
-				case KEY_SHIFTED+KEY_Z:
-					kconfig_center_headset();
-					break;
-
-
-				case KEY_V + KEY_ALTED: 	// changes 11/9/95
+				case KEY_V + KEY_ALTED:
+#if 0
+				case KEY_SHIFTED+KEY_F5:
 					if ( Game_victor_flag )		{
 						victor_init_graphics();
 						HUD_init_message( "Victor mode toggled" );
 					}
 					break;
-
-					// changes 11/9/95, 11/10/95
-				case KEY_SHIFTED+KEY_F5:  
-					if ( Game_victor_flag )		{
-						victor_init_graphics();
-						HUD_init_message( "Victor mode toggled" );
-					} else if ( VR_render_mode != VR_NONE )	{
-						simuleyes_offset_ratio = VR_DEFAULT_OFFSET_RATIO;
-						simuleyes_adjusted_offset_ratio = fixdiv (simuleyes_offset_ratio *
-								VR_PIXEL_SHIFT, VR_SEPARATION);
-						VR_eye_width		= VR_SEPARATION;
-						VR_eye_offset = VR_PIXEL_SHIFT;
-						VR_eye_offset_changed = 2;
-						HUD_init_message( "Stereo parameters reset");
-					}
-					break;
-
-				case KEY_SHIFTED+KEY_F6:
-						if ( VR_render_mode != VR_NONE )	{
-							if (Game_simuleyes_flag)	{
-								vr_reset_display();
-							} else {
-								VR_low_res++;
-								if ( VR_low_res > 3 ) VR_low_res = 0;
-								switch( VR_low_res )	{
-									case 0: HUD_init_message( "High Res" ); break;
-									case 1: HUD_init_message( "Low V.Res" ); break;
-									case 2: HUD_init_message( "Low H.Res" ); break;
-									case 3: HUD_init_message( "Low Res" ); break;
-								}
-							}
-						}
-					break;
-
-				case KEY_SHIFTED+KEY_F7:
-					if (!Game_simuleyes_flag)	{  // constraint added
-						if ( VR_render_mode != VR_NONE )	{
-							VR_switch_eyes = !VR_switch_eyes;
-							if ( VR_switch_eyes )
-								HUD_init_message( "Right Eye -- Left Eye" );
-							else
-								HUD_init_message( "Left Eye -- Right Eye" );
-						}
-					}
-					break;
-
-				case KEY_SHIFTED+KEY_F8:
-					if (!Game_simuleyes_flag)	{  // constraint added
-						VR_sensitivity++;
-						if (VR_sensitivity > 2 )
-							VR_sensitivity = 0;
-						HUD_init_message( "Head tracking sensitivy = %d", VR_sensitivity );
-					}
-					break;
-
-				case KEY_SHIFTED+KEY_ENTER:
-					if ( VR_render_mode != VR_NONE )	{
-						VR_show_hud = !VR_show_hud;
-					}
-					break;
-
-				case KEY_SHIFTED+KEY_F1:   // altered 11/9/95, 11/10/95
-						simuleyes_offset_ratio = fixdiv (simuleyes_offset_ratio,
-								VR_ADJUST_OFFSET_RATIO);
-						if (simuleyes_offset_ratio <	VR_MIN_OFFSET_RATIO)
-							simuleyes_offset_ratio = VR_MIN_OFFSET_RATIO;
-						simuleyes_adjusted_offset_ratio = fixdiv (simuleyes_offset_ratio *
-								VR_PIXEL_SHIFT, VR_SEPARATION);
-						VR_eye_offset = (int) ((fixmul (simuleyes_adjusted_offset_ratio,
-								VR_eye_width) - F1_0/2) / F1_0);
-						HUD_init_message( "Stereoscopic balance = %.1f",
-								f2fl(simuleyes_offset_ratio)*10);
-					VR_eye_offset_changed = 2;
-					break;
-				case KEY_SHIFTED+KEY_F2:   // altered 11/9/95, 11/10/95
-						simuleyes_offset_ratio = fixmul (simuleyes_offset_ratio,
-								VR_ADJUST_OFFSET_RATIO);
-						if (simuleyes_offset_ratio > VR_MAX_OFFSET_RATIO)
-							simuleyes_offset_ratio = VR_MAX_OFFSET_RATIO;
-						simuleyes_adjusted_offset_ratio = fixdiv (simuleyes_offset_ratio *
-								VR_PIXEL_SHIFT, VR_SEPARATION);
-						VR_eye_offset = (int) ((fixmul (simuleyes_adjusted_offset_ratio,
-								VR_eye_width) - F1_0/2) / F1_0);
-						HUD_init_message( "Stereoscopic balance = %.1f",
-								f2fl(simuleyes_offset_ratio)*10);
-					VR_eye_offset_changed = 2;
-					break;
-				case KEY_SHIFTED+KEY_F3:
-						VR_eye_width = VR_eye_width * 10 / 11;
-						if ( VR_eye_width < VR_MIN_SEPARATION )
-							VR_eye_width = VR_MIN_SEPARATION;
-						VR_eye_offset = (int) ((fixmul (simuleyes_adjusted_offset_ratio,
-								VR_eye_width) - F1_0/2) / F1_0);
-						VR_eye_offset_changed = 2;
-						HUD_init_message( "Stereo separation = %.1f", f2fl(VR_eye_width)*10);
-					break;
-				case KEY_SHIFTED+KEY_F4:
-						VR_eye_width = VR_eye_width * 11 / 10;
-						if ( VR_eye_width > VR_MAX_SEPARATION )
-							VR_eye_width = VR_MAX_SEPARATION; //11/10/95
-						VR_eye_offset = (int) ((fixmul (simuleyes_adjusted_offset_ratio,
-								VR_eye_width) - F1_0/2) / F1_0);
-						VR_eye_offset_changed = 2;
-						HUD_init_message( "Stereo separation = %.1f", f2fl(VR_eye_width)*10);
-					break;
-
-
+#endif
+//				case KEY_SHIFTED+KEY_F6:
+//					if ( VR_render_mode != VR_NONE )	{
+//						VR_low_res++;
+//						if ( VR_low_res > 3 ) VR_low_res = 0;
+//						switch( VR_low_res )	{
+//						case 0: HUD_init_message( "High Res" ); break;
+//						case 1: HUD_init_message( "Low V.Res" ); break;
+//						case 2: HUD_init_message( "Low H.Res" ); break;
+//						case 3: HUD_init_message( "Low Res" ); break;
+//						}					
+//					}
+//					break;
+//				case KEY_SHIFTED+KEY_F7:
+//					if ( VR_render_mode != VR_NONE )	{
+//						VR_switch_eyes = !VR_switch_eyes;
+//						if ( VR_switch_eyes )
+//							HUD_init_message( "Right Eye -- Left Eye" );
+//						else
+//							HUD_init_message( "Left Eye -- Right Eye" );
+//					}
+//					break;
+//				case KEY_SHIFTED+KEY_F8:
+//						VR_sensitivity++;
+//						if (VR_sensitivity > 2 )
+//							VR_sensitivity = 0;
+//						HUD_init_message( "Head tracking sensitivy = %d", VR_sensitivity );
+//					break;
+//				case KEY_SHIFTED+KEY_Z:
+//					kconfig_center_headset();
+//					break;
+//				case KEY_ENTER:
+//					if ( VR_render_mode != VR_NONE )	{
+//		  				VR_show_hud = !VR_show_hud;
+//					}					
+//					break;
+//				case KEY_SHIFTED+KEY_F7:
+//					VR_eye_width -= F1_0/10;
+//					if ( VR_eye_width < 0 ) VR_eye_width = 0;
+//					mprintf(( 0, "Eye offset = %f\n", f2fl(VR_eye_width) ));
+//					break;
+//				case KEY_SHIFTED+KEY_F8:
+//					VR_eye_width += F1_0/10;
+//					if ( VR_eye_width > F1_0*2 ) VR_eye_width = F1_0*2;
+//					mprintf(( 0, "Eye offset = %f\n", f2fl(VR_eye_width) ));
+//					break;
 
 				//use function keys for window sizing
 
@@ -3712,6 +3699,11 @@ void ReadControls()
 					do_controlcen_destroyed_stuff(NULL);
 					break;
 
+#ifdef NETWORK
+#ifndef MAC_SHAREWARE
+				case KEY_SHIFTED+KEY_F1:	multi_dump_robots(); 	break;
+#endif
+#endif
 				case KEY_BACKSP:
 				case KEY_CTRLED+KEY_BACKSP:
 				case KEY_ALTED+KEY_BACKSP:
@@ -3723,7 +3715,16 @@ void ReadControls()
 
  						Int3(); break;
 
-				case KEY_DEBUGGED+KEY_S:			digi_reset(); break;
+//				case KEY_DEBUGGED+KEY_S:			digi_reset(); break;
+#ifndef NDEBUG
+				case KEY_DEBUGGED+KEY_S:
+					if (!Sound_suspended)
+						digi_pause_all();
+					else
+						digi_resume_all();
+					Sound_suspended = !Sound_suspended;
+					break;
+#endif
 
 				case KEY_DEBUGGED+KEY_P:
 	 				if (Game_suspended & SUSP_ROBOTS)
@@ -3788,10 +3789,10 @@ void ReadControls()
 #ifndef NDEBUG
 	  			case KEY_DEBUGGED+KEY_O: toggle_outline_mode(); break;
 #endif
-	  			case KEY_DEBUGGED+KEY_T:
-					*Toggle_var = !*Toggle_var;
-					mprintf((0, "Variable at %08x set to %i\n", Toggle_var, *Toggle_var));
-					break;
+//	  			case KEY_DEBUGGED+KEY_T:
+//					*Toggle_var = !*Toggle_var;
+//					mprintf((0, "Variable at %08x set to %i\n", Toggle_var, *Toggle_var));
+//					break;
 	  			case KEY_DEBUGGED + KEY_L: 
 					if (++Lighting_on >= 2) Lighting_on = 0; break;
 	  			case KEY_DEBUGGED + KEY_SHIFTED + KEY_L: 
@@ -3810,18 +3811,20 @@ void ReadControls()
 				}
 	
 				case KEY_DEBUGGED + KEY_M:
+					automap_do_pcx = !automap_do_pcx;
+#if 0
 					Debug_spew = !Debug_spew;
 					if (Debug_spew) {
-						mopen( 0, 8, 1, 78, 16, "Debug Spew");
+//						mopen( 0, 8, 1, 78, 16, "Debug Spew");
 						HUD_init_message( "Debug Spew: ON" );
 					} else {
-						mclose( 0 );
+//						mclose( 0 );
 						HUD_init_message( "Debug Spew: OFF" );
 					}
+#endif
 					break;		
-	
-				case KEY_DEBUGGED + KEY_C:	
 
+				case KEY_DEBUGGED + KEY_C:	
 						do_cheat_menu(); 
 						break;
 				case KEY_DEBUGGED + KEY_SHIFTED + KEY_A:
@@ -3838,8 +3841,10 @@ void ReadControls()
 //						}
 						break;
 				}
-	
+				
 	 			case KEY_DEBUGGED+KEY_F:	framerate_on = !framerate_on; break;
+				
+				case KEY_DEBUGGED+KEY_T:	C_Scanline_subdivision = !C_Scanline_subdivision;break;
  	
  				case KEY_DEBUGGED+KEY_SPACEBAR:              //KEY_F7:                       // Toggle physics flying
  					slew_stop();
@@ -3897,19 +3902,11 @@ void ReadControls()
 
 			}       //switch (key)
 		}
+
+
+
+
 }
-
-
-void vr_reset_display()
-{
-	if (VR_render_mode == VR_NONE ) return;
-
-	if (VR_screen_mode == SCREEN_MENU)	// low res 320x200 (overall) mode
-		gr_set_mode( SM_320x400U );
-	set_screen_mode (SCREEN_MENU);
-	set_screen_mode (SCREEN_GAME);
-}
-
 
 #ifndef	NDEBUG
 int	Debug_slowdown=0;
@@ -3922,7 +3919,6 @@ extern void check_create_player_path(void);
 #endif
 
 extern	int	Do_appearance_effect;
-
 
 
 void GameLoop(int RenderFlag, int ReadControlsFlag )
@@ -3940,6 +3936,14 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
 				j += i;
 	}
 #endif
+{
+int i, count;
+for (i = 0; i<Highest_object_index;i++)
+	if (Objects[i].type != OBJ_NONE)
+		count++;
+if (count > 250)
+	mprintf((1, "%i objects\n"));
+}
 
 		if (desc_id_exit_num) {				 // are we supposed to be checking
 			if (!(--desc_dead_countdown))  // if so, at zero, then pull the plug
@@ -3965,7 +3969,7 @@ player_follow_path(ConsoleObject);
 		if (Game_mode & GM_MULTI)
 			multi_do_frame();
 		#endif
-
+	
 		if (RenderFlag) {
 			if (force_cockpit_redraw) {			//screen need redrawing?
 				init_cockpit();
@@ -4126,6 +4130,7 @@ mem_check();
 		create_player_appearance_effect(ConsoleObject);
 		Do_appearance_effect = 0;
 	}
+
 }
 
 //	-------------------------------------------------------------------------------------------------------
@@ -4388,3 +4393,4 @@ void mem_check(void)
 }
 #endif
 #endif
+

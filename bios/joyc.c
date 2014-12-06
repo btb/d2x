@@ -11,31 +11,34 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/bios/rcs/joyc.c $
- * $Revision: 1.37 $
- * $Author: john $
- * $Date: 1995/10/07 13:22:31 $
+ * $Source: Smoke:miner:source:bios::RCS:joyc.c $
+ * $Revision: 1.6 $
+ * $Author: allender $
+ * $Date: 1995/10/30 11:10:44 $
  * 
  * Routines for joystick reading.
  * 
  * $Log: joyc.c $
- * Revision 1.37  1995/10/07  13:22:31  john
- * Added new method of reading joystick that allows higher-priority
- * interrupts to go off.
- * 
- * Revision 1.36  1995/03/30  11:03:40  john
- * Made -JoyBios read buttons using BIOS.
- * 
- * Revision 1.35  1995/02/14  11:39:25  john
- * Added polled/bios joystick readers..
- * 
- * Revision 1.34  1995/02/10  17:06:12  john
- * Fixed bug with plugging in a joystick not getting detected.
- * 
- * Revision 1.33  1995/01/27  16:39:42  john
- * Made so that if no joystick detected, it wont't
- * read buttons.
- * 
+ * Revision 1.6  1995/10/30  11:10:44  allender
+ * lock down adb structures for stick info to try and get by
+ * VM bug in 7.5 -- not quite yet though
+ *
+ * Revision 1.5  1995/10/17  15:36:05  allender
+ * new joystick code ala Dave D w/o Flightstick pro support
+ *
+ * Revision 1.4  1995/08/18  10:16:48  allender
+ * put back in some joystick functions -- added support
+ * for thrustmaster stick direct reading of axis
+ *
+ * Revision 1.3  1995/07/26  16:58:17  allender
+ * get coords right for joystick
+ *
+ * Revision 1.2  1995/06/25  21:56:04  allender
+ * removed and modified joy handling routines for the mac
+ *
+ * Revision 1.1  1995/05/05  09:55:34  allender
+ * Initial revision
+ *
  * Revision 1.32  1995/01/12  13:16:40  john
  * Made it so that joystick can't lose an axis
  * by 1 weird reading. Reading has to occurr during
@@ -153,75 +156,153 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: joyc.c 1.37 1995/10/07 13:22:31 john Exp $";
+static char rcsid[] = "$Id: joyc.c 1.6 1995/10/30 11:10:44 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
-#include <dos.h>
-#include <i86.h>
-
-//#define ARCADE 1
+#include <Events.h>
+#include <DeskBus.h>			// for ADB reading of joysticks
 
 #include "types.h"
 #include "mono.h"
 #include "joy.h"
-#include "dpmi.h"
+#include "mouse.h"
+#include "JoyManager.h"			// for CH FlightStick Pro support
+#include "macsys.h"
 
-//In key.c
-// ebx = read mask                                                                           
-// edi = pointer to buffer																							
-// returns number of events																						
-int joy_read_stick_asm( int read_masks, int * event_buffer, int timeout );
-#pragma aux joy_read_stick_asm parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
 
-int joy_read_stick_friendly( int read_masks, int * event_buffer, int timeout );
-#pragma aux joy_read_stick_friendly parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
+//****** Thrustmaster specific information follows
 
-int joy_read_stick_polled( int read_masks, int * event_buffer, int timeout );
-#pragma aux joy_read_stick_polled parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
+// CHANGING THE FOLLOWING FORCES RE-INITIALIZATION OF THE DEVICE SETTINGS
+#define		THRUSTMASTER_STRUCT_VERSION	11		// STROKES
 
-int joy_read_stick_bios( int read_masks, int * event_buffer, int timeout );
-#pragma aux joy_read_stick_bios parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
+// OUR DEFAULT ADB ADDRESS AND HANDLER ID AS ISSUED TO THRUSTMASTER
+// BY APPLE
 
+#define		THRUSTMASTER_ADB_ADDR		7
+#define		THRUSTMASTER_HANDLER_ID		0x5F
+
+typedef struct ThrustmasterDevice {
+	// CALIBRATED POSITION DATA FROM DEVICE(S)
+		char			roll;		// -127 (left) ...+127 (right)
+		char			pitch;		// -127 (forward/down) ...+127 (back/up)
+		unsigned char	thrust;		// 0 (back) ...255 (forward)
+		char			yaw;		// -127 (left) ...+127 (right)
+	// THROTTLE BUTTON BITS:
+		short		rockerDown	:1;		// 0 (open), 1 (closed)
+		short		rockerUp	:1;
+		short		button1		:1;
+		short		button2		:1;
+		short		button3		:1;
+		short		button5		:1;
+		short		button6		:1;
+		short		button4		:1;
+	// STICK BUTTON BITS:
+		short		pinkey		:1;
+		short		thumbLow	:1;
+		short		trigger		:1;
+		short		thumbHigh	:1;
+		short		hatLeft		:1;
+		short		hatRight	:1;
+		short		hatDown		:1;
+		short		hatUp		:1;
+	// PADDING TO 8 BYTES (MAX ADB REGISTER SIZE)
+		char	reserveByte1;
+		char	reserveByte2;
+	// DEVICE STRUCTURE VERSION NUMBER
+		char	version;
+	// THIS BYTE IS CLEARED BY THE DRIVER EACH TIME NEW DATA IS ACQUIRED AND CALIBRATED
+		char	notNew;
+	// DEVICE ATTACHMENT INDICATORS
+		char	throttleAttached;
+		char	rudderAttached;
+	// MOUSING STUFF
+		char	mouseDefeated;
+	// PRIVATE STUFF
+		long	dontTouch;
+		long	fini;
+	} ThrustmasterDevice;
+
+static ThrustmasterDevice *tm_dev = NULL;
+
+uint joy_thrustmaster_init (void);
+
+//****** Thrustmaster specific information ends
+
+
+//****** Advanced Gravis MouseStick specific information follows
+
+#define		GRAVIS_SIGNATURE		0x4A656666
+
+typedef struct GravisDevice {
+	long		signature;				/* our signature */
+	char		private1[18];
+	short		numSticksConnected;		/* how many gamepads are available */
+	char		private2[22];
+	
+			/* STICK 1 INFO */
+	short		stick1_xIn;				/* absolute stick position */
+	short		stick1_yIn;				/* absolute stick position */
+	ubyte		stick1_buttons;			/* button states */
+	ubyte		private3;
+	short		stick1_xOut;			/* adjusted cursor position */
+	short		stick1_yOut;			/* adjusted cursor position */
+	char		stick1_old;				/* true if device is an old mousestick */
+	char		private4;
+	char		stick1_on;				/* pad is on or off */
+	char		private5;	
+	char		stick1_cursorCouple;	/* true if stick should move cursor */
+	char		stick1_appAware;		/* is driver switching sets? */
+	char		private6[152];
+	
+			/* STICK 2 INFO */
+	short		stick2_xIn;				/* absolute stick position */
+	short		stick2_yIn;				/* absolute stick position */
+	ubyte		stick2_buttons;			/* button states */
+	ubyte		private7;
+	short		stick2_xOut;			/* adjusted cursor position */
+	short		stick2_yOut;			/* adjusted cursor position */
+	char		stick2_old;				/* true if device is an old mousestick */
+	char		private8;
+	char		stick2_on;				/* pad is on or off */
+	char		private9;	
+	char		stick2_cursorCouple;	/* true if stick should move cursor */
+	char		stick2_appAware;		/* is driver switching sets? */
+	char		private10[152];
+	
+	} GravisDevice;
+
+static GravisDevice *ag_dev = NULL;
+
+uint joy_gravis_init (void);
+
+//****** Advanced Gravis MouseStick specific information ends
+
+
+//****** CH FlightStick Pro specific information follows
+#define CH_FLIGHTSTICK_PRO_CODE 0	// disabled since it doesn't work right
+
+#if CH_FLIGHTSTICK_PRO_CODE
+static uint flightstick_pro_init = 0;
+
+uint joy_flightstick_pro_init (void);
+#endif
+
+//****** CH FlightStick Pro specific information ends
 
 char joy_installed = 0;
 char joy_present = 0;
-
-#define JOY_READ_BUTTONS 	((~(inp(0x201) >> 4))&0xf)
-#ifdef ARCADE
-#define JOY_READ_BUTTONS_ARCADE	(~(inp(0x2A1)))
-#define MAX_BUTTONS 28
-#else
-#define MAX_BUTTONS 20
-#endif
-
-typedef struct Button_info {
-	ubyte		ignore;
-	ubyte		state;
-	ubyte		last_state;
-	int		timedown;
-	ubyte		downcount;
-	ubyte		upcount;
-} Button_info;
+char joy_type = 0;
 
 typedef struct Joy_info {
-	ubyte			present_mask;
-	ubyte			slow_read;
-	int			max_timer;
-	int			read_count;
-	ubyte			last_value;
-	Button_info	buttons[MAX_BUTTONS];
+	int			present_mask;
 	int			axis_min[4];
 	int			axis_center[4];
 	int			axis_max[4];
 } Joy_info;
 
 Joy_info joystick;
-
-extern int joy_bogus_reading;
-extern int joy_retries;
 
 void joy_get_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 {
@@ -245,212 +326,128 @@ void joy_set_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 	}
 }
 
-
-ubyte joy_get_present_mask()	{
-	return joystick.present_mask;
-}
-
-void joy_set_timer_rate(int max_value )	{
-	_disable();
-	joystick.max_timer = max_value;
-	_enable();
-}
-
-int joy_get_timer_rate()	{
-	return joystick.max_timer;
-}
-
-
-void joy_flush()	{
-	int i;
-
-	if (!joy_installed) return;
-
-	_disable();
-	for (i=0; i<MAX_BUTTONS; i++ )	{
-		joystick.buttons[i].ignore = 0;
-		joystick.buttons[i].state = 0;	
-		joystick.buttons[i].timedown = 0;	
-		joystick.buttons[i].downcount = 0;	
-		joystick.buttons[i].upcount = 0;	
-	}
-	_enable();
-
-}
-
-#pragma off (check_stack)
-
-extern int joy_read_buttons_bios();
-
-void joy_handler(int ticks_this_time)	{
-	ubyte value;
-#ifdef ARCADE
-	ubyte valuea;
-#endif
-	int i, state;
-	Button_info * button;
-
-//	joystick.max_timer = ticks_this_time;
-
-	if ( joystick.slow_read & JOY_BIOS_READINGS )		{
-		joystick.read_count++;
-		if ( joystick.read_count > 7 )	{
-			joystick.read_count = 0;
-			value = joy_read_buttons_bios();
-			joystick.last_value = value;
-		} else {
-			value = joystick.last_value;
-		}		
-	} else {
-		value = JOY_READ_BUTTONS;
-	#ifdef ARCADE
-		valuea = JOY_READ_BUTTONS_ARCADE;
-	#endif
-	}
-
-	for (i=0; i<MAX_BUTTONS; i++ )	{
-		button = &joystick.buttons[i];
-		if (!button->ignore) {
-			if ( i < 5 )
-				state = (value >> i) & 1;
-#ifdef ARCADE
-			else if ( i >= 20 ) 
-				state = (valuea >> (i-20)) & 1;
-#endif
-			else if (i==(value+4))	
-				state = 1;
-			else
-				state = 0;
-
-			if ( button->last_state == state )	{
-				if (state) button->timedown += ticks_this_time;
-			} else {
-				if (state)	{
-					button->downcount += state;
-					button->state = 1;
-				} else {	
-					button->upcount += button->state;
-					button->state = 0;
-				}
-				button->last_state = state;
-			}
+void joy_set_type(ubyte type)
+{
+	joy_type = type;
+	
+	if(joy_type==JOY_AS_THRUSTMASTER)
+	{
+		if (!joy_thrustmaster_init())
+		{
+			joy_type = JOY_AS_NONE;
 		}
 	}
+	else if(joy_type==JOY_AS_GRAVIS_MOUSESTICK)
+	{
+		if (!joy_gravis_init())
+		{
+			joy_type = JOY_AS_NONE;
+		}
+	}
+#if CH_FLIGHTSTICK_PRO_CODE
+	else if(joy_type==JOY_AS_FLIGHTSTICK_PRO)
+	{
+		if (!joy_flightstick_pro_init())
+		{
+			joy_type = JOY_AS_NONE;
+		}
+	}
+#else
+	else if(joy_type==JOY_AS_FLIGHTSTICK_PRO)
+	{
+		joy_type = JOY_AS_MOUSE;
+	}
+#endif	//CH_FLIGHTSTICK_PRO_CODE
 }
 
-void joy_handler_end()	{		// Dummy function to help calculate size of joystick handler function
-}
-
-#pragma off (check_stack)
-
-ubyte joy_read_raw_buttons()	{
-	if ( joystick.slow_read & JOY_BIOS_READINGS )	
-		return joy_read_buttons_bios();
-	else 
-		return JOY_READ_BUTTONS;
-}
-
-void joy_set_slow_reading(int flag)
+void joy_flush()
 {
-	joystick.slow_read |= flag;
-	joy_set_cen();
+	if (!joy_installed) return;
+
+	mouse_flush();
 }
 
 ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 {
-	ubyte read_masks, org_masks;
-	int t, t1, t2, buffer[4*2+2];
-	int e, i, num_channels, c;
+	ubyte read_masks;
+	Point mcoords;
 
+	read_masks = 0;	
 	axis[0] = 0; axis[1] = 0;
 	axis[2] = 0; axis[3] = 0;
 
 	if (!joy_installed) return 0;
 
-	read_masks = 0;
-	org_masks = mask;
-
-	mask &= joystick.present_mask;			// Don't read non-present channels
-	if ( mask==0 )	{
-		return 0;		// Don't read if no stick connected.
+	if (joy_type == JOY_AS_MOUSE) {
+		GetMouse(&mcoords);
+		axis[0] = mcoords.h;
+		axis[1] = mcoords.v;
+		read_masks = 3;
 	}
+	else if (joy_type == JOY_AS_THRUSTMASTER) {
+		read_masks = 0x3;
+		axis[0] = (int)(tm_dev->roll);
+		axis[1] = (int)(tm_dev->pitch);
+		if (tm_dev->rudderAttached) {
+			read_masks |= (1 << 2);
+			axis[2] = (int)(tm_dev->yaw);
+		}
+		if (tm_dev->throttleAttached) {
+			read_masks |= (1 << 3);
+			axis[3] = (int)(tm_dev->thrust);
+		}
+	}
+	else if (joy_type == JOY_AS_GRAVIS_MOUSESTICK) {
+		if (ag_dev->numSticksConnected > 0) {
+			read_masks = 0x3;
+			axis[0] = (int)(ag_dev->stick1_xIn);
+			axis[1] = (int)(ag_dev->stick1_yIn);
+		}
+		if (ag_dev->numSticksConnected > 1) {
+			read_masks |= (1 << 2);
+			axis[2] = (int)(ag_dev->stick2_xIn);
+			read_masks |= (1 << 3);
+			axis[3] = (int)(ag_dev->stick2_yIn);
+		}
+	}
+#if CH_FLIGHTSTICK_PRO_CODE
+	else if (joy_type == JOY_AS_FLIGHTSTICK_PRO) {
+		OSErr	err;
+		JoySimpleData	*joystick;
 
-	if ( joystick.slow_read & JOY_SLOW_READINGS )	{
-		for (c=0; c<4; c++ )	{		
-			if ( mask & (1 << c))	{
-				// Time out at  (1/100th of a second)
+		err = JoyOpenManager();
+		err = JoyEnableDevice(0, 1);
+		if(err == noErr)
+		{
+			joystick = JoyGetSimpleDataPtr();
+			
+			if (  (joystick->features & kJoyXAxisAvailable) 
+				&&(joystick->features & kJoyYAxisAvailable))
+			{
+				read_masks = 0x3;
+				axis[0] = (int)(joystick->xAxisValue) >> 8;
+				axis[1] = -((int)(joystick->yAxisValue) >> 8);
+			}
 
-				if ( joystick.slow_read & JOY_POLLED_READINGS )
-					num_channels = joy_read_stick_polled( (1 << c), buffer, 65536 );
-				else if ( joystick.slow_read & JOY_BIOS_READINGS )
-					num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
-				else if ( joystick.slow_read & JOY_FRIENDLY_READINGS )
-					num_channels = joy_read_stick_friendly( (1 << c), buffer, (1193180/100) );
-				else
-					num_channels = joy_read_stick_asm( (1 << c), buffer, (1193180/100) );
-	
-				if ( num_channels > 0 )	{
-					t1 = buffer[0];
-					e = buffer[1];
-					t2 = buffer[2];
-					if ( joystick.slow_read & (JOY_POLLED_READINGS|JOY_BIOS_READINGS) )	{
-						t = t2 - t1;
-					} else {			
-						if ( t1 > t2 )
-							t = t1 - t2;
-						else				{
-							t = t1 + joystick.max_timer - t2;
-							//mprintf( 0, "%d, %d, %d, %d\n", t1, t2, joystick.max_timer, t );
-						}
-					}
-	
-					if ( e & 1 ) { axis[0] = t; read_masks |= 1; }
-					if ( e & 2 ) { axis[1] = t; read_masks |= 2; }
-					if ( e & 4 ) { axis[2] = t; read_masks |= 4; }
-					if ( e & 8 ) { axis[3] = t; read_masks |= 8; }
-				}
+			if (joystick->features & kJoyRudderAvailable)
+			{
+				read_masks |= (1 << 2);
+				axis[2] = (int)(joystick->rudderValue) >> 8;
+			}
+
+			if (joystick->features & kJoyThrottleAvailable)
+			{
+				read_masks |= (1 << 3);
+				axis[3] = (int)(16384 - joystick->throttleValue) >> 7;
 			}
 		}
-	} else {
-		// Time out at  (1/100th of a second)
-		if ( joystick.slow_read & JOY_POLLED_READINGS )
-			num_channels = joy_read_stick_polled( mask, buffer, 65536 );
-		else if ( joystick.slow_read & JOY_BIOS_READINGS )
-			num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
-		else if ( joystick.slow_read & JOY_FRIENDLY_READINGS )
-			num_channels = joy_read_stick_friendly( mask, buffer, (1193180/100) );
-		else 
-			num_channels = joy_read_stick_asm( mask, buffer, (1193180/100) );
-		//mprintf(( 0, "(%d)\n", num_channels ));
-	
-		for (i=0; i<num_channels; i++ )	{
-			t1 = buffer[0];
-			t2 = buffer[i*2+2];
-			
-			if ( joystick.slow_read & (JOY_POLLED_READINGS|JOY_BIOS_READINGS) )	{
-				t = t2 - t1;
-			} else {			
-				if ( t1 > t2 )
-					t = t1 - t2;
-				else				{
-					t = t1 + joystick.max_timer - t2;
-					//mprintf(( 0, "%d, %d, %d, %d\n", t1, t2, joystick.max_timer, t ));
-				}
-			}		
-			e = buffer[i*2+1];
-	
-			if ( e & 1 ) { axis[0] = t; read_masks |= 1; }
-			if ( e & 2 ) { axis[1] = t; read_masks |= 2; }
-			if ( e & 4 ) { axis[2] = t; read_masks |= 4; }
-			if ( e & 8 ) { axis[3] = t; read_masks |= 8; }
-		}
-		
+		err = JoyEnableDevice(0, 0);
+		JoyCloseManager();
 	}
+#endif	//CH_FLIGHTSTICK_PRO_CODE
 
 	return read_masks;
 }
-
-extern void timer_set_joyhandler( void (*joy_handler)() );
 
 int joy_init()	
 {
@@ -459,38 +456,14 @@ int joy_init()
 
 	joy_flush();
 
-	_disable();
-	for (i=0; i<MAX_BUTTONS; i++ )	
-		joystick.buttons[i].last_state = 0;
-	_enable();
-
 	if ( !joy_installed )	{
 		joy_present = 0;
 		joy_installed = 1;
-		//joystick.max_timer = 65536;
-		joystick.slow_read = 0;
-		joystick.read_count = 0;
-		joystick.last_value = 0;
-
-		//--------------- lock everything for the virtal memory ----------------------------------
-		if (!dpmi_lock_region ((void near *)joy_handler, (char *)joy_handler_end - (char near *)joy_handler))	{
-			printf( "Error locking joystick handler!\n" );
-			exit(1);
-		}
-
-		if (!dpmi_lock_region (&joystick, sizeof(Joy_info)))	{
-			printf( "Error locking joystick handler's data!\n" );
-			exit(1);
-		}
-
-		timer_set_joyhandler(joy_handler);
 	}
 
 	// Do initial cheapy calibration...
 	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do	{
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, temp_axis );
-	} while( joy_bogus_reading );
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, temp_axis );
 
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
@@ -503,15 +476,23 @@ int joy_init()
 void joy_close()	
 {
 	if (!joy_installed) return;
+	if ( (tm_dev != NULL) && have_virtual_memory )
+		UnholdMemory( tm_dev, sizeof(ThrustmasterDevice) );
+	if ( (ag_dev != NULL) && have_virtual_memory )
+		UnholdMemory( ag_dev, sizeof(GravisDevice) );
+		
 	joy_installed = 0;
+}
+
+ubyte joy_get_present_mask()
+{
+	if (!joy_installed) return 0;
+	return (ubyte)(joystick.present_mask);
 }
 
 void joy_set_ul()	
 {
-	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do	{
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_min );
-	} while( joy_bogus_reading );
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_min );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
@@ -520,11 +501,7 @@ void joy_set_ul()
 
 void joy_set_lr()	
 {
-	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do {
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_max );
-	} while( joy_bogus_reading );
-
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_max );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
@@ -533,18 +510,14 @@ void joy_set_lr()
 
 void joy_set_cen() 
 {
-	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do {
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_center );
-	} while( joy_bogus_reading );
-
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_center );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
 		joy_present = 0;
 }
 
-void joy_set_cen_fake(int channel)	
+void joy_set_cen_fake(int channel)
 {
 
 	int i,n=0;
@@ -569,7 +542,7 @@ void joy_set_cen_fake(int channel)
 	joystick.axis_center[channel] = cenx;
 }
 
-int joy_get_scaled_reading( int raw, int axn )	
+int joy_get_scaled_reading( int raw, int axn )
 {
 	int x, d;
 
@@ -596,25 +569,14 @@ int joy_get_scaled_reading( int raw, int axn )
 	return x;
 }
 
-int last_reading[4] = { 0, 0, 0, 0 };
-
-void joy_get_pos( int *x, int *y )	
+void joy_get_pos( int *x, int *y )
 {
 	ubyte flags;
 	int axis[4];
 
-	if ((!joy_installed)||(!joy_present)) { *x=*y=0; return; }
+	if (!joy_installed) { *x=*y=0; return; }
 
 	flags=joystick_read_raw_axis( JOY_1_X_AXIS+JOY_1_Y_AXIS, axis );
-
-	if ( joy_bogus_reading )	{
-		axis[0] = last_reading[0];
-		axis[1] = last_reading[1];
-		flags = JOY_1_X_AXIS+JOY_1_Y_AXIS;
-	} else {
-		last_reading[0] = axis[0];
-		last_reading[1] = axis[1];
-	}
 
 	if ( flags & JOY_1_X_AXIS )
 		*x = joy_get_scaled_reading( axis[0], 0 );
@@ -627,31 +589,18 @@ void joy_get_pos( int *x, int *y )
 		*y = 0;
 }
 
-ubyte joy_read_stick( ubyte masks, int *axis )	
+ubyte joy_read_stick( ubyte masks, int *axis )
 {
 	ubyte flags;
 	int raw_axis[4];
 
-	if ((!joy_installed)||(!joy_present)) { 
+	if (!joy_installed) { 
 		axis[0] = 0; axis[1] = 0;
 		axis[2] = 0; axis[3] = 0;
 		return 0;  
 	}
 
 	flags=joystick_read_raw_axis( masks, raw_axis );
-
-	if ( joy_bogus_reading )	{
-		axis[0] = last_reading[0];
-		axis[1] = last_reading[1];
-		axis[2] = last_reading[2];
-		axis[3] = last_reading[3];
-		flags = masks;
-	} else {
-		last_reading[0] = axis[0];
-		last_reading[1] = axis[1];
-		last_reading[2] = axis[2];
-		last_reading[3] = axis[3];
-	}
 
 	if ( flags & JOY_1_X_AXIS )
 		axis[0] = joy_get_scaled_reading( raw_axis[0], 0 );
@@ -677,113 +626,147 @@ ubyte joy_read_stick( ubyte masks, int *axis )
 }
 
 
-int joy_get_btns()	
+int joy_get_btns()
 {
-	if ((!joy_installed)||(!joy_present)) return 0;
-
-	return joy_read_raw_buttons();
+	if (!joy_installed) return 0;
+	return mouse_get_btns();
 }
 
-void joy_get_btn_down_cnt( int *btn0, int *btn1 ) 
+void joy_get_btn_down_cnt( int *btn0, int *btn1 )
 {
-	if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
-
-	_disable();
-	*btn0 = joystick.buttons[0].downcount;
-	joystick.buttons[0].downcount = 0;
-	*btn1 = joystick.buttons[1].downcount;
-	joystick.buttons[1].downcount = 0;
-	_enable();
+	if (!joy_installed) { *btn0=*btn1=0; return; }
+	*btn0 = mouse_button_down_count(0);
+	*btn1 = mouse_button_down_count(1);
 }
 
-int joy_get_button_state( int btn )	
+int joy_get_button_state( int btn )
 {
-	int count;
-
-	if ((!joy_installed)||(!joy_present)) return 0;
-
-	if ( btn >= MAX_BUTTONS ) return 0;
-
-	_disable();
-	count = joystick.buttons[btn].state;
-	_enable();
-	
-	return  count;
+	if (!joy_installed) return 0;
+	return  mouse_button_state(btn);
 }
 
-int joy_get_button_up_cnt( int btn ) 
+#if 0
+int joy_get_button_up_cnt( int btn )
 {
-	int count;
-
-	if ((!joy_installed)||(!joy_present)) return 0;
-
-	if ( btn >= MAX_BUTTONS ) return 0;
-
-	_disable();
-	count = joystick.buttons[btn].upcount;
-	joystick.buttons[btn].upcount = 0;
-	_enable();
-
-	return count;
+	if (!joy_installed) return 0;
+	return mouse_button_up_cnt(btn);
 }
+#endif
 
-int joy_get_button_down_cnt( int btn ) 
+int joy_get_button_down_cnt( int btn )
 {
-	int count;
-
-	if ((!joy_installed)||(!joy_present)) return 0;
-	if ( btn >= MAX_BUTTONS ) return 0;
-
-	_disable();
-	count = joystick.buttons[btn].downcount;
-	joystick.buttons[btn].downcount = 0;
-	_enable();
-
-	return count;
+	if (!joy_installed) return 0;
+	return mouse_button_down_count(btn);
 }
 
 	
-fix joy_get_button_down_time( int btn ) 
+fix joy_get_button_down_time( int btn )
 {
-	fix count;
-
-	if ((!joy_installed)||(!joy_present)) return 0;
-	if ( btn >= MAX_BUTTONS ) return 0;
-
-	_disable();
-	count = joystick.buttons[btn].timedown;
-	joystick.buttons[btn].timedown = 0;
-	_enable();
-
-	return fixmuldiv(count, 65536, 1193180 );
+	if (!joy_installed) return 0;
+	return mouse_button_down_time(btn);
 }
 
-void joy_get_btn_up_cnt( int *btn0, int *btn1 ) 
-{
-	if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
+#if 0
+void joy_get_btn_up_cnt( int *btn0, int *btn1 ) {
+	if (!joy_installed) { *btn0=*btn1=0; return; }
 
-	_disable();
+//	_disable();
 	*btn0 = joystick.buttons[0].upcount;
 	joystick.buttons[0].upcount = 0;
 	*btn1 = joystick.buttons[1].upcount;
 	joystick.buttons[1].upcount = 0;
-	_enable();
+//	_enable();
 }
 
 void joy_set_btn_values( int btn, int state, fix timedown, int downcount, int upcount )
 {
-	_disable();
+//	_disable();
 	joystick.buttons[btn].ignore = 1;
 	joystick.buttons[btn].state = state;
 	joystick.buttons[btn].timedown = fixmuldiv( timedown, 1193180, 65536 );
 	joystick.buttons[btn].downcount = downcount;
 	joystick.buttons[btn].upcount = upcount;
-	_enable();
+//	_enable();
+}
+#endif
+
+uint joy_thrustmaster_init (void)
+{
+	OSErr			err;
+	uint			result = 0;
+	char			adb_addr;
+	ADBDataBlock	adb_data;
+
+	for (adb_addr = 1; adb_addr < 16; adb_addr++) {
+		err = GetADBInfo (&adb_data, adb_addr);
+		if (err == noErr) {
+			if ((adb_data.origADBAddr == THRUSTMASTER_ADB_ADDR) && (adb_data.devType == THRUSTMASTER_HANDLER_ID)) {
+				tm_dev = (ThrustmasterDevice *)(adb_data.dbDataAreaAddr);
+				if (have_virtual_memory) {
+					HoldMemory( tm_dev, sizeof(ThrustmasterDevice) );
+				}
+				result = 1;
+				break;
+			}
+		}
+	}
+	return(result);
 }
 
-void joy_poll()
+uint joy_gravis_init (void)
 {
-	if ( joystick.slow_read & JOY_BIOS_READINGS )	
-		joystick.last_value = joy_read_buttons_bios();
+	OSErr			err;
+	uint			result = 0;
+	ADBDataBlock	adbGetInfo;
+	short			x, numADB;
+	
+	numADB = CountADBs();
+	for (x = 1; x <= numADB; x++)
+	{
+		err = GetADBInfo(&adbGetInfo,GetIndADB(&adbGetInfo,x));
+		if (err == noErr)
+		{
+			ag_dev = (GravisDevice *)(adbGetInfo.dbDataAreaAddr);
+			if (ag_dev != nil && ag_dev->signature == GRAVIS_SIGNATURE)
+			{
+				if (have_virtual_memory) {
+					HoldMemory( ag_dev, sizeof(GravisDevice) );
+				}
+				result = 1;
+				break;
+			}
+		}
+	}
+	return(result);
 }
-
+
+#if CH_FLIGHTSTICK_PRO_CODE
+uint joy_flightstick_pro_init (void)
+{
+	uint	result = 0;
+	OSErr	err;
+
+	if(!flightstick_pro_init)
+	{
+		err = JoyOpenManager();
+		if(err == noErr)
+		{
+			short	count;
+			
+			count = JoyGetCount();
+			if(count != 0)
+			{
+//				err = JoyEnableDevice(0, 1);
+				flightstick_pro_init = 1;
+				result = 1;
+			}
+		}
+		JoyCloseManager();
+	}
+	else
+	{
+		result = 1;
+	}
+	return(result);
+}
+#endif	//CH_FLIGHTSTICK_PRO_CODE

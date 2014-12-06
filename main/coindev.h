@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/coindev.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:30:38 $
+ * $Source: Smoke:miner:source:main::RCS:COINDEV.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:55:01 $
  * 
  * Routines to read the coin counter.
  * 
- * $Log: coindev.h $
+ * $Log: COINDEV.H $
+ * Revision 1.1  1995/05/16  15:55:01  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:30:38  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -116,4 +119,3 @@ unsigned int coindev_count(int CoinMechNumber);
 #define ARCADE_CONTINUE_SECONDS	60
 
 #endif
-

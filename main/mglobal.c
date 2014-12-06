@@ -11,14 +11,26 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/mglobal.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/14 18:24:37 $
+ * $Source: BigRed:miner:source:main::RCS:mglobal.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 16:03:10 $
  *
  * Global variables for main directory
  *
  * $Log: mglobal.c $
+ * Revision 1.1  1995/12/05  16:03:10  allender
+ * Initial revision
+ *
+ * Revision 1.3  1995/10/10  11:49:41  allender
+ * removed malloc of static data now in ai module
+ *
+ * Revision 1.2  1995/07/12  12:48:52  allender
+ * malloc out edge_list global here, not static in automap.c
+ *
+ * Revision 1.1  1995/05/16  15:27:40  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/14  18:24:37  john
  * Force Destination Saturn to use CD-ROM drive.
  * 
@@ -167,6 +179,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  *
  */
 
+#include <Memory.h>
+
 #include "fix.h"
 #include "vecmat.h"
 #include "inferno.h"
@@ -175,14 +189,21 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "bm.h"
 #include "3d.h"
 #include "game.h"
+#include "polyobj.h"
+#include "ai.h"
+#include "mem.h"
+#include "switch.h"
+#include "automap.h"
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: mglobal.c 2.2 1995/03/14 18:24:37 john Exp $";
+static char rcsid[] = "$Id: mglobal.c 1.1 1995/12/05 16:03:10 allender Exp allender $";
 #pragma on (unreferenced)
 
 // Global array of vertices, common to one mine.
-vms_vector Vertices[MAX_VERTICES];
-g3s_point Segment_points[MAX_VERTICES];
+//vms_vector Vertices[MAX_VERTICES];
+//g3s_point Segment_points[MAX_VERTICES];
+vms_vector *Vertices;
+g3s_point *Segment_points;
 
 fix FrameTime = 0;		// Time since last frame, in seconds
 fix GameTime = 0;		//	Time in game, in seconds
@@ -191,7 +212,8 @@ fix GameTime = 0;		//	Time in game, in seconds
 int FrameCount = 0;
 
 //	This is the global mine which create_new_mine returns.
-segment	Segments[MAX_SEGMENTS];
+//segment	Segments[MAX_SEGMENTS];
+segment *Segments;
 //lsegment	Lsegments[MAX_SEGMENTS];
 
 // Number of vertices in current mine (ie, Vertices, pointed to by Vp)
@@ -243,10 +265,46 @@ fix	Next_laser_fire_time;			//	Time at which player can next fire his selected l
 fix	Next_missile_fire_time;			//	Time at which player can next fire his selected missile.
 //--unused-- fix	Laser_delay_time = F1_0/6;		//	Delay between laser fires.
 
+#ifdef APPLE_OEM
+#define DEFAULT_DIFFICULTY		0		// default for apple version is trainee
+#else
 #define DEFAULT_DIFFICULTY		1
-
+#endif
 int	Difficulty_level=DEFAULT_DIFFICULTY;	//	Difficulty level in 0..NDL-1, 0 = easiest, NDL-1 = hardest
 int	Detail_level=NUM_DETAIL_LEVELS-2;		//	Detail level in 0..NUM_DETAIL_LEVELS-1, 0 = boringest, NUM_DETAIL_LEVELS = coolest
 
 char	Menu_pcx_name[13];
-
+
+int init_globals()
+{
+	Segments = (segment *)mymalloc(sizeof(segment) * MAX_SEGMENTS);
+	if (Segments == NULL)
+		return -1;
+	Vertices = (vms_vector *)mymalloc(sizeof(vms_vector) * MAX_VERTICES);
+	if (Vertices == NULL)
+		return -1;
+	Segment_points = (g3s_point *)mymalloc(sizeof(g3s_point) * MAX_VERTICES);
+	if (Segment_points == NULL)
+		return -1;
+	Objects = (object *)mymalloc(sizeof(object) * MAX_OBJECTS);
+	if (Objects == NULL)
+		return -1;
+//	Ai_local_info = (ai_local *)mymalloc(sizeof(ai_local) * MAX_OBJECTS);
+//	if (Ai_local_info == NULL)
+//		return -1;
+
+#define MAX_POLYGON_VECS 1000
+	robot_points = (g3s_point *)mymalloc(sizeof(g3s_point) * MAX_POLYGON_VECS);
+	if (robot_points == NULL)
+		return -1;
+		
+	Triggers = (trigger *)mymalloc(sizeof(trigger) * MAX_TRIGGERS);
+	if (Triggers == NULL)
+		return -1;
+		
+	Edges = (Edge_info *)mymalloc(sizeof(Edge_info) * MAX_EDGES);
+	if (Edges == NULL)
+		return -1;
+		
+	return 0;
+}

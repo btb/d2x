@@ -11,17 +11,23 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/polyobj.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/05/26 16:10:37 $
+ * $Source: Smoke:miner:source:main::RCS:polyobj.c $
+ * $Revision: 1.3 $
+ * $Author: allender $
+ * $Date: 1995/10/25 14:07:07 $
  * 
  * Hacked-in polygon objects
  * 
  * $Log: polyobj.c $
- * Revision 2.1  1995/05/26  16:10:37  john
- * Support for new 4-byte align v8 pof files.
- * 
+ * Revision 1.3  1995/10/25  14:07:07  allender
+ * removed load_poly_model function
+ *
+ * Revision 1.2  1995/09/14  14:10:20  allender
+ * two funtions should be void
+ *
+ * Revision 1.1  1995/05/16  15:30:08  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:44  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -102,13 +108,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: polyobj.c 2.1 1995/05/26 16:10:37 john Exp $";
+static char rcsid[] = "$Id: polyobj.c 1.3 1995/10/25 14:07:07 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <io.h>
+#include <Memory.h>
 
 #ifdef DRIVE
 #include "drive.h"
@@ -123,7 +129,6 @@ static char rcsid[] = "$Id: polyobj.c 2.1 1995/05/26 16:10:37 john Exp $";
 #include "error.h"
 #include "mono.h"
 #include "mem.h"
-#include "args.h"
 
 #ifndef DRIVE
 #include "texmap.h"
@@ -135,15 +140,16 @@ static char rcsid[] = "$Id: polyobj.c 2.1 1995/05/26 16:10:37 john Exp $";
 #include "piggy.h"
 #endif
 
-polymodel Polygon_models[MAX_POLYGON_MODELS];	// = {&bot11,&bot17,&robot_s2,&robot_b2,&bot11,&bot17,&robot_s2,&robot_b2};
+//polymodel Polygon_models[MAX_POLYGON_MODELS];	// = {&bot11,&bot17,&robot_s2,&robot_b2,&bot11,&bot17,&robot_s2,&robot_b2};
+polymodel *Polygon_models;
 
 int N_polygon_models = 0;
 
 #define MAX_POLYGON_VECS 1000
-g3s_point robot_points[MAX_POLYGON_VECS];
+g3s_point *robot_points;
 
 #define PM_COMPATIBLE_VERSION 6
-#define PM_OBJFILE_VERSION 8
+#define PM_OBJFILE_VERSION 7
 
 int	Pof_file_end;
 int	Pof_addr;
@@ -175,10 +181,6 @@ int pof_read_int(ubyte *bufp)
 	Pof_addr += 4;
 	return i;
 
-//	if (cfread(&i,sizeof(i),1,f) != 1)
-//		Error("Unexpected end-of-file while reading object");
-//
-//	return i;
 }
 
 size_t pof_cfread(void *dst, size_t elsize, size_t nelem, ubyte *bufp)
@@ -206,10 +208,6 @@ short pof_read_short(ubyte *bufp)
 	s = *((short *) &bufp[Pof_addr]);
 	Pof_addr += 2;
 	return s;
-//	if (cfread(&s,sizeof(s),1,f) != 1)
-//		Error("Unexpected end-of-file while reading object");
-//
-//	return s;
 }
 
 pof_read_string(char *buf,int max, ubyte *bufp)
@@ -227,7 +225,6 @@ pof_read_string(char *buf,int max, ubyte *bufp)
 
 pof_read_vecs(vms_vector *vecs,int n,ubyte *bufp)
 {
-//	cfread(vecs,sizeof(vms_vector),n,f);
 
 	memcpy(vecs, &bufp[Pof_addr], n*sizeof(*vecs));
 	Pof_addr += n*sizeof(*vecs);
@@ -253,14 +250,14 @@ vms_angvec anim_angs[N_ANIM_STATES][MAX_SUBMODELS];
 robot_set_angles(robot_info *r,polymodel *pm,vms_angvec angs[N_ANIM_STATES][MAX_SUBMODELS]);
 #endif
 
+#if 0
 //reads a binary file containing a 3d model
 polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 {
 	CFILE *ifile;
 	short version;
-	int id,len, next_chunk;
+	int id,len;
 	ubyte	model_buf[MODEL_BUF_SIZE];
-
 	if ((ifile=cfopen(filename,"rb"))==NULL) 
 		Error("Can't open file <%s>",filename);
 
@@ -280,15 +277,11 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 	if (version < PM_COMPATIBLE_VERSION || version > PM_OBJFILE_VERSION)
 		Error("Bad version (%d) in model file <%s>",version,filename);
 
-	if ( FindArg( "-bspgen" )) 
-		fprintf( stderr, "bspgen -c1" );
-
 	while (new_pof_read_int(id,model_buf) == 1) {
 
 		//id  = pof_read_int(model_buf);
 		len = pof_read_int(model_buf);
-		next_chunk = Pof_addr + len;
-						
+
 		switch (id) {
 
 			case ID_OHDR: {		//Object header
@@ -303,18 +296,6 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 
 				pof_read_vecs(&pmmin,1,model_buf);
 				pof_read_vecs(&pmmax,1,model_buf);
-
-				if ( FindArg( "-bspgen" ))	{
-					vms_vector v;
-					fix l;
-				
-					vm_vec_sub(&v, &pmmax, &pmmin );
-					l = v.x;
-					if ( v.y > l ) l = v.y;					
-					if ( v.z > l ) l = v.z;					
-													
-					fprintf( stderr, " -l%.3f", f2fl(l) );
-				}
 
 				break;
 			}
@@ -376,9 +357,6 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			case ID_ANIM:		//Animation data
 				//mprintf(0,"Got chunk ANIM, len=%d\n",len);
 
-				if ( FindArg( "-bspgen" ))
-					fprintf( stderr, " -a" );
-				
 				if (r) {
 					int n_frames,f,m;
 
@@ -418,7 +396,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			case ID_IDTA:		//Interpreter data
 				//mprintf(0,"Got chunk IDTA, len=%d\n",len);
 
-				pm->model_data = malloc(len);
+				pm->model_data = mymalloc(len);
 				pm->model_data_size = len;
 			
 				pof_cfread(pm->model_data,1,len,model_buf);
@@ -431,23 +409,19 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 				break;
 
 		}
-		if ( version >= 8 )		// Version 8 needs 4-byte alignment!!!
-			pof_cfseek(model_buf,next_chunk,SEEK_SET);
+
+
+
 	}
 
 //	for (i=0;i<pm->n_models;i++)
 //		pm->submodel_ptrs[i] += (int) pm->model_data;
 
-	if ( FindArg( "-bspgen" )) {
-		char *p = strchr( filename, '.' );
-		*p = 0;
-		fprintf( stderr, " %s.3ds\n", filename );
-		*p = '.';
-	}
-
 	return pm;
 }
+#endif
 
+#if 0
 //reads the gun information for a model
 //fills in arrays gun_points & gun_dirs, returns the number of guns read
 int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs, int *gun_submodels)
@@ -514,11 +488,12 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
 
 	return n_guns;
 }
+#endif
 
 //free up a model, getting rid of all its memory
 free_model(polymodel *po)
 {
-	free(po->model_data);
+	myfree(po->model_data);
 }
 
 grs_bitmap *texture_list[MAX_POLYOBJ_TEXTURES];
@@ -614,7 +589,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 
 }
 
-free_polygon_models()
+void free_polygon_models()
 {
 	int i;
 
@@ -691,6 +666,7 @@ extern short highest_texture_num;	//from the 3d
 
 char Pof_names[MAX_POLYGON_MODELS][13];
 
+#if 0
 //returns the number of this model
 #ifndef DRIVE
 int load_polygon_model(char *filename,int n_textures,int first_texture,robot_info *r)
@@ -730,12 +706,14 @@ int load_polygon_model(char *filename,int n_textures,grs_bitmap ***textures)
 	return N_polygon_models-1;
 
 }
+#endif
 
 
-init_polygon_models()
+void init_polygon_models()
 {
 	N_polygon_models = 0;
 
+	Polygon_models = NULL;
 	atexit(free_polygon_models);
 
 }
@@ -749,7 +727,7 @@ init_polygon_models()
 //more-or-less fill the canvas.  Note that this routine actually renders
 //into an off-screen canvas that it creates, then copies to the current
 //canvas.
-draw_model_picture(int mn,vms_angvec *orient_angles)
+void draw_model_picture(int mn,vms_angvec *orient_angles)
 {
 	vms_vector	temp_pos=ZERO_VECTOR;
 	vms_matrix	temp_orient = IDENTITY_MATRIX;
@@ -784,4 +762,3 @@ draw_model_picture(int mn,vms_angvec *orient_angles)
 	gr_free_canvas(temp_canv);
 }
 
-

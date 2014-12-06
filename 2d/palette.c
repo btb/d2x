@@ -11,20 +11,79 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/palette.c $
- * $Revision: 1.41 $
- * $Author: john $
- * $Date: 1995/02/02 14:26:31 $
+ * $Source: Smoke:miner:source:2d::RCS:palette.c $
+ * $Revision: 1.20 $
+ * $Author: allender $
+ * $Date: 1995/11/07 13:57:52 $
  *
  * Graphical routines for setting the palette
  *
  * $Log: palette.c $
- * Revision 1.41  1995/02/02  14:26:31  john
- * Made palette fades work better with gamma thingy..
- * 
- * Revision 1.40  1994/12/08  19:03:46  john
- * Made functions use cfile.
- * 
+ * Revision 1.20  1995/11/07  13:57:52  allender
+ * set gr_palette_gamma_param to 4 as default
+ *
+ * Revision 1.19  1995/10/18  01:07:55  allender
+ * new gamma correction stuff
+ *
+ * Revision 1.18  1995/10/13  14:39:46  allender
+ * chance to appropriate GDevice when changing palette
+ *
+ * Revision 1.17  1995/09/13  08:39:19  allender
+ * added gamma correction table instead of on the fly calculation
+ *
+ * Revision 1.16  1995/09/05  08:48:57  allender
+ * changed palette gamme value to 1.5
+ *
+ * Revision 1.15  1995/09/04  11:41:36  allender
+ * added back the debug_mode to set video mode to b/w on
+ * error in case screen is faded.
+ *
+ * Revision 1.14  1995/08/18  15:49:20  allender
+ * added gamma correction value for PC palette entries
+ *
+ * Revision 1.13  1995/08/14  14:26:20  allender
+ * changed transparency color to 0
+ *
+ * Revision 1.12  1995/07/17  10:41:57  allender
+ * get palette read function working
+ *
+ * Revision 1.11  1995/07/13  13:32:03  allender
+ * change init_computed colors back to original form
+ *
+ * Revision 1.10  1995/07/05  16:06:13  allender
+ * don't use palette manager anymore -- directly use the color manager
+ * move transparency color back to entry 255 -- what a pain!!!
+ *
+ * Revision 1.9  1995/06/23  12:28:21  allender
+ * fixed gamma step up problems
+ *
+ * Revision 1.8  1995/06/22  16:58:41  allender
+ * moved check in gr_palette_fade_in to return immediatly if palette
+ * already faded in
+ *
+ * Revision 1.7  1995/06/13  13:04:07  allender
+ * modfied GWorld changes to execute only if GWorld is defined
+ *
+ * Revision 1.6  1995/06/06  16:02:38  allender
+ * fixed gr_palette_set_up to work more correctly
+ *
+ * Revision 1.5  1995/05/11  12:49:01  allender
+ * change transparency color -- fix up fade tables to reflect this
+ *
+ * Revision 1.4  1995/04/27  07:38:52  allender
+ * use animate palette to do fade in and out's
+ *
+ * Revision 1.3  1995/04/18  09:49:39  allender
+ * *** empty log message ***
+ *
+ * Revision 1.2  1995/04/07  13:15:01  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:20:08  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.39  1994/12/01  11:23:27  john
  * Limited Gamma from 0-8.
  * 
@@ -145,34 +204,59 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  *
  */
 
-#include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
+#include <Quickdraw.h>
+#include <Palettes.h>
+#include <Memory.h>
+#include <math.h>
 
-
-#include "types.h"
+#include "dtypes.h"
 #include "mem.h"
 #include "gr.h"
-#include "grdef.h"
-#include "cfile.h"
-#include "error.h"
-#include "mono.h"
 #include "fix.h"
-#include "key.h"
+#include "error.h"
+#include "macsys.h"
+#include "palette.h"
+#include "cfile.h"
 
 extern int gr_installed;
 
 ubyte gr_palette[256*3];
 ubyte gr_current_pal[256*3];
 ubyte gr_fade_table[256*34];
+ubyte gr_debug_mode = 0;			// reverse white and black for debugging
+ushort gr_mac_gamma[64];
+//double gamma_corrections[9] = {1.45,1.5,1.55,1.6,1.65,1.7,1.75,1.8,1.85};
+double gamma_corrections[9] = {1.7,1.6,1.5,1.4,1.3,1.2,1.1,1.0,0.9};
+
+//	0,128,362,665,1024,1431,1881,2370,
+//	2896,3456,4047,4669,5320,5999,6705,7436,
+//	8192,8971,9775,10600,11448,12317,13208,14118,
+//	15049,16000,16969,17957,18964,19989,21032,22092,
+//	23170,24265,25376,26504,27648,28807,29983,31175,
+//	32381,33603,34840,36092,37358,38639,39934,41243,
+//	42566,43904,45254,46619,47997,49388,50792,52210,
+//	53640,55083,56539,58008,59489,60982,62488,64006
+//};			// gamma correction values for the macintosh
 
 ushort gr_palette_selector;
 ushort gr_fade_table_selector;
 
-ubyte gr_palette_gamma = 0;
-int gr_palette_gamma_param = 0;
+ubyte gr_palette_gamma = 4;
+int gr_palette_gamma_param = 4;
 ubyte gr_palette_faded_out = 1;
+
+#define kGammaCorrect	1.70	//	Might also try 1.2
+//#define kGammaCorrect 1.5
+
+void gr_build_mac_gamma(double correction)
+{
+	int	i;
+
+	for (i = 0; i < 64; i++)
+		gr_mac_gamma[i] = (unsigned short) (pow(i / 64.0, correction) * 65536.0);
+}
 
 void gr_palette_set_gamma( int gamma )
 {
@@ -182,6 +266,7 @@ void gr_palette_set_gamma( int gamma )
 	if (gr_palette_gamma_param != gamma )	{
 		gr_palette_gamma_param = gamma;
 		gr_palette_gamma = gamma;
+		gr_build_mac_gamma(gamma_corrections[gr_palette_gamma]);
 		if (!gr_palette_faded_out)
 			gr_palette_load( gr_palette );
 	}	
@@ -192,18 +277,16 @@ int gr_palette_get_gamma()
 	return gr_palette_gamma_param;
 }
 
-
 void gr_use_palette_table( char * filename )
 {
 	CFILE *fp;
-	int i,fsize;
+	int i,j;
+	ubyte c;
 
 	fp = cfopen( filename, "rb" );
 	if ( fp==NULL)
-		Error("Can't open palette file <%s>",filename);
+		Error("Can't open palette file <%s> which is not in the current dir.",filename);
 
-	fsize	= cfilelength( fp );
-	Assert( fsize == 9472 );
 	cfread( gr_palette, 256*3, 1, fp );
 	cfread( gr_fade_table, 256*34, 1, fp );
 	cfclose(fp);
@@ -212,7 +295,23 @@ void gr_use_palette_table( char * filename )
 	for (i=0; i<GR_FADE_LEVELS; i++ )	{
 		gr_fade_table[i*256+255] = 255;
 	}
+	
+// swap colors 0 and 255 of the palette along with fade table entries
 
+#ifdef SWAP_0_255
+	for (i = 0; i < 3; i++) {
+		c = gr_palette[i];
+		gr_palette[i] = gr_palette[765+i];
+		gr_palette[765+i] = c;
+	}
+
+	for (i = 0; i < GR_FADE_LEVELS * 256; i++) {
+		if (gr_fade_table[i] == 0)
+			gr_fade_table[i] = 255;
+	}
+	for (i=0; i<GR_FADE_LEVELS; i++)
+		gr_fade_table[i*256] = TRANSPARENCY_COLOR;
+#endif
 }
 
 #define SQUARE(x) ((x)*(x))
@@ -281,8 +380,10 @@ int gr_find_closest_color( int r, int g, int b )
 //	g &= 63;
 //	b &= 63;
 
-	best_value = SQUARE(r-gr_palette[0])+SQUARE(g-gr_palette[1])+SQUARE(b-gr_palette[2]);
-	best_index = 0;
+//	best_value = SQUARE(r-gr_palette[0])+SQUARE(g-gr_palette[1])+SQUARE(b-gr_palette[2]);
+//	best_index = 0;
+	best_value = SQUARE(r-gr_palette[765])+SQUARE(g-gr_palette[766])+SQUARE(b-gr_palette[767]);
+	best_index = 255;
 	if (best_value==0) {
 		add_computed_color(r, g, b, best_index);
  		return best_index;
@@ -320,8 +421,10 @@ int gr_find_closest_color_current( int r, int g, int b )
 //	g &= 63;
 //	b &= 63;
 
-	best_value = SQUARE(r-gr_current_pal[0])+SQUARE(g-gr_current_pal[1])+SQUARE(b-gr_current_pal[2]);
-	best_index = 0;
+//	best_value = SQUARE(r-gr_current_pal[0])+SQUARE(g-gr_current_pal[1])+SQUARE(b-gr_current_pal[2]);
+//	best_index = 0;
+	best_value = SQUARE(r-gr_palette[765])+SQUARE(g-gr_palette[766])+SQUARE(b-gr_palette[767]);
+	best_index = 255;
 	if (best_value==0)
  		return best_index;
 
@@ -340,7 +443,6 @@ int gr_find_closest_color_current( int r, int g, int b )
 	return best_index;
 }
 
-
 static int last_r=0, last_g=0, last_b=0;
 
 void gr_palette_step_up( int r, int g, int b )
@@ -348,6 +450,11 @@ void gr_palette_step_up( int r, int g, int b )
 	int i;
 	ubyte *p;
 	int temp;
+	ColorSpec colors[256];
+	GDHandle old_device;
+//	PaletteHandle palette;
+//	RGBColor color;
+//	CTabHandle ctab;
 
 	if (gr_palette_faded_out) return;
 
@@ -357,120 +464,370 @@ void gr_palette_step_up( int r, int g, int b )
 	last_g = g;
 	last_b = b;
 
-	outp( 0x3c6, 0xff );
-	outp( 0x3c8, 0 );
 	p=gr_palette;
+//	palette = GetPalette(GameWindow);
 	for (i=0; i<256; i++ )	{
-		temp = (int)(*p++) + r + gr_palette_gamma;
+		colors[i].value = i;
+//		temp = (int)(*p++) + r + gr_palette_gamma;
+		temp = (int)(*p++) + r;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
-		outp( 0x3c9, temp );
-		temp = (int)(*p++) + g + gr_palette_gamma;
+		colors[i].rgb.red = gr_mac_gamma[temp];
+//		temp = (int)(*p++) + g + gr_palette_gamma;
+		temp = (int)(*p++) + g;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
-		outp( 0x3c9, temp );
-		temp = (int)(*p++) + b + gr_palette_gamma;
+		colors[i].rgb.green = gr_mac_gamma[temp];
+//		temp = (int)(*p++) + b + gr_palette_gamma;
+		temp = (int)(*p++) + b;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
-		outp( 0x3c9, temp );
+		colors[i].rgb.blue = gr_mac_gamma[temp];
+//		SetEntryColor(palette, i, &color);
 	}
+	old_device = GetGDevice();
+	SetGDevice(GameMonitor);
+	SetEntries(0, 255, colors);
+	SetGDevice(old_device);
+#if 0
+	ctab = (CTabHandle)NewHandle(sizeof(ColorTable));
+	Palette2CTab(palette, ctab);
+	AnimatePalette(GameWindow, ctab, 0, 0, 256);
+	ActivatePalette(GameWindow);
+	DisposeHandle((Handle)ctab);
+
+	if (GameGWorld != NULL) {
+		ctab = (**GetGWorldPixMap(GameGWorld)).pmTable;	// get the color table for the gWorld.
+		CTabChanged(ctab);
+		(**ctab).ctSeed = (**(**(*(CGrafPtr)GameWindow).portPixMap).pmTable).ctSeed;
+	}
+#endif
 }
 
 void gr_palette_clear()
 {
 	int i;
-	outp( 0x3c6, 0xff );
-	outp( 0x3c8, 0 );
-	for (i=0; i<768; i++ )	{
-		outp( 0x3c9, 0 );
+	ColorSpec colors[256];
+	GDHandle old_device;
+//	PaletteHandle palette;
+//	RGBColor color;
+//	CTabHandle ctable;
+
+	for (i = 0; i < 256; i++) {
+		colors[i].value = i;
+		colors[i].rgb.red = 0;
+		colors[i].rgb.green = 0;
+		colors[i].rgb.blue = 0;
 	}
+	old_device = GetGDevice();
+	SetGDevice(GameMonitor);
+	SetEntries(0, 255, colors);
+	SetGDevice(old_device);
+
+#if 0
+	palette = GetPalette(GameWindow);
+	for (i=0; i<256; i++) {
+		color.red = 0x0;
+		color.green = 0x0;
+		color.blue = 0x0;
+		SetEntryColor(palette, i, &color);
+	}
+	ctable = (CTabHandle)NewHandle(sizeof(ColorTable));
+	Palette2CTab(palette, ctable);
+	AnimatePalette(GameWindow, ctable, 0, 0, 256);
+	ActivatePalette(GameWindow);
+	
+	DisposeHandle((Handle)ctable);
+
+//  make the seeds match for the gworld clut and the window palette.  I don't know if
+//  this is necessary, but it doesn't hurt.
+
+	if (GameGWorld != NULL) {
+		ctable = (**GetGWorldPixMap(GameGWorld)).pmTable;
+		CTabChanged(ctable);
+		(**ctable).ctSeed = (**(**(*(CGrafPtr)GameWindow).portPixMap).pmTable).ctSeed;
+	}
+#endif
 	gr_palette_faded_out = 1;
 }
 
-void gr_palette_load( ubyte * pal )	
+void gr_palette_load( ubyte *pal )	
 {
-	int i;
-	ubyte c;
-	outp( 0x3c6, 0xff );
-	outp( 0x3c8, 0 );
-	for (i=0; i<768; i++ )	{
-		c = pal[i] + gr_palette_gamma;
-		if ( c > 63 ) c = 63;
-		outp( 0x3c9,c);
- 		gr_current_pal[i] = pal[i];
-	}
-	gr_palette_faded_out = 0;
+	int i, j;
+	GDHandle old_device;
+	ColorSpec colors[256];
+//	PaletteHandle palette;
+//	RGBColor color;
+//	CTabHandle ctable;
 
+	for (i=0; i<768; i++ ) {
+// 		gr_current_pal[i] = pal[i] + gr_palette_gamma;
+		gr_current_pal[i] = pal[i];
+		if (gr_current_pal[i] > 63) gr_current_pal[i] = 63;
+	}
+	for (i = 0, j = 0; j < 256; j++) {
+		colors[j].value = j;
+		colors[j].rgb.red = gr_mac_gamma[gr_current_pal[i++]];
+		colors[j].rgb.green = gr_mac_gamma[gr_current_pal[i++]];
+		colors[j].rgb.blue = gr_mac_gamma[gr_current_pal[i++]];
+	}
+	old_device = GetGDevice();
+	SetGDevice(GameMonitor);
+	SetEntries(0, 255, colors);
+	SetGDevice(old_device);
+
+#if 0
+	palette = GetPalette(GameWindow);
+	for (i = 0; i < 768; i += 3) {
+		color.red = gr_current_pal[i] << 9;
+		color.green = gr_current_pal[i+1] << 9;
+		color.blue = gr_current_pal[i+2] << 9;
+		SetEntryColor(palette, i / 3, &color);
+	}
+	
+	ctable = (CTabHandle)NewHandle(sizeof(ColorTable));
+	Palette2CTab(palette, ctable);
+	AnimatePalette(GameWindow, ctable, 0, 0, 256);
+	ActivatePalette(GameWindow);
+	
+	DisposeHandle((Handle)ctable);
+
+	if (GameGWorld != NULL) {
+		ctable = (**GetGWorldPixMap(GameGWorld)).pmTable;	// get the color table for the gWorld.
+		CTabChanged(ctable);
+		(**ctable).ctSeed = (**(**(*(CGrafPtr)GameWindow).portPixMap).pmTable).ctSeed;
+	}
+#endif
+	gr_palette_faded_out = 0;
 	init_computed_colors();
 }
-
-
 
 int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )	
 {
 	ubyte c;
-	int i,j;
+	int i,j, k;
 	fix fade_palette[768];
 	fix fade_palette_delta[768];
+	ColorSpec colors[256];
+	GDHandle old_device;
+//	PaletteHandle palette;
+//	RGBColor color;
+//	CTabHandle ctable;
 
 	allow_keys  = allow_keys;
 
 	if (gr_palette_faded_out) return 0;
 
+//	palette = GetPalette(GameWindow);
+
 	for (i=0; i<768; i++ )	{
-		fade_palette[i] = i2f(pal[i]+gr_palette_gamma);
+		fade_palette[i] = i2f(pal[i]);
 		fade_palette_delta[i] = fade_palette[i] / nsteps;
 	}
 
 	for (j=0; j<nsteps; j++ )	{
-		gr_sync_display();
-		outp( 0x3c6, 0xff );
-		outp( 0x3c8, 0 );
-		for (i=0; i<768; i++ )	{		
+		for (i=0, k = 0; k < 256; k++)	{
+			colors[k].value = k;
 			fade_palette[i] -= fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			c = f2i(fade_palette[i]);
-			if ( c > 63 ) c = 63;
-			outp( 0x3c9, c );								
+//			colors[k].rgb.red = gr_mac_gamma[(f2i(fade_palette[i])+gr_palette_gamma)];
+			colors[k].rgb.red = gr_mac_gamma[(f2i(fade_palette[i]))];
+			i++;
+			fade_palette[i] -= fade_palette_delta[i];
+			if (fade_palette[i] < 0 )
+				fade_palette[i] = 0;
+//			colors[k].rgb.green = gr_mac_gamma[(f2i(fade_palette[i])+gr_palette_gamma)];
+			colors[k].rgb.green = gr_mac_gamma[(f2i(fade_palette[i]))];
+			i++;
+			fade_palette[i] -= fade_palette_delta[i];
+			if (fade_palette[i] < 0 )
+				fade_palette[i] = 0;
+//			colors[k].rgb.blue = gr_mac_gamma[(f2i(fade_palette[i])+gr_palette_gamma)];
+			colors[k].rgb.blue = gr_mac_gamma[(f2i(fade_palette[i]))];
+			i++;
 		}
+		old_device = GetGDevice();
+		SetGDevice(GameMonitor);
+		SetEntries(0, 255, colors);
+		SetGDevice(old_device);
 	}
+
+#if 0
+	for (j=0; j<nsteps; j++ )	{
+		for (i=0; i<768; )	{		
+			fade_palette[i] -= fade_palette_delta[i];
+			if (fade_palette[i] < 0 )
+				fade_palette[i] = 0;
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			color.red = c << 9;
+			i++;
+			fade_palette[i] -= fade_palette_delta[i];
+			if (fade_palette[i] < 0 )
+				fade_palette[i] = 0;
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			color.green = c << 9;
+			i++;
+			fade_palette[i] -= fade_palette_delta[i];
+			if (fade_palette[i] < 0 )
+				fade_palette[i] = 0;
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			color.blue = c << 9;
+			i++;
+			SetEntryColor(palette, (i / 3) - 1, &color);
+		}
+		ctable = (CTabHandle)NewHandle(sizeof(ColorTable));
+		Palette2CTab(palette, ctable);
+		AnimatePalette(GameWindow, ctable, 0, 0, 256);
+		ActivatePalette(GameWindow);
+		
+		DisposeHandle((Handle)ctable);
+	}
+#endif
 	gr_palette_faded_out = 1;
 	return 0;
 }
 
 int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)	
 {
-	int i,j;
+	int i,j, k;
 	ubyte c;
 	fix fade_palette[768];
 	fix fade_palette_delta[768];
+	ColorSpec colors[256];
+	GDHandle old_device;
+//	PaletteHandle palette;
+//	RGBColor color;
+//	CTabHandle ctable;
 
 	allow_keys  = allow_keys;
 
 	if (!gr_palette_faded_out) return 0;
 
+//	palette = GetPalette(GameWindow);
+
 	for (i=0; i<768; i++ )	{
 		gr_current_pal[i] = pal[i];
 		fade_palette[i] = 0;
-		fade_palette_delta[i] = i2f(pal[i]+gr_palette_gamma) / nsteps;
+		fade_palette_delta[i] = i2f(pal[i]) / nsteps;
 	}
 
 	for (j=0; j<nsteps; j++ )	{
-		gr_sync_display();
-		outp( 0x3c6, 0xff );
-		outp( 0x3c8, 0 );
-		for (i=0; i<768; i++ )	{		
+		for (i=0, k = 0; k<256; k++ )	{
+			colors[k].value = k;
 			fade_palette[i] += fade_palette_delta[i];
-			if (fade_palette[i] > i2f(pal[i]+gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i]+gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+//			c = f2i(fade_palette[i])+gr_palette_gamma;
 			c = f2i(fade_palette[i]);
-			if ( c > 63 ) c = 63;
-			outp( 0x3c9, c );								
+			if (c > 63) c = 63;
+			colors[k].rgb.red = gr_mac_gamma[c];
+			i++;
+			fade_palette[i] += fade_palette_delta[i];
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+//			c = f2i(fade_palette[i])+gr_palette_gamma;
+			c = f2i(fade_palette[i]);
+			if (c > 63) c = 63;
+			colors[k].rgb.green = gr_mac_gamma[c];
+			i++;
+			fade_palette[i] += fade_palette_delta[i];
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+//			c = f2i(fade_palette[i])+gr_palette_gamma;
+			c = f2i(fade_palette[i]);
+			if (c > 63) c = 63;
+			colors[k].rgb.blue = gr_mac_gamma[c];
+			i++;
 		}
+		old_device = GetGDevice();
+		SetGDevice(GameMonitor);
+		SetEntries(0, 255, colors);
+		SetGDevice(old_device);
 	}
+
+#if 0
+	for (i=0; i<768; i++ )	{
+		gr_current_pal[i] = pal[i];
+		fade_palette[i] = 0;
+		fade_palette_delta[i] = i2f(pal[i]) / nsteps;
+	}
+
+	for (j=0; j<nsteps; j++ )	{
+		for (i=0; i<768;  )	{
+			fade_palette[i] += fade_palette_delta[i];
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			if (c > 63) c = 63;
+			color.red = c << 9;
+			i++;
+			fade_palette[i] += fade_palette_delta[i];
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			if (c > 63) c = 63;
+			color.green = c << 9;
+			i++;
+			fade_palette[i] += fade_palette_delta[i];
+			if (fade_palette[i] > i2f(pal[i]) )
+				fade_palette[i] = i2f(pal[i]);
+			c = f2i(fade_palette[i])+gr_palette_gamma;
+			if (c > 63) c = 63;
+			color.blue = c << 9;
+			i++;
+			SetEntryColor(palette, (i / 3) - 1, &color);
+		}
+		ctable = (CTabHandle)NewHandle(sizeof(ColorTable));
+		Palette2CTab(palette, ctable);
+		AnimatePalette(GameWindow, ctable, 0, 0, 256);
+		ActivatePalette(GameWindow);
+		
+		DisposeHandle((Handle)ctable);
+	}
+#endif
 	gr_palette_faded_out = 0;
 	return 0;
+}
+
+void debug_video_mode()
+{
+	ColorSpec color[2];
+	GDHandle old_device;
+	
+	color[0].value = 0;
+	color[0].rgb.red =  0xffff;
+	color[0].rgb.blue = 0xffff;
+	color[0].rgb.green = 0xffff;
+	color[1].value = 255;
+	color[1].rgb.red =  0x0;
+	color[1].rgb.blue = 0x0;
+	color[1].rgb.green = 0x0;
+	old_device = GetGDevice();
+	SetGDevice(GameMonitor);
+	SetEntries(-1, 1, color);
+	SetGDevice(old_device);
+	gr_debug_mode = 1;
+}
+
+void reset_debug_video_mode()
+{
+	ColorSpec color[2];
+	GDHandle old_device;
+	
+	color[0].value = 255;
+	color[0].rgb.red =  0xffff;
+	color[0].rgb.blue = 0xffff;
+	color[0].rgb.green = 0xffff;
+	color[1].value = 0;
+	color[1].rgb.red =  0x0;
+	color[1].rgb.blue = 0x0;
+	color[1].rgb.green = 0x0;
+	SetGDevice(GameMonitor);
+	old_device = GetGDevice();
+	SetEntries(-1, 1, color);
+	SetGDevice(old_device);
+	gr_debug_mode = 0;
 }
 
 void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b )
@@ -489,34 +846,19 @@ void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b )
 	}
 }
 
-void gr_palette_read(ubyte * palette)
+void gr_palette_read(ubyte * pal)
 {
-	int i;
-	outp( 0x3c6, 0xff );
-	outp( 0x3c7, 0 );
-	for (i=0; i<768; i++ )	{
-		*palette++ = inp( 0x3c9 );
+	int i, j;
+	char c;
+	RGBColor color;
+	
+	for (i = 0, j=0; i < 256; i++) {
+		Index2Color(i, &color);
+		c = color.red>>10;
+		pal[j++]=c;
+		c = color.green>>10;
+		pal[j++]=c;
+		c = color.blue>>10;
+		pal[j++]=c;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/segpoint.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:26:54 $
+ * $Source: Smoke:miner:source:main::RCS:SEGPOINT.H $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 16:02:38 $
  * 
  * Hopefully temporary file to hold external definition of Segment_points[]
  * 
- * $Log: segpoint.h $
+ * $Log: SEGPOINT.H $
+ * Revision 1.1  1995/05/16  16:02:38  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:26:54  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -39,6 +42,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "3d.h"
 
-extern	g3s_point	Segment_points[];
+//extern	g3s_point	Segment_points[];
+extern g3s_point *Segment_points;
 
 #endif

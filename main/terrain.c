@@ -11,14 +11,17 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/terrain.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:27 $
+ * $Source: Smoke:miner:source:main::RCS:TERRAIN.C $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/05/16 15:31:29 $
  * 
  * Code to render cool external-scene terrain
  * 
- * $Log: terrain.c $
+ * $Log: TERRAIN.C $
+ * Revision 1.1  1995/05/16  15:31:29  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:31:27  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -66,7 +69,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: terrain.c 2.0 1995/02/27 11:31:27 john Exp $";
+static char rcsid[] = "$Id: TERRAIN.C 1.1 1995/05/16 15:31:29 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -380,9 +383,9 @@ void render_terrain(vms_vector *org_point,int org_2dx,int org_2dy)
 
 }
 
-free_height_array()
+void free_height_array()
 {
-	free(height_array);
+	myfree(height_array);
 }
 
 void load_terrain(char *filename)
@@ -399,7 +402,7 @@ void load_terrain(char *filename)
 	}
 
 	if (height_array)
-		free(height_array);
+		myfree(height_array);
 	else
 		atexit(free_height_array);		//first time
 
@@ -477,10 +480,10 @@ fix get_avg_light(int i,int j)
 	return sum/6;
 }
 
-free_light_table()
+void free_light_table()
 {
 	if (light_array)
-		free(light_array);
+		myfree(light_array);
 
 }
 
@@ -491,12 +494,12 @@ build_light_table()
 
 
 	if (light_array)
-		free(light_array);
+		myfree(light_array);
 	else
 		atexit(free_light_table);		//first time
 
-	//MALLOC(light_array,ubyte,grid_w*grid_h); //Won't comile -KRB
-	light_array = (ubyte *)malloc(grid_w*grid_h+(sizeof(ubyte))); //my hack -KRB
+	MALLOC(light_array,ubyte,grid_w*grid_h);
+
 	for (i=1;i<grid_w;i++)
 		for (j=1;j<grid_h;j++) {
 			l = get_avg_light(i,j);

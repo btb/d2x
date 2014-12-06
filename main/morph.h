@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/morph.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:19 $
+ * $Source: Smoke:miner:source:main::RCS:morph.h $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/08/23 21:35:58 $
  * 
  * Header for morph.c
  * 
  * $Log: morph.h $
+ * Revision 1.2  1995/08/23  21:35:58  allender
+ * fix mcc compiler warnings
+ *
+ * Revision 1.1  1995/05/16  15:59:37  allender
+ * Initial revision
+ *
  * Revision 2.0  1995/02/27  11:32:19  john
  * New version 2.0, which has no anonymous unions, builds with
  * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
@@ -87,12 +93,11 @@ void morph_start(object *obj);
 void draw_morph_object(object *obj);
 
 //process the morphing object for one frame
-do_morph_frame(object *obj);
+void do_morph_frame(object *obj);
 
 //called at the start of a level
-init_morphs();
+void init_morphs();
 
 extern morph_data *find_morph_data(object *obj);
 
 #endif
-

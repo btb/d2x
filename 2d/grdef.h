@@ -11,17 +11,31 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/2d/rcs/grdef.h $
- * $Revision: 1.9 $
- * $Author: john $
- * $Date: 1995/03/01 12:31:13 $
+ * $Source: Smoke:miner:source:2d::RCS:grdef.h $
+ * $Revision: 1.5 $
+ * $Author: allender $
+ * $Date: 1995/09/14 15:36:33 $
  *
  * Internal definitions for graphics lib.
  *
  * $Log: grdef.h $
- * Revision 1.9  1995/03/01  12:31:13  john
- * Added wait for retrace thingy in modex setstart.
- * 
+ * Revision 1.5  1995/09/14  15:36:33  allender
+ * added stuff for 68k version
+ *
+ * Revision 1.4  1995/07/05  16:10:57  allender
+ * gr_linear_movsd prototype changes
+ *
+ * Revision 1.3  1995/04/19  14:39:28  allender
+ * changed function prototype
+ *
+ * Revision 1.2  1995/04/18  09:49:53  allender
+ * *** empty log message ***
+ *
+ * Revision 1.1  1995/03/09  09:04:56  allender
+ * Initial revision
+ *
+ *
+ * --- PC RCS information ---
  * Revision 1.8  1994/05/06  12:50:09  john
  * Added supertransparency; neatend things up; took out warnings.
  * 
@@ -48,30 +62,22 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * 
  *
  */
-
-extern int  gr_modex_setmode(short mode);
-extern void gr_modex_setplane(short plane);
-extern void gr_modex_setstart(short x, short y, int wait_for_retrace);
-extern void gr_modex_uscanline( short x1, short x2, short y, unsigned char color );
+#define USE_2D_ASM 1
+ 
+extern void gr_set_buffer(int w, int h, int r, int (*buffer_func)());
 
 extern void gr_pal_setblock( int start, int n, unsigned char * palette );
 extern void gr_pal_getblock( int start, int n, unsigned char * palette );
 extern void gr_pal_setone( int index, unsigned char red, unsigned char green, unsigned char blue );
 
-extern int  gr_vesa_setmodea(int mode);
-extern int  gr_vesa_checkmode(int mode);
-extern void gr_vesa_setstart(short x, short y );
-extern void gr_vesa_setpage(int page);
-extern void gr_vesa_incpage();
-extern void gr_vesa_scanline(short x1, short x2, short y, unsigned char color );
-extern int  gr_vesa_setlogical(int pixels_per_scanline);
-extern void gr_vesa_bitblt( unsigned char * source_ptr, unsigned int vesa_address, int height, int width );
-extern void gr_vesa_pixel( unsigned char color, unsigned int offset );
-
-void gr_linear_movsb( void * source, void * dest, unsigned short nbytes);
-void gr_linear_movsw( void * source, void * dest, unsigned short nbytes);
-void gr_linear_movsd( void * source, void * dest, unsigned short nbytes);
-void gr_linear_stosd( void * source, unsigned char color, unsigned short nbytes);
+void gr_linear_movsb( ubyte * source, ubyte * dest, int nbytes);
+void gr_linear_movsw( ubyte * source, ubyte * dest, int nbytes);
+#if ( defined(__MWERKS__) && defined(__MC68K__) && defined(USE_2D_ASM) )
+void gr_linear_movsd(ubyte * src:__A0, ubyte * dest:__A1, uint num_pixels:__D0 );
+#else
+void gr_linear_movsd( ubyte * source, ubyte * dest, uint nbytes);
+#endif
+void gr_linear_stosd( ubyte * source, unsigned char color, int nbytes);
 extern unsigned int gr_var_color;
 extern unsigned int gr_var_bwidth;
 extern unsigned char * gr_var_bitmap;
@@ -97,5 +103,3 @@ extern unsigned char * gr_video_memory;
 
 
 void order( int *x1, int *x2 );
-
-

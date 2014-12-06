@@ -11,14 +11,20 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/powerup.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/24 13:50:36 $
+ * $Source: Smoke:miner:source:main::RCS:powerup.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:18:55 $
  * 
  * Code for powerup objects.
  * 
  * $Log: powerup.c $
+ * Revision 1.2  1995/10/31  10:18:55  allender
+ * shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:30:16  allender
+ * Initial revision
+ *
  * Revision 2.2  1995/03/24  13:50:36  john
  * Added mega-wowie zowie to release.
  * 
@@ -149,7 +155,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: powerup.c 2.2 1995/03/24 13:50:36 john Exp $";
+static char rcsid[] = "$Id: powerup.c 1.2 1995/10/31 10:18:55 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdarg.h>
@@ -308,7 +314,7 @@ void do_megawow_powerup(int quantity)
 	int i;
 
 	powerup_basic(30, 0, 30, 1, "MEGA-WOWIE-ZOWIE!");
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	Players[Player_num].primary_weapon_flags = 0xff;
 	Players[Player_num].secondary_weapon_flags = 0xff;
 #else
@@ -321,7 +327,7 @@ void do_megawow_powerup(int quantity)
 	for (i=0; i<3; i++)
 		Players[Player_num].secondary_ammo[i] = quantity;
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 	for (i=3; i<5; i++)
 		Players[Player_num].primary_ammo[i] = 200;
 
@@ -577,4 +583,3 @@ int do_powerup(object *obj)
 	return used;
 
 }
-

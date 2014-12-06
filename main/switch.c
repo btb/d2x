@@ -11,15 +11,21 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: f:/miner/source/main/rcs/switch.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:39:08 $
+ * $Source: Smoke:miner:source:main::RCS:switch.c $
+ * $Revision: 1.2 $
+ * $Author: allender $
+ * $Date: 1995/10/31 10:18:10 $
  * 
  * New Triggers and Switches.
  * 
  * $Log: switch.c $
- * Revision 2.1  1995/03/21  14:39:08  john
+ * Revision 1.2  1995/10/31  10:18:10  allender
+ * shareware stuff
+ *
+ * Revision 1.1  1995/05/16  15:31:21  allender
+ * Initial revision
+ *
+ * Revision 2.1  1995/03/21  08:39:08  john
  * Ifdef'd out the NETWORK code.
  * 
  * Revision 2.0  1995/02/27  11:28:41  john
@@ -156,7 +162,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: switch.c 2.1 1995/03/21 14:39:08 john Exp $";
+static char rcsid[] = "$Id: switch.c 1.2 1995/10/31 10:18:10 allender Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -168,7 +174,6 @@ static char rcsid[] = "$Id: switch.c 2.1 1995/03/21 14:39:08 john Exp $";
 #include "game.h"
 #include "switch.h"
 #include "inferno.h"
-#include "editor\editor.h"
 #include "segment.h"
 #include "error.h"
 #include "gameseg.h"
@@ -184,7 +189,8 @@ static char rcsid[] = "$Id: switch.c 2.1 1995/03/21 14:39:08 john Exp $";
 #include "network.h"
 #include "palette.h"
 
-trigger Triggers[MAX_TRIGGERS];
+//trigger Triggers[MAX_TRIGGERS];
+trigger *Triggers;
 int Num_triggers;
 
 //link Links[MAX_WALL_LINKS];
@@ -386,7 +392,7 @@ void check_trigger(segment *seg, short side, short objnum)
 	
 			Triggers[ctrigger_num].flags &= ~TRIGGER_ON;
 		}
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 		if (Game_mode & GM_MULTI)
 			multi_send_trigger(trigger_num);
@@ -404,4 +410,3 @@ void triggers_frame_process()
 			Triggers[i].time -= FrameTime;
 }
 
-

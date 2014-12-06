@@ -10,29 +10,62 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/gameseq.c $
- * $Revision: 2.10 $
- * $Author: john $
- * $Date: 1995/12/19 15:48:25 $
+ /*
+ * $Source: BigRed:miner:source:main::RCS:gameseq.c $
+ * $Revision: 1.1 $
+ * $Author: allender $
+ * $Date: 1995/12/05 16:02:05 $
  * 
  * Routines for EndGame, EndLevel, etc.
  * 
  * $Log: gameseq.c $
- * Revision 2.10  1995/12/19  15:48:25  john
- * Made screen reset when loading new level.
- * 
- * Revision 2.9  1995/07/07  16:47:52  john
- * Fixed bug with reactor time..
- * 
- * Revision 2.8  1995/06/15  12:14:18  john
- * Made end game, win game and title sequences all go
- * on after 5 minutes automatically.
- * 
- * Revision 2.7  1995/05/26  16:16:25  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
+ * Revision 1.1  1995/12/05  16:02:05  allender
+ * Initial revision
+ *
+ * Revision 1.14  1995/11/03  12:55:30  allender
+ * shareware changes
+ *
+ * Revision 1.13  1995/10/31  10:23:07  allender
+ * shareware stuff
+ *
+ * Revision 1.12  1995/10/18  18:25:02  allender
+ * call auto_select_weapon after initing ammo since that may
+ * change the secondary weapon status
+ *
+ * Revision 1.11  1995/10/17  13:17:11  allender
+ * added closebox when entering pilot name
+ *
+ * Revision 1.10  1995/09/24  10:56:59  allender
+ * new players must be looked for in Players directory
+ *
+ * Revision 1.9  1995/09/18  08:08:08  allender
+ * remove netgame binding if at endgame
+ *
+ * Revision 1.8  1995/09/14  14:13:01  allender
+ * initplayerobject have void return
+ *
+ * Revision 1.7  1995/08/31  12:54:42  allender
+ * try and fix bug
+ *
+ * Revision 1.6  1995/08/26  16:25:40  allender
+ * put return values on needed functions
+ *
+ * Revision 1.5  1995/08/14  09:26:28  allender
+ * added byteswap header files
+ *
+ * Revision 1.4  1995/08/01  13:57:42  allender
+ * macified player file stuff -- players stored in seperate folder
+ *
+ * Revision 1.3  1995/06/08  12:54:37  allender
+ * new function for calculating a segment based checksum since the old way
+ * is byte order dependent
+ *
+ * Revision 1.2  1995/06/02  07:42:10  allender
+ * removed duplicate extern for network_endlevel_poll2
+ *
+ * Revision 1.1  1995/05/16  15:25:56  allender
+ * Initial revision
+ *
  * Revision 2.6  1995/03/24  13:11:20  john
  * Added save game during briefing screens.
  * 
@@ -243,18 +276,21 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gameseq.c 2.10 1995/12/19 15:48:25 john Exp $";
+static char rcsid[] = "$Id: gameseq.c 1.1 1995/12/05 16:02:05 allender Exp allender $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
-#include <conio.h>
+//#include <conio.h>
 #include <stdarg.h>
-#include <io.h>
+//#include <io.h>
 #include <errno.h>
 #include <time.h>
+
+#ifdef PROFILE
+#include <profiler.h>
+#endif
 
 #include "inferno.h"
 #include "game.h"
@@ -287,7 +323,7 @@ static char rcsid[] = "$Id: gameseq.c 2.10 1995/12/19 15:48:25 john Exp $";
 #include "digi.h"
 #include "gamesave.h"
 #include "scores.h"
-#include "ibitblt.h"
+//#include "ibitblt.h"
 #include "mem.h"
 #include "palette.h"
 #include "morph.h"
@@ -324,6 +360,7 @@ static char rcsid[] = "$Id: gameseq.c 2.10 1995/12/19 15:48:25 john Exp $";
 #include "State.h"
 #include "songs.h"
 #include "netmisc.h"
+#include "byteswap.h"
 
 #ifdef EDITOR
 #include "editor\editor.h"
@@ -335,7 +372,9 @@ static char rcsid[] = "$Id: gameseq.c 2.10 1995/12/19 15:48:25 john Exp $";
 int	Current_level_num=0,Next_level_num;
 char	Current_level_name[LEVEL_NAME_LEN];		
 
+#ifndef MAC_SHAREWARE
 int Last_level,Last_secret_level;
+#endif
 
 // Global variables describing the player
 int 				N_players=1;						// Number of players ( >1 means a net game, eh?)
@@ -408,7 +447,7 @@ gameseq_init_network_players()
 
 		if (( Objects[i].type==OBJ_PLAYER )	|| (Objects[i].type == OBJ_GHOST) || (Objects[i].type == OBJ_COOP))
 		{
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 			if ( (!(Game_mode & GM_MULTI_COOP) && ((Objects[i].type == OBJ_PLAYER)||(Objects[i].type==OBJ_GHOST))) ||
 	           ((Game_mode & GM_MULTI_COOP) && ((j == 0) || ( Objects[i].type==OBJ_COOP ))) )
 			{
@@ -422,7 +461,7 @@ gameseq_init_network_players()
 				Players[k].objnum = i;
 				Objects[i].id = k;
 				k++;
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 			}
 			else
 				obj_delete(i);
@@ -473,6 +512,53 @@ void gameseq_remove_unused_players()
 			obj_delete(Players[i].objnum);
 		}
 	}
+}
+
+// Setup player for a brand-new ship
+void init_player_stats_new_ship()
+{
+	int	i;
+
+	if (Newdemo_state == ND_STATE_RECORDING) {
+		newdemo_record_laser_level(Players[Player_num].laser_level, 0);
+		newdemo_record_player_weapon(0, 0);
+		newdemo_record_player_weapon(1, 0);
+	}
+
+	Players[Player_num].energy = MAX_ENERGY;
+	Players[Player_num].shields = MAX_SHIELDS;
+	Players[Player_num].laser_level = 0;
+	Players[Player_num].killer_objnum = -1;
+	Players[Player_num].hostages_on_board = 0;
+
+	for (i=0; i<MAX_PRIMARY_WEAPONS; i++) {
+		if (Newdemo_state == ND_STATE_RECORDING)
+			newdemo_record_primary_ammo(Players[Player_num].primary_ammo[i], 0);
+		Players[Player_num].primary_ammo[i] = 0;
+	}
+
+	for (i=1; i<MAX_SECONDARY_WEAPONS; i++) {
+		if (Newdemo_state == ND_STATE_RECORDING)
+			newdemo_record_secondary_ammo(Players[Player_num].secondary_ammo[i], 0);
+		Players[Player_num].secondary_ammo[i] = 0;
+	}
+
+	Players[Player_num].secondary_ammo[0] = 2 + NDL - Difficulty_level;
+
+	Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG;
+	Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG;
+
+	Primary_weapon = 0;
+	Secondary_weapon = 0;
+
+	Players[Player_num].flags &= ~(PLAYER_FLAGS_QUAD_LASERS | PLAYER_FLAGS_AFTERBURNER | PLAYER_FLAGS_CLOAKED | PLAYER_FLAGS_INVULNERABLE);
+
+	Players[Player_num].cloak_time = 0;
+	Players[Player_num].invulnerable_time = 0;
+
+	Player_is_dead = 0;		//player no longer dead
+
+	Players[Player_num].homing_object_dist = -F1_0; // Added by RH
 }
 
 // Setup player for new game
@@ -527,6 +613,8 @@ void init_ammo_and_energy(void)
 //			Players[Player_num].secondary_ammo[i] = Default_secondary_ammo_level[i];
 	if (Players[Player_num].secondary_ammo[0] < 2 + NDL - Difficulty_level)
 		Players[Player_num].secondary_ammo[0] = 2 + NDL - Difficulty_level;
+
+	auto_select_weapon(1);		// get the right secondary weapon		
 }
 
 // Setup player for new level (After completion of previous level)
@@ -536,7 +624,7 @@ void init_player_stats_level()
 
 	Players[Player_num].last_score = Players[Player_num].score;
 
-	Players[Player_num].level = Current_level_num;
+	Players[Player_num].level = (byte)Current_level_num;
 
 	#ifdef NETWORK
 	if (!Network_rejoined)
@@ -576,46 +664,6 @@ void init_player_stats_level()
 	init_gauges();
 }
 
-// Setup player for a brand-new ship
-void init_player_stats_new_ship()
-{
-	int	i;
-
-	if (Newdemo_state == ND_STATE_RECORDING) {
-		newdemo_record_laser_level(Players[Player_num].laser_level, 0);
-		newdemo_record_player_weapon(0, 0);
-		newdemo_record_player_weapon(1, 0);
-	}
-
-	Players[Player_num].energy = MAX_ENERGY;
-	Players[Player_num].shields = MAX_SHIELDS;
-	Players[Player_num].laser_level = 0;
-	Players[Player_num].killer_objnum = -1;
-	Players[Player_num].hostages_on_board = 0;
-
-	for (i=0; i<MAX_PRIMARY_WEAPONS; i++)
-		Players[Player_num].primary_ammo[i] = 0;
-
-	for (i=1; i<MAX_SECONDARY_WEAPONS; i++)
-		Players[Player_num].secondary_ammo[i] = 0;
-	Players[Player_num].secondary_ammo[0] = 2 + NDL - Difficulty_level;
-
-	Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG;
-	Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG;
-
-	Primary_weapon = 0;
-	Secondary_weapon = 0;
-
-	Players[Player_num].flags &= ~(PLAYER_FLAGS_QUAD_LASERS | PLAYER_FLAGS_AFTERBURNER | PLAYER_FLAGS_CLOAKED | PLAYER_FLAGS_INVULNERABLE);
-
-	Players[Player_num].cloak_time = 0;
-	Players[Player_num].invulnerable_time = 0;
-
-	Player_is_dead = 0;		//player no longer dead
-
-	Players[Player_num].homing_object_dist = -F1_0; // Added by RH
-}
-
 #ifdef NETWORK
 void reset_network_objects()
 {
@@ -653,26 +701,15 @@ void editor_reset_stuff_on_level()
 
 void reset_player_object();
 
-
-static fix time_out_value;
-#pragma off (unreferenced)
-void DoEndLevelScoreGlitzPoll( int nitems, newmenu_item * menus, int * key, int citem )
-{
-
-	if ( timer_get_approx_seconds() > time_out_value ) 	{
-		*key = -2;
-	}
-}
-#pragma on (unreferenced)
-
 //do whatever needs to be done when a player dies in multiplayer
 
 void DoGameOver()
 {
-	time_out_value = timer_get_approx_seconds() + i2f(60*5);
-	nm_messagebox1( TXT_GAME_OVER, DoEndLevelScoreGlitzPoll, 1, TXT_OK, "" );
+	nm_messagebox( TXT_GAME_OVER, 1, TXT_OK, "" );
 
+#ifndef MAC_SHAREWARE
 	if (Current_mission_num == 0)
+#endif			// NOTE LIKE TO IF
 		scores_maybe_add_player(0);
 
 	Function_mode = FMODE_MENU;
@@ -686,9 +723,7 @@ extern do_save_game_menu();
 //update various information about the player
 void update_player_stats()
 {
-// I took out this 'if' because it was causing the reactor invul time to be
-// off for players that sit in the death screen. -JS jul 6,95
-//	if (!Player_exploded) {
+	if (!Player_exploded) {
 		Players[Player_num].time_level += FrameTime;	//the never-ending march of time...
 		if ( Players[Player_num].time_level > i2f(3600) )	{
 			Players[Player_num].time_level -= i2f(3600);
@@ -700,7 +735,7 @@ void update_player_stats()
 			Players[Player_num].time_total -= i2f(3600);
 			Players[Player_num].hours_total++;
 		}
-//	}
+	}
 
 //	Players[Player_num].energy += FrameTime*Energy_regen_ratio;	//slowly regenerate energy
 
@@ -798,7 +833,8 @@ try_again:
 	m.type=NM_TYPE_INPUT; m.text_len = 8; m.text = text;
 
 	Newmenu_allowed_chars = playername_allowed_chars;
-	x = newmenu_do( NULL, TXT_ENTER_PILOT_NAME, 1, &m, NULL );
+//	x = newmenu_do( NULL, TXT_ENTER_PILOT_NAME, 1, &m, NULL );
+	x = newmenu_do4( NULL, TXT_ENTER_PILOT_NAME, 1, &m, NULL, 0, NULL, -1, -1, allow_abort );
 	Newmenu_allowed_chars = NULL;
 
 	if ( x < 0 ) {
@@ -809,16 +845,18 @@ try_again:
 	if (text[0]==0)	//null string
 		goto try_again;
 
-	sprintf( filename, "%s.plr", text );
+	sprintf( filename, ":Players:%s.plr", text );
 
 	fp = fopen( filename, "rb" );
 
+#if 0
 	//if the callsign is the name of a tty device, prepend a char
 	if (fp && isatty(fileno(fp))) {
 		fclose(fp);
 		sprintf(filename,"$%.7s.plr",text);
 		fp = fopen(filename,"rb");
 	}
+#endif
 	
 	if ( fp )	{
 		nm_messagebox(NULL, 1, TXT_OK, "%s '%s' %s", TXT_PLAYER, text, TXT_ALREADY_EXISTS );
@@ -839,7 +877,7 @@ try_again:
 }
 
 //Inputs the player's name, without putting up the background screen
-RegisterPlayer()
+int RegisterPlayer()
 {
 	int i,j;
 	char filename[14];
@@ -867,9 +905,13 @@ RegisterPlayer()
 do_menu_again:
 	;
 
-	if (!newmenu_get_filename( TXT_SELECT_PILOT, "*.plr", filename, allow_abort_flag ))	{
+	#ifndef APPLE_OEM
+	if (!newmenu_get_filename( TXT_SELECT_PILOT, ":Players:*.plr", filename, allow_abort_flag ))	{
 		return 0;		// They hit Esc in file selector
 	}
+	#else
+	newmenu_get_filename( "Select Pilot", ":Players:*.plr", filename, 0 );		// no abort allowed ever -- and change title of menubox
+	#endif
 
 	if ( filename[0] == '<' )	{
 		// They selected 'create new pilot'
@@ -891,23 +933,153 @@ do_menu_again:
 
 extern int descent_critical_error;
 
+// routine to calculate the checksum of the segments.  We add this special routine
+// since the current way is byte order dependent.
+
+void mac_do_checksum_calc(ubyte *b, int len, unsigned int *s1, unsigned int *s2)
+{
+
+	while(len--)	{
+		*s1 += *b++;
+		if (*s1 >= 255 ) *s1 -= 255;
+		*s2 += *s1;
+	}
+}
+
+ushort mac_calc_single_segment(segment *seg)
+{
+	int i, j, k;
+	unsigned int sum1,sum2;
+	short s;
+	int t;
+
+	sum1 = sum2 = 0;
+	
+	for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
+		mac_do_checksum_calc(&(seg->sides[j].type), 1, &sum1, &sum2);
+		mac_do_checksum_calc(&(seg->sides[j].pad), 1, &sum1, &sum2);
+		s = swapshort(seg->sides[j].wall_num);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		s = swapshort(seg->sides[j].tmap_num);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		s = swapshort(seg->sides[j].tmap_num2);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		for (k = 0; k < 4; k++) {
+			t = swapint(((int)seg->sides[j].uvls[k].u));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			t = swapint(((int)seg->sides[j].uvls[k].v));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			t = swapint(((int)seg->sides[j].uvls[k].l));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+		}
+		for (k = 0; k < 2; k++) {
+			t = swapint(((int)seg->sides[j].normals[k].x));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			t = swapint(((int)seg->sides[j].normals[k].y));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			t = swapint(((int)seg->sides[j].normals[k].z));
+			mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+		}
+	}
+	for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
+		s = swapshort(seg->children[j]);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	}
+	for (j = 0; j < MAX_VERTICES_PER_SEGMENT; j++) {
+		s = swapshort(seg->verts[j]);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	}
+	s = swapshort(seg->objects);
+	mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	mac_do_checksum_calc(&(seg->special), 1, &sum1, &sum2);
+	mac_do_checksum_calc(&(seg->matcen_num), 1, &sum1, &sum2);
+	s = swapshort(seg->value);
+	mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	t = swapint((int)(seg->static_light));
+	mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+	s = swapshort(seg->pad);
+	mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	sum2 %= 255;
+	return ((sum1<<8)+ sum2);
+}
+
+ushort mac_calc_segment_checksum()
+{
+	int i, j, k;
+	unsigned int sum1,sum2;
+	short s;
+	int t;
+
+	sum1 = sum2 = 0;
+	for (i = 0; i < Highest_segment_index + 1; i++) {
+		for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
+			mac_do_checksum_calc(&(Segments[i].sides[j].type), 1, &sum1, &sum2);
+			mac_do_checksum_calc(&(Segments[i].sides[j].pad), 1, &sum1, &sum2);
+			s = swapshort(Segments[i].sides[j].wall_num);
+			mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+			s = swapshort(Segments[i].sides[j].tmap_num);
+			mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+			s = swapshort(Segments[i].sides[j].tmap_num2);
+			mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+			for (k = 0; k < 4; k++) {
+				t = swapint(((int)Segments[i].sides[j].uvls[k].u));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+				t = swapint(((int)Segments[i].sides[j].uvls[k].v));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+				t = swapint(((int)Segments[i].sides[j].uvls[k].l));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			}
+			for (k = 0; k < 2; k++) {
+				t = swapint(((int)Segments[i].sides[j].normals[k].x));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+				t = swapint(((int)Segments[i].sides[j].normals[k].y));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+				t = swapint(((int)Segments[i].sides[j].normals[k].z));
+				mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+			}
+		}
+		for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
+			s = swapshort(Segments[i].children[j]);
+			mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		}
+		for (j = 0; j < MAX_VERTICES_PER_SEGMENT; j++) {
+			s = swapshort(Segments[i].verts[j]);
+			mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		}
+		s = swapshort(Segments[i].objects);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		mac_do_checksum_calc(&(Segments[i].special), 1, &sum1, &sum2);
+		mac_do_checksum_calc(&(Segments[i].matcen_num), 1, &sum1, &sum2);
+		s = swapshort(Segments[i].value);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+		t = swapint((int)(Segments[i].static_light));
+		mac_do_checksum_calc((ubyte *)&t, 4, &sum1, &sum2);
+		s = swapshort(Segments[i].pad);
+		mac_do_checksum_calc((ubyte *)&s, 2, &sum1, &sum2);
+	}
+	sum2 %= 255;
+	return ((sum1<<8)+ sum2);
+}
+	
+
 //load a level off disk. level numbers start at 1.  Secret levels are -1,-2,-3
 void LoadLevel(int level_num) 
 {
 	char *level_name;
 	player save_player;
+	FILE *fp;
+	int i;
+#ifdef MAC_SHAREWARE
+	static char t[13];
+#endif
 
-#ifdef REQUIRE_CD
+#ifdef SATURN
 	{
 		FILE *fp;
 		int i;
 		char fname[128];
 		strcpy( fname, destsat_cdpath );
-#ifdef DEST_SAT
 		strcat( fname, "saturn.hog" );
-#else
-		strcat( fname, "descent.hog" );
-#endif
 		do {
 			descent_critical_error = 0;
 			fp = fopen( fname, "rb" );
@@ -919,7 +1091,7 @@ void LoadLevel(int level_num)
 				gr_set_current_canvas(NULL);
 				gr_clear_canvas( gr_find_closest_color_current(0,0,0) );
 				gr_palette_load( gr_palette );
-				i = nm_messagebox( "Insert CD", 2, "Retry", "Exit", "Please put the\nDescent CD\nin your CD-ROM drive!\n" );
+				i = nm_messagebox( "Insert CD", 2, "Retry", "Exit", "Please put the\nDescent:Destination Saturn CD\nin your CD-ROM drive!\n" );
 				if ( i==1 )
 					exit(0);
 			}
@@ -932,9 +1104,8 @@ void LoadLevel(int level_num)
 
 	Assert(level_num <= Last_level  && level_num >= Last_secret_level  && level_num != 0);
 
-#ifdef SHAREWARE
+#ifdef MAC_SHAREWARE
 	{
-		static char t[13];
 		sprintf(t, "LEVEL%02d.SDL", level_num);
 		level_name = t;
 	}
@@ -950,9 +1121,25 @@ void LoadLevel(int level_num)
 	if (!load_level(level_name))
 		Current_level_num=level_num;
 
+#ifdef NETWORK
+#if 0
+	fp = fopen ("macsegs.out", "wt");
+	for (i = 0; i <= Highest_segment_index; i++) {
+		my_segments_checksum = mac_calc_single_segment(&(Segments[i]));
+		fprintf(fp, "segment %d -- %d\n", i, my_segments_checksum);
+	}
+	fclose(fp);
+#endif
+	my_segments_checksum = mac_calc_segment_checksum();
+#endif
+	
+#if 0
 	#ifdef NETWORK
+	for (i = 0; i <= Highest_segment_index; i++)
+		my_segments_checksum = netmisc_calc_checksum(&(Segments[i]), sizeof(segment));
 	my_segments_checksum = netmisc_calc_checksum(Segments, sizeof(segment)*(Highest_segment_index+1));
 	#endif
+#endif
 
 	load_endlevel_data(level_num);
 
@@ -971,7 +1158,7 @@ void LoadLevel(int level_num)
 }
 
 //sets up Player_num & ConsoleObject  
-InitPlayerObject()
+void InitPlayerObject()
 {
 	Assert(Player_num>=0 && Player_num<MAX_PLAYERS);
 
@@ -993,7 +1180,7 @@ InitPlayerObject()
 extern void game_disable_cheats();
 
 //starts a new game on the given level
-StartNewGame(int start_level)
+void StartNewGame(int start_level)
 {
 	Game_mode = GM_NORMAL;
 	Function_mode = FMODE_GAME;
@@ -1017,7 +1204,7 @@ StartNewGame(int start_level)
 }
 
 //starts a resumed game loaded from disk
-ResumeSavedGame(int start_level)
+void ResumeSavedGame(int start_level)
 {
 	Game_mode = GM_NORMAL;
 	Function_mode = FMODE_GAME;
@@ -1033,11 +1220,6 @@ ResumeSavedGame(int start_level)
 
 	game_disable_cheats();
 }
-
-#ifdef NETWORK
-extern void network_endlevel_poll2( int nitems, newmenu_item * menus, int * key, int citem ); // network.c
-#endif
-
 
 //	-----------------------------------------------------------------------------
 //	Does the bonus scoring.
@@ -1111,7 +1293,7 @@ void DoEndLevelScoreGlitz(int network)
 		m[i].text = m_str[i];
 	}
 
-	// m[c].type = NM_TYPE_MENU;	m[c++].text = "Ok";
+//	m[c].type = NM_TYPE_MENU;	m[c++].text = "Ok";
 
 	if (Current_level_num < 0)
 		sprintf(title,"%s%s %d %s\n %s %s",is_last_level?"\n\n\n":"\n",TXT_SECRET_LEVEL, -Current_level_num, TXT_COMPLETE, Current_level_name, TXT_DESTROYED);
@@ -1122,14 +1304,12 @@ void DoEndLevelScoreGlitz(int network)
 
 	gr_palette_fade_out(gr_palette, 32, 0);
 
-	time_out_value = timer_get_approx_seconds() + i2f(60*5);
-
 #ifdef NETWORK
 	if ( network && (Game_mode & GM_NETWORK) )
 		newmenu_do2(NULL, title, c, m, network_endlevel_poll2, 0, "MENU.PCX");
 	else
 #endif	// Note link!
-		newmenu_do2(NULL, title, c, m, DoEndLevelScoreGlitzPoll, 0, "MENU.PCX");
+		newmenu_do2(NULL, title, c, m, NULL, 0, "MENU.PCX");
 }
 
 //give the player the opportunity to save his game
@@ -1144,7 +1324,7 @@ DoEndlevelMenu()
 }
 
 //called when the player has finished a level
-PlayerFinishedLevel(int secret_flag)
+void PlayerFinishedLevel(int secret_flag)
 {
 	int	rval;
 	int 	was_multi = 0;
@@ -1196,7 +1376,9 @@ PlayerFinishedLevel(int secret_flag)
 	}
 
 	if (!was_multi && rval) {
+#ifndef MAC_SHAREWARE
 		if (Current_mission_num == 0)
+#endif										// note link to above if
 			scores_maybe_add_player(0);
 		longjmp( LeaveGame, 0 );		// Exit out of game loop
 	}
@@ -1209,6 +1391,10 @@ extern void do_end_game(void);
 
 //from which level each do you get to each secret level 
 int Secret_level_table[MAX_SECRET_LEVELS_PER_MISSION];
+
+#ifdef MAC_SHAREWARE
+extern void multi_endlevel_abort( void );		// new function for shareware to dump multi players after last level
+#endif
 
 //called to go to the next level (if there is one)
 //if secret_flag is true, advance to secret level, else next normal one
@@ -1228,6 +1414,10 @@ int AdvanceLevel(int secret_flag)
 	#ifdef NETWORK
 	if (Game_mode & GM_MULTI)
 	{
+#ifdef MAC_SHAREWARE
+		if ( Current_level_num == Last_level )
+			multi_endlevel_abort();					// long jumps out of game
+#endif
 		result = multi_endlevel(&secret_flag); // Wait for other players to reach this point
 		if (result) // failed to sync
 			return (Current_level_num == Last_level);
@@ -1239,8 +1429,15 @@ int AdvanceLevel(int secret_flag)
 		Function_mode = FMODE_MENU;
 		if ((Newdemo_state == ND_STATE_RECORDING) || (Newdemo_state == ND_STATE_PAUSED))
 			newdemo_stop_recording();
+		
+		if (Game_mode & GM_NETWORK)
+			network_release_registered_game();
 
 		songs_play_song( SONG_ENDGAME, 0 );
+
+#ifdef MAC_SHAREWARE						// so when on registered, can start at next level
+		set_highest_level(Last_level+1);
+#endif
 
 		do_end_game();
 		return 1;
@@ -1302,7 +1499,7 @@ died_in_mine_message(void)
 }
 
 //called when the player has died
-DoPlayerDead()
+void DoPlayerDead()
 {
 	reset_palette_add();
 
@@ -1382,7 +1579,9 @@ DoPlayerDead()
 		}
 
 		if (rval) {
+#ifndef MAC_SHAREWARE
 			if (Current_mission_num == 0)
+#endif			// NOTE LINK TO IF
 				scores_maybe_add_player(0);
 			longjmp( LeaveGame, 0 );		// Exit out of game loop
 		}
@@ -1393,8 +1592,39 @@ DoPlayerDead()
 
 }
 
+//	-----------------------------------------------------------------------------------------------------
+//	Initialize default parameters for one robot, copying from Robot_info to *objp.
+//	What about setting size!?  Where does that come from?
+void copy_defaults_to_robot(object *objp)
+{
+	robot_info	*robptr;
+	int			objid;
+
+	Assert(objp->type == OBJ_ROBOT);
+	objid = objp->id;
+	Assert(objid < N_robot_types);
+
+	robptr = &Robot_info[objid];
+
+	objp->shields = robptr->strength;
+
+}
+
+//	-----------------------------------------------------------------------------------------------------
+//	Copy all values from the robot info structure to all instances of robots.
+//	This allows us to change bitmaps.tbl and have these changes manifested in existing robots.
+//	This function should be called at level load time.
+void copy_defaults_to_robot_all(void)
+{
+	int	i;
+
+	for (i=0; i<=Highest_object_index; i++)
+		if (Objects[i].type == OBJ_ROBOT)
+			copy_defaults_to_robot(&Objects[i]);
+}
+
 //called when the player is starting a new level for normal game mode and restore state
-StartNewLevelSub(int level_num, int page_in_textures)
+void StartNewLevelSub(int level_num, int page_in_textures)
 {
 	if (!(Game_mode & GM_MULTI)) {
 		last_drawn_cockpit = -1;
@@ -1454,7 +1684,7 @@ StartNewLevelSub(int level_num, int page_in_textures)
 	#endif
 	init_player_stats_level();
 
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 #ifdef NETWORK
 	if ((Game_mode & GM_MULTI_COOP) && Network_rejoined)
 	{
@@ -1510,15 +1740,21 @@ StartNewLevelSub(int level_num, int page_in_textures)
 
 	//	Say player can use FLASH cheat to mark path to exit.
 	Last_level_path_created = -1;
+	
+#ifdef PROFILE
+	ProfilerSetStatus(1);
+#endif
 }
 
 //called when the player is starting a new level for normal game model
-StartNewLevel(int level_num)
+void StartNewLevel(int level_num)
 {
+	#ifndef APPLE_OEM
 	if (!(Game_mode & GM_MULTI)) {
 		do_briefing_screens(level_num);
 	}
-	StartNewLevelSub(level_num, 1 );		
+	#endif
+	StartNewLevelSub(level_num, 1 );
 
 }
 
@@ -1589,41 +1825,9 @@ done:
 	reset_cruise();
 }
 
-//	-----------------------------------------------------------------------------------------------------
-//	Initialize default parameters for one robot, copying from Robot_info to *objp.
-//	What about setting size!?  Where does that come from?
-void copy_defaults_to_robot(object *objp)
-{
-	robot_info	*robptr;
-	int			objid;
-
-	Assert(objp->type == OBJ_ROBOT);
-	objid = objp->id;
-	Assert(objid < N_robot_types);
-
-	robptr = &Robot_info[objid];
-
-	objp->shields = robptr->strength;
-
-}
-
-//	-----------------------------------------------------------------------------------------------------
-//	Copy all values from the robot info structure to all instances of robots.
-//	This allows us to change bitmaps.tbl and have these changes manifested in existing robots.
-//	This function should be called at level load time.
-void copy_defaults_to_robot_all(void)
-{
-	int	i;
-
-	for (i=0; i<=Highest_object_index; i++)
-		if (Objects[i].type == OBJ_ROBOT)
-			copy_defaults_to_robot(&Objects[i]);
-}
-
 int	Do_appearance_effect=0;
 
 extern int Rear_view;
-extern void vr_reset_display();
 
 //	-----------------------------------------------------------------------------------------------------
 //called when the player is starting a level (new game or new ship)
@@ -1648,7 +1852,7 @@ StartLevel(int random)
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
 	{
-#ifndef SHAREWARE
+#ifndef MAC_SHAREWARE
 		if (Game_mode & GM_MULTI_COOP)
 			multi_send_score();
 #endif
@@ -1669,10 +1873,6 @@ StartLevel(int random)
 	Fusion_charge = 0;
 
 	Robot_firing_enabled = 1;
-
-	if (VR_screen_mode == SCREEN_MENU)
-		vr_reset_display();
 }
 
 
-
