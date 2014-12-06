@@ -8,76 +8,15 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/gamemine.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:50 $
- * 
- * Header for gamemine.c
- * 
- * $Log: gamemine.h $
- * Revision 2.0  1995/02/27  11:28:50  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.15  1994/11/17  11:39:34  matt
- * Ripped out code to load old mines
- * 
- * Revision 1.14  1994/10/19  16:46:40  matt
- * Made tmap overrides for robots remap texture numbers
- * 
- * Revision 1.13  1994/09/23  22:14:37  matt
- * Took out obsolete structure fields
- * 
- * Revision 1.12  1994/07/22  12:36:32  matt
- * Cleaned up editor/game interactions some more.
- * 
- * Revision 1.11  1994/06/01  11:21:37  yuan
- * Added controlcentertriggers to the gamesave.
- * 
- * Revision 1.10  1994/05/10  12:14:26  yuan
- * Game save/load... Demo levels 1-5 added...
- * High scores fixed...
- * 
- * Revision 1.9  1994/05/04  18:25:05  yuan
- * Working on gamesave.
- * 
- * Revision 1.8  1994/05/03  15:53:27  yuan
- * Readded structure field groups for backward compatibility...
- * 
- * Revision 1.7  1994/05/03  11:36:26  yuan
- * Stabilizing gamesave stuff.
- * 
- * Revision 1.6  1994/04/28  11:01:32  yuan
- * Added objects in structure.
- * 
- * Revision 1.5  1994/04/06  18:30:03  john
- * Added Refueling segments.
- * 
- * Revision 1.4  1994/03/17  18:06:53  yuan
- * Removed switch code... Now we just have Walls, Triggers, and Links...
- * 
- * Revision 1.3  1994/03/01  18:12:24  yuan
- * Wallswitches, triggers, and more!
- * 
- * Revision 1.2  1994/02/10  15:36:01  matt
- * Various changes to make editor compile out.
- * 
- * Revision 1.1  1994/02/09  17:11:45  matt
- * Initial revision
- * 
- * 
- */
 
 
 
 #ifndef _GAMEMINE_H
 #define _GAMEMINE_H
 
-#define MINE_VERSION					17	// Current version expected
+#define MINE_VERSION					20	// Current version expected
 #define COMPATIBLE_VERSION 		16 // Oldest version that can safely be loaded.
 
 struct mtfi {
@@ -124,6 +63,23 @@ struct mfi {
 	int	  	unused_offset;			//was: doors_offset
 	int		unused_howmamy;		//was: doors_howmany
 	int		unused_sizeof;			//was: doors_sizeof
+	short		level_shake_frequency, level_shake_duration;	//	Shakes every level_shake_frequency seconds
+																			// for level_shake_duration seconds (on average, random).  In 16ths second.
+	int		secret_return_segment;
+	vms_matrix	secret_return_orient;
+
+	int		dl_indices_offset;
+	int		dl_indices_howmany;
+	int		dl_indices_sizeof;
+
+	int		delta_light_offset;
+	int		delta_light_howmany;
+	int		delta_light_sizeof;
+
+	int		segment2_offset;
+	int		segment2_howmany;
+	int		segment2_sizeof;
+
 };
 
 struct mh {
@@ -154,5 +110,7 @@ extern struct me mine_editor;
 int game_load_mine(char * filename);
 
 extern short tmap_xlate_table[];
-
+extern fix Level_shake_frequency, Level_shake_duration;
+extern int Secret_return_segment;
+extern vms_matrix Secret_return_orient;
 #endif

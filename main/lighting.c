@@ -8,125 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/lighting.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/07/24 13:21:56 $
- * 
- * Lighting functions.
- * 
- * $Log: lighting.c $
- * Revision 2.1  1995/07/24  13:21:56  john
- * Added new lighting calculation code to speed things up.
- * 
- * Revision 2.0  1995/02/27  11:27:33  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.43  1995/02/22  13:57:10  allender
- * remove anonymous union from object structure
- * 
- * Revision 1.42  1995/02/13  20:35:07  john
- * Lintized
- * 
- * Revision 1.41  1995/02/04  21:43:40  matt
- * Changed an assert() to an int3() and deal with the bad case
- * 
- * Revision 1.40  1995/01/15  20:48:27  mike
- * support light field for powerups.
- * 
- * Revision 1.39  1994/12/15  13:04:19  mike
- * Replace Players[Player_num].time_total references with GameTime.
- * 
- * Revision 1.38  1994/11/28  21:50:41  mike
- * optimizations.
- * 
- * Revision 1.37  1994/11/28  01:32:33  mike
- * lighting optimization.
- * 
- * Revision 1.36  1994/11/15  12:01:00  john
- * Changed a bunch of code that uses timer_get_milliseconds to 
- * timer_get_fixed_Seconds.  
- * 
- * Revision 1.35  1994/10/31  21:56:07  matt
- * Fixed bug & added error checking
- * 
- * Revision 1.34  1994/10/21  11:24:57  mike
- * Trap divide overflows in lighting.
- * 
- * Revision 1.33  1994/10/08  14:49:11  matt
- * If viewer changed, don't do smooth lighting hack
- * 
- * Revision 1.32  1994/09/25  23:41:07  matt
- * Changed the object load & save code to read/write the structure fields one
- * at a time (rather than the whole structure at once).  This mean that the
- * object structure can be changed without breaking the load/save functions.
- * As a result of this change, the local_object data can be and has been 
- * incorporated into the object array.  Also, timeleft is now a property 
- * of all objects, and the object structure has been otherwise cleaned up.
- * 
- * Revision 1.31  1994/09/25  15:45:15  matt
- * Added OBJ_LIGHT, a type of object that casts light
- * Added generalized lifeleft, and moved it to local_object
- * 
- * Revision 1.30  1994/09/11  15:48:27  mike
- * Use vm_vec_mag_quick in place of vm_vec_mag in point_dist computation.
- * 
- * Revision 1.29  1994/09/08  21:44:49  matt
- * Made lighting ramp 4x as fast; made only static (ambient) light ramp
- * up, but not headlight & dynamic light
- * 
- * Revision 1.28  1994/09/02  14:00:07  matt
- * Simplified explode_object() & mutliple-stage explosions
- * 
- * Revision 1.27  1994/08/29  19:06:44  mike
- * Make lighting proportional to square of distance, not linear.
- * 
- * Revision 1.26  1994/08/25  18:08:38  matt
- * Made muzzle flash cast 3x as much light
- * 
- * Revision 1.25  1994/08/23  16:38:31  mike
- * Key weapon light off bitmaps.tbl.
- * 
- * Revision 1.24  1994/08/13  12:20:44  john
- * Made the networking uise the Players array.
- * 
- * Revision 1.23  1994/08/12  22:42:18  john
- * Took away Player_stats; added Players array.
- * 
- * Revision 1.22  1994/07/06  10:19:22  matt
- * Changed include
- * 
- * Revision 1.21  1994/06/28  13:20:22  mike
- * Oops, fixed a dumb typo.
- * 
- * Revision 1.20  1994/06/28  12:53:25  mike
- * Change lighting function for flares, make brighter and asynchronously flicker.
- * 
- * Revision 1.19  1994/06/27  18:31:15  mike
- * Add flares.
- * 
- * Revision 1.18  1994/06/20  13:41:17  matt
- * Added time-based gradual lighting hack for objects
- * Took out strobing robots
- * 
- * Revision 1.17  1994/06/19  16:25:54  mike
- * Optimize lighting.
- * 
- * Revision 1.16  1994/06/17  18:08:08  mike
- * Make robots cast more and variable light.
- * 
- * Revision 1.15  1994/06/13  15:15:55  mike
- * Fix phantom light, every 64K milliseconds, muzzle flash would flash again.
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: lighting.c 2.1 1995/07/24 13:21:56 john Exp $";
+static char rcsid[] = "$Id: lighting.c 2.30 1996/09/13 13:59:04 jed Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -146,18 +33,94 @@ static char rcsid[] = "$Id: lighting.c 2.1 1995/07/24 13:21:56 john Exp $";
 #include "player.h"
 #include "weapon.h"
 #include "powerup.h"
-
-//global saying how bright the light beam is
-fix	Beam_brightness = (F1_0/2);
-// -- optimized out, mk, 11/28/94 -- fix	Face_light_scale = (F1_0/2);
-int	use_beam;		//flag for beam effect
+#include "fvi.h"
+#include "robot.h"
+#include "multi.h"
 
 int	Do_dynamic_light=1;
+//int	Use_fvi_lighting = 0;
 
 fix	Dynamic_light[MAX_VERTICES];
 
+#define	LIGHTING_CACHE_SIZE	4096	//	Must be power of 2!
+#define	LIGHTING_FRAME_DELTA	256	//	Recompute cache value every 8 frames.
+#define	LIGHTING_CACHE_SHIFT	8
+
+int	Lighting_frame_delta = 1;
+
+int	Lighting_cache[LIGHTING_CACHE_SIZE];
+
+int Cache_hits=0, Cache_lookups=1;
+
+//	Return true if we think vertex vertnum is visible from segment segnum.
+//	If some amount of time has gone by, then recompute, else use cached value.
+int lighting_cache_visible(int vertnum, int segnum, int objnum, vms_vector *obj_pos, int obj_seg, vms_vector *vertpos)
+{
+	int	cache_val, cache_frame, cache_vis;
+
+	cache_val = Lighting_cache[((segnum << LIGHTING_CACHE_SHIFT) ^ vertnum) & (LIGHTING_CACHE_SIZE-1)];
+
+	cache_frame = cache_val >> 1;
+	cache_vis = cache_val & 1;
+
+//mprintf((0, "%i %i %5i %i ", vertnum, segnum, cache_frame, cache_vis));
+
+Cache_lookups++;
+	if ((cache_frame == 0) || (cache_frame + Lighting_frame_delta <= FrameCount)) {
+		int			apply_light=0;
+		fvi_query	fq;
+		fvi_info		hit_data;
+		int			segnum, hit_type;
+
+		#ifndef NDEBUG
+		segnum = find_point_seg(obj_pos, obj_seg);
+		if (segnum == -1) {
+			Int3();		//	Obj_pos is not in obj_seg!
+			return 0;		//	Done processing this object.
+		}
+		#endif
+
+		fq.p0						= obj_pos;
+		fq.startseg				= obj_seg;
+		fq.p1						= vertpos;
+		fq.rad					= 0;
+		fq.thisobjnum			= objnum;
+		fq.ignore_obj_list	= NULL;
+		fq.flags					= FQ_TRANSWALL;
+
+		hit_type = find_vector_intersection(&fq, &hit_data);
+
+		// Hit_pos = Hit_data.hit_pnt;
+		// Hit_seg = Hit_data.hit_seg;
+
+		if (hit_type == HIT_OBJECT)
+			Int3();	//	Hey, we're not supposed to be checking objects!
+
+		if (hit_type == HIT_NONE)
+			apply_light = 1;
+		else if (hit_type == HIT_WALL) {
+			fix	dist_dist;
+			dist_dist = vm_vec_dist_quick(&hit_data.hit_pnt, obj_pos);
+			if (dist_dist < F1_0/4) {
+				apply_light = 1;
+				// -- Int3();	//	Curious, did fvi detect intersection with wall containing vertex?
+			}
+		}
+		Lighting_cache[((segnum << LIGHTING_CACHE_SHIFT) ^ vertnum) & (LIGHTING_CACHE_SIZE-1)] = apply_light + (FrameCount << 1);
+//mprintf((0, "%i\n", apply_light));
+		return apply_light;
+	} else {
+//mprintf((0, "\n"));
+Cache_hits++;
+		return cache_vis;
+	}	
+}
+
+#define	HEADLIGHT_CONE_DOT	(F1_0*9/10)
+#define	HEADLIGHT_SCALE		(F1_0*10)
+
 // ----------------------------------------------------------------------------------------------
-void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_render_vertices, short *render_vertices)
+void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_render_vertices, short *render_vertices, int objnum)
 {
 	int	vv;
 
@@ -165,7 +128,8 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
 		fix	obji_64 = obj_intensity*64;
 
 		// for pretty dim sources, only process vertices in object's own segment.
-		if (obji_64 <= F1_0*8) {
+		//	12/04/95, MK, markers only cast light in own segment.
+		if ((abs(obji_64) <= F1_0*8) || (Objects[objnum].type == OBJ_MARKER)) {
 			short *vp = Segments[obj_seg].verts;
 
 			for (vv=0; vv<MAX_VERTICES_PER_SEGMENT; vv++) {
@@ -174,31 +138,92 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
 				fix			dist;
 
 				vertnum = vp[vv];
-				vertpos = &Vertices[vertnum];
-				dist = vm_vec_dist_quick(obj_pos, vertpos);
-				dist = fixmul(dist/4, dist/4);
-				if (dist < obji_64) {
-					if (dist < MIN_LIGHT_DIST)
-						dist = MIN_LIGHT_DIST;
-
-					Dynamic_light[vertnum] += fixdiv(obj_intensity, dist);
+				if ((vertnum ^ FrameCount) & 1) {
+					vertpos = &Vertices[vertnum];
+					dist = vm_vec_dist_quick(obj_pos, vertpos);
+					dist = fixmul(dist/4, dist/4);
+					if (dist < abs(obji_64)) {
+						if (dist < MIN_LIGHT_DIST)
+							dist = MIN_LIGHT_DIST;
+	
+						Dynamic_light[vertnum] += fixdiv(obj_intensity, dist);
+					}
 				}
 			}
 		} else {
-			for (vv=FrameCount&1; vv<n_render_vertices; vv+=2) {
+			int	headlight_shift = 0;
+			fix	max_headlight_dist = F1_0*200;
+
+			if (Objects[objnum].type == OBJ_PLAYER)
+				if (Players[Objects[objnum].id].flags & PLAYER_FLAGS_HEADLIGHT_ON) {
+					headlight_shift = 3;
+					if (Objects[objnum].id != Player_num) {
+						vms_vector	tvec;
+						fvi_query	fq;
+						fvi_info		hit_data;
+						int			fate;
+
+						vm_vec_scale_add(&tvec, &Objects[objnum].pos, &Objects[objnum].orient.fvec, F1_0*200);
+
+						fq.startseg				= Objects[objnum].segnum;
+						fq.p0						= &Objects[objnum].pos;
+						fq.p1						= &tvec;
+						fq.rad					= 0;
+						fq.thisobjnum			= objnum;
+						fq.ignore_obj_list	= NULL;
+						fq.flags					= FQ_TRANSWALL;
+
+						fate = find_vector_intersection(&fq, &hit_data);
+						if (fate != HIT_NONE)
+							max_headlight_dist = vm_vec_mag_quick(vm_vec_sub(&tvec, &hit_data.hit_pnt, &Objects[objnum].pos)) + F1_0*4;
+					}
+				}
+			// -- for (vv=FrameCount&1; vv<n_render_vertices; vv+=2) {
+			for (vv=0; vv<n_render_vertices; vv++) {
 				int			vertnum;
 				vms_vector	*vertpos;
 				fix			dist;
+				int			apply_light;
 
 				vertnum = render_vertices[vv];
-				vertpos = &Vertices[vertnum];
-				dist = vm_vec_dist_quick(obj_pos, vertpos);
+				if ((vertnum ^ FrameCount) & 1) {
+					vertpos = &Vertices[vertnum];
+					dist = vm_vec_dist_quick(obj_pos, vertpos);
+					apply_light = 0;
 
-				if (dist < obji_64) {
-					if (dist < MIN_LIGHT_DIST)
-						dist = MIN_LIGHT_DIST;
+					if ((dist >> headlight_shift) < abs(obji_64)) {
 
-					Dynamic_light[vertnum] += fixdiv(obj_intensity, dist);
+						if (dist < MIN_LIGHT_DIST)
+							dist = MIN_LIGHT_DIST;
+
+						//if (Use_fvi_lighting) {
+						//	if (lighting_cache_visible(vertnum, obj_seg, objnum, obj_pos, obj_seg, vertpos)) {
+						//		apply_light = 1;
+						//	}
+						//} else
+							apply_light = 1;
+
+						if (apply_light) {
+							if (headlight_shift) {
+								fix			dot;
+								vms_vector	vec_to_point;
+
+								vm_vec_sub(&vec_to_point, vertpos, obj_pos);
+								vm_vec_normalize_quick(&vec_to_point);		//	MK, Optimization note: You compute distance about 15 lines up, this is partially redundant
+								dot = vm_vec_dot(&vec_to_point, &Objects[objnum].orient.fvec);
+								if (dot < F1_0/2)
+									Dynamic_light[vertnum] += fixdiv(obj_intensity, fixmul(HEADLIGHT_SCALE, dist));	//	Do the normal thing, but darken around headlight.
+								else {
+									if (Game_mode & GM_MULTI) {
+										if (dist < max_headlight_dist)
+											Dynamic_light[vertnum] += fixmul(fixmul(dot, dot), obj_intensity)/8;
+									} else
+										Dynamic_light[vertnum] += fixmul(fixmul(dot, dot), obj_intensity)/8;
+								}
+							} else
+								Dynamic_light[vertnum] += fixdiv(obj_intensity, dist);
+						}
+					}
 				}
 			}
 		}
@@ -221,7 +246,7 @@ void cast_muzzle_flash_light(int n_render_vertices, short *render_vertices)
 		if (Muzzle_data[i].create_time) {
 			time_since_flash = current_time - Muzzle_data[i].create_time;
 			if (time_since_flash < FLASH_LEN_FIXED_SECONDS)
-				apply_light((FLASH_LEN_FIXED_SECONDS - time_since_flash) * FLASH_SCALE, Muzzle_data[i].segnum, &Muzzle_data[i].pos, n_render_vertices, render_vertices);
+				apply_light((FLASH_LEN_FIXED_SECONDS - time_since_flash) * FLASH_SCALE, Muzzle_data[i].segnum, &Muzzle_data[i].pos, n_render_vertices, render_vertices, -1);
 			else
 				Muzzle_data[i].create_time = 0;		// turn off this muzzle flash
 		}
@@ -235,17 +260,114 @@ fix	Obj_light_xlate[16] =
 	 0x2123, 0x39af, 0x0f03, 0x132a,
 	 0x3123, 0x29af, 0x1f03, 0x032a};
 
+//	Flag array of objects lit last frame.  Guaranteed to process this frame if lit last frame.
+byte	Lighting_objects[MAX_OBJECTS];
+
+#define	MAX_HEADLIGHTS	8
+object	*Headlights[MAX_HEADLIGHTS];
+int		Num_headlights;
+
+// ---------------------------------------------------------
+fix compute_light_intensity(int objnum)
+{
+	object		*obj = &Objects[objnum];
+	int			objtype = obj->type;
+   fix hoardlight,s;
+         
+	switch (objtype) {
+		case OBJ_PLAYER:
+			 if (Players[obj->id].flags & PLAYER_FLAGS_HEADLIGHT_ON) {
+				if (Num_headlights < MAX_HEADLIGHTS)
+					Headlights[Num_headlights++] = obj;
+			 	return HEADLIGHT_SCALE;
+			 } else if ((Game_mode & GM_HOARD) && Players[obj->id].secondary_ammo[PROXIMITY_INDEX]) {
+			
+		   // If hoard game and player, add extra light based on how many orbs you have
+			// Pulse as well.
+
+		  	   hoardlight=i2f(Players[obj->id].secondary_ammo[PROXIMITY_INDEX])/2; //i2f(12));
+				hoardlight++;
+		      fix_sincos ((GameTime/2) & 0xFFFF,&s,NULL); // probably a bad way to do it
+			   s+=F1_0;  
+				s>>=1;
+			   hoardlight=fixmul (s,hoardlight);
+		 //     mprintf ((0,"Hoardlight is %f!\n",f2fl(hoardlight)));
+		      return (hoardlight);
+			  }
+			else
+				return max(vm_vec_mag_quick(&obj->mtype.phys_info.thrust)/4, F1_0*2) + F1_0/2;
+			break;
+		case OBJ_FIREBALL:
+			if (obj->id != 0xff) {
+				if (obj->lifeleft < F1_0*4)
+					return fixmul(fixdiv(obj->lifeleft, Vclip[obj->id].play_time), Vclip[obj->id].light_value);
+				else
+					return Vclip[obj->id].light_value;
+			} else
+				 return 0;
+			break;
+		case OBJ_ROBOT:
+			return F1_0*Robot_info[obj->id].lightcast;
+			break;
+		case OBJ_WEAPON: {
+			fix tval = Weapon_info[obj->id].light;
+			if (Game_mode & GM_MULTI)
+				if (obj->id == OMEGA_ID)
+					if (rand() > 8192)
+						return 0;		//	3/4 of time, omega blobs will cast 0 light!
+
+			if (obj->id == FLARE_ID )
+				return 2* (min(tval, obj->lifeleft) + ((GameTime ^ Obj_light_xlate[objnum&0x0f]) & 0x3fff));
+			else
+				return tval;
+		}
+
+		case OBJ_MARKER: {
+			fix	lightval = obj->lifeleft;
+
+			lightval &= 0xffff;
+
+			lightval = 8 * abs(F1_0/2 - lightval);
+
+			if (obj->lifeleft < F1_0*1000)
+				obj->lifeleft += F1_0;	//	Make sure this object doesn't go out.
+
+			return lightval;
+		}
+
+		case OBJ_POWERUP:
+			return Powerup_info[obj->id].light;
+			break;
+		case OBJ_DEBRIS:
+			return F1_0/4;
+			break;
+		case OBJ_LIGHT:
+			return obj->ctype.light_info.intensity;
+			break;
+		default:
+			return 0;
+			break;
+	}
+}
+
 // ----------------------------------------------------------------------------------------------
 void set_dynamic_light(void)
 {
-	int	objnum,vertnum;
+	int	vv;
+	int	objnum;
 	int	n_render_vertices;
 	short	render_vertices[MAX_VERTICES];
 	byte	render_vertex_flags[MAX_VERTICES];
 	int	render_seg,segnum, v;
+	byte	new_lighting_objects[MAX_OBJECTS];
+
+	Num_headlights = 0;
 
 	if (!Do_dynamic_light)
 		return;
+
+//if (Use_fvi_lighting)
+//	mprintf((0, "hits = %8i, misses = %8i, lookups = %8i, hit ratio = %7.4f\n", Cache_hits, Cache_lookups - Cache_hits, Cache_lookups, (float) Cache_hits / Cache_lookups));
 
 	memset(render_vertex_flags, 0, Highest_vertex_index+1);
 
@@ -274,16 +396,25 @@ void set_dynamic_light(void)
 		}
 	}
 
-	for (vertnum=FrameCount&1; vertnum<n_render_vertices; vertnum+=2) {
-		Assert(render_vertices[vertnum]>=0 && render_vertices[vertnum]<=Highest_vertex_index);
-		Dynamic_light[render_vertices[vertnum]] = 0;
+	// -- for (vertnum=FrameCount&1; vertnum<n_render_vertices; vertnum+=2) {
+	for (vv=0; vv<n_render_vertices; vv++) {
+		int	vertnum;
+
+		vertnum = render_vertices[vv];
+		Assert(vertnum >= 0 && vertnum <= Highest_vertex_index);
+		if ((vertnum ^ FrameCount) & 1)
+			Dynamic_light[vertnum] = 0;
 	}
 
 	cast_muzzle_flash_light(n_render_vertices, render_vertices);
 
-	//	Note, starting at 1 to skip player, whose light is handled by a different system, of course.
-//	for (objnum=1; objnum<=Highest_object_index; objnum++) {
+	for (objnum=0; objnum<=Highest_object_index; objnum++)
+		new_lighting_objects[objnum] = 0;
 
+	//	July 5, 1995: New faster dynamic lighting code.  About 5% faster on the PC (un-optimized).
+	//	Only objects which are in rendered segments cast dynamic light.  We might wad6 to extend this
+	//	one or two segments if we notice light changing as objects go offscreen.  I couldn't see any
+	//	serious visual degradation.  In fact, I could see no humorous degradation, either. --MK
 	for (render_seg=0; render_seg<N_render_segs; render_seg++) {
 		int	segnum = Render_list[render_seg];
 
@@ -292,102 +423,149 @@ void set_dynamic_light(void)
 		while (objnum != -1) {
 			object		*obj = &Objects[objnum];
 			vms_vector	*objpos = &obj->pos;
-			int			objtype = obj->type;
 			fix			obj_intensity;
-	
-			switch (objtype) {
-				case OBJ_FIREBALL:
-					if (obj->id != 0xff) {
-						if (obj->lifeleft < F1_0*4)
-							obj_intensity = fixmul(fixdiv(obj->lifeleft, Vclip[obj->id].play_time), Vclip[obj->id].light_value);
-						else
-							obj_intensity = Vclip[obj->id].light_value;
-					} else
-						obj_intensity = 0;
-					break;
-				case OBJ_ROBOT:
-					obj_intensity = F1_0/2;	// + (FrameCount & 0x1f)*F1_0/16;
-					break;
-				case OBJ_WEAPON:
-					obj_intensity = Weapon_info[obj->id].light;
-					if (obj->id == FLARE_ID )
-						obj_intensity = 2* (min(obj_intensity, obj->lifeleft) + ((GameTime ^ Obj_light_xlate[objnum&0x0f]) & 0x3fff));
-					break;
-				case OBJ_POWERUP:
-					obj_intensity = Powerup_info[obj->id].light;
-					break;
-				case OBJ_DEBRIS:
-					obj_intensity = F1_0/4;
-					break;
-				case OBJ_LIGHT:
-					obj_intensity = obj->ctype.light_info.intensity;
-					break;
-				default:
-					obj_intensity = 0;
-					break;
+
+			obj_intensity = compute_light_intensity(objnum);
+
+			if (obj_intensity) {
+				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, obj-Objects);
+				new_lighting_objects[objnum] = 1;
 			}
-	
-			if (obj_intensity)
-				apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices);
 
 			objnum = obj->next;
 		}
 	}
 
+	//	Now, process all lights from last frame which haven't been processed this frame.
+	for (objnum=0; objnum<=Highest_object_index; objnum++) {
+		//	In multiplayer games, process even unprocessed objects every 4th frame, else don't know about player sneaking up.
+		if ((Lighting_objects[objnum]) || ((Game_mode & GM_MULTI) && (((objnum ^ FrameCount) & 3) == 0))) {
+			if (!new_lighting_objects[objnum]) {
+				//	Lighted last frame, but not this frame.  Get intensity...
+				object		*obj = &Objects[objnum];
+				vms_vector	*objpos = &obj->pos;
+				fix			obj_intensity;
+
+				obj_intensity = compute_light_intensity(objnum);
+
+				if (obj_intensity) {
+					apply_light(obj_intensity, obj->segnum, objpos, n_render_vertices, render_vertices, objnum);
+					Lighting_objects[objnum] = 1;
+				} else
+					Lighting_objects[objnum] = 0;
+			}
+		} else {
+			//	Not lighted last frame, so we don't need to light it.  (Already lit if casting light this frame.)
+			//	But copy value from new_lighting_objects to update Lighting_objects array.
+			Lighting_objects[objnum] = new_lighting_objects[objnum];
+		}
+	}
 }
 
 // ---------------------------------------------------------
 
-//Compute the lighting from the headlight for a given vertex on a face.
-//Takes:
-//  point - the 3d coords of the point
-//  face_light - a scale factor derived from the surface normal of the face
-//If no surface normal effect is wanted, pass F1_0 for face_light
-fix compute_headlight_light(vms_vector *point,fix face_light)
+void toggle_headlight_active()
 {
-	fix light;
+	if (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT) {
+		Players[Player_num].flags ^= PLAYER_FLAGS_HEADLIGHT_ON;			
+		if (Game_mode & GM_MULTI)
+			multi_send_flags(Player_num);		
+	}
+}
 
-	light = Beam_brightness;
+#define HEADLIGHT_BOOST_SCALE 8		//how much to scale light when have headlight boost
 
-	if (light) {				//if no beam, don't bother with the rest of this
-		fix point_dist;
+fix	Beam_brightness = (F1_0/2);	//global saying how bright the light beam is
 
-		if (face_light < 0)
-			face_light = 0;
+#define MAX_DIST_LOG	6							//log(MAX_DIST-expressed-as-integer)
+#define MAX_DIST		(f1_0<<MAX_DIST_LOG)	//no light beyond this dist
 
-		point_dist = vm_vec_mag_quick(point);
+fix compute_headlight_light_on_object(object *objp)
+{
+	int	i;
+	fix	light;
 
-		//note: beam scale not used if !use_beam
+	//	Let's just illuminate players and robots for speed reasons, ok?
+	if ((objp->type != OBJ_ROBOT) && (objp->type	!= OBJ_PLAYER))
+		return 0;
 
-		if (point_dist >= MAX_DIST)
+	light = 0;
 
-			light = 0;
+	for (i=0; i<Num_headlights; i++) {
+		fix			dot, dist;
+		vms_vector	vec_to_obj;
+		object		*light_objp;
 
-		else {
-			fix dist_scale,temp_lightval;
+		light_objp = Headlights[i];
 
-			dist_scale = (MAX_DIST - point_dist) >> MAX_DIST_LOG;
+		vm_vec_sub(&vec_to_obj, &objp->pos, &light_objp->pos);
+		dist = vm_vec_normalize_quick(&vec_to_obj);
+		if (dist > 0) {
+			dot = vm_vec_dot(&light_objp->orient.fvec, &vec_to_obj);
 
-			temp_lightval = f1_0/4 + face_light/2;
-
-			light = Beam_brightness;
-
-			if (use_beam) {
-				fix beam_scale;
-
-				beam_scale = fixdiv(point->z,point_dist);
-				beam_scale = fixmul(beam_scale,beam_scale);	//square it
-				light = fixmul(light,beam_scale);
-			}
-
-			light = fixmul(light,fixmul(dist_scale,temp_lightval));
-
+			if (dot < F1_0/2)
+				light += fixdiv(HEADLIGHT_SCALE, fixmul(HEADLIGHT_SCALE, dist));	//	Do the normal thing, but darken around headlight.
+			else
+				light += fixmul(fixmul(dot, dot), HEADLIGHT_SCALE)/8;
 		}
-
 	}
 
 	return light;
 }
+
+
+// -- Unused -- //Compute the lighting from the headlight for a given vertex on a face.
+// -- Unused -- //Takes:
+// -- Unused -- //  point - the 3d coords of the point
+// -- Unused -- //  face_light - a scale factor derived from the surface normal of the face
+// -- Unused -- //If no surface normal effect is wanted, pass F1_0 for face_light
+// -- Unused -- fix compute_headlight_light(vms_vector *point,fix face_light)
+// -- Unused -- {
+// -- Unused -- 	fix light;
+// -- Unused -- 	int use_beam = 0;		//flag for beam effect
+// -- Unused -- 
+// -- Unused -- 	light = Beam_brightness;
+// -- Unused -- 
+// -- Unused -- 	if ((Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT) && (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT_ON) && Viewer==&Objects[Players[Player_num].objnum] && Players[Player_num].energy > 0) {
+// -- Unused -- 		light *= HEADLIGHT_BOOST_SCALE;
+// -- Unused -- 		use_beam = 1;	//give us beam effect
+// -- Unused -- 	}
+// -- Unused -- 
+// -- Unused -- 	if (light) {				//if no beam, don't bother with the rest of this
+// -- Unused -- 		fix point_dist;
+// -- Unused -- 
+// -- Unused -- 		point_dist = vm_vec_mag_quick(point);
+// -- Unused -- 
+// -- Unused -- 		if (point_dist >= MAX_DIST)
+// -- Unused -- 
+// -- Unused -- 			light = 0;
+// -- Unused -- 
+// -- Unused -- 		else {
+// -- Unused -- 			fix dist_scale,face_scale;
+// -- Unused -- 
+// -- Unused -- 			dist_scale = (MAX_DIST - point_dist) >> MAX_DIST_LOG;
+// -- Unused -- 			light = fixmul(light,dist_scale);
+// -- Unused -- 
+// -- Unused -- 			if (face_light < 0)
+// -- Unused -- 				face_light = 0;
+// -- Unused -- 
+// -- Unused -- 			face_scale = f1_0/4 + face_light/2;
+// -- Unused -- 			light = fixmul(light,face_scale);
+// -- Unused -- 
+// -- Unused -- 			if (use_beam) {
+// -- Unused -- 				fix beam_scale;
+// -- Unused -- 
+// -- Unused -- 				if (face_light > f1_0*3/4 && point->z > i2f(12)) {
+// -- Unused -- 					beam_scale = fixdiv(point->z,point_dist);
+// -- Unused -- 					beam_scale = fixmul(beam_scale,beam_scale);	//square it
+// -- Unused -- 					light = fixmul(light,beam_scale);
+// -- Unused -- 				}
+// -- Unused -- 			}
+// -- Unused -- 		}
+// -- Unused -- 	}
+// -- Unused -- 
+// -- Unused -- 	return light;
+// -- Unused -- }
 
 //compute the average dynamic light in a segment.  Takes the segment number
 fix compute_seg_dynamic_light(int segnum)
@@ -415,10 +593,18 @@ fix compute_seg_dynamic_light(int segnum)
 }
 
 fix object_light[MAX_OBJECTS];
-int object_id[MAX_OBJECTS];
+int object_sig[MAX_OBJECTS];
 object *old_viewer;
+int reset_lighting_hack;
 
 #define LIGHT_RATE i2f(4)		//how fast the light ramps up
+
+void start_lighting_frame(object *viewer)
+{
+	reset_lighting_hack = (viewer != old_viewer);
+
+	old_viewer = viewer;
+}
 
 //compute the lighting for an object.  Takes a pointer to the object,
 //and possibly a rotated 3d point.  If the point isn't specified, the
@@ -436,14 +622,14 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 
 	//First, get static light for this segment
 
-	light = Segments[obj->segnum].static_light;
+	light = Segment2s[obj->segnum].static_light;
 
 	//return light;
 
 
 	//Now, maybe return different value to smooth transitions
 
-	if (Viewer==old_viewer && object_id[objnum] == obj->id) {
+	if (!reset_lighting_hack && object_sig[objnum] == obj->signature) {
 		fix delta_light,frame_delta;
 
 		delta_light = light - object_light[objnum];
@@ -464,7 +650,7 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 	}
 	else {		//new object, initialize
 
-		object_id[objnum] = obj->id;
+		object_sig[objnum] = obj->signature;
 		object_light[objnum] = light;
 	}
 
@@ -472,17 +658,15 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 
 	//Next, add in headlight on this object
 
-	light += compute_headlight_light(rotated_pnt,f1_0);
-
+	// -- Matt code: light += compute_headlight_light(rotated_pnt,f1_0);
+	light += compute_headlight_light_on_object(obj);
+  
 	//Finally, add in dynamic light for this segment
 
 	light += compute_seg_dynamic_light(obj->segnum);
 
 
-	old_viewer = Viewer;
-
 	return light;
 }
 
 
-

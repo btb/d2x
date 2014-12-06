@@ -8,17 +8,13 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-*/
-/*
-	TESTM.C - Monochrome Testing routines
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include "key.h"
 #include "joy.h"
 #include "mouse.h"
 #include "mono.h"
-
 
 void main (void)
 {
@@ -29,7 +25,8 @@ void main (void)
 	key_init();
 	keyd_buffer_type = 1;
 
-	minit();
+	if (! minit()) {printf("No mono card\n"); exit(5);}
+
 	mopen( 1,1,1,37,10,  "Keyboard" );
 	mopen( 2,1,41,37,10, "Joystick");
 	mopen( 3,13,1,37,10, "Mouse" );
@@ -62,13 +59,11 @@ void main (void)
 		//ms_read();
 		//mprintf( 3, "(%d,%d)\tB1:%d\tB2:%d\tB3:%d\n", (int)msd_deltax, (int)msd_deltay, 1&msd_button_status, 2&msd_button_status, 4&msd_button_status);
 
-		//mDumpX(1, j1);
-
 		if (keyd_pressed[KEY_C])
 			mclose(1);
 
 		if (keyd_pressed[KEY_O])
-			mopen( 1,1,1,57,10,  "Keyboard" );
+			mopen( 1,1,1,37,10,  "Keyboard" );
 
 
 		if (keyd_pressed[KEY_F1])

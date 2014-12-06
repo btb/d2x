@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/barbox.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1994/01/18 11:07:45 $
- * 
- * File for creating a barbox...
- * 
- * $Log: barbox.c $
- * Revision 1.2  1994/01/18  11:07:45  john
- * *** empty log message ***
- * 
- * Revision 1.1  1994/01/10  15:24:32  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -126,4 +109,3 @@ void ui_barbox_close()
 	if (wnd)
 		ui_close_window(wnd);
 }
-

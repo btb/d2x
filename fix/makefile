@@ -1,16 +1,11 @@
 #
 # $Source: f:/miner/source/fix/rcs/makefile $
-# $Revision: 1.5 $
+# $Revision: 1.6 $
 # $Author: matt $
-# $Date: 1994/11/27 23:21:18 $
+# $Date: 1995/12/21 14:00:19 $
 #
 # Makefile for fixed-point library
 #
-
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
 
 # What to install, and where to install it
 INSTALL_TARGS = fix.lib fix.h fix.inc
@@ -31,15 +26,16 @@ FIX_OBJS = fix.obj
 FIXTEST_SRCS = fixtest.c
 FIXTEST_LIBS = fix.lib io.lib
 
-fix.lib: $(FIX_OBJS)
-	wlib fix.lib $(FIX_OBJS)
-	copy *.lib $(LIBDIR)
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
 asingen.obj: math.h stdio.h
 
-fix.obj: fix.inc fix.asm
-	masm fix.asm
+fix.obj: fix.inc psmacros.inc pstypes.inc
 
-fixtest.obj: conio.h fix.h graph.h stdio.h stdlib.h types.h
+fixtest.obj: conio.h fix.h graph.h pstypes.h stdio.h stdlib.h types.h
 
 singen.obj: math.h
 

@@ -8,35 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/poly.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/13 13:03:43 $
- *
- * Graphical routines for drawing polygons.
- *
- * $Log: poly.c $
- * Revision 1.5  1994/11/13  13:03:43  john
- * Added paged out bit in bitmap structure.  Commented out the
- * poly code that is never used.
- * 
- * Revision 1.4  1994/03/14  16:56:13  john
- * Changed grs_bitmap structure to include bm_flags.
- * 
- * Revision 1.3  1993/10/15  16:23:14  john
- * y
- * 
- * Revision 1.2  1993/10/08  14:30:39  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/09/08  11:44:13  john
- * Initial revision
- * 
- *
- */
 
 #include "mem.h"
 #include "gr.h"
@@ -298,4 +271,3 @@ void gr_poly(int nverts, int *vert )
 }
 
 #endif
-

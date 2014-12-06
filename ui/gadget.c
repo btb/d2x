@@ -8,40 +8,11 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/gadget.c $
- * $Revision: 1.6 $
- * $Author: matt $
- * $Date: 1994/08/09 09:56:48 $
- *
- * General routines for all the low-level gadgets.
- *
- * $Log: gadget.c $
- * Revision 1.6  1994/08/09  09:56:48  matt
- * Save & restore curwindow around button processing
- * 
- * Revision 1.5  1994/04/22  11:10:13  john
- * *** empty log message ***
- * 
- * Revision 1.4  1993/12/07  12:31:11  john
- * new version.
- * 
- * Revision 1.3  1993/10/26  13:46:19  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/10/05  17:30:06  john
- * ,
- * 
- * Revision 1.1  1993/09/20  10:34:54  john
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gadget.c 1.6 1994/08/09 09:56:48 matt Exp $";
+static char rcsid[] = "$Id: gadget.c 1.7 1995/06/05 11:15:21 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -102,6 +73,8 @@ UI_GADGET * ui_gadget_add( UI_WINDOW * wnd, short kind, short x1, short y1, shor
 void ui_gadget_delete_all( UI_WINDOW * wnd )
 {
 	UI_GADGET * tmp;
+
+	ui_pad_deactivate();
 
 	while( wnd->gadget != NULL )
 	{

@@ -8,39 +8,19 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/gpixel.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:20 $
- *
- * Graphical routines for getting a pixel's value.
- *
- * $Log: gpixel.c $
- * Revision 1.5  1994/11/18  22:50:20  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.4  1994/05/06  12:50:08  john
- * Added supertransparency; neatend things up; took out warnings.
- * 
- * Revision 1.3  1993/10/15  16:22:50  john
- * y
- * 
- * Revision 1.2  1993/09/29  16:15:00  john
- * optimized
- * 
- * Revision 1.1  1993/09/08  11:43:40  john
- * Initial revision
- * 
- *
- */
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "mem.h"
 
 
 #include "gr.h"
 #include "grdef.h"
+
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#include "error.h"
+#endif
 
 unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
 {
@@ -60,8 +40,19 @@ unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
 		gr_vesa_setpage( offset >> 16 );
 		return gr_video_memory[offset & 0xFFFF];
 		}
-	}
-	return 0;
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short p;
+        while(!pa_idle());
+        p = *(unsigned short *)(bitmap->bm_data + y * bitmap->bm_rowsize + x * PA_BPP);
+        return gr_find_closest_color(((p >> 9) & 0x3e), ((p >> 4) & 0x3e), ((p << 1) & 0x3e));
+    }
+    default:
+        Int3();
+#endif
+    }
+    return 0;
 }
 
 unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y )
@@ -84,7 +75,17 @@ unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y )
 		gr_vesa_setpage( offset >> 16 );
 		return gr_video_memory[offset & 0xFFFF];
 		}
-	}
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short p;
+        while(!pa_idle());
+        p = *(unsigned short *)(bitmap->bm_data + y * bitmap->bm_rowsize + x * PA_BPP);
+        return gr_find_closest_color(((p >> 9) & 0x3e), ((p >> 4) & 0x3e), ((p << 1) & 0x3e));
+    }
+    default:
+        Int3();
+#endif
+    }
 	return 0;
 }
-

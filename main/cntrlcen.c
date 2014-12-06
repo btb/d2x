@@ -8,103 +8,19 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/cntrlcen.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:25 $
- * 
- * Code for the control center
- * 
- * $Log: cntrlcen.c $
- * Revision 2.1  1995/03/21  14:40:25  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.0  1995/02/27  11:31:25  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.22  1995/02/11  01:56:14  mike
- * robots don't fire cheat.
- * 
- * Revision 1.21  1995/02/05  13:39:39  mike
- * fix stupid bug in control center firing timing.
- * 
- * Revision 1.20  1995/02/03  17:41:21  mike
- * fix control cen next fire time in multiplayer.
- * 
- * Revision 1.19  1995/01/29  13:46:41  mike
- * adapt to new create_small_fireball_on_object prototype.
- * 
- * Revision 1.18  1995/01/18  16:12:13  mike
- * Make control center aware of a cloaked playerr when he fires.
- * 
- * Revision 1.17  1995/01/12  12:53:44  rob
- * Trying to fix a bug with having cntrlcen in robotarchy games.
- * 
- * Revision 1.16  1994/12/11  12:37:22  mike
- * make control center smarter about firing at cloaked player, don't fire through self, though
- * it still looks that way due to prioritization problems.
- * 
- * Revision 1.15  1994/12/01  11:34:33  mike
- * fix control center shield strength in multiplayer team games.
- * 
- * Revision 1.14  1994/11/30  15:44:29  mike
- * make cntrlcen harder at higher levels.
- * 
- * Revision 1.13  1994/11/29  22:26:23  yuan
- * Fixed boss bug.
- * 
- * Revision 1.12  1994/11/27  23:12:31  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.11  1994/11/23  17:29:38  mike
- * deal with peculiarities going between net and regular game on boss level.
- * 
- * Revision 1.10  1994/11/18  18:27:15  rob
- * Fixed some bugs with the last version.
- * 
- * Revision 1.9  1994/11/18  17:13:59  mike
- * special case handling for level 8.
- * 
- * Revision 1.8  1994/11/15  12:45:28  mike
- * don't let cntrlcen know where a cloaked player is.
- * 
- * Revision 1.7  1994/11/08  12:18:37  mike
- * small explosions on control center.
- * 
- * Revision 1.6  1994/11/02  17:59:18  rob
- * Changed control centers so they can find people in network games.
- * Side effect of this is that control centers can find cloaked players.
- * (see in-code comments for explanation).  
- * Also added network hooks so control center shots 'sync up'.
- * 
- * Revision 1.5  1994/10/22  14:13:21  mike
- * Make control center stop firing shortly after player dies.
- * Fix bug: If play from editor and die, tries to initialize non-control center object.
- * 
- * Revision 1.4  1994/10/20  15:17:30  mike
- * Hack for control center inside boss robot.
- * 
- * Revision 1.3  1994/10/20  09:47:46  mike
- * lots stuff.
- * 
- * Revision 1.2  1994/10/17  21:35:09  matt
- * Added support for new Control Center/Main Reactor
- * 
- * Revision 1.1  1994/10/17  20:24:01  matt
- * Initial revision
- * 
- * 
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: cntrlcen.c 2.1 1995/03/21 14:40:25 john Exp $";
+static char rcsid[] = "$Id: cntrlcen.c 2.33 1996/06/18 10:54:32 matt Exp $";
 #pragma on (unreferenced)
 
+#ifdef WINDOWS
+#include "desw.h"
+#endif
+
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "error.h"
 #include "mono.h"
@@ -116,13 +32,21 @@ static char rcsid[] = "$Id: cntrlcen.c 2.1 1995/03/21 14:40:25 john Exp $";
 #include "gameseq.h"
 #include "ai.h"
 #include "multi.h"
-#include "fuelcen.h"
 #include "wall.h"
 #include "object.h"
 #include "robot.h"
+#include "vclip.h"
+#include "fireball.h"
+#include "endlevel.h"
 
-vms_vector controlcen_gun_points[MAX_CONTROLCEN_GUNS];
-vms_vector controlcen_gun_dirs[MAX_CONTROLCEN_GUNS];
+//@@vms_vector controlcen_gun_points[MAX_CONTROLCEN_GUNS];
+//@@vms_vector controlcen_gun_dirs[MAX_CONTROLCEN_GUNS];
+
+reactor Reactors[MAX_REACTORS];
+int Num_reactors=0;
+
+control_center_triggers ControlCenterTriggers;
+
 int	N_controlcen_guns;
 int	Control_center_been_hit;
 int	Control_center_player_been_seen;
@@ -135,20 +59,23 @@ vms_vector	Gun_pos[MAX_CONTROLCEN_GUNS], Gun_dir[MAX_CONTROLCEN_GUNS];
 //return the position & orientation of a gun on the control center object 
 void calc_controlcen_gun_point(vms_vector *gun_point,vms_vector *gun_dir,object *obj,int gun_num)
 {
+	reactor *reactor;
 	vms_matrix m;
 
 	Assert(obj->type == OBJ_CNTRLCEN);
 	Assert(obj->render_type==RT_POLYOBJ);
 
-	Assert(gun_num < N_controlcen_guns);
+	reactor = &Reactors[obj->id];
+
+	Assert(gun_num < reactor->n_guns);
 
 	//instance gun position & orientation
 
 	vm_copy_transpose_matrix(&m,&obj->orient);
 
-	vm_vec_rotate(gun_point,&controlcen_gun_points[gun_num],&m);
+	vm_vec_rotate(gun_point,&reactor->gun_points[gun_num],&m);
 	vm_vec_add2(gun_point,&obj->pos);
-	vm_vec_rotate(gun_dir,&controlcen_gun_dirs[gun_num],&m);
+	vm_vec_rotate(gun_dir,&reactor->gun_dirs[gun_num],&m);
 }
 
 //	-----------------------------------------------------------------------------
@@ -191,16 +118,113 @@ extern fix Player_time_of_death;		//	object.c
 
 int	Dead_controlcen_object_num=-1;
 
+//how long to blow up on insane
+int Base_control_center_explosion_time=DEFAULT_CONTROL_CENTER_EXPLOSION_TIME;
+
+int Control_center_destroyed = 0;
+fix Countdown_timer=0;
+int Countdown_seconds_left=0, Total_countdown_time=0;		//in whole seconds
+
+int	Alan_pavlish_reactor_times[NDL] = {90, 60, 45, 35, 30};
+
 //	-----------------------------------------------------------------------------
 //	Called every frame.  If control center been destroyed, then actually do something.
 void do_controlcen_dead_frame(void)
 {
-	if (!Control_center_present)
-		return;
-
-	if ((Dead_controlcen_object_num != -1) && (Fuelcen_seconds_left > 0))
+	if ((Dead_controlcen_object_num != -1) && (Countdown_seconds_left > 0))
 		if (rand() < FrameTime*4)
-			create_small_fireball_on_object(&Objects[Dead_controlcen_object_num], F1_0*3, 1);
+			create_small_fireball_on_object(&Objects[Dead_controlcen_object_num], F1_0, 1);
+
+	if (Control_center_destroyed && !Endlevel_sequence)
+		do_countdown_frame();
+}
+
+#define COUNTDOWN_VOICE_TIME fl2f(12.75)
+
+void do_countdown_frame()
+{
+	fix	old_time;
+	int	fc, div_scale;
+
+	if (!Control_center_destroyed)	return;
+
+	#if !defined(D2_OEM) && !defined(SHAREWARE)	// get countdown in OEM and SHAREWARE only
+	//	On last level, we don't want a countdown.
+	if ((Current_mission_num == 0) && (Current_level_num == Last_level))
+    {		
+     if (!(Game_mode & GM_MULTI))
+	   return;
+	  if (Game_mode & GM_MULTI_ROBOTS)
+		return;
+    }	 
+	#endif
+   
+	//	Control center destroyed, rock the player's ship.
+	fc = Countdown_seconds_left;
+	if (fc > 16)
+		fc = 16;
+
+	//	At Trainee, decrease rocking of ship by 4x.
+	div_scale = 1;
+	if (Difficulty_level == 0)
+		div_scale = 4;
+
+	ConsoleObject->mtype.phys_info.rotvel.x += (fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32))/div_scale;
+	ConsoleObject->mtype.phys_info.rotvel.z += (fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32))/div_scale;
+	//	Hook in the rumble sound effect here.
+
+	old_time = Countdown_timer;
+	Countdown_timer -= RealFrameTime;
+	Countdown_seconds_left = f2i(Countdown_timer + F1_0*7/8);
+
+	if ( (old_time > COUNTDOWN_VOICE_TIME ) && (Countdown_timer <= COUNTDOWN_VOICE_TIME) )	{
+		digi_play_sample( SOUND_COUNTDOWN_13_SECS, F3_0 );
+	}
+	if ( f2i(old_time + F1_0*7/8) != Countdown_seconds_left )	{
+		if ( (Countdown_seconds_left>=0) && (Countdown_seconds_left<10) ) 
+			digi_play_sample( SOUND_COUNTDOWN_0_SECS+Countdown_seconds_left, F3_0 );
+		if ( Countdown_seconds_left==Total_countdown_time-1)
+			digi_play_sample( SOUND_COUNTDOWN_29_SECS, F3_0 );
+	}						
+
+	if (Countdown_timer > 0) {
+		fix size,old_size;
+		size = (i2f(Total_countdown_time)-Countdown_timer) / fl2f(0.65);
+		old_size = (i2f(Total_countdown_time)-old_time) / fl2f(0.65);
+		if (size != old_size && (Countdown_seconds_left < (Total_countdown_time-5) ))		{			// Every 2 seconds!
+			//@@if (Dead_controlcen_object_num != -1) {
+			//@@	vms_vector vp;	//,v,c;
+			//@@	compute_segment_center(&vp, &Segments[Objects[Dead_controlcen_object_num].segnum]);
+			//@@	object_create_explosion( Objects[Dead_controlcen_object_num].segnum, &vp, size*10, VCLIP_SMALL_EXPLOSION);
+			//@@}
+
+			digi_play_sample( SOUND_CONTROL_CENTER_WARNING_SIREN, F3_0 );
+		}
+	}  else {
+		int flash_value;
+
+		if (old_time > 0)
+			digi_play_sample( SOUND_MINE_BLEW_UP, F1_0 );
+
+		flash_value = f2i(-Countdown_timer * (64 / 4));	// 4 seconds to total whiteness
+		PALETTE_FLASH_SET(flash_value,flash_value,flash_value);
+
+		if (PaletteBlueAdd > 64 )	{
+		WINDOS(
+			dd_gr_set_current_canvas(NULL),
+			gr_set_current_canvas( NULL )
+		);
+		WINDOS(
+			dd_gr_clear_canvas(BM_XRGB(31,31,31)),
+			gr_clear_canvas(BM_XRGB(31,31,31))
+		);														//make screen all white to match palette effect
+			reset_cockpit();								//force cockpit redraw next time
+			reset_palette_add();							//restore palette for death message
+			//controlcen->MaxCapacity = Fuelcen_max_amount;
+			//gauge_message( "Control Center Reset" );
+			DoPlayerDead();		//kill_player();
+		}																				
+	}
 }
 
 //	-----------------------------------------------------------------------------
@@ -212,21 +236,45 @@ void do_controlcen_destroyed_stuff(object *objp)
 {
 	int	i;
 
+   if ((Game_mode & GM_MULTI_ROBOTS) && Control_center_destroyed) 
+    return; // Don't allow resetting if control center and boss on same level
+
 	// Must toggle walls whether it is a boss or control center.
 	for (i=0;i<ControlCenterTriggers.num_links;i++)
 		wall_toggle(&Segments[ControlCenterTriggers.seg[i]], ControlCenterTriggers.side[i]); 
 
 	// And start the countdown stuff.
-	Fuelcen_control_center_destroyed = 1;
+	Control_center_destroyed = 1;
 
+	//	If a secret level, delete secret.sgc to indicate that we can't return to our secret level.
+	if (Current_level_num < 0) {
+		int	rval;
+		#ifndef MACINTOSH
+		rval = unlink("secret.sgc");
+		#else
+		rval = unlink(":Players:secret.sgc");
+		#endif
+		mprintf((0, "Deleting secret.sgc, return value = %i\n", rval));
+	}
 
-	if (!Control_center_present)
+	if (Base_control_center_explosion_time != DEFAULT_CONTROL_CENTER_EXPLOSION_TIME)
+		Total_countdown_time = Base_control_center_explosion_time + Base_control_center_explosion_time * (NDL-Difficulty_level-1)/2;
+	else
+		Total_countdown_time = Alan_pavlish_reactor_times[Difficulty_level];
+
+	Countdown_timer = i2f(Total_countdown_time);
+
+	if (!Control_center_present || objp==NULL) {
+		//Assert(objp == NULL);
 		return;
+	}
 
-	if (objp != NULL)
-		Dead_controlcen_object_num = objp-Objects;
+	//Assert(objp != NULL);
 
+	Dead_controlcen_object_num = objp-Objects;
 }
+
+int	Last_time_cc_vis_check = 0;
 
 //	-----------------------------------------------------------------------------
 //do whatever this thing does in a frame
@@ -267,7 +315,7 @@ void do_controlcen_frame(object *obj)
 			//	Hack for special control centers which are isolated and not reachable because the
 			//	real control center is inside the boss.
 			for (i=0; i<MAX_SIDES_PER_SEGMENT; i++)
-				if (segp->children[i] != -1)
+				if (IS_CHILD(segp->children[i]))
 					break;
 			if (i == MAX_SIDES_PER_SEGMENT)
 				return;
@@ -283,6 +331,24 @@ void do_controlcen_frame(object *obj)
 		return;
 	}
 
+	//	Periodically, make the reactor fall asleep if player not visible.
+	if (Control_center_been_hit || Control_center_player_been_seen) {
+		if ((Last_time_cc_vis_check + F1_0*5 < GameTime) || (Last_time_cc_vis_check > GameTime)) {
+			vms_vector	vec_to_player;
+			fix			dist_to_player;
+
+			vm_vec_sub(&vec_to_player, &ConsoleObject->pos, &obj->pos);
+			dist_to_player = vm_vec_normalize_quick(&vec_to_player);
+			Last_time_cc_vis_check = GameTime;
+			if (dist_to_player < F1_0*120) {
+				Control_center_player_been_seen = player_is_visible_from_object(obj, &obj->pos, 0, &vec_to_player);
+				if (!Control_center_player_been_seen)
+					Control_center_been_hit = 0;
+			}
+		}
+
+	}
+
 	if ((Control_center_next_fire_time < 0) && !(Player_is_dead && (GameTime > Player_time_of_death+F1_0*2))) {
 		if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)
 			best_gun_num = calc_best_gun(N_controlcen_guns, Gun_pos, Gun_dir, &Believed_player_pos);
@@ -290,6 +356,7 @@ void do_controlcen_frame(object *obj)
 			best_gun_num = calc_best_gun(N_controlcen_guns, Gun_pos, Gun_dir, &ConsoleObject->pos);
 
 		if (best_gun_num != -1) {
+			int			rand_prob, count;
 			vms_vector	vec_to_goal;
 			fix			dist_to_player;
 			fix			delta_fire_time;
@@ -315,21 +382,27 @@ void do_controlcen_frame(object *obj)
 			#endif
 			Laser_create_new_easy( &vec_to_goal, &Gun_pos[best_gun_num], obj-Objects, CONTROLCEN_WEAPON_NUM, 1);
 
-			//	1/4 of time, fire another thing, not directly at player, so it might hit him if he's constantly moving.
-			if (rand() < 32767/4) {
+			//	some of time, based on level, fire another thing, not directly at player, so it might hit him if he's constantly moving.
+			rand_prob = F1_0/(abs(Current_level_num)/4+2);
+			count = 0;
+			while ((rand() > rand_prob) && (count < 4)) {
 				vms_vector	randvec;
 
 				make_random_vector(&randvec);
-				vm_vec_scale_add2(&vec_to_goal, &randvec, F1_0/4);
+				vm_vec_scale_add2(&vec_to_goal, &randvec, F1_0/6);
 				vm_vec_normalize_quick(&vec_to_goal);
 				#ifdef NETWORK
 				if (Game_mode & GM_MULTI)
 					multi_send_controlcen_fire(&vec_to_goal, best_gun_num, obj-Objects);
 				#endif
-				Laser_create_new_easy( &vec_to_goal, &Gun_pos[best_gun_num], obj-Objects, CONTROLCEN_WEAPON_NUM, 1);
+				Laser_create_new_easy( &vec_to_goal, &Gun_pos[best_gun_num], obj-Objects, CONTROLCEN_WEAPON_NUM, 0);
+				count++;
 			}
 
 			delta_fire_time = (NDL - Difficulty_level) * F1_0/4;
+			if (Difficulty_level == 0)
+				delta_fire_time += F1_0/2;
+
 			if (Game_mode & GM_MULTI) // slow down rate of fire in multi player
 				delta_fire_time *= 2;
 
@@ -340,6 +413,8 @@ void do_controlcen_frame(object *obj)
 		Control_center_next_fire_time -= FrameTime;
 
 }
+
+int Reactor_strength=-1;		//-1 mean not set by designer
 
 //	-----------------------------------------------------------------------------
 //	This must be called at the start of each level.
@@ -373,8 +448,8 @@ void init_controlcen_for_level(void)
 		mprintf((1, "Warning: No control center.\n"));
 		return;
 	}
-
 #endif
+
 	if ( (boss_objnum != -1) && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_ROBOTS)) ) {
 		if (cntrlcen_objnum != -1) {
 //			mprintf((0, "Ghosting control center\n"));
@@ -385,15 +460,22 @@ void init_controlcen_for_level(void)
 	} else {
 		//	Compute all gun positions.
 		objp = &Objects[cntrlcen_objnum];
+		N_controlcen_guns = Reactors[objp->id].n_guns;
 		for (i=0; i<N_controlcen_guns; i++)
 			calc_controlcen_gun_point(&Gun_pos[i], &Gun_dir[i], objp, i);
 		Control_center_present = 1;
 
-		//	Boost control center strength at higher levels.
-		if (Current_level_num >= 0)
-			objp->shields = F1_0*200 + (F1_0*200/4) * Current_level_num;
-		else
-			objp->shields = F1_0*200 - Current_level_num*F1_0*100;
+		if (Reactor_strength == -1) {		//use old defaults
+			//	Boost control center strength at higher levels.
+			if (Current_level_num >= 0)
+				objp->shields = F1_0*200 + (F1_0*200/4) * Current_level_num;
+			else
+				objp->shields = F1_0*200 - Current_level_num*F1_0*150;
+		}
+		else {
+			objp->shields = i2f(Reactor_strength);
+		}
+
 	}
 
 	//	Say the control center has not yet been hit.
@@ -404,4 +486,12 @@ void init_controlcen_for_level(void)
 	Dead_controlcen_object_num = -1;
 }
 
-
+void special_reactor_stuff(void)
+{
+	mprintf((0, "Mucking with reactor countdown time.\n"));
+	if (Control_center_destroyed) {
+		Countdown_timer += i2f(Base_control_center_explosion_time + (NDL-1-Difficulty_level)*Base_control_center_explosion_time/(NDL-1));
+		Total_countdown_time = f2i(Countdown_timer)+2;	//	Will prevent "Self destruct sequence activated" message from replaying.
+	}
+}
+

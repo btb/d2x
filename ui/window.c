@@ -8,43 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/window.c $
- * $Revision: 1.8 $
- * $Author: john $
- * $Date: 1994/11/18 23:21:46 $
- *
- * Windowing functions and controller.
- *
- * $Log: window.c $
- * Revision 1.8  1994/11/18  23:21:46  john
- * Fixed big with prev.
- * 
- * Revision 1.7  1994/11/18  23:21:06  john
- * Changed some shorts to int.
- * 
- * Revision 1.6  1994/06/09  12:18:12  john
- * Took out keyboard flushes.
- * 
- * Revision 1.5  1994/01/18  11:00:36  john
- * added ui_get_idle_seconds.
- * 
- * Revision 1.4  1993/12/07  12:30:33  john
- * new version.
- * 
- * Revision 1.3  1993/10/26  13:46:08  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/10/05  17:31:46  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/09/20  10:35:44  john
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: window.c 1.8 1994/11/18 23:21:46 john Exp $";
@@ -658,4 +623,3 @@ void ui_wprintf_at( UI_WINDOW * wnd, short x, short y, char * format, ... )
 	ui_mouse_show();
 
 }
-

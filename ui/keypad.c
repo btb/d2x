@@ -1,15 +1,3 @@
-/*
-THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
@@ -29,7 +17,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ui.h"
 
 #include "mem.h"
-#include "cflib.h"
+//#include "cflib.h"
 #include "func.h"
 #include "error.h"
 
@@ -248,7 +236,8 @@ static void ui_pad_set_active( int n )
 			if (HotKey1[i] == KeyPad[n]->keycode[j] )
 			{
 				Pad[i]->hotkey1 =  HotKey1[i];
-				Pad[i]->user_function1 = func_nget( KeyPad[n]->function_number[j], &np, &name );			}
+				Pad[i]->user_function1 = func_nget( KeyPad[n]->function_number[j], &np, &name );
+			}
 		}
 	}
 
@@ -317,13 +306,10 @@ void ui_pad_read( int n, char * filename )
 		return;
 	}
 					  
-	//MALLOC( KeyPad[n], UI_KEYPAD, 1 );//Hack by KRB
-	KeyPad[n]=(UI_KEYPAD *)malloc(1*sizeof(UI_KEYPAD));
-
+	MALLOC( KeyPad[n], UI_KEYPAD, 1 );
 			
 	for (i=0; i < 17; i++ ) {
-		//MALLOC( KeyPad[n]->buttontext[i], char, 100 );//Hack by KRB
-		KeyPad[n]->buttontext[i]=(char *)malloc(100*sizeof(char));
+		MALLOC( KeyPad[n]->buttontext[i], char, 100 );
 	}
 
 	KeyPad[n]->numkeys = 0;
@@ -549,31 +535,15 @@ void ui_pad_read( int n, char * filename )
 
 
 /*
-
-	ui_pad_init(2);
-
-	ui_pad_read( 0, "curve.pad" );
-	ui_pad_read( 1, "segmove.pad" );
-	
-	
-	//open window
-		
-		ui_pad_activate();
-
-		
-			ui_pad_goto( n );
-			ui_pad_goto_next( n );
-			ui_pad_goto_previous( n );
-	
-
-		ui_pad_deactivate();
-		
-	
-
-	//close window
-
-	ui_pad_close();
-
-	exit();
+THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 

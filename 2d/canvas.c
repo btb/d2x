@@ -8,83 +8,33 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
- /*
- * $Source: f:/miner/source/2d/rcs/canvas.c $
- * $Revision: 1.14 $
- * $Author: john $
- * $Date: 1995/03/06 09:18:45 $
- *
- * Graphical routines for manipulating grs_canvas's.
- *
- * $Log: canvas.c $
- * Revision 1.14  1995/03/06  09:18:45  john
- * Made modex page flipping wait for retrace be default.
- * 
- * Revision 1.13  1995/03/01  15:37:40  john
- * Better ModeX support.
- * 
- * Revision 1.12  1994/11/28  17:08:29  john
- * Took out some unused functions in linear.asm, moved
- * gr_linear_movsd from linear.asm to bitblt.c, made sure that
- * the code in ibiblt.c sets the direction flags before rep movsing.
- * 
- * Revision 1.11  1994/11/18  22:50:24  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.10  1994/11/10  15:59:33  john
- * Fixed bugs with canvas's being created with bogus bm_flags.
- * 
- * Revision 1.9  1994/06/24  17:26:34  john
- * Made rowsizes bigger than actual screen work with SVGA.
- * 
- * Revision 1.8  1994/05/06  12:50:41  john
- * Added supertransparency; neatend things up; took out warnings.
- * 
- * Revision 1.7  1993/12/08  16:41:26  john
- * fixed color = -1 bug
- * 
- * Revision 1.6  1993/10/15  16:22:25  john
- * *** empty log message ***
- * 
- * Revision 1.5  1993/09/29  16:14:07  john
- * added globol variables describing current canvas
- * 
- * Revision 1.4  1993/09/14  16:03:40  matt
- * Added new function, gr_clear_canvas()
- * 
- * Revision 1.3  1993/09/14  13:51:38  matt
- * in gr_init_sub_canvas(), copy bm_rowsize from source canvas
- * 
- * Revision 1.2  1993/09/08  17:37:34  john
- * Checking for potential errors
- * 
- * Revision 1.1  1993/09/08  11:43:18  john
- * Initial revision
- * 
- *
- */
 
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "mem.h"
-
+#include "error.h"
 
 #include "gr.h"
 #include "grdef.h"
 
-grs_canvas * grd_curcanv;    //active canvas
-grs_screen * grd_curscreen;  //active screen
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
+
+grs_canvas * grd_curcanv=NULL;    //active canvas
+grs_screen * grd_curscreen=NULL;  //active screen
 
 grs_canvas *gr_create_canvas(int w, int h)
 {
 	unsigned char * data;
 	grs_canvas *new;
-	
-	new = (grs_canvas *)malloc( sizeof(grs_canvas) );
+
+    new = (grs_canvas *)malloc( sizeof(grs_canvas) );
 	data = (unsigned char *)malloc(w*h);
 
 	new->cv_bitmap.bm_x = 0;
@@ -104,9 +54,44 @@ grs_canvas *gr_create_canvas(int w, int h)
 	return new;
 }
 
+#if defined(POLY_ACC)
+grs_canvas *gr_create_canvas2(int w, int h, int type)
+{
+	unsigned char * data;
+	grs_canvas *new;
+
+	new = (grs_canvas *)malloc( sizeof(grs_canvas) );
+    if(type == BM_LINEAR)
+        data = (unsigned char *)malloc(w*h);
+    else if(type == BM_LINEAR15)
+        data = (unsigned char *)malloc(w*h*PA_BPP);
+
+	new->cv_bitmap.bm_x = 0;
+	new->cv_bitmap.bm_y = 0;
+	new->cv_bitmap.bm_w = w;
+	new->cv_bitmap.bm_h = h;
+	new->cv_bitmap.bm_flags = 0;
+    new->cv_bitmap.bm_type = type;
+	
+   new->cv_bitmap.bm_rowsize = type==BM_LINEAR?w:w*PA_BPP;
+	
+	new->cv_bitmap.bm_data = data;
+
+	new->cv_color = 0;
+	new->cv_drawmode = 0;
+	new->cv_font = NULL;
+	new->cv_font_fg_color = 0;
+	new->cv_font_bg_color = 0;
+	return new;
+}
+#endif
+
 grs_canvas *gr_create_sub_canvas(grs_canvas *canv, int x, int y, int w, int h)
 {
     grs_canvas *new;
+
+	if (x+w > canv->cv_bitmap.bm_w) {Int3(); w=canv->cv_bitmap.bm_w-x;}
+	if (y+h > canv->cv_bitmap.bm_h) {Int3(); h=canv->cv_bitmap.bm_h-y;}
 
     new = (grs_canvas *)malloc( sizeof(grs_canvas) );
 
@@ -120,7 +105,11 @@ grs_canvas *gr_create_sub_canvas(grs_canvas *canv, int x, int y, int w, int h)
 
 	new->cv_bitmap.bm_data = canv->cv_bitmap.bm_data;
 	new->cv_bitmap.bm_data += y*canv->cv_bitmap.bm_rowsize;
-	new->cv_bitmap.bm_data += x;
+#if defined(POLY_ACC)
+    new->cv_bitmap.bm_data += canv->cv_bitmap.bm_type==BM_LINEAR?x:x*PA_BPP; //$$POLY_ACC
+#else
+    new->cv_bitmap.bm_data += x;
+#endif
 
 	new->cv_color = canv->cv_color;
    new->cv_drawmode = canv->cv_drawmode;
@@ -142,14 +131,22 @@ void gr_init_canvas(grs_canvas *canv, unsigned char * pixdata, int pixtype, int 
 	canv->cv_bitmap.bm_y = 0;
 	if (pixtype==BM_MODEX)
 		canv->cv_bitmap.bm_rowsize = w / 4;
-	else
+#if defined(POLY_ACC)
+    else if(pixtype==BM_LINEAR15)
+#ifdef PA_3DFX_VOODOO
+		canv->cv_bitmap.bm_rowsize = 2048;
+#else
+		canv->cv_bitmap.bm_rowsize = w*PA_BPP;
+#endif
+#endif
+    else
 		canv->cv_bitmap.bm_rowsize = w;
-	canv->cv_bitmap.bm_w = w;
+
+    canv->cv_bitmap.bm_w = w;
 	canv->cv_bitmap.bm_h = h;
 	canv->cv_bitmap.bm_flags = 0;
 	canv->cv_bitmap.bm_type = pixtype;
 	canv->cv_bitmap.bm_data = pixdata;
-
 }
 
 void gr_init_sub_canvas(grs_canvas *new, grs_canvas *src, int x, int y, int w, int h)
@@ -171,13 +168,35 @@ void gr_init_sub_canvas(grs_canvas *new, grs_canvas *src, int x, int y, int w, i
 
 	new->cv_bitmap.bm_data = src->cv_bitmap.bm_data;
 	new->cv_bitmap.bm_data += y*src->cv_bitmap.bm_rowsize;
-	new->cv_bitmap.bm_data += x;
+#if defined(POLY_ACC)
+    new->cv_bitmap.bm_data += src->cv_bitmap.bm_type==BM_LINEAR?x:x*PA_BPP;
+#else
+    new->cv_bitmap.bm_data += x;
+#endif
 }
 
 void gr_free_canvas(grs_canvas *canv)
 {
+	if (canv == grd_curcanv) {		//bad!! freeing current canvas!
+		Int3();
+		gr_set_current_canvas(NULL);
+	}
+
+#if defined(POLY_ACC) && !defined(MACINTOSH)
+    //
+    // prevents freeing the VIRGE framebuffer. This is only a concern in two places in game.c
+    //
+    if(canv->cv_bitmap.bm_data != pa_get_buffer_address(0) &&
+       canv->cv_bitmap.bm_data != pa_get_buffer_address(1) )
+    {
+        free(canv->cv_bitmap.bm_data );
+    }
+#else
 	free(canv->cv_bitmap.bm_data );
-    free(canv);
+#endif
+
+	free(canv);
+
 }
 
 void gr_free_sub_canvas(grs_canvas *canv)
@@ -198,6 +217,10 @@ void gr_show_canvas( grs_canvas *canv )
 		//	else if (canv->cv_bitmap.bm_type == BM_LINEAR )
 		// Int3();		// Get JOHN!
 		//gr_linear_movsd( canv->cv_bitmap.bm_data, (void *)0xA0000, 320*200);
+#if defined(POLY_ACC)
+    else if (canv->cv_bitmap.bm_type == BM_LINEAR15)
+        Int3();     // hurray, this got called, now write some code to support it.
+#endif
 }
 
 void gr_set_current_canvas( grs_canvas *canv )
@@ -207,6 +230,8 @@ void gr_set_current_canvas( grs_canvas *canv )
 	else
 		grd_curcanv = canv;
 
+#ifndef MACINTOSH			// these variables are undefined on mac -- not used.
+
 	if ( (grd_curcanv->cv_color >= 0) && (grd_curcanv->cv_color <= 255) )	{
 		gr_var_color = grd_curcanv->cv_color;
 	} else
@@ -214,6 +239,7 @@ void gr_set_current_canvas( grs_canvas *canv )
 	gr_var_bitmap = grd_curcanv->cv_bitmap.bm_data;
 	gr_var_bwidth = grd_curcanv->cv_bitmap.bm_rowsize;
 
+#endif
 }
 
 void gr_clear_canvas(int color)
@@ -226,7 +252,7 @@ void gr_setcolor(int color)
 {
 	grd_curcanv->cv_color=color;
 
+#ifndef MACINTOSH
 	gr_var_color = color;
-
+#endif
 }
-

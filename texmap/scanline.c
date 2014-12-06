@@ -8,29 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/texmap/rcs/scanline.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1995/02/20 18:23:39 $
- * 
- * Routines to draw the texture mapped scanlines.
- * 
- * $Log: scanline.c $
- * Revision 1.2  1995/02/20  18:23:39  john
- * Added new module for C versions of inner loops.
- * 
- * Revision 1.1  1995/02/20  17:42:27  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: scanline.c 1.2 1995/02/20 18:23:39 john Exp $";
+static char rcsid[] = "$Id: scanline.c 1.3 1996/01/24 16:38:16 champaign Exp $";
 #pragma on (unreferenced)
 
 #include <math.h>
@@ -47,14 +30,17 @@ static char rcsid[] = "$Id: scanline.c 1.2 1995/02/20 18:23:39 john Exp $";
 #include "texmapl.h"
 #include "scanline.h"
 
+extern ubyte * dest_row_data;
+extern int loop_count;
+
 void c_tmap_scanline_flat()
 {
 	ubyte *dest;
 	int x;
 
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y )  );
+	dest = dest_row_data;
 
-	for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+	for (x=loop_count; x >= 0; x-- ) {
 		*dest++ = tmap_flat_color;
 	}
 }
@@ -65,10 +51,10 @@ void c_tmap_scanline_shaded()
 	ubyte *dest;
 	int x;
 
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
+	dest = dest_row_data;
 
 	fade = tmap_flat_shade_value<<8;
-	for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+	for (x=loop_count; x >= 0; x-- ) {
 		*dest++ = gr_fade_table[ fade |(*dest)];
 	}
 }
@@ -85,16 +71,16 @@ void c_tmap_scanline_lin_nolight()
 	dudx = fx_du_dx; 
 	dvdx = fx_dv_dx*64; 
 
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
+	dest = dest_row_data;
 
 	if (!Transparency_on)	{
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			*dest++ = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
 			u += dudx;
 			v += dvdx;
 		}
 	} else {
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
 			if ( c!=255)
 				*dest = c;
@@ -118,19 +104,19 @@ void c_tmap_scanline_lin()
 	dudx = fx_du_dx; 
 	dvdx = fx_dv_dx*64; 
 
-	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
+	l = fx_l;
+	dldx = fx_dl_dx;
+	dest = dest_row_data;
 
 	if (!Transparency_on)	{
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			*dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ] ];
 			l += dldx;
 			u += dudx;
 			v += dvdx;
 		}
 	} else {
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
 			if ( c!=255)
 				*dest = gr_fade_table[ (l&(0xff00)) + c ];
@@ -157,17 +143,17 @@ void c_tmap_scanline_per_nolight()
 	dvdx = fx_dv_dx*64; 
 	dzdx = fx_dz_dx;
 
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
+	dest = dest_row_data;
 
 	if (!Transparency_on)	{
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			*dest++ = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
 			u += dudx;
 			v += dvdx;
 			z += dzdx;
 		}
 	} else {
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
 			if ( c!=255)
 				*dest = c;
@@ -193,12 +179,12 @@ void c_tmap_scanline_per()
 	dvdx = fx_dv_dx*64; 
 	dzdx = fx_dz_dx;
 
-	l = fx_l>>8;
-	dldx = fx_dl_dx>>8;
-	dest = (ubyte *)(write_buffer + fx_xleft + (bytes_per_row * fx_y)  );
+	l = fx_l;
+	dldx = fx_dl_dx;
+	dest = dest_row_data;
 
 	if (!Transparency_on)	{
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			*dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ] ];
 			l += dldx;
 			u += dudx;
@@ -206,7 +192,7 @@ void c_tmap_scanline_per()
 			z += dzdx;
 		}
 	} else {
-		for (x= fx_xright-fx_xleft+1 ; x > 0; --x ) {
+		for (x=loop_count; x >= 0; x-- ) {
 			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
 			if ( c!=255)
 				*dest = gr_fade_table[ (l&(0xff00)) + c ];
@@ -219,5 +205,42 @@ void c_tmap_scanline_per()
 	}
 }
 
+#define zonk 1
 
-
+void c_tmap_scanline_editor()
+{
+	ubyte *dest;
+	uint c;
+	int x;
+	fix u,v,z,dudx, dvdx, dzdx;
+
+	u = fx_u;
+	v = fx_v*64;
+	z = fx_z;
+	dudx = fx_du_dx; 
+	dvdx = fx_dv_dx*64; 
+	dzdx = fx_dz_dx;
+
+	dest = dest_row_data;
+
+	if (!Transparency_on)	{
+		for (x=loop_count; x >= 0; x-- ) {
+			*dest++ = zonk;
+			//(uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+			u += dudx;
+			v += dvdx;
+			z += dzdx;
+		}
+	} else {
+		for (x=loop_count; x >= 0; x-- ) {
+			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+			if ( c!=255)
+				*dest = zonk;
+			dest++;
+			u += dudx;
+			v += dvdx;
+			z += dzdx;
+		}
+	}
+}
+

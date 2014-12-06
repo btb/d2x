@@ -8,29 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/coindev.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:26:39 $
- * 
- * Routines to read the coin counter.
- * 
- * $Log: coindev.c $
- * Revision 2.0  1995/02/27  11:26:39  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.2  1994/09/16  16:15:05  john
- * Added acrade sequencing.
- * 
- * Revision 1.1  1994/09/16  12:56:09  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -118,4 +97,3 @@ unsigned int coindev_count(CoinMechNumber)
 }
 
 
-

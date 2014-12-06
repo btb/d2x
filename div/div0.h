@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/div/rcs/div0.h $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1994/01/14 15:34:25 $
- *
- * Header file for divide by zero handler
- *
- * $Log: div0.h $
- * Revision 1.2  1994/01/14  15:34:25  john
- * Added counters for number of overflows.
- * 
- * Revision 1.1  1993/09/17  12:37:58  john
- * Initial revision
- * 
- *
- */
 
 // D I V 0 . H
 
@@ -86,4 +69,3 @@ extern int div0_num_saturated;
 
 
 
-

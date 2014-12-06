@@ -8,64 +8,15 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/scale.c $
- * $Revision: 1.12 $
- * $Author: john $
- * $Date: 1995/03/14 15:14:11 $
- * 
- * Routines for scaling a bitmap.
- * 
- * $Log: scale.c $
- * Revision 1.12  1995/03/14  15:14:11  john
- * Increased max scanline length to 640.
- * ..
- * 
- * Revision 1.11  1994/11/27  12:56:39  matt
- * Took out unneeded include of 3d.h
- * 
- * Revision 1.10  1994/11/18  22:50:25  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.9  1994/11/09  16:35:02  john
- * First version with working RLE bitmaps.
- * 
- * Revision 1.8  1994/06/09  13:15:17  john
- * *** empty log message ***
- * 
- * Revision 1.7  1994/06/07  11:47:02  john
- * Added back in the fast code for scaling up bitmaps.
- * 
- * Revision 1.6  1994/02/18  15:32:36  john
- * *** empty log message ***
- * 
- * Revision 1.5  1994/01/22  14:35:01  john
- * Added transparency as color index 255.
- * 
- * Revision 1.4  1994/01/17  16:59:12  john
- * once again...
- * 
- * Revision 1.3  1994/01/17  16:51:17  john
- * Added check so we don't draw outsibe
- * the source bitmap's v coordinate... kind
- * of a hack, but works.
- * 
- * Revision 1.2  1994/01/12  18:03:26  john
- * The first iteration of fast scaler..
- * 
- * Revision 1.1  1994/01/11  14:48:42  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: scale.c 1.12 1995/03/14 15:14:11 john Exp $";
+static char rcsid[] = "$Id: scale.c 1.26 1996/12/04 19:26:40 matt Exp $";
 #pragma on (unreferenced)
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
@@ -78,9 +29,11 @@ static char rcsid[] = "$Id: scale.c 1.12 1995/03/14 15:14:11 john Exp $";
 #include "error.h"
 #include "rle.h"
 
-#define TRANSPARENCY_COLOR 255;
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
 
-static int Transparency_color = TRANSPARENCY_COLOR;
+static int Transparency_color = TRANSPARENCY_COLOR;		// TRANSPARENCY_COLOR now in gr.h
 
 extern char scale_trans_color;
 extern int scale_error_term;
@@ -152,8 +105,14 @@ void rep_movsb( ubyte * sbits, ubyte * dbits, int width );
 
 #define FIND_SCALED_NUM(x,x0,x1,y0,y1) (fixmuldiv((x)-(x0),(y1)-(y0),(x1)-(x0))+(y0))
 
+//check if b-a overflows
+ubyte check_sub_oflow(int a,int b);
+#pragma aux check_sub_oflow parm [edx] [eax] value [al] modify exact [eax] = \
+	"sub	eax,edx"		\
+	"seto	al";
+
 // Scales bitmap, bp, into vertbuf[0] to vertbuf[1]
-void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf )
+void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf, int orientation )
 {
 	grs_bitmap * dbp = &grd_curcanv->cv_bitmap;
 	fix x0, y0, x1, y1;
@@ -184,6 +143,12 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf )
 
 	clipped_x0 = x0; clipped_y0 = y0;
 	clipped_x1 = x1; clipped_y1 = y1;
+
+	if (check_sub_oflow(x0,x1) || 
+		 check_sub_oflow(y0,y1) ||
+		 check_sub_oflow(u0,u1) ||
+		 check_sub_oflow(v0,v1))
+		return;
 
 	// Clip the left, moving u0 right as necessary
 	if ( x0 < xmin ) 	{
@@ -219,10 +184,10 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf )
 	Assert( dy0>=0 );
 	Assert( dx1<dbp->bm_w );
 	Assert( dy1<dbp->bm_h );
-	Assert( f2i(u0)<=f2i(u1) );
-	Assert( f2i(v0)<=f2i(v1) );
-	Assert( f2i(u0)>=0 );
-	Assert( f2i(v0)>=0 );
+	Assert( clipped_u1<=u1 );
+	Assert( clipped_v1<=v1 );
+	Assert( clipped_u0>=0 );
+	Assert( clipped_v0>=0 );
 	Assert( u1<i2f(bp->bm_w) );
 	Assert( v1<i2f(bp->bm_h) );
 
@@ -230,16 +195,50 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf )
 
 	dtemp = f2i(clipped_u1)-f2i(clipped_u0);
 
+   #ifdef _3DFX
+   _3dfx_BlitScale( bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation );
+
+   if ( _3dfx_skip_ddraw )
+      return;
+   #endif
+
 	if ( bp->bm_flags & BM_FLAG_RLE )	{
+
+#if defined(POLY_ACC)
+        if(bp->bm_type == BM_LINEAR && dbp->bm_type == BM_LINEAR15)
+        {
+            Assert(orientation == 0);
+            pa_blit_scale(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation);
+				return;
+        }
+        else
+        {
+            Assert(bp->bm_type == BM_LINEAR && dbp->bm_type == BM_LINEAR);
+        }
+#endif
 		if ( (dtemp < (f2i(clipped_x1)-f2i(clipped_x0))) && (dtemp>0) )
-			scale_bitmap_cc_asm_rle(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1  );
+			scale_bitmap_cc_asm_rle(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation  );
 		else
-			scale_bitmap_asm_rle(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1  );
+			scale_bitmap_asm_rle(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation  );
+
 	} else {
-		if ( (dtemp < (f2i(clipped_x1)-f2i(clipped_x0))) && (dtemp>0) )
-			scale_bitmap_cc_asm(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1  );
+#if defined(POLY_ACC)
+        if(bp->bm_type == BM_LINEAR && dbp->bm_type == BM_LINEAR15)
+        {
+            Assert(orientation == 0);
+            pa_blit_scale(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation);
+				return;
+        }
+        else
+        {
+            Assert(bp->bm_type == BM_LINEAR && dbp->bm_type == BM_LINEAR);
+        }
+#endif
+	
+	if ( (dtemp < (f2i(clipped_x1)-f2i(clipped_x0))) && (dtemp>0) )
+			scale_bitmap_cc_asm(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation  );
 		else
-			scale_bitmap_asm(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1  );
+			scale_bitmap_asm(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation  );
 	}
 }
 
@@ -267,13 +266,32 @@ void scale_bitmap_c(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0
 	}
 }
 
-void scale_bitmap_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1  )
+void scale_bitmap_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1, int orientation  )
 {
 	fix du, dv, v;
 	int y;
 
+	if (orientation & 4) {
+		int	t;
+		t = u0;	u0 = v0;	v0 = t;
+		t = u1;	u1 = v1;	v1 = t;
+	}
+
 	du = (u1-u0) / (x1-x0);
 	dv = (v1-v0) / (y1-y0);
+
+
+	if (orientation & 1) {
+		u0 = u1;
+		du = -du;
+	}
+
+	if (orientation & 2) {
+		v0 = v1;
+		dv = -dv;
+		if (dv < 0)
+			v0--;
+	}
 
 	v = v0;
 
@@ -283,7 +301,7 @@ void scale_bitmap_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int 
 	}
 }
 
-ubyte scale_rle_data[640];
+ubyte scale_rle_data[1024];
 
 void decode_row( grs_bitmap * bmp, int y )
 {
@@ -291,18 +309,42 @@ void decode_row( grs_bitmap * bmp, int y )
 	
 	for (i=0; i<y; i++ )
 		offset += bmp->bm_data[4+i];
-	gr_rle_decode( &bmp->bm_data[offset], scale_rle_data );
+	gr_rle_decode( &bmp->bm_data[offset], scale_rle_data, sizeof(scale_rle_data) );
 }
 
-void scale_bitmap_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1  )
+void scale_bitmap_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1, int orientation  )
 {
 	fix du, dv, v;
 	int y, last_row=-1;
 
+//	Rotation doesn't work because explosions are not square!
+// -- 	if (orientation & 4) {
+// -- 		int	t;
+// -- 		t = u0;	u0 = v0;	v0 = t;
+// -- 		t = u1;	u1 = v1;	v1 = t;
+// -- 	}
+
 	du = (u1-u0) / (x1-x0);
 	dv = (v1-v0) / (y1-y0);
 
+	if (orientation & 1) {
+		u0 = u1;
+		du = -du;
+	}
+
+	if (orientation & 2) {
+		v0 = v1;
+		dv = -dv;
+		if (dv < 0)
+			v0--;
+	}
+
 	v = v0;
+
+	if (v<0) {	//was: Assert(v >= 0);
+		Int3();	//this should be checked in higher-level routine
+		return;
+	}
 
 	for (y=y0; y<=y1; y++ )			{
 		if ( f2i(v) != last_row )	{
@@ -315,10 +357,24 @@ void scale_bitmap_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, 
 }
 
 
-void scale_bitmap_cc_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1  )
+void scale_bitmap_cc_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1, int orientation  )
 {
 	fix dv, v;
 	int y;
+
+	if (orientation & 1) {
+		int	t;
+		t = u0;	u0 = u1;	u1 = t;
+	}
+
+	if (orientation & 2) {
+		int	t;
+		t = v0;	v0 = v1;	v1 = t;
+		if (v1 < v0)
+			v0--;
+	}
+
+	v = v0;
 
 	dv = (v1-v0) / (y1-y0);
 		
@@ -336,10 +392,22 @@ void scale_bitmap_cc_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, i
 	}
 }
 
-void scale_bitmap_cc_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1  )
+void scale_bitmap_cc_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0, int x1, int y1, fix u0, fix v0,  fix u1, fix v1, int orientation )
 {
 	fix dv, v;
 	int y, last_row = -1;
+
+	if (orientation & 1) {
+		int	t;
+		t = u0;	u0 = u1;	u1 = t;
+	}
+
+	if (orientation & 2) {
+		int	t;
+		t = v0;	v0 = v1;	v1 = t;
+		if (v1 < v0)
+			v0--;
+	}
 
 	dv = (v1-v0) / (y1-y0);
 		
@@ -504,4 +572,3 @@ void rls_stretch_scanline_setup( int XDelta, int YDelta )
       }
 
 }
-

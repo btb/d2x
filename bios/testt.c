@@ -8,10 +8,7 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-*/
-/*
-	TESTT.C - Timer handler testing routines
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include <stdio.h>
@@ -19,45 +16,42 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "key.h"
 
-extern int timer_interrupted;
-extern unsigned short timer_value;
-
-int count=0;
-
-#pragma off (check_stack);			// No stack checking!
-void _loadds _far my_handler()
-{
-	count++;
-}
-#pragma on (check_stack);			
 
 void main (void)
 {
-	fix t1, t2, t3, delta, mdelta, mt3;
+	unsigned int MyTimer, t,t1, t2, ot, myc;
+	int i,s, b;
 
-	printf( "Press any key to start...\n" );
+	key_init();
 
-	timer_init();
-	timer_set_rate( 9943 );
+	//timer_init( 4661, NULL );
+	timer_init( 0, NULL );
 
-	t1 = t2 = timer_get_fixed_seconds();
+	s = TICKER;
+	MyTimer = timer_get_microseconds();
 
-	mdelta = 0;
-	mt3 = 0;
-	while(!kbhit())	{
-		t3 = t2;
-		t1 = timer_get_approx_seconds();
-		t2 = timer_get_fixed_seconds();
-		delta = t2 - t1;
-		if ( abs(delta) > mdelta )
-			mdelta = abs(delta);
-
-		if ( abs(t2-t3) > mt3 )
-			mt3 = abs(t2-t3);
-		printf( "%.8f\t%.8f\t%.8f\t%d\t%.8f\t%.8f\n", f2fl(t2), f2fl(t2-t1), f2fl(mdelta), TICKER/19, f2fl(t2-t3), f2fl(mt3) );
-//		if ( t2 < t1 )	{
-//			printf( "Bad time of %.8f\n", f2fl(t1-t2) );
-//		}
+	while(!keyd_pressed[KEY_ESC])
+	{
+		delay(1);
+		ot =t;
+		t = timer_get_milliseconds();
+		t1 = (TICKER - s)*10000/182;
+		//printf( "%d\t%d\t%u\t%d\t%u\t%u\t%u\n", (TICKER-s)*10000/182, myc, t, (int)t-(int)ot, key_down_time(KEY_G), key_down_count(KEY_G), key_up_count(KEY_G) );
+		printf( "%u\t%u\t%d\n", t1, t, (int)t - (int)t1 );
 	}
+
+	t1 = timer_get_microseconds();
+	delay(100);
+	t2 = timer_get_microseconds();
+
+	printf( "This number should be about 100000:  %d\n", t2-t1 );
+
+	t1 = timer_get_microseconds();
+	t2 = timer_get_microseconds();
+
+	printf( "Overhead for 'timer_get_microseconds' call:  %d æSeconds\n", t2-t1 );
+
+
+	timer_close();
+
 }
-

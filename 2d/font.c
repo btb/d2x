@@ -8,122 +8,18 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/* $Source: f:/miner/source/2d/rcs/font.c $
- * $Revision: 1.30 $
- * $Author: john $
- * $Date: 1995/01/25 20:02:03 $
- *
- * Graphical routines for drawing fonts.
- *
- * $Log: font.c $
- * Revision 1.30  1995/01/25  20:02:03  john
- * Fixed bug with mono clipped fonts only drawing 1 row.
- * 
- * Revision 1.29  1994/12/08  19:03:54  john
- * Made functions use cfile.
- * 
- * Revision 1.28  1994/11/27  23:08:22  matt
- * Changes for new mprintf calling convention
- * 
- * Revision 1.27  1994/11/18  23:54:50  john
- * Made centering work on x = 0x8000 not -0x8000.
- * 
- * Revision 1.26  1994/11/18  22:50:23  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.25  1994/11/04  11:10:31  john
- * Took the & out of string sizing.
- * 
- * Revision 1.24  1994/11/04  10:06:36  john
- * Added fade table for fading fonts. Made font that partially clips
- * not print a warning message.
- * 
- * Revision 1.23  1994/09/29  10:09:06  john
- * Added real clipping to text.
- * 
- * Revision 1.22  1994/09/12  19:27:51  john
- * Fixed bug with unclipped fonts clipping.
- * 
- * Revision 1.21  1994/09/12  17:16:59  john
- * Added clipping.
- * 
- * Revision 1.20  1994/08/28  16:43:01  matt
- * Added centering if x==0x8000
- * 
- * Revision 1.19  1994/08/15  15:01:11  matt
- * Close font file after reading
- * 
- * Revision 1.18  1994/08/12  18:17:42  matt
- * Fixed stupid bug that cause first char in font not to print
- * 
- * Revision 1.17  1994/08/11  18:00:17  matt
- * Cleaned up code, fixed string width bug.
- * 
- * Revision 1.16  1994/08/10  18:46:11  matt
- * Fixed a couple of little things
- * 
- * Revision 1.15  1994/08/10  18:36:20  matt
- * Changed font file format.  Made chars not in font plot as spaces.  Font file
- * now stores palette for color font & remaps on load.
- * 
- * Revision 1.14  1994/08/10  12:27:27  matt
- * Took out unneeded int3
- * 
- * Revision 1.13  1994/08/10  12:25:26  matt
- * Added support for colors fonts & kerned fonts
- * Made our own font file format
- * 
- * Revision 1.12  1994/07/22  17:19:00  john
- * made proportional font width be the max width.
- * 
- * Revision 1.11  1994/05/06  12:50:26  john
- * Added supertransparency; neatend things up; took out warnings.
- * 
- * Revision 1.10  1994/01/31  11:08:12  john
- * fixed bug with order of frees.
- * 
- * Revision 1.9  1994/01/31  10:36:40  john
- * Free'd variable size font data.
- * 
- * Revision 1.8  1994/01/27  17:17:40  john
- * Made error if font file doesn't exist.
- * 
- * Revision 1.7  1993/10/26  13:17:48  john
- * *** empty log message ***
- * 
- * Revision 1.6  1993/10/15  16:23:25  john
- * y
- * 
- * Revision 1.5  1993/09/28  19:05:50  john
- * added support for \n in gr_string and gr_get_string_size
- * 
- * Revision 1.4  1993/09/28  12:46:49  matt
- * On error, now call Error() instead of exit().
- * 
- * Revision 1.3  1993/09/20  11:35:31  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/09/08  15:54:39  john
- * renamed ReadFile to readfontfile to prevent conflicts with others.
- * 
- * Revision 1.1  1993/09/08  11:43:34  john
- * Initial revision
- * 
- *
- */
 
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+#include <string.h>
 
 #include <fcntl.h>
-#include <io.h>
-#include <sys\types.h>
-#include <sys\stat.h>
+#include <unistd.h>
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "mem.h"
 
 #include "gr.h"
@@ -132,6 +28,22 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "cfile.h"
 #include "mono.h"
+#include "byteswap.h"
+
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
+
+#define MAX_OPEN_FONTS	50
+#define FILENAME_LEN		13
+
+typedef struct openfont {
+	char filename[FILENAME_LEN];
+	grs_font *ptr;
+} openfont;
+
+//list of open fonts, for use (for now) for palette remapping
+openfont open_font[MAX_OPEN_FONTS];
 
 #define FONT        grd_curcanv->cv_font
 #define FG_COLOR    grd_curcanv->cv_font_fg_color
@@ -151,7 +63,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 int gr_internal_string_clipped(int x, int y, char *s );
 int gr_internal_string_clipped_m(int x, int y, char *s );
 
-char *find_kern_entry(grs_font *font,char first,char second)
+ubyte *find_kern_entry(grs_font *font,ubyte first,ubyte second)
 {
 	ubyte *p=font->ft_kerndata;
 
@@ -168,7 +80,7 @@ char *find_kern_entry(grs_font *font,char first,char second)
 #define INFONT(_c) ((_c >= 0) && (_c <= FMAXCHAR-FMINCHAR))
 
 //takes the character BEFORE being offset into current font
-get_char_width(int c,int c2,int *width,int *spacing)
+void get_char_width(ubyte c,ubyte c2,int *width,int *spacing)
 {
 	int letter;
 
@@ -222,12 +134,12 @@ int get_centered_x(char *s)
 }
 
 
-
 int gr_internal_string0(int x, int y, char *s )
 {
 	unsigned char * fp;
-	char * text_ptr, * next_row, * text_ptr1;
+	ubyte * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
+	int	skip_lines = 0;
 
 	unsigned int VideoOffset, VideoOffset1;
 
@@ -260,8 +172,20 @@ int gr_internal_string0(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )
+				if (*text_ptr == CC_UNDERLINE )
 				{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
@@ -314,6 +238,10 @@ int gr_internal_string0(int x, int y, char *s )
 
 			VideoOffset1 += ROWSIZE; y++;
 		}
+
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
 	}
 	return 0;
 }
@@ -321,8 +249,9 @@ int gr_internal_string0(int x, int y, char *s )
 int gr_internal_string0m(int x, int y, char *s )
 {
 	unsigned char * fp;
-	char * text_ptr, * next_row, * text_ptr1;
+	ubyte * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
+	int	skip_lines = 0;
 
 	unsigned int VideoOffset, VideoOffset1;
 
@@ -355,8 +284,20 @@ int gr_internal_string0m(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )
+				if (*text_ptr == CC_UNDERLINE )
 				{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
@@ -408,6 +349,9 @@ int gr_internal_string0m(int x, int y, char *s )
 
 			VideoOffset1 += ROWSIZE; y++;
 		}
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
 	}
 	return 0;
 }
@@ -418,7 +362,7 @@ int gr_internal_string2(int x, int y, char *s )
 	unsigned char * fp;
 	char * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
-	int page_switched;
+	int page_switched, skip_lines = 0;
 
 	unsigned int VideoOffset, VideoOffset1;
 
@@ -458,8 +402,20 @@ int gr_internal_string2(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )
+				if (*text_ptr == CC_UNDERLINE )
 				{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
@@ -604,7 +560,8 @@ int gr_internal_string2(int x, int y, char *s )
 				text_ptr++;
 			}
 
-			VideoOffset1 += ROWSIZE; y++;
+			y ++;
+			VideoOffset1 += ROWSIZE;
 
 			if (VideoOffset1 > 0xFFFF ) {
 				VideoOffset1 -= 0xFFFF + 1;
@@ -612,6 +569,10 @@ int gr_internal_string2(int x, int y, char *s )
 					gr_vesa_incpage();
 			}
 		}
+
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
 	}
 	return 0;
 }
@@ -621,7 +582,7 @@ int gr_internal_string2m(int x, int y, char *s )
 	unsigned char * fp;
 	char * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
-	int page_switched;
+	int page_switched, skip_lines = 0;
 
 	unsigned int VideoOffset, VideoOffset1;
 
@@ -661,8 +622,20 @@ int gr_internal_string2m(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )
+				if (*text_ptr == CC_UNDERLINE )
 				{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
@@ -757,7 +730,8 @@ int gr_internal_string2m(int x, int y, char *s )
 				VideoOffset += spacing-width;
 			}
 
-			VideoOffset1 += ROWSIZE; y++;
+			y ++;
+			VideoOffset1 += ROWSIZE;
 
 			if (VideoOffset1 > 0xFFFF ) {
 				VideoOffset1 -= 0xFFFF + 1;
@@ -765,9 +739,239 @@ int gr_internal_string2m(int x, int y, char *s )
 					gr_vesa_incpage();
 			}
 		}
+
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
 	}
 	return 0;
 }
+
+#if defined(POLY_ACC)
+int gr_internal_string5(int x, int y, char *s )
+{
+	unsigned char * fp;
+	ubyte * text_ptr, * next_row, * text_ptr1;
+	int r, BitMask, i, bits, width, spacing, letter, underline;
+	int	skip_lines = 0;
+
+	unsigned int VideoOffset, VideoOffset1;
+
+    pa_flush();
+    VideoOffset1 = y * ROWSIZE + x * PA_BPP;
+
+	next_row = s;
+
+	while (next_row != NULL )
+	{
+		text_ptr1 = next_row;
+		next_row = NULL;
+
+		if (x==0x8000) {			//centered
+			int xx = get_centered_x(text_ptr1);
+            VideoOffset1 = y * ROWSIZE + xx * PA_BPP;
+		}
+
+		for (r=0; r<FHEIGHT; r++)
+		{
+
+			text_ptr = text_ptr1;
+
+			VideoOffset = VideoOffset1;
+
+			while (*text_ptr)
+			{
+				if (*text_ptr == '\n' )
+				{
+					next_row = &text_ptr[1];
+					break;
+				}
+
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
+				underline = 0;
+				if (*text_ptr == CC_UNDERLINE )
+				{
+					if ((r==FBASELINE+2) || (r==FBASELINE+3))
+						underline = 1;
+					text_ptr++;
+				}
+
+				get_char_width(text_ptr[0],text_ptr[1],&width,&spacing);
+
+				letter = *text_ptr-FMINCHAR;
+
+				if (!INFONT(letter)) {	//not in font, draw as space
+                    VideoOffset += spacing * PA_BPP;
+					text_ptr++;
+					continue;
+				}
+
+				if (FFLAGS & FT_PROPORTIONAL)
+					fp = FCHARS[letter];
+				else
+					fp = FDATA + letter * BITS_TO_BYTES(width)*FHEIGHT;
+
+				if (underline)
+					for (i=0; i< width; i++ )
+                    {    *(short *)(DATA + VideoOffset) = pa_clut[FG_COLOR]; VideoOffset += PA_BPP; }
+				else
+				{
+					fp += BITS_TO_BYTES(width)*r;
+
+					BitMask = 0;
+
+					for (i=0; i< width; i++ )
+					{
+						if (BitMask==0) {
+							bits = *fp++;
+							BitMask = 0x80;
+						}
+
+						if (bits & BitMask)
+                        {    *(short *)(DATA + VideoOffset) = pa_clut[FG_COLOR]; VideoOffset += PA_BPP; }
+                        else
+                        {    *(short *)(DATA + VideoOffset) = pa_clut[BG_COLOR]; VideoOffset += PA_BPP; }
+                        BitMask >>= 1;
+					}
+				}
+
+                VideoOffset += PA_BPP * (spacing-width);       //for kerning
+
+				text_ptr++;
+			}
+
+			VideoOffset1 += ROWSIZE; y++;
+		}
+
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
+	}
+	return 0;
+}
+
+int gr_internal_string5m(int x, int y, char *s )
+{
+	unsigned char * fp;
+	ubyte * text_ptr, * next_row, * text_ptr1;
+	int r, BitMask, i, bits, width, spacing, letter, underline;
+	int	skip_lines = 0;
+
+	unsigned int VideoOffset, VideoOffset1;
+
+    pa_flush();
+    VideoOffset1 = y * ROWSIZE + x * PA_BPP;
+
+	next_row = s;
+
+	while (next_row != NULL )
+	{
+		text_ptr1 = next_row;
+		next_row = NULL;
+
+		if (x==0x8000) {			//centered
+			int xx = get_centered_x(text_ptr1);
+            VideoOffset1 = y * ROWSIZE + xx * PA_BPP;
+		}
+
+		for (r=0; r<FHEIGHT; r++)
+		{
+
+			text_ptr = text_ptr1;
+
+			VideoOffset = VideoOffset1;
+
+			while (*text_ptr)
+			{
+				if (*text_ptr == '\n' )
+				{
+					next_row = &text_ptr[1];
+					break;
+				}
+
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					skip_lines = *(text_ptr+1) - '0';
+					text_ptr += 2;
+					continue;
+				}
+
+				underline = 0;
+				if (*text_ptr == CC_UNDERLINE )
+				{
+					if ((r==FBASELINE+2) || (r==FBASELINE+3))
+						underline = 1;
+					text_ptr++;
+				}
+
+				get_char_width(text_ptr[0],text_ptr[1],&width,&spacing);
+
+				letter = *text_ptr-FMINCHAR;
+
+				if (!INFONT(letter)) {	//not in font, draw as space
+                    VideoOffset += spacing * PA_BPP;
+					text_ptr++;
+					continue;
+				}
+
+				if (FFLAGS & FT_PROPORTIONAL)
+					fp = FCHARS[letter];
+				else
+					fp = FDATA + letter * BITS_TO_BYTES(width)*FHEIGHT;
+
+				if (underline)
+					for (i=0; i< width; i++ )
+                    {    *(short *)(DATA + VideoOffset) = pa_clut[FG_COLOR]; VideoOffset += PA_BPP; }
+                else
+				{
+					fp += BITS_TO_BYTES(width)*r;
+
+					BitMask = 0;
+
+					for (i=0; i< width; i++ )
+					{
+						if (BitMask==0) {
+							bits = *fp++;
+							BitMask = 0x80;
+						}
+
+						if (bits & BitMask)
+                        {    *(short *)(DATA + VideoOffset) = pa_clut[FG_COLOR]; VideoOffset += PA_BPP; }
+                        else
+                            VideoOffset += PA_BPP;
+						BitMask >>= 1;
+					}
+				}
+				text_ptr++;
+
+                VideoOffset += PA_BPP * (spacing-width);
+			}
+
+			VideoOffset1 += ROWSIZE; y++;
+		}
+		y += skip_lines;
+		VideoOffset1 += ROWSIZE * skip_lines;
+		skip_lines = 0;
+	}
+	return 0;
+}
+#endif
 
 //a bitmap for the character
 grs_bitmap char_bm = {
@@ -782,7 +986,7 @@ grs_bitmap char_bm = {
 int gr_internal_color_string(int x, int y, char *s )
 {
 	unsigned char * fp;
-	char * text_ptr, * next_row, * text_ptr1;
+	ubyte * text_ptr, * next_row, * text_ptr1;
 	int width, spacing,letter;
 	int xx,yy;
 
@@ -791,6 +995,7 @@ int gr_internal_color_string(int x, int y, char *s )
 	next_row = s;
 
 	yy = y;
+
 
 	while (next_row != NULL)
 	{
@@ -847,31 +1052,33 @@ int gr_string(int x, int y, char *s )
 	int w, h, aw;
 	int clipped=0;
 
+	Assert(FONT != NULL);
+
 	if ( x == 0x8000 )	{
 		if ( y<0 ) clipped |= 1;
 		gr_get_string_size(s, &w, &h, &aw );
 		// for x, since this will be centered, only look at
 		// width.
-		if ( w > grd_curcanv->cv_bitmap.bm_w ) clipped |= 1;	
-		if ( (y+h) > grd_curcanv->cv_bitmap.bm_h ) clipped |= 1;	
+		if ( w > grd_curcanv->cv_bitmap.bm_w ) clipped |= 1;
+		if ( (y+h) > grd_curcanv->cv_bitmap.bm_h ) clipped |= 1;
 
-		if ( (y+h) < 0 ) clipped |= 2;	
-		if ( y > grd_curcanv->cv_bitmap.bm_h ) clipped |= 2;	
+		if ( (y+h) < 0 ) clipped |= 2;
+		if ( y > grd_curcanv->cv_bitmap.bm_h ) clipped |= 2;
 
 	} else {
 		if ( (x<0) || (y<0) ) clipped |= 1;
 		gr_get_string_size(s, &w, &h, &aw );
-		if ( (x+w) > grd_curcanv->cv_bitmap.bm_w ) clipped |= 1;	
-		if ( (y+h) > grd_curcanv->cv_bitmap.bm_h ) clipped |= 1;	
-		if ( (x+w) < 0 ) clipped |= 2;	
-		if ( (y+h) < 0 ) clipped |= 2;	
-		if ( x > grd_curcanv->cv_bitmap.bm_w ) clipped |= 2;	
-		if ( y > grd_curcanv->cv_bitmap.bm_h ) clipped |= 2;	
+		if ( (x+w) > grd_curcanv->cv_bitmap.bm_w ) clipped |= 1;
+		if ( (y+h) > grd_curcanv->cv_bitmap.bm_h ) clipped |= 1;
+		if ( (x+w) < 0 ) clipped |= 2;
+		if ( (y+h) < 0 ) clipped |= 2;
+		if ( x > grd_curcanv->cv_bitmap.bm_w ) clipped |= 2;
+		if ( y > grd_curcanv->cv_bitmap.bm_h ) clipped |= 2;
 	}
 
 	if ( !clipped )
 		return gr_ustring(x, y, s );
-	
+
 	if ( clipped & 2 )	{
 		// Completely clipped...
 		mprintf( (1, "Text '%s' at (%d,%d) is off screen!\n", s, x, y ));
@@ -885,12 +1092,12 @@ int gr_string(int x, int y, char *s )
 
 	// Partially clipped...
 
-	if (FFLAGS & FT_COLOR) 
+	if (FFLAGS & FT_COLOR)
 		return gr_internal_color_string( x, y, s);
 
 	if ( BG_COLOR == -1)
 		return gr_internal_string_clipped_m( x, y, s );
-	
+
 	return gr_internal_string_clipped( x, y, s );
 }
 
@@ -914,7 +1121,14 @@ int gr_ustring(int x, int y, char *s )
 				return gr_internal_string2m(x,y,s);
 			else
 				return gr_internal_string2(x,y,s);
-		}
+#if defined(POLY_ACC)
+        case BM_LINEAR15:
+			if ( BG_COLOR == -1)
+                return gr_internal_string5m(x,y,s);
+			else
+                return gr_internal_string5(x,y,s);
+#endif
+        }
 
 	return 0;
 }
@@ -934,7 +1148,7 @@ void gr_get_string_size(char *s, int *string_width, int *string_height, int *ave
 		*string_width = 0;
 		while (*s)
 		{
-//			if (*s == '&')
+//			if (*s == CC_UNDERLINE)
 //				s++;
 			while (*s == '\n')
 			{
@@ -945,15 +1159,20 @@ void gr_get_string_size(char *s, int *string_width, int *string_height, int *ave
 
 			if (*s == 0) break;
 
-			get_char_width(s[0],s[1],&width,&spacing);
-
-			*string_width += spacing;
-
-			if (*string_width > longest_width)
-				longest_width = *string_width;
-
-			i++;
-			s++;
+			//	1 = next byte specifies color, so skip the 1 and the color value
+			if (*s == CC_COLOR)
+				s += 2;
+			else if (*s == CC_LSPACING) {
+				*string_height += *(s+1)-'0';
+				s += 2;
+			} else {
+				get_char_width(s[0],s[1],&width,&spacing);
+				*string_width += spacing;
+				if (*string_width > longest_width)
+					longest_width = *string_width;
+				i++;
+				s++;
+			}
 		}
 	}
 	*string_width = longest_width;
@@ -984,9 +1203,33 @@ void gr_close_font( grs_font * font )
 {
 	if (font)
 	{
-		if ( font->ft_chars ) 
+		int fontnum;
+
+		//find font in list
+		for (fontnum=0;fontnum<MAX_OPEN_FONTS && open_font[fontnum].ptr!=font;fontnum++);
+		Assert(fontnum<MAX_OPEN_FONTS);	//did we find slot?
+
+		open_font[fontnum].ptr = NULL;
+
+		if ( font->ft_chars )
 			free( font->ft_chars );
 		free( font );
+
+	}
+}
+
+//remap (by re-reading) all the color fonts
+void gr_remap_color_fonts()
+{
+	int fontnum;
+
+	for (fontnum=0;fontnum<MAX_OPEN_FONTS;fontnum++) {
+		grs_font *font;
+
+		font = open_font[fontnum].ptr;
+
+		if (font && (font->ft_flags & FT_COLOR))
+			gr_remap_font(font,open_font[fontnum].filename);
 	}
 }
 
@@ -1005,34 +1248,68 @@ void decode_data_asm(ubyte *data, int num_pixels, ubyte * colormap, int * count 
 
 grs_font * gr_init_font( char * fontname )
 {
+	static int first_time=1;
 	grs_font *font;
-	int i;
+	int i,fontnum;
 	unsigned char * ptr;
 	int nchars;
 	CFILE *fontfile;
 	int file_id;
 	int datasize;		//size up to (but not including) palette
 
+	if (first_time) {
+		int i;
+		for (i=0;i<MAX_OPEN_FONTS;i++)
+			open_font[i].ptr = NULL;
+		first_time=0;
+	}
+
+	//find free font slot
+	for (fontnum=0;fontnum<MAX_OPEN_FONTS && open_font[fontnum].ptr!=NULL;fontnum++);
+	Assert(fontnum<MAX_OPEN_FONTS);	//did we find one?
+
+	strncpy(open_font[fontnum].filename,fontname,FILENAME_LEN);
+
 	fontfile = cfopen(fontname, "rb");
 
 	if (!fontfile)
 		Error( "Can't open font file %s", fontname );
 
-	cfread(&file_id,sizeof(file_id),1,fontfile);
-	cfread(&datasize,sizeof(datasize),1,fontfile);
+	file_id = cfile_read_int(fontfile);
+	datasize = cfile_read_int(fontfile);
 
 	if (file_id != 'NFSP')
 		Error( "File %s is not a font file", fontname );
 
 	font = (grs_font *) malloc(datasize);
 
+	open_font[fontnum].ptr = font;
+
 	cfread(font,1,datasize,fontfile);
+
+#ifdef MACINTOSH
+// gotta translate those endian things
+
+	font->ft_w = SWAPSHORT(font->ft_w);
+	font->ft_h = SWAPSHORT(font->ft_h);
+	font->ft_flags = SWAPSHORT(font->ft_flags);
+	font->ft_bytewidth = SWAPSHORT(font->ft_bytewidth);
+	font->ft_data = (ubyte *)SWAPINT((int)(font->ft_data));
+	font->ft_chars = (ubyte **)SWAPINT((int)(font->ft_chars));
+	font->ft_widths = (short *)SWAPINT((int)(font->ft_widths));
+	font->ft_kerndata = (ubyte *)SWAPINT((int)(font->ft_kerndata));
+#endif
 
 	nchars = font->ft_maxchar-font->ft_minchar+1;
 
 	if (font->ft_flags & FT_PROPORTIONAL) {
 
 		font->ft_widths = (short *) (((int) font->ft_widths) + ((ubyte *) font));
+
+#ifdef MACINTOSH
+		for (i = 0; i < nchars; i++)
+			font->ft_widths[i] = SWAPSHORT(font->ft_widths[i]);
+#endif
 
 		font->ft_data = ((int) font->ft_data) + ((ubyte *) font);
 
@@ -1058,7 +1335,7 @@ grs_font * gr_init_font( char * fontname )
 		ptr = font->ft_data + (nchars * font->ft_w * font->ft_h);
 	}
 
-	if (font->ft_flags & FT_KERNED) 
+	if (font->ft_flags & FT_KERNED)
 		font->ft_kerndata = ((int) font->ft_kerndata) + ((ubyte *) font);
 
 
@@ -1069,11 +1346,35 @@ grs_font * gr_init_font( char * fontname )
 
 		cfread(palette,3,256,fontfile);		//read the palette
 
+#ifdef MACINTOSH			// swap the first and last palette entries (black and white)
+		{
+			int i;
+			ubyte c;
+
+			for (i = 0; i < 3; i++) {
+				c = palette[i];
+				palette[i] = palette[765+i];
+				palette[765+i] = c;
+			}
+
+//  we also need to swap the data entries as well.  black is white and white is black
+
+			for (i = 0; i < ptr-font->ft_data; i++) {
+				if (font->ft_data[i] == 0)
+					font->ft_data[i] = 255;
+				else if (font->ft_data[i] == 255)
+					font->ft_data[i] = 0;
+			}
+
+		}
+#endif
+
 		build_colormap_good( &palette, colormap, freq );
-	
-		colormap[255] = 255;
+
+		colormap[TRANSPARENCY_COLOR] = TRANSPARENCY_COLOR;		// chaged from colormap[255] = 255 to this for macintosh
 
 		decode_data_asm(font->ft_data, ptr-font->ft_data, colormap, freq );
+
 	}
 
 	cfclose(fontfile);
@@ -1086,6 +1387,95 @@ grs_font * gr_init_font( char * fontname )
 
 	return font;
 
+}
+
+//remap a font by re-reading its data & palette
+void gr_remap_font( grs_font *font, char * fontname )
+{
+	int i;
+	int nchars;
+	CFILE *fontfile;
+	int file_id;
+	int datasize;		//size up to (but not including) palette
+	int data_ofs,data_len;
+
+	if (! (font->ft_flags & FT_COLOR))
+		return;
+
+	fontfile = cfopen(fontname, "rb");
+
+	if (!fontfile)
+		Error( "Can't open font file %s", fontname );
+
+	file_id = cfile_read_int(fontfile);
+	datasize = cfile_read_int(fontfile);
+
+	if (file_id != 'NFSP')
+		Error( "File %s is not a font file", fontname );
+
+	nchars = font->ft_maxchar-font->ft_minchar+1;
+
+	//compute data length
+	data_len = 0;
+	if (font->ft_flags & FT_PROPORTIONAL) {
+
+		for (i=0; i< nchars; i++ ) {
+			if (font->ft_flags & FT_COLOR)
+				data_len += font->ft_widths[i] * font->ft_h;
+			else
+				data_len += BITS_TO_BYTES(font->ft_widths[i]) * font->ft_h;
+		}
+
+	} else
+		data_len = nchars * font->ft_w * font->ft_h;
+
+	data_ofs = font->ft_data - ((ubyte *) font);
+
+	cfseek(fontfile,data_ofs,SEEK_CUR);
+	cfread(font->ft_data,1,data_len,fontfile);		//read raw data
+
+	if (font->ft_flags & FT_COLOR) {		//remap palette
+		ubyte palette[256*3];
+		ubyte colormap[256];
+		int freq[256];
+
+		cfseek(fontfile,-sizeof(palette),SEEK_END);
+
+		cfread(palette,3,256,fontfile);		//read the palette
+
+#ifdef MACINTOSH			// swap the first and last palette entries (black and white)
+		{
+			int i;
+			ubyte c;
+
+			for (i = 0; i < 3; i++) {
+				c = palette[i];
+				palette[i] = palette[765+i];
+				palette[765+i] = c;
+			}
+
+//  we also need to swap the data entries as well.  black is white and white is black
+
+			for (i = 0; i < data_len; i++) {
+				if (font->ft_data[i] == 0)
+					font->ft_data[i] = 255;
+				else if (font->ft_data[i] == 255)
+					font->ft_data[i] = 0;
+			}
+
+		}
+#endif
+
+		build_colormap_good( &palette, colormap, freq );
+
+		colormap[TRANSPARENCY_COLOR] = TRANSPARENCY_COLOR;	// changed from		colormap[255] = 255;
+
+		decode_data_asm(font->ft_data, data_len, colormap, freq );
+
+
+	}
+
+	cfclose(fontfile);
 }
 
 
@@ -1107,7 +1497,7 @@ int gr_internal_string_clipped(int x, int y, char *s )
 	char * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
 	int x1 = x, last_x;
-	
+
 	next_row = s;
 
 	while (next_row != NULL )
@@ -1131,8 +1521,20 @@ int gr_internal_string_clipped(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					Int3();	//	Warning: skip lines not supported for clipped strings.
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )	{
+				if (*text_ptr == CC_UNDERLINE )	{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
 					text_ptr++;
@@ -1156,7 +1558,7 @@ int gr_internal_string_clipped(int x, int y, char *s )
 				if (underline)	{
 					for (i=0; i< width; i++ )	{
 						gr_setcolor(FG_COLOR);
-						gr_pixel( x++, y );						
+						gr_pixel( x++, y );
 					}
 				} else {
 					fp += BITS_TO_BYTES(width)*r;
@@ -1168,11 +1570,11 @@ int gr_internal_string_clipped(int x, int y, char *s )
 							bits = *fp++;
 							BitMask = 0x80;
 						}
-						if (bits & BitMask)	
+						if (bits & BitMask)
 							gr_setcolor(FG_COLOR);
 						else
 							gr_setcolor(BG_COLOR);
-						gr_pixel( x++, y );						
+						gr_pixel( x++, y );
 						BitMask >>= 1;
 					}
 				}
@@ -1193,7 +1595,7 @@ int gr_internal_string_clipped_m(int x, int y, char *s )
 	char * text_ptr, * next_row, * text_ptr1;
 	int r, BitMask, i, bits, width, spacing, letter, underline;
 	int x1 = x, last_x;
-	
+
 	next_row = s;
 
 	while (next_row != NULL )
@@ -1218,8 +1620,20 @@ int gr_internal_string_clipped_m(int x, int y, char *s )
 					break;
 				}
 
+				if (*text_ptr == CC_COLOR) {
+					FG_COLOR = *(text_ptr+1);
+					text_ptr += 2;
+					continue;
+				}
+
+				if (*text_ptr == CC_LSPACING) {
+					Int3();	//	Warning: skip lines not supported for clipped strings.
+					text_ptr += 2;
+					continue;
+				}
+
 				underline = 0;
-				if (*text_ptr == '&' )	{
+				if (*text_ptr == CC_UNDERLINE )	{
 					if ((r==FBASELINE+2) || (r==FBASELINE+3))
 						underline = 1;
 					text_ptr++;
@@ -1243,7 +1657,7 @@ int gr_internal_string_clipped_m(int x, int y, char *s )
 				if (underline)	{
 					for (i=0; i< width; i++ )	{
 						gr_setcolor(FG_COLOR);
-						gr_pixel( x++, y );						
+						gr_pixel( x++, y );
 					}
 				} else {
 					fp += BITS_TO_BYTES(width)*r;
@@ -1260,7 +1674,7 @@ int gr_internal_string_clipped_m(int x, int y, char *s )
 							gr_pixel( x++, y );
 						} else {
 							x++;
-						}						
+						}
 						BitMask >>= 1;
 					}
 				}
@@ -1274,4 +1688,3 @@ int gr_internal_string_clipped_m(int x, int y, char *s )
 	}
 	return 0;
 }
-

@@ -1,17 +1,11 @@
 #
 # $Source: f:/miner/source/2d/rcs/makefile $
-# $Revision: 1.35 $
-# $Author: john $
-# $Date: 1995/01/29 17:08:57 $
+# $Revision: 1.44 $
+# $Author: matt $
+# $Date: 1996/12/04 18:52:36 $
 #
 # Makefile for bios functions
 #
-
-LIBDIR = ..\main
-
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
 
 # What to install, and where to install it
 INSTALL_TARGS = effect2d.h gr.h gr.lib grdef.h gr.inc palette.h ibitblt.h rle.h pcx.h
@@ -24,18 +18,18 @@ LIBS = gr
 
 # What test programs to make
 #TEST_PROGS = testg testp vesatest
-PROGS = testg
+#PROGS = testg
 
 # What object files for the lib
-GR_OBJS = linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
+GR_OBJS = linear.obj canvas.obj bitmap.obj gr.obj font.obj \
 	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
+	gpixel.obj line.obj lbitblt.obj	   \
 	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
 #effects.obj roller.obj 
 
 # What object files and libs for the test programs
-TESTG_SRCS = testg.c tmapbits.c
-TESTG_LIBS = io.lib gr.lib misc.lib mem.lib iff.lib  cfile.lib
+#TESTG_SRCS = testg.c tmapbits.c
+#TESTG_LIBS = io.lib gr.lib misc.lib mem.lib iff.lib  cfile.lib
 
 #TESTP_OBJS = testp.obj
 #TESTP_LIBS = io.lib gr.lib misc.lib mem.lib cflib.lib 
@@ -43,82 +37,81 @@ TESTG_LIBS = io.lib gr.lib misc.lib mem.lib iff.lib  cfile.lib
 #VESATEST_OBJS = vesatest.obj
 #VESATEST_LIBS = io.lib gr.lib misc.lib mem.lib cflib.lib 
 
-gr.lib: linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
-	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
 
-	wlib gr.lib linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-		bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-		gpixel.obj palette.obj line.obj lbitblt.obj        \
-		scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
-	copy *.lib $(LIBDIR)
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
 
-bitblt.obj: bitblt.c
-	wcc386 $(CCFLAGS) bitblt.c
-bitmap.obj: bitmap.c
-	wcc386 $(CCFLAGS) bitmap
-box.obj: box.c
-	wcc386 $(CCFLAGS) box
-canvas.obj: canvas.c
-	wcc386 $(CCFLAGS) canvas.c
-circle.obj: circle.c
-	wcc386 $(CCFLAGS) circle.c
-disc.obj: disc.c
-	wcc386 $(CCFLAGS) disc.c
-effects.obj: effects.c
-	wcc386 $(CCFLAGS) effects.c
-fdraw.obj: fdraw.c
-	wcc386 $(CCFLAGS) fdraw.c
-font.obj: font.c
-	wcc386 $(CCFLAGS) font.c
-gpixel.obj: gpixel.c
-	wcc386 $(CCFLAGS) gpixel.c
-gr.obj:  gr.c
-	wcc386 $(CCFLAGS) gr.c
-ibitblt.obj: ibitblt.c
-	wcc386 $(CCFLAGS) ibitblt.c
-inv_cmap.obj: inv_cmap.c
-	wcc386 $(CCFLAGS) inv_cmap.c
-l.obj:   l.obj
-	wcc386 $(CCFLAGS) l.c
-lbitblt.obj: lbitblt.asm
-	masm lbitblt.asm
-line.obj: line.c
-	wcc386 $(CCFLAGS) line.c
-linear.obj: linear.asm
-	masm linear.asm linear.obj
-median.obj: median.c
-	wcc386 $(CCFLAGS) median.c
-mspeed.obj: mspeed.c
-	wcc386 $(CCFLAGS) mspeed.c
-modex.obj: modex.asm
-	masm modex.asm
-palette.obj: palette.c
-	wcc386 $(CCFLAGS) palette.c
-pcx.obj: pcx.c
-	wcc386 $(CCFLAGS) pcx.c
-pixel.obj: pixel.c
-	wcc386 $(CCFLAGS) pixel.c
-poly.obj: poly.c
-	wcc386 $(CCFLAGS) poly.c
-rect.obj: rect.c
-	wcc386 $(CCFLAGS) rect.c
-rle.obj: rle.c
-	wcc386 $(CCFLAGS) rle.c
-roller.obj: roller.c
-	wcc386 $(CCFLAGS) roller.c
-scale.obj: scale.c
-	wcc386 $(CCFLAGS) scale.c
-scalea.obj: scalea.asm
-	masm scalea.asm scalea.obj 
-scanline.obj: scanline.c
-	wcc386 $(CCFLAGS) scanline.c
-testg.obj: testg.c
-	wcc386 $(CCFLAGS) testg.c
-vesa.obj: vesa.asm
-	masm vesa.asm
-vesalib.obj: vesalib.c
-	wcc386 $(CCFLAGS) vesalib.c
-vesatest.obj: vesatest.c
-	wcc386 $(CCFLAGS) vesatest.c
+bitblt.obj: byteswap.h error.h fix.h gr.h grdef.h mem.h mono.h pa_enabl.h \
+	 poly_acc.h pstypes.h rle.h
+
+bitmap.obj: error.h fix.h gr.h grdef.h malloc.h mem.h pa_enabl.h poly_acc.h \
+	 pstypes.h stdio.h stdlib.h
+
+box.obj: fix.h gr.h grdef.h mem.h pstypes.h
+
+canvas.obj: error.h fix.h gr.h grdef.h malloc.h mem.h pa_enabl.h poly_acc.h \
+	 pstypes.h stdio.h stdlib.h
+
+circle.obj: fix.h gr.h grdef.h mem.h pstypes.h
+
+disc.obj: fix.h gr.h grdef.h mem.h pstypes.h
+
+effects.obj: effect2d.h fix.h gr.h grdef.h mem.h pstypes.h stdio.h stdlib.h
+
+font.obj: byteswap.h cfile.h error.h fcntl.h fix.h gr.h grdef.h io.h mem.h \
+	 mono.h pa_enabl.h poly_acc.h pstypes.h stat.h stdarg.h stdio.h \
+	 stdlib.h string.h types.h unistd.h
+
+gpixel.obj: error.h fix.h gr.h grdef.h mem.h pa_enabl.h poly_acc.h \
+	 pstypes.h
+
+gr.obj:	 conio.h dos.h dpmi.h error.h fix.h gr.h grdef.h i86.h malloc.h \
+	 mem.h mono.h pa_enabl.h palette.h poly_acc.h pstypes.h stdio.h \
+	 stdlib.h string.h types.h
+
+ibitblt.obj: conio.h dos.h error.h fix.h gr.h grdef.h i86.h ibitblt.h mem.h \
+	 pa_enabl.h poly_acc.h pstypes.h stdio.h stdlib.h string.h types.h
+
+lbitblt.obj: fix.inc gr.inc psmacros.inc pstypes.inc
+
+line.obj: clip.h fix.h gr.h grdef.h mem.h pa_enabl.h poly_acc.h pstypes.h \
+	 stdlib.h
+
+linear.obj: psmacros.inc
+
+macstubs.obj: error.h fix.h gr.h pstypes.h
+
+mspeed.obj: conio.h fix.h gr.h grdef.h math.h pstypes.h stdio.h stdlib.h \
+	 timer.h
+
+paging.obj: psmacros.inc pstypes.inc
+
+pcx.obj: byteswap.h cfile.h fix.h gr.h grdef.h mem.h pa_enabl.h pcx.h \
+	 poly_acc.h pstypes.h stdio.h stdlib.h string.h
+
+pflow.obj: psmacros.inc pstypes.inc
+
+pixel.obj: error.h fix.h gr.h grdef.h mem.h pa_enabl.h poly_acc.h pstypes.h
+
+poly.obj: fix.h gr.h grdef.h mem.h pstypes.h
+
+rect.obj: fix.h gr.h grdef.h mem.h pa_enabl.h poly_acc.h pstypes.h
+
+rle.obj: dpmi.h error.h fix.h gr.h grdef.h key.h malloc.h mem.h mono.h \
+	 pa_enabl.h poly_acc.h pstypes.h stdio.h stdlib.h string.h
+
+scale.obj: conio.h error.h fix.h gr.h limits.h math.h mono.h pa_enabl.h \
+	 poly_acc.h pstypes.h rle.h stdio.h stdlib.h
+
+scalea.obj: psmacros.inc pstypes.inc
+
+scalemac.obj: error.h fix.h gr.h grdef.h pstypes.h
+
+scanline.obj: fix.h gr.h grdef.h mem.h pa_enabl.h poly_acc.h pstypes.h
+
+selector.obj: psmacros.inc pstypes.inc
+
+vesalib.obj: dpmi.h pstypes.h
+
+vesatest.obj: conio.h fix.h gr.h malloc.h pstypes.h stdio.h stdlib.h

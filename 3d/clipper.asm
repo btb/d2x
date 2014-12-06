@@ -1,48 +1,18 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/clipper.asm $
-; $Revision: 1.6 $
-; $Author: matt $
-; $Date: 1994/07/25 00:00:02 $
-;
-; Source for clipper
-;
-; $Log: clipper.asm $
-; Revision 1.6  1994/07/25  00:00:02  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.5  1994/02/10  18:00:38  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.4  1994/01/13  15:39:09  mike
-; Change usage of Frame_count to _Frame_count
-; 
-; Revision 1.3  1993/11/04  18:48:39  matt
-; Added system to only rotate points once per frame
-; 
-; Revision 1.2  1993/11/04  12:36:25  mike
-; Add clipping for lighting value.
-; 
-; Revision 1.1  1993/10/29  22:20:27  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 .386
 	option	oldstructs
 
 	.nolist
-	include	types.inc
+	include	pstypes.inc
 	include	psmacros.inc
 	include	gr.inc
 	include	3d.inc
@@ -52,7 +22,7 @@
 
 _DATA	segment	dword public USE32 'DATA'
 
-rcsid	db	"$Id: clipper.asm 1.6 1994/07/25 00:00:02 matt Exp $"
+rcsid	db	"$Id: clipper.asm 1.10 1996/02/14 09:59:55 matt Exp $"
 	align	4
 
  public free_point_num
@@ -100,6 +70,20 @@ free_temp_point:	push	eax
 	mov	free_points[eax*4],esi
 	pop	eax
 	ret
+
+;initialize the free points
+reset_temp_points:	debug_brk	'how often does this get called?'
+	pushm	edi,eax,ecx
+	mov	free_point_num,0
+	lea	edi,free_points
+	lea	eax,temp_points
+	mov	ecx,MAX_POINTS_IN_POLY
+reset_loop:	stosd
+	add	eax,size g3s_point
+	loop	reset_loop
+	popm	edi,eax,ecx
+	ret
+
 
 ;clip a particular value (eg. x, y, u). 
 ;assumes esi,edi=start,end points, ebp=dest point, and ebx/ecx=fraction

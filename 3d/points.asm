@@ -1,71 +1,18 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/points.asm $
-; $Revision: 1.13 $
-; $Author: matt $
-; $Date: 1995/02/09 22:00:05 $
-;
-; Source for point definition, rotation, etc.
-;
-; $Log: points.asm $
-; Revision 1.13  1995/02/09  22:00:05  matt
-; Removed dependence on divide overflow handler; we now check for overflow
-; before dividing.  This fixed problems on some TI chips.
-; 
-; Revision 1.12  1994/11/11  19:22:06  matt
-; Added new function, g3_calc_point_depth()
-; 
-; Revision 1.11  1994/07/25  00:00:04  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.10  1994/07/21  09:53:32  matt
-; Made g3_point_2_vec() take 2d coords relative to upper left, not center
-; 
-; Revision 1.9  1994/02/10  18:00:41  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.8  1994/02/09  11:48:55  matt
-; Added delta rotation functions
-; 
-; Revision 1.7  1994/01/13  15:39:39  mike
-; Change usage of Frame_count to _Frame_count.
-; 
-; Revision 1.6  1993/12/21  20:35:35  matt
-; Fixed bug that left register pushed if point was already projected in
-; g3_project_list()
-; 
-; Revision 1.5  1993/12/21  11:45:37  matt
-; Fixed negative y bug in g3_point_2_vec()
-; 
-; Revision 1.4  1993/12/20  20:21:51  matt
-; Added g3_point_2_vec()
-; 
-; Revision 1.3  1993/11/21  20:08:41  matt
-; Added function g3_rotate_point()
-; 
-; Revision 1.2  1993/11/04  18:49:17  matt
-; Added system to only rotate points once per frame
-; 
-; Revision 1.1  1993/10/29  22:20:27  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 .386
 	option	oldstructs
 
 	.nolist
-	include	types.inc
+	include	pstypes.inc
 	include	psmacros.inc
 	include	gr.inc
 	include	3d.inc
@@ -75,7 +22,7 @@
 
 _DATA	segment	dword public USE32 'DATA'
 
-rcsid	db	"$Id: points.asm 1.13 1995/02/09 22:00:05 matt Exp $"
+rcsid	db	"$Id: points.asm 1.14 1996/01/08 14:59:12 matt Exp $"
 	align	4
 
 tempv	vms_vector <>

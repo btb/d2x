@@ -1,126 +1,20 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/draw.asm $
-; $Revision: 1.30 $
-; $Author: matt $
-; $Date: 1995/02/15 02:26:52 $
-;
-; Source for drawing routines
-;
-; $Log: draw.asm $
-; Revision 1.30  1995/02/15  02:26:52  matt
-; Put in added handling for odd clipping error
-; 
-; Revision 1.29  1995/02/10  16:41:41  matt
-; Put in check for bad points after clip
-; 
-; Revision 1.28  1995/02/09  22:00:52  matt
-; Removed dependence on divide overflow handler; we now check for overflow
-; before dividing.  This fixed problems on some TI chips.
-; 
-; Revision 1.27  1994/11/30  00:59:32  mike
-; optimizations.
-; 
-; Revision 1.26  1994/10/03  12:52:04  matt
-; Fixed typo
-; 
-; Revision 1.25  1994/10/03  12:49:56  matt
-; Took out unused routines & data
-; 
-; Revision 1.24  1994/07/24  23:59:34  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.23  1994/05/30  11:36:26  matt
-; Added g3_set_special_render() to allow a user to specify functions to
-; call for 2d draws.
-; 
-; Revision 1.22  1994/05/19  21:46:13  matt
-; Moved texture lighting out of 3d and into the game
-; 
-; Revision 1.21  1994/05/13  17:06:18  matt
-; Finished ripping out intersected side lighting code
-; 
-; Revision 1.20  1994/05/13  17:02:58  matt
-; Took our special side lighting code
-; 
-; Revision 1.19  1994/04/19  18:45:19  matt
-; Now call the clipped disk, which it should have done all along, but
-; John had only implemented the unclipped disk, and it clipped anyway.
-; 
-; Revision 1.18  1994/04/19  18:26:42  matt
-; Added g3_draw_sphere() function.
-; 
-; Revision 1.17  1994/04/19  17:03:40  matt
-; For polygons, call the texture-mapper's flat shader
-; 
-; Revision 1.16  1994/03/18  15:58:37  matt
-; Fixed bug that caused light vals to be screwed up
-; 
-; Revision 1.15  1994/03/14  12:37:31  matt
-; Made draw routines check for rotated points
-; 
-; Revision 1.14  1994/02/10  18:00:39  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.13  1994/02/09  11:48:16  matt
-; Changes return codes for drawing functions
-; 
-; Revision 1.12  1994/02/01  13:23:05  matt
-; Added use_beam var to turn off beam lighting
-; 
-; Revision 1.11  1994/01/26  20:27:18  mike
-; bright light on very near side.
-; 
-; Revision 1.10  1994/01/26  12:49:26  matt
-; Made lighting computation a seperate function, g3_compute_lighting_value.
-; Note the unwieldy function name, courtesy of Mike.
-; 
-; Revision 1.9  1994/01/25  16:38:02  yuan
-; Fixed beam_brightness
-; 
-; Revision 1.8  1994/01/24  11:08:49  matt
-; Added beam_brightness variable
-; 
-; Revision 1.7  1994/01/22  18:22:09  matt
-; New lighting stuff now done in 3d; g3_draw_tmap() takes lighting parm
-; 
-; Revision 1.6  1993/12/05  23:47:14  matt
-; Added function g3_draw_line_ptrs()
-; 
-; Revision 1.5  1993/11/22  10:51:29  matt
-; Changed texture map function comments to reflect uvl (not just uv) struct
-; 
-; Revision 1.4  1993/11/17  10:40:02  matt
-; Added check for zero-length normal in do_facing_check
-; 
-; Revision 1.3  1993/11/04  18:49:14  matt
-; Added system to only rotate points once per frame
-; 
-; Revision 1.2  1993/11/04  12:36:36  mike
-; Add support for static lighting value.
-; 
-; Revision 1.1  1993/10/29  22:20:27  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 DONT_USE_UPOLY = 1
 
 .386
 	option	oldstructs
 
 	.nolist
-	include	types.inc
+	include	pstypes.inc
 	include	psmacros.inc
 	include	gr.inc
 	include	3d.inc
@@ -128,9 +22,10 @@ DONT_USE_UPOLY = 1
 
 	assume	cs:_TEXT, ds:_DATA
 
+
 _DATA	segment	dword public USE32 'DATA'
 
-rcsid	db	"$Id: draw.asm 1.30 1995/02/15 02:26:52 matt Exp $"
+rcsid	db	"$Id: draw.asm 1.33 1996/02/14 09:59:13 matt Exp $"
 	align	4
 
 tempv	vms_vector <>
@@ -259,6 +154,8 @@ not_temp_esi:	test	[edi].p3_flags,PF_TEMP_POINT
 	xchg	esi,edi
 	call	free_temp_point
 not_temp_edi:
+	check_free_points
+
 	ret	;ret code set from g3_draw_line
 
 
@@ -479,6 +376,8 @@ not_temp:	inc	ebx
 	cmp	ebx,ecx
 	jne	free_loop
 
+	check_free_points
+
 	pop	eax	;get ret codes back
 
 	popm	ebx,edi
@@ -618,6 +517,8 @@ t_free_loop:	mov	esi,[edi+ebx]	;get point
 	call	free_temp_point
 t_not_temp:	sub	ebx, 4
 	jns	t_free_loop
+
+	check_free_points
 
 	pop	eax	;get ret code
 

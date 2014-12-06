@@ -8,65 +8,11 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/terrain.c $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:27 $
- * 
- * Code to render cool external-scene terrain
- * 
- * $Log: terrain.c $
- * Revision 2.0  1995/02/27  11:31:27  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.12  1994/12/03  00:18:00  matt
- * Made endlevel sequence cut off early
- * Made exit model and bit explosion always plot last (after all terrain)
- * 
- * Revision 1.11  1994/11/27  23:13:46  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.10  1994/11/21  18:04:36  matt
- * Fixed alloc/free problem with height array
- * 
- * Revision 1.9  1994/11/21  17:30:42  matt
- * Properly free light array
- * 
- * Revision 1.8  1994/11/19  12:40:55  matt
- * Added system to read endlevel data from file, and to make it work
- * with any exit tunnel.
- * 
- * Revision 1.7  1994/11/16  11:49:44  matt
- * Added code to rotate terrain to match mine
- * 
- * Revision 1.6  1994/11/02  16:22:59  matt
- * Killed mprintf
- * 
- * Revision 1.5  1994/10/30  20:09:19  matt
- * For endlevel: added big explosion at tunnel exit; made lights in tunnel 
- * go out; made more explosions on walls.
- * 
- * Revision 1.4  1994/10/27  21:15:07  matt
- * Added better error handling
- * 
- * Revision 1.3  1994/10/27  01:03:17  matt
- * Made terrain renderer use aribtary point in height array as origin
- * 
- * Revision 1.2  1994/08/19  20:09:44  matt
- * Added end-of-level cut scene with external scene
- * 
- * Revision 1.1  1994/08/17  20:20:49  matt
- * Initial revision
- * 
- * 
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: terrain.c 2.0 1995/02/27 11:31:27 john Exp $";
+static char rcsid[] = "$Id: terrain.c 2.1 1995/04/19 15:28:07 samir Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -124,7 +70,14 @@ int org_i,org_j;
 
 int mine_tiles_drawn;		//flags to tell if all 4 tiles under mine have drawn
 
-draw_cell(int i,int j,g3s_point *p0,g3s_point *p1,g3s_point *p2,g3s_point *p3)
+
+//	LINT: adding function prototypes
+void build_light_table(void);
+void free_light_table(void);
+
+
+// ------------------------------------------------------------------------
+void draw_cell(int i,int j,g3s_point *p0,g3s_point *p1,g3s_point *p2,g3s_point *p3)
 {
 	g3s_point *pointlist[3];
 
@@ -380,7 +333,7 @@ void render_terrain(vms_vector *org_point,int org_2dx,int org_2dy)
 
 }
 
-free_height_array()
+void free_height_array()
 {
 	free(height_array);
 }
@@ -437,7 +390,7 @@ void load_terrain(char *filename)
 }
 
 
-get_pnt(vms_vector *p,int i,int j)
+void get_pnt(vms_vector *p,int i,int j)
 {
 	p->x = GRID_SCALE*i;
 	p->z = GRID_SCALE*j;
@@ -477,14 +430,14 @@ fix get_avg_light(int i,int j)
 	return sum/6;
 }
 
-free_light_table()
+void free_light_table()
 {
 	if (light_array)
 		free(light_array);
 
 }
 
-build_light_table()
+void build_light_table()
 {
 	int i,j;
 	fix l,l2,min_l=0x7fffffff,max_l=0;
@@ -495,8 +448,8 @@ build_light_table()
 	else
 		atexit(free_light_table);		//first time
 
-	//MALLOC(light_array,ubyte,grid_w*grid_h); //Won't comile -KRB
-	light_array = (ubyte *)malloc(grid_w*grid_h+(sizeof(ubyte))); //my hack -KRB
+	MALLOC(light_array,ubyte,grid_w*grid_h);
+
 	for (i=1;i<grid_w;i++)
 		for (j=1;j<grid_h;j++) {
 			l = get_avg_light(i,j);

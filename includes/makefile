@@ -1,19 +1,14 @@
 #
 # $Source: f:/miner/source/includes/rcs/makefile $
-# $Revision: 1.1 $
+# $Revision: 1.2 $
 # $Author: matt $
-# $Date: 1993/11/04 10:24:14 $
+# $Date: 1995/12/21 13:59:42 $
 #
 # Makefile for macro and header files
 #
 
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
 # What to install
-INSTALL_TARGS = types.h types.inc psmacros.inc
+INSTALL_TARGS = pstypes.h pstypes.inc psmacros.inc
 
 # What to clean
 CLEAN_TARGS = $(OBJDIR)\*.obj
@@ -25,6 +20,10 @@ TEST_PROGS = test
 TEST_SRCS = test.c mactest.c
 TEST_LIBS = io.lib
 
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
 
 mactest.obj: psmacros.inc
 

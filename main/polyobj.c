@@ -8,113 +8,23 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/polyobj.c $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/05/26 16:10:37 $
- * 
- * Hacked-in polygon objects
- * 
- * $Log: polyobj.c $
- * Revision 2.1  1995/05/26  16:10:37  john
- * Support for new 4-byte align v8 pof files.
- * 
- * Revision 2.0  1995/02/27  11:32:44  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.64  1995/01/14  19:16:43  john
- * First version of new bitmap paging code.
- * 
- * Revision 1.63  1994/12/14  18:06:54  matt
- * Removed compile warnings
- * 
- * Revision 1.62  1994/12/09  17:54:31  john
- * Made the CFILE's close right after reading in data.
- * 
- * Revision 1.61  1994/12/09  16:13:28  mike
- * speedup pof file reading, but still horribly slow using hog file...problem somewhere else.
- * 
- * Revision 1.60  1994/12/08  17:41:20  yuan
- * Cfiling stuff.
- * 
- * Revision 1.59  1994/11/21  11:02:19  matt
- * Added error checking
- * 
- * Revision 1.58  1994/11/14  11:32:49  matt
- * Allow switching to simpler models even when alt_textures specified
- * 
- * Revision 1.57  1994/11/13  21:15:24  matt
- * Added basic support for more than one level of detail simplification
- * 
- * Revision 1.56  1994/11/11  19:29:25  matt
- * Added code to show low detail polygon models
- * 
- * Revision 1.55  1994/11/10  14:02:57  matt
- * Hacked in support for player ships with different textures
- * 
- * Revision 1.54  1994/11/03  11:01:59  matt
- * Made robot pics lighted
- * 
- * Revision 1.53  1994/11/02  16:18:34  matt
- * Moved draw_model_picture() out of editor
- * 
- * Revision 1.52  1994/10/18  14:38:11  matt
- * Restored assert now that bug is fixed
- * 
- * Revision 1.51  1994/10/17  21:35:03  matt
- * Added support for new Control Center/Main Reactor
- * 
- * Revision 1.50  1994/10/14  17:46:23  yuan
- * Made the soft Int3 only work in net mode.
- * 
- * Revision 1.49  1994/10/14  17:43:47  yuan
- * Added soft int3's instead of Asserts  for some common network bugs.
- * 
- * Revision 1.48  1994/10/14  17:09:04  yuan
- * Made Assert on line 610 be if in an attempt
- * to bypass.
- * 
- * Revision 1.47  1994/09/09  14:23:42  matt
- * Added glow code to polygon models for engine glow
- * 
- * Revision 1.46  1994/08/26  18:03:30  matt
- * Added code to remap polygon model numbers by matching filenames
- * 
- * Revision 1.45  1994/08/26  15:35:58  matt
- * Made eclips usable on more than one object at a time
- * 
- * Revision 1.44  1994/08/25  18:11:58  matt
- * Made player's weapons and flares fire from the positions on the 3d model.
- * Also added support for quad lasers.
- * 
- * Revision 1.43  1994/07/25  00:14:18  matt
- * Made a couple of minor changes for the drivethrough
- * 
- * Revision 1.42  1994/07/25  00:02:41  matt
- * Various changes to accomodate new 3d, which no longer takes point numbers
- * as parms, and now only takes pointers to points.
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: polyobj.c 2.1 1995/05/26 16:10:37 john Exp $";
+static char rcsid[] = "$Id: polyobj.c 2.13 1996/07/10 16:14:59 jed Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <io.h>
 
-#ifdef DRIVE
-#include "drive.h"
-#else
+// -- I hate this warning in make depend! -- #ifdef DRIVE
+// -- I hate this warning in make depend! -- #include "drive.h"
+// -- I hate this warning in make depend! -- #else
 #include "inferno.h"
-#endif
+// -- I hate this warning in make depend! -- #endif
 
 #include "polyobj.h"
 
@@ -133,6 +43,12 @@ static char rcsid[] = "$Id: polyobj.c 2.1 1995/05/26 16:10:37 john Exp $";
 #include "lighting.h"
 #include "cfile.h"
 #include "piggy.h"
+#endif
+
+#include "pa_enabl.h"
+
+#ifdef _3DFX
+#include "3dfx_des.h"
 #endif
 
 polymodel Polygon_models[MAX_POLYGON_MODELS];	// = {&bot11,&bot17,&robot_s2,&robot_b2,&bot11,&bot17,&robot_s2,&robot_b2};
@@ -212,20 +128,20 @@ short pof_read_short(ubyte *bufp)
 //	return s;
 }
 
-pof_read_string(char *buf,int max, ubyte *bufp)
+void pof_read_string(char *buf,int max_char, ubyte *bufp)
 {
 	int	i;
 
-	for (i=0; i<max; i++) {
+	for (i=0; i<max_char; i++) {
 		if ((*buf++ = bufp[Pof_addr++]) == 0)
 			break;
 	}
 
-//	while (max-- && (*buf=cfgetc(f)) != 0) buf++;
+//	while (max_char-- && (*buf=cfgetc(f)) != 0) buf++;
 
 }
 
-pof_read_vecs(vms_vector *vecs,int n,ubyte *bufp)
+void pof_read_vecs(vms_vector *vecs,int n,ubyte *bufp)
 {
 //	cfread(vecs,sizeof(vms_vector),n,f);
 
@@ -259,7 +175,12 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 	CFILE *ifile;
 	short version;
 	int id,len, next_chunk;
-	ubyte	model_buf[MODEL_BUF_SIZE];
+	int anim_flag = 0;
+	ubyte *model_buf;
+	
+	model_buf = (ubyte *)malloc( MODEL_BUF_SIZE * sizeof(ubyte) );
+	if (!model_buf)
+		Error("Can't allocate space to read model %s\n", filename);
 
 	if ((ifile=cfopen(filename,"rb"))==NULL) 
 		Error("Can't open file <%s>",filename);
@@ -281,14 +202,14 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 		Error("Bad version (%d) in model file <%s>",version,filename);
 
 	if ( FindArg( "-bspgen" )) 
-		fprintf( stderr, "bspgen -c1" );
+		printf( "bspgen -c1" );
 
 	while (new_pof_read_int(id,model_buf) == 1) {
 
 		//id  = pof_read_int(model_buf);
 		len = pof_read_int(model_buf);
 		next_chunk = Pof_addr + len;
-						
+
 		switch (id) {
 
 			case ID_OHDR: {		//Object header
@@ -313,7 +234,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 					if ( v.y > l ) l = v.y;					
 					if ( v.z > l ) l = v.z;					
 													
-					fprintf( stderr, " -l%.3f", f2fl(l) );
+					printf( " -l%.3f", f2fl(l) );
 				}
 
 				break;
@@ -321,6 +242,8 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			
 			case ID_SOBJ: {		//Subobject header
 				int n;
+
+				anim_flag++;
 
 				//mprintf(0,"Got chunk SOBJ, len=%d\n",len);
 
@@ -350,15 +273,25 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 				if (r) {
 					int i;
 					vms_vector gun_dir;
+					ubyte gun_used[MAX_GUNS];
 
 					r->n_guns = pof_read_int(model_buf);
 
+					if ( r->n_guns )
+						anim_flag++;
+
 					Assert(r->n_guns <= MAX_GUNS);
+
+					for (i=0;i<r->n_guns;i++)
+						gun_used[i] = 0;
 
 					for (i=0;i<r->n_guns;i++) {
 						int id;
 
 						id = pof_read_short(model_buf);
+						Assert(id < r->n_guns);
+						Assert(gun_used[id] == 0);
+						gun_used[id] = 1;
 						r->gun_submodels[id] = pof_read_short(model_buf);
 						Assert(r->gun_submodels[id] != 0xff);
 						pof_read_vecs(&r->gun_points[id],1,model_buf);
@@ -376,9 +309,8 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 			case ID_ANIM:		//Animation data
 				//mprintf(0,"Got chunk ANIM, len=%d\n",len);
 
-				if ( FindArg( "-bspgen" ))
-					fprintf( stderr, " -a" );
-				
+				anim_flag++;
+
 				if (r) {
 					int n_frames,f,m;
 
@@ -441,9 +373,15 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 	if ( FindArg( "-bspgen" )) {
 		char *p = strchr( filename, '.' );
 		*p = 0;
-		fprintf( stderr, " %s.3ds\n", filename );
+
+		if ( anim_flag > 1 )
+			printf( " -a" );
+
+		printf( " %s.3ds\n", filename );
 		*p = '.';
 	}
+	
+	free(model_buf);
 
 	return pm;
 }
@@ -456,7 +394,11 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
 	short version;
 	int id,len;
 	int n_guns=0;
-	ubyte	model_buf[MODEL_BUF_SIZE];
+	ubyte	*model_buf;
+
+	model_buf = (ubyte *)malloc( MODEL_BUF_SIZE * sizeof(ubyte) );
+	if (!model_buf)
+		Error("Can't allocate space to read model %s\n", filename);
 
 	if ((ifile=cfopen(filename,"rb"))==NULL) 
 		Error("Can't open file <%s>",filename);
@@ -512,11 +454,13 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
 
 	}
 
+	free(model_buf);
+	
 	return n_guns;
 }
 
 //free up a model, getting rid of all its memory
-free_model(polymodel *po)
+void free_model(polymodel *po)
 {
 	free(po->model_data);
 }
@@ -533,6 +477,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 {
 	polymodel *po;
 	int i;
+   PA_DFX (int save_light);
 
 	Assert(model_num < N_polygon_models);
 
@@ -555,15 +500,27 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 			}
 
 	if (alt_textures)
+   {
 		for (i=0;i<po->n_textures;i++)	{
 			texture_list_index[i] = alt_textures[i];
 			texture_list[i] = &GameBitmaps[alt_textures[i].index];
+
+         #ifdef _3DFX
+         texture_list[i]->bm_handle = texture_list_index[i].index;
+         #endif
 		}
+   }
 	else
+   {
 		for (i=0;i<po->n_textures;i++)	{
 			texture_list_index[i] = ObjBitmaps[ObjBitmapPtrs[po->first_texture+i]];
 			texture_list[i] = &GameBitmaps[ObjBitmaps[ObjBitmapPtrs[po->first_texture+i]].index];
+
+         #ifdef _3DFX
+         texture_list[i]->bm_handle = texture_list_index[i].index;
+         #endif
 		}
+   }
 
 #ifdef PIGGY_USE_PAGING
 	// Make sure the textures for this object are paged in...
@@ -584,6 +541,12 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 	g3_start_instance_matrix(pos,orient);
 
 	g3_set_interp_points(robot_points);
+
+#ifdef _3DFX
+   _3dfx_rendering_poly_obj = 1;
+#endif
+	PA_DFX(save_light = Lighting_on);
+	PA_DFX(Lighting_on = 0);
 
 	if (flags == 0)		//draw entire object
 
@@ -612,9 +575,16 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 
 	g3_done_instance();
 
+#ifdef _3DFX
+   _3dfx_rendering_poly_obj = 0;
+#endif
+
+	PA_DFX (Lighting_on = save_light);
+
+
 }
 
-free_polygon_models()
+void free_polygon_models()
 {
 	int i;
 
@@ -624,7 +594,7 @@ free_polygon_models()
 
 }
 
-polyobj_find_min_max(polymodel *pm)
+void polyobj_find_min_max(polymodel *pm)
 {
 	ushort nverts;
 	vms_vector *vp;
@@ -689,7 +659,7 @@ polyobj_find_min_max(polymodel *pm)
 
 extern short highest_texture_num;	//from the 3d
 
-char Pof_names[MAX_POLYGON_MODELS][13];
+char Pof_names[MAX_POLYGON_MODELS][FILENAME_LEN];
 
 //returns the number of this model
 #ifndef DRIVE
@@ -705,7 +675,9 @@ int load_polygon_model(char *filename,int n_textures,grs_bitmap ***textures)
 	Assert(N_polygon_models < MAX_POLYGON_MODELS);
 	Assert(n_textures < MAX_POLYOBJ_TEXTURES);
 
-	mprintf(( 0, "Used %d/%d polygon model slots\n", N_polygon_models+1, MAX_POLYGON_MODELS ));
+	//	MK was real tired of those useless, slow mprintfs...
+	if (N_polygon_models > MAX_POLYGON_MODELS - 10)
+		mprintf(( 0, "Used %d/%d polygon model slots\n", N_polygon_models+1, MAX_POLYGON_MODELS ));
 
 	Assert(strlen(filename) <= 12);
 	strcpy(Pof_names[N_polygon_models],filename);
@@ -732,11 +704,11 @@ int load_polygon_model(char *filename,int n_textures,grs_bitmap ***textures)
 }
 
 
-init_polygon_models()
+void init_polygon_models()
 {
 	N_polygon_models = 0;
 
-	atexit(free_polygon_models);
+	atexit((void (*)())free_polygon_models);
 
 }
 
@@ -749,12 +721,12 @@ init_polygon_models()
 //more-or-less fill the canvas.  Note that this routine actually renders
 //into an off-screen canvas that it creates, then copies to the current
 //canvas.
-draw_model_picture(int mn,vms_angvec *orient_angles)
+void draw_model_picture(int mn,vms_angvec *orient_angles)
 {
 	vms_vector	temp_pos=ZERO_VECTOR;
 	vms_matrix	temp_orient = IDENTITY_MATRIX;
 	grs_canvas	*save_canv = grd_curcanv,*temp_canv;
-	//int			save_light;
+	int	save_light;
 
 	Assert(mn>=0 && mn<N_polygon_models);
 
@@ -772,10 +744,10 @@ draw_model_picture(int mn,vms_angvec *orient_angles)
 
 	vm_angles_2_matrix(&temp_orient, orient_angles);
 
-	//save_light = Lighting_on;
-	//Lighting_on = 0;
+	PA_DFX(save_light = Lighting_on);
+	PA_DFX(Lighting_on = 0);
 	draw_polygon_model(&temp_pos,&temp_orient,NULL,mn,0,f1_0,NULL,NULL);
-	//Lighting_on = save_light;
+	PA_DFX (Lighting_on = save_light);
 
 	gr_set_current_canvas(save_canv);
 
@@ -784,4 +756,3 @@ draw_model_picture(int mn,vms_angvec *orient_angles)
 	gr_free_canvas(temp_canv);
 }
 
-

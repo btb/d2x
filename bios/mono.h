@@ -8,37 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/mono.h $
- * $Revision: 1.6 $
- * $Author: matt $
- * $Date: 1994/12/03 17:07:37 $
- *
- * Header for monochrome/mprintf functions
- *
- * $Log: mono.h $
- * Revision 1.6  1994/12/03  17:07:37  matt
- * Made mono code turn off with either NDEBUG or NMONO
- * 
- * Revision 1.5  1994/11/27  23:07:28  matt
- * Made changes needed to be able to compile out monochrome debugging code
- * 
- * Revision 1.4  1993/12/07  12:33:28  john
- * *** empty log message ***
- * 
- * Revision 1.3  1993/09/14  20:54:50  matt
- * Made minit() check for mono card, return -1 if present, 0 if not
- * 
- * Revision 1.2  1993/07/22  13:05:40  john
- * added macros to print variables
- * 
- * Revision 1.1  1993/07/10  13:10:40  matt
- * Initial revision
- * 
- *
- */
 
 #ifndef _MONO_H
 #define _MONO_H
@@ -70,15 +41,15 @@ extern void mclear( int n );
 
 //==========================================================================
 // Prints a formatted string on window n
-extern void _mprintf( int n, char * format, ... );
+extern void mprintf( int n, char * format, ... );
 
-#define mprintf(args) _mprintf args
+#define mprintf(args) mprintf args
 
 //==========================================================================
 // Prints a formatted string on window n at row, col.
-extern void _mprintf_at( int n, int row, int col, char * format, ... );
+extern void mprintf_at( int n, int row, int col, char * format, ... );
 
-#define mprintf_at(args) _mprintf_at args
+#define mprintf_at(args) mprintf_at args
 
 //==========================================================================
 // Puts a char in window n at current cursor position

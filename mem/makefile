@@ -7,12 +7,6 @@
 # Makefile for memory debugging
 #
 
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
-
 # What to install, and where to install it
 INSTALL_TARGS = mem.lib mem.h
 
@@ -24,8 +18,9 @@ LIBS = mem
 
 MEM_OBJS = mem.obj
 
-mem.lib: $(MEM_OBJS)
-	wlib mem.lib $(MEM_OBJS)
-	copy *.lib $(LIBDIR)
-mem.obj: mem.h mem.c
-	wcc386 $(CCFLAGS) mem.c
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+mem.obj: dos.h i86.h mono.h stdarg.h stdio.h stdlib.h string.h

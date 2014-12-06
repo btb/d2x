@@ -8,58 +8,70 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-*/
-/*
-	TESTMS.C - Mouse testing routines
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
 
 #include "mouse.h"
 #include "key.h"
-#include "timer.h"
+
+short i_dx, i_dy, i_b, i_f, i_happend;
+
+void John( mouse_event * evt )
+{
+	i_dx = evt->dx;
+	i_dy = evt->dy;
+	i_b = evt->buttons;
+	i_f = evt->flags;
+	i_happend = 1;
+}
 
 void main (void)
 {
-	int x, y, dx, dy,  b;
-	fix dt1, dt2, dt3;
-	fix t;
+	short x, y, dx, dy, i, b;
 
 	printf( "This tests the mouse interface. ESC exits.\n" );
 
-	dpmi_init();
-	key_init();
-	timer_init();
-	b = mouse_init();
-	if (!b)  {
+	if (!mouse_init())  {
 		printf( "No mouse installed.\n" );
 		exit(1);
 	}
-	printf( "Mouse has %d buttons...\n", b );
-	key_getch();
 
-	t = timer_get_fixed_seconds();
+	key_init();
+
+	mouse_set_handler( ME_LEFT_DOWN | ME_MOVEMENT | ME_RIGHT_DOWN, John );
 
 	while( !keyd_pressed[KEY_ESC])
 	{
+
+		if (i_happend)
+		{
+			i_happend = 0;
+			printf( "INT: POS:(%d,%d)\tBTN:%d\tFLG:%d\n", i_dx, i_dy, i_b, i_f );
+		}
+	}
+
+	mouse_clear_handler();
+
+	delay(500);
+
+	while( !keyd_pressed[KEY_ESC])
+	{
+
+		if (i_happend)
+		{
+			printf( "ERROR: INT SHouLD NOT HAVe HAPND !!\n" );
+			break;
+		}
 		mouse_get_pos( &x, &y );
 		mouse_get_delta( &dx, &dy );
 		b = mouse_get_btns();
-		dt1 = mouse_button_down_time(MB_LEFT);
-		dt2 = mouse_button_down_time(MB_HEAD_LEFT);
-		dt3 = mouse_button_down_time(MB_HEAD_RIGHT);
-
-		printf( "POS:(%d,%d)\tDELTA:(%d,%d)\tBUTTONS:%d\tDOWNTIME:%12.5f %12.5f %12.5f\n", x, y, dx, dy, b, f2fl(dt1), f2fl(dt2),f2fl(dt3) );
-
-		while( (t+F1_0/20) < timer_get_fixed_seconds() )
-			;
-		t = timer_get_fixed_seconds();
+		printf( "POS:(%d,%d)\tDELTA:(%d,%d)\tBUTTONS:%d\n", x, y, dx, dy, b );
 	}
+
 
 	mouse_close();
 	key_close();
 }
-

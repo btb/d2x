@@ -8,102 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/editor/rcs/kdefs.h $
- * $Revision: 2.1 $
- * $Author: yuan $
- * $Date: 1995/03/08 16:07:10 $
- *
- * Prototypes for functions called from keypresses or buttons.
- *
- * $Log: kdefs.h $
- * Revision 2.1  1995/03/08  16:07:10  yuan
- * Added segment sizing default functions.
- * 
- * Revision 2.0  1995/02/27  11:34:34  john
- * Version 2.0! No anonymous unions, Watcom 10.0, with no need
- * for bitmaps.tbl.
- * 
- * Revision 1.97  1995/01/12  12:10:22  yuan
- * Added coop object capability.
- * 
- * Revision 1.96  1994/10/27  10:06:33  mike
- * kill macro stuff.
- * 
- * Revision 1.95  1994/09/26  23:22:59  matt
- * Added functions to keep player's starting position from getting messed up
- * 
- * Revision 1.94  1994/09/24  14:15:24  mike
- * Custom colored object support.
- * 
- * Revision 1.93  1994/09/23  18:03:52  yuan
- * Finished wall checking code.
- * 
- * Revision 1.92  1994/09/14  16:50:49  yuan
- * Added load mine only function
- * 
- * Revision 1.91  1994/08/16  18:11:03  yuan
- * Maded C place you in the center of a segment.
- * 
- * Revision 1.90  1994/08/15  17:47:55  yuan
- * Added external walls.
- * 
- * Revision 1.89  1994/08/03  10:32:10  mike
- * Texture map propagation without uv assignment.
- * 
- * Revision 1.88  1994/08/02  14:18:01  mike
- * Add Object dialog.
- * 
- * Revision 1.87  1994/07/22  17:19:15  yuan
- * Working on dialog box for refuel/repair/material/control centers.
- * 
- * Revision 1.86  1994/07/21  17:26:49  matt
- * When new mine created, the default save filename is now reset
- * 
- * Revision 1.85  1994/07/21  12:47:26  mike
- * *** empty log message ***
- * 
- * Revision 1.84  1994/07/14  14:49:19  yuan
- * Added prototype
- * 
- * Revision 1.83  1994/07/14  14:43:09  yuan
- * Added new rotation functions
- * 
- * Revision 1.82  1994/07/01  17:57:04  john
- * First version of not-working hostage system
- * 
- * 
- * Revision 1.81  1994/06/21  12:57:27  yuan
- * Remove center from segment function added to menu.
- * 
- * Revision 1.80  1994/06/17  16:05:20  mike
- * Prototype set_average_light_on_all_quick.
- * 
- * Revision 1.79  1994/05/31  16:43:24  john
- * Added hooks to create materialization centers.
- * 
- * Revision 1.78  1994/05/27  10:34:40  yuan
- * Added new Dialog boxes for Walls and Triggers.
- * 
- * Revision 1.77  1994/05/25  18:08:44  yuan
- * Revamping walls and triggers interface.
- * Wall interface complete, but triggers are still in progress.
- * 
- * Revision 1.76  1994/05/09  23:34:04  mike
- * SubtractFromGroup, CreateSloppyAdjacentJointsGroup, ClearFoundList
- * 
- * Revision 1.75  1994/05/03  18:31:17  mike
- * Add PerturbCurside.
- * 
- * Revision 1.74  1994/05/03  11:04:39  mike
- * Add prototypes for new segment sizing functions.
- * 
- * Revision 1.73  1994/04/29  10:32:04  yuan
- * Added door 8... Door typing system should be replaced soon.
- * 
- */
 
 // In khelp.c
 int DoHelp();
@@ -155,6 +61,8 @@ int RotateGroup();
 // In segment.c
 void ToggleBottom();
 void make_curside_bottom_side();
+int select_segment_by_number();
+int select_segment_with_powerup();
 
 // In editor.c
 int UndoCommand();
@@ -269,6 +177,7 @@ int	TexFlipY();
 int	TexSlideUp();
 int	TexSlideLeft();
 int	TexSetDefault();
+int	TexSetDefaultSelected();
 int	TexSlideRight();
 int	TexRotateLeft();
 int	TexSlideDown();
@@ -285,6 +194,8 @@ int	TexSlideDownBig();
 int	TexRotateRightBig();
 int	TexStretchDown();
 int	TexStretchUp();
+int	TexChangeAll();
+int	TexChangeAll2();
 
 //	object.c
 int	ObjectPlaceObject();
@@ -390,6 +301,7 @@ extern int do_wall_dialog(void);
 extern int do_trigger_dialog(void);
 extern int check_walls(void);
 extern int delete_all_walls(void);
+extern int delete_all_controlcen_triggers(void);
 
 // In centers.c
 extern int do_centers_dialog(void);
@@ -412,6 +324,8 @@ extern int robotmaker_create_from_curseg();
 extern int fuelcen_reset_all();
 extern void RestoreGameState();
 extern int fuelcen_delete_from_curseg();
+extern int goal_blue_create_from_curseg();
+extern int goal_red_create_from_curseg();
 
 // In editor\robot.c
 extern int do_robot_dialog();
@@ -420,4 +334,3 @@ extern int do_object_dialog();
 // In editor\hostage.c
 extern int do_hostage_dialog();
 
-

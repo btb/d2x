@@ -8,235 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/fuelcen.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/03/21 14:38:40 $
- * 
- * Functions for refueling centers.
- * 
- * $Log: fuelcen.c $
- * Revision 2.3  1995/03/21  14:38:40  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.2  1995/03/06  15:23:09  john
- * New screen techniques.
- * 
- * Revision 2.1  1995/02/27  13:13:26  john
- * Removed floating point.
- * 
- * Revision 2.0  1995/02/27  11:27:20  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.159  1995/02/22  13:48:10  allender
- * remove anonymous unions in object structure
- * 
- * Revision 1.158  1995/02/08  11:37:48  mike
- * Check for failures in call to obj_create.
- * 
- * Revision 1.157  1995/02/07  20:39:39  mike
- * fix toasters in multiplayer
- * 
- * 
- * Revision 1.156  1995/02/02  18:40:10  john
- * Fixed bug with full screen cockpit flashing non-white.
- * 
- * Revision 1.155  1995/01/28  15:27:22  yuan
- * Make sure fuelcen nums are valid.
- * 
- * Revision 1.154  1995/01/03  14:26:23  rob
- * Better ifdef for robot centers.
- * 
- * Revision 1.153  1995/01/03  11:27:49  rob
- * Added include of fuelcen.c
- * 
- * Revision 1.152  1995/01/03  09:47:22  john
- * Some ifdef SHAREWARE lines.
- * 
- * Revision 1.151  1995/01/02  21:02:07  rob
- * added matcen support for coop/multirobot.
- * 
- * Revision 1.150  1994/12/15  18:31:22  mike
- * fix confusing precedence problems.
- * 
- * Revision 1.149  1994/12/15  13:04:22  mike
- * Replace Players[Player_num].time_total references with GameTime.
- * 
- * Revision 1.148  1994/12/15  03:05:18  matt
- * Added error checking for NULL return from object_create_explosion()
- * 
- * Revision 1.147  1994/12/13  19:49:12  rob
- * Made the fuelcen noise quieter.
- * 
- * Revision 1.146  1994/12/13  12:03:18  john
- * Made the warning sirens not start until after "desccruction
- * secquence activated voice".
- * 
- * Revision 1.145  1994/12/12  17:18:30  mike
- * make warning siren louder.
- * 
- * Revision 1.144  1994/12/11  23:18:04  john
- * Added -nomusic.
- * Added RealFrameTime.
- * Put in a pause when sound initialization error.
- * Made controlcen countdown and framerate use RealFrameTime.
- * 
- * Revision 1.143  1994/12/11  14:10:16  mike
- * louder sounds.
- * 
- * Revision 1.142  1994/12/06  11:33:19  yuan
- * Fixed bug with fueling when above 100.
- * 
- * Revision 1.141  1994/12/05  23:37:14  matt
- * Took out calls to warning() function
- * 
- * Revision 1.140  1994/12/05  23:19:18  yuan
- * Fixed fuel center refuelers..
- * 
- * Revision 1.139  1994/12/03  12:48:12  mike
- * diminish rocking due to control center destruction.
- * 
- * Revision 1.138  1994/12/02  23:30:32  mike
- * fix bumpiness after toasting control center.
- * 
- * Revision 1.137  1994/12/02  22:48:14  mike
- * rock the ship after toasting the control center!
- * 
- * Revision 1.136  1994/12/02  17:12:11  rob
- * Fixed countdown sounds.
- * 
- * Revision 1.135  1994/11/29  20:59:43  rob
- * Don't run out of fuel in net games (don't want to sync it between machines)
- * 
- * Revision 1.134  1994/11/29  19:10:57  john
- * Took out debugging mprintf.
- * 
- * Revision 1.133  1994/11/29  13:19:40  john
- * Made voice for "destruction actived in t-"
- * be at 12.75 secs.
- * 
- * Revision 1.132  1994/11/29  12:19:46  john
- * MAde the "Mine desctruction will commence"
- * voice play at 12.5 secs.
- * 
- * Revision 1.131  1994/11/29  12:12:54  adam
- * *** empty log message ***
- * 
- * Revision 1.130  1994/11/28  21:04:26  rob
- * Added code to cast noise when player refuels.
- * 
- * Revision 1.129  1994/11/27  23:15:04  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.128  1994/11/21  16:27:51  mike
- * debug code for morphing.
- * 
- * Revision 1.127  1994/11/21  12:33:50  matt
- * For control center explosions, use small fireball, not pseudo-random vclip
- * 
- * Revision 1.126  1994/11/20  22:12:15  mike
- * Fix bug in initializing materialization centers.
- * 
- * Revision 1.125  1994/11/19  15:18:22  mike
- * rip out unused code and data.
- * 
- * Revision 1.124  1994/11/08  12:18:59  mike
- * Initialize Fuelcen_seconds_left.
- * 
- * Revision 1.123  1994/10/30  14:12:33  mike
- * rip out repair center stuff
- * 
- * Revision 1.122  1994/10/28  14:42:45  john
- * Added sound volumes to all sound calls.
- * 
- * Revision 1.121  1994/10/16  12:44:02  mike
- * Make time to exit mine after control center destruction diff level dependent.
- * 
- * Revision 1.120  1994/10/09  22:03:26  mike
- * Adapt to new create_n_segment_path parameters.
- * 
- * Revision 1.119  1994/10/06  14:52:42  mike
- * Remove last of ability to damage fuel centers.
- * 
- * Revision 1.118  1994/10/06  14:08:45  matt
- * Made morph flash effect get orientation from segment
- * 
- * Revision 1.117  1994/10/05  16:09:03  mike
- * Put debugging code into matcen/fuelcen synchronization problem.
- * 
- * Revision 1.116  1994/10/04  15:32:41  john
- * Took out the old PLAY_SOUND??? code and replaced it
- * with direct calls into digi_link_??? so that all sounds
- * can be made 3d.
- * 
- * Revision 1.115  1994/10/03  23:37:57  mike
- * Clean up this mess of confusion to the point where maybe matcens actually work.
- * 
- * Revision 1.114  1994/10/03  13:34:40  matt
- * Added new (and hopefully better) game sequencing functions
- * 
- * Revision 1.113  1994/09/30  14:41:57  matt
- * Fixed bug as per Mike's instructions
- * 
- * Revision 1.112  1994/09/30  00:37:33  mike
- * Balance materialization centers.
- * 
- * Revision 1.111  1994/09/28  23:12:52  matt
- * Macroized palette flash system
- * 
- * Revision 1.110  1994/09/27  15:42:31  mike
- * Add names of Specials.
- * 
- * Revision 1.109  1994/09/27  00:02:23  mike
- * Yet more materialization center stuff.
- * 
- * Revision 1.108  1994/09/26  11:26:23  mike
- * Balance materialization centers.
- * 
- * Revision 1.107  1994/09/25  23:40:47  matt
- * Changed the object load & save code to read/write the structure fields one
- * at a time (rather than the whole structure at once).  This mean that the
- * object structure can be changed without breaking the load/save functions.
- * As a result of this change, the local_object data can be and has been 
- * incorporated into the object array.  Also, timeleft is now a property 
- * of all objects, and the object structure has been otherwise cleaned up.
- * 
- * Revision 1.106  1994/09/25  15:55:58  mike
- * Balance materialization centers, make them emit light, make them re-triggerable after awhile.
- * 
- * Revision 1.105  1994/09/24  17:42:33  mike
- * Making materialization centers be activated by triggers and balancing them.
- * 
- * Revision 1.104  1994/09/24  14:16:06  mike
- * Support new network constants.
- * 
- * Revision 1.103  1994/09/20  19:14:40  john
- * Massaged the sound system; used a better formula for determining
- * which l/r balance, also, put in Mike's stuff that searches for a connection
- * between the 2 sounds' segments, stopping for closed doors, etc.
- * 
- * Revision 1.102  1994/09/17  01:40:51  matt
- * Added status bar/sizable window mode, and in the process revamped the
- * whole cockpit mode system.
- * 
- * Revision 1.101  1994/08/31  20:57:25  matt
- * Cleaned up endlevel/death code
- * 
- * Revision 1.100  1994/08/30  17:54:20  mike
- * Slow down rate of creation of objects by materialization centers.
- * 
- * Revision 1.99  1994/08/29  11:47:01  john
- * Added warning if no control centers in mine.
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: fuelcen.c 2.3 1995/03/21 14:38:40 john Exp $";
+static char rcsid[] = "$Id: fuelcen.c 2.20 1996/09/05 11:13:15 jed Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -253,6 +30,7 @@ static char rcsid[] = "$Id: fuelcen.c 2.3 1995/03/21 14:38:40 john Exp $";
 #include "vclip.h"
 #include "fireball.h"
 #include "robot.h"
+#include "powerup.h"
 
 #include "wall.h"
 #include "sounds.h"
@@ -280,16 +58,11 @@ fix Fuelcen_max_amount = i2f(100);
 // by this amount... when capacity gets to 0, no more morphers...
 fix EnergyToCreateOneRobot = i2f(1);
 
-int Fuelcen_control_center_destroyed = 0;
-int Fuelcen_seconds_left = 0;
-
 #define MATCEN_HP_DEFAULT			F1_0*500; // Hitpoints
 #define MATCEN_INTERVAL_DEFAULT	F1_0*5;	//  5 seconds
 
 matcen_info RobotCenters[MAX_ROBOT_CENTERS];
 int Num_robot_centers;
-
-control_center_triggers ControlCenterTriggers;
 
 FuelCenter Station[MAX_NUM_FUELCENS];
 int Num_fuelcenters = 0;
@@ -303,6 +76,8 @@ char	Special_names[MAX_CENTER_TYPES][11] = {
 	"REPAIRCEN ",
 	"CONTROLCEN",
 	"ROBOTMAKER",
+	"GOAL_RED",
+	"GOAL_BLUE",
 };
 #endif
 
@@ -316,9 +91,8 @@ void fuelcen_reset()
 	//mprintf( (0, "All fuel centers reset.\n"));
 
 	for(i=0; i<MAX_SEGMENTS; i++ )
-		Segments[i].special = SEGMENT_IS_NOTHING;
+		Segment2s[i].special = SEGMENT_IS_NOTHING;
 
-	Fuelcen_control_center_destroyed = 0;
 	Num_robot_centers = 0;
 
 }
@@ -330,23 +104,27 @@ void reset_all_robot_centers()
 
 	// Remove all materialization centers
 	for (i=0; i<Num_segments; i++)
-		if (Segments[i].special == SEGMENT_IS_ROBOTMAKER) {
-			Segments[i].special = SEGMENT_IS_NOTHING;
-			Segments[i].matcen_num = -1;
+		if (Segment2s[i].special == SEGMENT_IS_ROBOTMAKER) {
+			Segment2s[i].special = SEGMENT_IS_NOTHING;
+			Segment2s[i].matcen_num = -1;
 		}
 }
 #endif
 
 //------------------------------------------------------------
 // Turns a segment into a fully charged up fuel center...
-void fuelcen_create( segment * segp)
+void fuelcen_create( segment *segp)
 {
+	segment2	*seg2p = &Segment2s[segp-Segments];
+
 	int	station_type;
 
-	station_type = segp->special;
+	station_type = seg2p->special;
 
 	switch( station_type )	{
 	case SEGMENT_IS_NOTHING:
+	case SEGMENT_IS_GOAL_BLUE:
+	case SEGMENT_IS_GOAL_RED:
 		return;
 	case SEGMENT_IS_FUELCEN:
 	case SEGMENT_IS_REPAIRCEN:
@@ -357,23 +135,23 @@ void fuelcen_create( segment * segp)
 		Error( "Invalid station type %d in fuelcen.c\n", station_type );
 	}
 
-	Assert( (segp != NULL) );
-	if ( segp == NULL ) return;
+	Assert( (seg2p != NULL) );
+	if ( seg2p == NULL ) return;
 
 	Assert( Num_fuelcenters < MAX_NUM_FUELCENS );
 	Assert( Num_fuelcenters > -1 );
 
-	segp->value = Num_fuelcenters;
+	seg2p->value = Num_fuelcenters;
 	Station[Num_fuelcenters].Type = station_type;
 	Station[Num_fuelcenters].MaxCapacity = Fuelcen_max_amount;
 	Station[Num_fuelcenters].Capacity = Station[Num_fuelcenters].MaxCapacity;
-	Station[Num_fuelcenters].segnum = segp-Segments;
+	Station[Num_fuelcenters].segnum = seg2p-Segment2s;
 	Station[Num_fuelcenters].Timer = -1;
 	Station[Num_fuelcenters].Flag = 0;
 //	Station[Num_fuelcenters].NextRobotType = -1;
 //	Station[Num_fuelcenters].last_created_obj=NULL;
 //	Station[Num_fuelcenters].last_created_sig = -1;
-	compute_segment_center(&Station[Num_fuelcenters].Center, segp );
+	compute_segment_center(&Station[Num_fuelcenters].Center, segp);
 
 //	if (station_type == SEGMENT_IS_ROBOTMAKER)
 //		Station[Num_fuelcenters].Capacity = i2f(Difficulty_level + 3);
@@ -385,37 +163,39 @@ void fuelcen_create( segment * segp)
 //------------------------------------------------------------
 // Adds a matcen that already is a special type into the Station array.
 // This function is separate from other fuelcens because we don't want values reset.
-void matcen_create( segment * segp)
+void matcen_create( segment *segp)
 {
-	int	station_type = segp->special;
+	segment2	*seg2p = &Segment2s[segp-Segments];
 
-	Assert( (segp != NULL) );
+	int	station_type = seg2p->special;
+
+	Assert( (seg2p != NULL) );
 	Assert(station_type == SEGMENT_IS_ROBOTMAKER);
-	if ( segp == NULL ) return;
+	if ( seg2p == NULL ) return;
 
 	Assert( Num_fuelcenters < MAX_NUM_FUELCENS );
 	Assert( Num_fuelcenters > -1 );
 
-	segp->value = Num_fuelcenters;
+	seg2p->value = Num_fuelcenters;
 	Station[Num_fuelcenters].Type = station_type;
 	Station[Num_fuelcenters].Capacity = i2f(Difficulty_level + 3);
 	Station[Num_fuelcenters].MaxCapacity = Station[Num_fuelcenters].Capacity;
 
-	Station[Num_fuelcenters].segnum = segp-Segments;
+	Station[Num_fuelcenters].segnum = seg2p-Segment2s;
 	Station[Num_fuelcenters].Timer = -1;
 	Station[Num_fuelcenters].Flag = 0;
 //	Station[Num_fuelcenters].NextRobotType = -1;
 //	Station[Num_fuelcenters].last_created_obj=NULL;
 //	Station[Num_fuelcenters].last_created_sig = -1;
-	compute_segment_center(&Station[Num_fuelcenters].Center, segp );
+	compute_segment_center(&Station[Num_fuelcenters].Center, &Segments[seg2p-Segment2s] );
 
-	segp->matcen_num = Num_robot_centers;
+	seg2p->matcen_num = Num_robot_centers;
 	Num_robot_centers++;
 
-	RobotCenters[segp->matcen_num].hit_points = MATCEN_HP_DEFAULT;
-	RobotCenters[segp->matcen_num].interval = MATCEN_INTERVAL_DEFAULT;
-	RobotCenters[segp->matcen_num].segnum = segp-Segments;
-	RobotCenters[segp->matcen_num].fuelcen_num = Num_fuelcenters;
+	RobotCenters[seg2p->matcen_num].hit_points = MATCEN_HP_DEFAULT;
+	RobotCenters[seg2p->matcen_num].interval = MATCEN_INTERVAL_DEFAULT;
+	RobotCenters[seg2p->matcen_num].segnum = seg2p-Segment2s;
+	RobotCenters[seg2p->matcen_num].fuelcen_num = Num_fuelcenters;
 
 	//mprintf( (0, "Segment %d is assigned to be fuel center %d.\n", Station[Num_fuelcenters].segnum, Num_fuelcenters ));
 	Num_fuelcenters++;
@@ -425,9 +205,11 @@ void matcen_create( segment * segp)
 // Adds a segment that already is a special type into the Station array.
 void fuelcen_activate( segment * segp, int station_type )
 {
-	segp->special = station_type;
+	segment2	*seg2p = &Segment2s[segp-Segments];
 
-	if (segp->special == SEGMENT_IS_ROBOTMAKER)
+	seg2p->special = station_type;
+
+	if (seg2p->special == SEGMENT_IS_ROBOTMAKER)
 		matcen_create( segp);
 	else
 		fuelcen_create( segp);
@@ -443,18 +225,19 @@ void fuelcen_activate( segment * segp, int station_type )
 //	Trigger (enable) the materialization center in segment segnum
 void trigger_matcen(int segnum)
 {
-	segment		*segp = &Segments[segnum];
+	// -- segment		*segp = &Segments[segnum];
+	segment2		*seg2p = &Segment2s[segnum];
 	vms_vector	pos, delta;
 	FuelCenter	*robotcen;
 	int			objnum;
 
 	mprintf((0, "Trigger matcen, segment %i\n", segnum));
 
-	Assert(segp->special == SEGMENT_IS_ROBOTMAKER);
-	Assert(segp->matcen_num < Num_fuelcenters);
-	Assert((segp->matcen_num >= 0) && (segp->matcen_num <= Highest_segment_index));
+	Assert(seg2p->special == SEGMENT_IS_ROBOTMAKER);
+	Assert(seg2p->matcen_num < Num_fuelcenters);
+	Assert((seg2p->matcen_num >= 0) && (seg2p->matcen_num <= Highest_segment_index));
 
-	robotcen = &Station[RobotCenters[segp->matcen_num].fuelcen_num];
+	robotcen = &Station[RobotCenters[seg2p->matcen_num].fuelcen_num];
 
 	if (robotcen->Enabled == 1)
 		return;
@@ -462,7 +245,10 @@ void trigger_matcen(int segnum)
 	if (!robotcen->Lives)
 		return;
 
-	robotcen->Lives--;
+	//	MK: 11/18/95, At insane, matcens work forever!
+	if (Difficulty_level+1 < NDL)
+		robotcen->Lives--;
+
 	robotcen->Timer = F1_0*1000;	//	Make sure the first robot gets emitted right away.
 	robotcen->Enabled = 1;			//	Say this center is enabled, it can create robots.
 	robotcen->Capacity = i2f(Difficulty_level + 3);
@@ -489,9 +275,12 @@ void trigger_matcen(int segnum)
 //	Deletes the segment point entry in the FuelCenter list.
 void fuelcen_delete( segment * segp )
 {
+	segment2	*seg2p = &Segment2s[segp-Segments];
 	int i, j;
 
 Restart: ;
+
+	seg2p->special = 0;
 
 	for (i=0; i<Num_fuelcenters; i++ )	{
 		if ( Station[i].segnum == segp-Segments )	{
@@ -499,23 +288,29 @@ Restart: ;
 			// If Robot maker is deleted, fix Segments and RobotCenters.
 			if (Station[i].Type == SEGMENT_IS_ROBOTMAKER) {
 				Num_robot_centers--;
+				Assert(Num_robot_centers >= 0);
 
-				for (j=segp->matcen_num; j<Num_robot_centers; j++)
+				for (j=seg2p->matcen_num; j<Num_robot_centers; j++)
 					RobotCenters[j] = RobotCenters[j+1];
 
 				for (j=0; j<Num_fuelcenters; j++) {
 					if ( Station[j].Type == SEGMENT_IS_ROBOTMAKER )
-						if ( Segments[Station[j].segnum].matcen_num > segp->matcen_num )
-							Segments[Station[j].segnum].matcen_num--;
+						if ( Segment2s[Station[j].segnum].matcen_num > seg2p->matcen_num )
+							Segment2s[Station[j].segnum].matcen_num--;
 				}
 			}
-		
+
+			//fix RobotCenters so they point to correct fuelcenter
+			for (j=0; j<Num_robot_centers; j++ )
+				if (RobotCenters[j].fuelcen_num > i)		//this robotcenter's fuelcen is changing
+					RobotCenters[j].fuelcen_num--;
+
 			Num_fuelcenters--;
+			Assert(Num_fuelcenters >= 0);
 			for (j=i; j<Num_fuelcenters; j++ )	{
-				Station[i] = Station[i+1];
-				Segments[Station[i].segnum].value = i;
+				Station[j] = Station[j+1];
+				Segment2s[Station[j].segnum].value = j;
 			}
-			segp->special = 0;
 			goto Restart;
 		}
 	}
@@ -560,16 +355,13 @@ object * create_morph_robot( segment *segp, vms_vector *object_pos, int object_i
 
 	obj->shields = Robot_info[obj->id].strength;
 	
-	default_behavior = AIB_NORMAL;
-	if (object_id == 10)						//	This is a toaster guy!
-		default_behavior = AIB_RUN_FROM;
+	default_behavior = Robot_info[obj->id].behavior;
 
 	init_ai_object(obj-Objects, default_behavior, -1 );		//	Note, -1 = segment this robot goes to to hide, should probably be something useful
 
 	create_n_segment_path(obj, 6, -1);		//	Create a 6 segment path from creation point.
 
-	if (default_behavior == AIB_RUN_FROM)
-		Ai_local_info[objnum].mode = AIM_RUN_FROM_OBJECT;
+	Ai_local_info[objnum].mode = ai_behavior_to_mode(default_behavior);
 
 	return obj;
 }
@@ -619,7 +411,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 		return;
 	}
 
-	matcen_num = Segments[robotcen->segnum].matcen_num;
+	matcen_num = Segment2s[robotcen->segnum].matcen_num;
 	//mprintf((0, "Robotmaker #%i flags = %8x\n", matcen_num, RobotCenters[matcen_num].robot_flags));
 
 	if ( matcen_num == -1 ) {
@@ -627,7 +419,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 		return;
 	}
 
-	if (RobotCenters[matcen_num].robot_flags == 0) {
+	if (RobotCenters[matcen_num].robot_flags[0]==0 && RobotCenters[matcen_num].robot_flags[1]==0) {
 		//mprintf((0, "robot_flags = 0 at robot maker #%i\n", RobotCenters[matcen_num].robot_flags));
 		return;
 	}
@@ -726,20 +518,22 @@ void robotmaker_proc( FuelCenter * robotcen )
 			compute_segment_center(&cur_object_loc, &Segments[robotcen->segnum]);
 
 			// If this is the first materialization, set to valid robot.
-			if (RobotCenters[matcen_num].robot_flags != 0) {
+			if (RobotCenters[matcen_num].robot_flags[0] != 0 || RobotCenters[matcen_num].robot_flags[1] != 0) {
 				int	type;
 				uint	flags;
-				byte	legal_types[32];		//	32 bits in a word, the width of robot_flags.
-				int	num_types, robot_index;
+				byte	legal_types[64];		//	64 bits, the width of robot_flags[].
+				int	num_types, robot_index, i;
 
-				robot_index = 0;
 				num_types = 0;
-				flags = RobotCenters[matcen_num].robot_flags;
-				while (flags) {
-					if (flags & 1)
-						legal_types[num_types++] = robot_index;
-					flags >>= 1;
-					robot_index++;
+				for (i=0;i<2;i++) {
+					robot_index = i*32;
+					flags = RobotCenters[matcen_num].robot_flags[i];
+					while (flags) {
+						if (flags & 1)
+							legal_types[num_types++] = robot_index;
+						flags >>= 1;
+						robot_index++;
+					}
 				}
 
 				//mprintf((0, "Flags = %08x, %2i legal types to morph: \n", RobotCenters[matcen_num].robot_flags, num_types));
@@ -783,75 +577,6 @@ void robotmaker_proc( FuelCenter * robotcen )
 	}
 }
 
-#define	BASE_CONTROL_CENTER_EXPLOSION_TIME	30
-#define	DIFF_CONTROL_CENTER_EXPLOSION_TIME	(BASE_CONTROL_CENTER_EXPLOSION_TIME + (NDL-Difficulty_level-1)*5)
-
-#define COUNTDOWN_VOICE_TIME (i2f(DIFF_CONTROL_CENTER_EXPLOSION_TIME)-fl2f(12.75))
-
-void controlcen_proc( FuelCenter * controlcen )
-{
-	fix old_time;
-	int	fc;
-
-//	mprintf( (0, "CCT: %.1f\n", f2fl(controlcen->Timer)));
-
-	if (!Fuelcen_control_center_destroyed)	return;
-
-	//	Control center destroyed, rock the player's ship.
-	fc = Fuelcen_seconds_left;
-	if (fc > 16)
-		fc = 16;
-	ConsoleObject->mtype.phys_info.rotvel.x += fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-	ConsoleObject->mtype.phys_info.rotvel.z += fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-	//	Hook in the rumble sound effect here.
-
-	old_time = controlcen->Timer;
-	controlcen->Timer += RealFrameTime;			//timer_get_approx_seconds
-	Fuelcen_seconds_left = DIFF_CONTROL_CENTER_EXPLOSION_TIME - f2i(controlcen->Timer);
-	if ( (old_time < COUNTDOWN_VOICE_TIME ) && (controlcen->Timer >= COUNTDOWN_VOICE_TIME) )	{
-			digi_play_sample( SOUND_COUNTDOWN_13_SECS, F3_0 );
-	}
-	if ( f2i(old_time) != f2i(controlcen->Timer) )	{
-		if ( (Fuelcen_seconds_left>=0) && (Fuelcen_seconds_left<10) ) 
-			digi_play_sample( SOUND_COUNTDOWN_0_SECS+Fuelcen_seconds_left, F3_0 );
-		if ( Fuelcen_seconds_left==DIFF_CONTROL_CENTER_EXPLOSION_TIME-1)
-			digi_play_sample( SOUND_COUNTDOWN_29_SECS, F3_0 );
-	}						
-
-	if (controlcen->Timer < i2f(DIFF_CONTROL_CENTER_EXPLOSION_TIME)) {
-		vms_vector vp;	//,v,c;
-		fix size;
-		compute_segment_center(&vp, &Segments[controlcen->segnum]);
-		size = (0x50000*f2i(controlcen->Timer)*(FrameTime & 0xF))/16;
-		size = controlcen->Timer / (fl2f(0.65));
-		old_time = old_time / (fl2f(0.65));
-		if (size != old_time && (controlcen->Timer > (5*F1_0) ))		{			// Every 2 seconds!
-			//@@object_create_explosion( controlcen->segnum, &vp, size*10, FrameTime & 7);
-			object_create_explosion( controlcen->segnum, &vp, size*10, VCLIP_SMALL_EXPLOSION);
-			digi_play_sample( SOUND_CONTROL_CENTER_WARNING_SIREN, F3_0 );
-		}
-	}  else {
-		int flash_value;
-
-		if (old_time < i2f(DIFF_CONTROL_CENTER_EXPLOSION_TIME))
-			digi_play_sample( SOUND_MINE_BLEW_UP, F1_0 );
-
-		flash_value = f2i( (controlcen->Timer-i2f(DIFF_CONTROL_CENTER_EXPLOSION_TIME))*(64/4));	// 4 seconds to total whiteness
-		PALETTE_FLASH_SET(flash_value,flash_value,flash_value);
-
-		//gauge_message( "YOU'RE TOO SLOW! THE MINE BLEW UP!" );
-		if (PaletteBlueAdd > 64 )	{
-			gr_set_current_canvas( NULL );		
-			gr_clear_canvas(BM_XRGB(31,31,31));		//make screen all white to match palette effect
-			reset_cockpit();								//force cockpit redraw next time
-			reset_palette_add();							//restore palette for death message
-			controlcen->Timer = -1;
-			controlcen->MaxCapacity = Fuelcen_max_amount;
-			//gauge_message( "Control Center Reset" );
-			DoPlayerDead();		//kill_player();
-		}																				
-	}
-}
 
 #define M_PI 3.14159
 
@@ -869,7 +594,7 @@ void fuelcen_update_all()
 			if (! (Game_suspended & SUSP_ROBOTS))
 				robotmaker_proc( &Station[i] );
 		} else if ( Station[i].Type == SEGMENT_IS_CONTROLCEN )	{
-			controlcen_proc( &Station[i] );
+			//controlcen_proc( &Station[i] );
 	
 		} else if ( (Station[i].MaxCapacity > 0) && (PlayerSegment!=&Segments[Station[i].segnum]) )	{
 			if ( Station[i].Capacity < Station[i].MaxCapacity )	{
@@ -897,15 +622,23 @@ void fuelcen_update_all()
 //--unused-- 
 //--unused-- }
 
+#define FUELCEN_SOUND_DELAY (f1_0/4)		//play every half second
+
 //-------------------------------------------------------------
 fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 {
+	segment2	*seg2p = &Segment2s[segp-Segments];
+
+	static fix last_play_time=0;
+
 	Assert( segp != NULL );
 
 	PlayerSegment = segp;
 
-	if ( (segp) && (segp->special==SEGMENT_IS_FUELCEN) )	{
+	if ( (segp) && (seg2p->special==SEGMENT_IS_FUELCEN) )	{
 		fix amount;
+
+		detect_escort_goal_accomplished(-4);	//	UGLY! Hack! -4 means went through fuelcen.
 
 //		if (Station[segp->value].MaxCapacity<=0)	{
 //			HUD_init_message( "Fuelcenter %d is destroyed.", segp->value );
@@ -935,12 +668,18 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //				Station[segp->value].Capacity -= amount;
 //			}
 
-		digi_play_sample( SOUND_REFUEL_STATION_GIVING_FUEL, F1_0/2 );
+		if (last_play_time > GameTime)
+			last_play_time = 0;
 
-		#ifdef NETWORK
-		if (Game_mode & GM_MULTI)
-			multi_send_play_sound(SOUND_REFUEL_STATION_GIVING_FUEL, F1_0/2);
-		#endif
+		if (GameTime > last_play_time+FUELCEN_SOUND_DELAY) {
+
+			digi_play_sample( SOUND_REFUEL_STATION_GIVING_FUEL, F1_0/2 );
+			if (Game_mode & GM_MULTI)
+				multi_send_play_sound(SOUND_REFUEL_STATION_GIVING_FUEL, F1_0/2);
+
+			last_play_time = GameTime;
+		}
+
 
 		//HUD_init_message( "Fuelcen %d has %d/%d fuel", segp->value,f2i(Station[segp->value].Capacity),f2i(Station[segp->value].MaxCapacity) );
 		return amount;
@@ -1325,4 +1064,61 @@ void init_all_matcens(void)
 #endif
 
 }
-
+extern void multi_send_capture_bonus (char);
+
+void fuelcen_check_for_goal(segment *segp)
+{
+	segment2	*seg2p = &Segment2s[segp-Segments];
+
+	Assert( segp != NULL );
+	Assert (Game_mode & GM_CAPTURE);
+
+	if (seg2p->special==SEGMENT_IS_GOAL_BLUE )	{
+
+			if ((get_team(Player_num)==TEAM_BLUE) && (Players[Player_num].flags & PLAYER_FLAGS_FLAG))
+			 {
+				mprintf ((0,"In goal segment BLUE\n"));
+
+				multi_send_capture_bonus (Player_num);
+				Players[Player_num].flags &=(~(PLAYER_FLAGS_FLAG));
+				maybe_drop_net_powerup (POW_FLAG_RED);
+			 }
+	  	 }
+	if ( seg2p->special==SEGMENT_IS_GOAL_RED) {
+
+			if ((get_team(Player_num)==TEAM_RED) && (Players[Player_num].flags & PLAYER_FLAGS_FLAG))
+			 {		
+				mprintf ((0,"In goal segment RED\n"));
+				multi_send_capture_bonus (Player_num);
+				Players[Player_num].flags &=(~(PLAYER_FLAGS_FLAG));
+				maybe_drop_net_powerup (POW_FLAG_BLUE);
+			 }
+	  	 }
+  } 
+
+void fuelcen_check_for_hoard_goal(segment *segp)
+{
+	segment2	*seg2p = &Segment2s[segp-Segments];
+
+	Assert( segp != NULL );
+	Assert (Game_mode & GM_HOARD);
+
+   if (Player_is_dead)
+		return;
+
+	if (seg2p->special==SEGMENT_IS_GOAL_BLUE || seg2p->special==SEGMENT_IS_GOAL_RED  )	
+	{
+		if (Players[Player_num].secondary_ammo[PROXIMITY_INDEX])
+		{
+				mprintf ((0,"In orb goal!\n"));
+				multi_send_orb_bonus (Player_num);
+				Players[Player_num].flags &=(~(PLAYER_FLAGS_FLAG));
+				Players[Player_num].secondary_ammo[PROXIMITY_INDEX]=0;
+      }
+	}
+
+} 
+
+
+
+

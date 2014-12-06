@@ -8,24 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/multibot.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:39:10 $
- * 
- * Multiplayer robot code
- * 
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: multibot.c 2.2 1995/03/21 14:39:10 john Exp $";
+static char rcsid[] = "$Id: multibot.c 2.22 1996/10/18 13:04:06 jed Exp $";
 #pragma on (unreferenced)
-
-#ifdef NETWORK
-#ifndef SHAREWARE
 
 #include <string.h>
 #include <stdlib.h>
@@ -55,17 +43,18 @@ static char rcsid[] = "$Id: multibot.c 2.2 1995/03/21 14:39:10 john Exp $";
 #include "sounds.h"
 #include "effects.h"
 #include "physics.h" 
-
+#include "byteswap.h"
 //
 // Code for controlling robots in multiplayer games
 //
 
+
 #define STANDARD_EXPL_DELAY (F1_0/4)
-#define MIN_CONTROL_TIME	F1_0*2
-#define ROBOT_TIMEOUT		F1_0*3
+#define MIN_CONTROL_TIME	F1_0*1
+#define ROBOT_TIMEOUT		F1_0*2
 
 #define MIN_TO_ADD	60
-#define MAX_TO_DELETE	67
+#define MAX_TO_DELETE	61
 
 int robot_controlled[MAX_ROBOTS_CONTROLLED];
 int robot_agitation[MAX_ROBOTS_CONTROLLED];
@@ -77,6 +66,9 @@ int robot_fired[MAX_ROBOTS_CONTROLLED];
 byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 #define MULTI_ROBOT_PRIORITY(objnum, pnum) (((objnum % 4) + pnum) % N_players)
+
+extern void multi_send_stolen_items();
+extern int multi_powerup_is_allowed (int);
 
 //#define MULTI_ROBOT_PRIORITY(objnum, pnum) multi_robot_priority(objnum, pnum)
 //int multi_robot_priority(int objnum, int pnum)
@@ -115,7 +107,12 @@ multi_can_move_robot(int objnum, int agitation)
 	else if (Objects[objnum].ctype.ai_info.REMOTE_OWNER == Player_num) // Already my robot!
 	{
 		int slot_num = Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM;
-		Assert((slot_num > -1) && (slot_num < MAX_ROBOTS_CONTROLLED));
+
+      if ((slot_num < 0) || (slot_num >= MAX_ROBOTS_CONTROLLED))
+		 {
+		  mprintf ((0,"Not asserting in multi_can_move_robot!"));
+		  return 0;
+		 }
 
 		if (robot_fired[slot_num]) {
 //			mprintf((0, "Preventing robot from firing again until firing complete!\n"));
@@ -163,7 +160,11 @@ multi_check_robot_timeout(void)
 					Int3(); // Non-terminal but Rob is interesting, step over please...
 					return;
 				}
-//				Assert(Objects[robot_controlled[i]].ctype.ai_info.REMOTE_OWNER == Player_num);
+ 				if (Objects[robot_controlled[i]].ctype.ai_info.REMOTE_OWNER !=Player_num)
+				 {
+					mprintf ((0,"What? This ain't my bot and I'm trying to time it out!\n"));
+					return;
+				 }
 				mprintf((0, "Robot %d (slot %d) removed, timed out, frame %d.\n", robot_controlled[i], i, GameTime));
 				if (robot_send_pending[i])
 					multi_send_robot_position(robot_controlled[i], 1);
@@ -233,6 +234,9 @@ multi_add_controlled_robot(int objnum, int agitation)
 
 	// Try to add a new robot to the controlled list, return 1 if added, 0 if not.
 
+   if (Robot_info[Objects[objnum].id].boss_flag) // this is a boss, so make sure he gets a slot
+		agitation=(agitation*3)+Player_num;  
+ 
 	if (Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM > 0)
 	{
 		mprintf((0, "Robot %d hands-off = %d.\n", objnum, Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM));
@@ -263,10 +267,12 @@ multi_add_controlled_robot(int objnum, int agitation)
 		}
 	}
 
+//   mprintf ((0,"first_free_robot=%d lowest_agitated_bot=%d\n",first_free_robot,lowest_agitated_bot));
+
 	if (first_free_robot != -1)  // Room left for new robots
 		i = first_free_robot;
 
-	else if ((agitation > lowest_agitation) && (lowest_agitation <= MAX_TO_DELETE)) // Replace some old robot with a more agitated one
+	else if ((agitation > lowest_agitation))// && (lowest_agitation <= MAX_TO_DELETE)) // Replace some old robot with a more agitated one
 	{
 		if (robot_send_pending[lowest_agitated_bot])
 			multi_send_robot_position(robot_controlled[lowest_agitated_bot], 1);
@@ -301,7 +307,7 @@ multi_delete_controlled_robot(int objnum)
 	// Delete robot object number objnum from list of controlled robots because it is dead
 
 	if ( (objnum<0) || (objnum>Highest_object_index))	{
-//		mprintf((0, "Trying to releasing control of bogus robot %d\n", objnum));
+		mprintf((0, "Trying to releasing control of bogus robot %d\n", objnum));
 		return;
 	}
 
@@ -312,9 +318,14 @@ multi_delete_controlled_robot(int objnum)
 	if (i == MAX_ROBOTS_CONTROLLED)
 		return;
 
-//	mprintf((0, "Releasing control of robot %d\n", objnum));
+	mprintf((0, "Releasing control of robot %d\n", objnum));
 
-	Assert(Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM == i);
+	if (Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM != i)
+	 {
+	  mprintf ((0,"Saved from asserting in multi_delete_controlled_bot!"));
+	  Int3();  // can't release this bot!
+	  return;
+	 }
 
 	Objects[objnum].ctype.ai_info.REMOTE_OWNER = -1;
 	Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM = 0;
@@ -326,6 +337,8 @@ multi_delete_controlled_robot(int objnum)
 void
 multi_send_claim_robot(int objnum)
 {
+	short s;
+	
 	if ((objnum < 0) || (objnum > Highest_object_index))
 	{
 		Int3(); // See rob
@@ -342,14 +355,20 @@ multi_send_claim_robot(int objnum)
 
 	multibuf[0] = (char)MULTI_ROBOT_CLAIM;
 	multibuf[1] = Player_num;
-	*(short *)(multibuf+2) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[4]);
+	s = objnum_local_to_remote(objnum, (byte *)&multibuf[4]);
+	*(short *)(multibuf+2) = INTEL_SHORT(s);
 
-	multi_send_data(multibuf, 5, 1);
+	multi_send_data(multibuf, 5, 2);
+	multi_send_data(multibuf, 5, 2);
+	multi_send_data(multibuf, 5, 2);
+
 }
 
 void
 multi_send_release_robot(int objnum)
 {
+	short s;
+	
 	if ((objnum < 0) || (objnum > Highest_object_index))
 	{
 		Int3(); // See rob
@@ -366,9 +385,12 @@ multi_send_release_robot(int objnum)
 
 	multibuf[0] = (char)MULTI_ROBOT_RELEASE;
 	multibuf[1] = Player_num;
-	*(short *)(multibuf+2) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[4]);
+	s = objnum_local_to_remote(objnum, (byte *)&multibuf[4]);
+	*(short *)(multibuf+2) = INTEL_SHORT(s);
 
-	multi_send_data(multibuf, 5, 1);
+	multi_send_data(multibuf, 5, 2);
+	multi_send_data(multibuf, 5, 2);
+	multi_send_data(multibuf, 5, 2);
 }
 
 #define MIN_ROBOT_COM_GAP F1_0/12
@@ -395,7 +417,7 @@ multi_send_robot_frame(int sent)
 			if (robot_fired[sending])
 			{
 				robot_fired[sending] = 0;
-				multi_send_data(robot_fire_buf[sending], 18, 0);
+				multi_send_data(robot_fire_buf[sending], 18, 1);
 			}
 
 			if (!(Game_mode & GM_NETWORK))
@@ -413,16 +435,29 @@ void
 multi_send_robot_position_sub(int objnum)
 {
 	int loc = 0;
+	short s;
+#ifdef MACINTOSH
+	shortpos sp;
+#endif
 
 //	mprintf((0, "SENDPOS object %d, Gametime %d.\n", objnum, GameTime));
 
-	multibuf[loc] = MULTI_ROBOT_POSITION;  				loc += 1;
-	multibuf[loc] = Player_num;								loc += 1;
-	*(short *)(multibuf+loc) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
+	multibuf[loc] = MULTI_ROBOT_POSITION;  								loc += 1;
+	multibuf[loc] = Player_num;											loc += 1;
+	s = objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
+	*(short *)(multibuf+loc) = INTEL_SHORT(s);						
+
 																		loc += 3;
-	create_shortpos((shortpos *)(multibuf+loc), Objects+objnum);
-																		loc += sizeof(shortpos);
-	multi_send_data(multibuf, loc, 0);
+#ifndef MACINTOSH
+	create_shortpos((shortpos *)(multibuf+loc), Objects+objnum,0);		loc += sizeof(shortpos);
+#else
+	create_shortpos(&sp, Objects+objnum, 1);
+	memcpy(&(multibuf[loc]), (ubyte *)(sp.bytemat), 9);
+	loc += 9;
+	memcpy(&(multibuf[loc]), (ubyte *)&(sp.xo), 14);
+	loc += 14;
+#endif
+	multi_send_data(multibuf, loc, 1);
 }
 
 void
@@ -465,43 +500,69 @@ multi_send_robot_fire(int objnum, int gun_num, vms_vector *fire)
 {
 	// Send robot fire event
 	int loc = 0;
+	short s;
+#ifdef MACINTOSH
+	vms_vector swapped_vec;
+#endif
 
 	multibuf[loc] = MULTI_ROBOT_FIRE;						loc += 1;
 	multibuf[loc] = Player_num;								loc += 1;
-	*(short *)(multibuf+loc) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
+	s = objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
+	*(short *)(multibuf+loc) = INTEL_SHORT(s);
 																		loc += 3;
 	multibuf[loc] = gun_num;									loc += 1;
+#ifndef MACINTOSH
 	*(vms_vector *)(multibuf+loc) = *fire;					loc += sizeof(vms_vector); // 12
 	// 																--------------------------
 	//																 	Total = 18
+#else
+	swapped_vec.x = (fix)INTEL_INT((int)fire->x);
+	swapped_vec.y = (fix)INTEL_INT((int)fire->y);
+	swapped_vec.z = (fix)INTEL_INT((int)fire->z);
+	*(vms_vector *)(multibuf+loc) = swapped_vec;			loc += sizeof(vms_vector);
+#endif
+
 	if (Objects[objnum].ctype.ai_info.REMOTE_OWNER == Player_num)
 	{
 		int slot = Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM;
-		Assert((slot >= 0) && (slot < MAX_ROBOTS_CONTROLLED));
+		if (slot<0 || slot>=MAX_ROBOTS_CONTROLLED)
+		 {
+			mprintf ((0,"Saved from asserting in robofire\n"));
+			return;
+		 }
 		if (robot_fired[slot] != 0)
-			Int3(); // ROB!
+		 {
+			mprintf ((0,"Couldn't find an open slot for robo firing!\n"));
+		  //	Int3(); // ROB!
+			return;
+	    }
 		memcpy(robot_fire_buf[slot], multibuf, loc);
 		robot_fired[slot] = 1;
-//		if (Game_mode & GM_NETWORK)
-//			PacketUrgent = 1;
+		if (Game_mode & GM_NETWORK)
+			PacketUrgent = 1;
 	}
 	else
-		multi_send_data(multibuf, loc, 0); // Not our robot, send ASAP
+		multi_send_data(multibuf, loc, 2); // Not our robot, send ASAP
 }
 
 void
-multi_send_robot_explode(int objnum, int killer)
+multi_send_robot_explode(int objnum, int killer,char isthief)
 {
 	// Send robot explosion event to the other players
 
 	int loc = 0;
+	short s;
 
 	multibuf[loc] = MULTI_ROBOT_EXPLODE;					loc += 1;
 	multibuf[loc] = Player_num;								loc += 1;
-	*(short *)(multibuf+loc) = (short)objnum_local_to_remote(killer, (byte *)&multibuf[loc+2]);
+	s = (short)objnum_local_to_remote(killer, (byte *)&multibuf[loc+2]);
+	*(short *)(multibuf+loc) = INTEL_SHORT(s);
 																		loc += 3;
-	*(short *)(multibuf+loc) = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
-																		loc += 3;
+	s = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
+	*(short *)(multibuf+loc) = INTEL_SHORT(s);	loc += 3;
+	
+	multibuf[loc]=isthief;   loc++;
+		
 	multi_send_data(multibuf, loc, 1);
 
 	multi_delete_controlled_robot(objnum);
@@ -517,12 +578,12 @@ multi_send_create_robot(int station, int objnum, int type)
 	multibuf[loc] = MULTI_CREATE_ROBOT;						loc += 1;
 	multibuf[loc] = Player_num;								loc += 1;
 	multibuf[loc] = (byte)station;							loc += 1;
-	*(short *)(multibuf+loc) = (short)objnum;				loc += 2;
-	multibuf[loc] = type;										loc += 1;
+	*(short *)(multibuf+loc) = INTEL_SHORT((short)objnum);	loc += 2;
+	multibuf[loc] = type;									loc += 1;
 
 	map_objnum_local_to_local((short)objnum);
 
-	multi_send_data(multibuf, loc, 1);
+	multi_send_data(multibuf, loc, 2);
 }
 
 void
@@ -534,12 +595,12 @@ multi_send_boss_actions(int bossobjnum, int action, int secondary, int objnum)
 	
 	multibuf[loc] = MULTI_BOSS_ACTIONS;						loc += 1;
 	multibuf[loc] = Player_num;								loc += 1; // Which player is controlling the boss
-	*(short *)(multibuf+loc) = bossobjnum;					loc += 2; // We won't network map this objnum since its the boss
-	multibuf[loc] = (byte)action;								loc += 1; // What is the boss doing?
-	multibuf[loc] = (byte)secondary;							loc += 1; // More info for what he is doing
-	*(short *)(multibuf+loc) = objnum;						loc += 2; // Objnum of object created by gate-in action
+	*(short *)(multibuf+loc) = INTEL_SHORT(bossobjnum);		loc += 2; // We won't network map this objnum since its the boss
+	multibuf[loc] = (byte)action;							loc += 1; // What is the boss doing?
+	multibuf[loc] = (byte)secondary;						loc += 1; // More info for what he is doing
+	*(short *)(multibuf+loc) = INTEL_SHORT(objnum);			loc += 2; // Objnum of object created by gate-in action
 	if (action == 3) {
-		*(short *)(multibuf+loc) = Objects[objnum].segnum; loc += 2; // Segment number object created in (for gate only)
+		*(short *)(multibuf+loc) = INTEL_SHORT(Objects[objnum].segnum); loc += 2; // Segment number object created in (for gate only)
 	}
 	else
 																		loc += 2; // Dummy
@@ -551,7 +612,7 @@ multi_send_boss_actions(int bossobjnum, int action, int secondary, int objnum)
 		multi_delete_controlled_robot(bossobjnum);
 //		robot_controlled[Objects[bossobjnum].ctype.ai_info.REMOTE_SLOT_NUM] = -1;
 //		Objects[bossobjnum].ctype.ai_info.REMOTE_OWNER = -1;
-		Objects[bossobjnum].ctype.ai_info.REMOTE_SLOT_NUM = 5; // Hands-off period!
+//		Objects[bossobjnum].ctype.ai_info.REMOTE_SLOT_NUM = 5; // Hands-off period!
 	}
 	if (action == 3) {
 		mprintf((0, "LOCAL:Boss gating in robot id %d, objnum %d (%d).\n", secondary, objnum, objnum));
@@ -568,16 +629,29 @@ multi_send_create_robot_powerups(object *del_obj)
 
 	int loc = 0;
 	int i;
+#ifdef MACINTOSH
+	vms_vector swapped_vec;
+#endif
 
-	multibuf[loc] = MULTI_CREATE_ROBOT_POWERUPS;			loc += 1;
-	multibuf[loc] = Player_num;								loc += 1;
-	multibuf[loc] = del_obj->contains_count;				loc += 1;
-	multibuf[loc] = del_obj->contains_type; 				loc += 1;
-	multibuf[loc] = del_obj->contains_id;					loc += 1;
-	*(short *)(multibuf+loc) = del_obj->segnum;			loc += 2;
-	*(vms_vector *)(multibuf+loc) = del_obj->pos;		loc += 12;
+	multibuf[loc] = MULTI_CREATE_ROBOT_POWERUPS;				loc += 1;
+	multibuf[loc] = Player_num;									loc += 1;
+	multibuf[loc] = del_obj->contains_count;					loc += 1;
+	multibuf[loc] = del_obj->contains_type; 					loc += 1;
+	multibuf[loc] = del_obj->contains_id;						loc += 1;
+	*(short *)(multibuf+loc) = INTEL_SHORT(del_obj->segnum);	loc += 2;
+#ifndef MACINTOSH
+	*(vms_vector *)(multibuf+loc) = del_obj->pos;				loc += 12;
+#else
+	swapped_vec.x = (fix)INTEL_INT((int)del_obj->pos.x);
+	swapped_vec.y = (fix)INTEL_INT((int)del_obj->pos.y);
+	swapped_vec.z = (fix)INTEL_INT((int)del_obj->pos.z);
+	*(vms_vector *)(multibuf+loc) = swapped_vec;				loc += 12;
+#endif
 
 	memset(multibuf+loc, -1, MAX_ROBOT_POWERUPS*sizeof(short));
+  
+   if (del_obj->contains_count!=Net_create_loc)
+	  Int3();  //Get Jason, a bad thing happened
 
 	if ((Net_create_loc > MAX_ROBOT_POWERUPS) || (Net_create_loc < 1))
 	{
@@ -585,14 +659,14 @@ multi_send_create_robot_powerups(object *del_obj)
 	}
 	for (i = 0; i < Net_create_loc; i++)
 	{
-		*(short *)(multibuf+loc) = Net_create_objnums[i];
+		*(short *)(multibuf+loc) = INTEL_SHORT(Net_create_objnums[i]);
 		loc += 2;
 		map_objnum_local_to_local(Net_create_objnums[i]);
 	}
 
 	Net_create_loc = 0;
 
-	multi_send_data(multibuf, 27, 1);
+	multi_send_data(multibuf, 27, 2);
 }
 
 void
@@ -604,7 +678,7 @@ multi_do_claim_robot(char *buf)
 
 	pnum = buf[1];
 
-	remote_botnum = *(short *)(buf+2);
+	remote_botnum = INTEL_SHORT(*(short *)(buf+2));
 	botnum = objnum_remote_to_local(remote_botnum, (byte)buf[4]);
 
 	if ((botnum > Highest_object_index) || (botnum < 0)) {
@@ -646,7 +720,7 @@ multi_do_release_robot(char *buf)
 
 	pnum = buf[1];
 
-	botnum = (objnum_remote_to_local(*(short *)(buf+2), (byte)buf[4]));
+	botnum = objnum_remote_to_local( INTEL_SHORT( *(short *)(buf+2) ), (byte)buf[4] );
 
 	if ((botnum < 0) || (botnum > Highest_object_index)) {
 		mprintf((1, "Ignoring release message for object I don't have.\n"));
@@ -681,10 +755,13 @@ multi_do_robot_position(char *buf)
 	short botnum;
 	char pnum;
 	int loc = 1;
+#ifdef MACINTOSH
+	shortpos sp;
+#endif
 
 	pnum = buf[loc];										loc += 1;
 
-	botnum = objnum_remote_to_local(*(short *)(buf+loc), (byte)buf[loc+2]);
+	botnum = objnum_remote_to_local( INTEL_SHORT( *(short *)(buf+loc) ), (byte)buf[loc+2] );
 																loc += 3;
 
 	if ((botnum < 0) || (botnum > Highest_object_index)) {
@@ -720,8 +797,14 @@ multi_do_robot_position(char *buf)
 
 	set_thrust_from_velocity(&Objects[botnum]); // Try to smooth out movement
 //	Objects[botnum].phys_info.drag = Robot_info[Objects[botnum].id].drag >> 4; // Set drag to low
-	
-	extract_shortpos(&Objects[botnum], (shortpos *)(buf+loc)); 
+
+#ifndef MACINTOSH	
+	extract_shortpos(&Objects[botnum], (shortpos *)(buf+loc), 0);
+#else
+	memcpy((ubyte *)(sp.bytemat), (ubyte *)(buf + loc), 9);		loc += 9;
+	memcpy((ubyte *)&(sp.xo), (ubyte *)(buf + loc), 14);
+	extract_shortpos(&Objects[botnum], &sp, 1);
+#endif
 }
 
 void
@@ -734,10 +817,13 @@ multi_do_robot_fire(char *buf)
 	robot_info *robptr;
 
 	pnum = buf[loc];												loc += 1;
-	botnum = objnum_remote_to_local(*(short *)(buf+loc), (byte)buf[loc+2]);
+	botnum = objnum_remote_to_local( INTEL_SHORT( *(short *)(buf+loc) ), (byte)buf[loc+2]);
 																		loc += 3;
 	gun_num = (byte)buf[loc];											loc += 1;
 	fire = *(vms_vector *)(buf+loc);							
+	fire.x = (fix)INTEL_INT((int)fire.x);
+	fire.y = (fix)INTEL_INT((int)fire.y);
+	fire.z = (fix)INTEL_INT((int)fire.z);
 
 	if ((botnum < 0) || (botnum > Highest_object_index) || (Objects[botnum].type != OBJ_ROBOT) || (Objects[botnum].flags & OF_EXPLODING))
 	{
@@ -748,7 +834,7 @@ multi_do_robot_fire(char *buf)
 	
 	// Do the firing
 	
-	if (gun_num == -1)
+	if (gun_num == -1 || gun_num==-2)
 	{
 		// Drop proximity bombs
 		vm_vec_add(&gun_point, &Objects[botnum].pos, &fire);
@@ -761,12 +847,16 @@ multi_do_robot_fire(char *buf)
 	
 	if (gun_num == -1) 
 		Laser_create_new_easy( &fire, &gun_point, botnum, PROXIMITY_ID, 1);
-	else
+	else if (gun_num == -2)
+		Laser_create_new_easy( &fire, &gun_point, botnum, SUPERPROX_ID, 1);
+	else	
 		Laser_create_new_easy( &fire, &gun_point, botnum, robptr->weapon_type, 1);
 }
 
+extern void drop_stolen_items (object *);
+
 int
-multi_explode_robot_sub(int botnum, int killer)
+multi_explode_robot_sub(int botnum, int killer,char isthief)
 {
 	object *robot;
 
@@ -809,14 +899,31 @@ multi_explode_robot_sub(int botnum, int killer)
 		multi_drop_robot_powerups(robot-Objects);
 		multi_delete_controlled_robot(robot-Objects);
 	}
+	else if (robot->ctype.ai_info.REMOTE_OWNER == -1 && network_i_am_master()) 
+	{
+		multi_drop_robot_powerups(robot-Objects);
+		//multi_delete_controlled_robot(robot-Objects);
+	}
+
+   if (isthief || Robot_info[robot->id].thief)
+	 drop_stolen_items(robot);
 
 	if (Robot_info[robot->id].boss_flag) {
 		if (!Boss_dying)
-			start_boss_death_sequence(robot);
+			start_boss_death_sequence(robot);	
 		else
-			return 0;
-	} else
-		explode_object(robot, STANDARD_EXPL_DELAY);
+			return (0);
+	} else if (Robot_info[robot->id].death_roll) {
+		start_robot_death_sequence(robot);
+	} else {
+		if (robot->id == SPECIAL_REACTOR_ROBOT)
+			special_reactor_stuff();
+		if (Robot_info[robot->id].kamikaze)
+			explode_object(robot,1);	//	Kamikaze, explode right away, IN YOUR FACE!
+		else
+			explode_object(robot,STANDARD_EXPL_DELAY);
+   }
+   
 	return 1;
 }
 
@@ -830,22 +937,22 @@ multi_do_robot_explode(char *buf)
 	short killer;
 	int pnum;
 	int rval;
+	char thief;
 
 	pnum = buf[loc]; 					loc += 1;
-	killer = objnum_remote_to_local(*(short *)(buf+loc), (byte)buf[loc+2]);
+	killer = objnum_remote_to_local( INTEL_SHORT( *(short *)(buf+loc) ), (byte)buf[loc+2]);
 											loc += 3;
-	botnum = objnum_remote_to_local(*(short *)(buf+loc), (byte)buf[loc+2]);
+	botnum = objnum_remote_to_local( INTEL_SHORT( *(short *)(buf+loc) ), (byte)buf[loc+2]);
 											loc += 3;
-
-//	Assert((botnum > -1) && (botnum <= Highest_object_index));
+   thief=buf[loc];
 
 	if ((botnum < 0) || (botnum > Highest_object_index)) {
 //		Int3();
-//		mprintf((0, "Ignored explode message for robot I don't have.\n"));
+		mprintf((0, "Ignored explode message for robot I don't have.\n"));
 		return;
 	}
 
-	rval = multi_explode_robot_sub(botnum, killer);
+	rval = multi_explode_robot_sub(botnum, killer,thief);
 
 	if (rval && (killer == Players[Player_num].objnum))
 		add_points_to_score(Robot_info[Objects[botnum].id].score_value);
@@ -860,7 +967,7 @@ multi_do_create_robot(char *buf)
 	
 	int fuelcen_num = buf[2];
 	int pnum = buf[1];
-	short objnum = *(short *)(buf+3);
+	short objnum = INTEL_SHORT( *(short *)(buf+3) );
 	int type = buf[5];
 
 	FuelCenter *robotcen;
@@ -920,12 +1027,12 @@ multi_do_boss_actions(char *buf)
 	int loc = 1;
 	short remote_objnum, segnum;
 
-	pnum = buf[loc]; 							loc += 1;
-	boss_objnum = *(short *)(buf+loc);	loc += 2;
-	action = buf[loc];						loc += 1;
-	secondary = buf[loc];					loc += 1;
-	remote_objnum = *(short *)(buf+loc);loc += 2;
-	segnum = *(short *)(buf+loc);			loc += 2;
+	pnum = buf[loc]; 									loc += 1;
+	boss_objnum = INTEL_SHORT( *(short *)(buf+loc) );	loc += 2;
+	action = buf[loc];									loc += 1;
+	secondary = buf[loc];								loc += 1;
+	remote_objnum = INTEL_SHORT( *(short *)(buf+loc) );	loc += 2;
+	segnum = INTEL_SHORT( *(short *)(buf+loc) );		loc += 2;
 	
 	if ((boss_objnum < 0) || (boss_objnum > Highest_object_index))
 	{
@@ -986,7 +1093,7 @@ multi_do_boss_actions(char *buf)
 			}
 			break;
 		case 2: // Cloak
-			Boss_hit_this_frame = 0;
+			Boss_hit_time = -F1_0*10;
 			Boss_cloak_start_time = GameTime;
 			Boss_cloak_end_time = GameTime + Boss_cloak_duration;
 			boss_obj->ctype.ai_info.CLOAKED = 1;
@@ -1026,15 +1133,21 @@ multi_do_create_robot_powerups(char *buf)
 	object del_obj;
 	int pnum, egg_objnum, i;
 
-	pnum = buf[loc];								loc += 1;
-	del_obj.contains_count = buf[loc];		loc += 1;	
-	del_obj.contains_type = buf[loc];		loc += 1;
-	del_obj.contains_id = buf[loc]; 			loc += 1;
-	del_obj.segnum = *(short *)(buf+loc);	loc += 2;
-	del_obj.pos = *(vms_vector *)(buf+loc);	loc += 12;
+	pnum = buf[loc];										loc += 1;
+	del_obj.contains_count = buf[loc];						loc += 1;	
+	del_obj.contains_type = buf[loc];						loc += 1;
+	del_obj.contains_id = buf[loc]; 						loc += 1;
+	del_obj.segnum = INTEL_SHORT( *(short *)(buf+loc) );	loc += 2;
+	del_obj.pos = *(vms_vector *)(buf+loc);					loc += 12;
+	
 	vm_vec_zero(&del_obj.mtype.phys_info.velocity);
 
+	del_obj.pos.x = (fix)INTEL_INT((int)del_obj.pos.x);
+	del_obj.pos.y = (fix)INTEL_INT((int)del_obj.pos.y);
+	del_obj.pos.z = (fix)INTEL_INT((int)del_obj.pos.z);
+
 	Assert((pnum >= 0) && (pnum < N_players));
+	Assert (pnum!=Player_num); // What? How'd we send ourselves this?
 
 	Net_create_loc = 0;
 	srand(1245L);
@@ -1049,8 +1162,11 @@ multi_do_create_robot_powerups(char *buf)
 
 	for (i = 0; i < Net_create_loc; i++)
 	{
-		if (*(short *)(buf+loc) != -1)
-			map_objnum_local_to_remote((short)Net_create_objnums[i], *(short *)(buf+loc), pnum);
+		short s;
+		
+		s = INTEL_SHORT( *(short *)(buf+loc) );
+		if ( s != -1)
+			map_objnum_local_to_remote((short)Net_create_objnums[i], s, pnum);
 		else
 			Objects[Net_create_objnums[i]].flags |= OF_SHOULD_BE_DEAD; // Delete objects other guy didn't create one of
 		loc += 2;
@@ -1088,6 +1204,8 @@ multi_drop_robot_powerups(int objnum)
 		//	If dropping a weapon that the player has, drop energy instead, unless it's vulcan, in which case drop vulcan ammo.
 		if (del_obj->contains_type == OBJ_POWERUP) {
 			maybe_replace_powerup_with_energy(del_obj);
+			if (!multi_powerup_is_allowed(del_obj->contains_id))
+				del_obj->contains_id=POW_SHIELD_BOOST;
 
 			// No key drops in non-coop games!
 			if (!(Game_mode & GM_MULTI_COOP)) {
@@ -1110,7 +1228,12 @@ multi_drop_robot_powerups(int objnum)
 			del_obj->contains_type = robptr->contains_type;
 			del_obj->contains_id = robptr->contains_id;
 			if (del_obj->contains_type == OBJ_POWERUP)
+			 {
 				maybe_replace_powerup_with_energy(del_obj);
+				if (!multi_powerup_is_allowed(del_obj->contains_id))
+					del_obj->contains_id=POW_SHIELD_BOOST;
+			 }
+		
 			srand(1245L);
 			if (del_obj->contains_count > 0)
 				egg_objnum = object_create_egg(del_obj);
@@ -1137,8 +1260,8 @@ void multi_robot_request_change(object *robot, int player_num)
 	if (!(Game_mode & GM_MULTI_ROBOTS))
 		return;
 	
-	if (robot->ctype.ai_info.REMOTE_OWNER != Player_num)
-		return;
+//	if (robot->ctype.ai_info.REMOTE_OWNER == Player_num)
+//		return;
 
 	slot = robot->ctype.ai_info.REMOTE_SLOT_NUM;
 
@@ -1164,6 +1287,3 @@ void multi_robot_request_change(object *robot, int player_num)
 	}
 }
 
-#endif
-#endif
-

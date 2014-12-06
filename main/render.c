@@ -8,299 +8,17 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/render.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/12/19 15:31:36 $
- *
- * Sample setup for RCS header
- *
- * $Log: render.c $
- * Revision 2.5  1995/12/19  15:31:36  john
- * Made stereo mode only record 1 eye in demo.
- * 
- * Revision 2.4  1995/03/20  18:15:53  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.3  1995/03/13  16:11:05  john
- * Maybe fixed bug that lighting didn't work with vr helmets.
- * 
- * Revision 2.2  1995/03/09  15:33:49  john
- * Fixed bug with iglasses timeout too long, and objects
- * disappearing from left eye.
- * 
- * Revision 2.1  1995/03/06  15:23:59  john
- * New screen techniques.
- * 
- * Revision 2.0  1995/02/27  11:31:01  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.252  1995/02/22  13:49:38  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.251  1995/02/11  15:07:26  matt
- * Took out code which was mostly intended as part of a larger renderer
- * change which never happened.  This new code was causing problems with
- * the level 4 control center.
- * 
- * Revision 1.250  1995/02/07  16:28:53  matt
- * Fixed problem with new code
- * 
- * Revision 1.249  1995/02/06  14:38:58  matt
- * Took out some code that didn't compile when editor in
- * 
- * Revision 1.248  1995/02/06  13:45:25  matt
- * Structural changes, plus small sorting improvements
- * 
- * Revision 1.247  1995/02/02  15:59:26  matt
- * Changed assert to int3.
- * 
- * Revision 1.246  1995/02/01  21:02:27  matt
- * Added partial fix for rendering bugs
- * Ripped out laser hack system
- * 
- * Revision 1.245  1995/01/20  15:14:30  matt
- * Added parens to fix precedence bug
- * 
- * Revision 1.244  1995/01/14  19:16:59  john
- * First version of new bitmap paging code.
- * 
- * Revision 1.243  1995/01/03  20:19:25  john
- * Pretty good working version of game save.
- * 
- * Revision 1.242  1994/12/29  13:51:05  john
- * Made the floating reticle draw in the spot
- * regardless of the eye offset.
- * 
- * Revision 1.241  1994/12/23  15:02:55  john
- * Tweaked floating reticle.
- * 
- * Revision 1.240  1994/12/23  14:27:45  john
- * Changed offset of floating reticle to line up with
- * lasers a bit better.
- * 
- * Revision 1.239  1994/12/23  14:22:50  john
- * Added floating reticle for VR helments.  
- * 
- * Revision 1.238  1994/12/13  14:07:50  matt
- * Fixed tmap_num2 bug in search mode
- * 
- * Revision 1.237  1994/12/11  00:45:53  matt
- * Fixed problem when object sort buffer got full
- * 
- * Revision 1.236  1994/12/09  18:46:06  matt
- * Added a little debugging
- * 
- * Revision 1.235  1994/12/09  14:59:16  matt
- * Added system to attach a fireball to another object for rendering purposes,
- * so the fireball always renders on top of (after) the object.
- * 
- * Revision 1.234  1994/12/08  15:46:54  matt
- * Fixed buffer overflow that caused seg depth screwup
- * 
- * Revision 1.233  1994/12/08  11:51:53  matt
- * Took out some unused stuff
- * 
- * Revision 1.232  1994/12/06  16:31:48  mike
- * fix detriangulation problems.
- * 
- * Revision 1.231  1994/12/05  15:32:51  matt
- * Changed an assert to an int3 & return
- * 
- * Revision 1.230  1994/12/04  17:28:04  matt
- * Got rid of unused no_render_flag array, and took out box clear when searching
- * 
- * Revision 1.229  1994/12/04  15:51:14  matt
- * Fixed linear tmap transition for objects
- * 
- * Revision 1.228  1994/12/03  20:16:50  matt
- * Turn off window clip for objects
- * 
- * Revision 1.227  1994/12/03  14:48:00  matt
- * Restored some default settings
- * 
- * Revision 1.226  1994/12/03  14:44:32  matt
- * Fixed another difficult bug in the window clip system
- * 
- * Revision 1.225  1994/12/02  13:19:56  matt
- * Fixed rect clears at terminus of rendering
- * Made a bunch of debug code compile out
- * 
- * Revision 1.224  1994/12/02  11:58:21  matt
- * Fixed window clip bug
- * 
- * Revision 1.223  1994/11/28  21:50:42  mike
- * optimizations.
- * 
- * Revision 1.222  1994/11/28  01:32:15  mike
- * turn off window clearing.
- * 
- * Revision 1.221  1994/11/27  23:11:52  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.220  1994/11/20  15:58:55  matt
- * Don't migrate the control center, since it doesn't move out of its segment
- * 
- * Revision 1.219  1994/11/19  23:54:36  mike
- * change window colors.
- * 
- * Revision 1.218  1994/11/19  15:20:25  mike
- * rip out unused code and data
- * 
- * Revision 1.217  1994/11/18  13:21:24  mike
- * Clear only view portals into rest of world based on value of Clear_window.
- * 
- * Revision 1.216  1994/11/15  17:02:10  matt
- * Re-added accidentally deleted variable
- * 
- * Revision 1.215  1994/11/15  16:51:50  matt
- * Made rear view only switch to rear cockpit if cockpit on in front view
- * 
- * Revision 1.214  1994/11/14  20:47:57  john
- * Attempted to strip out all the code in the game 
- * directory that uses any ui code.
- * 
- * Revision 1.213  1994/11/11  15:37:07  mike
- * write orange for background to show render bugs.
- * 
- * Revision 1.212  1994/11/09  22:57:18  matt
- * Keep tract of depth of segments rendered, for detail level optimization
- * 
- * Revision 1.211  1994/11/01  23:40:14  matt
- * Elegantly handler buffer getting full
- * 
- * Revision 1.210  1994/10/31  22:28:13  mike
- * Fix detriangulation bug.
- * 
- * Revision 1.209  1994/10/31  11:48:56  mike
- * Optimize detriangulation, speedup of about 4% in many cases, 0% in many.
- * 
- * Revision 1.208  1994/10/30  20:08:34  matt
- * For endlevel: added big explosion at tunnel exit; made lights in tunnel 
- * go out; made more explosions on walls.
- * 
- * Revision 1.207  1994/10/27  14:14:35  matt
- * Don't do light flash during endlevel sequence
- * 
- * Revision 1.206  1994/10/11  12:05:42  mike
- * Improve detriangulation.
- * 
- * Revision 1.205  1994/10/07  15:27:00  john
- * Commented out the code that moves your eye
- * forward.
- * 
- * Revision 1.204  1994/10/05  16:07:38  mike
- * Don't detriangulate sides if in player's segment.  Prevents player going behind a wall,
- * though there are cases in which it would be ok to detriangulate these.
- * 
- * Revision 1.203  1994/10/03  12:44:05  matt
- * Took out unreferenced code
- * 
- * Revision 1.202  1994/09/28  14:08:45  john
- * Added Zoom stuff back in, but ifdef'd it out.
- * 
- * Revision 1.201  1994/09/25  23:41:49  matt
- * Changed the object load & save code to read/write the structure fields one
- * at a time (rather than the whole structure at once).  This mean that the
- * object structure can be changed without breaking the load/save functions.
- * As a result of this change, the local_object data can be and has been 
- * incorporated into the object array.  Also, timeleft is now a property 
- * of all objects, and the object structure has been otherwise cleaned up.
- * 
- * Revision 1.200  1994/09/25  15:50:10  mike
- * Integrate my debug changes which shows how many textures were rendered
- * this frame.
- * 
- * Revision 1.199  1994/09/25  15:45:22  matt
- * Added OBJ_LIGHT, a type of object that casts light
- * Added generalized lifeleft, and moved it to local_object
- * 
- * Revision 1.198  1994/09/15  21:23:32  matt
- * Changed system to keep track of whether & what cockpit is up
- * 
- * Revision 1.197  1994/09/15  16:30:12  mike
- * Comment out call to object_render_targets, which did nothing.
- * 
- * Revision 1.196  1994/09/07  22:25:51  matt
- * Don't migrate through semi-transparent walls
- * 
- * Revision 1.195  1994/09/07  19:16:21  mike
- * Homing missile.
- * 
- * Revision 1.194  1994/08/31  20:54:17  matt
- * Don't do flash effect while whiting out
- * 
- * Revision 1.193  1994/08/23  17:20:12  john
- * Added rear-view cockpit.
- * 
- * Revision 1.192  1994/08/22  14:36:35  john
- * Made R key make a "reverse" view render.
- * 
- * Revision 1.191  1994/08/19  20:09:26  matt
- * Added end-of-level cut scene with external scene
- * 
- * Revision 1.190  1994/08/10  19:56:17  john
- * Changed font stuff; Took out old menu; messed up lots of
- * other stuff like game sequencing messages, etc.
- * 
- * Revision 1.189  1994/08/10  14:45:05  john
- * *** empty log message ***
- * 
- * Revision 1.188  1994/08/09  16:04:06  john
- * Added network players to editor.
- * 
- * Revision 1.187  1994/08/05  17:07:05  john
- * Made lasers be two objects, one drawing after the other
- * all the time.
- * 
- * Revision 1.186  1994/08/05  10:07:57  matt
- * Disable window check checking (i.e., always use window check)
- * 
- * Revision 1.185  1994/08/04  19:11:30  matt
- * Changed a bunch of vecmat calls to use multiple-function routines, and to
- * allow the use of C macros for some functions
- * 
- * Revision 1.184  1994/08/04  00:21:14  matt
- * Cleaned up fvi & physics error handling; put in code to make sure objects
- * are in correct segment; simplified segment finding for objects and points
- * 
- * Revision 1.183  1994/08/02  19:04:28  matt
- * Cleaned up vertex list functions
- * 
- * Revision 1.182  1994/07/29  15:13:33  matt
- * When window check turned off, cut render depth in half
- * 
- * Revision 1.181  1994/07/29  11:03:50  matt
- * Use highest_segment_index instead of num_segments so render works from
- * the editor
- * 
- * Revision 1.180  1994/07/29  10:04:34  mike
- * Update Cursegp when an object is selected.
- * 
- * Revision 1.179  1994/07/25  00:02:50  matt
- * Various changes to accomodate new 3d, which no longer takes point numbers
- * as parms, and now only takes pointers to points.
- * 
- * Revision 1.178  1994/07/24  14:37:49  matt
- * Added angles for player head
- * 
- * Revision 1.177  1994/07/20  19:08:07  matt
- * If in editor, don't move eye from center of viewer object
- * 
- * 
- */
-
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: render.c 2.5 1995/12/19 15:31:36 john Exp $";
+static char rcsid[] = "$Id: render.c 2.42 1996/12/04 18:28:12 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "inferno.h"
 #include "segment.h"
 #include "error.h"
@@ -321,7 +39,7 @@ static char rcsid[] = "$Id: render.c 2.5 1995/12/19 15:31:36 john Exp $";
 #include "gameseg.h"
 #include "vclip.h"
 #include "lighting.h"
-#include	"fuelcen.h"
+#include	"cntrlcen.h"
 #include "newdemo.h"
 #include "automap.h"
 #include "endlevel.h"
@@ -334,6 +52,10 @@ static char rcsid[] = "$Id: render.c 2.5 1995/12/19 15:31:36 john Exp $";
 
 #ifdef EDITOR
 #include "editor\editor.h"
+#endif
+
+#if defined(POLY_ACC)
+#include "poly_acc.h"
 #endif
 
 //used for checking if points have been rotated
@@ -351,7 +73,11 @@ vms_vector Viewer_eye;	//valid during render
 
 int	N_render_segs;
 
+#ifndef MACINTOSH
 fix Render_zoom = 0x9000;							//the player's zoom factor
+#else
+fix Render_zoom = 0xB000;
+#endif
 
 #ifndef NDEBUG
 ubyte object_rendered[MAX_OBJECTS];
@@ -415,7 +141,7 @@ int toggle_show_only_curside(void)
 	return Show_only_curside = !Show_only_curside;
 }
 
-draw_outline(int nverts,g3s_point **pointlist)
+void draw_outline(int nverts,g3s_point **pointlist)
 {
 	int i;
 
@@ -488,13 +214,13 @@ void draw_3d_reticle(fix eye_offset)
 		if ( !reticle_canvas )
 			Error( "Couldn't malloc reticle_canvas" );
 		atexit( free_reticle_canvas );
-		reticle_canvas->cv_bitmap.bm_selector = 0;
+		reticle_canvas->cv_bitmap.bm_handle = 0;
 		reticle_canvas->cv_bitmap.bm_flags = BM_FLAG_TRANSPARENT;
 	}
 
 	saved_canvas = grd_curcanv;
 	gr_set_current_canvas(reticle_canvas);
-	gr_clear_canvas( 255 );		// Clear to Xparent
+	gr_clear_canvas( TRANSPARENCY_COLOR );		// Clear to Xparent
 	show_reticle(1);
 	gr_set_current_canvas(saved_canvas);
 	
@@ -505,18 +231,20 @@ void draw_3d_reticle(fix eye_offset)
 }
 
 
+extern fix Seismic_tremor_magnitude;
+
 fix flash_scale;
 
 #define FLASH_CYCLE_RATE f1_0
 
-fix flash_rate = FLASH_CYCLE_RATE;
+fix Flash_rate = FLASH_CYCLE_RATE;
 
 //cycle the flashing light for when mine destroyed
-flash_frame()
+void flash_frame()
 {
 	static fixang flash_ang=0;
 
-	if (!Fuelcen_control_center_destroyed)
+	if (!Control_center_destroyed && !Seismic_tremor_magnitude)
 		return;
 
 	if (Endlevel_sequence)
@@ -526,11 +254,24 @@ flash_frame()
 		return;
 
 //	flash_ang += fixmul(FLASH_CYCLE_RATE,FrameTime);
-	flash_ang += fixmul(flash_rate,FrameTime);
+	if (Seismic_tremor_magnitude) {
+		fix	added_flash;
 
-	fix_fastsincos(flash_ang,&flash_scale,NULL);
+		added_flash = abs(Seismic_tremor_magnitude);
+		if (added_flash < F1_0)
+			added_flash *= 16;
 
-	flash_scale = (flash_scale + f1_0)/2;
+		flash_ang += fixmul(Flash_rate, fixmul(FrameTime, added_flash+F1_0));
+		fix_fastsincos(flash_ang,&flash_scale,NULL);
+		flash_scale = (flash_scale + F1_0*3)/4;	//	gets in range 0.5 to 1.0
+	} else {
+		flash_ang += fixmul(Flash_rate,FrameTime);
+		fix_fastsincos(flash_ang,&flash_scale,NULL);
+		flash_scale = (flash_scale + f1_0)/2;
+		if (Difficulty_level == 0)
+			flash_scale = (flash_scale+F1_0*3)/4;
+	}
+
 
 }
 
@@ -540,9 +281,9 @@ flash_frame()
 //	hideously hacked in headlight system.
 //	vp is a pointer to vertex ids.
 //	tmap1, tmap2 are texture map ids.  tmap2 is the pasty one.
-void render_face(int segnum, int sidenum, int nv, short *vp, int tmap1, int tmap2, uvl *uvlp, vms_vector *norm)
+void render_face(int segnum, int sidenum, int nv, short *vp, int tmap1, int tmap2, uvl *uvlp, int wid_flags)
 {
-	fix			face_light;
+	// -- Using new headlight system...fix			face_light;
 	grs_bitmap	*bm;
 	fix			reflect;
 	uvl			uvl_copy[8];
@@ -556,17 +297,37 @@ void render_face(int segnum, int sidenum, int nv, short *vp, int tmap1, int tmap
 		pointlist[i] = &Segment_points[vp[i]];
 	}
 
-	face_light = -vm_vec_dot(&Viewer->orient.fvec,norm);
+	//handle cloaked walls
+	if (wid_flags & WID_CLOAKED_FLAG) {
+		int wall_num = Segments[segnum].sides[sidenum].wall_num;
+		Assert(wall_num != -1);
+		Gr_scanline_darkening_level = Walls[wall_num].cloak_value;
+		gr_setcolor(BM_XRGB(0,0,0));	//set to black (matters for s3)
+
+		g3_draw_poly(nv,pointlist);		//draw as flat poly
+
+		Gr_scanline_darkening_level = GR_FADE_LEVELS;
+
+		return;
+	}
+
+	// -- Using new headlight system...face_light = -vm_vec_dot(&Viewer->orient.fvec,norm);
 
 	if (tmap1 >= NumTextures) {
 		mprintf((0,"Invalid tmap number %d, NumTextures=%d, changing to 0\n",tmap1,NumTextures));
+
+	#ifndef RELEASE
 		Int3();
+	#endif
+
 		Segments[segnum].sides[sidenum].tmap_num = 0;
 	}
 
 	// New code for overlapping textures...
 	if (tmap2 != 0)
+   {
 		bm = texmerge_get_cached_bitmap( tmap1, tmap2 );
+   }
 	else	{
 		bm = &GameBitmaps[Textures[tmap1].index];
 		PIGGY_PAGE_IN(Textures[tmap1]);
@@ -583,21 +344,21 @@ void render_face(int segnum, int sidenum, int nv, short *vp, int tmap1, int tmap
 	{
 		int i;
 
-		face_light = fixmul(face_light,reflect);
+		// -- Using new headlight system...face_light = fixmul(face_light,reflect);
 
 		for (i=0;i<nv;i++) {
 
 			//the uvl struct has static light already in it
 
 			//scale static light for destruction effect
-			if (Fuelcen_control_center_destroyed)	//make lights flash
+			if (Control_center_destroyed || Seismic_tremor_magnitude)	//make lights flash
 				uvl_copy[i].l = fixmul(flash_scale,uvl_copy[i].l);
 
 			//add in dynamic light (from explosions, etc.)
 			uvl_copy[i].l += Dynamic_light[vp[i]];
 
 			//add in light from player's headlight
-			uvl_copy[i].l += compute_headlight_light(&Segment_points[vp[i]].p3_vec,face_light);
+			// -- Using new headlight system...uvl_copy[i].l += compute_headlight_light(&Segment_points[vp[i]].p3_vec,face_light);
 
 			//saturate at max value
 			if (uvl_copy[i].l > MAX_LIGHT)
@@ -606,13 +367,13 @@ void render_face(int segnum, int sidenum, int nv, short *vp, int tmap1, int tmap
 		}
 	}
 
-
 #ifdef EDITOR
 	if ((Render_only_bottom) && (sidenum == WBOTTOM))
 		g3_draw_tmap(nv,pointlist,(g3s_uvl *) uvl_copy,&GameBitmaps[Textures[Bottom_bitmap_num].index]);
 	else
 #endif
-		g3_draw_tmap(nv,pointlist,(g3s_uvl *) uvl_copy,bm);
+
+   g3_draw_tmap(nv,pointlist,(g3s_uvl *) uvl_copy,bm);
 
 	#ifndef NDEBUG
 	if (Outline_mode) draw_outline(nv, pointlist);
@@ -649,7 +410,7 @@ void check_face(int segnum, int sidenum, int facenum, int nv, short *vp, int tma
  save_lighting = Lighting_on;
  Lighting_on = 2;
 		//g3_draw_poly(nv,vp);
-		g3_draw_tmap(nv,pointlist, uvl_copy, bm);
+		g3_draw_tmap(nv,pointlist, (g3s_uvl *)uvl_copy, bm);
  Lighting_on = save_lighting;
 
 		if (gr_ugpixel(&grd_curcanv->cv_bitmap,_search_x,_search_y) == 1) {
@@ -666,6 +427,9 @@ fix	Tulate_min_dot = (F1_0/4);
 //--unused-- fix	Tulate_min_ratio = (2*F1_0);
 fix	Min_n0_n1_dot	= (F1_0*15/16);
 
+extern int contains_flare(segment *segp, int sidenum);
+extern fix	Obj_light_xlate[16];
+
 // -----------------------------------------------------------------------------------
 //	Render a side.
 //	Check for normal facing.  If so, render faces on side dictated by sidep->type.
@@ -678,8 +442,12 @@ void render_side(segment *segp, int sidenum)
 	uvl			temp_uvls[3];
 	fix			min_dot, max_dot;
 	vms_vector  normals[2];
+	int			wid_flags;
 
-	if (!(WALL_IS_DOORWAY(segp,sidenum) & WID_RENDER_FLAG))		//if (WALL_IS_DOORWAY(segp, sidenum) == WID_NO_WALL)
+
+	wid_flags = WALL_IS_DOORWAY(segp,sidenum);
+
+	if (!(wid_flags & WID_RENDER_FLAG))		//if (WALL_IS_DOORWAY(segp, sidenum) == WID_NO_WALL)
 		return;
 
 	#ifdef COMPACT_SEGS	
@@ -689,25 +457,82 @@ void render_side(segment *segp, int sidenum)
 		normals[1] = segp->sides[sidenum].normals[1];
 	#endif
 
-	//	Regardless of whether this side is comprised of a single quad, or two triangles, we need to know one normal, so
-	//	deal with it, get the dot product.
-	if (sidep->type == SIDE_IS_TRI_13)
-		vm_vec_normalized_dir(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][1]]]);
-	else
-		vm_vec_normalized_dir(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
-
-	get_side_verts(vertnum_list,segp-Segments,sidenum);
-
-	v_dot_n0 = vm_vec_dot(&tvec, &normals[0]);
+	//	========== Mark: Here is the change...beginning here: ==========
 
 	if (sidep->type == SIDE_IS_QUAD) {
+
+		vm_vec_sub(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
+
+		// -- Old, slow way --	//	Regardless of whether this side is comprised of a single quad, or two triangles, we need to know one normal, so
+		// -- Old, slow way --	//	deal with it, get the dot product.
+		// -- Old, slow way --	if (sidep->type == SIDE_IS_TRI_13)
+		// -- Old, slow way --		vm_vec_normalized_dir(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][1]]]);
+		// -- Old, slow way --	else
+		// -- Old, slow way --		vm_vec_normalized_dir(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
+
+		get_side_verts(vertnum_list,segp-Segments,sidenum);
+		v_dot_n0 = vm_vec_dot(&tvec, &normals[0]);
+
+// -- flare creates point -- {
+// -- flare creates point -- 	int	flare_index;
+// -- flare creates point -- 
+// -- flare creates point -- 	flare_index = contains_flare(segp, sidenum);
+// -- flare creates point -- 
+// -- flare creates point -- 	if (flare_index != -1) {
+// -- flare creates point -- 		int			tri;
+// -- flare creates point -- 		fix			u, v, l;
+// -- flare creates point -- 		vms_vector	*hit_point;
+// -- flare creates point -- 		short			vertnum_list[4];
+// -- flare creates point -- 
+// -- flare creates point -- 		hit_point = &Objects[flare_index].pos;
+// -- flare creates point -- 
+// -- flare creates point -- 		find_hitpoint_uv( &u, &v, &l, hit_point, segp, sidenum, 0);	//	last parm means always use face 0.
+// -- flare creates point -- 
+// -- flare creates point -- 		get_side_verts(vertnum_list, segp-Segments, sidenum);
+// -- flare creates point -- 
+// -- flare creates point -- 		g3_rotate_point(&Segment_points[MAX_VERTICES-1], hit_point);
+// -- flare creates point -- 
+// -- flare creates point -- 		for (tri=0; tri<4; tri++) {
+// -- flare creates point -- 			short	tri_verts[3];
+// -- flare creates point -- 			uvl	tri_uvls[3];
+// -- flare creates point -- 
+// -- flare creates point -- 			tri_verts[0] = vertnum_list[tri];
+// -- flare creates point -- 			tri_verts[1] = vertnum_list[(tri+1) % 4];
+// -- flare creates point -- 			tri_verts[2] = MAX_VERTICES-1;
+// -- flare creates point -- 
+// -- flare creates point -- 			tri_uvls[0] = sidep->uvls[tri];
+// -- flare creates point -- 			tri_uvls[1] = sidep->uvls[(tri+1)%4];
+// -- flare creates point -- 			tri_uvls[2].u = u;
+// -- flare creates point -- 			tri_uvls[2].v = v;
+// -- flare creates point -- 			tri_uvls[2].l = F1_0;
+// -- flare creates point -- 
+// -- flare creates point -- 			render_face(segp-Segments, sidenum, 3, tri_verts, sidep->tmap_num, sidep->tmap_num2, tri_uvls, &normals[0]);
+// -- flare creates point -- 		}
+// -- flare creates point -- 
+// -- flare creates point -- 	return;
+// -- flare creates point -- 	}
+// -- flare creates point -- }
+
 		if (v_dot_n0 >= 0) {
-			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, &normals[0]);
+			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 			#ifdef EDITOR
 			check_face(segp-Segments, sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 			#endif
 		}
 	} else {
+		//	Regardless of whether this side is comprised of a single quad, or two triangles, we need to know one normal, so
+		//	deal with it, get the dot product.
+		if (sidep->type == SIDE_IS_TRI_13)
+			vm_vec_normalized_dir_quick(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][1]]]);
+		else
+			vm_vec_normalized_dir_quick(&tvec, &Viewer_eye, &Vertices[segp->verts[Side_to_verts[sidenum][0]]]);
+
+		get_side_verts(vertnum_list,segp-Segments,sidenum);
+
+		v_dot_n0 = vm_vec_dot(&tvec, &normals[0]);
+
+		//	========== Mark: The change ends here. ==========
+
 		//	Although this side has been triangulated, because it is not planar, see if it is acceptable
 		//	to render it as a single quadrilateral.  This is a function of how far away the viewer is, how non-planar
 		//	the face is, how normal to the surfaces the view is.
@@ -731,7 +556,7 @@ void render_side(segment *segp, int sidenum)
 			if (n0_dot_n1 < Min_n0_n1_dot)
 				goto im_so_ashamed;
 
-			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, &normals[0]);
+			render_face(segp-Segments, sidenum, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 			#ifdef EDITOR
 			check_face(segp-Segments, sidenum, 0, 4, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 			#endif
@@ -739,7 +564,7 @@ void render_side(segment *segp, int sidenum)
 im_so_ashamed: ;
 			if (sidep->type == SIDE_IS_TRI_02) {
 				if (v_dot_n0 >= 0) {
-					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, &normals[0]);
+					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls, wid_flags);
 					#ifdef EDITOR
 					check_face(segp-Segments, sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
@@ -748,14 +573,14 @@ im_so_ashamed: ;
 				if (v_dot_n1 >= 0) {
 					temp_uvls[0] = sidep->uvls[0];		temp_uvls[1] = sidep->uvls[2];		temp_uvls[2] = sidep->uvls[3];
 					vertnum_list[1] = vertnum_list[2];	vertnum_list[2] = vertnum_list[3];	// want to render from vertices 0, 2, 3 on side
-					render_face(segp-Segments, sidenum, 3, &vertnum_list[0], sidep->tmap_num, sidep->tmap_num2, temp_uvls, &normals[1]);
+					render_face(segp-Segments, sidenum, 3, &vertnum_list[0], sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
 					#ifdef EDITOR
 					check_face(segp-Segments, sidenum, 1, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
 				}
 			} else if (sidep->type ==  SIDE_IS_TRI_13) {
 				if (v_dot_n1 >= 0) {
-					render_face(segp-Segments, sidenum, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, &sidep->uvls[1], &normals[1]);	// rendering 1,2,3, so just skip 0
+					render_face(segp-Segments, sidenum, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, &sidep->uvls[1], wid_flags);	// rendering 1,2,3, so just skip 0
 					#ifdef EDITOR
 					check_face(segp-Segments, sidenum, 1, 3, &vertnum_list[1], sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
@@ -764,7 +589,7 @@ im_so_ashamed: ;
 				if (v_dot_n0 >= 0) {
 					temp_uvls[0] = sidep->uvls[0];		temp_uvls[1] = sidep->uvls[1];		temp_uvls[2] = sidep->uvls[3];
 					vertnum_list[2] = vertnum_list[3];		// want to render from vertices 0,1,3
-					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, temp_uvls, &normals[0]);
+					render_face(segp-Segments, sidenum, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, temp_uvls, wid_flags);
 					#ifdef EDITOR
 					check_face(segp-Segments, sidenum, 0, 3, vertnum_list, sidep->tmap_num, sidep->tmap_num2, sidep->uvls);
 					#endif
@@ -778,7 +603,7 @@ im_so_ashamed: ;
 }
 
 #ifdef EDITOR
-render_object_search(object *obj)
+void render_object_search(object *obj)
 {
 	int changed=0;
 
@@ -806,7 +631,9 @@ render_object_search(object *obj)
 }
 #endif
 
-do_render_object(int objnum)
+extern ubyte DemoDoingRight,DemoDoingLeft;
+
+void do_render_object(int objnum, int window_num)
 {
 	#ifdef EDITOR
 	int save_3d_outline;
@@ -822,20 +649,34 @@ do_render_object(int objnum)
 		Int3();		//get Matt!!!
 		return;
 	}
+
 	object_rendered[objnum] = 1;
 	#endif
 
+   if (Newdemo_state==ND_STATE_PLAYBACK)  
+	 {
+	  if ((DemoDoingLeft==6 || DemoDoingRight==6) && Objects[objnum].type==OBJ_PLAYER)
+		{
+			// A nice fat hack: keeps the player ship from showing up in the
+			// small extra view when guiding a missile in the big window
+			
+			mprintf ((0,"Returning from render_object prematurely...\n"));
+  			return; 
+		}
+	 }
+
 	//	Added by MK on 09/07/94 (at about 5:28 pm, CDT, on a beautiful, sunny late summer day!) so
 	//	that the guided missile system will know what objects to look at.
+	//	I didn't know we had guided missiles before the release of D1. --MK
 	if ((Objects[objnum].type == OBJ_ROBOT) || (Objects[objnum].type == OBJ_PLAYER)) {
-		//Assert(Num_rendered_objects < MAX_RENDERED_OBJECTS);
+		//Assert(Window_rendered_data[window_num].rendered_objects < MAX_RENDERED_OBJECTS);
 		//	This peculiar piece of code makes us keep track of the most recently rendered objects, which
 		//	are probably the higher priority objects, without overflowing the buffer
-		if (Num_rendered_objects >= MAX_RENDERED_OBJECTS) {
+		if (Window_rendered_data[window_num].num_objects >= MAX_RENDERED_OBJECTS) {
 			Int3();
-			Num_rendered_objects /= 2;
+			Window_rendered_data[window_num].num_objects /= 2;
 		}
-		Ordered_rendered_object_list[Num_rendered_objects++] = objnum;
+		Window_rendered_data[window_num].rendered_objects[Window_rendered_data[window_num].num_objects++] = objnum;
 	}
 
 	if ((count++ > MAX_OBJECTS) || (obj->next == objnum)) {
@@ -961,7 +802,7 @@ void project_list(int nv,short *pointnumlist)
 
 
 // -----------------------------------------------------------------------------------
-void render_segment(int segnum)
+void render_segment(int segnum, int window_num)
 {
 	segment		*seg = &Segments[segnum];
 	g3s_codes 	cc;
@@ -969,7 +810,7 @@ void render_segment(int segnum)
 
 	Assert(segnum!=-1 && segnum<=Highest_segment_index);
 
-	cc=rotate_list(8,&seg->verts);
+	cc=rotate_list(8,seg->verts);
 
 	if (! cc.and) {		//all off screen?
 
@@ -978,7 +819,8 @@ void render_segment(int segnum)
 
 		// set_segment_local_light_value(segnum,INITIAL_LOCAL_LIGHT);
 
-		Automap_visited[segnum]=1;
+      if (Viewer->type!=OBJ_ROBOT)
+  	   	Automap_visited[segnum]=1;
 
 		for (sn=0; sn<MAX_SIDES_PER_SEGMENT; sn++)
 			render_side(seg, sn);
@@ -993,7 +835,7 @@ void render_segment(int segnum)
 	if (!migrate_objects) {
 		int objnum;
 		for (objnum=seg->objects;objnum!=-1;objnum=Objects[objnum].next)
-			do_render_object(objnum);
+			do_render_object(objnum, window_num);
 	}
 	#endif
 
@@ -1046,11 +888,11 @@ void render_segment(int segnum)
 #ifndef NDEBUG
 
 //draw outline for curside
-outline_seg_side(segment *seg,int _side,int edge,int vert)
+void outline_seg_side(segment *seg,int _side,int edge,int vert)
 {
 	g3s_codes cc;
 
-	cc=rotate_list(8,&seg->verts);
+	cc=rotate_list(8,seg->verts);
 
 	if (! cc.and) {		//all off screen?
 		side *s;
@@ -1125,7 +967,7 @@ ubyte code_window_point(fix x,fix y,window *w)
 }
 
 #ifndef NDEBUG
-draw_window_box(int color,short left,short top,short right,short bot)
+void draw_window_box(int color,short left,short top,short right,short bot)
 {
 	short l,t,r,b;
 
@@ -1174,12 +1016,9 @@ short render_obj_list[MAX_RENDER_SEGS+N_EXTRA_OBJ_LISTS][OBJS_PER_SEG];
 #define RED   BM_XRGB(63,0,0)
 #define WHITE BM_XRGB(63,63,63)
 
-//Global vars for window clip test
-int Window_clip_left,Window_clip_top,Window_clip_right,Window_clip_bot;
-
 //Given two sides of segment, tell the two verts which form the 
 //edge between them
-Two_sides_to_edge[6][6][2] = {
+short Two_sides_to_edge[6][6][2] = {
 	{ {-1,-1}, {3,7}, {-1,-1}, {2,6}, {6,7}, {2,3} },
 	{ {3,7}, {-1,-1}, {0,4}, {-1,-1}, {4,7}, {0,3} },
 	{ {-1,-1}, {0,4}, {-1,-1}, {1,5}, {4,5}, {0,1} },
@@ -1189,7 +1028,7 @@ Two_sides_to_edge[6][6][2] = {
 };
 
 //given an edge specified by two verts, give the two sides on that edge
-Edge_to_sides[8][8][2] = {
+int Edge_to_sides[8][8][2] = {
 	{ {-1,-1}, {2,5}, {-1,-1}, {1,5}, {1,2}, {-1,-1}, {-1,-1}, {-1,-1} },
 	{ {2,5}, {-1,-1}, {3,5}, {-1,-1}, {-1,-1}, {2,3}, {-1,-1}, {-1,-1} },
 	{ {-1,-1}, {3,5}, {-1,-1}, {0,5}, {-1,-1}, {-1,-1}, {0,3}, {-1,-1} },
@@ -1438,7 +1277,7 @@ int sort_seg_children(segment *seg,int n_children,short *child_list)
 	return count;
 }
 
-add_obj_to_seglist(int objnum,int listnum)
+void add_obj_to_seglist(int objnum,int listnum)
 {
 	int i,checkn,marker;
 
@@ -1500,7 +1339,7 @@ add_obj_to_seglist(int objnum,int listnum)
 
 }
 
-#define SORT_LIST_SIZE 50
+#define SORT_LIST_SIZE 100
 
 typedef struct sort_item {
 	int objnum;
@@ -1511,7 +1350,7 @@ sort_item sort_list[SORT_LIST_SIZE];
 int n_sort_items;
 
 //compare function for object sort. 
-int sort_func(sort_item *a,sort_item *b)
+int sort_func(const sort_item *a,const sort_item *b)
 {
 	fix delta_dist;
 	object *obj_a,*obj_b;
@@ -1524,14 +1363,15 @@ int sort_func(sort_item *a,sort_item *b)
 	if (abs(delta_dist) < (obj_a->size + obj_b->size)) {		//same position
 
 		//these two objects are in the same position.  see if one is a fireball
-		//or laser or something that should plot on top
+		//or laser or something that should plot on top.  Don't do this for
+		//the afterburner blobs, though.
 
-		if (obj_a->type == OBJ_WEAPON || obj_a->type == OBJ_FIREBALL)
+		if (obj_a->type == OBJ_WEAPON || (obj_a->type == OBJ_FIREBALL && obj_a->id != VCLIP_AFTERBURNER_BLOB))
 			if (!(obj_b->type == OBJ_WEAPON || obj_b->type == OBJ_FIREBALL))
 				return -1;	//a is weapon, b is not, so say a is closer
 			else;				//both are weapons 
 		else
-			if (obj_b->type == OBJ_WEAPON || obj_b->type == OBJ_FIREBALL)
+			if (obj_b->type == OBJ_WEAPON || (obj_b->type == OBJ_FIREBALL && obj_b->id != VCLIP_AFTERBURNER_BLOB))
 				return 1;	//b is weapon, a is not, so say a is farther
 
 		//no special case, fall through to normal return
@@ -1540,7 +1380,7 @@ int sort_func(sort_item *a,sort_item *b)
 	return delta_dist;	//return distance
 }
 
-build_object_lists(int n_segs)
+void build_object_lists(int n_segs)
 {
 	int nn;
 
@@ -1574,7 +1414,7 @@ build_object_lists(int n_segs)
 				list_pos = nn;
 
 //mprintf((0,"objnum=%d ",objnum));
-				if (obj->type != OBJ_CNTRLCEN)		//don't migrate controlcen
+				if (obj->type != OBJ_CNTRLCEN && !(obj->type==OBJ_ROBOT && obj->id==65))		//don't migrate controlcen
 				do {
 					segmasks m;
 
@@ -1587,7 +1427,7 @@ build_object_lists(int n_segs)
 
 						for (sn=0,sf=1;sn<6;sn++,sf<<=1)
 							if (m.sidemask & sf) {
-								segment *seg = &Segments[obj->segnum];
+								segment *seg = &Segments[new_segnum];
 		
 								if (WALL_IS_DOORWAY(seg,sn) & WID_FLY_FLAG) {		//can explosion migrate through
 									int child = seg->children[sn];
@@ -1604,7 +1444,7 @@ build_object_lists(int n_segs)
 							}
 					}
 	
-				} while (did_migrate);
+				} while (0);	//while (did_migrate);
 
 				add_obj_to_seglist(objnum,list_pos);
 	
@@ -1640,11 +1480,62 @@ build_object_lists(int n_segs)
 						sort_list[n_sort_items].dist = vm_vec_dist_quick(&Objects[t].pos,&Viewer_eye);
 						n_sort_items++;
 					}
+					else {			//no room for object
+						int ii;
+
+						#ifndef NDEBUG
+						FILE *tfile=fopen("sortlist.out","wt");
+
+						//I find this strange, so I'm going to write out
+						//some information to look at later
+						if (tfile) {
+							for (ii=0;ii<SORT_LIST_SIZE;ii++) {
+								int objnum = sort_list[ii].objnum;
+
+								fprintf(tfile,"Obj %3d  Type = %2d  Id = %2d  Dist = %08x  Segnum = %3d\n",
+									objnum,Objects[objnum].type,Objects[objnum].id,sort_list[ii].dist,Objects[objnum].segnum);
+							}
+							fclose(tfile);
+						}
+						#endif
+
+						Int3();	//Get Matt!!!
+
+						//Now try to find a place for this object by getting rid
+						//of an object we don't care about
+
+						for (ii=0;ii<SORT_LIST_SIZE;ii++) {
+							int objnum = sort_list[ii].objnum;
+							object *obj = &Objects[objnum];
+							int type = obj->type;
+
+							//replace debris & fireballs
+							if (type == OBJ_DEBRIS || type == OBJ_FIREBALL) {
+								fix dist = vm_vec_dist_quick(&Objects[t].pos,&Viewer_eye);
+
+								//don't replace same kind of object unless new 
+								//one is closer
+
+								if (Objects[t].type != type || dist < sort_list[ii].dist) {
+									sort_list[ii].objnum = t;
+									sort_list[ii].dist = dist;
+									break;
+								}
+							}
+						}
+
+						Int3();	//still couldn't find a slot
+					}
 
 
 			//now call qsort
-
-			qsort(sort_list,n_sort_items,sizeof(*sort_list),sort_func);
+		#if defined(__WATCOMC__) || defined(MACINTOSH)
+			qsort(sort_list,n_sort_items,sizeof(*sort_list),
+				   sort_func);
+		#else
+			qsort(sort_list,n_sort_items,sizeof(*sort_list),
+					(int (cdecl *)(const void*,const void*))sort_func);
+		#endif	
 
 			//now copy back into list
 
@@ -1669,14 +1560,21 @@ extern int Total_pixels;
 //--unused-- int Total_num_tmaps_drawn=0;
 
 int Rear_view=0;
+extern ubyte RenderingType;
+
+void start_lighting_frame(object *viewer);
 
 #ifdef JOHN_ZOOM
 fix Zoom_factor=F1_0;
 #endif
 //renders onto current canvas
-void render_frame(fix eye_offset)
+void render_frame(fix eye_offset, int window_num)
 {
 	int start_seg_num;
+
+#if defined(POLY_ACC)
+//$$ not needed for Verite, probably optional for ViRGE.    pa_flush();
+#endif
 
 //Total_num_tmaps_drawn += Num_tmaps_drawn;
 //if ((FrameCount > 0) && (Total_num_tmaps_drawn))
@@ -1690,14 +1588,21 @@ void render_frame(fix eye_offset)
 	}
 
 #ifdef NEWDEMO
-	if ( Newdemo_state == ND_STATE_RECORDING )	{
-		if (eye_offset >= 0 )	{
-			newdemo_record_start_frame(FrameCount, FrameTime );
-			newdemo_record_viewer_object(Viewer);
-		}
+	if ( Newdemo_state == ND_STATE_RECORDING && eye_offset >= 0 )	{
+     
+	  //	mprintf ((0,"Objnum=%d objtype=%d objid=%d\n",Viewer-Objects,Viewer->type,Viewer->id));
+		
+      if (RenderingType==0)
+   		newdemo_record_start_frame(FrameCount, FrameTime );
+      if (RenderingType!=255)
+   		newdemo_record_viewer_object(Viewer);
 	}
 #endif
+  
+   //Here:
 
+	start_lighting_frame(Viewer);		//this is for ugly light-smoothing hack
+  
 	g3_start_frame();
 
 	Viewer_eye = Viewer->pos;
@@ -1752,22 +1657,37 @@ void render_frame(fix eye_offset)
 			Clear_window_color = BM_XRGB(0, 0, 0);	//BM_XRGB(31, 15, 7);
 		gr_clear_canvas(Clear_window_color);
 	}
+	#ifndef NDEBUG
+	if (Show_only_curside)
+		gr_clear_canvas(Clear_window_color);
+	#endif
 
-	render_mine(start_seg_num,eye_offset);
+	render_mine(start_seg_num,eye_offset, window_num);
 
 	if (Use_player_head_angles ) 
 		draw_3d_reticle(eye_offset);
 
 	g3_end_frame();
 
-	FrameCount++;		//we have rendered a frame
+   //RenderingType=0;
+
+	// -- Moved from here by MK, 05/17/95, wrong if multiple renders/frame! FrameCount++;		//we have rendered a frame
 }
 
 int first_terminal_seg;
 
+void update_rendered_data(int window_num, object *viewer, int rear_view_flag, int user)
+{
+	Assert(window_num < MAX_RENDERED_WINDOWS);
+	Window_rendered_data[window_num].frame = FrameCount;
+	Window_rendered_data[window_num].viewer = viewer;
+	Window_rendered_data[window_num].rear_view = rear_view_flag;
+	Window_rendered_data[window_num].user = user;
+}
+
 //build a list of segments to be rendered
 //fills in Render_list & N_render_segs
-build_segment_list(int start_seg_num)
+build_segment_list(int start_seg_num, int window_num)
 {
 	int	lcnt,scnt,ecnt;
 	int	l,c;
@@ -1792,7 +1712,7 @@ build_segment_list(int start_seg_num)
 
 	#ifndef NDEBUG
 	if (pre_draw_segs)
-		render_segment(start_seg_num);
+		render_segment(start_seg_num, window_num);
 	#endif
 
 	render_windows[0].left=render_windows[0].top=0;
@@ -1847,7 +1767,7 @@ build_segment_list(int start_seg_num)
 						ubyte codes_and=0xff;
 						int i;
 
-						rotate_list(8,&seg->verts);
+						rotate_list(8,seg->verts);
 						rotated=1;
 
 						for (i=0;i<4;i++)
@@ -1883,8 +1803,8 @@ build_segment_list(int start_seg_num)
 
 						if (rotated<2) {
 							if (!rotated)
-								rotate_list(8,&seg->verts);
-							project_list(8,&seg->verts);
+								rotate_list(8,seg->verts);
+							project_list(8,seg->verts);
 							rotated=2;
 						}
 
@@ -1974,7 +1894,7 @@ build_segment_list(int start_seg_num)
 
 							#ifndef NDEBUG
 							if (pre_draw_segs)
-								render_segment(ch);
+								render_segment(ch, window_num);
 							#endif
 no_add:
 	;
@@ -2007,13 +1927,13 @@ done_list:
 }
 
 //renders onto current canvas
-void render_mine(int start_seg_num,fix eye_offset)
+void render_mine(int start_seg_num,fix eye_offset, int window_num)
 {
 	int		i;
 	int		nn;
 
 	//	Initialize number of objects (actually, robots!) rendered this frame.
-	Num_rendered_objects = 0;
+	Window_rendered_data[window_num].num_objects = 0;
 
 #ifdef LASER_HACK
 	Hack_nlasers = 0;
@@ -2031,7 +1951,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 
 	#if defined(EDITOR) && !defined(NDEUBG)
 	if (Show_only_curside) {
-		rotate_list(8,&Cursegp->verts);
+		rotate_list(8,Cursegp->verts);
 		render_side(Cursegp,Curside);
 		goto done_rendering;
 	}
@@ -2039,14 +1959,14 @@ void render_mine(int start_seg_num,fix eye_offset)
 
 
 	#ifdef EDITOR
-	if (_search_mode || eye_offset>0)	{
+	if (_search_mode)	{
 		//lcnt = lcnt_save;
 		//scnt = scnt_save;
 	}
 	else
 	#endif
 		//NOTE LINK TO ABOVE!!
-		build_segment_list(start_seg_num);		//fills in Render_list & N_render_segs
+		build_segment_list(start_seg_num, window_num);		//fills in Render_list & N_render_segs
 
 	//render away
 
@@ -2059,7 +1979,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 	#endif
 
 	#ifndef NDEBUG
-	if (!(_search_mode || eye_offset>0)) {
+	if (!(_search_mode)) {
 		int i;
 
 		for (i=0;i<N_render_segs;i++) {
@@ -2076,7 +1996,6 @@ void render_mine(int start_seg_num,fix eye_offset)
 	}
 	#endif
 
-//	if (!(_search_mode || eye_offset>0) && migrate_objects)
 	if (!(_search_mode))
 		build_object_lists(N_render_segs);
 
@@ -2115,7 +2034,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 		Current_seg_depth = Seg_depth[nn];
 
 		//if (!no_render_flag[nn])
-		if (segnum!=-1 && (_search_mode || eye_offset>0 || visited[segnum]!=255)) {
+		if (segnum!=-1 && (_search_mode || visited[segnum]!=255)) {
 			//set global render window vars
 
 			if (window_check) {
@@ -2127,7 +2046,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 
 			//mprintf((0," %d",segnum));
 
-			render_segment(segnum); 
+			render_segment(segnum, window_num);
 			visited[segnum]=255;
 
 			if (window_check) {		//reset for objects
@@ -2168,7 +2087,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 							//mprintf( (0, "O%d ", ObjNumber ));
 						} else	
 						#endif
-							do_render_object(ObjNumber);	// note link to above else
+							do_render_object(ObjNumber, window_num);	// note link to above else
 
 						objnp++;
 					}
@@ -2182,7 +2101,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 				}
 
 				//for (i=0;i<n_expl_objs;i++)
-				//	do_render_object(expl_objs[i]);
+				//	do_render_object(expl_objs[i], window_num);
 
 				//mprintf((0,"done seg %d\n",segnum));
 
@@ -2200,7 +2119,7 @@ void render_mine(int start_seg_num,fix eye_offset)
 	// Draw the hacked lasers last
 	for (i=0; i < Hack_nlasers; i++ )	{
 		//mprintf( (0, "D%d ", Hack_laser_list[i] ));
-		do_render_object(Hack_laser_list[i]);
+		do_render_object(Hack_laser_list[i], window_num);
 	}
 #endif
 
@@ -2241,11 +2160,11 @@ int find_seg_side_face(short x,short y,int *seg,int *side,int *face,int *poly)
 
 		gr_set_current_canvas(&temp_canvas);
 
-		render_frame(0);
+		render_frame(0, 0);
 	}
 	else {
 		gr_set_current_canvas(&VR_render_sub_buffer[0]);	//render off-screen
-		render_frame(0);
+		render_frame(0, 0);
 	}
 
 	_search_mode = 0;
@@ -2262,4 +2181,3 @@ int find_seg_side_face(short x,short y,int *seg,int *side,int *face,int *poly)
 }
 
 #endif
-

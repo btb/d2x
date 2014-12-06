@@ -8,38 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/arcade.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:27:27 $
- * 
- * Routines for arcade version.
- * 
- * $Log: arcade.h $
- * Revision 2.0  1995/02/27  11:27:27  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.4  1994/09/16  21:44:06  matt
- * Made arcade code based on #define
- * 
- * Revision 1.3  1994/09/16  16:14:52  john
- * Added acrade sequencing.
- * 
- * Revision 1.2  1994/09/16  11:51:01  john
- * Added first version of arcade joystick support;
- * Also fixed some bugs in kconfig.c, such as reading non-present
- * joysticks, which killed frame rate, and not reading key_down_time
- * when in slide mode or bank mode.
- * 
- * Revision 1.1  1994/09/16  09:59:29  john
- * Initial revision
- * 
- * 
- */
 
 
 

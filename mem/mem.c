@@ -8,83 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/mem/rcs/mem.c $
- * $Revision: 1.18 $
- * $Author: matt $
- * $Date: 1995/01/24 20:49:18 $
- * 
- * Files for debugging memory allocator
- * 
- * $Log: mem.c $
- * Revision 1.18  1995/01/24  20:49:18  matt
- * Made some stuff return when get errors
- * 
- * Revision 1.17  1994/11/29  15:40:38  matt
- * Added extra newline after message
- * 
- * Revision 1.16  1994/11/15  18:27:56  john
- * Took away show mem info by default.
- * 
- * Revision 1.15  1994/11/10  10:00:37  john
- * Made it show_mem_info by default.
- * 
- * Revision 1.14  1994/11/10  09:53:06  john
- * Put in more efficient, but less debugging info version.
- * 
- * Revision 1.13  1994/10/27  00:56:45  john
- * Reduced number of blocks; made show mem usage by default.
- * 
- * Revision 1.12  1994/10/06  19:15:17  john
- * Upped the number of blocks.
- * 
- * 
- * Revision 1.11  1994/07/27  20:04:22  john
- * Neatend printed output.
- * 
- * Revision 1.10  1994/07/20  10:22:17  yuan
- * Added overwrite error
- * 
- * Revision 1.9  1994/03/23  12:58:43  john
- * Made message global.
- * 
- * Revision 1.8  1994/03/15  11:12:59  john
- * Made calloc fill block with zeros like it's
- * supposed to.
- * 
- * Revision 1.7  1994/02/18  12:43:21  john
- * Only print mem debugging info if show_mem_info
- * is true. Need to set in debugger, btw.
- * 
- * Revision 1.6  1994/02/17  17:01:34  john
- * Took out MEM_LEAKAGE warning!
- * 
- * Revision 1.5  1994/01/24  16:04:47  john
- * Added mem_print_all function to dump all
- * allocated memory to inferno.mem file.
- * 
- * 
- * Revision 1.4  1994/01/18  11:01:41  john
- * *** empty log message ***
- * 
- * Revision 1.3  1993/12/10  12:20:50  john
- * Speed up by replacing mem_find_unused_id with a table lookup.
- * 
- * Revision 1.2  1993/12/08  12:38:22  mike
- * Change 10000 to MAX_INDEX
- * Use LargestIndex in place of MAX_INDEX as appropriate.
- * 
- * Revision 1.1  1993/11/02  17:45:28  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: mem.c 1.18 1995/01/24 20:49:18 matt Exp $";
+static char rcsid[] = "$Id: mem.c 1.29 1996/05/30 10:31:57 champaign Exp $";
 #pragma on (unreferenced)
 
 
@@ -98,17 +27,40 @@ static char rcsid[] = "$Id: mem.c 1.18 1995/01/24 20:49:18 matt Exp $";
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <dos.h>
 #include <malloc.h>
 
+#include "pstypes.h"
 #include "mono.h"
 #include "error.h"
 
-//#define FULL_MEM_CHECKING
+#ifdef MACINTOSH
 
-#ifdef FULL_MEM_CHECKING 
+	#include <Gestalt.h>
+	#include <Memory.h>
+	#include <Processes.h>
+	ubyte virtual_memory_on = 0;
+
+	#if defined(RELEASE) || defined(NDEBUG)
+		#define MEMSTATS	0
+	#else
+		#define MEMSTATS	1
+	#endif
+
+	
+	#if MEMSTATS
+		static 	int		sMemStatsFileInitialized	= false;
+		static 	FILE* 	sMemStatsFile 				= NULL;
+		static	char  	sMemStatsFileName[32]		= "memstats.txt";
+	#endif	// end of if MEMSTATS
+	
+#else	// no memstats on pc
+	#define MEMSTATS 0
+#endif
+
+#define FULL_MEM_CHECKING 1
+
+#if defined(FULL_MEM_CHECKING) && !defined(NDEBUG)
 
 #define CHECKSIZE 16
 #define CHECKBYTE 0xFC
@@ -121,7 +73,7 @@ static unsigned int MallocRealSize[MAX_INDEX];
 static unsigned char Present[MAX_INDEX];
 static char * Filename[MAX_INDEX];
 static char * Varname[MAX_INDEX];
-static int Line[MAX_INDEX];
+static int LineNum[MAX_INDEX];
 static int BytesMalloced = 0;
 
 static unsigned int SmallestAddress = 0xFFFFFFF;
@@ -156,7 +108,7 @@ void mem_init()
 		Present[i] = 0;
 		Filename[i] = NULL;
 		Varname[i] = NULL;
-		Line[i] = 0;
+		LineNum[i] = 0;
 	}
 
 	SmallestAddress = 0xFFFFFFF;
@@ -166,25 +118,79 @@ void mem_init()
 	LargestIndex = 0;
 
 	atexit(mem_display_blocks);
+	
+#ifdef MACINTOSH
+
+// need to check for virtual memory since we will need to do some
+// tricks based on whether it is on or not
+
+	{
+		int 			mem_type;
+		THz				theD2PartionPtr = nil;
+		unsigned long	thePartitionSize = 0;
+		
+		MaxApplZone();
+		MoreMasters();			// allocate 240 more master pointers (mainly for snd handles)
+		MoreMasters();
+		MoreMasters();
+		MoreMasters();
+		virtual_memory_on = 0;
+		if(Gestalt(gestaltVMAttr, &mem_type) == noErr)
+			if (mem_type & 0x1)
+				virtual_memory_on = 1;
+				
+		#if MEMSTATS
+			sMemStatsFile = fopen(sMemStatsFileName, "wt");
+	
+			if (sMemStatsFile != NULL)
+			{
+				sMemStatsFileInitialized = true;
+	
+				theD2PartionPtr = ApplicationZone();
+				thePartitionSize =  ((unsigned long) theD2PartionPtr->bkLim) - ((unsigned long) theD2PartionPtr);
+				fprintf(sMemStatsFile, "\nMemory Stats File Initialized.");
+				fprintf(sMemStatsFile, "\nDescent 2 launched in partition of %u bytes.\n",
+						thePartitionSize);
+			}
+		#endif	// end of ifdef MEMSTATS
+	}
+
+#endif	// end of ifdef macintosh
 
 }
 
 void PrintInfo( int id )
 {
-	fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], Line[id] );
+	fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], LineNum[id] );
 }
 
 
 void * mem_malloc( unsigned int size, char * var, char * filename, int line, int fill_zero )
 {
 	unsigned int base;
-	int i, j, id;
+	int i, id;
 	void *ptr;
 	char * pc;
 	int * data;
 
 	if (Initialized==0)
 		mem_init();
+
+#if MEMSTATS
+	{
+		unsigned long	theFreeMem = 0;
+	
+		if (sMemStatsFileInitialized)
+		{
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before attempting: MALLOC %9u bytes.",
+					theFreeMem,
+					size);
+		}
+	}
+#endif	// end of ifdef memstats
 
 	if ( num_blocks >= MAX_INDEX )	{
 		fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );		
@@ -199,11 +205,15 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 	if (id==-1)
 	{
 		fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );		
-		fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], Line[id] );
+		fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], LineNum[id] );
 		Error( "MEM_OUT_OF_SLOTS" );
 	}
 
+#ifndef MACINTOSH
 	ptr = malloc( size+CHECKSIZE );
+#else
+	ptr = (void *)NewPtrClear( size+CHECKSIZE );
+#endif
 
 	/*
 	for (j=0; j<=LargestIndex; j++ )
@@ -222,9 +232,8 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 	{
 		out_of_memory = 1;
 		fprintf( stderr, "\nMEM_OUT_OF_MEMORY: Malloc returned NULL\n" );
-		fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], Line[id] );
+		fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], LineNum[id] );
 		Error( "MEM_OUT_OF_MEMORY" );
-		Int3();
 	}
 
 	base = (unsigned int)ptr;
@@ -237,7 +246,7 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 	MallocSize[id] = size;
 	Varname[id] = var;
 	Filename[id] = filename;
-	Line[id] = line;
+	LineNum[id] = line;
 	Present[id]    = 1;
 
 	pc = (char *)ptr;
@@ -271,7 +280,7 @@ int mem_check_integrity( int block_number )
 {
 	int * data;
 	int i, ErrorCount;
-	char * CheckData;
+	ubyte * CheckData;
 
 	CheckData = (char *)(MallocBase[block_number] + MallocSize[block_number]);
 
@@ -296,6 +305,7 @@ int mem_check_integrity( int block_number )
 		fprintf( stderr, "\nMEM_OVERWRITE: Memory after the end of allocated block overwritten.\n" );
 		PrintInfo( block_number );
 		fprintf( stderr, "\t%d/%d check bytes were overwritten.\n", ErrorCount, CHECKSIZE );
+		Int3();
 	}
 
 	return ErrorCount;
@@ -308,6 +318,20 @@ void mem_free( void * buffer )
 
 	if (Initialized==0)
 		mem_init();
+
+#if MEMSTATS
+	{
+		unsigned long	theFreeMem = 0;
+	
+		if (sMemStatsFileInitialized)
+		{
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before attempting: FREE", theFreeMem);
+		}
+	}
+#endif	// end of ifdef memstats
 
 	if (buffer==NULL  &&  (!out_of_memory))
 	{
@@ -331,7 +355,11 @@ void mem_free( void * buffer )
 	
 	BytesMalloced -= MallocSize[id];
 
+#ifndef MACINTOSH
 	free( buffer );
+#else
+	DisposePtr( (Ptr)buffer );
+#endif
 	
 	
 	Present[id] = 0;
@@ -347,6 +375,22 @@ void mem_display_blocks()
 
 	if (Initialized==0) return;
 	
+#if MEMSTATS
+	{	
+		if (sMemStatsFileInitialized)
+		{
+			unsigned long	theFreeMem = 0;
+
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before closing MEMSTATS file.", theFreeMem);
+			fprintf(sMemStatsFile, "\nMemory Stats File Closed.");
+			fclose(sMemStatsFile);
+		}
+	}
+#endif	// end of ifdef memstats
+
 	numleft = 0;
 	for (i=0; i<=LargestIndex; i++ )
 	{
@@ -368,10 +412,10 @@ void mem_display_blocks()
 
 	if (show_mem_info)	{
 		fprintf( stderr, "\n\nMEMORY USAGE:\n" );
-		fprintf( stderr, "  %u Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
-		fprintf( stderr, "  %u Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
+		fprintf( stderr, "  %6u Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
+		fprintf( stderr, "  %6u Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
 		fprintf( stderr, "  ---------------------------\n" );
-		fprintf( stderr, "  %u Kbytes required.\n\n", 	(LargestAddress-(4*1024*1024)+512)/1024 );
+		fprintf( stderr, "  %6u Kbytes required.\n\n", 	(LargestAddress-(4*1024*1024)+512)/1024 );
 	}
 }
 
@@ -395,7 +439,7 @@ void mem_print_all()
 		if (Present[i]==1 )	{
 			size += MallocSize[i];
 			//fprintf( ef, "Var:%s\t File:%s\t Line:%d\t Size:%d Base:%x\n", Varname[i], Filename[i], Line[i], MallocSize[i], MallocBase[i] );
-			fprintf( ef, "%12d bytes in %s declared in %s, line %d\n", MallocSize[i], Varname[i], Filename[i], Line[i]  );
+			fprintf( ef, "%12d bytes in %s declared in %s, line %d\n", MallocSize[i], Varname[i], Filename[i], LineNum[i]  );
 		}
 	fprintf( ef, "%d bytes (%d Kbytes) allocated.\n", size, size/1024 ); 
 	fclose(ef);
@@ -423,6 +467,45 @@ void mem_init()
 	LargestAddress = 0x0;
 
 	atexit(mem_display_blocks);
+
+#ifdef MACINTOSH
+
+	// need to check for virtual memory since we will need to do some
+	// tricks based on whether it is on or not
+	
+	{
+		int 			mem_type;
+		THz				theD2PartionPtr = nil;
+		unsigned long	thePartitionSize = 0;
+		
+		MaxApplZone();
+		MoreMasters();		// allocate 240 more master pointers (mainly for snd handles)
+		MoreMasters();
+		MoreMasters();
+		MoreMasters();
+		virtual_memory_on = 0;
+		if(Gestalt(gestaltVMAttr, &mem_type) == noErr)
+			if (mem_type & 0x1)
+				virtual_memory_on = 1;
+				
+		#if MEMSTATS
+			sMemStatsFile = fopen(sMemStatsFileName, "wt");
+
+			if (sMemStatsFile != NULL)
+			{
+				sMemStatsFileInitialized = true;
+
+				theD2PartionPtr = ApplicationZone();
+				thePartitionSize =  ((unsigned long) theD2PartionPtr->bkLim) - ((unsigned long) theD2PartionPtr);
+				fprintf(sMemStatsFile, "\nMemory Stats File Initialized.");
+				fprintf(sMemStatsFile, "\nDescent 2 launched in partition of %u bytes.\n",
+						thePartitionSize);
+			}
+		#endif	// end of ifdef memstats
+	}
+	
+#endif	// end of ifdef macintosh
+
 }
 
 void * mem_malloc( unsigned int size, char * var, char * filename, int line, int fill_zero )
@@ -434,6 +517,22 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 	if (Initialized==0)
 		mem_init();
 
+#if MEMSTATS
+	{
+		unsigned long	theFreeMem = 0;
+	
+		if (sMemStatsFileInitialized)
+		{
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before attempting: MALLOC %9u bytes.",
+					theFreeMem,
+					size);
+		}
+	}
+#endif	// end of ifdef memstats
+
 	if (size==0)	{
 		fprintf( stderr, "\nMEM_MALLOC_ZERO: Attempting to malloc 0 bytes.\n" );
 		fprintf( stderr, "\tVar %s, file %s, line %d.\n", var, filename, line );
@@ -441,7 +540,11 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 		Int3();
 	}
 
+#ifndef MACINTOSH
 	ptr = malloc( size + CHECKSIZE );
+#else
+	ptr = (void *)NewPtrClear( size+CHECKSIZE );
+#endif
 
 	if (ptr==NULL)	{
 		fprintf( stderr, "\nMEM_OUT_OF_MEMORY: Malloc returned NULL\n" );
@@ -467,12 +570,25 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 
 void mem_free( void * buffer )
 {
-	int ErrorCount;
 	int * psize = (int *)buffer;
 	psize--;
 
 	if (Initialized==0)
 		mem_init();
+
+#if MEMSTATS
+	{
+		unsigned long	theFreeMem = 0;
+	
+		if (sMemStatsFileInitialized)
+		{
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before attempting: FREE", theFreeMem);
+		}
+	}
+#endif	// end of ifdef memstats
 
 	if (buffer==NULL)	{
 		fprintf( stderr, "\nMEM_FREE_NULL: An attempt was made to free the null pointer.\n" );
@@ -481,22 +597,34 @@ void mem_free( void * buffer )
 		return;
 	}
 
-	ErrorCount = 0;
-
-	if (ErrorCount)	{
-		fprintf( stderr, "\nMEM_OVERWRITE: Memory after the end of allocated block overwritten.\n" );
-		fprintf( stderr, "\tBlock at 0x%x, size %d\n", buffer, *psize );
-		fprintf( stderr, "\t%d/%d check bytes were overwritten.\n", ErrorCount, CHECKSIZE );
-	}
-
 	BytesMalloced -= *psize;
 
+#ifndef MACINTOSH
 	free( buffer );
+#else
+	DisposePtr( (Ptr)buffer );
+#endif
 }
 
 void mem_display_blocks()
 {
 	if (Initialized==0) return;
+
+#if MEMSTATS
+	{	
+		if (sMemStatsFileInitialized)
+		{
+			unsigned long	theFreeMem = 0;
+
+			theFreeMem = FreeMem();
+		
+			fprintf(sMemStatsFile,
+					"\n%9u bytes free before closing MEMSTATS file.", theFreeMem);
+			fprintf(sMemStatsFile, "\nMemory Stats File Closed.");
+			fclose(sMemStatsFile);
+		}
+	}
+#endif	// end of ifdef memstats
 
 	if (BytesMalloced != 0 )	{
 		fprintf( stderr, "\nMEM_LEAKAGE: %d bytes of memory have not been freed.\n", BytesMalloced );
@@ -522,3 +650,35 @@ void mem_print_all()
 #endif
 
 
+#ifdef MACINTOSH
+
+// routine to try and compact and purge the process manager zone to squeeze
+// some temporary memory out of it for QT purposes.
+
+void PurgeTempMem()
+{
+	OSErr err;
+	Handle tempHandle;
+	THz appZone, processZone;
+	Size heapSize;
+	
+	// compact the system zone to try and squeeze some temporary memory out of it
+	MaxMemSys(&heapSize);
+	
+	// compact the Process Manager zone to get more temporary memory
+	appZone = ApplicationZone();
+	tempHandle = TempNewHandle(10, &err);		// temporary allocation may fail
+	if (!err && (tempHandle != NULL) ) {
+		processZone = HandleZone(tempHandle);
+		if ( MemError() || (processZone == NULL) ) {
+			DisposeHandle(tempHandle);
+			return;
+		}
+		SetZone(processZone);
+		MaxMem(&heapSize);				// purge and compact the Process Manager Zone.
+		SetZone(appZone);
+		DisposeHandle(tempHandle);
+	}
+}
+
+#endif

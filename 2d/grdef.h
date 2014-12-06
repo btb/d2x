@@ -8,46 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/grdef.h $
- * $Revision: 1.9 $
- * $Author: john $
- * $Date: 1995/03/01 12:31:13 $
- *
- * Internal definitions for graphics lib.
- *
- * $Log: grdef.h $
- * Revision 1.9  1995/03/01  12:31:13  john
- * Added wait for retrace thingy in modex setstart.
- * 
- * Revision 1.8  1994/05/06  12:50:09  john
- * Added supertransparency; neatend things up; took out warnings.
- * 
- * Revision 1.7  1994/01/25  11:40:29  john
- * Added gr_check_mode function.
- * 
- * Revision 1.6  1993/10/15  16:22:53  john
- * y
- * 
- * Revision 1.5  1993/09/29  17:31:00  john
- * added gr_vesa_pixel
- * 
- * Revision 1.4  1993/09/29  16:14:43  john
- * added global canvas descriptors.
- * 
- * Revision 1.3  1993/09/08  17:38:02  john
- * Looking for errors
- * 
- * Revision 1.2  1993/09/08  15:54:29  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/09/08  11:37:57  john
- * Initial revision
- * 
- *
- */
 
 extern int  gr_modex_setmode(short mode);
 extern void gr_modex_setplane(short plane);
@@ -70,11 +32,32 @@ extern void gr_vesa_pixel( unsigned char color, unsigned int offset );
 
 void gr_linear_movsb( void * source, void * dest, unsigned short nbytes);
 void gr_linear_movsw( void * source, void * dest, unsigned short nbytes);
-void gr_linear_movsd( void * source, void * dest, unsigned short nbytes);
-void gr_linear_stosd( void * source, unsigned char color, unsigned short nbytes);
+void gr_linear_stosd( ubyte * source, unsigned char color, unsigned short nbytes);
 extern unsigned int gr_var_color;
 extern unsigned int gr_var_bwidth;
 extern unsigned char * gr_var_bitmap;
+
+void gr_linear_movsd( ubyte * source, ubyte * dest, int nbytes);
+
+#ifndef MACINTOSH
+#pragma aux gr_linear_movsd parm [esi] [edi] [ecx] modify exact [ecx esi edi eax ebx] = \
+" cld "					\
+" mov		ebx, ecx	"	\
+" mov		eax, edi"	\
+" and		eax, 011b"	\
+" jz		d_aligned"	\
+" mov		ecx, 4"		\
+" sub		ecx, eax"	\
+" sub		ebx, ecx"	\
+" rep		movsb"		\
+" d_aligned: "			\
+" mov		ecx, ebx"	\
+" shr		ecx, 2"		\
+" rep 	movsd"		\
+" mov		ecx, ebx"	\
+" and 	ecx, 11b"	\
+" rep 	movsb";
+#endif 		// ifdef MACINTOSH
 
 void gr_linear_line( int x0, int y0, int x1, int y1);
 
@@ -98,4 +81,3 @@ extern unsigned char * gr_video_memory;
 
 void order( int *x1, int *x2 );
 
-

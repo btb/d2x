@@ -8,698 +8,25 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/newdemo.c $
- * $Revision: 2.7 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:06 $
- * 
- * Code to make a complete demo playback system.
- * 
- * $Log: newdemo.c $
- * Revision 2.7  1995/05/26  16:16:06  john
- * Split SATURN into define's for requiring cd, using cd, etc.
- * Also started adding all the Rockwell stuff.
- * 
- * Revision 2.6  1995/03/21  14:39:38  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.5  1995/03/14  18:24:31  john
- * Force Destination Saturn to use CD-ROM drive.
- * 
- * Revision 2.4  1995/03/14  16:22:29  john
- * Added cdrom alternate directory stuff.
- * 
- * Revision 2.3  1995/03/10  12:58:33  allender
- * only display rear view cockpit when cockpit mode was CM_FULL_COCKPIT.
- * 
- * Revision 2.2  1995/03/08  16:12:15  allender
- * changes for Destination Saturn
- * 
- * Revision 2.1  1995/03/08  12:11:26  allender
- * fix shortpos reading
- * 
- * Revision 2.0  1995/02/27  11:29:40  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.189  1995/02/22  14:53:42  allender
- * missed some anonymous stuff
- * 
- * Revision 1.188  1995/02/22  13:24:53  john
- * Removed the vecmat anonymous unions.
- * 
- * Revision 1.187  1995/02/22  13:13:54  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.186  1995/02/14  15:36:41  allender
- * fix fix for morph effect
- * 
- * Revision 1.185  1995/02/14  11:25:48  allender
- * save cockpit mode and restore after playback.  get orientation for morph
- * effect when object is morph vclip
- * 
- * Revision 1.184  1995/02/13  12:18:14  allender
- * change to decide about interpolating or not
- * 
- * Revision 1.183  1995/02/12  00:46:23  adam
- * don't decide to skip frames until after at least 10 frames have
- * passed -- allender
- * 
- * Revision 1.182  1995/02/11  22:34:01  john
- * Made textures page in for newdemos before playback time.
- * 
- * Revision 1.181  1995/02/11  17:28:32  allender
- * strip frames from end of demo
- * 
- * Revision 1.180  1995/02/11  16:40:35  allender
- * start of frame stripping debug code
- * 
- * Revision 1.179  1995/02/10  17:40:06  allender
- * put back in wall_hit_process code to fix door problem
- * 
- * Revision 1.178  1995/02/10  17:17:24  adam
- * allender } fix
- * 
- * Revision 1.177  1995/02/10  17:16:24  allender
- * fix possible tmap problems
- * 
- * Revision 1.176  1995/02/10  15:54:37  allender
- * changes for out of space on device.
- * 
- * Revision 1.175  1995/02/09  19:55:00  allender
- * fix bug with morph recording -- force rendertype to RT_POLYOBJ when
- * playing back since it won't render until fully morphed otherwise
- * 
- * Revision 1.174  1995/02/07  17:15:35  allender
- * DOH!!!!!
- * 
- * Revision 1.173  1995/02/07  17:14:21  allender
- * immediately return when loading bogus level stuff when reading a frame
- * 
- * Revision 1.172  1995/02/02  11:15:03  allender
- * after loading new level, read next frame (forward or back) always because
- * of co-op ships showing up when level is loaded
- * 
- * Revision 1.171  1995/02/02  10:24:16  allender
- * removed cfile stuff.  Use standard FILE functions for demo playback
- * 
- * Revision 1.170  1995/01/30  13:54:32  allender
- * support for missions
- * 
- * Revision 1.169  1995/01/27  16:27:35  allender
- * put game mode to demo_game_mode when sorting multiplayer kill (and score)
- * list
- * 
- * Revision 1.168  1995/01/27  09:52:25  allender
- * minor changes because of object/segment linking problems
- * 
- * Revision 1.167  1995/01/27  09:22:28  allender
- * changed way multi-player score is recorded.  Record difference, not
- * actual
- * 
- * Revision 1.166  1995/01/25  14:32:44  allender
- * changed with recorded player flags.  More checks for paused state
- * during interpolation reading of objects
- * 
- * Revision 1.165  1995/01/25  11:23:32  allender
- * found bug with out of disk space problem
- * 
- * Revision 1.164  1995/01/25  11:11:33  allender
- * coupla' things.  Fix problem with objects apparently being linked in
- * the wrong segment.  Put an Int3 in to check why demos will write to
- * end of space on drive. close demo file if demo doens't start playing
- * back.  Put obj->type == OBJ_ROBOT around checking for boss cloaking
- * 
- * Revision 1.163  1995/01/24  19:44:30  allender
- * fix obscure problem with rewinding and having the wrong object linked
- * to the wrong segments.  will investigate further.
- * 
- * Revision 1.162  1995/01/23  09:31:28  allender
- * add team score in team mode playback
- * 
- * Revision 1.161  1995/01/20  22:47:39  matt
- * Mission system implemented, though imcompletely
- * 
- * Revision 1.160  1995/01/20  09:30:37  allender
- * don't call LoadLevel with bogus data
- * 
- * Revision 1.159  1995/01/20  09:13:23  allender
- * *&^%&*%$ typo
- * 
- * Revision 1.158  1995/01/20  09:12:04  allender
- * record team names during demo recoring in GM_TEAM
- * 
- * Revision 1.157  1995/01/19  16:31:09  allender
- * forgot to bump demo version for new weapon change stuff
- * 
- * Revision 1.156  1995/01/19  16:29:33  allender
- * added new byte for weapon change (old weapon) so rewinding works
- * correctly for weapon changes in registered
- * 
- * Revision 1.155  1995/01/19  15:00:05  allender
- * remove code to take away blastable walls in multiplayer demo playbacks
- * 
- * Revision 1.154  1995/01/19  11:07:05  allender
- * put in psuedo cloaking for boss robots.  Problem is that cloaking is
- * time based, and that don't get done in demos, so bosses just disappear.
- * oh well
- * 
- * Revision 1.153  1995/01/19  09:42:29  allender
- * record laser levels in demos
- * 
- * Revision 1.152  1995/01/18  20:43:12  allender
- * fix laser level stuff on goto-beginning and goto-end
- * 
- * Revision 1.151  1995/01/18  20:28:18  allender
- * cloak robots now cloak (except maybe for boss........)  Put in function
- * to deal with control center triggers
- * 
- * Revision 1.150  1995/01/18  18:55:07  allender
- * bug fix
- * 
- * Revision 1.149  1995/01/18  18:49:03  allender
- * lots 'o stuff....record laser level.  Record beginning of door opening
- * sequence.  Fix some problems with control center stuff.  Control center
- * triggers now work in reverse
- * 
- * Revision 1.148  1995/01/18  08:51:40  allender
- * forgot to record ammo counts at beginning of demo
- * 
- * Revision 1.147  1995/01/17  17:42:07  allender
- * added primary and secondary ammo counts.  Changed goto_end routine
- * to be more efficient
- * 
- * Revision 1.146  1995/01/17  13:46:35  allender
- * fix problem with destroyed control center and rewinding a demo.
- * Save callsign and restore after demo playback
- * 
- * Revision 1.145  1995/01/12  10:21:53  allender
- * fixes for 1.0 to 1.1 demo incompatibility
- * 
- * Revision 1.144  1995/01/05  13:51:43  allender
- * fixed type of player num variable
- * 
- * Revision 1.143  1995/01/04  16:58:28  allender
- * bumped up demo version number
- * 
- * Revision 1.142  1995/01/04  14:59:02  allender
- * added more information to end of demo for registered.  Forced game mode
- * to be GM_NORMAL on demo playback
- * 
- * Revision 1.141  1995/01/03  17:30:47  allender
- * fixed logic problem with cloak stuf
- * 
- * Revision 1.140  1995/01/03  17:12:23  allender
- * fix for getting cloak stuff at end of demo for shareware
- * 
- * Revision 1.139  1995/01/03  15:20:24  allender
- * fix goto_end for shareware -- changes to goto_end for registered
- * 
- * Revision 1.138  1995/01/03  13:13:26  allender
- * add } I forgot
- * 
- * Revision 1.137  1995/01/03  13:10:29  allender
- * make score work forwards and backwards
- * 
- * Revision 1.136  1995/01/03  11:45:20  allender
- * added code to record players scores
- * 
- * Revision 1.135  1994/12/30  10:03:57  allender
- * put cloak stuff at end of demo for fast forward to the end
- * 
- * Revision 1.134  1994/12/29  17:02:55  allender
- * spelling fix on SHAREWARE
- * 
- * Revision 1.133  1994/12/29  16:43:41  allender
- * lots of new multiplayer stuff.  wrapped much code with SHAREWARE defines
- * 
- * Revision 1.132  1994/12/28  14:15:01  allender
- * added routines to deal with connecting and reconnecting players when
- * recording multiplayer demos
- * 
- * Revision 1.131  1994/12/21  12:57:59  allender
- * bug fix
- * 
- * Revision 1.130  1994/12/21  12:46:53  allender
- * record multi player deaths and kills
- * 
- * Revision 1.129  1994/12/19  16:37:27  allender
- * pick good filename when trying to save in network play and player
- * gets bumped out of menu by multi-player code
- * 
- * Revision 1.128  1994/12/14  10:49:01  allender
- * reset bad_read variable when starting demo playback
- * 
- * Revision 1.127  1994/12/14  08:53:06  allender
- * lowered watermark for out of space
- * 
- * Revision 1.126  1994/12/14  08:49:52  allender
- * put up warning when starting demo recording if not enough space and
- * not let them record
- * 
- * Revision 1.125  1994/12/13  00:01:37  allender
- * CLOAK FIX -- (I'm tempted to take cloak out of game because I can't
- * seem to get it right in demo playback)
- * 
- * Revision 1.124  1994/12/12  14:51:21  allender
- * more fixed to multiplayer cloak stuff
- * 
- * Revision 1.123  1994/12/12  11:33:11  allender
- * fixed rearview mode to work again
- * 
- * Revision 1.122  1994/12/12  11:00:16  matt
- * Added code to handle confusion with attached objects
- * 
- * Revision 1.121  1994/12/12  00:31:29  allender
- * give better warning when out of space when recording.  Don't record
- * until no space left.  We have 500K watermark when we now stop recording
- * 
- * Revision 1.120  1994/12/10  16:44:54  matt
- * Added debugging code to track down door that turns into rock
- * 
- * Revision 1.119  1994/12/09  18:46:15  matt
- * Added code to handle odd error condition
- * 
- * Revision 1.118  1994/12/09  17:27:37  allender
- * force playernum to 0 when demo is done playing
- * 
- * Revision 1.117  1994/12/09  16:40:39  allender
- * yet more cloak stuff.  Assign cloak/invuln time when starting demo
- * if flags are set.  Check cloak and invuln time when demo
- * even when paused
- * 
- * Revision 1.116  1994/12/09  14:59:22  matt
- * Added system to attach a fireball to another object for rendering purposes,
- * so the fireball always renders on top of (after) the object.
- * 
- * Revision 1.115  1994/12/09  12:21:45  allender
- * only allow valid chars when typing in demo filename
- * 
- * Revision 1.114  1994/12/08  23:19:02  allender
- * final(?) fix for getting cloak gauge to work on demo playback
- * with forward and reverse
- * 
- * Revision 1.113  1994/12/08  21:34:38  allender
- * record old and new player flags to accuratedly record cloaking and
- * decloaking
- * ./
- * 
- * Revision 1.112  1994/12/08  18:04:47  allender
- * bashed playernum right after reading it in demo header so shields
- * and energy are put in right place
- * 
- * Revision 1.111  1994/12/08  17:10:07  allender
- * encode playernum in demo header.  Bash viewer segment to 0 if in
- * bogus segnum.  Don't link render objs for same reason
- * 
- * Revision 1.110  1994/12/08  15:36:12  allender
- * cloak stuff works forwards and backwards
- * 
- * Revision 1.109  1994/12/08  13:46:03  allender
- * don't record rearview anymore, but leave in case statement for playback
- * purposes.  change the way letterbox <--> cockpit transitions happen
- * 
- * Revision 1.108  1994/12/08  12:36:06  matt
- * Added new object allocation & deallocation functions so other code
- * could stop messing around with internal object data structures.
- * 
- * Revision 1.107  1994/12/08  11:19:04  allender
- * handle out of space (more) gracefully then before
- * 
- * Revision 1.106  1994/12/08  00:29:49  allender
- * fixed bug that didn't load level on goto_beginning
- * 
- * Revision 1.105  1994/12/08  00:11:51  mike
- * change matrix interpolation.
- * 
- * Revision 1.104  1994/12/07  23:46:37  allender
- * changed invulnerability and cloak to work (almost) correctly both
- * in single and multi player
- * 
- * Revision 1.103  1994/12/07  11:48:49  adam
- * BY ALLENDER -- added dampening of interpolation factor to 1 if greater
- * than 1 (although I have not seen this happen).  this is attempt to
- * get wobbling problem solved
- * 
- * Revision 1.102  1994/12/07  11:23:56  allender
- * attempt at getting rid of wobbling on demo playback
- * 
- * Revision 1.101  1994/12/06  19:31:17  allender
- * moved blastable wall stuff code to where we load level during demo
- * playback
- * 
- * Revision 1.100  1994/12/06  19:21:51  allender
- * multi games, destroy blastable walls.  Do wall toggle when control center
- * destroyed
- * 
- * Revision 1.99  1994/12/06  16:54:48  allender
- * fixed code so if demo automatically started from menu, don't bring up
- * message if demo is too old
- * 
- * Revision 1.98  1994/12/06  13:55:15  matt
- * Use new rounding func, f2ir()
- * 
- * Revision 1.97  1994/12/06  13:44:45  allender
- * suppressed compiler warnings
- * 
- * Revision 1.96  1994/12/06  13:38:03  allender
- * removed recording of wall hit process.  I think that all bases are covered
- * elsewhere
- * 
- * Revision 1.95  1994/12/06  12:57:35  allender
- * added recording of multi_decloaking.  Fixed some other cloaking code so
- * that cloak should last as long as player was cloaked.  We will lose the
- * guage effect, but the time is probably more important on playback
- * 
- * Revision 1.94  1994/12/05  23:37:17  matt
- * Took out calls to warning() function
- * 
- * Revision 1.93  1994/12/03  17:52:04  yuan
- * Localization 380ish
- * 
- * Revision 1.92  1994/12/02  12:53:39  allender
- * fixed goto_beginning and goto_end on demo playback
- * 
- * Revision 1.91  1994/12/01  12:01:49  allender
- * added multi player cloak stuff
- * 
- * Revision 1.90  1994/11/30  09:33:58  allender
- * added field in header to tell what version (shareware or registered)
- * demo was recorded with.  Don't allow demo recorded on one to playback
- * on the other
- * 
- * Revision 1.89  1994/11/29  00:31:01  allender
- * major changes -- added level recording feature which records level
- * advancement.  Changes to internal code to handle this.
- * 
- * Revision 1.88  1994/11/27  23:13:54  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.87  1994/11/27  23:07:35  allender
- * starting on code to get all level transitions recorded. not done yet
- * 
- * Revision 1.86  1994/11/27  17:39:47  matt
- * Don't xlate tmap numbers when editor compiled out
- * 
- * Revision 1.85  1994/11/23  09:27:21  allender
- * put up info box with message if demo version is too old or level
- * cannot be loaded
- * 
- * Revision 1.84  1994/11/22  19:37:39  allender
- * fix array mistake
- * 
- * Revision 1.83  1994/11/22  19:35:09  allender
- * record player ship colors in multiplayer demo recordings
- * 
- * Revision 1.82  1994/11/19  15:36:42  mike
- * fix fix.
- * 
- * Revision 1.81  1994/11/19  15:23:21  mike
- * rip out unused code
- * 
- * Revision 1.80  1994/11/16  14:51:49  rob
- * Fixed network/demo incompatibility.
- * 
- * Revision 1.79  1994/11/15  10:55:48  allender
- * made start of demo playback read initial demo information so
- * level will get loaded.  Made demo record to single file which
- * will get renamed.  Added numerics after old filename so
- * sequential filenames would be defaulted to
- * 
- * Revision 1.78  1994/11/15  09:46:06  allender
- * added versioning.  Fixed problems with trying to interpolating a completely
- * 0 orientation matrix
- * 
- * Revision 1.77  1994/11/14  14:34:31  matt
- * Fixed up handling when textures can't be found during remap
- * 
- * Revision 1.76  1994/11/14  09:15:29  allender
- * make ESC from file save menu exit w/o saving.  Fix letterbox, rear view,
- * to normal cockpit mode transition to work correctly when skipping and
- * interpolating frames
- * 
- * Revision 1.75  1994/11/11  16:22:07  allender
- * made morphing objects record only the object being morphed.
- * 
- * Revision 1.74  1994/11/08  14:59:19  john
- * Added code to respond to network while in menus.
- * 
- * Revision 1.73  1994/11/08  14:52:20  adam
- * *** empty log message ***
- * 
- * Revision 1.72  1994/11/07  15:47:04  allender
- * prompt for filename when done recording demo
- * 
- * Revision 1.71  1994/11/07  11:47:19  allender
- * when interpolating frames, delete weapon, fireball, and debris objects
- * from an inpolated frame if they don't appear in the next recorded
- * frame
- * 
- * Revision 1.70  1994/11/07  11:02:41  allender
- * more with interpolation. I believe that I have it right now
- * 
- * Revision 1.69  1994/11/07  08:47:40  john
- * Made wall state record.
- * 
- * Revision 1.68  1994/11/05  17:22:51  john
- * Fixed lots of sequencing problems with newdemo stuff.
- * 
- * Revision 1.67  1994/11/04  20:11:52  john
- * Neatening up palette stuff with demos.
- * 
- * Revision 1.66  1994/11/04  16:49:44  allender
- * changed newdemo_do_interpolate to default to on
- * 
- * Revision 1.65  1994/11/04  16:44:51  allender
- * added filename support for demo recording.  more auto demo stuff
- * 
- * Revision 1.64  1994/11/04  13:05:31  allender
- * fixing the lifeleft variable again.  (I think I got it right this time)
- * 
- * Revision 1.63  1994/11/04  11:37:37  allender
- * commented out fprintfs and fixed compiler warning
- * 
- * Revision 1.62  1994/11/04  11:33:50  allender
- * added OBJ_FLARE and OBJ_LIGHT to obj->lifeleft recording
- * 
- * Revision 1.61  1994/11/04  11:29:21  allender
- * more interpolation stuff -- not done yet.  Fixed so hostage vclips
- * render correctly.  Changed lifeleft to full precision, but only
- * write it when object is fireball or weapon type of object
- * 
- * Revision 1.60  1994/11/03  10:00:11  allender
- * fixed divide by zero in calculating render time.  more interpolation
- * stuff which isn't quite done
- * 
- * Revision 1.59  1994/11/02  17:10:59  allender
- * never play recorded frames when interpolation is occuring
- * 
- * Revision 1.58  1994/11/02  14:28:58  allender
- * profile total playback time and average frame render time
- * 
- * Revision 1.57  1994/11/02  14:09:03  allender
- * record rear view.  start of playback interpolation code -- this
- * is not yet done
- * 
- * Revision 1.56  1994/11/01  13:25:30  allender
- * drop frames if playing back demo on slower machine
- * 
- * Revision 1.55  1994/10/31  16:10:40  allender
- * record letterbox mode on death seq, and then restore
- * 
- * Revision 1.54  1994/10/29  16:01:38  allender
- * added ND_STATE_NODEMOS to indicate that there are no demos currently
- * available for playback
- * 
- * Revision 1.53  1994/10/29  15:38:42  allender
- * in newdemo_start_playback, make Newdemo_at_eof = 0
- * 
- * Revision 1.52  1994/10/28  14:45:28  john
- * fixed typo from last checkin.
- * 
- * Revision 1.51  1994/10/28  14:42:55  john
- * Added sound volumes to all sound calls.
- * 
- * Revision 1.50  1994/10/28  14:31:57  allender
- * homing missle and autodemo stuff
- * 
- * Revision 1.49  1994/10/28  12:42:14  allender
- * record homing distance
- * 
- * Revision 1.48  1994/10/27  16:57:54  allender
- * changed demo vcr to be able to play any number of frames by storing
- * frame length (in bytes) in the demo file.  Added blowing up monitors
- * 
- * Revision 1.47  1994/10/26  16:50:50  allender
- * put two functions inside of VCR_MODE ifdef
- * 
- * Revision 1.46  1994/10/26  15:20:32  allender
- * added CT_REMOTE as valid control type for recording
- * 
- * Revision 1.45  1994/10/26  14:45:35  allender
- * completed hacked in vcr demo playback stuff
- * 
- * Revision 1.44  1994/10/26  13:40:52  allender
- * vcr playback of demo stuff
- * 
- * Revision 1.43  1994/10/26  08:51:57  allender
- * record player weapon change
- * 
- * Revision 1.42  1994/10/25  15:48:01  allender
- * add shields, energy, and player flags to demo recording.
- * ,
- * 
- * Revision 1.41  1994/10/24  08:19:35  allender
- * fixed compilation errors
- * 
- * Revision 1.40  1994/10/23  19:17:08  matt
- * Fixed bug with "no key" messages
- * 
- * Revision 1.39  1994/10/22  14:15:08  mike
- * Suppress compiler warnings.
- * 
- * Revision 1.38  1994/10/21  15:24:55  allender
- * compressed writing of object structures with specialized code
- * to write out only pertinent object structures.
- * 
- * Revision 1.37  1994/10/20  13:03:17  matt
- * Replaced old save files (MIN/SAV/HOT) with new LVL files
- * 
- * Revision 1.36  1994/09/28  23:13:10  matt
- * Macroized palette flash system
- * 
- * Revision 1.35  1994/09/26  17:28:32  matt
- * Made new multiple-object morph code work with the demo system
- * 
- * Revision 1.34  1994/09/10  13:31:54  matt
- * Made exploding walls a type of blastable walls.
- * Cleaned up blastable walls, making them tmap2 bitmaps.
- * 
- * Revision 1.33  1994/08/15  18:05:28  john
- * *** empty log message ***
- * 
- * Revision 1.32  1994/08/15  17:56:38  john
- * ,
- * 
- * Revision 1.31  1994/08/10  09:44:54  john
- * *** empty log message ***
- * 
- * Revision 1.30  1994/07/22  12:35:48  matt
- * Cleaned up editor/game interactions some more.
- * 
- * Revision 1.29  1994/07/21  13:06:45  matt
- * Ripped out remants of old demo system, and added demo only system that
- * disables object movement and game options from menu.
- * 
- * Revision 1.28  1994/07/18  16:22:44  john
- * Made all file read/writes call the same routine.
- * 
- * Revision 1.27  1994/07/14  22:38:27  matt
- * Added exploding doors
- * 
- * Revision 1.26  1994/07/05  12:49:04  john
- * Put functionality of New Hostage spec into code.
- * 
- * Revision 1.25  1994/06/29  11:05:38  john
- * Made demos read in compressed.
- * 
- * Revision 1.24  1994/06/29  09:14:06  john
- * Made files write out uncompressed and read in compressed.
- * 
- * Revision 1.23  1994/06/28  11:55:28  john
- * Made newdemo system record/play directly to/from disk, so
- * we don't need the 4 MB buffer anymore.
- * 
- * Revision 1.22  1994/06/27  15:52:38  john
- * #define'd out the newdemo stuff
- * 
- * 
- * Revision 1.21  1994/06/22  00:29:04  john
- * Fixed bug with playing demo then playing game without
- * loading new mine.
- * 
- * Revision 1.20  1994/06/22  00:14:23  john
- * Attempted to fix sign.
- * 
- * Revision 1.19  1994/06/21  23:57:54  john
- * Hopefully fixed bug with negative countdowns.
- * 
- * Revision 1.18  1994/06/21  23:47:44  john
- * MAde Malloc always 4*1024*1024.
- * 
- * Revision 1.17  1994/06/21  22:58:47  john
- * Added error if out of memory.
- * 
- * Revision 1.16  1994/06/21  22:15:48  john
- * Added  % done to demo recording.
- * 
- * 
- * Revision 1.15  1994/06/21  19:45:55  john
- * Added palette effects to demo recording.
- * 
- * Revision 1.14  1994/06/21  15:08:54  john
- * Made demo record HUD message and cleaned up the HUD code.
- * 
- * Revision 1.13  1994/06/21  14:20:08  john
- * Put in hooks to record HUD messages.
- * 
- * Revision 1.12  1994/06/20  11:50:15  john
- * Made demo record flash effect, and control center triggers.
- * 
- * Revision 1.11  1994/06/17  18:01:33  john
- * A bunch of new stuff by John
- * 
- * Revision 1.10  1994/06/17  12:13:31  john
- * More newdemo stuff; made editor->game transition start in slew mode.
- * 
- * Revision 1.9  1994/06/16  13:14:36  matt
- * Fixed typo
- * 
- * Revision 1.8  1994/06/16  13:02:07  john
- * Added morph hooks.
- * 
- * Revision 1.7  1994/06/15  19:01:33  john
- * Added the capability to make 3d sounds play just once for the
- * laser hit wall effects.
- * 
- * Revision 1.6  1994/06/15  14:56:59  john
- * Added triggers to demo recording.
- * 
- * Revision 1.5  1994/06/14  20:42:15  john
- * Made robot matztn cntr not work until no robots or player are
- * in the segment.
- * 
- * Revision 1.4  1994/06/14  14:43:27  john
- * Made doors work with newdemo system.
- * 
- * Revision 1.3  1994/06/14  11:32:29  john
- * Made Newdemo record & restore the current mine.
- * 
- * Revision 1.2  1994/06/13  21:02:43  john
- * Initial version of new demo recording system.
- * 
- * Revision 1.1  1994/06/13  11:09:00  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: newdemo.c 2.7 1995/05/26 16:16:06 john Exp $";
+static char rcsid[] = "$Id: newdemo.c 2.66 1996/09/20 14:51:50 jeremy Exp $";
 #pragma on (unreferenced)
 
-#include <dos.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
+#include <stdarg.h>
 #include <string.h>	// for memset
 #include <ctype.h>
 #include <malloc.h>
 #include <limits.h>
+#include <errno.h>
+#include <direct.h>
+#include <dos.h>
+#include <io.h>
 
 #include "inferno.h"
 #include "game.h"
@@ -754,15 +81,26 @@ static char rcsid[] = "$Id: newdemo.c 2.7 1995/05/26 16:16:06 john Exp $";
 #include "aistruct.h"
 #include "mission.h"
 #include "piggy.h"
+#include "controls.h"
+
+#include "findfile.h"
 
 #ifdef EDITOR
 #include "editor\editor.h"
+#endif
+
+#ifdef MACINTOSH
+#pragma global_optimizer off		// pretty much sucks...need to look into this
 #endif
 
 //#include "nocfile.h"
 
 //Does demo start automatically?
 int Auto_demo = 0;
+
+byte WasRecorded [MAX_OBJECTS];
+byte ViewWasRecorded[MAX_OBJECTS];
+byte RenderingWasRecorded[32];
 
 #define ND_EVENT_EOF					0			// EOF
 #define ND_EVENT_START_DEMO		1			// Followed by 16 character, NULL terminated filename of .SAV file to use
@@ -796,8 +134,6 @@ int Auto_demo = 0;
 #define ND_EVENT_MULTI_CLOAK		29			// followed by player num
 #define ND_EVENT_MULTI_DECLOAK	30			// followed by player num
 #define ND_EVENT_RESTORE_REARVIEW	31		// restore cockpit after rearview mode
-
-#ifndef SHAREWARE
 #define ND_EVENT_MULTI_DEATH		32			// with player number
 #define ND_EVENT_MULTI_KILL		33			// with player number
 #define ND_EVENT_MULTI_CONNECT	34			// with player number
@@ -809,27 +145,34 @@ int Auto_demo = 0;
 #define ND_EVENT_SECONDARY_AMMO	40			// with old/new ammo count
 #define ND_EVENT_DOOR_OPENING		41			// with segment/side
 #define ND_EVENT_LASER_LEVEL		42			// no data
-#endif
+#define ND_EVENT_PLAYER_AFTERBURNER	43       // followed by byte old ab, current ab
+#define ND_EVENT_CLOAKING_WALL	44			// info changing while wall cloaking
+#define ND_EVENT_CHANGE_COCKPIT	45       // change the cockpit 
+#define ND_EVENT_START_GUIDED	   46			// switch to guided view
+#define ND_EVENT_END_GUIDED		47			// stop guided view/return to ship
+#define ND_EVENT_SECRET_THINGY	48			// 0/1 = secret exit functional/non-functional
+#define ND_EVENT_LINK_SOUND_TO_OBJ	49		// record digi_link_sound_to_object3
+#define ND_EVENT_KILL_SOUND_TO_OBJ	50		// record digi_kill_sound_linked_to_object
+
 
 #define NORMAL_PLAYBACK 		0
 #define SKIP_PLAYBACK			1
 #define INTERPOLATE_PLAYBACK	2
 #define INTERPOL_FACTOR       (F1_0 + (F1_0/5))
 
-#ifdef SHAREWARE
-#define DEMO_VERSION				5
+#define DEMO_VERSION				15		//last D1 version was 13
+#define DEMO_GAME_TYPE 			3		//1 was shareware, 2 registered
+
+#ifndef MACINTOSH
+#define DEMO_FILENAME			"demos\\tmpdemo.dem"
+#define DEMO_DIR				"demos\\"
 #else
-#define DEMO_VERSION				13
+#define DEMO_FILENAME			":Demos:tmpdemo.dem"
+#define DEMO_DIR				":Demos:"
 #endif
 
-#define DEMO_FILENAME			"tmpdemo.dem"
 #define DEMO_MAX_LEVELS			29
 
-#ifdef SHAREWARE
-#define DEMO_GAME_TYPE 1
-#else
-#define DEMO_GAME_TYPE 2
-#endif
 
 char nd_save_callsign[CALLSIGN_LEN+1];
 int Newdemo_state = 0;
@@ -841,7 +184,7 @@ int Newdemo_game_mode;
 int Newdemo_old_cockpit;
 byte Newdemo_no_space;
 byte Newdemo_at_eof;
-byte Newdemo_do_interpolate = 1;
+byte Newdemo_do_interpolate = 0; // 1
 byte Newdemo_players_cloaked;
 byte Newdemo_warning_given = 0;
 byte Newdemo_cntrlcen_destroyed = 0;
@@ -852,9 +195,12 @@ fix nd_playback_total;
 fix nd_recorded_total;
 fix nd_recorded_time;
 byte playback_style;
+byte First_time_playback=1;
+fix JasonPlaybackTotal=0;
+
 
 FILE *infile;
-FILE *outfile;
+FILE *outfile=NULL;
 
 int newdemo_get_percent_done()	{
 	if ( Newdemo_state == ND_STATE_PLAYBACK )	{
@@ -908,6 +254,18 @@ int newdemo_read( void *buffer, int elsize, int nelem )
 	return num_read;
 }
 
+int newdemo_find_object( int signature )
+{
+	int i;
+	object * objp;
+	objp = Objects;
+	for (i=0; i<=Highest_object_index; i++, objp++ )	{
+		if ( (objp->type != OBJ_NONE) && (objp->signature == signature))
+			return i;
+	}
+	return -1;
+}
+
 int newdemo_write( void *buffer, int elsize, int nelem )
 {
 	int num_written, total_size;
@@ -915,6 +273,7 @@ int newdemo_write( void *buffer, int elsize, int nelem )
 	total_size = elsize * nelem;
 	frame_bytes_written += total_size;
 	Newdemo_num_written += total_size;
+	Assert(outfile != NULL);
 	num_written = fwrite( buffer, elsize, nelem, outfile );
 //	if ((Newdemo_num_written > Newdemo_size) && !Newdemo_no_space) {
 //		Newdemo_no_space=1;
@@ -923,7 +282,7 @@ int newdemo_write( void *buffer, int elsize, int nelem )
 //	}
 	if ((Newdemo_num_written > Newdemo_size) && !Newdemo_no_space)
 		Newdemo_no_space=1;
-	if (num_written == nelem)
+	if (num_written == nelem && !Newdemo_no_space)
 		return num_written;
 
 	Newdemo_no_space=2;
@@ -988,7 +347,7 @@ void nd_write_shortpos(object *obj)
 	shortpos sp;
 	ubyte render_type;
 
-	create_shortpos(&sp, obj);
+	create_shortpos(&sp, obj, 0);
 
 	render_type = obj->render_type;
 	if (((render_type == RT_POLYOBJ) || (render_type == RT_HOSTAGE) || (render_type == RT_MORPH)) || (obj->type == OBJ_CAMERA)) {
@@ -1105,6 +464,9 @@ void nd_read_object(object *obj)
 	nd_read_short((short *)&(obj->signature));
 	nd_read_shortpos(obj);
 
+if ((obj->type == OBJ_ROBOT) && (obj->id == SPECIAL_REACTOR_ROBOT))
+	Int3();
+
 	obj->attached_obj		= -1;
 
 	switch(obj->type) {
@@ -1117,7 +479,12 @@ void nd_read_object(object *obj)
 
 		case OBJ_ROBOT:
 			obj->control_type = CT_AI;
-			obj->movement_type = MT_PHYSICS;
+			//	(MarkA and MikeK said we should not do the crazy last secret stuff with multiple reactors...
+			//	This necessary code is our vindication. --MK, 2/15/96)
+			if (obj->id != SPECIAL_REACTOR_ROBOT)
+				obj->movement_type = MT_PHYSICS;
+			else
+				obj->movement_type = MT_NONE;
 			obj->size = Polygon_models[Robot_info[obj->id].model_num].rad;
 			obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
 			obj->rtype.pobj_info.subobj_flags = 0;
@@ -1158,11 +525,14 @@ void nd_read_object(object *obj)
 	if ((obj->type == OBJ_WEAPON) && (obj->render_type == RT_WEAPON_VCLIP))
 		nd_read_fix(&(obj->lifeleft));
 	else {
-		nd_read_byte((ubyte *)&(obj->lifeleft));
+		ubyte b;
+		
+		nd_read_byte(&b);
+		obj->lifeleft = (fix)b;
+// MWA old way -- won't work with big endian machines		nd_read_byte((ubyte *)&(obj->lifeleft));
 		obj->lifeleft = (fix)((int)obj->lifeleft << 12);
 	}
 
-#ifndef SHAREWARE
 	if (obj->type == OBJ_ROBOT) {
 		if (Robot_info[obj->id].boss_flag) {
 			byte cloaked;
@@ -1171,7 +541,6 @@ void nd_read_object(object *obj)
 			obj->ctype.ai_info.CLOAKED = cloaked;
 		}
 	}
-#endif
 
 	switch (obj->movement_type) {
 
@@ -1305,6 +674,9 @@ void nd_write_object(object *obj)
 {
 	int life;
 
+if ((obj->type == OBJ_ROBOT) && (obj->id == SPECIAL_REACTOR_ROBOT))
+	Int3();
+
 /*
  *  Do render_type first so on read, we can make determination of
  *  what else to read in
@@ -1339,7 +711,6 @@ void nd_write_object(object *obj)
 		nd_write_byte((ubyte)life);
 	}
 
-#ifndef SHAREWARE
 	if (obj->type == OBJ_ROBOT) {
 		if (Robot_info[obj->id].boss_flag) {
 			if ((GameTime > Boss_cloak_start_time) && (GameTime < Boss_cloak_end_time))
@@ -1348,7 +719,6 @@ void nd_write_object(object *obj)
 				nd_write_byte(0);
 		}
 	}
-#endif
 
 	switch (obj->movement_type) {
 
@@ -1426,7 +796,6 @@ void nd_write_object(object *obj)
 				for (i = 0; i < Polygon_models[obj->rtype.pobj_info.model_num].n_models; i++)
 					nd_write_angvec(&obj->rtype.pobj_info.anim_angles[i]);
 
-
 			nd_write_int(obj->rtype.pobj_info.tmap_override);
 
 			break;
@@ -1451,36 +820,28 @@ void nd_write_object(object *obj)
 
 }
 
+int JustStartedRecording=0,JustStartedPlayback=0;
+
 void newdemo_record_start_demo()
 {
-#ifndef SHAREWARE
 	int i;
-#endif
 
 	stop_time();
 	nd_write_byte(ND_EVENT_START_DEMO);
 	nd_write_byte(DEMO_VERSION);
 	nd_write_byte(DEMO_GAME_TYPE);
 	nd_write_fix(GameTime);
+ 
 	if (Game_mode & GM_MULTI)
 		nd_write_int(Game_mode | (Player_num << 16));
 	else
 		nd_write_int(Game_mode);
 
-#ifdef NETWORK
-#ifdef SHAREWARE
-	if (Game_mode & GM_MULTI)
-		nd_write_byte(Netgame.team_vector);
-#else
 	if (Game_mode & GM_TEAM) {
 		nd_write_byte(Netgame.team_vector);
 		nd_write_string(Netgame.team_name[0]);
 		nd_write_string(Netgame.team_name[1]);
 	}
-#endif
-#endif
-
-#ifndef SHAREWARE
 
 	if (Game_mode & GM_MULTI) {
 		nd_write_byte((byte)N_players);
@@ -1510,14 +871,14 @@ void newdemo_record_start_demo()
 
 	nd_write_string(Current_mission_filename);
 
-#endif
-
 	nd_write_byte((byte)(f2ir(Players[Player_num].energy)));
 	nd_write_byte((byte)(f2ir(Players[Player_num].shields)));
 	nd_write_int(Players[Player_num].flags);		// be sure players flags are set
 	nd_write_byte((byte)Primary_weapon);
 	nd_write_byte((byte)Secondary_weapon);
 	Newdemo_start_frame = FrameCount;
+   JustStartedRecording=1;
+ 
 	newdemo_set_new_level(Current_level_num);
 	start_time();
 
@@ -1525,12 +886,24 @@ void newdemo_record_start_demo()
 
 void newdemo_record_start_frame(int frame_number, fix frame_time )
 {
+  int i;
+  
 	if (Newdemo_no_space) {
 		newdemo_stop_playback();
 		return;
 	}
-
+   				  
+  
 	stop_time();
+
+   for (i=0;i<MAX_OBJECTS;i++)
+	 {
+      WasRecorded[i]=0;
+		ViewWasRecorded[i]=0;
+	 }
+	for (i=0;i<32;i++)
+   	RenderingWasRecorded[i]=0;
+	
 	frame_number -= Newdemo_start_frame;
 
 	Assert(frame_number >= 0 );
@@ -1546,16 +919,35 @@ void newdemo_record_start_frame(int frame_number, fix frame_time )
 
 void newdemo_record_render_object(object * obj)
 {
+   if (ViewWasRecorded[obj-Objects])
+  	 	return;
+
+  //	if (obj==&Objects[Players[Player_num].objnum] && !Player_is_dead)
+    //	return;
+	
 	stop_time();
 	nd_write_byte(ND_EVENT_RENDER_OBJECT);
 	nd_write_object(obj);
 	start_time();
 }
 
+extern ubyte RenderingType;
+
 void newdemo_record_viewer_object(object * obj)
 {
+
+   if (ViewWasRecorded[obj-Objects] && (ViewWasRecorded[obj-Objects]-1)==RenderingType)
+		return;
+	//if (WasRecorded[obj-Objects])
+  	  //	return;
+	if (RenderingWasRecorded[RenderingType])
+		return;
+	
+   ViewWasRecorded[obj-Objects]=RenderingType+1;
+	RenderingWasRecorded[RenderingType]=1;
 	stop_time();
 	nd_write_byte(ND_EVENT_VIEWER_OBJECT);
+   nd_write_byte(RenderingType);
 	nd_write_object(obj);
 	start_time();
 }
@@ -1573,6 +965,15 @@ void newdemo_record_sound( int soundno )	{
 //--unused-- 	start_time();
 //--unused-- }
 //--unused-- 
+
+void newdemo_record_cockpit_change (int mode)
+ {
+  stop_time();
+  nd_write_byte (ND_EVENT_CHANGE_COCKPIT);
+  nd_write_int(mode);
+  start_time();
+ }
+
 
 void newdemo_record_sound_3d( int soundno, int angle, int volume )	{
 	stop_time();
@@ -1592,6 +993,29 @@ void newdemo_record_sound_3d_once( int soundno, int angle, int volume )	{
 	start_time();
 }
 
+
+void newdemo_record_link_sound_to_object3( int soundno, short objnum, fix max_volume, fix  max_distance, int loop_start, int loop_end )
+{
+	stop_time();
+	nd_write_byte( ND_EVENT_LINK_SOUND_TO_OBJ );
+	nd_write_int( soundno );
+	nd_write_int( Objects[objnum].signature );
+	nd_write_int( max_volume );
+	nd_write_int( max_distance );
+	nd_write_int( loop_start );
+	nd_write_int( loop_end );
+	start_time();
+}
+
+void newdemo_record_kill_sound_linked_to_object( int objnum )
+{
+	stop_time();
+	nd_write_byte( ND_EVENT_KILL_SOUND_TO_OBJ );
+	nd_write_int( Objects[objnum].signature );
+	start_time();
+}
+
+
 void newdemo_record_wall_hit_process( int segnum, int side, int damage, int playernum )
 {
 	stop_time();
@@ -1607,13 +1031,31 @@ void newdemo_record_wall_hit_process( int segnum, int side, int damage, int play
 	start_time();
 }
 
-void newdemo_record_trigger( int segnum, int side, int objnum )
+void newdemo_record_guided_start ()
+ {
+  nd_write_byte (ND_EVENT_START_GUIDED);
+ }
+void newdemo_record_guided_end ()
+ {
+  nd_write_byte (ND_EVENT_END_GUIDED);
+ }
+
+void newdemo_record_secret_exit_blown(int truth)
+{
+	stop_time();
+	nd_write_byte( ND_EVENT_SECRET_THINGY );
+	nd_write_int( truth );
+	start_time();
+}
+
+void newdemo_record_trigger( int segnum, int side, int objnum,int shot )
 {
 	stop_time();
 	nd_write_byte( ND_EVENT_TRIGGER );
 	nd_write_int( segnum );
 	nd_write_int( side );
 	nd_write_int( objnum );
+	nd_write_int(shot);
 	start_time();
 }
 
@@ -1649,7 +1091,7 @@ void newdemo_record_control_center_destroyed()
 {
 	stop_time();
 	nd_write_byte( ND_EVENT_CONTROL_CENTER_DESTROYED );
-	nd_write_int( Fuelcen_seconds_left );
+	nd_write_int( Countdown_seconds_left );
 	start_time();
 }
 
@@ -1671,32 +1113,29 @@ void newdemo_record_palette_effect(short r, short g, short b )
 	start_time();
 }
 
-#ifdef SHAREWARE
-void newdemo_record_player_energy(int energy)
-#else
 void newdemo_record_player_energy(int old_energy, int energy)
-#endif
 {
 	stop_time();
 	nd_write_byte( ND_EVENT_PLAYER_ENERGY );
-#ifndef SHAREWARE
 	nd_write_byte((byte) old_energy);
-#endif
 	nd_write_byte((byte) energy);
 	start_time();
 }
 
-#ifdef SHAREWARE
-void newdemo_record_player_shields(int shield)
-#else
+void newdemo_record_player_afterburner(fix old_afterburner, fix afterburner)
+{
+	stop_time();
+	nd_write_byte( ND_EVENT_PLAYER_AFTERBURNER );
+	nd_write_byte((byte) (old_afterburner>>9));
+	nd_write_byte((byte) (afterburner>>9));
+	start_time();
+}
+
 void newdemo_record_player_shields(int old_shield, int shield)
-#endif
 {
 	stop_time();
 	nd_write_byte( ND_EVENT_PLAYER_SHIELD );
-#ifndef SHAREWARE
 	nd_write_byte((byte)old_shield);
-#endif
 	nd_write_byte((byte)shield);
 	start_time();
 }
@@ -1715,12 +1154,10 @@ void newdemo_record_player_weapon(int weapon_type, int weapon_num)
 	nd_write_byte( ND_EVENT_PLAYER_WEAPON );
 	nd_write_byte((byte)weapon_type);
 	nd_write_byte((byte)weapon_num);
-#ifndef SHAREWARE
 	if (weapon_type)
 		nd_write_byte((byte)Secondary_weapon);
 	else
 		nd_write_byte((byte)Primary_weapon);
-#endif
 	start_time();
 }
 
@@ -1809,8 +1246,6 @@ void newdemo_record_multi_decloak(int pnum)
 	nd_write_byte((byte)pnum);
 	start_time();
 }
-
-#ifndef SHAREWARE
 
 void newdemo_record_multi_death(int pnum)
 {
@@ -1919,14 +1354,52 @@ void newdemo_record_laser_level(byte old_level, byte new_level)
 	start_time();
 }
 
-#endif
+void newdemo_record_cloaking_wall(int front_wall_num, int back_wall_num, ubyte type, ubyte state, fix cloak_value, fix l0, fix l1, fix l2, fix l3)
+{
+	Assert(front_wall_num <= 255 && back_wall_num <= 255);
+
+	stop_time();
+	nd_write_byte(ND_EVENT_CLOAKING_WALL);
+	nd_write_byte(front_wall_num);
+	nd_write_byte(back_wall_num);
+	nd_write_byte(type);
+	nd_write_byte(state);
+	nd_write_byte(cloak_value);
+	nd_write_short(l0>>8); 
+	nd_write_short(l1>>8);
+	nd_write_short(l2>>8);
+	nd_write_short(l3>>8);
+	start_time();
+}
 
 void newdemo_set_new_level(int level_num)
 {
+	int i;
+	int side;
+	segment *seg;
+
 	stop_time();
 	nd_write_byte(ND_EVENT_NEW_LEVEL);
 	nd_write_byte((byte)level_num);
 	nd_write_byte((byte)Current_level_num);
+ 
+   if (JustStartedRecording==1)
+	 {
+  	  	nd_write_int(Num_walls);
+		for (i=0;i<Num_walls;i++)
+		 {
+	     nd_write_byte (Walls[i].type);
+		  nd_write_byte (Walls[i].flags);
+		  nd_write_byte (Walls[i].state);  
+
+		  seg = &Segments[Walls[i].segnum];
+		  side = Walls[i].sidenum;
+		  nd_write_short (seg->sides[side].tmap_num);
+		  nd_write_short (seg->sides[side].tmap_num2);
+		  JustStartedRecording=0;
+	    }
+	 }
+	  	
 	start_time();
 }
 
@@ -1946,6 +1419,27 @@ int newdemo_read_demo_start(int rnd_demo)
 		return 1;
 	}
 	nd_read_byte(&version);
+	nd_read_byte(&game_type);
+	if (game_type < DEMO_GAME_TYPE) {
+		newmenu_item m[2];
+
+		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
+		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
+		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = "    In Descent: First Strike";
+	
+		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
+		return 1;
+	}
+	if (game_type != DEMO_GAME_TYPE) {
+		newmenu_item m[2];
+
+		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
+		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
+		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = "   In Unknown Descent version";
+	
+		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
+		return 1;
+	}
 	if (version < DEMO_VERSION) {
 		if (!rnd_demo) {
 			newmenu_item m[1];
@@ -1955,43 +1449,13 @@ int newdemo_read_demo_start(int rnd_demo)
 		}
 		return 1;
 	}
-	nd_read_byte(&game_type);
-	if (game_type != DEMO_GAME_TYPE) {
-		newmenu_item m[3];
-
-		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
-#ifdef SHAREWARE
-		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = TXT_WITH_REGISTERED;
-#else
-		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = TXT_WITH_SHAREWARE;
-#endif
-		m[ 2].type = NM_TYPE_TEXT; m[ 2].text = TXT_OF_DESCENT;
-	
-		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
-		return 1;
-	}
 	nd_read_fix(&GameTime);
+   Boss_cloak_start_time=Boss_cloak_end_time=GameTime;
+	JasonPlaybackTotal=0;
+ 
 	nd_read_int(&Newdemo_game_mode);
 
-#ifndef NETWORK
-	if (Newdemo_game_mode & GM_MULTI) {
-		nm_messagebox( NULL, 1, "Ok", "can't playback net game\nwith this version of code\n" );
-		return 1;
-	}
-#endif
-
-#ifdef NETWORK
 	change_playernum_to((Newdemo_game_mode >> 16) & 0x7);
-#ifdef SHAREWARE
-	if (Newdemo_game_mode & GM_TEAM)
-		nd_read_byte(&(Netgame.team_vector));
-
-	for (i =0 ; i < MAX_PLAYERS; i++) {
- 		Players[i].cloak_time = 0;
- 		Players[i].invulnerable_time = 0;
-	}
-#else
 	if (Newdemo_game_mode & GM_TEAM) {
 		nd_read_byte(&(Netgame.team_vector));
 		nd_read_string(Netgame.team_name[0]);
@@ -2000,7 +1464,11 @@ int newdemo_read_demo_start(int rnd_demo)
 	if (Newdemo_game_mode & GM_MULTI) {
 
 		multi_new_game();
-		nd_read_byte((byte *)&N_players);
+		nd_read_byte(&c);
+		N_players = (int)c;
+// changed this to above two lines -- breaks on the mac because of
+// endian issues
+//		nd_read_byte((byte *)&N_players);
 		for (i = 0 ; i < N_players; i++) {
 			Players[i].cloak_time = 0;
 			Players[i].invulnerable_time = 0;
@@ -2018,7 +1486,6 @@ int newdemo_read_demo_start(int rnd_demo)
 		multi_sort_kill_list();
 		Game_mode = GM_NORMAL;
 	} else
-#endif
 		nd_read_int(&(Players[Player_num].score));		// Note link to above if!
 
 	for (i = 0; i < MAX_PRIMARY_WEAPONS; i++)
@@ -2036,20 +1503,16 @@ int newdemo_read_demo_start(int rnd_demo)
 // Support for missions
 
 	nd_read_string(current_mission);
-#ifdef DEST_SAT
-	if (!strcmp(current_mission, ""))
-		strcpy(current_mission, "DESTSAT");
-#endif
 	if (!load_mission_by_name(current_mission)) {
-		newmenu_item m[1];
+		if (!rnd_demo) {
+			newmenu_item m[1];
 
-		sprintf(text, TXT_NOMISSION4DEMO, current_mission);
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
-		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
+			sprintf(text, TXT_NOMISSION4DEMO, current_mission);
+			m[ 0].type = NM_TYPE_TEXT; m[ 0].text = text;
+			newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
+		}
 		return 1;
 	}
-
-#endif
 
 	nd_recorded_total = 0;
 	nd_playback_total = 0;
@@ -2071,28 +1534,9 @@ int newdemo_read_demo_start(int rnd_demo)
 // check the next byte -- it _will_ be a load_new_level event.  If it is
 // not, then we must shift all bytes up by one.
 
-#ifdef SHAREWARE
-	{
-		unsigned char c;
-
-		c = fgetc(infile);
-		if (c != ND_EVENT_NEW_LEVEL) {
-			int flags;
-
-			flags = Players[Player_num].flags;
-			energy = shield;
-			shield = (unsigned char)flags;
-			flags = (flags >> 8) & 0x00ffffff;
-			flags |= (Primary_weapon << 24);
-			Primary_weapon = Secondary_weapon;
-			Secondary_weapon = c;
-		} else
-			ungetc(c, infile);
-	}
-#endif
-
 	Players[Player_num].energy = i2f(energy);
 	Players[Player_num].shields = i2f(shield);
+	JustStartedPlayback=1;
 	return 0;
 }
 
@@ -2119,14 +1563,20 @@ void newdemo_pop_ctrlcen_triggers()
 
 #define N_PLAYER_SHIP_TEXTURES 6
 
+void nd_render_extras (ubyte,object *);
+extern void multi_apply_goal_textures ();
+ubyte Newdemo_flying_guided=0;
 
 int newdemo_read_frame_information()
 {
-	int done, segnum, side, objnum, soundno, angle, volume, i;
+	int done, segnum, side, objnum, soundno, angle, volume, i,shot;
 	object *obj;
-	ubyte c;
+	ubyte c,WhichWindow;
 	static byte saved_letter_cockpit;
 	static byte saved_rearview_cockpit;
+   object extraobj;
+   static char LastReadValue=101;
+   segment *seg;	
 
 	done = 0;
 
@@ -2155,26 +1605,45 @@ int newdemo_read_frame_information()
 			if (Newdemo_vcr_state == ND_STATE_PLAYBACK)
 				nd_recorded_total += nd_recorded_time;
 			NewdemoFrameCount--;
+					
 			if (nd_bad_read) { done = -1; break; }
 			break;
 		}
 
 		case ND_EVENT_VIEWER_OBJECT:				// Followed by an object structure
-			nd_read_object(Viewer);
-			if (Newdemo_vcr_state != ND_STATE_PAUSED) {
-				if (nd_bad_read) { done = -1; break; }
-				segnum = Viewer->segnum;
-				Viewer->next = Viewer->prev = Viewer->segnum = -1;
+         nd_read_byte (&WhichWindow);
+         if (WhichWindow&15)
+			  { 
+//				 mprintf ((0,"Reading extra!\n"));
+             nd_read_object (&extraobj);				
+				 if (Newdemo_vcr_state!=ND_STATE_PAUSED)
+	  			  {
+					if (nd_bad_read) { done = -1; break; }
+						
+		   	   nd_render_extras (WhichWindow,&extraobj);	
+				  }
+			  }
+			else
+			  {	
+  //				mprintf ((0,"Reading viewer!\n"));
+				//Viewer=&Objects[0];
+   			nd_read_object(Viewer);
+
+				if (Newdemo_vcr_state != ND_STATE_PAUSED) {
+					if (nd_bad_read) { done = -1; break; }
+					segnum = Viewer->segnum;
+					Viewer->next = Viewer->prev = Viewer->segnum = -1;
 
 // HACK HACK HACK -- since we have multiple level recording, it can be the case
 // HACK HACK HACK -- that when rewinding the demo, the viewer is in a segment
 // HACK HACK HACK -- that is greater than the highest index of segments.  Bash
 // HACK HACK HACK -- the viewer to segment 0 for bogus view.
 
-				if (segnum > Highest_segment_index)
-					segnum = 0;
-				obj_link(Viewer-Objects,segnum);
-			}
+					if (segnum > Highest_segment_index)
+						segnum = 0;
+					obj_link(Viewer-Objects,segnum);
+				}
+			  }
 			break;
 
 		case ND_EVENT_RENDER_OBJECT:			   // Followed by an object structure
@@ -2195,7 +1664,6 @@ int newdemo_read_frame_information()
 					break;
 
 				obj_link(obj-Objects,segnum);
-				#ifdef NETWORK
 				if ((obj->type == OBJ_PLAYER) && (Newdemo_game_mode & GM_MULTI)) {
 					int player;
 
@@ -2214,7 +1682,6 @@ int newdemo_read_frame_information()
 					multi_player_textures[player][5] = ObjBitmaps[ObjBitmapPtrs[First_multi_bitmap_num+(player)*2+1]];
 					obj->rtype.pobj_info.alt_textures = player+1;
 				}
-				#endif
 			}
 			break;
 
@@ -2250,6 +1717,34 @@ int newdemo_read_frame_information()
 				digi_play_sample_3d( soundno, angle, volume, 1 );
 			break;
 
+		case ND_EVENT_LINK_SOUND_TO_OBJ:
+			{
+				int soundno, objnum, max_volume, max_distance, loop_start, loop_end;
+				int signature;
+				nd_read_int( &soundno );
+				nd_read_int( &signature );
+				nd_read_int( &max_volume );
+				nd_read_int( &max_distance );
+				nd_read_int( &loop_start );
+				nd_read_int( &loop_end );
+				objnum = newdemo_find_object( signature );
+				if ( objnum > -1 )	{	//	@mk, 2/22/96, John told me to.
+					digi_link_sound_to_object3( soundno, objnum, 1, max_volume, max_distance, loop_start, loop_end );
+				}
+			}
+			break;
+
+		case ND_EVENT_KILL_SOUND_TO_OBJ:
+			{
+				int objnum, signature;
+				nd_read_int( &signature );
+				objnum = newdemo_find_object( signature );
+				if ( objnum > -1 )	{	//	@mk, 2/22/96, John told me to.
+					digi_kill_sound_linked_to_object(objnum);
+				}
+			}
+			break;
+
 		case ND_EVENT_WALL_HIT_PROCESS: {
 			int player, segnum;
 			fix damage;
@@ -2268,9 +1763,23 @@ int newdemo_read_frame_information()
 			nd_read_int(&segnum);
 			nd_read_int(&side);
 			nd_read_int(&objnum);
+			nd_read_int(&shot);
 			if (nd_bad_read) { done = -1; break; }
 			if (Newdemo_vcr_state != ND_STATE_PAUSED)
-				check_trigger(&Segments[segnum], side, objnum);
+			{
+				mprintf ((0,"EVENT TRIGGER! shot=%d\n",shot));
+
+				if (Triggers[Walls[Segments[segnum].sides[side].wall_num].trigger].type == TT_SECRET_EXIT) {
+					int	truth;
+
+					nd_read_byte(&c);
+					Assert(c == ND_EVENT_SECRET_THINGY);
+					nd_read_int(&truth);
+					if (!truth)
+						check_trigger(&Segments[segnum], side, objnum,shot);
+				} else
+					check_trigger(&Segments[segnum], side, objnum,shot);
+			}
 			break;
 
 		case ND_EVENT_HOSTAGE_RESCUED: {
@@ -2318,8 +1827,8 @@ int newdemo_read_frame_information()
 			break;
 
 		case ND_EVENT_CONTROL_CENTER_DESTROYED:
-			nd_read_int(&Fuelcen_seconds_left);
-			Fuelcen_control_center_destroyed = 1;
+			nd_read_int(&Countdown_seconds_left);
+			Control_center_destroyed = 1;
 			if (nd_bad_read) { done = -1; break; }
 			if (!Newdemo_cntrlcen_destroyed) {
 				newdemo_pop_ctrlcen_triggers();
@@ -2336,6 +1845,16 @@ int newdemo_read_frame_information()
 			HUD_init_message( hud_msg );
 			break;
 			}
+	   case ND_EVENT_START_GUIDED:
+			Newdemo_flying_guided=1;
+			if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) 
+				Newdemo_flying_guided=0;
+			break;
+	   case ND_EVENT_END_GUIDED:
+			Newdemo_flying_guided=0;
+			if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) 
+				Newdemo_flying_guided=1;
+			break;
 
 		case ND_EVENT_PALETTE_EFFECT: {
 			short r, g, b;
@@ -2350,45 +1869,49 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_PLAYER_ENERGY: {
 			ubyte energy;
-#ifndef SHAREWARE
 			ubyte old_energy;
 
 			nd_read_byte(&old_energy);
-#endif
 			nd_read_byte(&energy);
 			if (nd_bad_read) {done = -1; break; }
-#ifdef SHAREWARE
-			Players[Player_num].energy = i2f(energy);
-#else
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].energy = i2f(energy);
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
 				if (old_energy != 255)
 					Players[Player_num].energy = i2f(old_energy);
 			}
-#endif
+			break;
+		}
+
+		case ND_EVENT_PLAYER_AFTERBURNER: {
+			ubyte afterburner;
+			ubyte old_afterburner;
+
+			nd_read_byte(&old_afterburner);
+			nd_read_byte(&afterburner);
+			if (nd_bad_read) {done = -1; break; }
+			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
+				Afterburner_charge = afterburner<<9;
+			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
+				if (old_afterburner != 255)
+					Afterburner_charge = old_afterburner<<9;
+			}
 			break;
 		}
 
 		case ND_EVENT_PLAYER_SHIELD: {
 			ubyte shield;
-#ifndef SHAREWARE
 			ubyte old_shield;
 
 			nd_read_byte(&old_shield);
-#endif
 			nd_read_byte(&shield);
 			if (nd_bad_read) {done = -1; break; }
-#ifdef SHAREWARE
-			Players[Player_num].shields = i2f(shield);
-#else
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].shields = i2f(shield);
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
 				if (old_shield != 255)
 					Players[Player_num].shields = i2f(old_shield);
 			}
-#endif
 			break;
 		}
 
@@ -2433,21 +1956,6 @@ int newdemo_read_frame_information()
 			break;
 		}
 
-#ifdef SHAREWARE
-		case ND_EVENT_PLAYER_WEAPON: {
-			byte weapon_type, weapon_num;
-
-			nd_read_byte(&weapon_type);
-			nd_read_byte(&weapon_num);
-
-			if (weapon_type == 0)
-				Primary_weapon = (int)weapon_num;
-			else
-				Secondary_weapon = (int)weapon_num;
-
-			break;
-		}
-#else
 		case ND_EVENT_PLAYER_WEAPON: {
 			byte weapon_type, weapon_num;
 			byte old_weapon;
@@ -2468,19 +1976,23 @@ int newdemo_read_frame_information()
 			}
 			break;
 		}
-#endif
-
 
 		case ND_EVENT_EFFECT_BLOWUP: {
 			short segnum;
 			byte side;
 			vms_vector pnt;
+			object dummy;
+
+			//create a dummy object which will be the weapon that hits 
+			//the monitor. the blowup code wants to know who the parent of the
+			//laser is, so create a laser whose parent is the player
+			dummy.ctype.laser_info.parent_type = OBJ_PLAYER;
 
 			nd_read_short(&segnum);
 			nd_read_byte(&side);
 			nd_read_vector(&pnt);
 			if (Newdemo_vcr_state != ND_STATE_PAUSED)
-				check_effect_blowup(&(Segments[segnum]), side, &pnt);
+				check_effect_blowup(&(Segments[segnum]), side, &pnt, &dummy, 0);
 			break;
 		}
 
@@ -2500,6 +2012,15 @@ int newdemo_read_frame_information()
 				select_cockpit(saved_letter_cockpit);
 			break;
 
+      case ND_EVENT_CHANGE_COCKPIT:
+		  {
+			int dummy;
+
+		   nd_read_int (&dummy);
+			select_cockpit (dummy);
+
+		   break;
+		  }
 		case ND_EVENT_REARVIEW:
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				saved_rearview_cockpit = Cockpit_mode;
@@ -2601,7 +2122,6 @@ int newdemo_read_frame_information()
 			break;
 		}
 
-#ifndef SHAREWARE
 		case ND_EVENT_MULTI_DEATH: {
 			byte pnum;
 
@@ -2613,7 +2133,6 @@ int newdemo_read_frame_information()
 			break;
 		}
 
-		#ifdef NETWORK	
 		case ND_EVENT_MULTI_KILL: {
 			byte pnum, kill;
 
@@ -2704,7 +2223,6 @@ int newdemo_read_frame_information()
 			Game_mode = GM_NORMAL;
 			break;
 		}
-		#endif
 
 		case ND_EVENT_PLAYER_SCORE: {
 			int score;
@@ -2784,7 +2302,44 @@ int newdemo_read_frame_information()
 			break;
 		}
 
-#endif
+		case ND_EVENT_CLOAKING_WALL: {
+			ubyte back_wall_num,front_wall_num,type,state,cloak_value;
+			short l0,l1,l2,l3;
+			segment *segp;
+			int sidenum;
+
+			nd_read_byte(&front_wall_num);
+			nd_read_byte(&back_wall_num);
+			nd_read_byte(&type);
+			nd_read_byte(&state);
+			nd_read_byte(&cloak_value);
+			nd_read_short(&l0);
+			nd_read_short(&l1);
+			nd_read_short(&l2);
+			nd_read_short(&l3);
+
+			Walls[front_wall_num].type = type;
+			Walls[front_wall_num].state = state;
+			Walls[front_wall_num].cloak_value = cloak_value;
+			segp = &Segments[Walls[front_wall_num].segnum];
+			sidenum = Walls[front_wall_num].sidenum;
+			segp->sides[sidenum].uvls[0].l = ((int) l0) << 8;
+			segp->sides[sidenum].uvls[1].l = ((int) l1) << 8;
+			segp->sides[sidenum].uvls[2].l = ((int) l2) << 8;
+			segp->sides[sidenum].uvls[3].l = ((int) l3) << 8;
+
+			Walls[back_wall_num].type = type;
+			Walls[back_wall_num].state = state;
+			Walls[back_wall_num].cloak_value = cloak_value;
+			segp = &Segments[Walls[back_wall_num].segnum];
+			sidenum = Walls[back_wall_num].sidenum;
+			segp->sides[sidenum].uvls[0].l = ((int) l0) << 8;
+			segp->sides[sidenum].uvls[1].l = ((int) l1) << 8;
+			segp->sides[sidenum].uvls[2].l = ((int) l2) << 8;
+			segp->sides[sidenum].uvls[3].l = ((int) l3) << 8;
+
+			break;
+		}
 
 		case ND_EVENT_NEW_LEVEL: 	{
 			byte new_level, old_level, loaded_level;
@@ -2804,15 +2359,6 @@ int newdemo_read_frame_information()
 					Players[i].flags &= ~PLAYER_FLAGS_CLOAKED;
 				}
 			}
-#ifdef DEST_SAT
-			if ( (loaded_level < Last_secret_level) || (loaded_level > Last_level - 1) ) {
-				newmenu_item m[1];
-
-				m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_NO_DESTSAT_LVL;
-				newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
-				return -1;
-			}
-#else
 			if ((loaded_level < Last_secret_level) || (loaded_level > Last_level)) {
 				newmenu_item m[3];
 
@@ -2822,10 +2368,30 @@ int newdemo_read_frame_information()
 				newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
 				return -1;
 			}
-#endif
-			LoadLevel((int)loaded_level);
-			piggy_load_level_data();
+
+			LoadLevel((int)loaded_level,1);
 			Newdemo_cntrlcen_destroyed = 0;
+
+			if (JustStartedPlayback)
+		 	 { 
+				nd_read_int (&Num_walls);
+				for (i=0;i<Num_walls;i++)    // restore the walls
+					{
+					 nd_read_byte (&Walls[i].type);
+					 nd_read_byte (&Walls[i].flags);
+					 nd_read_byte (&Walls[i].state);
+	
+					  seg = &Segments[Walls[i].segnum];
+					  side = Walls[i].sidenum;
+					  nd_read_short (&seg->sides[side].tmap_num);
+					  nd_read_short (&seg->sides[side].tmap_num2);
+					}					
+			  if (Newdemo_game_mode & GM_CAPTURE)
+		        multi_apply_goal_textures ();	
+			  JustStartedPlayback=0;	
+		    }
+		
+	
 // so says Rob H.!!!			if (Newdemo_game_mode & GM_MULTI) {
 // so says Rob H.!!!				for (i = 0; i < Num_walls; i++) {
 // so says Rob H.!!!					if (Walls[i].type == WALL_BLASTABLE) 
@@ -2861,6 +2427,9 @@ int newdemo_read_frame_information()
 			Int3();
 		}
 	}
+  	  
+   LastReadValue=c;
+  
 	if (nd_bad_read) {
 		newmenu_item m[2];
 
@@ -2874,8 +2443,8 @@ int newdemo_read_frame_information()
 
 void newdemo_goto_beginning()
 {
-	if (NewdemoFrameCount == 0)
-		return;
+//	if (NewdemoFrameCount == 0)
+//		return;
 	fseek(infile, 0, SEEK_SET);
 	Newdemo_vcr_state = ND_STATE_PLAYBACK;
 	if (newdemo_read_demo_start(0))
@@ -2888,54 +2457,11 @@ void newdemo_goto_beginning()
 	Newdemo_at_eof = 0;
 }
 
-#ifdef SHAREWARE
-void newdemo_goto_end()
-{
-	short frame_length;
-	byte level;
-	int i;
-
-	fseek(infile, -2, SEEK_END);
-	nd_read_byte(&level);
-	if ((level < LAST_SECRET_LEVEL) || (level > LAST_LEVEL)) {
-		newmenu_item m[3];
-
-		m[ 0].type = NM_TYPE_TEXT; m[ 0].text = TXT_CANT_PLAYBACK;
-		m[ 1].type = NM_TYPE_TEXT; m[ 1].text = TXT_LEVEL_CANT_LOAD;
-		m[ 2].type = NM_TYPE_TEXT; m[ 2].text = TXT_DEMO_OLD_CORRUPT;
-		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
-		newdemo_stop_playback();
-		return;
-	}
-	if (level != Current_level_num)	{
-		LoadLevel(level);
-		piggy_load_level_data();
-	}
-	if (Newdemo_game_mode & GM_MULTI) {
-		fseek(infile, -10, SEEK_END);
-		nd_read_byte(&Newdemo_players_cloaked);
-		for (i = 0; i < MAX_PLAYERS; i++) {
-			if ((1 << i) & Newdemo_players_cloaked)
-				Players[i].flags |= PLAYER_FLAGS_CLOAKED;
-				Players[i].cloak_time = GameTime - (CLOAK_TIME_MAX / 2);
-		}
-	}
-	fseek(infile, -12, SEEK_END);
-	nd_read_short(&frame_length);
-	fseek(infile, -frame_length, SEEK_CUR);
-	nd_read_int(&NewdemoFrameCount);				// get the frame count
-	NewdemoFrameCount--;
-	fseek(infile, 4, SEEK_CUR);
-	newdemo_read_frame_information();			// then the frame information
-	Newdemo_vcr_state = ND_STATE_PAUSED;
-	return;
-}
-#else
 void newdemo_goto_end()
 {
 	short frame_length, byte_count, bshort;
 	byte level, bbyte, laser_level;
-	ubyte energy, shield;
+	ubyte energy, shield, c;
 	int i, loc, bint;
 
 	fseek(infile, -2, SEEK_END);
@@ -2951,10 +2477,9 @@ void newdemo_goto_end()
 		newdemo_stop_playback();
 		return;
 	}
-	if (level != Current_level_num)	{
-		LoadLevel(level);
-		piggy_load_level_data();
-	}
+	if (level != Current_level_num)
+		LoadLevel(level,1);
+
 	fseek(infile, -4, SEEK_END);
 	nd_read_short(&byte_count);
 	fseek(infile, -2 - byte_count, SEEK_CUR);
@@ -2993,7 +2518,11 @@ void newdemo_goto_end()
 	}
 
 	if (Newdemo_game_mode & GM_MULTI) {
-		nd_read_byte((byte *)&N_players);
+		nd_read_byte(&c);
+		N_players = (int)c;
+// see newdemo_read_start_demo for explanation of
+// why this is commented out
+//		nd_read_byte((byte *)&N_players);
 		for (i = 0; i < N_players; i++) {
 			nd_read_string(Players[i].callsign);
 			nd_read_byte(&(Players[i].connected));
@@ -3018,7 +2547,6 @@ void newdemo_goto_end()
 	Newdemo_vcr_state = ND_STATE_PAUSED;
 	return;
 }
-#endif
 
 void newdemo_back_frames(int frames)
 {
@@ -3203,7 +2731,7 @@ void newdemo_playback_one_frame()
 	int frames_back, i, level;
 	static fix base_interpol_time = 0;
 	static fix d_recorded = 0;
-
+   
 	for (i = 0; i < MAX_PLAYERS; i++)
 		if (Newdemo_players_cloaked & (1 << i))
 			Players[i].cloak_time = GameTime - (CLOAK_TIME_MAX / 2);
@@ -3213,9 +2741,12 @@ void newdemo_playback_one_frame()
 	
 	if (Newdemo_vcr_state == ND_STATE_PAUSED)			// render a frame or not
 		return;
-
-	Fuelcen_control_center_destroyed = 0;
-	Fuelcen_seconds_left = -1;
+   
+	if (Newdemo_vcr_state == ND_STATE_PLAYBACK)
+		DoJasonInterpolate(nd_recorded_time);
+	
+	Control_center_destroyed = 0;
+	Countdown_seconds_left = -1;
 	PALETTE_FLASH_SET(0,0,0);		//clear flash
 
 	if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD))
@@ -3232,11 +2763,7 @@ void newdemo_playback_one_frame()
 		else
 			frames_back = 1;
 		if (Newdemo_at_eof) {
-#ifdef SHAREWARE
-			fseek(infile, -2, SEEK_END);
-#else
 			fseek(infile, 11, SEEK_CUR);
-#endif
 		}
 		newdemo_back_frames(frames_back);
 
@@ -3306,7 +2833,7 @@ void newdemo_playback_one_frame()
 			if (nd_playback_total > nd_recorded_total)
 				playback_style = SKIP_PLAYBACK;
 
-					
+							
 		if ((playback_style == INTERPOLATE_PLAYBACK) && Newdemo_do_interpolate) {
 			fix d_play = 0;
 
@@ -3383,27 +2910,49 @@ void newdemo_playback_one_frame()
 }
 
 void newdemo_start_recording()
-{
-	struct diskfree_t dfree;
-	unsigned drive;
+{  
+   #ifdef WINDOWS
+		Newdemo_size=GetFreeDiskSpace();
+		mprintf((0, "Free space = %d\n", Newdemo_size));
+	#else
+		Newdemo_size = GetDiskFree();
+	#endif
 
-	_dos_getdrive(&drive);
-	if (!_dos_getdiskfree(drive, &dfree))
-		Newdemo_size = dfree.avail_clusters * dfree.sectors_per_cluster * dfree.bytes_per_sector;
-	else {
-		Newdemo_size = ULONG_MAX;					// make be biggest it can be
-		Int3();		// get MARK A!!!!!
-	}
-	if (Newdemo_size < 500000) {
-		nm_messagebox(NULL, 1, TXT_OK, TXT_DEMO_NO_SPACE);
-		return;
-	}
 	Newdemo_size -= 100000;
+
+	if ((Newdemo_size+100000) <  2000000000) 	{
+		if (((int)(Newdemo_size)) < 500000) {
+			#ifndef MACINTOSH
+			nm_messagebox(NULL, 1, TXT_OK, TXT_DEMO_NO_SPACE);
+			#else
+			nm_messagebox(NULL, 1, TXT_OK, "Not enough space on current\ndrive to start demo recording.");
+			#endif
+			return;
+		}
+	}
+
 	Newdemo_num_written = 0;
 	Newdemo_no_space=0;
 	Newdemo_state = ND_STATE_RECORDING;
 	outfile = fopen( DEMO_FILENAME, "wb" );
-	newdemo_record_start_demo();
+
+	#ifndef MACINTOSH
+	if (outfile == NULL && errno == ENOENT) {		//dir doesn't exist?
+	#else
+	if (outfile == NULL) {							//dir doesn't exist and no errno on mac!
+	#endif	
+		mkdir(DEMO_DIR);								//try making directory
+		outfile = fopen( DEMO_FILENAME, "wb" );
+	}
+
+	if (outfile == NULL)
+     {
+		nm_messagebox(NULL, 1, TXT_OK, "Cannot open demo temp file");
+   	Newdemo_state = ND_STATE_NORMAL;
+     }
+	else
+		newdemo_record_start_demo();
+		
 }
 
 char demoname_allowed_chars[] = "azAZ09__--";
@@ -3411,13 +2960,11 @@ void newdemo_stop_recording()
 {
 	newmenu_item m[6];
 	int l, exit;
-	static char filename[9] = "", *s;
+	static char filename[15] = "", *s;
 	static ubyte tmpcnt = 0;
 	ubyte cloaked = 0;
-	char fullname[15];
-#ifndef SHAREWARE
+	char fullname[15+FILENAME_LEN] = DEMO_DIR;
 	unsigned short byte_count = 0;
-#endif
 
 	nd_write_byte(ND_EVENT_EOF);
 	nd_write_short(frame_bytes_written - 1);
@@ -3434,7 +2981,6 @@ void newdemo_stop_recording()
 	nd_write_short(ND_EVENT_EOF);
 	nd_write_int(ND_EVENT_EOF);
 
-#ifndef SHAREWARE
 	byte_count += 10;		// from frame_bytes_written
  
 	nd_write_byte((byte)(f2ir(Players[Player_num].energy)));
@@ -3475,13 +3021,13 @@ void newdemo_stop_recording()
 		byte_count += 4;
 	}
 	nd_write_short(byte_count);
-#endif
 
 	nd_write_byte(Current_level_num);
 	nd_write_byte(ND_EVENT_EOF);
 
 	l = ftell(outfile);
 	fclose(outfile);
+	outfile = NULL;
 	Newdemo_state = ND_STATE_NORMAL;
 	gr_palette_load( gr_palette );
 
@@ -3522,13 +3068,14 @@ try_again:
 	Newmenu_allowed_chars = NULL;
 
 	if (exit == -2) {					// got bumped out from network menu
-		char save_file[15];
+		char save_file[7+FILENAME_LEN];
 
 		if (filename[0] != '\0') {
-			strcpy(save_file, filename);
+			strcpy(save_file, DEMO_DIR);
+			strcat(save_file, filename);
 			strcat(save_file, ".dem");
-		} else 
-			sprintf (save_file, "tmp%d.dem", tmpcnt++);
+		} else
+			sprintf (save_file, "%stmp%d.dem", DEMO_DIR, tmpcnt++);
 		remove(save_file);
 		rename(DEMO_FILENAME, save_file);
 		return;
@@ -3549,98 +3096,78 @@ try_again:
 		}
 
 	if (Newdemo_no_space)
-		strcpy(fullname, m[1].text);
+		strcat(fullname, m[1].text);
 	else
-		strcpy(fullname, m[0].text);
+		strcat(fullname, m[0].text);
 	strcat(fullname, ".dem");
 	remove(fullname);
 	rename(DEMO_FILENAME, fullname);
 }
 
+//returns the number of demo files on the disk
+int newdemo_count_demos()
+{
+	FILEFINDSTRUCT find;
+	int NumFiles=0;
+
+	if( !FileFindFirst("demos\\*.DEM", &find ) )	{
+		do	{
+			NumFiles++;
+		} while( !FileFindNext( &find ) );
+		FileFindClose();
+	}
+
+	return NumFiles;
+}
+
 void newdemo_start_playback(char * filename)
 {
-	struct find_t find;
+	FILEFINDSTRUCT find;
 	int rnd_demo = 0;
+	char filename2[7+FILENAME_LEN] = DEMO_DIR;
+
+	change_playernum_to(0);
+   First_time_playback=1;
+	JasonPlaybackTotal=0;
 
 	if (filename==NULL) {
 		// Randomly pick a filename 
 		int NumFiles = 0, RandFileNum;
 		rnd_demo = 1;
-		if( !_dos_findfirst( "*.DEM", _A_NORMAL, &find ) )	{
-			do	{
-				NumFiles++;
-			} while( !_dos_findnext( &find ) );
-		}
-#ifdef USE_CD
-		if ( strlen(destsat_cdpath) )	{
-			char temp_spec[128];
-			strcpy( temp_spec, destsat_cdpath );
-			strcat( temp_spec, "*.DEM" );
-			if( !_dos_findfirst( temp_spec, _A_NORMAL, &find ) )	{
-				do	{
-					NumFiles++;
-				} while( !_dos_findnext( &find ) );
-			}
-		}
-#endif
+
+		NumFiles = newdemo_count_demos();
 
 		if ( NumFiles == 0 ) { 
 			return;		// No files found!
 		}
 		RandFileNum = rand() % NumFiles;
 		NumFiles = 0;
-		if( !_dos_findfirst( "*.DEM", _A_NORMAL, &find ) )	{
+		if( !FileFindFirst( "demos\\*.DEM", &find ) )	{
 			do	{
 				if ( NumFiles==RandFileNum )	{
 					filename = &find.name;
 					break;
 				}
 				NumFiles++;
-			} while( !_dos_findnext( &find ) );
+			} while( !FileFindNext( &find ) );
+			FileFindClose();
 		}
-#ifdef USE_CD
-		if ( strlen(destsat_cdpath) )	{
-			char temp_spec[128];
-			strcpy( temp_spec, destsat_cdpath );
-			strcat( temp_spec, "*.DEM" );
-			if( !_dos_findfirst( temp_spec, _A_NORMAL, &find ) )	{
-				do	{
-					if ( NumFiles==RandFileNum )	{
-						filename = &find.name;
-						break;
-					}
-					NumFiles++;
-				} while( !_dos_findnext( &find ) );
-			}
-		}
-#endif
 		if ( filename==NULL) return;
 	}
 
 	if (!filename)
-
 		return;
-	infile = fopen( filename, "rb" );
-#ifdef USE_CD
-	if (infile==NULL)	{
-		// Read demo from CD??
-		if ( strlen(destsat_cdpath) )	{
-			char temp_spec[128];
-			strcpy( temp_spec, destsat_cdpath );
-			strcat( temp_spec, filename );
-			infile = fopen( temp_spec, "rb" );
-		}
-	}
-#endif
+
+	strcat(filename2,filename);
+
+	infile = fopen( filename2, "rb" );
 	if (infile==NULL)	{
 		mprintf( (0, "Error reading '%s'\n", filename ));
 		return;
 	}
 
 	nd_bad_read = 0;
-	#ifdef NETWORK
 	change_playernum_to(0);						// force playernum to 0
-	#endif
 	strncpy(nd_save_callsign, Players[Player_num].callsign, CALLSIGN_LEN);
 	Viewer = ConsoleObject = &Objects[0];	// play properly as if console player
 	if (newdemo_read_demo_start(rnd_demo)) {
@@ -3659,6 +3186,8 @@ void newdemo_start_playback(char * filename)
 	Newdemo_players_cloaked = 0;
 	playback_style = NORMAL_PLAYBACK;
 	Function_mode = FMODE_GAME;
+	Cockpit_3d_view[0] = CV_NONE;			//turn off 3d views on cockpit
+	Cockpit_3d_view[1] = CV_NONE;			//turn off 3d views on cockpit
 	newdemo_playback_one_frame();		// this one loads new level
 	newdemo_playback_one_frame();		// get all of the objects to renderb game
 }
@@ -3667,9 +3196,7 @@ void newdemo_stop_playback()
 {
 	fclose( infile );
 	Newdemo_state = ND_STATE_NORMAL;
-	#ifdef NETWORK
 	change_playernum_to(0);						//this is reality
-	#endif
 	strncpy(Players[Player_num].callsign, nd_save_callsign, CALLSIGN_LEN);
 	Cockpit_mode = Newdemo_old_cockpit;
 	Game_mode = GM_GAME_OVER;
@@ -3751,4 +3278,72 @@ void newdemo_strip_frames(char *outname, int bytes_to_strip)
 }
 
 #endif
-
+
+object DemoRightExtra,DemoLeftExtra;
+ubyte DemoDoRight=0,DemoDoLeft=0;
+
+void nd_render_extras (ubyte which,object *obj)
+ {
+  ubyte w=which>>4;
+  ubyte type=which&15;
+  
+  if (which==255)
+   {
+    Int3(); // how'd we get here?
+	 do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
+    return;
+  	}
+
+  if (w)
+   { memcpy (&DemoRightExtra,obj,sizeof(object));  DemoDoRight=type;  }
+  else
+   { memcpy (&DemoLeftExtra,obj,sizeof(object)); DemoDoLeft=type;}
+
+ } 
+
+void DoJasonInterpolate (fix recorded_time)
+ {
+  int the_delay;
+  float MyRecFrameTime,ThisFrameTime;
+
+  JasonPlaybackTotal+=FrameTime;
+	  
+ 
+  if (!First_time_playback)
+    {
+     // get the difference between the recorded time and the playback time
+     
+  	   MyRecFrameTime=f2fl(recorded_time); 
+      ThisFrameTime=f2fl(FrameTime);
+  
+	   the_delay=((MyRecFrameTime-ThisFrameTime)*1000.0);       
+	   //mprintf ((0,"The delay=%d\n",the_delay));
+		if (the_delay>=0)
+	  	  {
+	      stop_time();
+		   delay (the_delay);
+		   start_time();
+	     }
+		else
+		 {
+			while (JasonPlaybackTotal > nd_recorded_total) 
+	   		if (newdemo_read_frame_information() == -1) 
+		   	 {
+					 newdemo_stop_playback();
+					 return;
+				 }
+				
+		//	the_delay=(f2fl(nd_recorded_total-JasonPlaybackTotal))*1000.0;
+			//if (delay>0)
+		//		delay (the_delay);
+		 }
+
+	 }
+  
+  First_time_playback=0;    
+ }
+   
+#ifdef MACINTOSH
+#pragma global_optimizer reset
+#endif
+

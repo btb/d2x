@@ -8,55 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/menubar.c $
- * $Revision: 1.10 $
- * $Author: matt $
- * $Date: 1994/11/27 14:53:11 $
- * 
- * .
- * 
- * $Log: menubar.c $
- * Revision 1.10  1994/11/27  14:53:11  matt
- * Took out include of medlisp.h
- * 
- * Revision 1.9  1994/11/18  23:07:28  john
- * Changed a bunch of shorts to ints.
- * 
- * Revision 1.8  1994/05/31  18:18:41  john
- * Fixed bug with F pulling up file menu,
- * 
- * Revision 1.7  1994/05/30  12:03:37  john
- * Fixed bug with Alt+F not getting accepted in state 0.
- * 
- * Revision 1.6  1994/05/25  10:05:54  yuan
- * Tracking down strange bug with do-wall-dialog.
- * 
- * Revision 1.5  1994/05/24  17:52:22  yuan
- * Testing.
- * 
- * Revision 1.4  1994/02/01  13:29:53  john
- * *** empty log message ***
- * 
- * Revision 1.3  1993/12/22  17:26:49  john
- * made it so that you can hold down Alt key and 
- * type menu letters to select an item.
- * 
- * Revision 1.2  1993/12/15  11:18:15  yuan
- * Changed width of menubar to 700 so that we could squeeze
- * in the clock
- * 
- * Revision 1.1  1993/12/07  12:31:09  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: menubar.c 1.10 1994/11/27 14:53:11 matt Exp $";
+static char rcsid[] = "$Id: menubar.c 1.15 1996/01/05 16:32:17 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -79,7 +36,7 @@ static char rcsid[] = "$Id: menubar.c 1.10 1994/11/27 14:53:11 matt Exp $";
 
 
 #define MAXMENUS 30
-#define MAXITEMS 30
+#define MAXITEMS 32
 
 typedef struct {
 	short 			x, y, w, h;
@@ -248,7 +205,7 @@ int menu_match_keypress( MENU * menu, int keypress )
 			
 	for (i=0; i< menu->NumItems; i++ )
 	{
-		letter = strrchr( menu->Item[i].Text, '&' );
+		letter = strrchr( menu->Item[i].Text, CC_UNDERLINE );
 		if (letter)
 		{
 			letter++;
@@ -673,6 +630,14 @@ void CommaParse( int n, char * dest, char * source )
 	dest[j++] = 0;
 }
 
+//translate '&' characters to the underline character
+void ul_xlate(char *s)
+{
+	while ((s=strchr(s,'&'))!=NULL)
+		*s = CC_UNDERLINE;
+}
+
+
 void menubar_init( char * file )
 {
 	int i,j, np;
@@ -697,7 +662,7 @@ void menubar_init( char * file )
 		{
 			Menu[i].Item[j].x = Menu[i].Item[j].y = Menu[i].Item[j].w = Menu[i].Item[j].h = 0;
 			Menu[i].Item[j].Text = NULL;
-			Menu[i].Item[j].Hotkey = 0;
+			Menu[i].Item[j].Hotkey = -1;
 			Menu[i].Item[j].user_function = NULL;
 		}
 	}
@@ -714,9 +679,17 @@ void menubar_init( char * file )
 				
 		CommaParse( 0, buf1, buffer );
 		menu = atoi( buf1 );
+		if (menu >= MAXMENUS)
+			Error("Too many menus (%d).",menu);
+
 		CommaParse( 1, buf1, buffer );
 		item = atoi(buf1 );
+		if (item >= MAXITEMS)
+			Error("Too many items (%d) in menu %d.",item+1,menu);
+
 		CommaParse( 2, buf1, buffer );
+		ul_xlate(buf1);
+
 		if (buf1[0] != '-' )
 		{
 			sprintf( buf2, " %s ", buf1 );
@@ -730,7 +703,7 @@ void menubar_init( char * file )
 		for (i=0; i<=strlen(Menu[menu].Item[item].Text); i++ )
 		{
 			np = Menu[menu].Item[item].Text[i];
-			if (np != '&') 
+			if (np != CC_UNDERLINE) 
 				Menu[menu].Item[item].InactiveText[j++] = np;
 		}
 

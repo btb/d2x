@@ -8,28 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/vesalib.c $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1994/11/07 12:07:42 $
- * 
- * Routines to access VESA video modes.
- * 
- * $Log: vesalib.c $
- * Revision 1.3  1994/11/07  12:07:42  john
- * Made save/restore cursor work a bit better.
- * 
- * Revision 1.2  1994/09/29  10:09:26  john
- * Initial version, but not used.
- * 
- * Revision 1.1  1994/09/19  11:54:45  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -275,4 +255,3 @@ void gr_restore_mode_vesa(void * buffer)
 	}
 	return;
 }
-

@@ -8,28 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/circle.c $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1994/11/18 22:51:01 $
- * 
- * .
- * 
- * $Log: circle.c $
- * Revision 1.3  1994/11/18  22:51:01  john
- * Changed a bunch of shorts to ints in calls.
- * 
- * Revision 1.2  1994/05/12  17:33:18  john
- * Added circle code.
- * 
- * Revision 1.1  1994/05/12  17:21:49  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -128,4 +108,3 @@ int gr_ucircle(fix xc1,fix yc1,fix r1)
 	}
 	return 0;
 }
-

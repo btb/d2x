@@ -1,3 +1,5 @@
+//#define PSX_BUILD_TOOLS
+
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,106 +10,17 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/paging.c $
- * $Revision: 2.5 $
- * $Author: john $
- * $Date: 1995/10/07 13:18:21 $
- * 
- * Routines for paging in/out textures.
- * 
- * $Log: paging.c $
- * Revision 2.5  1995/10/07  13:18:21  john
- * Added PSX debugging stuff that builds .PAG files.
- * 
- * Revision 2.4  1995/08/24  13:40:03  john
- * Added code to page in vclip for powerup disapperance and to 
- * fix bug that made robot makers not page in the correct bot
- * textures.
- * 
- * Revision 2.3  1995/07/26  12:09:19  john
- * Made code that pages in weapon_info->robot_hit_vclip not
- * page in unless it is a badass weapon.  Took out old functionallity
- * of using this if no robot exp1_vclip, since all robots have these.
- * 
- * Revision 2.2  1995/07/24  13:22:11  john
- * Made sure everything gets paged in at the
- * level start.  Fixed bug with robot effects not
- * getting paged in correctly.
- * 
- * Revision 2.1  1995/05/12  15:50:16  allender
- * fix to check effects dest_bm_num > -1 before paging in
- * 
- * Revision 2.0  1995/02/27  11:27:39  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.18  1995/02/22  14:12:28  allender
- * remove anonyous union from object structure
- * 
- * Revision 1.17  1995/02/11  22:54:15  john
- * Made loading for pig not show up for demos.
- * 
- * Revision 1.16  1995/02/11  22:37:04  john
- * Made cockpit redraw.
- * 
- * Revision 1.15  1995/01/28  16:29:35  john
- * *** empty log message ***
- * 
- * Revision 1.14  1995/01/27  17:16:18  john
- * Added code to page in all the weapons.
- * 
- * Revision 1.13  1995/01/24  21:51:22  matt
- * Clear the boxed message to fix a mem leakage
- * 
- * Revision 1.12  1995/01/23  13:00:46  john
- * Added hostage vclip paging.
- * 
- * Revision 1.11  1995/01/23  12:29:52  john
- * Added code to page in eclip on robots, dead control center,
- * gauges bitmaps, and weapon pictures.
- * 
- * Revision 1.10  1995/01/21  12:54:15  adam
- * *** empty log message ***
- * 
- * Revision 1.9  1995/01/21  12:41:29  adam
- * changed orb to loading box
- * 
- * Revision 1.8  1995/01/18  15:09:02  john
- * Added start/stop time around paging.
- * Made paging clear screen around globe.
- * 
- * Revision 1.7  1995/01/18  10:37:00  john
- * Added code to page in exploding monitors.
- * 
- * Revision 1.6  1995/01/17  19:03:35  john
- * Added cool spinning orb during loading.
- * 
- * Revision 1.5  1995/01/17  14:49:26  john
- * Paged in weapons.
- * 
- * Revision 1.4  1995/01/17  12:14:07  john
- * Made walls, object explosion vclips load at level start.
- * 
- * Revision 1.3  1995/01/15  13:23:24  john
- * First working version
- * 
- * Revision 1.2  1995/01/15  11:56:45  john
- * Working version of paging.
- * 
- * Revision 1.1  1995/01/15  11:33:37  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: paging.c 2.5 1995/10/07 13:18:21 john Exp $";
+static char rcsid[] = "$Id: paging.c 2.19 1996/09/20 14:52:59 jeremy Exp $";
 #pragma on (unreferenced)
 
+#ifdef WINDOWS
+#include "desw.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -138,6 +51,21 @@ static char rcsid[] = "$Id: paging.c 2.5 1995/10/07 13:18:21 john Exp $";
 #include "gauges.h"
 #include "powerup.h"
 #include "fuelcen.h"
+#include "mission.h"
+
+
+#ifdef WINDOWS
+void paging_touch_vclip_w( vclip * vc )
+{
+	int i;
+
+	for (i=0; i<vc->num_frames; i++ )	{
+		if ( GameBitmaps[(vc->frames[i]).index].bm_flags & BM_FLAG_PAGED_OUT) 
+			piggy_bitmap_page_in_w( vc->frames[i],1 );
+	}
+}
+#endif
+
 
 void paging_touch_vclip( vclip * vc )
 {
@@ -147,6 +75,7 @@ void paging_touch_vclip( vclip * vc )
 		PIGGY_PAGE_IN( vc->frames[i] );
 	}
 }
+
 
 void paging_touch_wall_effects( int tmap_num )
 {
@@ -191,7 +120,10 @@ void paging_touch_model( int modelnum )
 	for (i=0;i<pm->n_textures;i++)	{
 		PIGGY_PAGE_IN( ObjBitmaps[ObjBitmapPtrs[pm->first_texture+i]] );
 		paging_touch_object_effects( ObjBitmapPtrs[pm->first_texture+i] );
-		//paging_touch_object_effects( pm->first_texture+i );
+		#ifdef PSX_BUILD_TOOLS
+		// cmp added
+		paging_touch_object_effects( pm->first_texture+i );
+		#endif
 	}
 }
 
@@ -238,6 +170,9 @@ byte super_boss_gate_type_list[13] = {0, 1, 8, 9, 10, 11, 12, 15, 16, 18, 19, 20
 void paging_touch_robot( int robot_index )
 {
 	int i;
+
+	//mprintf((0, "Robot %d loading...", robot_index));
+
 	// Page in robot_index
 	paging_touch_model(Robot_info[robot_index].model_num);
 	if ( Robot_info[robot_index].exp1_vclip_num>-1 )
@@ -267,12 +202,20 @@ void paging_touch_object( object * obj )
 		case RT_NONE:	break;		//doesn't render, like the player
 
 		case RT_POLYOBJ:
-			paging_touch_model(obj->rtype.pobj_info.model_num);
+			if ( obj->rtype.pobj_info.tmap_override != -1 )
+				PIGGY_PAGE_IN( Textures[obj->rtype.pobj_info.tmap_override] );
+			else
+				paging_touch_model(obj->rtype.pobj_info.model_num);
 			break;
 
 		case RT_POWERUP: 
-			if ( obj->rtype.vclip_info.vclip_num > -1 )
+			if ( obj->rtype.vclip_info.vclip_num > -1 ) {
+		//@@	#ifdef WINDOWS
+		//@@		paging_touch_vclip_w(&Vclip[obj->rtype.vclip_info.vclip_num]);
+		//@@	#else
 				paging_touch_vclip(&Vclip[obj->rtype.vclip_info.vclip_num]);
+		//@@	#endif
+			}
 			break;
 
 		case RT_MORPH:	break;
@@ -325,25 +268,48 @@ void paging_touch_side( segment * segp, int sidenum )
 		PIGGY_PAGE_IN( Textures[tmap1] );
 	}
 
+	// PSX STUFF
+	#ifdef PSX_BUILD_TOOLS
+		// If there is water on the level, then force the water splash into memory
+		if(!(TmapInfo[tmap1].flags & TMI_VOLATILE) && (TmapInfo[tmap1].flags & TMI_WATER)) {
+			bitmap_index Splash;
+			Splash.index = 1098;
+			PIGGY_PAGE_IN(Splash);
+			Splash.index = 1099;
+			PIGGY_PAGE_IN(Splash);
+			Splash.index = 1100;
+			PIGGY_PAGE_IN(Splash);
+			Splash.index = 1101;
+			PIGGY_PAGE_IN(Splash);
+			Splash.index = 1102;
+			PIGGY_PAGE_IN(Splash);
+		}
+	#endif
+
 }
 
 void paging_touch_robot_maker( segment * segp )
 {
-	if ( segp->special == SEGMENT_IS_ROBOTMAKER )	{
+	segment2	*seg2p = &Segment2s[segp-Segments];
+
+	if ( seg2p->special == SEGMENT_IS_ROBOTMAKER )	{
 		paging_touch_vclip(&Vclip[VCLIP_MORPHING_ROBOT]);
-		if (RobotCenters[segp->matcen_num].robot_flags != 0) {
+		if (RobotCenters[seg2p->matcen_num].robot_flags != 0) {
+			int	i;
 			uint	flags;
 			int	robot_index;
 
-			robot_index = 0;
-			flags = RobotCenters[segp->matcen_num].robot_flags;
-			while (flags) {
-				if (flags & 1)	{
-					// Page in robot_index
-					paging_touch_robot( robot_index );
+			for (i=0;i<2;i++) {
+				robot_index = i*32;
+				flags = RobotCenters[seg2p->matcen_num].robot_flags[i];
+				while (flags) {
+					if (flags & 1)	{
+						// Page in robot_index
+						paging_touch_robot( robot_index );
+					}
+					flags >>= 1;
+					robot_index++;
 				}
-				flags >>= 1;
-				robot_index++;
 			}
 		}
 	}
@@ -354,8 +320,9 @@ void paging_touch_segment(segment * segp)
 {
 	int sn;
 	int objnum;
+	segment2	*seg2p = &Segment2s[segp-Segments];
 
-	if ( segp->special == SEGMENT_IS_ROBOTMAKER )	
+	if ( seg2p->special == SEGMENT_IS_ROBOTMAKER )	
 		paging_touch_robot_maker(segp);
 
 //	paging_draw_orb();
@@ -388,7 +355,6 @@ void paging_touch_walls()
 	}
 }
 
-
 void paging_touch_all()
 {
 	int black_screen;
@@ -399,11 +365,11 @@ void paging_touch_all()
 	black_screen = gr_palette_faded_out;
 
 	if ( gr_palette_faded_out )	{
-		gr_clear_canvas( 0 );
+		gr_clear_canvas( BM_XRGB(0,0,0) );
 		gr_palette_load( gr_palette );
 	}
 	
-	show_boxed_message(TXT_LOADING);
+//@@	show_boxed_message(TXT_LOADING);
 
 	mprintf(( 0, "Loading all textures in mine..." ));
 	for (s=0; s<=Highest_segment_index; s++)	{
@@ -434,49 +400,112 @@ void paging_touch_all()
 	paging_touch_vclip( &Vclip[VCLIP_PLAYER_APPEARANCE] );
 	paging_touch_vclip( &Vclip[VCLIP_POWERUP_DISAPPEARANCE] );
 
-	mprintf(( 0, "done\n" ));
-
-	clear_boxed_message();
-
-	if ( black_screen )	{
-		gr_palette_clear();
-		gr_clear_canvas( 0 );
-	}
-	start_time();
-	reset_cockpit();		//force cockpit redraw next time
 
 #ifdef PSX_BUILD_TOOLS
+
+	//PSX STUFF 
+	paging_touch_walls();
+	for(s=0; s<=Highest_object_index; s++) {
+		paging_touch_object(&Objects[s]);
+	}
+
+
 	{
+		char * p;
 		extern int Current_level_num;
 		extern ushort GameBitmapXlat[MAX_BITMAP_FILES];
+		short Used[MAX_BITMAP_FILES];
 		FILE * fp;
 		char fname[128];
 		int i;
 
-		if ( Current_level_num < 0 )
-			sprintf( fname, "levels%d.pag", -Current_level_num );
-		else	
-			sprintf( fname, "level%02d.pag", Current_level_num );
-		fp = fopen( fname, "wt" );
-		for (i=0; i<MAX_BITMAP_FILES;i++ )	{
-			int paged_in = 1;
-			piggy_get_bitmap_name(i,fname);
+		if (Current_level_num<0)                //secret level
+			strcpy( fname, Secret_level_names[-Current_level_num-1] );
+		else                                    //normal level
+			strcpy( fname, Level_names[Current_level_num-1] );
+		p = strchr( fname, '.' );
+		if ( p ) *p = 0;
+		strcat( fname, ".pag" );
 
-			if (GameBitmaps[i].bm_flags & BM_FLAG_PAGED_OUT) 
+		fp = fopen( fname, "wt" );
+		for (i=0; i<MAX_BITMAP_FILES;i++ )      {
+			Used[i] = 0;
+		}
+		for (i=0; i<MAX_BITMAP_FILES;i++ )      {
+			Used[GameBitmapXlat[i]]++;
+		}
+
+		//cmp added so that .damage bitmaps are included for paged-in lights of the current level
+		for (i=0; i<MAX_TEXTURES;i++) {
+			if(Textures[i].index > 0 && Textures[i].index < MAX_BITMAP_FILES && 
+				Used[Textures[i].index] > 0 &&
+				TmapInfo[i].destroyed > 0 && TmapInfo[i].destroyed < MAX_BITMAP_FILES) {
+				Used[Textures[TmapInfo[i].destroyed].index] += 1;
+				mprintf((0, "HERE %d ", Textures[TmapInfo[i].destroyed].index));
+
+				PIGGY_PAGE_IN(Textures[TmapInfo[i].destroyed]);
+
+			}
+		}
+
+		//	Force cockpit to be paged in.
+		{
+			bitmap_index bonk;
+			bonk.index = 109;
+			PIGGY_PAGE_IN(bonk);
+		}
+
+		// Force in the frames for markers
+		{
+			bitmap_index bonk2;
+			bonk2.index = 2014;
+			PIGGY_PAGE_IN(bonk2);
+			bonk2.index = 2015;
+			PIGGY_PAGE_IN(bonk2);
+			bonk2.index = 2016;
+			PIGGY_PAGE_IN(bonk2);
+			bonk2.index = 2017;
+			PIGGY_PAGE_IN(bonk2);
+			bonk2.index = 2018;
+			PIGGY_PAGE_IN(bonk2);
+		}
+
+		for (i=0; i<MAX_BITMAP_FILES;i++ )      {
+			int paged_in = 1;
+			// cmp debug
+			//piggy_get_bitmap_name(i,fname);
+
+			if (GameBitmaps[i].bm_flags & BM_FLAG_PAGED_OUT ) 
 				paged_in = 0;
-			if (GameBitmapXlat[i]!=i)
+
+//                      if (GameBitmapXlat[i]!=i)
+//                              paged_in = 0;
+
+			if ( !Used[i] )
 				paged_in = 0;
-			if ( (i==47) || (i==48) )		// Mark red mplayer ship textures as paged in.
+			if ( (i==47) || (i==48) )               // Mark red mplayer ship textures as paged in.
 				paged_in = 1;
 	
 			if ( !paged_in )
-				fprintf( fp, "0,\t// Bitmap %d (%s)\n", i, fname );
+				fprintf( fp, "0,\t// Bitmap %d (%s)\n", i, "test\0"); // cmp debug fname );
 			else
-				fprintf( fp, "1,\t// Bitmap %d (%s)\n", i, fname );
+				fprintf( fp, "1,\t// Bitmap %d (%s)\n", i, "test\0"); // cmp debug fname );
 		}
+
 		fclose(fp);
 	}
 #endif
 
+	mprintf(( 0, "done\n" ));
+
+//@@	clear_boxed_message();
+
+	if ( black_screen )	{
+		gr_palette_clear();
+		gr_clear_canvas( BM_XRGB(0,0,0) );
+	}
+	start_time();
+	reset_cockpit();		//force cockpit redraw next time
+
 }
-
+

@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/icon.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1994/11/18 23:07:33 $
- * 
- * An icon class.
- * 
- * $Log: icon.c $
- * Revision 1.2  1994/11/18  23:07:33  john
- * Changed a bunch of shorts to ints.
- * 
- * Revision 1.1  1993/12/07  12:30:23  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -110,8 +93,7 @@ UI_GADGET_ICON * ui_add_gadget_icon( UI_WINDOW * wnd, char * text, short x, shor
 
 	icon->width = w;
 	icon->height = h;
-	//MALLOC( icon->text, char, strlen( text )+2);//Hack by KRB
-	icon->text=(char *)malloc((strlen( text )+2)*sizeof(char));
+	MALLOC( icon->text, char, strlen( text )+2);
 	strcpy( icon->text, text );
 	icon->trap_key = k;
 	icon->user_function = f;
@@ -164,4 +146,3 @@ void ui_icon_do( UI_GADGET_ICON * icon, int keypress )
 	ui_draw_icon( icon );
 
 }
-

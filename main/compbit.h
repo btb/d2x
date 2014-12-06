@@ -8,33 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/compbit.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:28:46 $
- * 
- * Contains encryption key for bitmaps.tbl
- * 
- * $Log: compbit.h $
- * Revision 2.0  1995/02/27  11:28:46  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.3  1994/12/05  15:10:28  allender
- * changed extern prototype definition
- * 
- * Revision 1.2  1994/10/19  15:43:33  allender
- * header file which contains the xor value which is used when encrypting
- * bitmaps.tbl
- * 
- * Revision 1.1  1994/10/19  13:22:19  allender
- * Initial revision
- * 
- * 
- */
 
 
 
@@ -46,4 +21,3 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern void encode_rotate_left(char *);
 
 #endif
-

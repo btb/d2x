@@ -8,109 +8,29 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/kmatrix.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/05/02 17:01:22 $
- * 
- * Kill matrix displayed at end of level.
- * 
- * $Log: kmatrix.c $
- * Revision 2.3  1995/05/02  17:01:22  john
- * Fixed bug with kill list not showing up in VFX mode.
- * 
- * Revision 2.2  1995/03/21  14:38:20  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.1  1995/03/06  15:22:54  john
- * New screen techniques.
- * 
- * Revision 2.0  1995/02/27  11:25:56  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.19  1995/02/15  14:47:23  john
- * Added code to keep track of kills during endlevel.
- * 
- * Revision 1.18  1995/02/08  11:00:06  rob
- * Moved string to localized file
- * 
- * Revision 1.17  1995/02/01  23:45:55  rob
- * Fixed string.
- * 
- * Revision 1.16  1995/01/30  21:47:11  rob
- * Added a line of instructions.
- * 
- * Revision 1.15  1995/01/20  16:58:43  rob
- * careless careless careless... 
- * 
- * 
- * Revision 1.14  1995/01/20  13:43:48  rob
- * Longer time to view.
- * 
- * Revision 1.13  1995/01/20  13:42:34  rob
- * Fixed sorting bug.
- * 
- * Revision 1.12  1995/01/19  17:35:21  rob
- * Fixed coloration of player names in team mode.
- * 
- * Revision 1.11  1995/01/16  21:26:15  rob
- * Fixed it!!
- * 
- * Revision 1.10  1995/01/16  18:55:41  rob
- * Added include of network.h
- * 
- * Revision 1.9  1995/01/16  18:22:35  rob
- * Fixed problem with signs.
- * 
- * Revision 1.8  1995/01/12  16:07:51  rob
- * ADded sorting before display.
- * 
- * Revision 1.7  1995/01/04  08:46:53  rob
- * JOHN CHECKED IN FOR ROB !!!
- * 
- * Revision 1.6  1994/12/09  20:17:20  yuan
- * Touched up
- * 
- * Revision 1.5  1994/12/09  19:46:35  yuan
- * Localized the sucker.
- * 
- * Revision 1.4  1994/12/09  19:24:58  rob
- * Yuan's fix to the centering.
- * 
- * Revision 1.3  1994/12/09  19:02:37  yuan
- * Cleaned up a bit.
- * 
- * Revision 1.2  1994/12/09  16:19:46  yuan
- * kill matrix stuff.
- * 
- * Revision 1.1  1994/12/09  15:08:58  yuan
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: kmatrix.c 2.3 1995/05/02 17:01:22 john Exp $";
+static char rcsid[] = "$Id: kmatrix.c 2.69 1996/09/17 15:07:36 jed Exp $";
 #pragma on (unreferenced)
 
 #ifdef NETWORK
+
+#ifdef WINDOWS
+#include "desw.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <io.h>
 #include <stdarg.h>
-#include <dos.h>
-#include <conio.h>
 
+#include "pa_enabl.h"       //$$POLY_ACC
 #include "error.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"
@@ -123,33 +43,54 @@ static char rcsid[] = "$Id: kmatrix.c 2.3 1995/05/02 17:01:22 john Exp $";
 #include "player.h"
 #include "screens.h"
 #include "gamefont.h"
+#include "cntrlcen.h"
 #include "mouse.h"
 #include "joy.h"
 #include "timer.h"
 #include "text.h"
+#include "songs.h"
 #include "multi.h"
 #include "kmatrix.h"
 #include "gauges.h"
 #include "pcx.h"
 #include "network.h"
 
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
+
 #define CENTERING_OFFSET(x) ((300 - (70 + (x)*25 ))/2)
+#define CENTERSCREEN (MenuHires?320:160)
 
 int kmatrix_kills_changed = 0;
+char ConditionLetters[]={' ','P','E','D','E','E','V','W'};
+char WaitingForOthers=0;
 
+int Kmatrix_nomovie_message=0;
+
+extern char MaxPowerupsAllowed[],PowerupsInMine[];
+extern void network_send_endlevel_sub(int);
+
+#define LHX(x)		((x)*(MenuHires?2:1))
+#define LHY(y)		((y)*(MenuHires?2.4:1))
+ 
 void kmatrix_draw_item( int  i, int *sorted )
 {
 	int j, x, y;
+	char temp[10];
 
-	y = 50+i*9;
+	y = LHY(50+i*9);
 
 	// Print player name.
 
-	gr_printf( CENTERING_OFFSET(N_players), y, "%s", Players[sorted[i]].callsign );
+	gr_printf( LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
 
+   if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
+	   gr_printf (LHX(CENTERING_OFFSET(N_players)-15),y,"%c",ConditionLetters[Players[sorted[i]].connected]);
+    
 	for (j=0; j<N_players; j++) {
 
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
+		x = LHX(70 + CENTERING_OFFSET(N_players) + j*25);
 
 		if (sorted[i]==sorted[j]) {
 			if (kill_matrix[sorted[i]][sorted[j]] == 0) {
@@ -170,11 +111,40 @@ void kmatrix_draw_item( int  i, int *sorted )
 		}
 
 	}
-	
-	x = 70 + CENTERING_OFFSET(N_players) + N_players*25;
+
+  if (Players[sorted[i]].net_killed_total+Players[sorted[i]].net_kills_total==0)
+ 	sprintf (temp,"NA");
+  else
+   sprintf (temp,"%d%%",(int)((float)((float)Players[sorted[i]].net_kills_total/((float)Players[sorted[i]].net_killed_total+(float)Players[sorted[i]].net_kills_total))*100.0));		
+		
+	x = LHX(60 + CENTERING_OFFSET(N_players) + N_players*25);
 	gr_set_fontcolor( BM_XRGB(25,25,25),-1 );
-	gr_printf( x ,y,"%4d",Players[sorted[i]].net_kills_total);
+	gr_printf( x ,y,"%4d/%s",Players[sorted[i]].net_kills_total,temp);
 }
+
+void kmatrix_draw_coop_item( int  i, int *sorted )
+{
+	int  x, y;
+
+	y = LHY(50+i*9);
+
+	// Print player name.
+
+	gr_printf( LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
+   gr_printf (LHX(CENTERING_OFFSET(N_players)-15),y,"%c",ConditionLetters[Players[sorted[i]].connected]);
+    
+
+	x = CENTERSCREEN;
+
+	gr_set_fontcolor( BM_XRGB(60,40,10),-1 );
+	gr_printf( x, y, "%d", Players[sorted[i]].score );
+
+	x = CENTERSCREEN+LHX(50);
+
+	gr_set_fontcolor( BM_XRGB(60,40,10),-1 );
+	gr_printf( x, y, "%d", Players[sorted[i]].net_killed_total);
+}
+
 
 void kmatrix_draw_names(int *sorted)
 {
@@ -182,69 +152,271 @@ void kmatrix_draw_names(int *sorted)
 	
 	int color;
 
+   if (Kmatrix_nomovie_message)
+    {
+		gr_set_fontcolor( BM_XRGB(63,0,0),-1 );
+		gr_printf( CENTERSCREEN-LHX(40), LHY(20), "(Movie not played)");
+	 }
+
 	for (j=0; j<N_players; j++) {
 		if (Game_mode & GM_TEAM)
 			color = get_team(sorted[j]);
 		else
 			color = sorted[j];
 
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
-		gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
-		gr_printf( x, 40, "%c", Players[sorted[j]].callsign[0] );
+		x = LHX (70 + CENTERING_OFFSET(N_players) + j*25);
+
+      if (Players[sorted[j]].connected==0)
+        gr_set_fontcolor(gr_find_closest_color(31,31,31),-1);
+      else
+        gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
+
+		gr_printf( x, LHY(40), "%c", Players[sorted[j]].callsign[0] );
+
 	}
 
-	x = 70 + CENTERING_OFFSET(N_players) + N_players*25;
+	x = LHX(72 + CENTERING_OFFSET(N_players) + N_players*25);
 	gr_set_fontcolor( BM_XRGB(31,31,31),-1 );
-	gr_printf( x, 40, TXT_KILLS);
+	gr_printf( x, LHY(40), "K/E");
 		
+}
+void kmatrix_draw_coop_names(int *sorted)
+{
+	sorted=sorted;
+
+   if (Kmatrix_nomovie_message)
+    {
+		gr_set_fontcolor( BM_XRGB(63,0,0),-1 );
+		gr_printf( CENTERSCREEN-LHX(40), LHY(20), "(Movie not played)");
+	 }
+
+	gr_set_fontcolor( BM_XRGB(63,31,31),-1 );
+	gr_printf( CENTERSCREEN, LHY(40), "SCORE");
+
+	gr_set_fontcolor( BM_XRGB(63,31,31),-1 );
+	gr_printf( CENTERSCREEN+LHX(50), LHY(40), "DEATHS");
 }
 
 
 void kmatrix_draw_deaths(int *sorted)
 {
+	int y,x;
+	char reactor_message[50];
+
+   sorted=sorted;
+
+   y = LHY(55 + 72 + 35);
+	x = LHX(35);
+
+	{
+          
+		int sw, sh, aw;
+	   				
+      gr_set_fontcolor(gr_find_closest_color(63,20,0),-1);
+      gr_get_string_size("P-Playing E-Escaped D-Died", &sw, &sh, &aw); 
+
+ 	   if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
+		   gr_printf( CENTERSCREEN-(sw/2), y,"P-Playing E-Escaped D-Died");
+   
+      y+=(sh+5);
+	   gr_get_string_size("V-Viewing scores W-Waiting", &sw, &sh, &aw); 
+
+	   if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
+		   gr_printf( CENTERSCREEN-(sw/2), y,"V-Viewing scores W-Waiting");
+
+	}
+
+   y+=LHY(20);
+
+	{
+		int sw, sh, aw;
+      gr_set_fontcolor(gr_find_closest_color(63,63,63),-1);
+
+      if (Players[Player_num].connected==7)
+       {
+        gr_get_string_size("Waiting for other players...",&sw, &sh, &aw); 
+        gr_printf( CENTERSCREEN-(sw/2), y,"Waiting for other players...");
+       }
+      else
+       {
+        gr_get_string_size(TXT_PRESS_ANY_KEY2, &sw, &sh, &aw); 
+        gr_printf( CENTERSCREEN-(sw/2), y, TXT_PRESS_ANY_KEY2);
+       }
+	}
+
+  if (Countdown_seconds_left <=0)
+   kmatrix_reactor(TXT_REACTOR_EXPLODED);
+  else
+   {
+     sprintf(&reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
+     kmatrix_reactor (&reactor_message);
+   }
+  
+  if (Game_mode & GM_HOARD)  
+	  kmatrix_phallic();
+
+}
+void kmatrix_draw_coop_deaths(int *sorted)
+{
 	int j, x, y;
+	char reactor_message[50];
 	
-	y = 55 + N_players * 9;
+	y = LHY(55 + N_players * 9);
 
 //	gr_set_fontcolor(gr_getcolor(player_rgb[j].r,player_rgb[j].g,player_rgb[j].b),-1 );
 	gr_set_fontcolor( BM_XRGB(31,31,31),-1 );
 
-	x = CENTERING_OFFSET(N_players);
+	x = CENTERSCREEN+LHX(50);
 	gr_printf( x, y, TXT_DEATHS );
 
 	for (j=0; j<N_players; j++) {
-		x = 70 + CENTERING_OFFSET(N_players) + j*25;
+		x = CENTERSCREEN+LHX(50);
 		gr_printf( x, y, "%d", Players[sorted[j]].net_killed_total );
 	}
 
-	y = 55 + 72 + 12;
-	x = 35;
+   y = LHY(55 + 72 + 35);
+	x = LHX(35);
+
+	{
+          
+		int sw, sh, aw;
+
+      gr_set_fontcolor(gr_find_closest_color(63,20,0),-1);
+      gr_get_string_size("P-Playing E-Escaped D-Died", &sw, &sh, &aw); 
+
+	  if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
+	      gr_printf( CENTERSCREEN-(sw/2), y,"P-Playing E-Escaped D-Died");
+  	   
+   
+      y+=(sh+5);
+	   gr_get_string_size("V-Viewing scores W-Waiting", &sw, &sh, &aw); 
+
+	   if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
+	       gr_printf( CENTERSCREEN-(sw/2), y,"V-Viewing scores W-Waiting");
+
+	}
+
+   y+=LHY(20);
 
 	{
 		int sw, sh, aw;
-		gr_get_string_size(TXT_PRESS_ANY_KEY2, &sw, &sh, &aw);	
-		gr_printf( 160-(sw/2), y, TXT_PRESS_ANY_KEY2);
+      gr_set_fontcolor(gr_find_closest_color(63,63,63),-1);
+
+      if (Players[Player_num].connected==7)
+       {
+        gr_get_string_size("Waiting for other players...",&sw, &sh, &aw); 
+        gr_printf( CENTERSCREEN-(sw/2), y,"Waiting for other players...");
+       }
+      else
+       {
+        gr_get_string_size(TXT_PRESS_ANY_KEY2, &sw, &sh, &aw); 
+        gr_printf( CENTERSCREEN-(sw/2), y, TXT_PRESS_ANY_KEY2);
+       }
 	}
+
+  if (Countdown_seconds_left <=0)
+   kmatrix_reactor(TXT_REACTOR_EXPLODED);
+  else
+   {
+     sprintf(&reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
+     kmatrix_reactor (&reactor_message);
+   }
+
 }
+
+void kmatrix_reactor (char *message)
+ {
+  static char oldmessage[50]={0};
+  int sw, sh, aw;
+
+  if ((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL))
+	return;
+
+  grd_curcanv->cv_font = SMALL_FONT;
+
+  if (oldmessage[0]!=0)
+   {
+    gr_set_fontcolor(gr_find_closest_color(0,0,0),-1);
+    gr_get_string_size(oldmessage, &sw, &sh, &aw); 
+   // gr_printf( CENTERSCREEN-(sw/2), LHY(55+72+12), oldmessage);
+   }
+  gr_set_fontcolor(gr_find_closest_color(0,32,63),-1);
+  gr_get_string_size(message, &sw, &sh, &aw); 
+  gr_printf( CENTERSCREEN-(sw/2), LHY(55+72+12), message);
+
+  strcpy (&oldmessage,message);
+ }
+
+extern int PhallicLimit,PhallicMan;
+
+void kmatrix_phallic ()
+ {
+  int sw, sh, aw;
+  char message[80];
+
+  if (!(Game_mode & GM_HOARD))
+	return;
+
+  if ((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL))
+	return;
+  
+  if (PhallicMan==-1)
+	strcpy (message,"There was no record set for this level.");
+  else
+	sprintf (message,"%s had the best record at %d points.",Players[PhallicMan].callsign,PhallicLimit);
+
+  grd_curcanv->cv_font = SMALL_FONT;
+  gr_set_fontcolor(gr_find_closest_color(63,63,63),-1);
+  gr_get_string_size(message, &sw, &sh, &aw); 
+  gr_printf( CENTERSCREEN-(sw/2), LHY(55+72+3), message);
+ }
+
+ 
+void load_stars(void);
+
+WINDOS(dd_grs_canvas *StarBackCanvas,
+			grs_canvas *StarBackCanvas
+);		//,*SaveCanvas;
+
 
 void kmatrix_redraw()
 {
-	int i, pcx_error, color;
-		
+	int i, color;
 	int sorted[MAX_NUM_NET_PLAYERS];
-
+WINDOS(
+	dd_grs_canvas *tempcanvas,
+   grs_canvas *tempcanvas
+);
+   
+   if (Game_mode & GM_MULTI_COOP)
+	 {
+	  kmatrix_redraw_coop();
+	  return;
+	 }
+         
 	multi_sort_kill_list();
 
-	gr_set_current_canvas(NULL);
-	
-	pcx_error = pcx_read_bitmap("STARS.PCX",&grd_curcanv->cv_bitmap,grd_curcanv->cv_bitmap.bm_type,NULL);
-	Assert(pcx_error == PCX_ERROR_NONE);
+	WINDOS(
+	   tempcanvas=dd_gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h ),
+   	tempcanvas=gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h )
+	);
 
-	grd_curcanv->cv_font = Gamefonts[GFONT_MEDIUM_3];
+   WINDOS(
+		dd_gr_set_current_canvas(tempcanvas),
+		gr_set_current_canvas (tempcanvas)
+	);
 
-	gr_string( 0x8000, 15, TXT_KILL_MATRIX_TITLE	);
+	WINDOS (
+		dd_gr_blt_notrans(StarBackCanvas, 0,0,0,0, tempcanvas,0,0,0,0),
+	  	gr_bitmap (0,0,&StarBackCanvas->cv_bitmap)
+	);
 
-	grd_curcanv->cv_font = Gamefonts[GFONT_SMALL];
+WIN(DDGRLOCK(dd_grd_curcanv));
+	grd_curcanv->cv_font = MEDIUM3_FONT;
+
+	gr_string( 0x8000, LHY(10), TXT_KILL_MATRIX_TITLE	);
+
+	grd_curcanv->cv_font = SMALL_FONT;
 
 	multi_get_kill_list(sorted);
 
@@ -258,45 +430,310 @@ void kmatrix_redraw()
 		else
 			color = sorted[i];
 
-		gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
-		kmatrix_draw_item( i, sorted );
+     if (Players[sorted[i]].connected==0)
+       gr_set_fontcolor(gr_find_closest_color(31,31,31),-1);
+     else
+       gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
+
+     kmatrix_draw_item( i, sorted );
 	}
 
 	kmatrix_draw_deaths(sorted);
+WIN(DDGRUNLOCK(dd_grd_curcanv));
+
+WINDOS(
+	dd_gr_set_current_canvas(NULL),
+	gr_set_current_canvas(NULL)
+);
+
+#if defined(POLY_ACC)
+    pa_save_clut();
+    pa_update_clut(gr_palette, 0, 256, 0);
+#endif
+
+PA_DFX (pa_set_frontbuffer_current());
+
+WINDOS(
+	dd_gr_blt_notrans(tempcanvas, 0,0,0,0, dd_grd_curcanv, 0,0,0,0),
+  	gr_bitmap (0,0,&tempcanvas->cv_bitmap)
+);
+
+PA_DFX (pa_set_backbuffer_current());
+
+#if defined(POLY_ACC)
+    pa_restore_clut();
+#endif
+
+	gr_palette_load(gr_palette);
+WINDOS(
+	dd_gr_free_canvas(tempcanvas),
+	gr_free_canvas (tempcanvas)
+);
 }
 
-#define MAX_VIEW_TIME	F1_0*60
+void kmatrix_redraw_coop()
+{
+	int i, color;
+	int sorted[MAX_NUM_NET_PLAYERS];
 
+WINDOS(
+	dd_grs_canvas *tempcanvas,
+	grs_canvas *tempcanvas
+);
+        
+	multi_sort_kill_list();
+
+WINDOS(
+   tempcanvas=dd_gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h ),
+   tempcanvas=gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h )
+);
+WINDOS(
+	dd_gr_set_current_canvas(tempcanvas),
+   gr_set_current_canvas (tempcanvas)
+);
+
+WINDOS (
+	dd_gr_blt_notrans(StarBackCanvas, 0,0,0,0, tempcanvas,0,0,0,0),
+  	gr_bitmap (0,0,&StarBackCanvas->cv_bitmap)
+);
+
+
+
+WIN(DDGRLOCK(dd_grd_curcanv));
+	grd_curcanv->cv_font = MEDIUM3_FONT;
+	gr_string( 0x8000, LHY(10), "COOPERATIVE SUMMARY"	);
+
+	grd_curcanv->cv_font = SMALL_FONT;
+
+	multi_get_kill_list(sorted);
+
+	kmatrix_draw_coop_names(sorted);
+
+	for (i=0; i<N_players; i++ )		{
+
+     color = sorted[i];
+
+     if (Players[sorted[i]].connected==0)
+       gr_set_fontcolor(gr_find_closest_color(31,31,31),-1);
+     else
+       gr_set_fontcolor(gr_getcolor(player_rgb[color].r,player_rgb[color].g,player_rgb[color].b),-1 );
+
+     kmatrix_draw_coop_item( i, sorted );
+	}
+
+	kmatrix_draw_deaths(sorted);
+WIN(DDGRUNLOCK(dd_grd_curcanv));
+
+WINDOS(
+	dd_gr_set_current_canvas(NULL),
+	gr_set_current_canvas(NULL)
+);
+
+#if defined(POLY_ACC)
+    pa_save_clut();
+    pa_update_clut(gr_palette, 0, 256, 0);
+#endif
+
+PA_DFX (pa_set_frontbuffer_current());
+
+WINDOS(
+	dd_gr_blt_notrans(tempcanvas, 0,0,0,0, dd_grd_curcanv, 0,0,0,0),
+  	gr_bitmap (0,0,&tempcanvas->cv_bitmap)
+);
+
+PA_DFX (pa_set_backbuffer_current());
+
+#if defined(POLY_ACC)
+    pa_restore_clut();
+#endif
+
+	gr_palette_load(gr_palette);
+WINDOS(
+	dd_gr_free_canvas(tempcanvas),
+	gr_free_canvas (tempcanvas)
+);
+}
+
+#define MAX_VIEW_TIME   F1_0*15
+#define ENDLEVEL_IDLE_TIME	F1_0*10
+
+fix StartAbortMenuTime;
+
+
+#ifdef MACINTOSH
+extern void load_stars_palette();
+#endif
+
+extern void network_endlevel_poll3( int nitems, struct newmenu_item * menus, int * key, int citem );
 
 void kmatrix_view(int network)
-{
-	int i, k, done;
+{											  
+   int i, k, done,choice;
 	fix entry_time = timer_get_approx_seconds();
 	int key;
+   int oldstates[MAX_PLAYERS];
+   int previous_seconds_left=-1;
+   int num_ready,num_escaped;
 
-	set_screen_mode( SCREEN_MENU );
+ 	network=Game_mode & GM_NETWORK;
+ 
+   for (i=0;i<MAX_NUM_NET_PLAYERS;i++)
+   	digi_kill_sound_linked_to_object (Players[i].objnum);
+ 	
+   set_screen_mode( SCREEN_MENU );
 
-	kmatrix_redraw();
+	WINDOS(
+		StarBackCanvas=dd_gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h ),
+		StarBackCanvas=gr_create_canvas( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h )
+	);
+	WINDOS(
+		dd_gr_set_current_canvas(StarBackCanvas),
+	   gr_set_current_canvas(StarBackCanvas)
+	);
+	#ifdef MACINTOSH
+	if (virtual_memory_on) {
+		load_stars_palette();		// horrible hack to prevent too much paging when doing endlevel syncing
+		gr_clear_canvas( BM_XRGB(0, 0, 0) );
+	} else
+	#endif							// note link to above if/else pair
+		load_stars();
+   
+   WaitingForOthers=0;
+   kmatrix_redraw();
 
-	gr_palette_fade_in( gr_palette,32, 0);
+	//@@gr_palette_fade_in( gr_palette,32, 0);
 	game_flush_inputs();
 
 	done = 0;
 
-	while(!done)	{
+   for (i=0;i<N_players;i++)
+    oldstates[i]=Players[i].connected;
 
-		for (i=0; i<4; i++ )	
-			if (joy_get_button_down_cnt(i)>0) done=1;
-		for (i=0; i<3; i++ )	
-			if (mouse_button_down_count(i)>0) done=1;
+	if (network)
+	   network_endlevel(&key);
+
+	while(!done)	{
+	#ifdef WINDOWS
+		MSG msg;
+
+		DoMessageStuff(&msg);
+
+		DDGRRESTORE;
+
+	#endif
+
+      kmatrix_kills_changed = 0;
+      for (i=0; i<4; i++ ) 
+          if (joy_get_button_down_cnt(i)>0) 
+			  {  
+				  #if defined (D2_OEM)
+					 if (Current_level_num==8)
+						{
+	                Players[Player_num].connected=0;
+						 if (network)
+		                network_send_endlevel_packet();
+						WINDOS(
+							dd_gr_free_canvas(StarBackCanvas),
+						   gr_free_canvas (StarBackCanvas)
+						);
+					    multi_leave_game();
+				       Kmatrix_nomovie_message=0;
+				       longjmp(LeaveGame, 0); 
+	                return;
+						}
+				  #endif
+		
+            Players[Player_num].connected=7;
+				if (network)
+   	         network_send_endlevel_packet();
+				break;
+			  } 			
+    	for (i=0; i<3; i++ )	
+          if (mouse_button_down_count(i)>0) 
+				{
+				  #if defined (D2_OEM)
+					 if (Current_level_num==8)
+						{
+	                Players[Player_num].connected=0;
+						 if (network)
+		                network_send_endlevel_packet();
+						WINDOS(
+							dd_gr_free_canvas(StarBackCanvas),
+						   gr_free_canvas (StarBackCanvas)
+						);
+					    multi_leave_game();
+				       Kmatrix_nomovie_message=0;
+				       longjmp(LeaveGame, 0); 
+	                return;
+						}
+				  #endif
+					Players[Player_num].connected=7;
+				   if (network)
+	               network_send_endlevel_packet();
+					break;
+		      }			
+
+		//see if redbook song needs to be restarted
+		songs_check_redbook_repeat();
 
 		k = key_inkey();
 		switch( k )	{
 			case KEY_ENTER:
 			case KEY_SPACEBAR:
+ 				  if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))		
+					{
+						done=1;
+						break;
+					}
+					
+				  #if defined (D2_OEM)
+					 if (Current_level_num==8)
+						{
+	                Players[Player_num].connected=0;
+						 if (network)
+		                network_send_endlevel_packet();
+						WINDOS(
+							dd_gr_free_canvas(StarBackCanvas),
+						   gr_free_canvas (StarBackCanvas)
+						);
+					    multi_leave_game();
+				       Kmatrix_nomovie_message=0;
+				       longjmp(LeaveGame, 0); 
+	                return;
+						}
+				  #endif
+		
+              Players[Player_num].connected=7;
+				  if (network)	
+               network_send_endlevel_packet();
+              break;
 			case KEY_ESC:
-				done=1;
-				break;
+				  if (Game_mode & GM_NETWORK)
+					{
+					 StartAbortMenuTime=timer_get_approx_seconds();
+	   		  	 choice=nm_messagebox1( NULL,network_endlevel_poll3, 2, TXT_YES, TXT_NO, TXT_ABORT_GAME );
+					}
+				  else
+		          choice=nm_messagebox( NULL, 2, TXT_YES, TXT_NO, TXT_ABORT_GAME );
+              if (choice==0)
+               {
+                Players[Player_num].connected=0;
+					 if (network)
+	                network_send_endlevel_packet();
+						WINDOS(
+							dd_gr_free_canvas(StarBackCanvas),
+						   gr_free_canvas (StarBackCanvas)
+						);
+				    multi_leave_game();
+			       Kmatrix_nomovie_message=0;
+			       longjmp(LeaveGame, 0); 
+                return;
+               }
+              else
+               kmatrix_kills_changed=1;
+           
+				  break;
+
 			case KEY_PRINT_SCREEN:
 				save_screen_shot(0);
 				break;
@@ -306,25 +743,105 @@ void kmatrix_view(int network)
 			default:
 				break;
 		}
-		if (timer_get_approx_seconds() > entry_time+MAX_VIEW_TIME)
-			done=1;
+		if (timer_get_approx_seconds() >= (entry_time+MAX_VIEW_TIME) && Players[Player_num].connected!=7)
+			{
+				  #if defined (D2_OEM)
+					 if (Current_level_num==8)
+						{
+	                Players[Player_num].connected=0;
+						 if (network)
+		                network_send_endlevel_packet();
+						WINDOS(
+							dd_gr_free_canvas(StarBackCanvas),
+						   gr_free_canvas (StarBackCanvas)
+						);
+					    multi_leave_game();
+				       Kmatrix_nomovie_message=0;
+				       longjmp(LeaveGame, 0); 
+	                return;
+						}
+				  #endif
+		
+			 if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))		
+				{
+					done=1;
+					break;
+				}
+          Players[Player_num].connected=7;
+			 if (network)
+	          network_send_endlevel_packet();
+		   }	 
 
 		if (network && (Game_mode & GM_NETWORK))
 		{
-			kmatrix_kills_changed = 0;
-			network_endlevel_poll2(0, NULL, &key, 0);
-			if ( kmatrix_kills_changed )	{
-				kmatrix_redraw();
-			}
-			if (key < -1)
-				done = 1;
+        network_endlevel_poll2(0, NULL, &key, 0);
+                       
+        for (num_escaped=0,num_ready=0,i=0;i<N_players;i++)
+          {
+            if (Players[i].connected && i!=Player_num)
+               {
+                // Check timeout for idle players
+                if (timer_get_approx_seconds() > LastPacketTime[i]+ENDLEVEL_IDLE_TIME)
+                   {
+                    mprintf((0, "idle timeout for player %d.\n", i));
+			      	  Players[i].connected = 0;
+                    network_send_endlevel_sub(i);
+                   }                        
+                }
+
+               if (Players[i].connected!=oldstates[i])
+                  {
+                   if (ConditionLetters[Players[i].connected]!=ConditionLetters[oldstates[i]])
+                     kmatrix_kills_changed=1;
+                   oldstates[i]=Players[i].connected;
+						 network_send_endlevel_packet();
+                  }
+					if (Players[i].connected==0 || Players[i].connected==7)
+					  num_ready++;
+
+               if (Players[i].connected!=1)
+                   num_escaped++;
+          }
+
+         if (num_ready>=N_players)
+             done=1;
+         if (num_escaped>=N_players)
+             Countdown_seconds_left=-1;
+
+         if (previous_seconds_left != Countdown_seconds_left)
+            {
+             previous_seconds_left=Countdown_seconds_left;
+				 kmatrix_kills_changed=1;
+				}
+                                                 
+         if ( kmatrix_kills_changed )    
+            {
+             kmatrix_redraw();
+             kmatrix_kills_changed=0;
+	   		}
+
 		}
 	}
 
+  Players[Player_num].connected=7;
+
+  if (network)	
+     network_send_endlevel_packet();  // make sure
+
+       
 // Restore background and exit
 	gr_palette_fade_out( gr_palette, 32, 0 );
 
 	game_flush_inputs();
+
+	WINDOS(
+		dd_gr_free_canvas(StarBackCanvas),
+		gr_free_canvas (StarBackCanvas)
+	);
+
+   Kmatrix_nomovie_message=0;
+
 }
+
 #endif
-
+

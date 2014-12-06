@@ -8,62 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/fvi.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:58 $
- * 
- * Header for fvi.c
- * 
- * $Log: fvi.h $
- * Revision 2.1  1995/03/20  18:15:58  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.0  1995/02/27  11:32:02  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.10  1995/02/02  14:07:58  matt
- * Fixed confusion about which segment you are touching when you're 
- * touching a wall.  This manifested itself in spurious lava burns.
- * 
- * Revision 1.9  1994/12/04  22:48:04  matt
- * Physics & FVI now only build seglist for player objects, and they 
- * responsilby deal with buffer full conditions
- * 
- * Revision 1.8  1994/10/31  12:28:01  matt
- * Added new function object_intersects_wall()
- * 
- * Revision 1.7  1994/10/10  13:10:00  matt
- * Increased max_fvi_segs
- * 
- * Revision 1.6  1994/09/25  00:38:29  matt
- * Made the 'find the point in the bitmap where something hit' system
- * publicly accessible.
- * 
- * Revision 1.5  1994/08/01  13:30:35  matt
- * Made fvi() check holes in transparent walls, and changed fvi() calling
- * parms to take all input data in query structure.
- * 
- * Revision 1.4  1994/07/13  21:47:59  matt
- * FVI() and physics now keep lists of segments passed through which the
- * trigger code uses.
- * 
- * Revision 1.3  1994/07/08  14:27:26  matt
- * Non-needed powerups don't get picked up now; this required changing FVI to
- * take a list of ingore objects rather than just one ignore object.
- * 
- * Revision 1.2  1994/06/09  09:58:39  matt
- * Moved find_vector_intersection() from physics.c to new file fvi.c
- * 
- * Revision 1.1  1994/06/09  09:26:14  matt
- * Initial revision
- * 
- * 
- */
 
 
 
@@ -100,6 +46,7 @@ typedef struct fvi_info {
 #define FQ_TRANSWALL		2		//go through transparent walls
 #define FQ_TRANSPOINT	4		//go through trans wall if hit point is transparent
 #define FQ_GET_SEGLIST	8		//build a list of segments
+#define FQ_IGNORE_POWERUPS	16		//ignore powerups
 
 //this data contains the parms to fvi()
 typedef struct fvi_query {
@@ -124,11 +71,11 @@ typedef struct fvi_query {
 int find_vector_intersection(fvi_query *fq,fvi_info *hit_data);
 
 //finds the uv coords of the given point on the given seg & side
-//fills in u & v
-find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum);
+//fills in u & v. if l is non-NULL fills it in also
+void find_hitpoint_uv(fix *u,fix *v,fix *l, vms_vector *pnt,segment *seg,int sidenum,int facenum);
 
 //Returns true if the object is through any walls
 int object_intersects_wall(object *objp);
 
 #endif
-
+

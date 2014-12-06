@@ -8,98 +8,13 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/segment.h $
- * $Revision: 2.1 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:22 $
- *
- * Include file for functions which need to access segment data structure.
- *
- * $Log: segment.h $
- * Revision 2.1  1995/03/20  18:15:22  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.0  1995/02/27  11:26:49  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.89  1995/01/24  15:07:55  yuan
- * *** empty log message ***
- * 
- * Revision 1.88  1994/12/12  01:04:06  yuan
- * Boosted MAX_GAME_VERTS.
- * 
- * Revision 1.87  1994/12/11  16:18:14  mike
- * add constants so we can detect too-large mines for game while in editor.
- * 
- * Revision 1.86  1994/12/08  15:07:29  yuan
- * *** empty log message ***
- * 
- * Revision 1.85  1994/12/01  21:06:39  matt
- * Moved plane tolerance constant to gameseg.c, the only file that used it.
- * 
- * Revision 1.84  1994/11/27  14:01:41  matt
- * Fixed segment structure so LVLs work
- * 
- * Revision 1.83  1994/11/26  22:50:20  matt
- * Removed editor-only fields from segment structure when editor is compiled
- * out, and padded segment structure to even multiple of 4 bytes.
- * 
- * Revision 1.82  1994/11/21  11:43:36  mike
- * smaller segment and vertex buffers.
- * 
- * Revision 1.81  1994/11/17  11:39:35  matt
- * Ripped out code to load old mines
- * 
- * Revision 1.80  1994/10/30  14:12:05  mike
- * rip out local segments stuff.
- * 
- * Revision 1.79  1994/10/27  11:33:58  mike
- * lower number of segments by 100, saving 116K.
- * 
- * Revision 1.78  1994/08/25  21:54:50  mike
- * Add macro IS_CHILD to make checking for the presence of a child centralized.
- * 
- * Revision 1.77  1994/08/11  18:58:16  mike
- * Add prototype for Side_to_verts_int.
- * 
- * Revision 1.76  1994/08/01  11:04:13  yuan
- * New materialization centers.
- * 
- * Revision 1.75  1994/07/25  00:04:19  matt
- * Various changes to accomodate new 3d, which no longer takes point numbers
- * as parms, and now only takes pointers to points.
- * 
- * Revision 1.74  1994/07/21  19:01:30  mike
- * new lsegment structure.
- * 
- * Revision 1.73  1994/06/08  14:30:48  matt
- * Added static_light field to segment structure, and padded side struct
- * to be longword aligned.
- * 
- * Revision 1.72  1994/05/19  23:25:17  mike
- * Change MINE_VERSION to 15, DEFAULT_LIGHTING to 0
- * 
- * Revision 1.71  1994/05/12  14:45:54  mike
- * New segment data structure (!!), group, special, object, value = short.
- * 
- * Revision 1.70  1994/05/03  11:06:46  mike
- * Remove constants VMAG and UMAG which are editor specific..
- * 
- * Revision 1.69  1994/04/18  10:40:28  yuan
- * Increased segment limit to 1000
- * (From 500)
- * 
- * 
- */
 
 #ifndef _SEGMENT_H
 #define _SEGMENT_H
 
-#include	"types.h"
+#include	"pstypes.h"
 #include	"fix.h"
 #include "vecmat.h"
 //#include "3d.h"
@@ -123,15 +38,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define	WBACK								4
 #define	WFRONT							5
 
-#define	MAX_GAME_SEGMENTS				800
-#define	MAX_GAME_VERTICES				2800
-
-#if defined(SHAREWARE) && !defined(EDITOR)
-  #define	MAX_SEGMENTS					MAX_GAME_SEGMENTS
-  #define	MAX_SEGMENT_VERTICES			MAX_GAME_VERTICES
+#if defined(SHAREWARE)
+  #define	MAX_SEGMENTS					800
+  #define	MAX_SEGMENT_VERTICES			2800
 #else
   #define	MAX_SEGMENTS					900
-  #define	MAX_SEGMENT_VERTICES			(4*MAX_SEGMENTS)
+  #define	MAX_SEGMENT_VERTICES			3600
 #endif
 
 //normal everyday vertices
@@ -187,16 +99,41 @@ typedef struct segment {
 	short		verts[MAX_VERTICES_PER_SEGMENT];	// vertex ids of 4 front and 4 back vertices
 	#ifdef	EDITOR
 	short		group;								// group number to which the segment belongs.
-	#endif
 	short		objects;								// pointer to objects in this segment
-	ubyte		special;								// special property of a segment (such as damaging, trigger, etc.)
-	byte		matcen_num;							//	which center segment is associated with.
-	short		value;
-	fix		static_light;						//average static light in segment
-	#ifndef	EDITOR
-	short		pad;			//make structure longword aligned
+	#else
+	int		objects;								// pointer to objects in this segment
 	#endif
+
+// -- Moved to segment2 to make this struct 512 bytes long --
+//	ubyte		special;								// what type of center this is 
+//	byte		matcen_num;							//	which center segment is associated with.
+//	short		value;
+//	fix		static_light;						//average static light in segment
+//	#ifndef	EDITOR
+//	short		pad;			//make structure longword aligned
+//	#endif
 } segment;
+
+#define	S2F_AMBIENT_WATER		0x01
+#define	S2F_AMBIENT_LAVA		0x02
+
+typedef struct segment2 {
+	ubyte		special;
+	byte		matcen_num;
+	byte		value;
+	ubyte		s2_flags;
+	fix		static_light;
+} segment2;
+
+//values for special field
+#define SEGMENT_IS_NOTHING			0
+#define SEGMENT_IS_FUELCEN			1
+#define SEGMENT_IS_REPAIRCEN		2
+#define SEGMENT_IS_CONTROLCEN		3
+#define SEGMENT_IS_ROBOTMAKER		4
+#define SEGMENT_IS_GOAL_BLUE		5
+#define SEGMENT_IS_GOAL_RED		6
+#define MAX_CENTER_TYPES			7
 
 #ifdef COMPACT_SEGS
 extern void get_side_normal(segment *sp, int sidenum, int normal_num, vms_vector * vm );
@@ -224,7 +161,7 @@ typedef struct {
 // Globals from mglobal.c
 extern	vms_vector	Vertices[];
 extern	segment		Segments[];
-//--repair-- extern	lsegment		Lsegments[];
+extern	segment2		Segment2s[];
 extern	int			Num_segments;
 extern	int			Num_vertices;
 
@@ -233,6 +170,39 @@ extern	int		Side_to_verts_int[MAX_SIDES_PER_SEGMENT][4];	// Side_to_verts[my_sid
 extern	char		Side_opposite[];									// Side_opposite[my_side] returns side opposite cube from my_side.
 
 #define SEG_PTR_2_NUM(segptr) (Assert((unsigned) (segptr-Segments)<MAX_SEGMENTS),(segptr)-Segments)
+
+//	New stuff, 10/14/95: For shooting out lights and monitors.
+//	Light cast upon vert_light vertices in segnum:sidenum by some light
+typedef struct {
+	short	segnum;
+	byte	sidenum;
+	byte	dummy;
+	ubyte	vert_light[4];
+} delta_light;
+
+//	Light at segnum:sidenum casts light on count sides beginning at index (in array Delta_lights)
+typedef struct {
+	short	segnum;
+	byte	sidenum;
+	byte	count;
+	short	index;
+} dl_index;
+
+#define	MAX_DL_INDICES		500
+#define	MAX_DELTA_LIGHTS	10000
+
+#define	DL_SCALE				2048		//	Divide light to allow 3 bits integer, 5 bits fraction.
+
+extern	dl_index		Dl_indices[MAX_DL_INDICES];
+extern	delta_light Delta_lights[MAX_DELTA_LIGHTS];
+extern	int			Num_static_lights;
+
+extern int subtract_light(int segnum, int sidenum);
+extern int add_light(int segnum, int sidenum);
+extern void restore_all_lights_in_mine(void);
+extern void clear_light_subtracted(void);
+
+extern ubyte Light_subtracted[MAX_SEGMENTS];
 
 // ----------------------------------------------------------------------------------------------------------
 // --------------------------  Segment interrogation functions ------------------------
@@ -266,4 +236,3 @@ extern void med_check_all_vertices();
 
 #endif
 
-

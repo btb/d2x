@@ -1,83 +1,13 @@
-;
-; $Source: f:/miner/source/vecmat/rcs/vecmat.inc $
-; $Revision: 1.21 $
-; $Author: matt $
-; $Date: 1994/12/13 14:44:21 $
-;
-; Header file for vector/matrix library
-;
-; $Log: vecmat.inc $
-; Revision 1.21  1994/12/13  14:44:21  matt
-; Added vm_vector_2_matrix_norm()
-; 
-; Revision 1.20  1994/09/11  19:23:04  matt
-; Added vm_vec_normalized_dir_quick()
-; 
-; Revision 1.19  1994/07/19  18:52:55  matt
-; Added vm_vec_normalize_quick() and vm_vec_copy_normalize_quick()
-; 
-; Revision 1.18  1994/06/16  18:24:31  matt
-; Added vm_vec_mag_quick()
-; 
-; Revision 1.17  1994/05/19  12:07:20  matt
-; Fixed globals and macros and added a constant
-; 
-; Revision 1.16  1994/05/18  22:28:55  matt
-; Added function vm_vec_normalized_dir()
-; Added C macros IS_ZERO_VEC(), vm_vec_zero(), and vm_set_identity()
-; Added C global static vars vmd_zero_vector & vmd_identity_matrix
-; 
-; Revision 1.15  1994/05/18  21:45:05  matt
-; Added functions:
-;   vm_extract_angles_vector()
-;   vm_extract_angles_vector_normalized()
-;   vm_vec_copy_normalize()
-; 
-; Revision 1.14  1994/05/13  12:42:09  matt
-; Added new function, vm_vec_dist_quick(), which does an approximation.
-; 
-; Revision 1.13  1994/03/30  15:43:54  matt
-; Added two functions, vm_vec_scale_add() & vm_vec_scale_add2()
-; 
-; Revision 1.12  1994/01/31  19:45:24  matt
-; Added function vm_extract_angles_matrix()
-; 
-; Revision 1.11  1993/12/21  19:46:29  matt
-; Added function vm_dist_to_plane()
-; 
-; Revision 1.10  1993/12/13  17:26:40  matt
-; Added vm_vec_dist()
-; 
-; Revision 1.9  1993/12/02  12:44:04  matt
-; New functions: vm_vec_copy_scale(), vm_vec_scale2()
-; 
-; Revision 1.8  1993/10/29  22:39:08  matt
-; Changed matrix order, making direction vectors the rows
-; 
-; Revision 1.7  1993/10/25  11:49:58  matt
-; Made vm_vec_delta_ang() take optional forward vector to return signed delta
-; 
-; Revision 1.6  1993/10/20  01:10:04  matt
-; Added vm_vec_delta_ang(), vm_vec_delta_ang_norm(), and vm_vec_ang_2_matrix()
-; 
-; Revision 1.5  1993/09/28  12:16:04  matt
-; Added func vm_vector_2_matrix()
-; 
-; Revision 1.4  1993/09/24  21:19:14  matt
-; Added vm_vec_avg() and vm_vec_avg4()
-; 
-; Revision 1.3  1993/09/20  14:56:35  matt
-; Added new function, vm_vec_perp()
-; 
-; Revision 1.2  1993/09/17  11:09:57  matt
-; Added vm_vec_add2() and vm_vec_sub2(), which take 2 args (dest==src0)
-; 
-; Revision 1.1  1993/09/16  20:19:29  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ifndef _VECMAT_INC
 _VECMAT_INC equ 1
 

@@ -8,222 +8,11 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/endlevel.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/21 14:40:14 $
- * 
- * Code for rendering external scenes
- * 
- * $Log: endlevel.c $
- * Revision 2.2  1995/03/21  14:40:14  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.1  1995/03/20  18:15:50  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.0  1995/02/27  11:30:42  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.80  1995/02/22  13:24:45  john
- * Removed the vecmat anonymous unions.
- * 
- * Revision 1.79  1995/02/11  12:41:54  john
- * Added new song method, with FM bank switching..
- * 
- * Revision 1.78  1995/02/08  11:37:41  mike
- * Check for failures in call to obj_create.
- * 
- * Revision 1.77  1995/02/05  22:09:49  matt
- * Switch out of rear view when starting endlevel sequence
- * 
- * Revision 1.76  1995/01/30  18:08:28  rob
- * Add palette fade out before ending level on special missions.
- * 
- * Revision 1.75  1995/01/29  16:19:19  rob
- * Fixed endlevel for custom missions.
- * 
- * Revision 1.74  1995/01/26  12:18:10  rob
- * Changed calling convention of network_do_frame.
- * 
- * Revision 1.73  1995/01/21  16:50:03  matt
- * Made endlevel work with new mission stuff
- * 
- * Revision 1.72  1994/12/20  18:22:51  john
- * Added code to support non-looping songs, and put
- * it in for endlevel and credits.
- * 
- * Revision 1.71  1994/12/15  12:23:58  matt
- * Added check for failure to create camera object
- * 
- * Revision 1.70  1994/12/15  03:05:28  matt
- * Added error checking for NULL return from object_create_explosion()
- * 
- * Revision 1.69  1994/12/12  21:41:38  matt
- * Don't start endlevel if OF_SHOULD_BE_DEAD is set for player
- * 
- * Revision 1.68  1994/12/12  15:44:54  rob
- * Rolled back a change to endlevel_start that caused more bugs than
- * it fixed.
- * 
- * Revision 1.67  1994/12/12  12:08:33  rob
- * IF a player is dead upon entering the tunnel, make them not dead.  Not perfect solution
- * but avoids some last-minute weirdness we want to fix.  This should be revisited in new
- * versions if possible!
- * 
- * Revision 1.66  1994/12/11  22:02:13  allender
- * made endlevel data loading work with .txb encoded format (made with
- * compbit -i level0?.end -o level0?.txb)
- * 
- * Revision 1.65  1994/12/11  20:32:47  matt
- * Made camera transition happen 1/3 of the way through exit tunnel
- * 
- * Revision 1.64  1994/12/08  20:56:27  john
- * More cfile stuff.
- * 
- * Revision 1.63  1994/12/07  17:00:52  rob
- * Trying to fix homing tone warning when in exit tunnel.
- * 
- * Revision 1.62  1994/12/06  13:24:47  matt
- * Made exit model come out of bitmaps.tbl
- * 
- * Revision 1.61  1994/12/06  12:06:22  matt
- * Fixed/cleaned up satellite (planet/sun) code
- * 
- * Revision 1.60  1994/12/05  13:37:12  adam
- * removed slew-mode
- * 
- * Revision 1.59  1994/12/05  12:49:37  matt
- * Made satellite a rod (instead of a plane old non-rotating bitmap), and
- * made the size settable in the .end file
- * 
- * Revision 1.58  1994/12/04  21:40:00  matt
- * Added explosion sounds
- * 
- * Revision 1.57  1994/12/04  18:31:41  matt
- * Wasn't coding planet position, causing it to disappear sometimes
- * 
- * Revision 1.56  1994/12/04  14:30:26  john
- * Added hooks for music..
- * 
- * Revision 1.55  1994/12/04  13:53:52  matt
- * Added code to make camera off-centered during lookback
- * 
- * Revision 1.54  1994/12/04  12:30:18  matt
- * Fixed slew for short sequence
- * 
- * Revision 1.53  1994/12/03  19:28:10  matt
- * Added alternate model for exit model after mine destruction
- * 
- * Revision 1.52  1994/12/03  00:17:23  matt
- * Made endlevel sequence cut off early
- * Made exit model and bit explosion always plot last (after all terrain)
- * 
- * Revision 1.51  1994/12/01  20:15:43  yuan
- * Localization.
- * 
- * Revision 1.50  1994/11/30  23:27:35  adam
- * mucked around carelessly
- * 
- * Revision 1.49  1994/11/28  21:50:37  mike
- * optimizations.
- * 
- * Revision 1.48  1994/11/28  00:12:05  allender
- * took out demo code that was in at one time to record endlevel sequence.
- * We are _not_ recording endlevel sequence
- * 
- * Revision 1.47  1994/11/27  23:35:54  allender
- * pause demo recording when starting endlevel sequence.  on demo playback,
- * don't do endlevel at all.
- * 
- * Revision 1.46  1994/11/27  23:13:59  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.45  1994/11/26  23:17:29  matt
- * When camera leaves mine, bank it so it's level with the ground
- * 
- * Revision 1.44  1994/11/23  16:52:13  rob
- * Ended netgame endlevel sequence a bit earlier.
- * 
- * Revision 1.43  1994/11/22  19:20:46  rob
- * Modem support for secret levels.
- * 
- * Revision 1.42  1994/11/22  12:11:03  rob
- * Fixed bug - file handle left open in load_endlevel_data.
- * 
- * Revision 1.41  1994/11/21  17:29:22  matt
- * Cleaned up sequencing & game saving for secret levels
- * 
- * Revision 1.40  1994/11/19  15:14:54  mike
- * remove unused code and data
- * 
- * Revision 1.39  1994/11/19  12:41:32  matt
- * Added system to read endlevel data from file, and to make it work
- * with any exit tunnel.
- * 
- * Revision 1.38  1994/11/17  15:02:24  mike
- * support new segment validation functions.
- * 
- * Revision 1.37  1994/11/17  13:04:45  allender
- * backout out newdemo changes
- * 
- * Revision 1.35  1994/11/16  14:52:33  rob
- * Commented out SLEW_ON on Matt's direction.
- * Changed something to fix demo recording.
- * 
- * Revision 1.34  1994/11/16  11:49:29  matt
- * Added code to rotate terrain to match mine
- * 
- * Revision 1.33  1994/11/14  17:54:54  allender
- * on exit sequence during demo recording, force player exited from mine
- * packet to all other network players
- * 
- * Revision 1.32  1994/11/10  21:27:42  matt
- * Took out printf's
- * 
- * Revision 1.31  1994/11/10  14:02:24  matt
- * Hacked in support for player ships with different textures
- * 
- * Revision 1.30  1994/11/09  10:31:33  matt
- * Don't create explosions if can't find seg to create them in
- * 
- * Revision 1.29  1994/11/05  17:22:37  john
- * Fixed lots of sequencing problems with newdemo stuff.
- * 
- * Revision 1.28  1994/11/03  11:10:39  matt
- * Fixed chase angles code
- * Maybe other things, too.
- * 
- * Revision 1.27  1994/10/30  20:09:21  matt
- * For endlevel: added big explosion at tunnel exit; made lights in tunnel 
- * go out; made more explosions on walls.
- * 
- * Revision 1.26  1994/10/28  16:37:50  allender
- * stop demo recording when endlevel sequence activated
- * 
- * Revision 1.25  1994/10/27  21:15:21  matt
- * Added explosions in mine chasing player
- * 
- * Revision 1.24  1994/10/27  01:03:57  matt
- * Fixed several small bugs in flythrough
- * 
- * Revision 1.23  1994/10/22  01:32:30  matt
- * Don't start endlevel sequence if player dead
- * 
- * Revision 1.22  1994/10/22  00:08:06  matt
- * Fixed up problems with bonus & game sequencing
- * Player doesn't get credit for hostages unless he gets them out alive
- * 
- * 
- * 
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
+static char rcsid[] = "$Id: endlevel.c 2.42 1997/01/27 16:26:53 matt Exp $";
 #pragma on (unreferenced)
 
 //#define SLEW_ON 1
@@ -231,7 +20,13 @@ static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
 //#define _MARK_ON
 
 #include <stdlib.h>
-//#include <wsample.h> //This file not included in public domain release -KRB
+
+#ifdef __WATCOMC__
+#if __WATCOMC__ < 1000
+#include <wsample.h>
+#endif
+#endif
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -251,6 +46,7 @@ static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
 #include "endlevel.h"
 #include "object.h"
 #include "game.h"
+#include "screens.h"
 #include "gauges.h"
 #include "wall.h"
 #include "terrain.h"
@@ -267,6 +63,8 @@ static char rcsid[] = "$Id: endlevel.c 2.2 1995/03/21 14:40:14 john Exp $";
 #include "cfile.h"
 #include "compbit.h"
 #include "songs.h"
+#include "movie.h"
+#include "render.h"
 
 typedef struct flythrough_data {
 	object		*obj;
@@ -302,6 +100,37 @@ int transition_segnum,exit_segnum;
 object *endlevel_camera;
 
 #define FLY_SPEED i2f(50)
+
+start_endlevel_flythrough(int n,object *obj,fix speed);
+
+#ifdef D2_OEM
+char movie_table[] =	{	'a','a','a','a','d','d','d','d' };
+#else
+char movie_table[] =	{	'a','b','c',
+						#ifndef SHAREWARE
+							'a',
+							'd','f','d','f',
+							'g','h','i','g',
+							'j','k','l','j',
+							'm','o','m','o',
+							'p','q','p','q'
+						#endif
+					};
+#endif
+
+#define N_MOVIES (sizeof(movie_table) / sizeof(*movie_table))
+
+#ifndef SHAREWARE
+#ifdef D2_OEM
+char movie_table_secret[] = {'a','d'};
+#else
+char movie_table_secret[] = {'a','d','g','j','m','p'};
+#endif
+#define N_MOVIES_SECRET (sizeof(movie_table_secret) / sizeof(*movie_table_secret))
+#else
+#define N_MOVIES_SECRET 0
+#endif
+
 
 #define FLY_ACCEL i2f(5)
 
@@ -354,6 +183,65 @@ int matt_find_connect_side(int seg0,int seg1)
 	return -1;
 }
 
+extern int Kmatrix_nomovie_message;
+
+#if defined(D2_OEM) || defined(COMPILATION)
+#define MOVIE_REQUIRED 0
+#else
+#define MOVIE_REQUIRED 1
+#endif
+
+//returns movie played status.  see movie.h
+int start_endlevel_movie()
+{
+	char movie_name[] = "esa.mve";
+   int r;
+	ubyte save_pal[768];
+
+	Assert(Current_mission_num == 0);		//only play movie for built-in mission
+
+	Assert(N_MOVIES >= Last_level);
+	Assert(N_MOVIES_SECRET >= -Last_secret_level);
+
+	#ifndef D2_OEM
+	if (Current_level_num == Last_level)
+		return 1;	//don't play movie
+	#endif
+
+	if (Current_level_num > 0)
+		movie_name[2] = movie_table[Current_level_num-1];
+	else {
+		#ifndef SHAREWARE
+			return 0;		//no escapes for secret level 
+		#else
+			Error("Invalid level number <%d>",Current_level_num);
+		#endif
+	}
+
+	memcpy(save_pal,gr_palette,768);
+
+	#ifndef SHAREWARE
+		r=PlayMovie(movie_name,(Game_mode & GM_MULTI)?0:MOVIE_REQUIRED);
+	#else
+		return	0;	// movie not played for shareware
+	#endif
+
+	if (Newdemo_state == ND_STATE_PLAYBACK) {
+		set_screen_mode(SCREEN_GAME);
+		memcpy(gr_palette,save_pal,768);
+	}
+
+   if (r==MOVIE_NOT_PLAYED && (Game_mode & GM_MULTI))
+	  Kmatrix_nomovie_message=1;
+	else
+ 	  Kmatrix_nomovie_message=0;
+	
+	return (r);
+
+}
+
+#ifdef SHAREWARE
+void
 free_endlevel_data()
 {
 	if (terrain_bm_instance.bm_data)
@@ -390,8 +278,7 @@ init_endlevel()
 
 	terrain_bm_instance.bm_data = satellite_bm_instance.bm_data = NULL;
 }
-
-static int cockpit_mode_save;
+#endif	//SHAREWARE
 
 object external_explosion;
 int ext_expl_playing,mine_destroyed;
@@ -403,40 +290,89 @@ vms_angvec exit_angles={-0xa00,0,0};
 vms_matrix surface_orient;
 
 int endlevel_data_loaded=0;
+extern char last_palette_loaded[];
 
 start_endlevel_sequence()
 {
-	int last_segnum,exit_side,tunnel_length;
+	int	i;
+	int movie_played;
+	static int inited = 0;
+	
+	#if defined(MACINTOSH) && defined(SHAREWARE)
+	if (!inited) {
+		load_exit_models();
+		inited = 1;
+	}
+	#endif
 
 	if (Newdemo_state == ND_STATE_RECORDING)		// stop demo recording
 		Newdemo_state = ND_STATE_PAUSED;
 
-	if (Newdemo_state == ND_STATE_PLAYBACK)		// don't do this if in playback mode
+	if (Newdemo_state == ND_STATE_PLAYBACK) {		// don't do this if in playback mode
+		if (Current_mission_num == 0)		//only play movie for built-in mission
+			start_endlevel_movie();
+		strcpy(last_palette_loaded,"");		//force palette load next time
 		return;
+	}
 
 	if (Player_is_dead || ConsoleObject->flags&OF_SHOULD_BE_DEAD)
 		return;				//don't start if dead!
+
+	//	Dematerialize Buddy!
+	for (i=0; i<=Highest_object_index; i++)
+		if (Objects[i].type == OBJ_ROBOT)
+			if (Robot_info[Objects[i].id].companion) {
+				object_create_explosion(Objects[i].segnum, &Objects[i].pos, F1_0*7/2, VCLIP_POWERUP_DISAPPEARANCE );
+				Objects[i].flags |= OF_SHOULD_BE_DEAD;
+			}
 
 	Players[Player_num].homing_object_dist = -F1_0; // Turn off homing sound.
 
 	reset_rear_view();		//turn off rear view if set
 
-	if (!endlevel_data_loaded) {
-
+	if (Game_mode & GM_MULTI) {
+		multi_send_endlevel_start(0);
 		#ifdef NETWORK
-		if (Game_mode & GM_MULTI) {
-			multi_send_endlevel_start(0);
-			#ifdef NETWORK
-			network_do_frame(1, 1);
-			#endif
+		network_do_frame(1, 1);
+		#endif
+	}
+
+	if (Current_mission_num == 0) {		//only play movie for built-in mission
+
+		//try playing movie.  If it plays, great. if not, do rendered ending
+		
+		if (!(Game_mode & GM_MULTI))
+			movie_played = start_endlevel_movie();
+		
+		#ifdef SHAREWARE
+		if (movie_played == MOVIE_NOT_PLAYED) {		//don't have movie.  Do rendered sequence
+		#ifndef WINDOWS
+			start_rendered_endlevel_sequence();
+		#endif
+			return;
 		}
 		#endif
 
+	}
+	else
 		gr_palette_fade_out(gr_palette, 32, 0);
 
-		PlayerFinishedLevel(0);		//don't do special sequence
-		return;
-	}
+	PlayerFinishedLevel(0);		//done with level
+}
+
+#ifndef SHAREWARE
+
+do_endlevel_frame() {Int3();}
+stop_endlevel_sequence() {Int3();}
+void render_endlevel_frame() {Int3();}
+
+#else
+
+static int cockpit_mode_save;
+
+start_rendered_endlevel_sequence()
+{
+	int last_segnum,exit_side,tunnel_length;
 
 	{
 		int segnum,old_segnum,entry_side,i;
@@ -469,6 +405,7 @@ start_endlevel_sequence()
 		segnum = Segments[old_segnum].children[exit_side];
 		i=tunnel_length/3;
 		while (i--) {
+
 			entry_side = matt_find_connect_side(segnum,old_segnum);
 			exit_side = Side_opposite[entry_side];
 			old_segnum = segnum;
@@ -477,8 +414,6 @@ start_endlevel_sequence()
 		transition_segnum = segnum;
 
 	}
-
-	Assert(last_segnum == exit_segnum);
 
 	cockpit_mode_save = Cockpit_mode;
 
@@ -489,7 +424,10 @@ start_endlevel_sequence()
 	}
 	#endif
 
-	songs_play_song( SONG_ENDLEVEL, 0 );
+	#ifdef SHAREWARE
+	Assert(last_segnum == exit_segnum);
+	// 	songs_play_song( SONG_ENDLEVEL, 0 );	// JTS: Until we get an exit song, just don't worry
+	#endif
 
 	Endlevel_sequence = EL_FLYTHROUGH;
 
@@ -626,11 +564,13 @@ get_angs_to_object(vms_angvec *av,vms_vector *targ_pos,vms_vector *cur_pos)
 
 do_endlevel_frame()
 {
+	#ifdef SHAREWARE
 	static fix timer;
+	static fix bank_rate;
+	#endif
 	vms_vector save_last_pos;
 	static fix explosion_wait1=0;
 	static fix explosion_wait2=0;
-	static fix bank_rate;
 	static fix ext_expl_halflife;
 
 	save_last_pos = ConsoleObject->last_pos;	//don't let move code change this
@@ -764,7 +704,15 @@ do_endlevel_frame()
 			do_endlevel_flythrough(0);
 
 			if (ConsoleObject->segnum == transition_segnum) {
+
+				#ifndef SHAREWARE
+					start_endlevel_movie();
+					stop_endlevel_sequence();
+				#else
+
 				int objnum;
+
+				//songs_play_song( SONG_ENDLEVEL, 0 );
 
 				Endlevel_sequence = EL_LOOKBACK;
 
@@ -790,12 +738,15 @@ do_endlevel_frame()
 				vm_vec_scale_add2(&endlevel_camera->pos,&endlevel_camera->orient.fvec,i2f(7));
 
 				timer=0x20000;
+
+				#endif
 			}
 
 			break;
 		}
 
 
+#ifdef SHAREWARE
 		case EL_LOOKBACK: {
 
 			do_endlevel_flythrough(0);
@@ -824,8 +775,6 @@ do_endlevel_frame()
 				bank_rate = (-exit_seg_angles.b - cam_angles.b)/2;
 
 				ConsoleObject->control_type = endlevel_camera->control_type = CT_NONE;
-
-				//_MARK_("Starting outside");//Commented out by KRB
 
 #ifdef SLEW_ON
  slew_obj = endlevel_camera;
@@ -934,8 +883,6 @@ do_endlevel_frame()
 
 				Endlevel_sequence = EL_CHASING;
 
-				//_MARK_("Done outside");//Commented out -KRB
-
 				vm_vec_normalized_dir_quick(&tvec,&station_pos,&ConsoleObject->pos);
 				vm_vector_2_matrix(&ConsoleObject->orient,&tvec,&surface_orient.uvec,NULL);
 
@@ -984,6 +931,8 @@ do_endlevel_frame()
 
 		}
 		#endif		//ifdef SHORT_SEQUENCE
+#endif
+
 	}
 }
 
@@ -1030,8 +979,6 @@ find_exit_side(object *obj)
 extern fix Render_zoom;							//the player's zoom factor
 
 extern vms_vector Viewer_eye;	//valid during render
-
-void render_mine(int start_seg_num,fix eye_offset);
 
 draw_exit_model()
 {
@@ -1214,7 +1161,7 @@ endlevel_render_mine(fix eye_offset)
 	else
 		g3_set_view_matrix(&Viewer_eye,&Viewer->orient,Render_zoom);
 
-	render_mine(start_seg_num,eye_offset);
+	render_mine(start_seg_num,eye_offset, 0);
 }
 
 void render_endlevel_frame(fix eye_offset)
@@ -1224,13 +1171,14 @@ void render_endlevel_frame(fix eye_offset)
 
 	if (Endlevel_sequence < EL_OUTSIDE)
 		endlevel_render_mine(eye_offset);
+	#ifdef SHAREWARE
 	else
 		render_external_scene(eye_offset);
+	#endif
 
 	g3_end_frame();
 
 }
-
 
 
 ///////////////////////// copy of flythrough code for endlevel
@@ -1534,7 +1482,7 @@ try_again:
 		strcpy(filename,Level_names[level_num-1]);
 
 	if (!convert_ext(filename,"END"))
-		return;
+		Error("Error converting filename <%s> for endlevel data\n",filename);
 
 	ifile = cfopen(filename,"rb");
 
@@ -1546,8 +1494,7 @@ try_again:
 
 		if (!ifile)
 			if (level_num==1) {
-				return;		//abort
-				//Error("Cannot load file text of binary version of <%s>",filename);
+				Error("Cannot load file text of binary version of <%s>",filename);
 			}
 			else {
 				level_num = 1;
@@ -1585,12 +1532,14 @@ try_again:
 		switch (var) {
 
 			case 0: {						//ground terrain
-				int iff_error;
+				int iff_error, i;
 				ubyte pal[768];
 
 				if (terrain_bm_instance.bm_data)
 					free(terrain_bm_instance.bm_data);
 
+				Assert(terrain_bm_instance.bm_data == NULL);
+				
 				iff_error = iff_read_bitmap(p,&terrain_bm_instance,BM_LINEAR,pal);
 				if (iff_error != IFF_NO_ERROR) {
 					mprintf((1, "File %s - IFF error: %s",p,iff_errormsg(iff_error)));
@@ -1598,8 +1547,9 @@ try_again:
 				}
 
 				terrain_bitmap = &terrain_bm_instance;
-				gr_remap_bitmap_good( terrain_bitmap, pal, iff_transparent_color, -1);
 
+				gr_remap_bitmap_good( terrain_bitmap, pal, iff_transparent_color, -1);
+				
 				break;
 			}
 
@@ -1722,5 +1672,5 @@ vm_vec_copy_scale(&satellite_upvec,&tm.uvec,SATELLITE_HEIGHT);
 
 }
 
+#endif
 
-

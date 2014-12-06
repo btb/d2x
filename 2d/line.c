@@ -8,53 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/line.c $
- * $Revision: 1.10 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:02 $
- *
- * Graphical routines for drawing lines.
- *
- * $Log: line.c $
- * Revision 1.10  1994/11/18  22:50:02  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.9  1994/07/13  12:03:04  john
- * Added assembly modex line-drawer.
- * 
- * Revision 1.8  1993/12/06  18:18:03  john
- * took out aaline.
- * 
- * Revision 1.7  1993/12/03  12:11:17  john
- * ,
- * 
- * Revision 1.6  1993/11/18  09:40:22  john
- * Added laser-line
- * 
- * Revision 1.5  1993/10/15  16:23:36  john
- * y
- * 
- * Revision 1.4  1993/09/29  16:13:58  john
- * optimized
- * 
- * Revision 1.3  1993/09/26  18:44:12  matt
- * Added gr_uline(), which just calls gr_line(), and made both take
- * fixes, and shift down themselves.
- * 
- * Revision 1.2  1993/09/11  19:50:15  matt
- * In gr_vline() & gr_hline(), check for start > end, and EXCHG if so
- * 
- * Revision 1.1  1993/09/08  11:43:54  john
- * Initial revision
- * 
- *
- */
 
 #include <stdlib.h>
 
+#include "pa_enabl.h"
 #include "mem.h"
 
 #include "gr.h"
@@ -62,6 +21,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "fix.h"
 
 #include "clip.h"
+
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
 
 extern void gr_modex_line();
 int modex_line_vertincr;
@@ -308,7 +271,11 @@ int gr_uline(fix _a1, fix _b1, fix _a2, fix _b2)
 	switch(TYPE)
 	{
 	case BM_LINEAR:
+#ifndef MACINTOSH
 		gr_linear_line( a1, b1, a2, b2 );
+#else
+		gr_universal_uline( a1, b1, a2, b2 );
+#endif
 		return 0;
 	case BM_MODEX:
 		modex_line_x1 = a1+XOFFSET;		
@@ -339,10 +306,14 @@ int gr_line(fix a1, fix b1, fix a2, fix b2)
 
 	CLIPLINE(a1,b1,a2,b2,x1,y1,x2,y2,return 2,clipped=1, FSCALE );
 
+	#if defined(MACINTOSH)
+	if ( PAEnabled )
+		pa_draw_line( a1, b1, a2, b2 );
+	else
+	#endif
 	gr_uline( a1, b1, a2, b2 );
 
 	return clipped;
 
 }
 
-

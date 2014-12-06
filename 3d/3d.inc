@@ -1,114 +1,13 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/3d.inc $
-; $Revision: 1.30 $
-; $Author: matt $
-; $Date: 1995/02/09 22:00:50 $
-;
-; Header file for 3d library
-;
-; $Log: 3d.inc $
-; Revision 1.30  1995/02/09  22:00:50  matt
-; Removed dependence on divide overflow handler; we now check for overflow
-; before dividing.  This fixed problems on some TI chips.
-; 
-; Revision 1.29  1994/11/11  19:22:15  matt
-; Added new function, g3_calc_point_depth()
-; 
-; Revision 1.28  1994/09/09  14:24:13  matt
-; Added support for glowing textures, to add engine glow to Descent.
-; 
-; Revision 1.27  1994/09/01  10:42:26  matt
-; Blob routine, renamed g3_draw_bitmap(), now takes seperate 3d width & height.
-; 
-; Revision 1.26  1994/07/29  18:15:53  matt
-; Added instance by angles, and corrected parms for g3_init()
-; 
-; Revision 1.25  1994/07/25  00:00:01  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.24  1994/07/22  17:57:57  matt
-; Changed the name of the rod functions, and took out some debugging code
-; 
-; Revision 1.23  1994/06/07  16:49:35  matt
-; Made interpreter take lighting value as parm, rather than in global var
-; 
-; Revision 1.22  1994/05/31  18:35:19  matt
-; Added light value to g3_draw_facing_bitmap()
-; 
-; Revision 1.21  1994/05/30  22:48:15  matt
-; Added support for morph effect
-; 
-; Revision 1.20  1994/05/30  11:36:25  matt
-; Added g3_set_special_render() to allow a user to specify functions to
-; call for 2d draws.
-; 
-; Revision 1.19  1994/05/19  21:46:30  matt
-; Moved texture lighting out of 3d and into the game
-; 
-; Revision 1.18  1994/04/19  18:26:41  matt
-; Added g3_draw_sphere() function.
-; 
-; Revision 1.17  1994/03/25  18:22:39  matt
-; g3_draw_polygon_model() now takes ptr to list of angles
-; 
-; Revision 1.16  1994/03/15  21:23:14  matt
-; Added interpreter functions
-; 
-; Revision 1.15  1994/02/15  17:37:35  matt
-; New function, g3_draw_blob()
-; 
-; Revision 1.14  1994/02/10  18:00:10  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.13  1994/02/09  11:47:34  matt
-; Added rod & delta point functions
-; 
-; Revision 1.12  1994/01/26  12:38:20  matt
-; Added function g3_compute_lighting_value()
-; 
-; Revision 1.11  1994/01/24  14:08:24  matt
-; Added instancing functions
-; 
-; Revision 1.10  1994/01/22  18:22:07  matt
-; New lighting stuff now done in 3d; g3_draw_tmap() takes lighting parm
-; 
-; Revision 1.9  1994/01/20  17:21:46  matt
-; New function g3_compute_sky_polygon()
-; 
-; Revision 1.8  1994/01/14  17:21:02  matt
-; Added new function g3_draw_horizon()
-; 
-; Revision 1.6  1993/12/20  20:21:43  matt
-; Added g3_point_2_vec()
-; 
-; Revision 1.5  1993/12/05  23:47:13  matt
-; Added function g3_draw_line_ptrs()
-; 
-; Revision 1.4  1993/11/21  20:08:16  matt
-; Added functions g3_rotate_point & g3_draw_object
-; 
-; Revision 1.3  1993/11/04  18:49:42  matt
-; Made g3_init() have functionality of g3_set_points(), which I killed
-; 
-; Revision 1.2  1993/11/04  12:38:29  mike
-; Add PF_LVS, flag for lighting value
-; 
-; Revision 1.1  1993/10/29  22:20:27  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ifndef _3D_INC
 _3D_INC equ 1
 
@@ -178,7 +77,8 @@ _DATA	segment	dword public USE32 'DATA'
 
 	extf	Vertex_list
 
-	;;extw	_Frame_count
+;Variables local to 3d library
+	extd	free_point_num
 
 _DATA	ends
 
@@ -228,6 +128,7 @@ _TEXT	segment	dword public USE32 'CODE'
 
 ;from clipper.asm
 	extn	clip_line	;esi,edi=points (ptrs)
+	extn	reset_temp_points	;(takes nothing)
 	extn	free_temp_point	;esi=point (ptr)
 	extn	clip_polygon	;esi=src list,edi=dest list,ecx=n, al=codes_or
 
@@ -255,7 +156,9 @@ _TEXT	segment	dword public USE32 'CODE'
 	extn	g3_set_interp_points	;eax=ptr to list
 	extn	g3_draw_polygon_model	;esi=model ptr, edi=bitmap list ptr, eax=anim angles, edx=light, ebx=ptr to glow values (or NULL)
 	extn	g3_init_polygon_model	;esi=model ptr
+	extn	g3_uninit_polygon_model	;esi=model ptr
 	extn	g3_draw_morphing_model	;esi=model ptr, edi=bitmap list ptr, eax=anim angles, edx=light, ebx=new points
+	extn	g3_remap_interp_colors	;(void)
 
 _TEXT	ends
 
@@ -275,6 +178,16 @@ not_neg1:	shld	ecx,eax,1	;num * 2
 	cmp	ecx,den
 	pop	ecx
 	jae	lbl
+	endm
+
+;see if any free points left unfreed, and if so, reset the free point list
+check_free_points	macro
+	local	free_points_ok
+	test	free_point_num,-1
+	jz	free_points_ok
+	debug_brk	"Error: free_point_num != 0 after draw"
+	call	reset_temp_points
+free_points_ok:
 	endm
 
 

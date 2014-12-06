@@ -8,28 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/vesatest.c $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1993/12/21 11:40:47 $
- * 
- * .
- * 
- * $Log: vesatest.c $
- * Revision 1.3  1993/12/21  11:40:47  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/12/09  17:14:14  john
- * VESA test program.
- * 
- * Revision 1.1  1993/12/09  16:53:01  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
@@ -144,4 +124,3 @@ main()
 
 
 
-

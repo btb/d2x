@@ -8,63 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/mouse.c $
- * $Revision: 1.11 $
- * $Author: john $
- * $Date: 1995/02/10 18:52:17 $
- * 
- * Functions to access Mouse and Cyberman...
- * 
- * $Log: mouse.c $
- * Revision 1.11  1995/02/10  18:52:17  john
- * Fixed bug with mouse not getting closed.
- * 
- * Revision 1.10  1995/02/02  11:10:33  john
- * Changed a bunch of mouse stuff around to maybe get
- * around PS/2 mouse hang.
- * 
- * Revision 1.9  1995/01/14  19:19:52  john
- * Fixed signed short error cmp with -1 that caused mouse
- * to break under Watcom 10.0
- * 
- * Revision 1.8  1994/12/27  12:38:23  john
- * Made mouse use temporary dos buffer instead of
- * 
- * allocating its own.
- * 
- * 
- * Revision 1.7  1994/12/05  23:54:53  john
- * Fixed bug with mouse_get_delta only returning positive numbers..
- * 
- * Revision 1.6  1994/11/18  23:18:18  john
- * Changed some shorts to ints.
- * 
- * Revision 1.5  1994/09/13  12:34:02  john
- * Added functions to get down count and state.
- * 
- * Revision 1.4  1994/08/29  20:52:19  john
- * Added better cyberman support; also, joystick calibration
- * value return funcctiionn,
- * 
- * Revision 1.3  1994/08/24  18:54:32  john
- * *** empty log message ***
- * 
- * Revision 1.2  1994/08/24  18:53:46  john
- * Made Cyberman read like normal mouse; added dpmi module; moved
- * mouse from assembly to c. Made mouse buttons return time_down.
- * 
- * Revision 1.1  1994/08/24  13:56:37  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: mouse.c 1.11 1995/02/10 18:52:17 john Exp $";
+static char rcsid[] = "$Id: mouse.c 1.12 1995/11/22 11:30:10 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -362,12 +311,10 @@ int mouse_init(int enable_cyberman)
 	}
 
 	if (!dpmi_lock_region(&Mouse,sizeof(mouse_info)))	{
-		printf( "Unable to lock mouse data region" );
-		exit(1);
+		Error( "Unable to lock mouse data region" );
 	}
 	if (!dpmi_lock_region((void near *)mouse_handler,(char *)mouse_handler_end - (char near *)mouse_handler))	{
-		printf( "Unable to lock mouse handler" );
-		exit(1);
+		Error( "Unable to lock mouse handler" );
 	}
 
 	// Install mouse handler
@@ -609,4 +556,3 @@ void mouse_get_cyberman_pos( int *x, int *y )
 
 }
 
-

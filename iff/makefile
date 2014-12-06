@@ -7,11 +7,6 @@
 # Makefile for IFF library
 #
 
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
 # What to install
 INSTALL_TARGS = iff.lib iff.h
 
@@ -26,18 +21,19 @@ TEST_PROGS = ifftest ifftestv
 
 # What object files and libs for the test programs
 IFFTEST_SRCS = ifftest.c
-IFFTEST_LIBS = iff.lib gr.lib mem.lib bm.lib misc.lib cflib.lib cfile.lib
+IFFTEST_LIBS = iff.lib vga.lib gr.lib mem.lib misc.lib cfile.lib io.lib
 
 IFFTESTV_SRCS = ifftestv.c
 IFFTESTV_LIBS = iff.lib vesa.lib cflib.lib cfile.lib
 
-iff.lib: $(IFF_OBJS)
-	wlib iff.lib $(IFF_OBJS)
-	copy *.lib $(LIBDIR)
-iff.obj: iff.c
-	wcc386 $(CCFLAGS) iff.c
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+iff.obj: conio.h fix.h gr.h iff.h malloc.h mem.h stdio.h stdlib.h string.h \
+	 types.h
 
 ifftest.obj: conio.h fix.h gr.h iff.h stdio.h stdlib.h types.h
 
 ifftestv.obj: conio.h fix.h gr.h iff.h stdio.h types.h vesa.h
-

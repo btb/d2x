@@ -8,22 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/misc/rcs/parsarg.c $
- * $Revision: 1.1 $
- * $Author: matt $
- * $Date: 1993/09/09 17:32:03 $
- *
- * Source for parse_args() function.  See header file (parsarg.h) for info
- *
- * $Log: parsarg.c $
- * Revision 1.1  1993/09/09  17:32:03  matt
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: parsarg.c 1.1 1993/09/09 17:32:03 matt Exp $";

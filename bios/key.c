@@ -8,137 +8,13 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/key.c $
- * $Revision: 1.35 $
- * $Author: john $
- * $Date: 1995/01/25 20:13:30 $
- * 
- * Functions for keyboard handler.
- * 
- * $Log: key.c $
- * Revision 1.35  1995/01/25  20:13:30  john
- * Took out not passing keys to debugger if w10.
- * 
- * Revision 1.34  1995/01/14  19:19:31  john
- * Made so when you press Shift+Baskspace, it release keys autmatically.
- * 
- * Revision 1.33  1994/12/13  09:21:48  john
- * Took out keyd_editor_mode, and KEY_DEBUGGED stuff for NDEBUG versions.
- * 
- * Revision 1.32  1994/11/12  13:52:01  john
- * Fixed bug with code that cleared bios buffer.
- * 
- * Revision 1.31  1994/10/24  15:16:16  john
- * Added code to detect KEY_PAUSE.
- * 
- * Revision 1.30  1994/10/24  13:57:53  john
- * Hacked in support for pause key onto code 0x61.
- * 
- * Revision 1.29  1994/10/21  15:18:13  john
- * *** empty log message ***
- * 
- * Revision 1.28  1994/10/21  15:17:24  john
- * Made LSHIFT+BACKSPACE do what PrtScr used to.
- * 
- * Revision 1.27  1994/09/22  16:09:18  john
- * Fixed some virtual memory lockdown problems with timer and
- * joystick.
- * 
- * Revision 1.26  1994/09/15  21:32:47  john
- * Added bounds checking for down_count scancode
- * parameter.
- * 
- * Revision 1.25  1994/08/31  12:22:20  john
- * Added KEY_DEBUGGED
- * 
- * Revision 1.24  1994/08/24  18:53:48  john
- * Made Cyberman read like normal mouse; added dpmi module; moved
- * mouse from assembly to c. Made mouse buttons return time_down.
- * 
- * Revision 1.23  1994/08/18  15:17:51  john
- * *** empty log message ***
- * 
- * Revision 1.22  1994/08/18  15:16:38  john
- * fixed some bugs with clear_key_times and then
- * removed it because i fixed key_flush to do the
- * same.
- * 
- * Revision 1.21  1994/08/17  19:01:25  john
- * Attempted to fix a bug with a key being held down
- * key_flush called, then the key released having too 
- * long of a time.
- * 
- * Revision 1.20  1994/08/08  10:43:48  john
- * Recorded when a key was pressed for key_inkey_time.
- * 
- * Revision 1.19  1994/06/22  15:00:03  john
- * Made keyboard close automatically on exit.
- * 
- * Revision 1.18  1994/06/21  09:16:29  john
- * *** empty log message ***
- * 
- * Revision 1.17  1994/06/21  09:08:23  john
- * *** empty log message ***
- * 
- * Revision 1.16  1994/06/21  09:05:01  john
- * *** empty log message ***
- * 
- * Revision 1.15  1994/06/21  09:04:24  john
- * Made PrtScreen do an int5
- * 
- * Revision 1.14  1994/06/17  17:17:06  john
- * Added keyd_time_last_key_was_pressed or something like that.
- * 
- * Revision 1.13  1994/05/14  13:55:16  matt
- * Added #define to control key passing to bios
- * 
- * Revision 1.12  1994/05/05  18:09:39  john
- * Took out BIOS to prevent stuck keys.
- * 
- * Revision 1.11  1994/05/03  17:39:12  john
- * *** empty log message ***
- * 
- * Revision 1.10  1994/04/29  12:14:20  john
- * Locked all memory used during interrupts so that program
- * won't hang when using virtual memory.
- * 
- * Revision 1.9  1994/04/28  23:49:41  john
- * Made key_flush flush more keys and also did something else but i forget what.
- * 
- * Revision 1.8  1994/04/22  12:52:12  john
- * *** empty log message ***
- * 
- * Revision 1.7  1994/04/01  10:44:59  mike
- * Change key_getch() to call getch() if our interrupt hasn't been installed.
- * 
- * Revision 1.6  1994/03/09  10:45:48  john
- * Neatend code a bit.
- * 
- * Revision 1.5  1994/02/17  17:24:16  john
- * Neatened up a bit.
- * 
- * Revision 1.4  1994/02/17  16:30:29  john
- * Put in code to pass keys when in debugger.
- * 
- * Revision 1.3  1994/02/17  15:57:59  john
- * Made handler not chain to BIOS handler.
- * 
- * Revision 1.2  1994/02/17  15:56:06  john
- * Initial version.
- * 
- * Revision 1.1  1994/02/17  15:54:07  john
- * Initial revision
- * 
- * 
- */
 
 //#define PASS_KEYS_TO_BIOS	1			//if set, bios gets keys
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: key.c 1.35 1995/01/25 20:13:30 john Exp $";
+static char rcsid[] = "$Id: key.c 1.38 1996/06/13 13:07:59 jed Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -222,13 +98,30 @@ extern char key_to_ascii(int keycode )
 		return ascii_table[keycode];
 }
 
+
+void key_putkey (unsigned short keycode)
+ {
+  // this function simulates a key stroke entered
+  char temp;
+  
+
+  temp = key_data.keytail+1;
+  if ( temp >= KEY_BUFFER_SIZE ) temp=0;
+  if (temp!=key_data.keyhead)	
+    {
+  		key_data.keybuffer[key_data.keytail] = keycode;
+  		key_data.keytail = temp;
+    }
+ }  
+ 
+
 void key_clear_bios_buffer_all()
 {
 	// Clear keyboard buffer...
 	*(ushort *)0x41a=*(ushort *)0x41c;
 	// Clear the status bits...
-	*(ubyte *)0x417 = 0;
-	*(ubyte *)0x418 = 0;
+//	*(ubyte *)0x417 = 0;
+//	*(ubyte *)0x418 = 0;
 }
 
 void key_clear_bios_buffer()
@@ -571,10 +464,15 @@ void __interrupt __far key_handler()
 void key_handler_end()	{		// Dummy function to help calculate size of keyboard handler function
 }
 
+ubyte Status1,Status2;
+
 void key_init()
 {
 	// Initialize queue
 
+	Status1= *(ubyte*)0x417;
+	Status2= *(ubyte*)0x418;
+ 
 	keyd_time_when_last_pressed = timer_get_fixed_seconds();
 	keyd_buffer_type = 1;
 	keyd_repeat = 1;
@@ -590,40 +488,31 @@ void key_init()
 
 	//--------------- lock everything for the virtal memory ----------------------------------
 	if (!dpmi_lock_region ((void near *)key_handler, (char *)key_handler_end - (char near *)key_handler))	{
-		printf( "Error locking keyboard handler!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler!\n" );
 	}
 	if (!dpmi_lock_region (&key_data, sizeof(keyboard)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_buffer_type, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_repeat, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_editor_mode, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_last_pressed, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_last_released, sizeof(char)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_pressed, sizeof(char)*256))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 	if (!dpmi_lock_region (&keyd_time_when_last_pressed, sizeof(int)))	{
-		printf( "Error locking keyboard handler's data!\n" );
-		exit(1);
+		Error( "Can't lock keyboard handler's data!\n" );
 	}
 
 	key_data.prev_int_9 = _dos_getvect( 9 );
@@ -642,6 +531,7 @@ void key_close()
 	_disable();
 	key_clear_bios_buffer_all();
 	_enable();
-
+  
+	*(ubyte*)0x417=Status1;
+	*(ubyte*)0x418=Status2;
 }
-

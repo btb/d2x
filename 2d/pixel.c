@@ -8,40 +8,19 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/pixel.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:26 $
- *
- * Graphical routines for setting a pixel.
- *
- * $Log: pixel.c $
- * Revision 1.5  1994/11/18  22:50:26  john
- * Changed shorts to ints in parameters.
- * 
- * Revision 1.4  1993/10/15  16:22:26  john
- * *** empty log message ***
- * 
- * Revision 1.3  1993/09/29  17:31:27  john
- * optimized vesa pixel stuff
- * 
- * Revision 1.2  1993/09/29  16:15:15  john
- * optimized
- * 
- * Revision 1.1  1993/09/08  11:44:09  john
- * Initial revision
- * 
- *
- */
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "mem.h"
 
 #include "gr.h"
 #include "grdef.h"
 
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#include "error.h"
+#endif
 
 void gr_upixel( int x, int y )
 {
@@ -57,7 +36,18 @@ void gr_upixel( int x, int y )
 	case BM_SVGA:
 		gr_vesa_pixel( COLOR, (unsigned int)DATA + (unsigned int)ROWSIZE * y + x);
 		return;
-	}
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short *p = (unsigned short *)(DATA + y * ROWSIZE + x * PA_BPP);
+        while(!pa_idle());
+        *p = pa_clut[COLOR];
+        return;
+    }
+    default:
+        Int3();
+#endif
+    }
 }
 
 void gr_pixel( int x, int y )
@@ -76,7 +66,18 @@ void gr_pixel( int x, int y )
 	case BM_SVGA:
 		gr_vesa_pixel( COLOR, (unsigned int)DATA + (unsigned int)ROWSIZE * y + x);
 		return;
-	}
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short *p = (unsigned short *)(DATA + y * ROWSIZE + x * PA_BPP);
+        while(!pa_idle());
+        *p = pa_clut[COLOR];
+        return;
+    }
+    default:
+        Int3();
+#endif
+    }
 }
 
 void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color )
@@ -95,7 +96,18 @@ void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color )
 	case BM_SVGA:
 		gr_vesa_pixel(color,(unsigned int)bm->bm_data + (unsigned int)bm->bm_rowsize * y + x);
 		return;
-	}
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short *p = (unsigned short *)(bm->bm_data + y * bm->bm_rowsize + x * PA_BPP);
+        while(!pa_idle());
+        *p = pa_clut[color];
+        return;
+    }
+    default:
+        Int3();
+#endif
+    }
 }
 
 void gr_bm_pixel( grs_bitmap * bm, int x, int y, unsigned char color )
@@ -116,7 +128,17 @@ void gr_bm_pixel( grs_bitmap * bm, int x, int y, unsigned char color )
 	case BM_SVGA:
 		gr_vesa_pixel(color,(unsigned int)bm->bm_data + (unsigned int)bm->bm_rowsize * y + x);
 		return;
-	}
+#if defined(POLY_ACC)
+    case BM_LINEAR15:
+    {
+        unsigned short *p = (unsigned short *)(bm->bm_data + y * bm->bm_rowsize + x * PA_BPP);
+        while(!pa_idle());
+        *p = pa_clut[color];
+        return;
+    }
+    default:
+        Int3();
+#endif
+    }
 }
 
-

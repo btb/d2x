@@ -8,34 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/uidraw.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 23:07:34 $
- *
- * Graphics primatives for the ui gadgets and windows.
- *
- * $Log: uidraw.c $
- * Revision 1.5  1994/11/18  23:07:34  john
- * Changed a bunch of shorts to ints.
- * 
- * Revision 1.4  1994/09/13  11:20:22  john
- * Made ui_string_centered not clip.
- * 
- * Revision 1.3  1993/10/26  13:46:33  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/10/05  17:31:00  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/09/20  10:35:41  john
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: uidraw.c 1.5 1994/11/18 23:07:34 john Exp $";
@@ -143,4 +117,3 @@ void ui_draw_line_in( short x1, short y1, short x2, short y2 )
 
 
 
-

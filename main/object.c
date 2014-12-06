@@ -8,314 +8,17 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/object.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/06/15 12:30:51 $
- * 
- * object rendering
- * 
- * $Log: object.c $
- * Revision 2.3  1995/06/15  12:30:51  john
- * Fixed bug with multiplayer ships cloaking out wrongly.
- * 
- * Revision 2.2  1995/05/15  11:34:53  john
- * Fixed bug as Matt directed that fixed problems with the exit
- * triggers being missed on slow frame rate computer.
- * 
- * Revision 2.1  1995/03/21  14:38:51  john
- * Ifdef'd out the NETWORK code.
- * 
- * Revision 2.0  1995/02/27  11:28:14  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.335  1995/02/22  12:57:30  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.334  1995/02/09  22:04:40  mike
- * fix lifeleft on badass weapons.
- * 
- * Revision 1.333  1995/02/08  12:54:00  matt
- * Fixed object freeing code which was deleting some explosions it shouldn't
- * 
- * Revision 1.332  1995/02/08  11:37:26  mike
- * Check for failures in call to obj_create.
- * 
- * Revision 1.331  1995/02/05  17:48:52  rob
- * Changed assert in obj_relink, more robust.
- * 
- * Revision 1.330  1995/02/05  13:39:48  mike
- * remove invulnerability effect code (actually, comment out).
- * 
- * Revision 1.329  1995/02/04  12:29:52  rob
- * Get rid of potential assert error for explosion detachment.
- * 
- * Revision 1.328  1995/02/01  18:15:57  rob
- * Removed debugging output from engine glow change.
- * 
- * Revision 1.327  1995/02/01  16:20:12  matt
- * Made engine glow vary over a wider range, and made the glow be based
- * on thrust/speed, without regard to direction.
- * 
- * Revision 1.326  1995/01/29  14:46:24  rob
- * Fixed invul. vclip to only appear on player who is invul.
- * 
- * Revision 1.325  1995/01/29  13:48:16  mike
- * Add invulnerability graphical effect viewable by other players.
- * 
- * Revision 1.324  1995/01/29  11:39:25  mike
- * Add invulnerability effect.
- * 
- * Revision 1.323  1995/01/27  17:02:41  mike
- * add more information to an Error call.
- * 
- * Revision 1.322  1995/01/26  22:11:30  mike
- * Purple chromo-blaster (ie, fusion cannon) spruce up (chromification)
- * 
- * Revision 1.321  1995/01/25  20:04:10  matt
- * Moved matrix check to avoid orthogonalizing an uninitialize matrix
- * 
- * Revision 1.320  1995/01/25  12:11:35  matt
- * Make sure orient matrix is orthogonal when resetting player object
- * 
- * Revision 1.319  1995/01/21  21:46:22  mike
- * Optimize code in Assert (and prevent warning message).
- * 
- * Revision 1.318  1995/01/21  21:22:16  rob
- * Removed HUD clear messages.
- * Added more Asserts to try and find illegal control type bug.
- * 
- * Revision 1.317  1995/01/15  15:34:30  matt
- * When freeing object slots, don't free fireballs that will be deleting
- * other objects.
- * 
- * Revision 1.316  1995/01/14  19:16:48  john
- * First version of new bitmap paging code.
- * 
- * Revision 1.315  1995/01/12  18:53:37  john
- * Fixed parameter passing error.
- * 
- * Revision 1.314  1995/01/12  12:09:47  yuan
- * Added coop object capability.
- * 
- * Revision 1.313  1994/12/15  16:45:44  matt
- * Took out slew stuff for release version
- * 
- * Revision 1.312  1994/12/15  13:04:25  mike
- * Replace Players[Player_num].time_total references with GameTime.
- * 
- * Revision 1.311  1994/12/15  11:01:04  mike
- * add Object_minus_one for debugging.
- * 
- * Revision 1.310  1994/12/15  03:03:33  matt
- * Added error checking for NULL return from object_create_explosion()
- * 
- * Revision 1.309  1994/12/14  17:25:31  matt
- * Made next viewer func based on release not ndebug
- * 
- * Revision 1.308  1994/12/13  12:55:42  mike
- * hostages on board messages for when you die.
- * 
- * Revision 1.307  1994/12/12  17:18:11  mike
- * make boss cloak/teleport when get hit, make quad laser 3/4 as powerful.
- * 
- * Revision 1.306  1994/12/12  00:27:11  matt
- * Added support for no-levelling option
- * 
- * Revision 1.305  1994/12/11  22:41:14  matt
- * Added command-line option, -nolevel, which turns off player ship levelling
- * 
- * Revision 1.304  1994/12/11  22:03:23  mike
- * free up object slots as necessary.
- * 
- * Revision 1.303  1994/12/11  14:09:31  mike
- * make boss explosion sounds softer.
- * 
- * Revision 1.302  1994/12/11  13:25:11  matt
- * Restored calls to fix_object_segs() when debugging is turned off, since
- * it's not a big routine, and could fix some possibly bad problems.
- * 
- * Revision 1.301  1994/12/11  12:38:25  mike
- * make boss explosion sounds louder in create_small_fireball.
- * 
- * Revision 1.300  1994/12/10  15:28:37  matt
- * Added asserts for debugging
- * 
- * Revision 1.299  1994/12/09  16:18:51  matt
- * Fixed init_player_object, for editor
- * 
- * Revision 1.298  1994/12/09  15:03:10  matt
- * Two changes for Mike:
- *   1.  Do better placement of camera during death sequence (prevents hang)
- *   2.  Only record dodging information if the player fired in a frame
- * 
- * Revision 1.297  1994/12/09  14:59:12  matt
- * Added system to attach a fireball to another object for rendering purposes,
- * so the fireball always renders on top of (after) the object.
- * 
- * Revision 1.296  1994/12/08  20:05:07  matt
- * Removed unneeded debug message
- * 
- * Revision 1.295  1994/12/08  12:36:02  matt
- * Added new object allocation & deallocation functions so other code
- * could stop messing around with internal object data structures.
- * 
- * Revision 1.294  1994/12/07  20:13:37  matt
- * Added debris object limiter
- * 
- * Revision 1.293  1994/12/06  16:58:38  matt
- * Killed warnings
- * 
- * Revision 1.292  1994/12/05  22:34:35  matt
- * Make tmap_override objects use override texture as alt texture.  This 
- * should have the effect of making simpler models use the override texture.
- * 
- * Revision 1.291  1994/12/05  12:23:53  mike
- * make camera start closer, but move away from player in death sequence.
- * 
- * Revision 1.290  1994/12/02  11:11:18  mike
- * hook sound effect to player small explosions (ctrlcen, too).
- * 
- * Revision 1.289  1994/11/28  21:50:52  mike
- * optimizations.
- * 
- * Revision 1.288  1994/11/27  23:12:28  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.287  1994/11/27  20:35:50  matt
- * Fixed dumb mistake
- * 
- * Revision 1.286  1994/11/27  20:30:52  matt
- * Got rid of warning
- * 
- * Revision 1.285  1994/11/21  11:43:21  mike
- * ndebug stuff.
- * 
- * Revision 1.284  1994/11/19  15:19:37  mike
- * rip out unused code and data.
- * 
- * Revision 1.283  1994/11/18  23:41:59  john
- * Changed some shorts to ints.
- * 
- * Revision 1.282  1994/11/18  16:16:17  mike
- * Separate depth on objects vs. walls.
- * 
- * Revision 1.281  1994/11/18  12:05:35  rob
- * Removed unnecessary invulnerability flag set in player death.
- * (I hope its unnecessary.. its commented out if it proves crucial)
- * fixes powerup dropping bug for net play.
- * 
- * Revision 1.280  1994/11/16  20:36:34  rob
- * Changed player explosion (small) code.
- * 
- * Revision 1.279  1994/11/16  18:26:04  matt
- * Clear tmap override on player, to fix "rock ship" bug
- * 
- * Revision 1.278  1994/11/16  14:54:12  rob
- * Moved hook for network explosions.
- * 
- * Revision 1.277  1994/11/14  11:40:42  mike
- * plot inner polygon on laser based on detail level.
- * 
- * Revision 1.276  1994/11/10  14:02:59  matt
- * Hacked in support for player ships with different textures
- * 
- * Revision 1.275  1994/11/08  12:19:08  mike
- * Make a generally useful function for putting small explosions on any object.
- * 
- * Revision 1.274  1994/11/04  19:55:54  rob
- * Changed calls to player_explode to accomodate new parameter.
- * 
- * Revision 1.273  1994/11/02  21:54:27  matt
- * Delete the camera when the death sequence is done
- * 
- * Revision 1.272  1994/11/02  11:36:35  rob
- * Added player-in-process-of-dying explosions to network play.
- * 
- * Revision 1.271  1994/10/31  17:25:33  matt
- * Fixed cloaked bug
- * 
- * Revision 1.270  1994/10/31  16:11:19  allender
- * on demo recording, store letterbox mode in demo.
- * 
- * Revision 1.269  1994/10/31  10:36:18  mike
- * Make cloak effect fadein/fadeout different for robots versus player.
- * 
- * Revision 1.268  1994/10/30  14:11:44  mike
- * rip out repair center stuff.
- * 
- * Revision 1.267  1994/10/28  19:43:52  mike
- * Boss cloaking effect.
- * 
- * Revision 1.266  1994/10/27  11:33:42  mike
- * Add Highest_ever_object_index -- high water mark in object creation.
- * 
- * Revision 1.265  1994/10/25  10:51:12  matt
- * Vulcan cannon powerups now contain ammo count
- * 
- * Revision 1.264  1994/10/24  20:49:24  matt
- * Made cloaked objects pulse
- * 
- * Revision 1.263  1994/10/21  12:19:45  matt
- * Clear transient objects when saving (& loading) games
- * 
- * Revision 1.262  1994/10/21  11:25:23  mike
- * Use new constant IMMORTAL_TIME.
- * 
- * Revision 1.261  1994/10/19  16:50:35  matt
- * If out of segment, put player in center of segment when checking objects
- * 
- * 
- * Revision 1.260  1994/10/17  23:21:55  mike
- * Clean up robot cloaking, move more to ai.c
- * 
- * Revision 1.259  1994/10/17  21:34:49  matt
- * Added support for new Control Center/Main Reactor
- * 
- * Revision 1.258  1994/10/17  21:18:04  mike
- * robot cloaking.
- * 
- * Revision 1.257  1994/10/17  14:12:23  matt
- * Cleaned up problems with player dying from mine explosion
- * 
- * Revision 1.256  1994/10/15  19:04:31  mike
- * Don't remove proximity bombs after you die.
- * 
- * Revision 1.255  1994/10/14  15:57:00  mike
- * Don't show ids in network mode.
- * Fix, I hope, but in death sequence.
- * 
- * Revision 1.254  1994/10/12  08:04:29  mike
- * Don't decloak player on death.
- * 
- * Revision 1.253  1994/10/11  20:36:16  matt
- * Clear "transient" objects (weapons,explosions,etc.) when starting a level
- * 
- * Revision 1.252  1994/10/11  12:24:09  matt
- * Cleaned up/change badass explosion calls
- * 
- * Revision 1.251  1994/10/08  19:30:20  matt
- * Fixed (I hope) a bug in cloaking of multiplayer objects
- * 
- * Revision 1.250  1994/10/08  14:03:15  rob
- * Changed cloaking routine.
- * 
- * Revision 1.249  1994/10/07  22:17:27  mike
- * Asserts on valid segnum.
- * 
- * Revision 1.248  1994/10/07  19:11:14  matt
- * Added cool cloak transition effect
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: object.c 2.3 1995/06/15 12:30:51 john Exp $";
+static char rcsid[] = "$Id: object.c 2.89 1996/10/11 18:40:20 matt Exp $";
 #pragma on (unreferenced)
+
+#ifdef WINDOWS
+#include "desw.h"
+#endif
 
 #include <string.h>	// for memset
 #include <stdio.h>
@@ -345,12 +48,14 @@ static char rcsid[] = "$Id: object.c 2.3 1995/06/15 12:30:51 john Exp $";
 #include "fireball.h"
 #include "laser.h"
 #include "error.h"
+#include "pa_enabl.h"
 #include "ai.h"
 #include "hostage.h"
 #include "morph.h"
 #include "cntrlcen.h"
 #include "powerup.h"
 #include "fuelcen.h"
+#include "endlevel.h"
 
 #include "sounds.h"
 #include "collide.h"
@@ -368,14 +73,25 @@ static char rcsid[] = "$Id: object.c 2.3 1995/06/15 12:30:51 john Exp $";
 #include "args.h"
 #include "text.h"
 #include "piggy.h"
+#include "switch.h"
+
+#ifdef TACTILE
+#include "tactile.h"
+#endif
 
 #ifdef EDITOR
 #include "editor\editor.h"
 #endif
 
+#ifdef _3DFX
+#include "3dfx_des.h"
+#endif
+
 /*
  *  Global variables
  */
+
+extern byte WasRecorded[MAX_OBJECTS];
 
 ubyte CollisionResult[MAX_OBJECT_TYPES][MAX_OBJECT_TYPES];
 
@@ -413,9 +129,7 @@ int print_object_info = 0;
 
 //--unused-- int Player_controller_type = 0;
 
-//	List of objects rendered last frame in order.  Created at render time, used by homing missiles in laser.c
-short ordered_rendered_object_list[MAX_RENDERED_OBJECTS];
-int	Num_rendered_objects = 0;
+window_rendered_data Window_rendered_data[MAX_RENDERED_WINDOWS];
 
 #ifndef NDEBUG
 char	Object_type_names[MAX_OBJECT_TYPES][9] = {
@@ -434,6 +148,7 @@ char	Object_type_names[MAX_OBJECT_TYPES][9] = {
 	"GHOST   ",
 	"LIGHT   ",
 	"COOP    ",
+	"MARKER  ",
 };
 #endif
 
@@ -459,22 +174,98 @@ void object_goto_next_viewer()
 	Error( "Couldn't find a viewer object!" );
 
 }
+
+//set viewer object to next object in array
+void object_goto_prev_viewer()
+{
+	int i, start_obj = 0;
+
+	start_obj = Viewer - Objects;		//get viewer object number
+	
+	for (i=0; i<=Highest_object_index; i++) {
+
+		start_obj--;
+		if (start_obj < 0 ) start_obj = Highest_object_index;
+
+		if (Objects[start_obj].type != OBJ_NONE )	{
+			Viewer = &Objects[start_obj];
+			return;
+		}
+	}
+
+	Error( "Couldn't find a viewer object!" );
+
+}
 #endif
+
+object *obj_find_first_of_type (int type)
+ {
+  int i;
+
+  for (i=0;i<=Highest_object_index;i++)
+	if (Objects[i].type==type)
+	 return (&Objects[i]);
+  return ((object *)NULL);
+ }
+
+int obj_return_num_of_type (int type)
+ {
+  int i,count=0;
+
+  for (i=0;i<=Highest_object_index;i++)
+	if (Objects[i].type==type)
+	 count++;
+  return (count);
+ }
+int obj_return_num_of_typeid (int type,int id)
+ {
+  int i,count=0;
+
+  for (i=0;i<=Highest_object_index;i++)
+	if (Objects[i].type==type && Objects[i].id==id)
+	 count++;
+  return (count);
+ }
+
+int global_orientation = 0;
 
 //draw an object that has one bitmap & doesn't rotate
 void draw_object_blob(object *obj,bitmap_index bmi)
 {
+	int	orientation=0;
 	grs_bitmap * bm = &GameBitmaps[bmi.index];
+
+
+	if (obj->type == OBJ_FIREBALL)
+		orientation = (obj-Objects) & 7;
+
+	orientation = global_orientation;
+
+//@@#ifdef WINDOWS
+//@@	if (obj->type == OBJ_POWERUP) {
+//@@		if ( GameBitmaps[(bmi).index].bm_flags & BM_FLAG_PAGED_OUT) 
+//@@			piggy_bitmap_page_in_w( bmi,1 );
+//@@	}
+//@@	if (bm->bm_handle) {
+//@@		DDGRUNLOCK(dd_grd_curcanv);
+//@@	}
+//@@#else
 	PIGGY_PAGE_IN( bmi );
+//@@#endif	
 
 	if (bm->bm_w > bm->bm_h)
 
-		g3_draw_bitmap(&obj->pos,obj->size,fixmuldiv(obj->size,bm->bm_h,bm->bm_w),bm);
+		g3_draw_bitmap(&obj->pos,obj->size,fixmuldiv(obj->size,bm->bm_h,bm->bm_w),bm, orientation);
 
 	else 
 
-		g3_draw_bitmap(&obj->pos,fixmuldiv(obj->size,bm->bm_w,bm->bm_h),obj->size,bm);
+		g3_draw_bitmap(&obj->pos,fixmuldiv(obj->size,bm->bm_w,bm->bm_h),obj->size,bm, orientation);
 
+//@@#ifdef WINDOWS
+//@@	if (bm->bm_handle) {
+//@@		DDGRLOCK(dd_grd_curcanv);
+//@@	}
+//@@#endif
 }
 
 //draw an object that is a texture-mapped rod
@@ -487,6 +278,8 @@ void draw_object_tmap_rod(object *obj,bitmap_index bitmapi,int lighted)
 	g3s_point top_p,bot_p;
 
 	PIGGY_PAGE_IN(bitmapi);
+
+   bitmap->bm_handle = bitmapi.index;
 
 	vm_vec_copy_scale(&delta,&obj->orient.uvec,obj->size);
 
@@ -501,7 +294,19 @@ void draw_object_tmap_rod(object *obj,bitmap_index bitmapi,int lighted)
 	else
 		light = f1_0;
 
+   #ifdef _3DFX
+   _3dfx_rendering_poly_obj = 1;
+   #endif
+
+	#ifdef PA_3DFX_VOODOO
+	light = f1_0;
+	#endif
+
 	g3_draw_rod_tmap(bitmap,&bot_p,obj->size,&top_p,obj->size,light);
+
+   #ifdef _3DFX
+   _3dfx_rendering_poly_obj = 0;
+   #endif
 
 }
 
@@ -525,16 +330,16 @@ extern void draw_tmap_flat();
 #define	CLOAK_FADEIN_DURATION_ROBOT	F1_0
 #define	CLOAK_FADEOUT_DURATION_ROBOT	F1_0
 
-fix	Cloak_fadein_duration;
-fix	Cloak_fadeout_duration;
-
 //do special cloaked render
-draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time,bitmap_index * alt_textures)
+draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time)
 {
 	fix cloak_delta_time,total_cloaked_time;
 	fix light_scale;
 	int cloak_value;
 	int fading=0;		//if true, fading, else cloaking
+	fix	Cloak_fadein_duration;
+	fix	Cloak_fadeout_duration;
+
 
 	total_cloaked_time = cloak_end_time-cloak_start_time;
 
@@ -555,12 +360,13 @@ draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix clo
 
 	if (cloak_delta_time < Cloak_fadein_duration/2) {
 
-		light_scale = Cloak_fadein_duration/2 - cloak_delta_time;
+		light_scale = fixdiv(Cloak_fadein_duration/2 - cloak_delta_time,Cloak_fadein_duration/2);
 		fading = 1;
+
 	}
 	else if (cloak_delta_time < Cloak_fadein_duration) {
 
-		cloak_value = f2i((cloak_delta_time - Cloak_fadein_duration/2) * CLOAKED_FADE_LEVEL);
+		cloak_value = f2i(fixdiv(cloak_delta_time - Cloak_fadein_duration/2,Cloak_fadein_duration/2) * CLOAKED_FADE_LEVEL);
 
 	} else if (GameTime < cloak_end_time-Cloak_fadeout_duration) {
 		static int cloak_delta=0,cloak_dir=1;
@@ -584,26 +390,33 @@ draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix clo
 	
 	} else if (GameTime < cloak_end_time-Cloak_fadeout_duration/2) {
 
-		cloak_value = f2i((total_cloaked_time - Cloak_fadeout_duration/2 - cloak_delta_time) * CLOAKED_FADE_LEVEL);
+		cloak_value = f2i(fixdiv(total_cloaked_time - Cloak_fadeout_duration/2 - cloak_delta_time,Cloak_fadeout_duration/2) * CLOAKED_FADE_LEVEL);
 
 	} else {
 
-		light_scale = Cloak_fadeout_duration/2 - (total_cloaked_time - cloak_delta_time);
+		light_scale = fixdiv(Cloak_fadeout_duration/2 - (total_cloaked_time - cloak_delta_time),Cloak_fadeout_duration/2);
 		fading = 1;
 	}
 
 
 	if (fading) {
-		fix new_light,new_glow;
+		fix new_light,save_glow;
+		bitmap_index * alt_textures = NULL;
+
+		if ( obj->rtype.pobj_info.alt_textures > 0 )
+			alt_textures = multi_player_textures[obj->rtype.pobj_info.alt_textures-1];
 
 		new_light = fixmul(light,light_scale);
-		new_glow = fixmul(*glow,light_scale);
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,new_light,&new_glow, alt_textures );
+		save_glow = glow[0];
+		glow[0] = fixmul(glow[0],light_scale);
+		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,new_light,glow, alt_textures );
+		glow[0] = save_glow;
 	}
 	else {
 		Gr_scanline_darkening_level = cloak_value;
+		gr_setcolor(BM_XRGB(0,0,0));	//set to black (matters for s3)
 		g3_set_special_render(draw_tmap_flat,NULL,NULL);		//use special flat drawer
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,glow, alt_textures );
+		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,glow,NULL );
 		g3_set_special_render(NULL,NULL,NULL);
 		Gr_scanline_darkening_level = GR_FADE_LEVELS;
 	}
@@ -615,62 +428,97 @@ void draw_polygon_object(object *obj)
 {
 	fix light;
 	int	imsave;
-	fix engine_glow_value;
+	fix engine_glow_value[2];		//element 0 is for engine glow, 1 for headlight
 
 	light = compute_object_light(obj,NULL);
+
+	//	If option set for bright players in netgame, brighten them!
+	if (Game_mode & GM_MULTI)
+		if (Netgame.BrightPlayers)
+			light = F1_0;
+
+	//make robots brighter according to robot glow field
+	if (obj->type == OBJ_ROBOT)
+		light += (Robot_info[obj->id].glow<<12);		//convert 4:4 to 16:16
+
+	if (obj->type == OBJ_WEAPON)
+		if (obj->id == FLARE_ID)
+			light += F1_0*2;
+
+	if (obj->type == OBJ_MARKER)
+ 		light += F1_0*2;
+
 
 	imsave = Interpolation_method;
 	if (Linear_tmap_polygon_objects)
 		Interpolation_method = 1;
 
 	//set engine glow value
-	engine_glow_value = f1_0/5;
+	engine_glow_value[0] = f1_0/5;
 	if (obj->movement_type == MT_PHYSICS) {
 
 		if (obj->mtype.phys_info.flags & PF_USES_THRUST && obj->type==OBJ_PLAYER && obj->id==Player_num) {
 			fix thrust_mag = vm_vec_mag_quick(&obj->mtype.phys_info.thrust);
-			engine_glow_value += (fixdiv(thrust_mag,Player_ship->max_thrust)*4)/5;
+			engine_glow_value[0] += (fixdiv(thrust_mag,Player_ship->max_thrust)*4)/5;
 		}
 		else {
 			fix speed = vm_vec_mag_quick(&obj->mtype.phys_info.velocity);
-			engine_glow_value += (fixdiv(speed,MAX_VELOCITY)*4)/5;
+			engine_glow_value[0] += (fixdiv(speed,MAX_VELOCITY)*3)/5;
 		}
+	}
+
+	//set value for player headlight
+	if (obj->type == OBJ_PLAYER) {
+		if (Players[obj->id].flags & PLAYER_FLAGS_HEADLIGHT && !Endlevel_sequence)
+			if (Players[obj->id].flags & PLAYER_FLAGS_HEADLIGHT_ON)
+				engine_glow_value[1] = -2;		//draw white!
+			else
+				engine_glow_value[1] = -1;		//draw normal color (grey)
+		else
+			engine_glow_value[1] = -3;			//don't draw
 	}
 
 	if (obj->rtype.pobj_info.tmap_override != -1) {
 		polymodel *pm = &Polygon_models[obj->rtype.pobj_info.model_num];
-		bitmap_index bm_ptrs[10];
+		bitmap_index bm_ptrs[12];
 
 		int i;
 
-		Assert(pm->n_textures<=10);
+		Assert(pm->n_textures<=12);
 
-		for (i=0;i<pm->n_textures;i++)
+		for (i=0;i<12;i++)		//fill whole array, in case simple model needs more
 			bm_ptrs[i] = Textures[obj->rtype.pobj_info.tmap_override];
 
-		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,bm_ptrs);
+		draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,engine_glow_value,bm_ptrs);
 	}
 	else {
-		bitmap_index * alt_textures = NULL;
-	
-		#ifdef NETWORK
-		if ( obj->rtype.pobj_info.alt_textures > 0 )
-			alt_textures = multi_player_textures[obj->rtype.pobj_info.alt_textures-1];
-		#endif
 
 		if (obj->type==OBJ_PLAYER && (Players[obj->id].flags&PLAYER_FLAGS_CLOAKED))
-			draw_cloaked_object(obj,light,&engine_glow_value,Players[obj->id].cloak_time,Players[obj->id].cloak_time+CLOAK_TIME_MAX,alt_textures);
+			draw_cloaked_object(obj,light,engine_glow_value,Players[obj->id].cloak_time,Players[obj->id].cloak_time+CLOAK_TIME_MAX);
 		else if ((obj->type == OBJ_ROBOT) && (obj->ctype.ai_info.CLOAKED)) {
 			if (Robot_info[obj->id].boss_flag)
-				draw_cloaked_object(obj,light,&engine_glow_value, Boss_cloak_start_time, Boss_cloak_end_time,alt_textures);
+				draw_cloaked_object(obj,light,engine_glow_value, Boss_cloak_start_time, Boss_cloak_end_time);
 			else
-				draw_cloaked_object(obj,light,&engine_glow_value, GameTime-F1_0*10, GameTime+F1_0*10,alt_textures);
+				draw_cloaked_object(obj,light,engine_glow_value, GameTime-F1_0*10, GameTime+F1_0*10);
 		} else {
-			draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,alt_textures);
+			bitmap_index * alt_textures = NULL;
+	
+			#ifdef NETWORK
+			if ( obj->rtype.pobj_info.alt_textures > 0 )
+				alt_textures = multi_player_textures[obj->rtype.pobj_info.alt_textures-1];
+			#endif
+
+			//	Snipers get bright when they fire.
+			if (Ai_local_info[obj-Objects].next_fire < F1_0/8) {
+				if (obj->ctype.ai_info.behavior == AIB_SNIPE)
+					light = 2*light + F1_0;
+			}
+
+			draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,obj->rtype.pobj_info.model_num,obj->rtype.pobj_info.subobj_flags,light,engine_glow_value,alt_textures);
 			if (obj->type == OBJ_WEAPON && (Weapon_info[obj->id].model_num_inner > -1 )) {
 				fix dist_to_eye = vm_vec_dist_quick(&Viewer->pos, &obj->pos);
 				if (dist_to_eye < Simple_model_threshhold_scale * F1_0*2)
-					draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,Weapon_info[obj->id].model_num_inner,obj->rtype.pobj_info.subobj_flags,light,&engine_glow_value,alt_textures);
+					draw_polygon_model(&obj->pos,&obj->orient,&obj->rtype.pobj_info.anim_angles,Weapon_info[obj->id].model_num_inner,obj->rtype.pobj_info.subobj_flags,light,engine_glow_value,alt_textures);
 			}
 		}
 	}
@@ -736,6 +584,8 @@ void draw_polygon_object(object *obj)
 
 int	Player_fired_laser_this_frame=-1;
 
+
+
 // -----------------------------------------------------------------------------
 //this routine checks to see if an robot rendered near the middle of
 //the screen, and if so and the player had fired, "warns" the robot
@@ -752,7 +602,7 @@ void set_robot_location_info(object *objp)
 		//the code below to check for object near the center of the screen
 		//completely ignores z, which may not be good
 
-		if ((abs(temp.x) < F1_0*4) && (abs(temp.y) < F1_0*4)) {
+		if ((abs(temp.p3_x) < F1_0*4) && (abs(temp.p3_y) < F1_0*4)) {
 			objp->ctype.ai_info.danger_laser_num = Player_fired_laser_this_frame;
 			objp->ctype.ai_info.danger_laser_signature = Objects[Player_fired_laser_this_frame].signature;
 		}
@@ -775,7 +625,7 @@ void create_small_fireball_on_object(object *objp, fix size_scale, int sound_fla
 
 	vm_vec_add2(&pos, &rand_vec);
 
-	size = fixmul(size_scale, F1_0 + rand()*4);
+	size = fixmul(size_scale, F1_0/2 + rand()*4/2);
 
 	segnum = find_point_seg(&pos, objp->segnum);
 	if (segnum != -1) {
@@ -891,8 +741,12 @@ void render_object(object *obj)
 
 	#ifdef NEWDEMO
 	if ( obj->render_type != RT_NONE )
-		if ( Newdemo_state == ND_STATE_RECORDING )
-			newdemo_record_render_object(obj);
+		if ( Newdemo_state == ND_STATE_RECORDING ) {
+			if (!WasRecorded[obj-Objects]) {     
+				newdemo_record_render_object(obj);
+				WasRecorded[obj-Objects]=1;
+			}
+		}
 	#endif
 
 	Max_linear_depth = mld_save;
@@ -930,8 +784,6 @@ void render_object(object *obj)
 //091494: 	}
 //091494: 	Object_num_close=0;
 //091494: }
-
-
 //--unused-- //draw target boxes for nearby robots
 //--unused-- void object_render_id(object * obj)
 //--unused-- {
@@ -962,7 +814,6 @@ void render_object(object *obj)
 //--unused-- 		}
 //--unused-- 	}
 //--unused-- }
-
 
 check_and_fix_matrix(vms_matrix *m);
 
@@ -1005,6 +856,8 @@ void init_player_object()
 {
 	ConsoleObject->type = OBJ_PLAYER;
 	ConsoleObject->id = 0;					//no sub-types for player
+
+	ConsoleObject->signature = 0;			//player has zero, others start at 1
 
 	ConsoleObject->size = Polygon_models[Player_ship->model_num].rad;
 
@@ -1233,7 +1086,7 @@ void obj_unlink(int objnum)
 	Assert(Objects[0].prev != 0);
 }
 
-int Object_next_signature = 0;
+int Object_next_signature = 1;	//player gets 0, others start at 1
 
 int Debris_object_count=0;
 
@@ -1246,6 +1099,13 @@ int	Unused_object_slots;
 int obj_allocate(void)
 {
 	int objnum;
+
+	if ( num_objects >= MAX_OBJECTS-2 ) {
+		int	num_freed;
+
+		num_freed = free_object_slots(MAX_OBJECTS-10);
+		mprintf((0, " *** Freed %i objects in frame %i\n", num_freed, FrameCount));
+	}
 
 	if ( num_objects >= MAX_OBJECTS ) {
 		#ifndef NDEBUG
@@ -1286,27 +1146,30 @@ void obj_free(int objnum)
 
 //-----------------------------------------------------------------------------
 //	Scan the object list, freeing down to num_used objects
-void free_object_slots(int num_used)
+//	Returns number of slots freed.
+int free_object_slots(int num_used)
 {
 	int	i, olind;
 	int	obj_list[MAX_OBJECTS];
-	int	num_already_free, num_to_free;
+	int	num_already_free, num_to_free, original_num_to_free;
 
 	olind = 0;
 	num_already_free = MAX_OBJECTS - Highest_object_index - 1;
 
 	if (MAX_OBJECTS - num_already_free < num_used)
-		return;
+		return 0;
 
 	for (i=0; i<=Highest_object_index; i++) {
-		if (Objects[i].flags & OF_SHOULD_BE_DEAD)
+		if (Objects[i].flags & OF_SHOULD_BE_DEAD) {
 			num_already_free++;
-		else
+			if (MAX_OBJECTS - num_already_free < num_used)
+				return num_already_free;
+		} else
 			switch (Objects[i].type) {
 				case OBJ_NONE:
 					num_already_free++;
 					if (MAX_OBJECTS - num_already_free < num_used)
-						return;
+						return 0;
 					break;
 				case OBJ_WALL:
 				case OBJ_FLARE:
@@ -1332,6 +1195,7 @@ void free_object_slots(int num_used)
 	}
 
 	num_to_free = MAX_OBJECTS - num_used - num_already_free;
+	original_num_to_free = num_to_free;
 
 	if (num_to_free > olind) {
 		mprintf((1, "Warning: Asked to free %i objects, but can only free %i.\n", num_to_free, olind));
@@ -1346,7 +1210,7 @@ void free_object_slots(int num_used)
 		}
 
 	if (!num_to_free)
-		return;
+		return original_num_to_free;
 
 	for (i=0; i<num_to_free; i++)
 		if (Objects[obj_list[i]].type == OBJ_FIREBALL  &&  Objects[obj_list[i]].ctype.expl_info.delete_objnum==-1) {
@@ -1356,17 +1220,16 @@ void free_object_slots(int num_used)
 		}
 
 	if (!num_to_free)
-		return;
+		return original_num_to_free;
 
 	for (i=0; i<num_to_free; i++)
 		if ((Objects[obj_list[i]].type == OBJ_WEAPON) && (Objects[obj_list[i]].id == FLARE_ID)) {
 			num_to_free--;
-			mprintf((0, "Freeing    FLARE object %3i\n", obj_list[i]));
 			Objects[obj_list[i]].flags |= OF_SHOULD_BE_DEAD;
 		}
 
 	if (!num_to_free)
-		return;
+		return original_num_to_free;
 
 	for (i=0; i<num_to_free; i++)
 		if ((Objects[obj_list[i]].type == OBJ_WEAPON) && (Objects[obj_list[i]].id != FLARE_ID)) {
@@ -1375,6 +1238,7 @@ void free_object_slots(int num_used)
 			Objects[obj_list[i]].flags |= OF_SHOULD_BE_DEAD;
 		}
 
+	return original_num_to_free - num_to_free;
 }
 
 //-----------------------------------------------------------------------------
@@ -1388,7 +1252,8 @@ int obj_create(ubyte type,ubyte id,int segnum,vms_vector *pos,
 	int objnum;
 	object *obj;
 
-	Assert((segnum <= Highest_segment_index) && (segnum >= 0));
+	Assert(segnum <= Highest_segment_index);
+	Assert (segnum >= 0);
 	Assert(ctype <= CT_CNTRLCEN);
 
 	if (type==OBJ_DEBRIS && Debris_object_count>=Max_debris_objects)
@@ -1425,8 +1290,10 @@ int obj_create(ubyte type,ubyte id,int segnum,vms_vector *pos,
 	obj->pos 					= *pos;
 	obj->size 					= size;
 	obj->flags 					= 0;
-	if (orient != NULL) 
-		obj->orient 			= *orient;
+	//@@if (orient != NULL) 
+	//@@	obj->orient 			= *orient;
+
+	obj->orient 				= orient?*orient:vmd_identity_matrix;
 
 	obj->control_type 		= ctype;
 	obj->movement_type 		= mtype;
@@ -1468,11 +1335,15 @@ int obj_create(ubyte type,ubyte id,int segnum,vms_vector *pos,
 
 	//	Set (or not) persistent bit in phys_info.
 	if (obj->type == OBJ_WEAPON) {
+		Assert(obj->control_type == CT_WEAPON);
 		obj->mtype.phys_info.flags |= (Weapon_info[obj->id].persistent*PF_PERSISTENT);
 		obj->ctype.laser_info.creation_time = GameTime;
 		obj->ctype.laser_info.last_hitobj = -1;
 		obj->ctype.laser_info.multiplier = F1_0;
 	}
+
+	if (obj->control_type == CT_POWERUP)
+		obj->ctype.powerup_info.creation_time = GameTime;
 
 	if (obj->control_type == CT_EXPLOSION)
 		obj->ctype.expl_info.next_attach = obj->ctype.expl_info.prev_attach = obj->ctype.expl_info.attach_parent = -1;
@@ -1520,15 +1391,31 @@ int obj_create_copy(int objnum, vms_vector *new_pos, int newsegnum)
 }
 #endif
 
+extern void newdemo_record_guided_end();
+
 //remove object from the world
 void obj_delete(int objnum)
 {
+	int pnum;
 	object *obj = &Objects[objnum];
 
 	Assert(objnum != -1);
 	Assert(objnum != 0 );
 	Assert(obj->type != OBJ_NONE);
 	Assert(obj != ConsoleObject);
+
+	if (obj->type==OBJ_WEAPON && obj->id==GUIDEDMISS_ID) {
+		pnum=Objects[obj->ctype.laser_info.parent_num].id;
+		mprintf ((0,"Deleting a guided missile! Player %d\n\n",pnum));
+
+		if (pnum!=Player_num) {
+			mprintf ((0,"deleting missile that belongs to %d (%s)!\n",pnum,Players[pnum].callsign));
+			Guided_missile[pnum]=NULL;
+		}
+		else if (Newdemo_state==ND_STATE_RECORDING)
+			newdemo_record_guided_end();
+		
+	}
 
 	if (obj == Viewer)		//deleting the viewer?
 		Viewer = ConsoleObject;						//..make the player the viewer
@@ -1552,6 +1439,7 @@ void obj_delete(int objnum)
 
 	obj->type = OBJ_NONE;		//unused!
 	obj->signature = -1;
+	obj->segnum=-1;				// zero it!
 
 	obj_free(objnum);
 }
@@ -1569,7 +1457,8 @@ int		Death_sequence_aborted=0;
 int		Player_eggs_dropped=0;
 fix		Camera_to_player_dist_goal=F1_0*4;
 
-ubyte		Control_type_save, Render_type_save, cockpit_mode_save;
+ubyte		Control_type_save, Render_type_save;
+extern	int Cockpit_mode_save;	//set while in letterbox or rear view, or -1
 
 //	------------------------------------------------------------------------------------------------------------------
 void dead_player_end(void)
@@ -1584,7 +1473,8 @@ void dead_player_end(void)
 	Player_exploded = 0;
 	obj_delete(Dead_player_camera-Objects);
 	Dead_player_camera = NULL;
-	select_cockpit(cockpit_mode_save);
+	select_cockpit(Cockpit_mode_save);
+	Cockpit_mode_save = -1;
 	Viewer = Viewer_save;
 	ConsoleObject->type = OBJ_PLAYER;
 	ConsoleObject->flags = Player_flags_save;
@@ -1652,6 +1542,8 @@ void set_camera_pos(vms_vector *camera_pos, object *objp)
 
 extern void drop_player_eggs(object *objp);
 extern int get_explosion_vclip(object *obj,int stage);
+extern void multi_cap_objects();
+extern int Proximity_dropped,Smartmines_dropped;
 
 //	------------------------------------------------------------------------------------------------------------------
 void dead_player_frame(void)
@@ -1704,14 +1596,27 @@ void dead_player_frame(void)
 			else
 				HUD_init_message(TXT_SHIP_DESTROYED_0);
 
+				#ifdef TACTILE 
+					if (TactileStick)
+					 {
+					  ClearForces();
+					 }
+				#endif
 				Player_exploded = 1;
 				if (!Arcade_mode) {
+
+					if (Game_mode & GM_NETWORK)
+					 {
+						AdjustMineSpawn ();
+						multi_cap_objects();
+					 }
+				  
 					drop_player_eggs(ConsoleObject);
 					Player_eggs_dropped = 1;
 					#ifdef NETWORK
 					if (Game_mode & GM_MULTI)
 					{
-						multi_send_position(Players[Player_num].objnum);
+						//multi_send_position(Players[Player_num].objnum);
 						multi_send_player_explode(MULTI_PLAYER_EXPLODE);
 					}
 					#endif
@@ -1724,6 +1629,7 @@ void dead_player_frame(void)
 				ConsoleObject->flags &= ~OF_SHOULD_BE_DEAD;		//don't really kill player
 				ConsoleObject->render_type = RT_NONE;				//..just make him disappear
 				ConsoleObject->type = OBJ_GHOST;						//..and kill intersections
+				Players[Player_num].flags &= ~PLAYER_FLAGS_HEADLIGHT_ON;
 			}
 		} else {
 			if (rand() < FrameTime*4) {
@@ -1739,12 +1645,19 @@ void dead_player_frame(void)
 		if (!Arcade_mode) {
 			if (Death_sequence_aborted) { //time_dead > DEATH_SEQUENCE_LENGTH) {
 				if (!Player_eggs_dropped) {
+				
+					if (Game_mode & GM_NETWORK)
+					 {
+						AdjustMineSpawn();
+						multi_cap_objects();
+					 }
+					
 					drop_player_eggs(ConsoleObject);
 					Player_eggs_dropped = 1;
 					#ifdef NETWORK
 					if (Game_mode & GM_MULTI)
 					{
-						multi_send_position(Players[Player_num].objnum);
+						//multi_send_position(Players[Player_num].objnum);
 						multi_send_player_explode(MULTI_PLAYER_EXPLODE);
 					}
 					#endif
@@ -1760,8 +1673,24 @@ void dead_player_frame(void)
 	}
 }
 
-Killed_in_frame = -1;
-Killed_objnum = -1;
+
+void AdjustMineSpawn()
+ {
+   if (!(Game_mode & GM_NETWORK))
+		return;  // No need for this function in any other mode
+  
+   if (!(Game_mode & GM_HOARD))
+	  	Players[Player_num].secondary_ammo[PROXIMITY_INDEX]+=Proximity_dropped;
+   Players[Player_num].secondary_ammo[SMART_MINE_INDEX]+=Smartmines_dropped;
+	Proximity_dropped=0;
+	Smartmines_dropped=0;
+ }
+
+
+
+int Killed_in_frame = -1;
+short Killed_objnum = -1;
+extern char Multi_killed_yourself;
 
 //	------------------------------------------------------------------------------------------------------------------
 void start_player_death_sequence(object *player)
@@ -1788,12 +1717,27 @@ void start_player_death_sequence(object *player)
 	if (Game_mode & GM_MULTI) 
 	{
 		multi_send_kill(Players[Player_num].objnum);
+
+//		If Hoard, increase number of orbs by 1
+//    Only if you haven't killed yourself
+//		This prevents cheating
+
+		if (Game_mode & GM_HOARD)
+		 if (Players[Player_num].secondary_ammo[PROXIMITY_INDEX]<12)
+			if (!Multi_killed_yourself)
+				Players[Player_num].secondary_ammo[PROXIMITY_INDEX]++;
+	
 	}
 	#endif
 	
 	PaletteRedAdd = 40;
 	Player_is_dead = 1;
-	Players[Player_num].flags &= ~(PLAYER_FLAGS_AFTERBURNER);
+   #ifdef TACTILE
+    if (TactileStick)
+	  Buffeting (70);
+	#endif
+  
+	//Players[Player_num].flags &= ~(PLAYER_FLAGS_AFTERBURNER);
 
 	vm_vec_zero(&player->mtype.phys_info.rotthrust);
 	vm_vec_zero(&player->mtype.phys_info.thrust);
@@ -1810,7 +1754,8 @@ void start_player_death_sequence(object *player)
 		Dead_player_camera = Viewer;
 	}
 
-	cockpit_mode_save = Cockpit_mode;
+	if (Cockpit_mode_save == -1)		//if not already saved
+		Cockpit_mode_save = Cockpit_mode;
 	select_cockpit(CM_LETTERBOX);
 	if (Newdemo_state == ND_STATE_RECORDING)
 		newdemo_record_letterbox();
@@ -1896,6 +1841,17 @@ spin_object(object *obj)
 	check_and_fix_matrix(&obj->orient);
 }
 
+int Drop_afterburner_blob_flag;		//ugly hack
+extern void multi_send_drop_blobs(char);
+extern void fuelcen_check_for_goal (segment *);
+
+//see if wall is volatile, and if so, cause damage to player  
+//returns true if player is in lava
+int check_volatile_wall(object *obj,int segnum,int sidenum,vms_vector *hitpt);
+
+//	Time at which this object last created afterburner blobs.
+fix	Last_afterburner_time[MAX_OBJECTS];
+
 //--------------------------------------------------------------------
 //move an object for the current frame
 void object_move_one( object * obj )
@@ -1909,14 +1865,27 @@ void object_move_one( object * obj )
 
 	if ((obj->type==OBJ_PLAYER) && (Player_num==obj->id))	{
 		fix fuel;
-		fuel=fuelcen_give_fuel( &Segments[obj->segnum], i2f(100)-Players[Player_num].energy );
+		
+      if (Game_mode & GM_CAPTURE)
+			 fuelcen_check_for_goal (&Segments[obj->segnum]);
+      if (Game_mode & GM_HOARD)
+			 fuelcen_check_for_hoard_goal (&Segments[obj->segnum]);
+
+		fuel=fuelcen_give_fuel( &Segments[obj->segnum], INITIAL_ENERGY-Players[Player_num].energy );
 		if (fuel > 0 )	{
 			Players[Player_num].energy += fuel;
+
 		}
 	}
 
-	if (obj->lifeleft != IMMORTAL_TIME)	//if not immortal...
-		obj->lifeleft -= FrameTime;		//...inevitable countdown towards death
+	if (obj->lifeleft != IMMORTAL_TIME) {	//if not immortal...
+		//	Ok, this is a big hack by MK.
+		//	If you want an object to last for exactly one frame, then give it a lifeleft of ONE_FRAME_TIME.
+		if (obj->lifeleft != ONE_FRAME_TIME)
+			obj->lifeleft -= FrameTime;		//...inevitable countdown towards death
+	}
+
+	Drop_afterburner_blob_flag = 0;
 
 	switch (obj->control_type) {
 
@@ -1963,6 +1932,7 @@ void object_move_one( object * obj )
 			break;
 		#endif
 
+
 //		case CT_FLYTHROUGH:
 //			do_flythrough(obj,0);			// HACK:do_flythrough should operate on an object!!!!
 //			//check_object_seg(obj);
@@ -1973,7 +1943,7 @@ void object_move_one( object * obj )
 
 		case CT_LIGHT: break;		//doesn't do anything
 
-		case CT_REMOTE: break;     //movement is handled in com_process_input
+		case CT_REMOTE: break;		//movement is handled in com_process_input
 
 		case CT_CNTRLCEN: do_controlcen_frame(obj); break;
 
@@ -1987,8 +1957,10 @@ void object_move_one( object * obj )
 
 	if (obj->lifeleft < 0 ) {		// We died of old age
 		obj->flags |= OF_SHOULD_BE_DEAD;
-		if ( Weapon_info[obj->id].damage_radius )
-			explode_badass_weapon(obj);
+		if ( obj->type==OBJ_WEAPON && Weapon_info[obj->id].damage_radius )
+			explode_badass_weapon(obj,&obj->pos);
+		else if ( obj->type==OBJ_ROBOT)	//make robots explode
+			explode_object(obj,0);
 	}
 
 	if (obj->type == OBJ_NONE || obj->flags&OF_SHOULD_BE_DEAD)
@@ -2005,26 +1977,111 @@ void object_move_one( object * obj )
 	}
 
 	//	If player and moved to another segment, see if hit any triggers.
+	// also check in player under a lavafall
 	if (obj->type == OBJ_PLAYER && obj->movement_type==MT_PHYSICS)	{
+
 		if (previous_segment != obj->segnum) {
 			int	connect_side,i;
+			int	old_level = Current_level_num;
 			for (i=0;i<n_phys_segs-1;i++) {
 				connect_side = find_connect_side(&Segments[phys_seglist[i+1]], &Segments[phys_seglist[i]]);
 				if (connect_side != -1)
-					check_trigger(&Segments[phys_seglist[i]], connect_side, obj-Objects);
-					//check_trigger(&Segments[previous_segment], connect_side, obj-Objects);
+					check_trigger(&Segments[phys_seglist[i]], connect_side, obj-Objects,0);
 				#ifndef NDEBUG
 				else {	// segments are not directly connected, so do binary subdivision until you find connected segments.
 					mprintf((1, "UNCONNECTED SEGMENTS %d,%d\n",phys_seglist[i+1],phys_seglist[i]));
+					// -- Unnecessary, MK, 09/04/95 -- Int3();
 				}
 				#endif
+
+				//maybe we've gone on to the next level.  if so, bail!
+				if (Current_level_num != old_level)
+					return;
 			}
+		}
+
+		{
+			int sidemask,under_lavafall=0;
+			static int lavafall_hiss_playing[MAX_PLAYERS]={0};
+
+			sidemask = get_seg_masks(&obj->pos,obj->segnum,obj->size).sidemask;
+			if (sidemask) {
+				int sidenum,bit,wall_num;
+	
+				for (sidenum=0,bit=1;sidenum<6;bit<<=1,sidenum++)
+					if ((sidemask & bit) && ((wall_num=Segments[obj->segnum].sides[sidenum].wall_num)!=-1) && Walls[wall_num].type==WALL_ILLUSION) {
+						int type;
+						if ((type=check_volatile_wall(obj,obj->segnum,sidenum,&obj->pos))!=0) {
+							int sound = (type==1)?SOUND_LAVAFALL_HISS:SOUND_SHIP_IN_WATERFALL;
+							under_lavafall = 1;
+							if (!lavafall_hiss_playing[obj->id]) {
+								digi_link_sound_to_object3( sound, obj-Objects, 1, F1_0, i2f(256), -1, -1);
+								lavafall_hiss_playing[obj->id] = 1;
+							}
+						}
+					}
+			}
+	
+			if (!under_lavafall && lavafall_hiss_playing[obj->id]) {
+				digi_kill_sound_linked_to_object( obj-Objects);
+				lavafall_hiss_playing[obj->id] = 0;
+			}
+		}
+	}
+
+	//see if guided missile has flown through exit trigger
+	if (obj==Guided_missile[Player_num] && obj->signature==Guided_missile_sig[Player_num]) {
+		if (previous_segment != obj->segnum) {
+			int	connect_side;
+			connect_side = find_connect_side(&Segments[obj->segnum], &Segments[previous_segment]);
+			if (connect_side != -1) {
+				int wall_num,trigger_num;
+				wall_num = Segments[previous_segment].sides[connect_side].wall_num;
+				if ( wall_num != -1 ) {
+					trigger_num = Walls[wall_num].trigger;
+					if (trigger_num != -1)
+						if (Triggers[trigger_num].type == TT_EXIT)
+							Guided_missile[Player_num]->lifeleft = 0;
+				}
+			}
+		}
+	}
+
+	if (Drop_afterburner_blob_flag) {
+		Assert(obj==ConsoleObject);
+		drop_afterburner_blobs(obj, 2, i2f(5)/2, -1);	//	-1 means use default lifetime
+		if (Game_mode & GM_MULTI)
+			multi_send_drop_blobs(Player_num);
+		Drop_afterburner_blob_flag = 0;
+	}
+
+	if ((obj->type == OBJ_WEAPON) && (Weapon_info[obj->id].afterburner_size)) {
+		int	objnum = obj-Objects;
+		fix	vel = vm_vec_mag_quick(&obj->mtype.phys_info.velocity);
+		fix	delay, lifetime;
+
+		if (vel > F1_0*200)
+			delay = F1_0/16;
+		else if (vel > F1_0*40)
+			delay = fixdiv(F1_0*13,vel);
+		else
+			delay = F1_0/4;
+
+		lifetime = (delay * 3)/2;
+		if (!(Game_mode & GM_MULTI)) {
+			delay /= 2;
+			lifetime *= 2;
+		}
+
+		if ((Last_afterburner_time[objnum] + delay < GameTime) || (Last_afterburner_time[objnum] > GameTime)) {
+			drop_afterburner_blobs(obj, 1, i2f(Weapon_info[obj->id].afterburner_size)/16, lifetime);
+			Last_afterburner_time[objnum] = GameTime;
 		}
 	}
 
 	#else
 		obj++;		//kill warning
-	#endif
+	#endif		//DEMO_ONLY
 }
 
 int	Max_used_objects = MAX_OBJECTS - 20;
@@ -2035,6 +2092,8 @@ void object_move_all()
 {
 	int i;
 	object *objp;
+
+// -- mprintf((0, "Frame %i: %i/%i objects used.\n", FrameCount, num_objects, MAX_OBJECTS));
 
 //	check_duplicate_objects();
 //	remove_incorrect_objects();
@@ -2225,7 +2284,7 @@ void clear_transient_objects(int clear_all)
 	object *obj; 
 
 	for (objnum=0,obj=&Objects[0];objnum<=Highest_object_index;objnum++,obj++)
-		if (((obj->type == OBJ_WEAPON) && (clear_all || obj->id != PROXIMITY_ID)) ||
+		if (((obj->type == OBJ_WEAPON) && !(Weapon_info[obj->id].flags&WIF_PLACABLE) && (clear_all || ((obj->id != PROXIMITY_ID) && (obj->id != SUPERPROX_ID)))) ||
 			 obj->type == OBJ_FIREBALL ||
 			 obj->type == OBJ_DEBRIS ||
 			 obj->type == OBJ_DEBRIS ||
@@ -2306,4 +2365,71 @@ void obj_detach_all(object *parent)
 		obj_detach_one(&Objects[parent->attached_obj]);
 }
 
-
+//creates a marker object in the world.  returns the object number
+int drop_marker_object(vms_vector *pos,int segnum,vms_matrix *orient, int marker_num)
+{
+	int objnum;
+
+	Assert(Marker_model_num != -1);
+
+	objnum = obj_create(OBJ_MARKER, marker_num, segnum, pos, orient, Polygon_models[Marker_model_num].rad, CT_NONE, MT_NONE, RT_POLYOBJ);
+
+	if (objnum >= 0) {
+		object *obj = &Objects[objnum];
+
+		obj->rtype.pobj_info.model_num = Marker_model_num;
+
+		vm_vec_copy_scale(&obj->mtype.spin_rate,&obj->orient.uvec,F1_0/2);
+
+		//	MK, 10/16/95: Using lifeleft to make it flash, thus able to trim lightlevel from all objects.
+		obj->lifeleft = IMMORTAL_TIME - 1;
+	}
+
+	return objnum;	
+}
+
+extern int Ai_last_missile_camera;
+
+//	*viewer is a viewer, probably a missile.
+//	wake up all robots that were rendered last frame subject to some constraints.
+void wake_up_rendered_objects(object *viewer, int window_num)
+{
+	int	i;
+
+	//	Make sure that we are processing current data.
+	if (FrameCount != Window_rendered_data[window_num].frame) {
+		mprintf((1, "Warning: Called wake_up_rendered_objects with a bogus window.\n"));
+		return;
+	}
+
+	Ai_last_missile_camera = viewer-Objects;
+
+	for (i=0; i<Window_rendered_data[window_num].num_objects; i++) {
+		int	objnum;
+		object *objp;
+		int	fcval = FrameCount & 3;
+
+		objnum = Window_rendered_data[window_num].rendered_objects[i];
+		if ((objnum & 3) == fcval) {
+			objp = &Objects[objnum];
+	
+			if (objp->type == OBJ_ROBOT) {
+				if (vm_vec_dist_quick(&viewer->pos, &objp->pos) < F1_0*100) {
+					ai_local		*ailp = &Ai_local_info[objnum];
+					if (ailp->player_awareness_type == 0) {
+						objp->ctype.ai_info.SUB_FLAGS |= SUB_FLAGS_CAMERA_AWAKE;
+						ailp->player_awareness_type = PA_WEAPON_ROBOT_COLLISION;
+						ailp->player_awareness_time = F1_0*3;
+						ailp->previous_visibility = 2;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+

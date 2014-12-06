@@ -1,64 +1,13 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/includes/rcs/psmacros.inc $
-; $Revision: 1.12 $
-; $Author: matt $
-; $Date: 1994/12/06 14:32:19 $
-;
-; Useful macros.  Everyone should use these.
-;
-; $Log: psmacros.inc $
-; Revision 1.12  1994/12/06  14:32:19  matt
-; Made mprintf turn off if NMONO set
-; 
-; Revision 1.11  1994/11/27  23:18:19  matt
-; Made mprintf go away when debugging turned off
-; 
-; Revision 1.10  1994/03/25  18:00:34  matt
-; Added imulc of 6
-; 
-; Revision 1.9  1994/02/10  18:00:58  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.8  1993/11/22  23:47:06  matt
-; debug macros were trashing eax
-; 
-; Revision 1.7  1993/11/04  12:39:25  mike
-; Modify imulc macro to support fast multiply by 36
-; and multiply anything using imul, but give warning.
-; 
-; Revision 1.6  1993/10/19  21:17:31  matt
-; Added abs_eax macro
-; 
-; Revision 1.5  1993/09/26  22:28:21  matt
-; Removed extra register pushes in mprintf
-; Make DEBUG_ON all uppercase since we seem to have case sensitivity on
-; 
-; Revision 1.4  1993/09/26  19:22:30  matt
-; Added imulc macro, to multiply a register by a constant.  It does not
-; at this time support arbitrary constants, only 0,1,3,5,9, and powers of 2
-; 
-; Revision 1.3  1993/09/13  11:50:57  matt
-; Added 'b' & 'w', aliases for 'byte ptr' and 'word ptr'
-; 
-; Revision 1.2  1993/09/03  19:00:03  matt
-; Added breakpoint macros
-; 
-; Revision 1.1  1993/08/24  12:51:52  matt
-; Initial revision
-; 
-;
-;
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ;Shortcuts for casting
 
 w equ word ptr
@@ -229,7 +178,7 @@ mprintf	macro	window:=<0>,format:req,args:vararg
 	local	string,skip
 	ifndef	NDEBUG
 	ifndef	NMONO
-	extn	_mprintf_
+	extn	mprintf_
 	jmp	skip
 string	label	byte
 	dbstr	format
@@ -239,7 +188,7 @@ skip:
 %	 pushml	@ArgRev(args)
 	endif
 	pushml	offset string,window
-	call	_mprintf_
+	call	mprintf_
 	add	esp,(@ArgCount(args)+2)*4	;fix stack
 	endif
 	endif
@@ -251,7 +200,7 @@ mprintf_at	macro	window:=<0>,row,col,format:req,args:vararg
 	local	string,skip
 	ifndef	NDEBUG
 	ifndef	NMONO
-	extn	_mprintf_at_
+	extn	mprintf_at_
 	jmp	skip
 string	label	byte
 	dbstr	format
@@ -261,7 +210,7 @@ skip:
 %	 pushml	@ArgRev(args)
 	endif
 	pushml	offset string,col,row,window
-	call	_mprintf_at_
+	call	mprintf_at_
 	add	esp,(@ArgCount(args)+4)*4	;fix stack
 	endif
 	endif

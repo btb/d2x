@@ -8,55 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/iglasses.c $
- * $Revision: 2.8 $
- * $Author: mike $
- * $Date: 1995/03/30 16:36:31 $
- * 
- * Routines for the i-glasses VR stuff.
- * 
- * $Log: iglasses.c $
- * Revision 2.8  1995/03/30  16:36:31  mike
- * text localization.
- * 
- * Revision 2.7  1995/03/24  13:10:37  john
- * Synced with shareware.
- * 
- * Revision 2.6  1995/03/09  18:07:35  john
- * Fixed bug with iglasses tracking not "centering" right.
- * Made VFX have bright headlight lighting.
- * 
- * Revision 2.5  1995/03/09  15:33:23  john
- * Fixed bug with iglasses timeout too long, and objects
- * disappearing from left eye.
- * 
- * Revision 2.4  1995/03/06  15:23:13  john
- * New screen techniques.
- * 
- * Revision 2.3  1995/03/03  22:38:30  john
- * Tweaked the filtering,.
- * 
- * Revision 2.2  1995/03/03  22:28:22  john
- * Added code to detect invalid serial ports.
- * 
- * Revision 2.1  1995/03/03  22:24:00  john
- * Added code to make iglasses work with Greenleaf.
- * 
- * Revision 1.2  1995/02/09  22:01:01  john
- * Added i-glasses tracking.
- * 
- * Revision 1.1  1995/02/09  15:53:47  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: iglasses.c 2.8 1995/03/30 16:36:31 mike Exp $";
+static char rcsid[] = "$Id: iglasses.c 2.11 1996/06/11 15:28:48 matt Exp $";
 #pragma on (unreferenced)
 
 #define DOS4G		
@@ -66,29 +23,20 @@ static char rcsid[] = "$Id: iglasses.c 2.8 1995/03/30 16:36:31 mike Exp $";
 #include <math.h>
 #include <conio.h>
 
+#include "inferno.h"
 #include "error.h"
 #include "mono.h"
 #include "args.h"
 #include "text.h"
 #include "iglasses.h"
 #include "key.h"
-//#include "commlib.h" //nien - These aren't included -KRB
-//#include "fast.h"
+#include "commlib.h"
+#include "fast.h"
 #include "timer.h"
 
 int iglasses_headset_installed=0;
 
 void iglasses_close_tracking();
-
-//*******************************************
-
-typedef struct  {
-	int status;
-	int count;
-	
-} PORT; //I added this it will compile, but I doubt it works. -KRB
-//*******************************************
-
 
 PORT * Iport = NULL;
 
@@ -110,7 +58,7 @@ static filter X_filter, Y_filter, Z_filter;
 
 void iglasses_init_tracking(int serial_port)	
 {
-	fix t1;
+	fix t1,t2;
 	int c;
 
 	if (iglasses_headset_installed) return;
@@ -118,9 +66,10 @@ void iglasses_init_tracking(int serial_port)
 	if ( (serial_port < 1) || (serial_port > 4) )	{
 		Error( TXT_IGLASSES_ERROR_1 );
 	}
-	printf( "\n\n%s %d\n", TXT_IGLASSES_INIT, serial_port );
-	printf( "%s\n", TXT_IGLASSES_ON);
-	printf( "%s\n", TXT_PRESS_ESC_TO_ABORT);
+	printf( "\n\n");
+	printf( TXT_IGLASSES_INIT, serial_port );
+	printf( "\n%s\n", TXT_IGLASSES_ON);
+	printf( "Looking for glasses - %s", TXT_PRESS_ESC_TO_ABORT);
 	Iport = PortOpenGreenleafFast(serial_port-1, 9600, 'N', 8, 1 );
 	if ( !Iport )	{
 		printf( "%s\n", TXT_SERIAL_FAILURE, Iport->status );
@@ -131,23 +80,31 @@ void iglasses_init_tracking(int serial_port)
 	SetRts( Iport, 1 );
 	UseRtsCts( Iport, 0 );
 	
-	iglasses_headset_installed = 1;
-	atexit( iglasses_close_tracking );
+	t2 = timer_get_fixed_seconds() + i2f(20);
 
-	while( 1 )	{
+	while(timer_get_fixed_seconds() < t2)	{
 		printf( "." );
 		t1 = timer_get_fixed_seconds() + F1_0;
 		ClearRXBuffer(Iport);
 		ClearTXBuffer(Iport);
 		WriteBuffer( Iport, "!\r", 2 );
 		while ( timer_get_fixed_seconds() < t1 )	{
-			if ( key_inkey() == KEY_ESC ) exit(0);
+			if ( key_inkey() == KEY_ESC ) goto NotOK;
 			c = ReadChar( Iport );
 			if ( c == 'O' )	{
 				goto TrackerOK1;
 			} 	
 		}
 	}
+
+NotOK:;
+	printf(	"\n\nWarning: Cannot find i-glasses! on port %d\n"
+				" Press Esc to abort D2, any other key to continue without i-glasses support.\n"
+				" Use SETUP to disable i-glasses support.\n",serial_port);
+	if ( key_getch() == KEY_ESC )
+		exit(1);
+	else
+		return;
 
 TrackerOK1:
 
@@ -160,7 +117,7 @@ TrackerOK1:
 		// M1 = all data
 		WriteBuffer( Iport, "!M1,P,B\r", 8 );
 		while ( timer_get_fixed_seconds() < t1 )	{
-			if ( key_inkey() == KEY_ESC ) exit(0);
+			if ( key_inkey() == KEY_ESC ) return;
 			c = ReadChar( Iport );
 			if ( c == 'O' )	{
 				goto TrackerOK2;
@@ -169,11 +126,15 @@ TrackerOK1:
 	}
 
 TrackerOK2:
+
 	printf( ".\n" );
 	ClearRXBuffer(Iport);
 	ClearTXBuffer(Iport);
 
  	WriteChar( Iport, 'S' );
+
+	iglasses_headset_installed = 1;
+	atexit( iglasses_close_tracking );
 
 #ifdef USE_FILTERS 
 	initFIR( &X_filter );

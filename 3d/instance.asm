@@ -1,55 +1,20 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/instance.asm $
-; $Revision: 1.8 $
-; $Author: matt $
-; $Date: 1994/07/29 18:16:16 $
-; 
-; Code for handling instanced 3d objects
-; 
-; $Log: instance.asm $
-; Revision 1.8  1994/07/29  18:16:16  matt
-; Added instance by angles, and corrected parms for g3_init()
-; 
-; Revision 1.7  1994/07/25  00:00:02  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.6  1994/06/16  17:52:31  matt
-; If NULL passed for instance matrix, don't rotate (just do offset)
-; 
-; Revision 1.5  1994/06/01  18:10:22  matt
-; Fixed register trash in g3_start_instance_matrix()
-; 
-; Revision 1.4  1994/03/25  17:09:20  matt
-; Increase MAX_INSTANCE_DEPTH to 5 (from 3)
-; 
-; Revision 1.3  1994/02/10  18:00:43  matt
-; Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
-; 
-; Revision 1.2  1994/01/24  14:08:45  matt
-; Added code to this previously dull file
-; 
-; Revision 1.1  1994/01/23  15:22:52  matt
-; Initial revision
-; 
-; 
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 .386
 	option	oldstructs
 
 	.nolist
-	include	types.inc
+	include	pstypes.inc
 	include	psmacros.inc
 	include	vecmat.inc
 	include	3d.inc
@@ -59,7 +24,7 @@
 
 _DATA	segment	dword public USE32 'DATA'
 
-rcsid	db	"$Id: instance.asm 1.8 1994/07/29 18:16:16 matt Exp $"
+rcsid	db	"$Id: instance.asm 1.10 1996/01/08 14:59:11 matt Exp $"
 	align	4
 
 MAX_INSTANCE_DEPTH	equ	5
@@ -109,10 +74,14 @@ g3_start_instance_matrix:
 	mov	eax,instance_depth
 	inc	instance_depth
 
-	ifndef	NDEBUG
-	 cmp	eax,MAX_INSTANCE_DEPTH
-	 break_if	e,'Already at max depth'
-	endif
+	cmp	eax,MAX_INSTANCE_DEPTH
+	jl	depth_ok
+;we've overflowed the instance stack. Return without doing anything
+	debug_brk	'Already at or over max depth'
+	pop	eax
+	pop	eax	;fix stack
+	jmp	no_inst_matrix
+depth_ok:
 
 	imul	eax,inst_context_size
 	lea	edi,instance_stack[eax]
@@ -164,6 +133,8 @@ g3_done_instance:	pushm	eax,ecx,esi,edi
 	dec	instance_depth
 	break_if	s,'Instance stack underflow!'
 	mov	eax,instance_depth
+	cmp	eax,MAX_INSTANCE_DEPTH	;over the limit?
+	jae	skip_restore		;..yes, so don't do anything
 	imul	eax,inst_context_size
 	lea	esi,instance_stack[eax]
 	lea	edi,View_position
@@ -172,7 +143,7 @@ g3_done_instance:	pushm	eax,ecx,esi,edi
 	lea	edi,View_matrix
 	mov	ecx,9
 	rep	movsd
-	popm	eax,ecx,esi,edi
+skip_restore:	popm	eax,ecx,esi,edi
 	ret
 
 

@@ -8,49 +8,22 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/scanline.c $
- * $Revision: 1.7 $
- * $Author: john $
- * $Date: 1994/11/18 22:50:48 $
- *
- * Graphical routines for drawing solid scanlines.
- *
- * $Log: scanline.c $
- * Revision 1.7  1994/11/18  22:50:48  john
- * Changed a bunch of shorts to ints in calls.
- * 
- * Revision 1.6  1994/09/02  11:40:32  john
- * fixed bug with urect scanline drakening still
- * only using 16 levels of fade.
- * 
- * Revision 1.5  1994/04/08  16:59:12  john
- * Add fading poly's; Made palette fade 32 instead of 16.
- * 
- * Revision 1.4  1994/03/22  18:36:27  john
- * Added darkening scanlines
- * 
- * Revision 1.3  1993/10/15  16:22:52  john
- * y
- * 
- * Revision 1.2  1993/09/08  11:56:29  john
- * neatened
- * 
- * Revision 1.1  1993/09/08  11:44:27  john
- * Initial revision
- * 
- *
- */
 
+#include "pa_enabl.h"                   //$$POLY_ACC
 #include "mem.h"
 
 #include "gr.h"
 #include "grdef.h"
 
+#if defined(POLY_ACC)
+#include "poly_acc.h"
+#endif
+
 int Gr_scanline_darkening_level = GR_FADE_LEVELS;
 
+#ifndef MACINTOSH
 void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fade_table );
 #pragma aux gr_linear_darken parm [edi] [eax] [ecx] [edx] modify exact [eax ebx ecx edx edi] = \
 "					xor	ebx, ebx					"	\
@@ -60,7 +33,78 @@ void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fad
 "					mov	[edi], al				"	\
 "					inc	edi						"	\
 "					dec	ecx						"	\
-"					jnz	gld_loop					"	
+"					jnz	gld_loop					"
+#else
+void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fade_table )
+{
+	int i;
+
+	for (i=0; i<count; i++ )	{
+		*dest = fade_table[*dest+(darkening_level*256)];
+		dest++;
+	}
+}
+
+void gr_linear_stosd( ubyte * dest, ubyte color, unsigned short count )
+{
+	int i, x;
+
+	if (count > 3) {
+		while ((int)(dest) & 0x3) { *dest++ = color; count--; };
+		if (count >= 4) {
+			x = (color << 24) | (color << 16) | (color << 8) | color;
+			while (count > 4) { *(int *)dest = x; dest += 4; count -= 4; };
+		}
+		while (count > 0) { *dest++ = color; count--; };
+	} else {
+		for (i=0; i<count; i++ )
+			*dest++ = color;
+	}
+}
+#endif
+
+#if defined(POLY_ACC)
+//$$ Note that this code WAS a virtual clone of the mac code and any changes to mac should be reflected here.
+void gr_linear15_darken( short * dest, int darkening_level, int count, ubyte * fade_table )
+{
+    //$$ this routine is a prime candidate for using the alpha blender.
+    int i;
+    unsigned short rt[32], gt[32], bt[32];
+    unsigned long level, int_level, dlevel;
+
+    dlevel = (darkening_level << 16) / GR_FADE_LEVELS;
+    level = int_level = 0;
+    for(i = 0; i != 32; ++i)
+    {
+        rt[i] = int_level << 10;
+        gt[i] = int_level << 5;
+        bt[i] = int_level;
+
+        level += dlevel;
+        int_level = level >> 16;
+    }
+
+    pa_flush();
+    for (i=0; i<count; i++ )    {
+        if(*dest & 0x8000)
+	        *dest =
+   	         rt[((*dest >> 10) & 0x1f)] |
+      	      gt[((*dest >> 5) & 0x1f)] |
+         	   bt[((*dest >> 0) & 0x1f)] |
+            	0x8000;
+	        dest++;
+	}
+}
+
+void gr_linear15_stosd( short * dest, ubyte color, unsigned short count )
+{
+    //$$ this routine is a prime candidate for using the alpha blender.
+    short c = pa_clut[color];
+    pa_flush();
+    while(count--)
+        *dest++ = c;
+}
+#endif
 
 void gr_uscanline( int x1, int x2, int y )
 {
@@ -76,7 +120,12 @@ void gr_uscanline( int x1, int x2, int y )
 		case BM_SVGA:
 			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
-		}
+#if defined(POLY_ACC)
+        case BM_LINEAR15:
+            gr_linear15_stosd( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), COLOR, x2-x1+1);
+			break;
+#endif
+        }
 	} else {
 		switch(TYPE)
 		{
@@ -87,9 +136,32 @@ void gr_uscanline( int x1, int x2, int y )
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
 		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
+			{
+				ubyte * vram = (ubyte *)0xA0000;
+				int VideoLocation,page,offset1, offset2;
+
+				VideoLocation = (ROWSIZE * y) + x1;
+				page    = VideoLocation >> 16;
+				offset1  = VideoLocation & 0xFFFF;
+				offset2   = offset1 + (x2-x1+1);
+
+				gr_vesa_setpage( page );
+				if ( offset2 <= 0xFFFF )	{
+					gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
+				} else {					 			
+					gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, 0xFFFF-offset1+1, gr_fade_table);
+					page++;
+					gr_vesa_setpage(page);
+					gr_linear_darken( vram, Gr_scanline_darkening_level, offset2 - 0xFFFF, gr_fade_table);
+				}
+			}
 			break;
-		}
+#if defined(POLY_ACC)
+        case BM_LINEAR15:
+            gr_linear15_darken( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
+			break;
+#endif
+        }
 	}
 }
 
@@ -117,7 +189,12 @@ void gr_scanline( int x1, int x2, int y )
 		case BM_SVGA:
 			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
-		}
+#if defined(POLY_ACC)
+        case BM_LINEAR15:
+            gr_linear15_stosd( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), COLOR, x2-x1+1);
+			break;
+#endif
+        }
 	} else {
 		switch(TYPE)
 		{
@@ -128,10 +205,32 @@ void gr_scanline( int x1, int x2, int y )
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
 		case BM_SVGA:
-			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
+			{
+				ubyte * vram = (ubyte *)0xA0000;
+				int VideoLocation,page,offset1, offset2;
+
+				VideoLocation = (ROWSIZE * y) + x1;
+				page    = VideoLocation >> 16;
+				offset1  = VideoLocation & 0xFFFF;
+				offset2   = offset1 + (x2-x1+1);
+
+				gr_vesa_setpage( page );
+				if ( offset2 <= 0xFFFF )	{
+					gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
+				} else {					 			
+					gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, 0xFFFF-offset1+1, gr_fade_table);
+					page++;
+					gr_vesa_setpage(page);
+					gr_linear_darken( vram, Gr_scanline_darkening_level, offset2 - 0xFFFF, gr_fade_table);
+				}
+			}
 			break;
-		}
+#if defined(POLY_ACC)
+        case BM_LINEAR15:
+            gr_linear15_darken( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
+			break;
+#endif
+        }
 	}
 }
 
-

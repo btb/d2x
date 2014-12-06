@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/cdrom.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1995/03/20 15:01:19 $
- * 
- * Routines to access a cdrom drive.
- * 
- * $Log: cdrom.c $
- * Revision 1.2  1995/03/20  15:01:19  john
- * Initial revision.
- * 
- * Revision 1.1  1995/03/14  16:56:59  john
- * Initial revision
- * 
- * 
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: cdrom.c 1.2 1995/03/20 15:01:19 john Exp $";
@@ -107,4 +90,3 @@ int find_descent_cd()
 	return cdrom_drive;
 }
 
-

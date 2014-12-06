@@ -8,59 +8,23 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/mouse.h $
- * $Revision: 1.10 $
- * $Author: john $
- * $Date: 1995/02/02 10:22:29 $
- *
- * Header for mouse functions
- *
- * $Log: mouse.h $
- * Revision 1.10  1995/02/02  10:22:29  john
- * Added cyberman init parameter.
- * 
- * Revision 1.9  1994/11/18  23:18:09  john
- * Changed some shorts to ints.
- * 
- * Revision 1.8  1994/09/13  12:33:49  john
- * Added functions to get down count and state.
- * 
- * Revision 1.7  1994/08/29  20:52:20  john
- * Added better cyberman support; also, joystick calibration
- * value return funcctiionn,
- * 
- * Revision 1.6  1994/08/24  17:54:35  john
- * *** empty log message ***
- * 
- * Revision 1.5  1994/08/24  17:51:43  john
- * Added transparent cyberman support
- * 
- * Revision 1.4  1993/07/27  09:32:22  john
- * *** empty log message ***
- * 
- * Revision 1.3  1993/07/26  10:46:44  john
- * added definition for mouse_set_pos
- * 
- * Revision 1.2  1993/07/22  13:07:59  john
- * added header for mousesetlimts
- * 
- * Revision 1.1  1993/07/10  13:10:40  matt
- * Initial revision
- * 
- *
- */
 
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include "types.h"
+#include "pstypes.h"
 #include "fix.h"
 
 #define MB_LEFT			0
+
+#if defined(_WIN32)
+#undef MB_RIGHT	
+#endif
+
 #define MB_RIGHT			1
+
 #define MB_MIDDLE			2
 #define MB_Z_UP			3
 #define MB_Z_DOWN			4
@@ -105,4 +69,3 @@ extern int mouse_button_state(int button);
 
 
 #endif
-

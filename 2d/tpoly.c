@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/tpoly.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1994/04/08 16:59:42 $
- * 
- * Same as polygon, but darkens...
- * 
- * $Log: tpoly.c $
- * Revision 1.2  1994/04/08  16:59:42  john
- * Add fading poly's; Made palette fade 32 instead of 16.
- * 
- * Revision 1.1  1994/03/22  17:55:16  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)

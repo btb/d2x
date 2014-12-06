@@ -1,17 +1,11 @@
 #
 # $Source: f:/miner/source/ui/rcs/makefile $
-# $Revision: 1.8 $
+# $Revision: 1.9 $
 # $Author: matt $
-# $Date: 1994/11/27 14:53:50 $
+# $Date: 1995/05/30 22:55:30 $
 #
 # Makefile for user-interface functions
 #
-
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
 
 # What to install, and where to install it
 INSTALL_TARGS = ui.lib ui.h func.h
@@ -30,64 +24,67 @@ UI_OBJS = ui.obj mouse.obj window.obj uidraw.obj button.obj \
 		  gadget.obj listbox.obj message.obj popup.obj scroll.obj \
 		  radio.obj checkbox.obj inputbox.obj userbox.obj menu.obj \
 		  harderr.obj file.obj keytrap.obj icon.obj keypress.obj \
-		  menubar.obj keypad.obj 
-#func.obj #Couldn't find func.c - where are the functions??
+		  menubar.obj keypad.obj func.obj
 
 # What object files and libs for the test programs
 TESTG_SRCS = testg.c
 TESTG_LIBS = io.lib gr.lib ui.lib misc.lib mem.lib readfile.lib iff.lib func.lib cflib.lib cfile.lib
 TESTG_LFLAGS = option stack=50k
 
-ui.lib: $(UI_OBJS)
-	wlib ui.lib $(UI_OBJS)
-	copy *.lib $(LIBDIR)
-barbox.obj: barbox.c
-	wcc386 $(CCFLAGS) barbox.c
-button.obj: button.c
-	wcc386 $(CCFLAGS) button.c
-checkbox.obj: checkbox.c
-	wcc386 $(CCFLAGS) checkbox.c
-file.obj: file.c
-	wcc386 $(CCFLAGS) file.c
-func.obj: func.c
-	wcc386 $(CCFLAGS) func.c
-gadget.obj: gadget.c
-	wcc386 $(CCFLAGS) gadget.c
-harderr.obj: harderr.c
-	wcc386 $(CCFLAGS) harderr.c
-icon.obj: icon.c
-	wcc386 $(CCFLAGS) icon.c
-inputbox.obj: inputbox.c
-	wcc386 $(CCFLAGS) inputbox.c
-keypad.obj: keypad.c
-	wcc386 $(CCFLAGS) keypad.c
-keypress.obj: keypress.c
-	wcc386 $(CCFLAGS) keypress.c
-keytrap.obj: keytrap.c
-	wcc386 $(CCFLAGS) keytrap.c
-listbox.obj: listbox.c
-	wcc386 $(CCFLAGS) listbox.c
-menu.obj: menu.c
-	wcc386 $(CCFLAGS) menu.c
-menubar.obj: menubar.c
-	wcc386 $(CCFLAGS) menubar.c
-message.obj: message.c
-	wcc386 $(CCFLAGS) message.c
-mouse.obj: mouse.c
-	wcc386 $(CCFLAGS) mouse.c
-number.obj: number.c
-	wcc386 $(CCFLAGS) number.c
-popup.obj: popup.c
-	wcc386 $(CCFLAGS) popup.c
-radio.obj: radio.c
-	wcc386 $(CCFLAGS) radio.c
-scroll.obj: scroll.c
-	wcc386 $(CCFLAGS) scroll.c
-ui.obj:	 ui.c
-	wcc386 $(CCFLAGS) ui.c
-uidraw.obj: uidraw.c
-	wcc386 $(CCFLAGS) uidraw.c
-userbox.obj: userbox.c
-	wcc386 $(CCFLAGS) userbox.c
-window.obj: window.c
-	wcc386 $(CCFLAGS) window.c
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
+
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
+
+barbox.obj: fix.h gr.h key.h stdarg.h stdio.h types.h ui.h
+
+button.obj: fix.h gr.h key.h mem.h mono.h stdlib.h string.h types.h ui.h
+
+checkbox.obj: fix.h gr.h key.h mem.h stdlib.h string.h types.h ui.h
+
+file.obj: conio.h ctype.h direct.h dos.h fcntl.h fix.h gr.h i86.h io.h \
+	 key.h mem.h mono.h stat.h stdio.h stdlib.h string.h types.h ui.h
+
+func.obj: func.h stdlib.h string.h
+
+gadget.obj: fix.h gr.h key.h mem.h stdio.h stdlib.h types.h ui.h
+
+icon.obj: fix.h gr.h key.h mem.h stdlib.h string.h types.h ui.h
+
+inputbox.obj: fix.h gr.h key.h mem.h stdlib.h string.h types.h ui.h
+
+keypad.obj: conio.h direct.h dos.h error.h fix.h func.h gr.h i86.h key.h \
+	 math.h mem.h mono.h stdio.h stdlib.h string.h types.h ui.h
+
+keypress.obj: fix.h gr.h key.h stdarg.h stdio.h string.h types.h ui.h
+
+keytrap.obj: fix.h gr.h key.h stdlib.h string.h types.h ui.h
+
+listbox.obj: fix.h gr.h key.h stdlib.h types.h ui.h
+
+menu.obj: fix.h gr.h mem.h stdlib.h types.h ui.h
+
+menubar.obj: ctype.h error.h fix.h func.h gr.h key.h mem.h mono.h stdio.h \
+	 stdlib.h string.h types.h ui.h
+
+message.obj: fix.h gr.h key.h stdarg.h stdio.h types.h ui.h
+
+mouse.obj: fix.h gr.h mem.h mouse.h stdlib.h types.h ui.h
+
+number.obj: fix.h gr.h stdarg.h stdio.h types.h ui.h
+
+popup.obj: fix.h gr.h mouse.h types.h ui.h
+
+radio.obj: fix.h gr.h key.h mono.h stdlib.h string.h types.h ui.h
+
+scroll.obj: fix.h gr.h key.h stdlib.h types.h ui.h
+
+ui.obj:	 dos.h fix.h gr.h i86.h key.h mono.h mouse.h stdarg.h stdio.h \
+	 stdlib.h string.h types.h ui.h
+
+uidraw.obj: fix.h gr.h types.h ui.h
+
+userbox.obj: fix.h gr.h key.h stdlib.h string.h types.h ui.h
+
+window.obj: dos.h fix.h gr.h i86.h key.h mem.h mono.h mouse.h stdarg.h \
+	 stdio.h stdlib.h types.h ui.h

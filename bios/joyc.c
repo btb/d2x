@@ -8,152 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/joyc.c $
- * $Revision: 1.37 $
- * $Author: john $
- * $Date: 1995/10/07 13:22:31 $
- * 
- * Routines for joystick reading.
- * 
- * $Log: joyc.c $
- * Revision 1.37  1995/10/07  13:22:31  john
- * Added new method of reading joystick that allows higher-priority
- * interrupts to go off.
- * 
- * Revision 1.36  1995/03/30  11:03:40  john
- * Made -JoyBios read buttons using BIOS.
- * 
- * Revision 1.35  1995/02/14  11:39:25  john
- * Added polled/bios joystick readers..
- * 
- * Revision 1.34  1995/02/10  17:06:12  john
- * Fixed bug with plugging in a joystick not getting detected.
- * 
- * Revision 1.33  1995/01/27  16:39:42  john
- * Made so that if no joystick detected, it wont't
- * read buttons.
- * 
- * Revision 1.32  1995/01/12  13:16:40  john
- * Made it so that joystick can't lose an axis
- * by 1 weird reading. Reading has to occurr during
- * calibration for this to happen.
- * 
- * Revision 1.31  1994/12/28  15:56:03  john
- * Fixed bug that refused to read joysticks whose 
- * min,cen,max were less than 100 apart.
- * 
- * Revision 1.30  1994/12/28  15:31:53  john
- * Added code to read joystick axis not all at one time.
- * 
- * Revision 1.29  1994/12/27  15:44:36  john
- * Made the joystick timeout be at 1/100th of a second, 
- * regardless of CPU speed.
- * 
- * Revision 1.28  1994/12/04  11:54:54  john
- * Made stick read at whatever rate the clock is at, not
- * at 18.2 times/second.
- * 
- * Revision 1.27  1994/11/29  02:25:40  john
- * Made it so that the scaled reading returns 0 
- * if the calibration factors look funny..
- * 
- * Revision 1.26  1994/11/22  11:08:07  john
- * Commented out the ARCADE joystick.
- * 
- * Revision 1.25  1994/11/14  19:40:26  john
- * Fixed bug with no joystick being detected.
- * 
- * Revision 1.24  1994/11/14  19:36:40  john
- * Took out initial cheapy calibration.
- * 
- * Revision 1.23  1994/11/14  19:13:27  john
- * Took out the calibration in joy_init
- * 
- * Revision 1.22  1994/10/17  10:09:57  john
- * Made the state look at last_State, so that a joy_flush
- * doesn't cause a new down state to be added next reading.
- * 
- * Revision 1.21  1994/10/13  11:36:23  john
- * Made joy_down_time be kept track of in fixed seconds,
- * not ticks.
- * 
- * Revision 1.20  1994/10/12  16:58:50  john
- * Fixed bug w/ previous comment.
- * 
- * Revision 1.19  1994/10/12  16:57:44  john
- * Added function to set a joystick button's state.
- * 
- * Revision 1.18  1994/10/11  10:20:13  john
- * Fixed Flightstick Pro/
- * ..
- * 
- * Revision 1.17  1994/09/29  18:29:20  john
- * *** empty log message ***
- * 
- * Revision 1.16  1994/09/27  19:17:23  john
- * Added code so that is joy_init is never called, joystick is not
- * used at all.
- * 
- * Revision 1.15  1994/09/22  16:09:23  john
- * Fixed some virtual memory lockdown problems with timer and
- * joystick.
- * 
- * Revision 1.14  1994/09/16  11:44:42  john
- * Fixed bug with slow joystick.
- * 
- * Revision 1.13  1994/09/16  11:36:15  john
- * Fixed bug with reading non-present channels.
- * 
- * Revision 1.12  1994/09/15  20:52:48  john
- * rme john
- * Added support for the Arcade style joystick.
- * 
- * Revision 1.11  1994/09/13  20:04:49  john
- * Fixed bug with joystick button down_time.
- * 
- * Revision 1.10  1994/09/10  13:48:07  john
- * Made all 20 buttons read.
- * 
- * Revision 1.9  1994/08/31  09:55:02  john
- * *** empty log message ***
- * 
- * Revision 1.8  1994/08/29  21:02:14  john
- * Added joy_set_cal_values...
- * 
- * Revision 1.7  1994/08/29  20:52:17  john
- * Added better cyberman support; also, joystick calibration
- * value return funcctiionn,
- * 
- * Revision 1.6  1994/08/24  18:53:12  john
- * Made Cyberman read like normal mouse; added dpmi module; moved
- * mouse from assembly to c. Made mouse buttons return time_down.
- * 
- * Revision 1.5  1994/07/14  22:12:23  john
- * Used intrinsic forms of outp to fix vmm error.
- * 
- * Revision 1.4  1994/07/07  19:52:59  matt
- * Made joy_init() return success/fail flag
- * Made joy_init() properly detect a stick if one is plugged in after joy_init()
- * was called the first time.
- * 
- * Revision 1.3  1994/07/01  10:55:55  john
- * Fixed some bugs... added support for 4 axis.
- * 
- * Revision 1.2  1994/06/30  20:36:55  john
- * Revamped joystick code.
- * 
- * Revision 1.1  1994/06/30  15:42:15  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: joyc.c 1.37 1995/10/07 13:22:31 john Exp $";
+static char rcsid[] = "$Id: joyc.c 1.37 1995/11/22 11:30:10 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
@@ -165,6 +25,7 @@ static char rcsid[] = "$Id: joyc.c 1.37 1995/10/07 13:22:31 john Exp $";
 //#define ARCADE 1
 
 #include "types.h"
+#include "error.h"
 #include "mono.h"
 #include "joy.h"
 #include "dpmi.h"
@@ -175,9 +36,6 @@ static char rcsid[] = "$Id: joyc.c 1.37 1995/10/07 13:22:31 john Exp $";
 // returns number of events																						
 int joy_read_stick_asm( int read_masks, int * event_buffer, int timeout );
 #pragma aux joy_read_stick_asm parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
-
-int joy_read_stick_friendly( int read_masks, int * event_buffer, int timeout );
-#pragma aux joy_read_stick_friendly parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
 
 int joy_read_stick_polled( int read_masks, int * event_buffer, int timeout );
 #pragma aux joy_read_stick_polled parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
@@ -219,9 +77,6 @@ typedef struct Joy_info {
 } Joy_info;
 
 Joy_info joystick;
-
-extern int joy_bogus_reading;
-extern int joy_retries;
 
 void joy_get_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 {
@@ -290,7 +145,7 @@ void joy_handler(int ticks_this_time)	{
 	int i, state;
 	Button_info * button;
 
-//	joystick.max_timer = ticks_this_time;
+	joystick.max_timer = ticks_this_time;
 
 	if ( joystick.slow_read & JOY_BIOS_READINGS )		{
 		joystick.read_count++;
@@ -384,8 +239,6 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 					num_channels = joy_read_stick_polled( (1 << c), buffer, 65536 );
 				else if ( joystick.slow_read & JOY_BIOS_READINGS )
 					num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
-				else if ( joystick.slow_read & JOY_FRIENDLY_READINGS )
-					num_channels = joy_read_stick_friendly( (1 << c), buffer, (1193180/100) );
 				else
 					num_channels = joy_read_stick_asm( (1 << c), buffer, (1193180/100) );
 	
@@ -417,8 +270,6 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 			num_channels = joy_read_stick_polled( mask, buffer, 65536 );
 		else if ( joystick.slow_read & JOY_BIOS_READINGS )
 			num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
-		else if ( joystick.slow_read & JOY_FRIENDLY_READINGS )
-			num_channels = joy_read_stick_friendly( mask, buffer, (1193180/100) );
 		else 
 			num_channels = joy_read_stick_asm( mask, buffer, (1193180/100) );
 		//mprintf(( 0, "(%d)\n", num_channels ));
@@ -467,20 +318,18 @@ int joy_init()
 	if ( !joy_installed )	{
 		joy_present = 0;
 		joy_installed = 1;
-		//joystick.max_timer = 65536;
+		joystick.max_timer = 65536;
 		joystick.slow_read = 0;
 		joystick.read_count = 0;
 		joystick.last_value = 0;
 
 		//--------------- lock everything for the virtal memory ----------------------------------
 		if (!dpmi_lock_region ((void near *)joy_handler, (char *)joy_handler_end - (char near *)joy_handler))	{
-			printf( "Error locking joystick handler!\n" );
-			exit(1);
+			Error( "Can't lock joystick handler!\n" );
 		}
 
 		if (!dpmi_lock_region (&joystick, sizeof(Joy_info)))	{
-			printf( "Error locking joystick handler's data!\n" );
-			exit(1);
+			Error( "Can't lock joystick handler's data!\n" );
 		}
 
 		timer_set_joyhandler(joy_handler);
@@ -488,9 +337,7 @@ int joy_init()
 
 	// Do initial cheapy calibration...
 	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do	{
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, temp_axis );
-	} while( joy_bogus_reading );
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, temp_axis );
 
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
@@ -509,9 +356,7 @@ void joy_close()
 void joy_set_ul()	
 {
 	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do	{
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_min );
-	} while( joy_bogus_reading );
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_min );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
@@ -521,10 +366,7 @@ void joy_set_ul()
 void joy_set_lr()	
 {
 	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do {
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_max );
-	} while( joy_bogus_reading );
-
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_max );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
@@ -534,10 +376,7 @@ void joy_set_lr()
 void joy_set_cen() 
 {
 	joystick.present_mask = JOY_ALL_AXIS;		// Assume they're all present
-	do {
-		joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_center );
-	} while( joy_bogus_reading );
-
+	joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_center );
 	if ( joystick.present_mask & 3 )
 		joy_present = 1;
 	else
@@ -596,8 +435,6 @@ int joy_get_scaled_reading( int raw, int axn )
 	return x;
 }
 
-int last_reading[4] = { 0, 0, 0, 0 };
-
 void joy_get_pos( int *x, int *y )	
 {
 	ubyte flags;
@@ -606,15 +443,6 @@ void joy_get_pos( int *x, int *y )
 	if ((!joy_installed)||(!joy_present)) { *x=*y=0; return; }
 
 	flags=joystick_read_raw_axis( JOY_1_X_AXIS+JOY_1_Y_AXIS, axis );
-
-	if ( joy_bogus_reading )	{
-		axis[0] = last_reading[0];
-		axis[1] = last_reading[1];
-		flags = JOY_1_X_AXIS+JOY_1_Y_AXIS;
-	} else {
-		last_reading[0] = axis[0];
-		last_reading[1] = axis[1];
-	}
 
 	if ( flags & JOY_1_X_AXIS )
 		*x = joy_get_scaled_reading( axis[0], 0 );
@@ -639,19 +467,6 @@ ubyte joy_read_stick( ubyte masks, int *axis )
 	}
 
 	flags=joystick_read_raw_axis( masks, raw_axis );
-
-	if ( joy_bogus_reading )	{
-		axis[0] = last_reading[0];
-		axis[1] = last_reading[1];
-		axis[2] = last_reading[2];
-		axis[3] = last_reading[3];
-		flags = masks;
-	} else {
-		last_reading[0] = axis[0];
-		last_reading[1] = axis[1];
-		last_reading[2] = axis[2];
-		last_reading[3] = axis[3];
-	}
 
 	if ( flags & JOY_1_X_AXIS )
 		axis[0] = joy_get_scaled_reading( raw_axis[0], 0 );
@@ -786,4 +601,3 @@ void joy_poll()
 	if ( joystick.slow_read & JOY_BIOS_READINGS )	
 		joystick.last_value = joy_read_buttons_bios();
 }
-

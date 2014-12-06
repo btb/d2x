@@ -8,156 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/iff/rcs/iff.c $
- * $Revision: 1.43 $
- * $Author: john $
- * $Date: 1994/12/08 19:03:17 $
- *
- * Routines for reading and writing IFF files
- *
- * $Log: iff.c $
- * Revision 1.43  1994/12/08  19:03:17  john
- * Added code to use cfile.
- * 
- * Revision 1.42  1994/12/08  17:45:32  john
- * Put back in cfile stuff.
- * 
- * Revision 1.41  1994/11/19  16:41:06  matt
- * Took out unused code
- * 
- * Revision 1.40  1994/11/07  21:26:39  matt
- * Added new function iff_read_into_bitmap()
- * 
- * Revision 1.39  1994/10/27  00:12:03  john
- * Used nocfile
- * 
- * Revision 1.38  1994/08/10  19:49:58  matt
- * Fixed bitmaps in ILBM format with masking (stencil) on.
- * 
- * Revision 1.37  1994/06/02  18:53:17  matt
- * Clear flags & selector in new bitmap structure
- * 
- * Revision 1.36  1994/05/17  14:00:33  matt
- * Fixed bug with odd-width deltas & odd-length body chunks
- * 
- * Revision 1.35  1994/05/16  20:38:55  matt
- * Made anim brushes work when odd width
- * 
- * Revision 1.34  1994/05/06  19:37:26  matt
- * Improved error handling and checking
- * 
- * Revision 1.33  1994/04/27  20:57:07  matt
- * Fixed problem with RLE decompression and odd-width bitmap
- * Added more error checking
- * 
- * Revision 1.32  1994/04/16  21:44:19  matt
- * Fixed bug introduced last version
- * 
- * Revision 1.31  1994/04/16  20:12:40  matt
- * Made masked (stenciled) bitmaps work
- * 
- * Revision 1.30  1994/04/13  23:46:16  matt
- * Added function, iff_errormsg(), which returns ptr to error message.
- * 
- * Revision 1.29  1994/04/13  23:27:25  matt
- * Put in support for anim brushes (.abm files)
- * 
- * Revision 1.28  1994/04/13  16:33:31  matt
- * Cleaned up file read code, adding fake_file structure (FFILE), which
- * cleanly implements reading the entire file into a buffer and then reading
- * out of that buffer.
- * 
- * Revision 1.27  1994/04/06  23:07:43  matt
- * Cleaned up code; added prototype (but no new code) for anim brush read
- * 
- * Revision 1.26  1994/03/19  02:51:52  matt
- * Really did what I said I did last revision.
- * 
- * Revision 1.25  1994/03/19  02:16:07  matt
- * Made work ILBMs which didn't have 8 planes
- * 
- * Revision 1.24  1994/03/15  14:45:26  matt
- * When error, only free memory if has been allocated
- * 
- * Revision 1.23  1994/02/18  12:39:05  john
- * Made code read from buffer.
- * 
- * Revision 1.22  1994/02/15  18:15:26  john
- * Took out cfile attempt (too slow)
- * 
- * Revision 1.21  1994/02/15  13:17:48  john
- * added assert to cfseek.
- * 
- * Revision 1.20  1994/02/15  13:13:11  john
- * Made iff code work normally.
- * 
- * Revision 1.19  1994/02/15  12:51:07  john
- * crappy inbetween version.
- * 
- * Revision 1.18  1994/02/10  18:31:32  matt
- * Changed 'if DEBUG_ON' to 'ifndef NDEBUG'
- * 
- * Revision 1.17  1994/01/24  11:51:26  john
- * Made write routine write transparency info.
- * 
- * Revision 1.16  1994/01/22  14:41:11  john
- * Fixed bug with declareations.
- * 
- * Revision 1.15  1994/01/22  14:23:00  john
- * Added global vars to check transparency
- * 
- * Revision 1.14  1993/12/08  19:00:42  matt
- * Changed while loop to memset
- * 
- * Revision 1.13  1993/12/08  17:23:51  mike
- * Speedup by converting while...getc to fread.
- * 
- * Revision 1.12  1993/12/08  12:37:35  mike
- * Optimize parse_body.
- * 
- * Revision 1.11  1993/12/05  17:30:14  matt
- * Made bitmaps with width <= 64 not compress
- * 
- * Revision 1.10  1993/12/03  12:24:51  matt
- * Fixed TINY chunk when bitmap was part of a larger bitmap
- * 
- * Revision 1.9  1993/11/22  17:26:43  matt
- * iff write now writes out a tiny chunk
- * 
- * Revision 1.8  1993/11/21  22:04:13  matt
- * Fixed error with non-compressed bitmaps
- * Added Yuan's code to free raw data if we get an error parsing the body
- * 
- * Revision 1.7  1993/11/11  12:12:12  yuan
- * Changed mallocs to MALLOCs.
- * 
- * Revision 1.6  1993/11/01  19:02:23  matt
- * Fixed a couple bugs in rle compression
- * 
- * Revision 1.5  1993/10/27  12:47:39  john
- * *** empty log message ***
- * 
- * Revision 1.4  1993/10/27  12:37:31  yuan
- * Added mem.h
- * 
- * Revision 1.3  1993/09/22  19:16:57  matt
- * Added new error type, IFF_CORRUPT, for internally bad IFF files.
- * 
- * Revision 1.2  1993/09/08  19:24:16  matt
- * Fixed bug in RLE compression
- * Changed a bunch of unimportant values like aspect and page size when writing
- * Added new error condition, IFF_BAD_BM_TYPE
- * Make sub-bitmaps work correctly
- * Added compile flag to turn compression off (COMPRESS)
- * 
- * Revision 1.1  1993/09/08  14:24:15  matt
- * Initial revision
- * 
- *
- */
 
 #define COMPRESS		1	//do the RLE or not? (for debugging mostly)
 #define WRITE_TINY	0	//should we write a TINY chunk?
@@ -165,7 +17,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MIN_COMPRESS_WIDTH	65	//don't compress if less than this wide
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: iff.c 1.43 1994/12/08 19:03:17 john Exp $";
+static char rcsid[] = "$Id: iff.c 1.48 1996/06/10 08:52:12 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -257,6 +109,7 @@ long get_sig(FFILE *f)
 //	if ((s[1]=cfgetc(f))==EOF) return(EOF);
 //	if ((s[0]=cfgetc(f))==EOF) return(EOF);
 
+#ifndef MACINTOSH
 	if (f->position>=f->length) return EOF;
 	s[3] = f->data[f->position++];
 	if (f->position>=f->length) return EOF;
@@ -265,6 +118,16 @@ long get_sig(FFILE *f)
 	s[1] = f->data[f->position++];
 	if (f->position>=f->length) return EOF;
 	s[0] = f->data[f->position++];
+#else
+	if (f->position>=f->length) return EOF;
+	s[0] = f->data[f->position++];
+	if (f->position>=f->length) return EOF;
+	s[1] = f->data[f->position++];
+	if (f->position>=f->length) return EOF;
+	s[2] = f->data[f->position++];
+	if (f->position>=f->length) return EOF;
+	s[3] = f->data[f->position++];
+#endif
 
 	return(*((long *) s));
 }
@@ -499,18 +362,16 @@ int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
 
 		}
 
-	if (bmheader->masking==mskHasMask && p==data_end && ifile->position==end_pos-2)		//I don't know why...
-		ifile->position++;		//...but if I do this it works
+	if (p!=data_end)				//if we don't have the whole bitmap...
+		return IFF_CORRUPT;		//...the give an error
 
-	if (p==data_end && ifile->position==end_pos-1)		//must be a pad byte
-		//ignore = cfgetc(ifile);		//get pad byte
-		ifile->position++;
-	else
-		if (ifile->position!=end_pos || p!=data_end) {
-//			debug("IFF Error: p=%x, data_end=%x, cnt=%d\n",p,data_end,cnt);
-			return IFF_CORRUPT;
-		}
+	//Pretend we read the whole chuck, because if we didn't, it's because
+	//we didn't read the last mask like or the last rle record for padding
+	//or whatever and it's not important, because we check to make sure
+	//we got the while bitmap, and that's what really counts.
 
+	ifile->position = end_pos;
+	
 	if (ignore) ignore++;   // haha, suppress the evil warning message
 
 	return IFF_NO_ERROR;
@@ -656,8 +517,7 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 						}
 						else {
 
-							//MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );//Hack by KRB
-							bmheader->raw_data=(ubyte *)malloc((bmheader->w * bmheader->h)*sizeof(ubyte));
+							MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );
 							if (!bmheader->raw_data)
 								return IFF_NO_MEM;
 						}
@@ -674,8 +534,7 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 						bmheader->h = prev_bm->bm_h;
 						bmheader->type = prev_bm->bm_type;
 
-						//MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );//Hack by KRB
-						bmheader->raw_data=(ubyte *)malloc((bmheader->w * bmheader->h)*sizeof(ubyte));
+						MALLOC( bmheader->raw_data, ubyte, bmheader->w * bmheader->h );
 
 						memcpy(bmheader->raw_data, prev_bm->bm_data, bmheader->w * bmheader->h );
 						skip_chunk(ifile,len);
@@ -742,8 +601,7 @@ int convert_ilbm_to_pbm(iff_bitmap_header *bmheader)
 	int bytes_per_row,byteofs;
 	ubyte checkmask,newbyte,setbit;
 
-	//MALLOC( new_data, byte, bmheader->w * bmheader->h );//hack by KRB
-	new_data = (byte *)malloc((bmheader->w * bmheader->h)*sizeof(byte));
+	MALLOC( new_data, byte, bmheader->w * bmheader->h );
 	if (new_data == NULL) return IFF_NO_MEM;
 
 	destptr = new_data;
@@ -794,8 +652,7 @@ int convert_rgb15(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 //        if ((new_data = malloc(bm->bm_w * bm->bm_h * 2)) == NULL)
 //            {ret=IFF_NO_MEM; goto done;}
-       //MALLOC(new_data, ushort, bm->bm_w * bm->bm_h * 2);//hack by KRB also a bug I believe. It is allocating twice the needed memory.
-		new_data = malloc(bm->bm_w * bm->bm_h * 2);//I left it as previously done, thinking the *2 means sizeof(ushort)
+       MALLOC(new_data, ushort, bm->bm_w * bm->bm_h * 2);
        if (new_data == NULL)
            return IFF_NO_MEM;
 
@@ -829,8 +686,7 @@ int open_fake_file(char *ifilename,FFILE *ffile)
 
 	ffile->length = cfilelength(ifile);
 
-	//MALLOC(ffile->data,ubyte,ffile->length);//Hack by KRB
-	ffile->data = (ubyte *)malloc(ffile->length*sizeof(ubyte));
+	MALLOC(ffile->data,ubyte,ffile->length);
 
 	if (cfread(ffile->data, 1, ffile->length, ifile) < ffile->length)
 		ret = IFF_READ_ERROR;
@@ -862,7 +718,8 @@ copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
 	bm->bm_rowsize = bmheader->w;
 	bm->bm_data = bmheader->raw_data;
 
-	bm->bm_flags = bm->bm_selector = 0;
+	bm->bm_flags = bm->bm_handle = 0;
+	
 }
 
 //if bm->bm_data is set, use it (making sure w & h are correct), else
@@ -916,7 +773,22 @@ int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,g
 
 	copy_iff_to_grs(bm,&bmheader);
 
+#ifndef MACINTOSH
 	if (palette) memcpy(palette,&bmheader.palette,sizeof(bmheader.palette));
+#else
+//	if (palette) memcpy(palette,&bmheader.palette, 768);			// pal_entry is 4 bytes on mac
+	if (palette) {
+		ubyte *c;
+		int i;
+		
+		c = palette;
+		for (i = 0; i < 256; i++) {
+			*c++ = bmheader.palette[i].r;
+			*c++ = bmheader.palette[i].g;
+			*c++ = bmheader.palette[i].b;
+		}
+	}
+#endif
 
 	//Now do post-process if required
 
@@ -932,7 +804,7 @@ done:
 }
 
 //returns error codes - see IFF.H.  see GR.H for bitmap_type
-int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,byte *palette)
+int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,ubyte *palette)
 {
 	int ret;			//return code
 	FFILE ifile;
@@ -1112,8 +984,7 @@ int write_body(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 	put_long(len,ofile);
 
     //if (! (new_span = malloc(bitmap_header->w+(bitmap_header->w/128+2)*2))) return IFF_NO_MEM;
-   // MALLOC( new_span, ubyte, bitmap_header->w + (bitmap_header->w/128+2)*2);//hack by KRB, also allocating twice the needed memory, probably a bug
-	new_span = malloc(bitmap_header->w+(bitmap_header->w/128+2)*2);//left it alone, as in 2 lines above -KRB
+    MALLOC( new_span, ubyte, bitmap_header->w + (bitmap_header->w/128+2)*2);
     if (new_span == NULL) return IFF_NO_MEM;
 
 	for (y=bitmap_header->h;y--;) {
@@ -1235,7 +1106,7 @@ int write_pbm(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)		
 
 //writes an IFF file from a grs_bitmap structure. writes palette if not null
 //returns error codes - see IFF.H.
-int iff_write_bitmap(char *ofilename,grs_bitmap *bm,byte *palette)
+int iff_write_bitmap(char *ofilename,grs_bitmap *bm,ubyte *palette)
 {
 	FILE *ofile;
 	iff_bitmap_header bmheader;
@@ -1323,8 +1194,8 @@ int iff_read_animbrush(char *ifilename,grs_bitmap **bm_list,int max_bitmaps,int 
 
 			prev_bm = *n_bitmaps>0?bm_list[*n_bitmaps-1]:NULL;
 
-		   //MALLOC(bm_list[*n_bitmaps] , grs_bitmap, 1 );//hack by KRB
-			bm_list[*n_bitmaps]=(grs_bitmap *)malloc(1*sizeof(grs_bitmap));
+		   MALLOC(bm_list[*n_bitmaps] , grs_bitmap, 1 );
+
 			bm_list[*n_bitmaps]->bm_data = NULL;
 
 			ret = iff_parse_bitmap(&ifile,bm_list[*n_bitmaps],form_type,*n_bitmaps>0?NULL:palette,prev_bm);
@@ -1385,4 +1256,3 @@ char *iff_errormsg(int error_number)
 }
 
 
-

@@ -1,3 +1,6 @@
+
+#define NEW_FVI_STUFF 1
+
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -8,215 +11,21 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-
-#define NEW_FVI_STUFF 1
-
-/*
- * $Source: f:/miner/source/main/rcs/fvi.c $
- * $Revision: 2.3 $
- * $Author: john $
- * $Date: 1995/03/24 14:49:04 $
- * 
- * New home for find_vector_intersection()
- * 
- * $Log: fvi.c $
- * Revision 2.3  1995/03/24  14:49:04  john
- * Added cheat for player to go thru walls.
- * 
- * Revision 2.2  1995/03/21  17:58:32  john
- * Fixed bug with normals..
- * 
- * 
- * Revision 2.1  1995/03/20  18:15:37  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.0  1995/02/27  11:27:41  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.49  1995/02/22  14:45:47  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.48  1995/02/22  13:24:50  john
- * Removed the vecmat anonymous unions.
- * 
- * Revision 1.47  1995/02/07  16:17:26  matt
- * Disabled all robot-robot collisions except those involving two green
- * guys.  Used to do collisions if either robot was green guy.
- * 
- * Revision 1.46  1995/02/02  14:07:53  matt
- * Fixed confusion about which segment you are touching when you're 
- * touching a wall.  This manifested itself in spurious lava burns.
- * 
- * Revision 1.45  1995/02/02  13:45:53  matt
- * Made a bunch of lint-inspired changes
- * 
- * Revision 1.44  1995/01/24  12:10:17  matt
- * Fudged collisions for player/player, and player weapon/other player in
- * coop games.
- * 
- * Revision 1.43  1995/01/14  19:16:45  john
- * First version of new bitmap paging code.
- * 
- * Revision 1.42  1994/12/15  12:22:40  matt
- * Small change which may or may not help
- * 
- * Revision 1.41  1994/12/14  11:45:51  matt
- * Fixed (hopefully) little bug with invalid segnum
- * 
- * Revision 1.40  1994/12/13  17:12:01  matt
- * Increased edge tolerance a bunch more
- * 
- * Revision 1.39  1994/12/13  14:37:59  matt
- * Fixed another stupid little bug
- * 
- * Revision 1.38  1994/12/13  13:25:44  matt
- * Increased tolerance massively to avoid catching on corners
- * 
- * Revision 1.37  1994/12/13  12:02:20  matt
- * Fixed small bug
- * 
- * Revision 1.36  1994/12/13  11:17:35  matt
- * Lots of changes to hopefully fix objects leaving the mine.  Note that
- * this code should be considered somewhat experimental - one problem I
- * know about is that you can get stuck on edges more easily than before.
- * There may be other problems I don't know about yet.
- * 
- * Revision 1.35  1994/12/12  01:20:57  matt
- * Added hack in object-object collisions that treats claw guys as
- * if they have 3/4 of their actual radius.
- * 
- * Revision 1.34  1994/12/04  22:48:39  matt
- * Physics & FVI now only build seglist for player objects, and they 
- * responsilby deal with buffer full conditions
- * 
- * Revision 1.33  1994/12/04  22:07:05  matt
- * Added better handing of buffer full condition
- * 
- * Revision 1.32  1994/12/01  21:06:33  matt
- * Several important changes:
- *  (1) Checking against triangulated sides has been standardized a bit
- *  (2) Code has been added to de-triangulate some sides
- *  (3) BIG ONE: the tolerance for checking a point against a plane has
- *      been drastically relaxed
- * 
- * 
- * Revision 1.31  1994/11/27  23:15:03  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.30  1994/11/19  15:20:30  mike
- * rip out unused code and data
- * 
- * Revision 1.29  1994/11/16  12:18:17  mike
- * hack for green_guy:green_guy collision detection.
- * 
- * Revision 1.28  1994/11/10  13:08:54  matt
- * Added support for new run-length-encoded bitmaps
- * 
- * Revision 1.27  1994/10/31  12:27:51  matt
- * Added new function object_intersects_wall()
- * 
- * Revision 1.26  1994/10/20  13:59:27  matt
- * Added assert
- * 
- * Revision 1.25  1994/10/09  23:51:09  matt
- * Made find_hitpoint_uv() work with triangulated sides
- * 
- * Revision 1.24  1994/09/25  00:39:29  matt
- * Took out mprintf's
- * 
- * Revision 1.23  1994/09/25  00:37:53  matt
- * Made the 'find the point in the bitmap where something hit' system
- * publicly accessible.
- * 
- * Revision 1.22  1994/09/21  16:58:22  matt
- * Fixed bug in trans wall check that was checking against verically 
- * flipped bitmap (i.e., the y coord was negative when checking).
- * 
- * Revision 1.21  1994/09/02  11:31:40  matt
- * Fixed object/object collisions, so you can't fly through robots anymore.
- * Cleaned up object damage system.
- * 
- * Revision 1.20  1994/08/26  09:42:03  matt
- * Increased the size of a buffer
- * 
- * Revision 1.19  1994/08/11  18:57:53  mike
- * Convert shorts to ints for optimization.
- * 
- * Revision 1.18  1994/08/08  21:38:24  matt
- * Put in small optimization
- * 
- * Revision 1.17  1994/08/08  12:21:52  yuan
- * Fixed assert
- * 
- * Revision 1.16  1994/08/08  11:47:04  matt
- * Cleaned up fvi and physics a little
- * 
- * Revision 1.15  1994/08/04  00:21:04  matt
- * Cleaned up fvi & physics error handling; put in code to make sure objects
- * are in correct segment; simplified segment finding for objects and points
- * 
- * Revision 1.14  1994/08/02  19:04:26  matt
- * Cleaned up vertex list functions
- * 
- * Revision 1.13  1994/08/02  09:56:28  matt
- * Put in check for bad value find_plane_line_intersection()
- * 
- * Revision 1.12  1994/08/01  17:27:26  matt
- * Added support for triangulated walls in trans point check
- * 
- * Revision 1.11  1994/08/01  13:30:40  matt
- * Made fvi() check holes in transparent walls, and changed fvi() calling
- * parms to take all input data in query structure.
- * 
- * Revision 1.10  1994/07/13  21:47:17  matt
- * FVI() and physics now keep lists of segments passed through which the
- * trigger code uses.
- * 
- * Revision 1.9  1994/07/09  21:21:40  matt
- * Fixed, hopefull, bugs in sphere-to-vector intersection code
- * 
- * Revision 1.8  1994/07/08  14:26:42  matt
- * Non-needed powerups don't get picked up now; this required changing FVI to
- * take a list of ingore objects rather than just one ignore object.
- * 
- * Revision 1.7  1994/07/06  20:02:37  matt
- * Made change to match gameseg that uses lowest point number as reference
- * point when checking against a plane
- * 
- * Revision 1.6  1994/06/29  15:43:58  matt
- * When computing intersection of vector and sphere, use the radii of both
- * objects.
- * 
- * Revision 1.5  1994/06/14  15:57:58  matt
- * Took out asserts, and added other hacks, pending real bug fixes
- * 
- * Revision 1.4  1994/06/13  23:10:08  matt
- * Fixed problems with triangulated sides
- * 
- * Revision 1.3  1994/06/09  12:11:14  matt
- * Fixed confusing use of two variables, hit_objnum & fvi_hit_object, to
- * keep the same information in different ways.
- * 
- * Revision 1.2  1994/06/09  09:58:38  matt
- * Moved find_vector_intersection() from physics.c to new file fvi.c
- * 
- * Revision 1.1  1994/06/09  09:25:57  matt
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: fvi.c 2.3 1995/03/24 14:49:04 john Exp $";
+static char rcsid[] = "$Id: fvi.c 2.16 1996/10/24 11:51:22 samir Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
+
+#ifdef MACINTOSH
+#include <Memory.h>
+#endif
 
 #include "error.h"
 #include "mono.h"
@@ -238,6 +47,7 @@ extern int Physics_cheat_flag;
 
 int oflow_check(fix a,fix b);
 
+#ifndef MACINTOSH
 #pragma aux oflow_check parm [eax] [ebx] value [eax] modify exact [eax ebx edx] = \
    "cdq"				\
 	"xor eax,edx"	\
@@ -251,6 +61,14 @@ int oflow_check(fix a,fix b);
 	"or   dx,dx"	\
 	"setnz al"		\
 	"movzx eax,al";
+#else
+// probably should come up with better routine than this!!!
+// it was this way for D1 mac -- wonder what problems it caused?
+int oflow_check(fix a, fix b)
+{
+	return 0;
+}
+#endif
 
 
 //find the point on the specified plane where the line intersects
@@ -332,7 +150,7 @@ int ij_table[3][2] =        {
 #define IT_POINT        3       //touches vertex
 
 //see if a point in inside a face by projecting into 2d
-uint check_point_to_face(vms_vector *checkp,segment *sp, side *s,int facenum,int nv,int *vertex_list)
+uint check_point_to_face(vms_vector *checkp, side *s,int facenum,int nv,int *vertex_list)
 {
 	vms_vector_array *checkp_array;
 	vms_vector_array norm;
@@ -398,14 +216,14 @@ uint check_point_to_face(vms_vector *checkp,segment *sp, side *s,int facenum,int
 
 
 //check if a sphere intersects a face
-check_sphere_to_face(vms_vector *pnt,segment *sp, side *s,int facenum,int nv,fix rad,int *vertex_list)
+check_sphere_to_face(vms_vector *pnt, side *s,int facenum,int nv,fix rad,int *vertex_list)
 {
 	vms_vector checkp=*pnt;
 	uint edgemask;
 
 	//now do 2d check to see if point is in side
 
-	edgemask = check_point_to_face(pnt,sp,s,facenum,nv,vertex_list);
+	edgemask = check_point_to_face(pnt,s,facenum,nv,vertex_list);
 
 	//we've gone through all the sides, are we inside?
 
@@ -485,6 +303,9 @@ int check_line_to_face(vms_vector *newp,vms_vector *p0,vms_vector *p1,segment *s
 		norm = seg->sides[side].normals[facenum];
 	#endif
 
+	if ((seg-Segments)==-1)
+		Error("segnum == -1 in check_line_to_face()");
+
 	create_abs_vertex_lists(&num_faces,vertex_list,seg-Segments,side);
 
 	//use lowest point number
@@ -510,7 +331,7 @@ int check_line_to_face(vms_vector *newp,vms_vector *p0,vms_vector *p1,segment *s
 	if (rad!=0)
 		vm_vec_scale_add2(&checkp,&norm,-rad);
 
-	return check_sphere_to_face(&checkp,seg,s,facenum,nv,rad,vertex_list);
+	return check_sphere_to_face(&checkp,s,facenum,nv,rad,vertex_list);
 
 }
 
@@ -582,12 +403,15 @@ int special_check_line_to_face(vms_vector *newp,vms_vector *p0,vms_vector *p1,se
 
 	//calc some basic stuff
  
+	if ((seg-Segments)==-1)
+		Error("segnum == -1 in special_check_line_to_face()");
+
 	create_abs_vertex_lists(&num_faces,vertex_list,seg-Segments,side);
 	vm_vec_sub(&move_vec,p1,p0);
 
 	//figure out which edge(s) to check against
 
-	edgemask = check_point_to_face(p0,seg,s,facenum,nv,vertex_list);
+	edgemask = check_point_to_face(p0,s,facenum,nv,vertex_list);
 
 	if (edgemask == 0)
 		return check_line_to_face(newp,p0,p1,seg,side,facenum,nv,rad);
@@ -723,6 +547,7 @@ int check_vector_to_sphere_1(vms_vector *intp,vms_vector *p0,vms_vector *p1,vms_
 		return 0;
 }
 
+/*
 //$$fix get_sphere_int_dist(vms_vector *w,fix dist,fix rad);
 //$$
 //$$#pragma aux get_sphere_int_dist parm [esi] [ebx] [ecx] value [eax] modify exact [eax ebx ecx edx] = \
@@ -829,6 +654,7 @@ int check_vector_to_sphere_1(vms_vector *intp,vms_vector *p0,vms_vector *p1,vms_
 //$$	else
 //$$		return 0;       //no intersection
 //$$}
+*/
 
 //determine if a vector intersects with an object
 //if no intersects, returns 0, else fills in intp and returns dist
@@ -884,7 +710,7 @@ int find_vector_intersection(fvi_query *fq,fvi_info *hit_data)
 	vms_vector hit_pnt;
 	int i;
 
-	Assert(fq->ignore_obj_list != -1);
+	Assert(fq->ignore_obj_list != (int *)(-1));
 	Assert((fq->startseg <= Highest_segment_index) && (fq->startseg >= 0));
 
 	fvi_hit_seg = -1;
@@ -1038,11 +864,25 @@ int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p
 
 	//fvi_hit_object = -1;
 
+#if defined(MACINTOSH)
+	if ( StackSpace() < 1024 )                      
+	{
+		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));
+		Int3();
+	}
+#elif defined(WINDOWS)
+	if ( stackavail() < 10240 )                      
+	{
+		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));
+		Int3();
+	}
+#else
 	if ( stackavail() < 1024 )                      
 	{
 		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));
 		Int3();
 	}
+#endif
 
 	if (flags&FQ_GET_SEGLIST)
 		*seglist = startseg; 
@@ -1064,10 +904,15 @@ int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p
 			 	 		(CollisionResult[Objects[objnum].type][Objects[thisobjnum].type] == RESULT_NOTHING ))) {
 				int fudged_rad = rad;
 
+				//	If this is a powerup, don't do collision if flag FQ_IGNORE_POWERUPS is set
+				if (Objects[objnum].type == OBJ_POWERUP)
+					if (flags & FQ_IGNORE_POWERUPS)
+						continue;
+
 				//	If this is a robot:robot collision, only do it if both of them have attack_type != 0 (eg, green guy)
 				if (Objects[thisobjnum].type == OBJ_ROBOT)
 					if (Objects[objnum].type == OBJ_ROBOT)
-						if (!(Robot_info[Objects[objnum].id].attack_type && Robot_info[Objects[thisobjnum].id].attack_type))
+						// -- MK: 11/18/95, 4claws glomming together...this is easy.  -- if (!(Robot_info[Objects[objnum].id].attack_type && Robot_info[Objects[thisobjnum].id].attack_type))
 							continue;
 
 				if (Objects[thisobjnum].type == OBJ_ROBOT && Robot_info[Objects[thisobjnum].id].attack_type)
@@ -1160,7 +1005,7 @@ int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p
 						}
 
 						if ((wid_flag & WID_FLY_FLAG) ||
-							((wid_flag == WID_TRANSPARENT_WALL) && 
+							(((wid_flag & WID_RENDER_FLAG) && (wid_flag & WID_RENDPAST_FLAG)) && 
 								((flags & FQ_TRANSWALL) || (flags & FQ_TRANSPOINT && check_trans_wall(&hit_point,seg,side,face))))) {
 
 							int newsegnum;
@@ -1309,6 +1154,7 @@ quit_looking:
 
 }
 
+/*
 //--unused-- //compute the magnitude of a 2d vector
 //--unused-- fix mag2d(vec2d *v);
 //--unused-- #pragma aux mag2d parm [esi] value [eax] modify exact [eax ebx ecx edx] = \
@@ -1321,6 +1167,7 @@ quit_looking:
 //--unused-- 	"add	eax,ebx"			\
 //--unused-- 	"adc	edx,ecx"			\
 //--unused-- 	"call	quad_sqrt";
+*/
 
 //--unused-- //returns mag
 //--unused-- fix normalize_2d(vec2d *v)
@@ -1341,8 +1188,8 @@ quit_looking:
 #define cross(v0,v1) (fixmul((v0)->i,(v1)->j) - fixmul((v0)->j,(v1)->i))
 
 //finds the uv coords of the given point on the given seg & side
-//fills in u & v
-find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int facenum)
+//fills in u & v. if l is non-NULL fills it in also
+void find_hitpoint_uv(fix *u,fix *v,fix *l,vms_vector *pnt,segment *seg,int sidenum,int facenum)
 {
 	vms_vector_array *pnt_array;
 	vms_vector_array normal_array;
@@ -1361,6 +1208,15 @@ find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int face
 	//do lasers pass through illusory walls?
 
 	//when do I return 0 & 1 for non-transparent walls?
+
+	if (segnum < 0 || segnum > Highest_segment_index) {
+		mprintf((0,"Bad segnum (%d) in find_hitpoint_uv()\n",segnum));
+		*u = *v = 0;
+		return;
+	}
+
+	if (segnum==-1)
+		Error("segnum == -1 in find_hitpoint_uv()");
 
 	create_abs_vertex_lists(&num_faces,vertex_list,segnum,sidenum);
 	create_all_vertnum_lists(&num_faces,vertnum_list,segnum,sidenum);
@@ -1411,7 +1267,7 @@ find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int face
 	//mprintf(0," checkv = %x,%x\n",checkv.i,checkv.j);
 
 	k1 = -fixdiv(cross(&checkp,&vec0) + cross(&vec0,&p1),cross(&vec0,&vec1));
-	if (vec0.i)
+	if (abs(vec0.i) > abs(vec0.j))
 		k0 = fixdiv(fixmul(-k1,vec1.i) + checkp.i - p1.i,vec0.i);
 	else
 		k0 = fixdiv(fixmul(-k1,vec1.j) + checkp.j - p1.j,vec0.j);
@@ -1423,6 +1279,9 @@ find_hitpoint_uv(fix *u,fix *v,vms_vector *pnt,segment *seg,int sidenum,int face
 
 	*u = uvls[1].u + fixmul( k0,uvls[0].u - uvls[1].u) + fixmul(k1,uvls[2].u - uvls[1].u);
 	*v = uvls[1].v + fixmul( k0,uvls[0].v - uvls[1].v) + fixmul(k1,uvls[2].v - uvls[1].v);
+
+	if (l)
+		*l = uvls[1].l + fixmul( k0,uvls[0].l - uvls[1].l) + fixmul(k1,uvls[2].l - uvls[1].l);
 
 	//mprintf(0," u,v    = %x,%x\n",*u,*v);
 }
@@ -1436,9 +1295,9 @@ int check_trans_wall(vms_vector *pnt,segment *seg,int sidenum,int facenum)
 	int bmx,bmy;
 	fix u,v;
 
-	Assert(WALL_IS_DOORWAY(seg,sidenum) == WID_TRANSPARENT_WALL);
+//	Assert(WALL_IS_DOORWAY(seg,sidenum) == WID_TRANSPARENT_WALL);
 
-	find_hitpoint_uv(&u,&v,pnt,seg,sidenum,facenum);
+	find_hitpoint_uv(&u,&v,NULL,pnt,seg,sidenum,facenum);	//	Don't compute light value.
 
 	if (side->tmap_num2 != 0)	{
 		bm = texmerge_get_cached_bitmap( side->tmap_num, side->tmap_num2 );
@@ -1459,7 +1318,7 @@ int check_trans_wall(vms_vector *pnt,segment *seg,int sidenum,int facenum)
 
 	//mprintf(0," bmx,y  = %d,%d, color=%x\n",bmx,bmy,bm->bm_data[bmy*64+bmx]);
 
-	return (bm->bm_data[bmy*bm->bm_w+bmx] == 255);
+	return (bm->bm_data[bmy*bm->bm_w+bmx] == TRANSPARENCY_COLOR);
 }
 
 //new function for Mike
@@ -1491,9 +1350,12 @@ int sphere_intersects_wall(vms_vector *pnt,int segnum,fix rad)
 
 					//did we go through this wall/door?
 
+					if ((seg-Segments)==-1)
+						Error("segnum == -1 in sphere_intersects_wall()");
+
 					create_abs_vertex_lists(&num_faces,vertex_list,seg-Segments,side);
 
-					face_hit_type = check_sphere_to_face( pnt,seg,&seg->sides[side],
+					face_hit_type = check_sphere_to_face( pnt,&seg->sides[side],
 										face,((num_faces==1)?4:3),rad,vertex_list);
 
 					if (face_hit_type) {            //through this wall/door
@@ -1532,4 +1394,4 @@ int object_intersects_wall(object *objp)
 	return sphere_intersects_wall(&objp->pos,objp->segnum,objp->size);
 }
 
-
+

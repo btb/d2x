@@ -8,52 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/morph.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:32:19 $
- * 
- * Header for morph.c
- * 
- * $Log: morph.h $
- * Revision 2.0  1995/02/27  11:32:19  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.9  1995/01/04  12:20:46  john
- * Declearations to work better with game state save.
- * 
- * 
- * Revision 1.8  1995/01/03  20:38:44  john
- * Externed MAX_MORPH_OBJECTS
- * 
- * Revision 1.7  1994/09/26  17:28:33  matt
- * Made new multiple-object morph code work with the demo system
- * 
- * Revision 1.6  1994/09/26  15:40:17  matt
- * Allow multiple simultaneous morphing objects
- * 
- * Revision 1.5  1994/06/28  11:55:19  john
- * Made newdemo system record/play directly to/from disk, so
- * we don't need the 4 MB buffer anymore.
- * 
- * Revision 1.4  1994/06/16  13:57:40  matt
- * Added support for morphing objects in demos
- * 
- * Revision 1.3  1994/06/08  18:22:03  matt
- * Made morphing objects light correctly
- * 
- * Revision 1.2  1994/05/30  22:50:25  matt
- * Added morph effect for robots
- * 
- * Revision 1.1  1994/05/30  12:04:19  matt
- * Initial revision
- * 
- * 
- */
 
 
 
@@ -87,12 +43,12 @@ void morph_start(object *obj);
 void draw_morph_object(object *obj);
 
 //process the morphing object for one frame
-do_morph_frame(object *obj);
+void do_morph_frame(object *obj);
 
 //called at the start of a level
-init_morphs();
+void init_morphs();
 
 extern morph_data *find_morph_data(object *obj);
 
 #endif
-
+

@@ -8,28 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/clip.h $
- * $Revision: 1.3 $
- * $Author: john $
- * $Date: 1993/10/15 16:22:28 $
- *
- * Macros used for clipping
- *
- * $Log: clip.h $
- * Revision 1.3  1993/10/15  16:22:28  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/09/29  16:14:31  john
- * made work with fix point
- * 
- * Revision 1.1  1993/09/08  11:40:53  john
- * Initial revision
- * 
- *
- */
 
 
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))

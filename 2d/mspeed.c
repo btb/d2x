@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/2d/rcs/mspeed.c $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1993/10/15 16:23:32 $
- *
- * Program for testing video speed.
- *
- * $Log: mspeed.c $
- * Revision 1.2  1993/10/15  16:23:32  john
- * y
- * 
- * Revision 1.1  1993/09/08  11:43:59  john
- * Initial revision
- * 
- *
- */
 
 #include <stdlib.h>
 #include <stdio.h>

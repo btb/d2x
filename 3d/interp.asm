@@ -1,96 +1,20 @@
-;THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
-;SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
-;END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
-;ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
-;IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
-;SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
-;FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
-;CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
-;
-; $Source: f:/miner/source/3d/rcs/interp.asm $
-; $Revision: 1.21 $
-; $Author: john $
-; $Date: 1994/10/26 23:57:49 $
-; 
-; Polygon object interpreter
-; 
-; $Log: interp.asm $
-; Revision 1.21  1994/10/26  23:57:49  john
-; Took out gr_inverse_table
-; 
-; Revision 1.20  1994/09/26  14:43:31  matt
-; Put in checks for faces with fewer than 3 vertices
-; 
-; Revision 1.19  1994/09/09  14:24:14  matt
-; Added support for glowing textures, to add engine glow to Descent.
-; 
-; Revision 1.18  1994/08/26  16:42:03  matt
-; Added check for how many textures used in an object
-; 
-; Revision 1.17  1994/07/29  18:29:17  matt
-; Use instance-by-angles code, instead of building matrix here
-; 
-; Revision 1.16  1994/07/25  10:58:28  matt
-; Fixed morph effect for new 3d point handling
-; 
-; Revision 1.15  1994/07/25  00:00:07  matt
-; Made 3d no longer deal with point numbers, but only with pointers.
-; 
-; Revision 1.14  1994/07/22  17:57:59  matt
-; Changed the name of the rod functions, and took out some debugging code
-; 
-; Revision 1.13  1994/06/07  16:49:36  matt
-; Made interpreter take lighting value as parm, rather than in global var
-; 
-; Revision 1.12  1994/05/31  22:11:52  matt
-; Fixed morphing object lighting
-; 
-; Revision 1.11  1994/05/31  18:35:52  matt
-; Added lighting back to polygon objects
-; 
-; Revision 1.10  1994/05/31  16:03:55  matt
-; Made uvls right for triangulated faces in morphing objects
-; 
-; Revision 1.9  1994/05/30  22:48:34  matt
-; Added support for morph effect
-; 
-; Revision 1.8  1994/05/19  23:12:04  matt
-; Support new uvl value ranges
-; 
-; Revision 1.7  1994/04/29  15:39:46  matt
-; Use ebx in one place because the assembler seemed to be using it anyway
-; even though I typed just bx.
-; 
-; Revision 1.6  1994/04/19  17:02:32  matt
-; Made g3d_interp_outline var accessible by C
-; 
-; Revision 1.5  1994/03/30  10:22:40  matt
-; Added outline option for polygon models
-; 
-; Revision 1.4  1994/03/25  18:23:51  matt
-; Fixed a couple of subobject problems, and made g3_draw_polygon_model
-; take a pointer to a list of angvecs for subobj animation.
-; 
-; Revision 1.3  1994/03/18  16:07:57  matt
-; Added subobject and rod bitmap opcodes
-; 
-; Revision 1.2  1994/03/15  21:23:04  matt
-; Added code
-; 
-; Revision 1.1  1994/03/14  21:26:56  matt
-; Initial revision
-; 
-; 
-
+; THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
+; SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
+; END-USERS, AND SUBJECT TO ALL OF THE TERMS AND CONDITIONS HEREIN, GRANTS A
+; ROYALTY-FREE, PERPETUAL LICENSE TO SUCH END-USERS FOR USE BY SUCH END-USERS
+; IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
+; SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
+; FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
+; CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
+; AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+; COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 .386
 	option	oldstructs
 
 	.nolist
-	include	types.inc
+	include	pstypes.inc
 	include	psmacros.inc
 	include	gr.inc
 	include	3d.inc
@@ -100,7 +24,7 @@
 
 _DATA	segment	dword public USE32 'DATA'
 
-rcsid	db	"$Id: interp.asm 1.21 1994/10/26 23:57:49 john Exp $"
+rcsid	db	"$Id: interp.asm 1.27 1996/01/08 14:59:12 matt Exp $"
 	align	4
 
 ;table with address for each opcode
@@ -132,11 +56,9 @@ zero_angles	fixang	0,0,0	;vms_angvec <0,0,0>	;for if no angles specified
 rod_top_p	g3s_point <>
 rod_bot_p	g3s_point <>
 
-	ifndef	NDEBUG
 	public	g3d_interp_outline,_g3d_interp_outline
 _g3d_interp_outline label	dword
 g3d_interp_outline	dd	0
-	endif
 
 morph_pointlist	dd	?,?,?
 
@@ -151,6 +73,15 @@ Interp_point_list	dd	?
 MAX_POINTS_PER_POLY = 25
 
 point_list	dd	MAX_POINTS_PER_POLY dup (?)
+
+MAX_INTERP_COLORS = 100
+
+;this is a table of mappings from RGB15 to palette colors
+interp_color_table	dw	MAX_INTERP_COLORS dup (?,?)
+
+n_interp_colors	dd	0
+uninit_flag	dd	0
+
 
 _DATA	ends
 
@@ -231,9 +162,7 @@ rotate_loop:	call	g3_rotate_point
 op_defp_start:	xor	ecx,ecx
 	xor	eax,eax
 	mov	ax,w 4[ebp]	;starting point num
-	imulc	eax,size(g3s_point) ;get ofs of point
-	;changed the above line from "size g3s_point" to "size(g3s_point)" to make the compiler happy -KRB
-	
+	imulc	eax,size g3s_point	;get ofs of point
 	add	eax,Interp_point_list
 	mov	edi,eax
 	mov	cx,2[ebp]	;num points
@@ -251,9 +180,45 @@ op_flatpoly:	xor	ecx,ecx
 
 ;polygon is facing, so draw it
 
+;here the glow parameter is used for the player's headlight
+	test	glow_num,-1	;glow override?
+	js	no_glow2
+	mov	eax,glow_num
+	mov	esi,glow_values
+	mov	eax,[esi+eax*4]
+	mov	glow_num,-1
+	cmp	eax,-1	;-1 means draw normal color
+	jne	not_normal_color
+;use the color specified, run through darkening table
+	xor	ebx,ebx
+	mov	eax,32	;32 shades
+	imul	model_light
+	sar	eax,16
+	or	eax,eax
+	jns	no_sat1
 	xor	eax,eax
-	mov	ax,28[ebp]			;get color
-	call	gr_setcolor_			;set it
+no_sat1:	cmp	eax,32
+	jl	no_sat2
+	mov	eax,32
+no_sat2:	mov	bh,al	;get lighting table
+	xor	eax,eax
+	mov	ax,28[ebp]			;get color index
+	mov	ax,interp_color_table[eax*4]
+	mov	bl,al
+	mov	al,gr_fade_table[ebx]
+	jmp	got_color_index
+not_normal_color:	cmp	eax,-2	;-2 means use white
+	jne	not_white
+	mov	eax,255	;hack!
+	jmp	got_color_index
+not_white:	cmp	eax,-3	;-3 means don't draw polygon
+	je	flat_not_facing
+no_glow2:
+
+	xor	eax,eax
+	mov	ax,28[ebp]			;get color index
+	mov	ax,interp_color_table[eax*4]
+got_color_index:	call	gr_setcolor_			;set it
 
 	lea	esi,30[ebp]	;point number list
 
@@ -268,7 +233,7 @@ op_flatpoly:	xor	ecx,ecx
 	xor	ebx,ebx
 copy_loop:	xor	eax,eax
 	mov	ax,w [esi+ebx*2]	;get point number
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	[edi+ebx*4],eax
 	inc	ebx
@@ -374,7 +339,7 @@ l_loop:	mov	8[ebx],eax
 	xor	ebx,ebx
 copy_loop2:	xor	eax,eax
 	mov	ax,w [esi+ebx*2]	;get point number
-	imulc	eax,size(g3s_point);;Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	[edi+ebx*4],eax
 	inc	ebx
@@ -488,7 +453,7 @@ op_subcall:	xor	eax,eax
 	lea	edi,zero_angles
 	jmp	got_angles
 angles_not_null:
-	imulc	eax,size(vms_angvec);Modified to add Parentheses -KRB
+	imulc	eax,size vms_angvec
 	add	edi,eax
 got_angles:
 	;angles in edi
@@ -508,6 +473,52 @@ got_angles:
 	lea	ebp,20[ebp]
 	next
 
+;takes ax, returns ax
+find_color_index:	push	ebx
+
+	;first, see if color already in table
+
+	xor	ebx,ebx	;counter
+look_loop:	cmp	ebx,n_interp_colors
+	je	must_add_color
+	cmp	ax,interp_color_table+2[ebx*4]
+	je	found_color
+	inc	ebx
+	jmp	look_loop
+
+must_add_color:	mov	interp_color_table+2[ebx*4],ax	;save rgb15
+	call	gr_find_closest_color_15bpp_
+	mov	interp_color_table[ebx*4],ax		;save pal entry
+	inc	n_interp_colors
+
+found_color:	mov	eax,ebx	;return index
+	pop	ebx
+	ret
+
+;this remaps the 15bpp colors for the models into a new palette.  It should
+;be called whenever the palette changes
+g3_remap_interp_colors:
+	pushm	eax,ebx
+
+	xor	ebx,ebx	;index
+remap_loop:	cmp	ebx,n_interp_colors
+	je	done_remap
+
+	xor	eax,eax
+	mov	ax,interp_color_table+2[ebx*4]	;get rgb15
+	call	gr_find_closest_color_15bpp_
+	mov	interp_color_table[ebx*4],ax		;store pal entry 
+
+	inc	ebx
+	jmp	remap_loop
+
+done_remap:	popm	eax,ebx
+	ret
+
+
+;maps the colors back to RGB15
+g3_uninit_polygon_model:
+	mov	uninit_flag,1
 
 ;initialize a polygon object
 ;translate colors, scale UV values
@@ -518,6 +529,8 @@ g3_init_polygon_model:
 	pushm	eax,ebx,ecx,edx,esi,edi
 	call	init_loop
 	popm	eax,ebx,ecx,edx,esi,edi
+
+	mov	uninit_flag,0
 	ret
 
 
@@ -545,16 +558,17 @@ not_defpoints:
 	cmp 	w 2[esi],3
 	break_if	l,'face must have 3 or more points'
 	endif
-	;NO_INVERSE_TABLE xor	ebx,ebx
-	;NO_INVERSE_TABLE mov	bx,28[esi]		;get color
-	;NO_INVERSE_TABLE xor	eax,eax
-	;NO_INVERSE_TABLE mov	al,gr_inverse_table[ebx]	;xlate it
 	; The following 3 lines replace the above
 	xor	eax, eax
 	mov	ax,28[esi]		;get color
-	call	gr_find_closest_color_15bpp_
-
-	mov	28[esi],ax		;store new color
+	test	uninit_flag,-1
+	jz	not_uninit
+;unitialize!
+	mov	ax,interp_color_table+2[eax*4]
+	jmp	cont1
+not_uninit:
+	call	find_color_index
+cont1:	mov	28[esi],ax		;store new color
 
 	xor	ecx,ecx
 	mov	cx,2[esi]	;get nverts
@@ -729,7 +743,7 @@ morph_rotate_loop:	call	g3_rotate_point
 morph_defp_start:	xor	ecx,ecx
 	xor	eax,eax
 	mov	ax,w 4[ebp]	;starting point num
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB ;get ofs of point
+	imulc	eax,size g3s_point	;get ofs of point
 	add	eax,Interp_point_list
 	mov	edi,eax
 	mov	cx,2[ebp]	;num points
@@ -745,6 +759,7 @@ morph_flatpoly:	xor	ecx,ecx
 ;set color
 	xor	eax,eax
 	mov	ax,28[ebp]			;get color
+	mov	ax,interp_color_table[eax*4]
 	call	gr_setcolor_			;set it
 
 ;check and draw
@@ -752,17 +767,17 @@ morph_flatpoly:	xor	ecx,ecx
 
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+4,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+8,eax
 
@@ -781,7 +796,7 @@ flat_tri_loop:	xor	edi,edi	;no normal, must compute
 	mov	morph_pointlist+4,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+8,eax
 
@@ -849,17 +864,17 @@ not_zero:
 
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+4,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+8,eax
 
@@ -902,7 +917,7 @@ tmap_tri_loop:	xor	edi,edi	;no normal, must compute
 	mov	morph_pointlist+4,eax
 	xor	eax,eax
 	lodsw
-	imulc	eax,size(g3s_point);Modified to add Parentheses -KRB
+	imulc	eax,size g3s_point
 	add	eax,Interp_point_list
 	mov	morph_pointlist+8,eax
 
@@ -995,4 +1010,3 @@ _TEXT	ends
 
 	end
 
-

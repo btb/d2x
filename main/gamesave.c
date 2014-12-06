@@ -8,279 +8,11 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/gamesave.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/04/23 14:53:12 $
- * 
- * Save game information
- * 
- * $Log: gamesave.c $
- * Revision 2.2  1995/04/23  14:53:12  john
- * Made some mine structures read in with no structure packing problems.
- * 
- * Revision 2.1  1995/03/20  18:15:43  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.0  1995/02/27  11:29:50  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.207  1995/02/23  10:17:36  allender
- * fixed parameter mismatch with compute_segment_center
- * 
- * Revision 1.206  1995/02/22  14:51:17  allender
- * fixed some things that I missed
- * 
- * Revision 1.205  1995/02/22  13:31:38  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.204  1995/02/01  20:58:08  john
- * Made editor check hog.
- * 
- * Revision 1.203  1995/01/28  17:40:34  mike
- * correct level names (use rdl, sdl) for dumpmine stuff.
- * 
- * Revision 1.202  1995/01/25  20:03:46  matt
- * Moved matrix check to avoid orthogonalizing an uninitialize matrix
- * 
- * Revision 1.201  1995/01/20  16:56:53  mike
- * remove some mprintfs.
- * 
- * Revision 1.200  1995/01/15  19:42:13  matt
- * Ripped out hostage faces for registered version
- * 
- * Revision 1.199  1995/01/05  16:59:09  yuan
- * Make it so if editor is loaded, don't get error from typo
- * in filename.
- * 
- * Revision 1.198  1994/12/19  12:49:46  mike
- * Change fgets to cfgets.  fgets was getting a pointer mismatch warning.
- * 
- * Revision 1.197  1994/12/12  01:20:03  matt
- * Took out object size hack for green claw guys
- * 
- * Revision 1.196  1994/12/11  13:19:37  matt
- * Restored calls to fix_object_segs() when debugging is turned off, since
- * it's not a big routine, and could fix some possibly bad problems.
- * 
- * Revision 1.195  1994/12/10  16:17:24  mike
- * fix editor bug that was converting transparent walls into rock.
- * 
- * Revision 1.194  1994/12/09  14:59:27  matt
- * Added system to attach a fireball to another object for rendering purposes,
- * so the fireball always renders on top of (after) the object.
- * 
- * Revision 1.193  1994/12/08  17:19:02  yuan
- * Cfiling stuff.
- * 
- * Revision 1.192  1994/12/02  20:01:05  matt
- * Always give vulcan cannon powerup same amount of ammo, regardless of
- * how much it was saved with
- * 
- * Revision 1.191  1994/11/30  17:45:57  yuan
- * Saving files now creates RDL/SDLs instead of CDLs.
- * 
- * Revision 1.190  1994/11/30  17:22:14  matt
- * Ripped out hostage faces in shareware version
- * 
- * Revision 1.189  1994/11/28  00:09:30  allender
- * commented out call to newdemo_record_start_demo in load_level...what is
- * this doing here anyway?????
- * 
- * Revision 1.188  1994/11/27  23:13:48  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.187  1994/11/27  18:06:20  matt
- * Cleaned up LVL/CDL file loading
- * 
- * Revision 1.186  1994/11/25  22:46:29  matt
- * Allow ESC out of compiled/normal menu (esc=compiled).
- * 
- * Revision 1.185  1994/11/23  12:18:35  mike
- * move level names here...a more logical place than dumpmine.
- * 
- * Revision 1.184  1994/11/21  20:29:19  matt
- * If hostage info is bad, fix it.
- * 
- * Revision 1.183  1994/11/21  20:26:07  matt
- * Fixed bug, I hope
- * 
- * Revision 1.182  1994/11/21  20:20:37  matt
- * Fixed stupid mistake
- * 
- * Revision 1.181  1994/11/21  20:18:40  matt
- * Fixed (hopefully) totally bogus writing of hostage data
- * 
- * Revision 1.180  1994/11/20  14:11:56  matt
- * Gracefully handle two hostages having same id
- * 
- * Revision 1.179  1994/11/19  23:55:05  mike
- * remove Assert, put in comment for Matt.
- * 
- * Revision 1.178  1994/11/19  19:53:24  matt
- * Added code to full support different hostage head clip & message for
- * each hostage.
- * 
- * Revision 1.177  1994/11/19  15:15:21  mike
- * remove unused code and data
- * 
- * Revision 1.176  1994/11/19  10:28:28  matt
- * Took out write routines when editor compiled out
- * 
- * Revision 1.175  1994/11/17  20:38:25  john
- * Took out warning.
- * 
- * Revision 1.174  1994/11/17  20:36:34  john
- * Made it so that saving a mine will write the .cdl even
- * if .lvl gets error.
- * 
- * Revision 1.173  1994/11/17  20:26:19  john
- * Made the game load whichever of .cdl or .lvl exists,
- * and if they both exist, prompt the user for which one.
- * 
- * Revision 1.172  1994/11/17  20:11:20  john
- * Fixed warning.
- * 
- * Revision 1.171  1994/11/17  20:09:26  john
- * Added new compiled level format.
- * 
- * Revision 1.170  1994/11/17  14:57:21  mike
- * moved segment validation functions from editor to main.
- * 
- * Revision 1.169  1994/11/17  11:39:21  matt
- * Ripped out code to load old mines
- * 
- * Revision 1.168  1994/11/16  11:24:53  matt
- * Made attack-type robots have smaller radius, so they get closer to player
- * 
- * Revision 1.167  1994/11/15  21:42:47  mike
- * better error messages.
- * 
- * Revision 1.166  1994/11/15  15:30:41  matt
- * Save ptr to name of level being loaded
- * 
- * Revision 1.165  1994/11/14  20:47:46  john
- * Attempted to strip out all the code in the game 
- * directory that uses any ui code.
- * 
- * Revision 1.164  1994/11/14  14:34:23  matt
- * Fixed up handling when textures can't be found during remap
- * 
- * Revision 1.163  1994/11/10  14:02:49  matt
- * Hacked in support for player ships with different textures
- * 
- * Revision 1.162  1994/11/06  14:38:17  mike
- * Remove an apparently unnecessary mprintf.
- * 
- * Revision 1.161  1994/10/30  14:11:28  mike
- * ripout local segments stuff.
- * 
- * Revision 1.160  1994/10/28  12:10:41  matt
- * Check that was supposed to happen only when editor was in was happening
- * only when editor was out.
- * 
- * Revision 1.159  1994/10/27  11:25:32  matt
- * Only do connectivity error check when editor in
- * 
- * Revision 1.158  1994/10/27  10:54:00  matt
- * Made connectivity error checking put up warning if errors found
- * 
- * Revision 1.157  1994/10/25  10:50:54  matt
- * Vulcan cannon powerups now contain ammo count
- * 
- * Revision 1.156  1994/10/23  02:10:43  matt
- * Got rid of obsolete hostage_info stuff
- * 
- * Revision 1.155  1994/10/22  18:57:26  matt
- * Added call to check_segment_connections()
- * 
- * Revision 1.154  1994/10/21  12:19:23  matt
- * Clear transient objects when saving (& loading) games
- * 
- * Revision 1.153  1994/10/21  11:25:10  mike
- * Use new constant IMMORTAL_TIME.
- * 
- * Revision 1.152  1994/10/20  12:46:59  matt
- * Replace old save files (MIN/SAV/HOT) with new LVL files
- * 
- * Revision 1.151  1994/10/19  19:26:32  matt
- * Fixed stupid bug
- * 
- * Revision 1.150  1994/10/19  16:46:21  matt
- * Made tmap overrides for robots remap texture numbers
- * 
- * Revision 1.149  1994/10/18  08:50:27  yuan
- * Fixed correct variable this time.
- * 
- * Revision 1.148  1994/10/18  08:45:02  yuan
- * Oops. forgot load function.
- * 
- * Revision 1.147  1994/10/18  08:42:10  yuan
- * Avoid the int3.
- * 
- * Revision 1.146  1994/10/17  21:34:57  matt
- * Added support for new Control Center/Main Reactor
- * 
- * Revision 1.145  1994/10/15  19:06:34  mike
- * Fix bug, maybe, having to do with something or other, ...
- * 
- * Revision 1.144  1994/10/12  21:07:33  matt
- * Killed unused field in object structure
- * 
- * Revision 1.143  1994/10/06  14:52:55  mike
- * Put check in to detect possibly bogus walls in last segment which leaked through an earlier check
- * due to misuse of Highest_segment_index.
- * 
- * Revision 1.142  1994/10/05  22:12:44  mike
- * Put in cleanup for matcen/fuelcen links.
- * 
- * Revision 1.141  1994/10/03  11:30:05  matt
- * Make sure player in a valid segment before saving
- * 
- * Revision 1.140  1994/09/28  11:14:41  mike
- * Better error messaging on bogus mines: Only bring up dialog box if a "real" (level??.*) level.
- * 
- * Revision 1.139  1994/09/28  09:22:58  mike
- * Comment out a mprintf.
- * 
- * Revision 1.138  1994/09/27  17:08:36  mike
- * Message boxes when you load bogus mines.
- * 
- * Revision 1.137  1994/09/27  15:43:45  mike
- * Move the dump stuff to dumpmine.
- * 
- * Revision 1.136  1994/09/27  00:02:31  mike
- * Dump text files (".txm") when loading a mine, showing all kinds of useful mine info.
- * 
- * Revision 1.135  1994/09/26  11:30:41  matt
- * Took out code which loaded bogus player structure
- * 
- * Revision 1.134  1994/09/26  11:18:44  john
- * Fixed some conflicts with newseg.
- * 
- * Revision 1.133  1994/09/26  10:56:58  matt
- * Fixed inconsistancies in lifeleft for immortal objects
- * 
- * Revision 1.132  1994/09/25  23:41:10  matt
- * Changed the object load & save code to read/write the structure fields one
- * at a time (rather than the whole structure at once).  This mean that the
- * object structure can be changed without breaking the load/save functions.
- * As a result of this change, the local_object data can be and has been 
- * incorporated into the object array.  Also, timeleft is now a property 
- * of all objects, and the object structure has been otherwise cleaned up.
- * 
- */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: gamesave.c 2.2 1995/04/23 14:53:12 john Exp $";
-#pragma on (unreferenced)
+char gamesave_rcsid[] = "$Id: gamesave.c 2.72 1996/12/19 11:28:57 jason Exp $";
 
-
-#include <io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -305,14 +37,13 @@ static char rcsid[] = "$Id: gamesave.c 2.2 1995/04/23 14:53:12 john Exp $";
 #include "robot.h"
 
 
-#include "cflib.h"
 #include "cfile.h"
 #include "bm.h"
 #include "menu.h"
 #include "switch.h"
 #include "fuelcen.h"
+#include "cntrlcen.h"
 #include "powerup.h"
-#include "hostage.h"
 #include "weapon.h"
 #include "newdemo.h"
 #include "gameseq.h"
@@ -321,66 +52,28 @@ static char rcsid[] = "$Id: gamesave.c 2.2 1995/04/23 14:53:12 john Exp $";
 #include "text.h"
 #include "gamefont.h"
 #include "gamesave.h"
+#include "gamepal.h"
+#include "laser.h"
+#include "byteswap.h"
 
-#ifdef EDITOR
-#ifdef SHAREWARE
-char *Shareware_level_names[NUM_SHAREWARE_LEVELS] = {
-	"level01.sdl",
-	"level02.sdl",
-	"level03.sdl",
-	"level04.sdl",
-	"level05.sdl",
-	"level06.sdl",
-	"level07.sdl"
-};
-#else
-char *Shareware_level_names[NUM_SHAREWARE_LEVELS] = {
-	"level01.rdl",
-	"level02.rdl",
-	"level03.rdl",
-	"level04.rdl",
-	"level05.rdl",
-	"level06.rdl",
-	"level07.rdl"
-};
-#endif
-
-char *Registered_level_names[NUM_REGISTERED_LEVELS] = {
-	"level08.rdl",
-	"level09.rdl",
-	"level10.rdl",
-	"level11.rdl",
-	"level12.rdl",
-	"level13.rdl",
-	"level14.rdl",
-	"level15.rdl",
-	"level16.rdl",
-	"level17.rdl",
-	"level18.rdl",
-	"level19.rdl",
-	"level20.rdl",
-	"level21.rdl",
-	"level22.rdl",
-	"level23.rdl",
-	"level24.rdl",
-	"level25.rdl",
-	"level26.rdl",
-	"level27.rdl",
-	"levels1.rdl",
-	"levels2.rdl",
-	"levels3.rdl"
-};
+#ifdef MACINTOSH
+#include "strutil.h"		// because my compiler doesn't have strupr
 #endif
 
 char Gamesave_current_filename[128];
 
-#define GAME_VERSION					25
+#define GAME_VERSION					32
 #define GAME_COMPATIBLE_VERSION	22
+
+//version 28->29	add delta light support
+//version 27->28  controlcen id now is reactor number, not model number
+//version 28->29  ??
+//version 29->30	changed trigger structure
+//version 30->31	changed trigger structure some more
+//version 31->32	change segment structure, make it 512 bytes w/o editor, add Segment2s array.
 
 #define MENU_CURSOR_X_MIN			MENU_X
 #define MENU_CURSOR_X_MAX			MENU_X+6
-
-#define HOSTAGE_DATA_VERSION	0
 
 //Start old wall structures
 
@@ -413,6 +106,45 @@ typedef struct v19_door {
 } v19_door;
 
 //End old wall structures
+
+//old trigger structs
+
+typedef struct v29_trigger {
+	byte		type;
+	short		flags;
+	fix		value;
+	fix		time;
+	byte		link_num;
+	short 	num_links;
+	short 	seg[MAX_WALLS_PER_LINK];
+	short		side[MAX_WALLS_PER_LINK];
+	} v29_trigger;
+
+typedef struct v30_trigger {
+	short		flags;
+	byte	 	num_links;
+	byte		pad;			//keep alignment
+	fix		value;
+	fix		time;
+	short 	seg[MAX_WALLS_PER_LINK];
+	short		side[MAX_WALLS_PER_LINK];
+	} v30_trigger;
+
+//flags for V30 & below triggers
+#define	TRIGGER_CONTROL_DOORS		1	// Control Trigger
+#define	TRIGGER_SHIELD_DAMAGE		2	// Shield Damage Trigger
+#define	TRIGGER_ENERGY_DRAIN	   	4	// Energy Drain Trigger
+#define	TRIGGER_EXIT					8	// End of level Trigger
+#define	TRIGGER_ON					  16	// Whether Trigger is active
+#define	TRIGGER_ONE_SHOT			  32	// If Trigger can only be triggered once
+#define	TRIGGER_MATCEN				  64	// Trigger for materialization centers
+#define	TRIGGER_ILLUSION_OFF		 128	// Switch Illusion OFF trigger
+#define	TRIGGER_SECRET_EXIT		 256	// Exit to secret level
+#define	TRIGGER_ILLUSION_ON		 512	// Switch Illusion ON trigger
+#define	TRIGGER_UNLOCK_DOORS		1024	// Unlocks a door
+#define	TRIGGER_OPEN_WALL			2048	// Makes a wall open
+#define	TRIGGER_CLOSE_WALL		4096	// Makes a wall closed
+#define	TRIGGER_ILLUSORY_WALL	8192	// Makes a wall illusory
 
 struct {
 	ushort 	fileinfo_signature;
@@ -449,7 +181,21 @@ struct {
 	int		matcen_offset;
 	int		matcen_howmany;
 	int		matcen_sizeof;
+	int		dl_indices_offset;
+	int		dl_indices_howmany;
+	int		dl_indices_sizeof;
+	int		delta_light_offset;
+	int		delta_light_howmany;
+	int		delta_light_sizeof;
 } game_fileinfo;
+
+//	LINT: adding function prototypes
+void read_object(object *obj, CFILE *f, int version);
+void write_object(object *obj, FILE *f);
+void dump_mine_info(void);
+
+extern char MaxPowerupsAllowed[MAX_POWERUP_TYPES];
+extern char PowerupsInMine[MAX_POWERUP_TYPES];
 
 #ifdef EDITOR
 extern char mine_filename[];
@@ -475,92 +221,26 @@ int is_real_level(char *filename)
 	return !strnicmp(&filename[len-11], "level", 5);
 
 }
+#endif
 
-void convert_name_to_CDL( char *dest, char *src )
+void change_filename_extension( char *dest, char *src, char *new_ext )
 {
 	int i;
 
 	strcpy (dest, src);
 
-#ifdef SHAREWARE
-	for (i=1; i<strlen(dest); i++ )
-	{
-		if (dest[i]=='.'||dest[i]==' '||dest[i]==0)
-		{
-			dest[i]='.';
-			dest[i+1]='S';
-			dest[i+2]= 'D';
-			dest[i+3]= 'L';
-			dest[i+4]=0;
-			return;
-		}
-	}
-
-	if (i < 123)
-	{
-		dest[i]='.';
-		dest[i+1]='S';
-		dest[i+2]= 'D';
-		dest[i+3]= 'L';
-		dest[i+4]=0;
-		return;
-	}
-#else
-	for (i=1; i<strlen(dest); i++ )
-	{
-		if (dest[i]=='.'||dest[i]==' '||dest[i]==0)
-		{
-			dest[i]='.';
-			dest[i+1]='R';
-			dest[i+2]= 'D';
-			dest[i+3]= 'L';
-			dest[i+4]=0;
-			return;
-		}
-	}
-
-	if (i < 123)
-	{
-		dest[i]='.';
-		dest[i+1]='R';
-		dest[i+2]= 'D';
-		dest[i+3]= 'L';
-		dest[i+4]=0;
-		return;
-	}
-#endif
-
-
-
-
-}
-#endif
-
-void convert_name_to_LVL( char *dest, char *src )
-{
-	int i;
-
-	strcpy (dest, src);
+	if (new_ext[0]=='.')
+		new_ext++;
 
 	for (i=1; i<strlen(dest); i++ )
-	{
 		if (dest[i]=='.'||dest[i]==' '||dest[i]==0)
-		{
-			dest[i]='.';
-			dest[i+1]='L';
-			dest[i+2]= 'V';
-			dest[i+3]= 'L';
-			dest[i+4]=0;
-			return;
-		}
-	}
+			break;
 
-	if (i < 123)
-	{
+	if (i < 123) {
 		dest[i]='.';
-		dest[i+1]='L';
-		dest[i+2]= 'V';
-		dest[i+3]= 'L';
+		dest[i+1]=new_ext[0];
+		dest[i+2]=new_ext[1];
+		dest[i+3]=new_ext[2];
 		dest[i+4]=0;
 		return;
 	}
@@ -572,8 +252,8 @@ void convert_name_to_LVL( char *dest, char *src )
 
 int Gamesave_num_players=0;
 
-int N_save_pof_names=25;
-char Save_pof_names[MAX_POLYGON_MODELS][13];
+int N_save_pof_names;
+char Save_pof_names[MAX_POLYGON_MODELS][FILENAME_LEN];
 
 check_and_fix_matrix(vms_matrix *m);
 
@@ -590,12 +270,36 @@ void verify_object( object * obj )	{
 
 		// Make sure model number & size are correct...		
 		if ( obj->render_type == RT_POLYOBJ ) {
+			Assert(Robot_info[obj->id].model_num != -1);
+				//if you fail this assert, it means that a robot in this level
+				//hasn't been loaded, possibly because he's marked as
+				//non-shareware.  To see what robot number, print obj->id.
+
+			Assert(Robot_info[obj->id].always_0xabcd == 0xabcd);
+				//if you fail this assert, it means that the robot_ai for
+				//a robot in this level hasn't been loaded, possibly because 
+				//it's marked as non-shareware.  To see what robot number, 
+				//print obj->id.
+
 			obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
 			obj->size = Polygon_models[obj->rtype.pobj_info.model_num].rad;
+
+			//@@Took out this ugly hack 1/12/96, because Mike has added code
+			//@@that should fix it in a better way.
+			//@@//this is a super-ugly hack.  Since the baby stripe robots have
+			//@@//their firing point on their bounding sphere, the firing points
+			//@@//can poke through a wall if the robots are very close to it. So
+			//@@//we make their radii bigger so the guns can't get too close to 
+			//@@//the walls
+			//@@if (Robot_info[obj->id].flags & RIF_BIG_RADIUS)
+			//@@	obj->size = (obj->size*3)/2;
 
 			//@@if (obj->control_type==CT_AI && Robot_info[obj->id].attack_type)
 			//@@	obj->size = obj->size*3/4;
 		}
+
+		if (obj->id == 65)						//special "reactor" robots
+			obj->movement_type = MT_NONE;
 
 		if (obj->movement_type == MT_PHYSICS) {
 			obj->mtype.phys_info.mass = Robot_info[obj->id].mass;
@@ -623,37 +327,70 @@ void verify_object( object * obj )	{
 			Assert( obj->render_type != RT_POLYOBJ );
 		}
 		obj->control_type = CT_POWERUP;
-
 		obj->size = Powerup_info[obj->id].size;
-	}
+		obj->ctype.powerup_info.creation_time = 0;
 
-	//if ( obj->type == OBJ_HOSTAGE )	{
-	//	if ( obj->id >= N_hostage_types )	{
-	//		obj->id = 0;
-	//		Assert( obj->render_type == RT_POLYOBJ );
-	//	}
-	//}
+		if (Game_mode & GM_NETWORK)
+			{
+			  if (multi_powerup_is_4pack(obj->id))
+				{
+				 PowerupsInMine[obj->id-1]+=4;
+			 	 MaxPowerupsAllowed[obj->id-1]+=4;
+				}
+			  PowerupsInMine[obj->id]++;
+		     MaxPowerupsAllowed[obj->id]++;
+			  mprintf ((0,"PowerupLimiter: ID=%d\n",obj->id));
+			  if (obj->id>MAX_POWERUP_TYPES)
+				mprintf ((1,"POWERUP: Overwriting array bounds!! Get JL!\n"));
+		 	}
+
+	}
 
 	if ( obj->type == OBJ_WEAPON )	{
 		if ( obj->id >= N_weapon_types )	{
 			obj->id = 0;
 			Assert( obj->render_type != RT_POLYOBJ );
 		}
+
+		if (obj->id == PMINE_ID) {		//make sure pmines have correct values
+
+			obj->mtype.phys_info.mass = Weapon_info[obj->id].mass;
+			obj->mtype.phys_info.drag = Weapon_info[obj->id].drag;
+			obj->mtype.phys_info.flags |= PF_FREE_SPINNING;
+
+			// Make sure model number & size are correct...		
+			Assert( obj->render_type == RT_POLYOBJ );
+
+			obj->rtype.pobj_info.model_num = Weapon_info[obj->id].model_num;
+			obj->size = Polygon_models[obj->rtype.pobj_info.model_num].rad;
+		}
 	}
 
 	if ( obj->type == OBJ_CNTRLCEN )	{
-		int i;
 
 		obj->render_type = RT_POLYOBJ;
 		obj->control_type = CT_CNTRLCEN;
 
-		// Make model number is correct...	
+		//@@// Make model number is correct...	
+		//@@for (i=0; i<Num_total_object_types; i++ )	
+		//@@	if ( ObjType[i] == OL_CONTROL_CENTER )		{
+		//@@		obj->rtype.pobj_info.model_num = ObjId[i];
+		//@@		obj->shields = ObjStrength[i];
+		//@@		break;		
+		//@@	}
+
+		#ifdef EDITOR
+		{
+		int i;
+		// Check, and set, strength of reactor
 		for (i=0; i<Num_total_object_types; i++ )	
-			if ( ObjType[i] == OL_CONTROL_CENTER )		{
-				obj->rtype.pobj_info.model_num = ObjId[i];
+			if ( ObjType[i]==OL_CONTROL_CENTER && ObjId[i] == obj->id ) {
 				obj->shields = ObjStrength[i];
 				break;		
 			}
+		Assert(i < Num_total_object_types);		//make sure we found it
+		}
+		#endif
 	}
 
 	if ( obj->type == OBJ_PLAYER )	{
@@ -675,14 +412,11 @@ void verify_object( object * obj )	{
 
 	if (obj->type == OBJ_HOSTAGE) {
 
-		if (obj->id > N_hostage_types)
-			obj->id = 0;
+		//@@if (obj->id > N_hostage_types)
+		//@@	obj->id = 0;
 
 		obj->render_type = RT_HOSTAGE;
 		obj->control_type = CT_POWERUP;
-		//obj->vclip_info.vclip_num = Hostage_vclip_num[Hostages[obj->id].type];
-		//obj->vclip_info.frametime = Vclip[obj->vclip_info.vclip_num].frame_time;
-		//obj->vclip_info.framenum = 0;
 	}
 
 }
@@ -694,6 +428,7 @@ static int read_int(CFILE *file)
 	if (cfread( &i, sizeof(i), 1, file) != 1)
 		Error( "Error reading int in gamesave.c" );
 
+	i = INTEL_INT(i);
 	return i;
 }
 
@@ -704,6 +439,7 @@ static fix read_fix(CFILE *file)
 	if (cfread( &f, sizeof(f), 1, file) != 1)
 		Error( "Error reading fix in gamesave.c" );
 
+	f = (fix)INTEL_INT((int)f);
 	return f;
 }
 
@@ -714,6 +450,7 @@ static short read_short(CFILE *file)
 	if (cfread( &s, sizeof(s), 1, file) != 1)
 		Error( "Error reading short in gamesave.c" );
 
+	s = INTEL_SHORT(s);
 	return s;
 }
 
@@ -724,6 +461,7 @@ static short read_fixang(CFILE *file)
 	if (cfread( &f, sizeof(f), 1, file) != 1)
 		Error( "Error reading fixang in gamesave.c" );
 
+	f = (fixang)INTEL_SHORT((short)f);
 	return f;
 }
 
@@ -823,11 +561,17 @@ static void gs_write_angvec(vms_angvec *v,FILE *file)
 
 #endif
 
+
+extern int multi_powerup_is_4pack(int);
 //reads one object of the given version from the given file
-read_object(object *obj,CFILE *f,int version)
+void read_object(object *obj,CFILE *f,int version)
 {
+	
 	obj->type				= read_byte(f);
 	obj->id					= read_byte(f);
+
+	if (obj->type == OBJ_CNTRLCEN && version<28)
+		obj->id = 0;		//used to be only one kind of reactor
 
 	obj->control_type		= read_byte(f);
 	obj->movement_type	= read_byte(f);
@@ -891,12 +635,14 @@ read_object(object *obj,CFILE *f,int version)
 				obj->ctype.ai_info.flags[i]			= read_byte(f);
 
 			obj->ctype.ai_info.hide_segment			= read_short(f);
-			obj->ctype.ai_info.hide_index				= read_short(f);
+			obj->ctype.ai_info.hide_index			= read_short(f);
 			obj->ctype.ai_info.path_length			= read_short(f);
 			obj->ctype.ai_info.cur_path_index		= read_short(f);
 
-			obj->ctype.ai_info.follow_path_start_seg	= read_short(f);
-			obj->ctype.ai_info.follow_path_end_seg		= read_short(f);
+			if (version <= 25) {
+				read_short(f);	//				obj->ctype.ai_info.follow_path_start_seg	= 
+				read_short(f);	//				obj->ctype.ai_info.follow_path_end_seg		= 
+			}
 
 			break;
 		}
@@ -915,7 +661,7 @@ read_object(object *obj,CFILE *f,int version)
 			//do I really need to read these?  Are they even saved to disk?
 
 			obj->ctype.laser_info.parent_type		= read_short(f);
-			obj->ctype.laser_info.parent_num			= read_short(f);
+			obj->ctype.laser_info.parent_num		= read_short(f);
 			obj->ctype.laser_info.parent_signature	= read_int(f);
 
 			break;
@@ -934,6 +680,12 @@ read_object(object *obj,CFILE *f,int version)
 
 			if (obj->id == POW_VULCAN_WEAPON)
 					obj->ctype.powerup_info.count = VULCAN_WEAPON_AMMO_AMOUNT;
+
+			if (obj->id == POW_GAUSS_WEAPON)
+					obj->ctype.powerup_info.count = VULCAN_WEAPON_AMMO_AMOUNT;
+
+			if (obj->id == POW_OMEGA_WEAPON)
+					obj->ctype.powerup_info.count = MAX_OMEGA_CHARGE;
 
 			break;
 
@@ -1020,7 +772,7 @@ read_object(object *obj,CFILE *f,int version)
 #ifdef EDITOR
 
 //writes one object to the given file
-write_object(object *obj,FILE *f)
+void write_object(object *obj,FILE *f)
 {
 	gs_write_byte(obj->type,f);
 	gs_write_byte(obj->id,f);
@@ -1090,8 +842,8 @@ write_object(object *obj,FILE *f)
 			gs_write_short(obj->ctype.ai_info.path_length,f);
 			gs_write_short(obj->ctype.ai_info.cur_path_index,f);
 
-			gs_write_short(obj->ctype.ai_info.follow_path_start_seg,f);
-			gs_write_short(obj->ctype.ai_info.follow_path_end_seg,f);
+			// -- unused! mk, 08/13/95 -- gs_write_short(obj->ctype.ai_info.follow_path_start_seg,f);
+			// -- unused! mk, 08/13/95 -- gs_write_short(obj->ctype.ai_info.follow_path_end_seg,f);
 
 			break;
 		}
@@ -1111,8 +863,6 @@ write_object(object *obj,FILE *f)
 			gs_write_short(obj->ctype.laser_info.parent_type,f);
 			gs_write_short(obj->ctype.laser_info.parent_num,f);
 			gs_write_int(obj->ctype.laser_info.parent_signature,f);
-
-			break;
 
 			break;
 
@@ -1188,6 +938,16 @@ write_object(object *obj,FILE *f)
 }
 #endif
 
+typedef struct  {
+	int			robot_flags;		// Up to 32 different robots
+	fix			hit_points;			// How hard it is to destroy this particular matcen
+	fix			interval;			// Interval between materialogrifizations
+	short			segnum;				// Segment this is attached to.
+	short			fuelcen_num;		// Index in fuelcen array.
+} old_matcen_info;
+
+extern int remove_trigger_num(int trigger_num);
+
 // -----------------------------------------------------------------------------
 // Load game 
 // Loads all the relevant data for a level.
@@ -1226,13 +986,25 @@ load_game_data(CFILE *LoadFile)
 	game_fileinfo.matcen_howmany		=	0;
 	game_fileinfo.matcen_sizeof		=	sizeof(matcen_info);
 
+	game_fileinfo.dl_indices_offset		=	-1;
+	game_fileinfo.dl_indices_howmany		=	0;
+	game_fileinfo.dl_indices_sizeof		=	sizeof(dl_index);
+
+	game_fileinfo.delta_light_offset		=	-1;
+	game_fileinfo.delta_light_howmany		=	0;
+	game_fileinfo.delta_light_sizeof		=	sizeof(delta_light);
+
 	// Read in game_top_fileinfo to get size of saved fileinfo.
 
 	if (cfseek( LoadFile, start_offset, SEEK_SET )) 
 		Error( "Error seeking in gamesave.c" ); 
 
-	if (cfread( &game_top_fileinfo, sizeof(game_top_fileinfo), 1, LoadFile) != 1)
-		Error( "Error reading game_top_fileinfo in gamesave.c" );
+//	if (cfread( &game_top_fileinfo, sizeof(game_top_fileinfo), 1, LoadFile) != 1)
+//		Error( "Error reading game_top_fileinfo in gamesave.c" );
+
+	game_top_fileinfo.fileinfo_signature = read_short(LoadFile);
+	game_top_fileinfo.fileinfo_version = read_short(LoadFile);
+	game_top_fileinfo.fileinfo_sizeof = read_int(LoadFile);
 
 	// Check signature
 	if (game_top_fileinfo.fileinfo_signature != 0x6705)
@@ -1246,8 +1018,10 @@ load_game_data(CFILE *LoadFile)
 	if (cfseek( LoadFile, start_offset, SEEK_SET )) 
 		Error( "Error seeking to game_fileinfo in gamesave.c" );
 
-	game_fileinfo.fileinfo_signature = read_short(LoadFile);
+//	if (cfread( &game_fileinfo, game_top_fileinfo.fileinfo_sizeof, 1, LoadFile )!=1)
+//		Error( "Error reading game_fileinfo in gamesave.c" );
 
+	game_fileinfo.fileinfo_signature = read_short(LoadFile);
 	game_fileinfo.fileinfo_version = read_short(LoadFile);
 	game_fileinfo.fileinfo_sizeof = read_int(LoadFile);
 	for(i=0; i<15; i++)
@@ -1277,20 +1051,33 @@ load_game_data(CFILE *LoadFile)
 	game_fileinfo.matcen_howmany = read_int(LoadFile);
 	game_fileinfo.matcen_sizeof = read_int(LoadFile);
 
-//	if (cfread( &game_fileinfo, game_top_fileinfo.fileinfo_sizeof, 1, LoadFile )!=1)
-//		Error( "Error reading game_fileinfo in gamesave.c" );
+	if (game_top_fileinfo.fileinfo_version >= 29) {
+		game_fileinfo.dl_indices_offset = read_int(LoadFile);
+		game_fileinfo.dl_indices_howmany = read_int(LoadFile);
+		game_fileinfo.dl_indices_sizeof = read_int(LoadFile);
+
+		game_fileinfo.delta_light_offset = read_int(LoadFile);
+		game_fileinfo.delta_light_howmany = read_int(LoadFile);
+		game_fileinfo.delta_light_sizeof = read_int(LoadFile);
+	}
 
 	if (game_top_fileinfo.fileinfo_version >= 14) {	//load mine filename
-		char *p=Current_level_name;
-		//must do read one char at a time, since no cfgets()
-		do *p = cfgetc(LoadFile); while (*p++!=0);
+		//@@char *p=Current_level_name;
+		//@@//must do read one char at a time, since no cfgets()
+		//@@do *p = cfgetc(LoadFile); while (*p++!=0);
+
+		cfgets(Current_level_name,sizeof(Current_level_name),LoadFile);
+
+		if (Current_level_name[strlen(Current_level_name)-1] == '\n')
+			Current_level_name[strlen(Current_level_name)-1] = 0;
 	}
 	else
 		Current_level_name[0]=0;
 
 	if (game_top_fileinfo.fileinfo_version >= 19) {	//load pof names
-		cfread(&N_save_pof_names,2,1,LoadFile);
-		cfread(Save_pof_names,N_save_pof_names,13,LoadFile);
+//		cfread(&N_save_pof_names,2,1,LoadFile);
+		N_save_pof_names = read_short(LoadFile);
+		cfread(Save_pof_names,N_save_pof_names,FILENAME_LEN,LoadFile);
 	}
 
 	//===================== READ PLAYER INFO ==========================
@@ -1327,8 +1114,25 @@ load_game_data(CFILE *LoadFile)
 
 					Assert(sizeof(Walls[i]) == game_fileinfo.walls_sizeof);
 
+// code to correctly read wall structure on mac.  I'm assuming only v20 walls
+// and up.
+#ifndef MACINTOSH
 					if (cfread(&Walls[i], game_fileinfo.walls_sizeof, 1,LoadFile)!=1)
 						Error( "Error reading Walls[%d] in gamesave.c", i);
+#else
+					Walls[i].segnum = read_int(LoadFile);
+					Walls[i].sidenum = read_int(LoadFile);
+					Walls[i].hps = read_fix(LoadFile);
+					Walls[i].linked_wall = read_int(LoadFile);
+					Walls[i].type = read_byte(LoadFile);
+					Walls[i].flags = read_byte(LoadFile);
+					Walls[i].state = read_byte(LoadFile);
+					Walls[i].trigger = read_byte(LoadFile);
+					Walls[i].clip_num = read_byte(LoadFile);
+					Walls[i].keys = read_byte(LoadFile);
+					Walls[i].controlling_trigger = read_byte(LoadFile);
+					Walls[i].cloak_value = read_byte(LoadFile);
+#endif
 				}
 				else if (game_top_fileinfo.fileinfo_version >= 17) {
 					v19_wall w;
@@ -1385,8 +1189,18 @@ load_game_data(CFILE *LoadFile)
 
 					Assert(sizeof(ActiveDoors[i]) == game_fileinfo.doors_sizeof);
 
+// code to read doors for mac -- assume version 20 and greater for doors
+#ifndef MACINTOSH
 					if (cfread(&ActiveDoors[i], game_fileinfo.doors_sizeof,1,LoadFile)!=1)
 						Error( "Error reading ActiveDoors[%d] in gamesave.c", i);
+#else
+					ActiveDoors[i].n_parts = read_int(LoadFile);
+					ActiveDoors[i].front_wallnum[0] = read_short(LoadFile);
+					ActiveDoors[i].front_wallnum[1] = read_short(LoadFile);
+					ActiveDoors[i].back_wallnum[0] = read_short(LoadFile);
+					ActiveDoors[i].back_wallnum[1] = read_short(LoadFile);
+					ActiveDoors[i].time = read_fix(LoadFile);
+#endif
 				}
 				else {
 					v19_door d;
@@ -1416,23 +1230,100 @@ load_game_data(CFILE *LoadFile)
 
 	//==================== READ TRIGGER INFO ==========================
 
-	if (game_fileinfo.triggers_offset > -1)		{
+
+// for MACINTOSH -- assume all triggers >= verion 31 triggers.
+
+	if (game_fileinfo.triggers_offset > -1)
+	{
 		if (!cfseek( LoadFile, game_fileinfo.triggers_offset,SEEK_SET ))	{
-			for (i=0;i<game_fileinfo.triggers_howmany;i++)	{
-				//Assert( sizeof(Triggers[i]) == game_fileinfo.triggers_sizeof );
-				//if (cfread(&Triggers[i], game_fileinfo.triggers_sizeof,1,LoadFile)!=1)
-				//	Error( "Error reading Triggers[%d] in gamesave.c", i);
-				Triggers[i].type = read_byte(LoadFile);
-				Triggers[i].flags = read_short(LoadFile);
-				Triggers[i].value = read_int(LoadFile);
-				Triggers[i].time = read_int(LoadFile);
-				Triggers[i].link_num = read_byte(LoadFile);
-				Triggers[i].num_links = read_short(LoadFile);
-				for (j=0; j<MAX_WALLS_PER_LINK; j++ )	
-					Triggers[i].seg[j] = read_short(LoadFile);
-				for (j=0; j<MAX_WALLS_PER_LINK; j++ )
-					Triggers[i].side[j] = read_short(LoadFile);
-			}
+			for (i=0;i<game_fileinfo.triggers_howmany;i++)
+				if (game_top_fileinfo.fileinfo_version < 31) {
+					v30_trigger trig;
+					int t,type;
+
+					if (game_top_fileinfo.fileinfo_version < 30) {
+						v29_trigger trig29;
+						int t;
+	
+						if (cfread(&trig29, game_fileinfo.triggers_sizeof,1,LoadFile)!=1)
+							Error( "Error reading Triggers[%d] in gamesave.c", i);
+	
+						trig.flags		= trig29.flags;
+						trig.num_links	= trig29.num_links;
+						trig.num_links	= trig29.num_links;
+						trig.value		= trig29.value;
+						trig.time		= trig29.time;
+	
+						for (t=0;t<trig.num_links;t++) {
+							trig.seg[t]  = trig29.seg[t];
+							trig.side[t] = trig29.side[t];
+						}
+					}
+					else
+						if (cfread(&trig, game_fileinfo.triggers_sizeof,1,LoadFile)!=1)
+							Error( "Error reading Triggers[%d] in gamesave.c", i);
+
+					//Assert(trig.flags & TRIGGER_ON);
+					trig.flags &= ~TRIGGER_ON;
+
+					if (trig.flags & TRIGGER_CONTROL_DOORS)
+						type = TT_OPEN_DOOR;
+					else if (trig.flags & TRIGGER_SHIELD_DAMAGE)
+						Int3();
+					else if (trig.flags & TRIGGER_ENERGY_DRAIN)
+						Int3();
+					else if (trig.flags & TRIGGER_EXIT)
+						type = TT_EXIT;
+					else if (trig.flags & TRIGGER_ONE_SHOT)
+						Int3();
+					else if (trig.flags & TRIGGER_MATCEN)
+						type = TT_MATCEN;
+					else if (trig.flags & TRIGGER_ILLUSION_OFF)
+						type = TT_ILLUSION_OFF;
+					else if (trig.flags & TRIGGER_SECRET_EXIT)
+						type = TT_SECRET_EXIT;
+					else if (trig.flags & TRIGGER_ILLUSION_ON)
+						type = TT_ILLUSION_ON;
+					else if (trig.flags & TRIGGER_UNLOCK_DOORS)
+						type = TT_UNLOCK_DOOR;
+					else if (trig.flags & TRIGGER_OPEN_WALL)
+						type = TT_OPEN_WALL;
+					else if (trig.flags & TRIGGER_CLOSE_WALL)
+						type = TT_CLOSE_WALL;
+					else if (trig.flags & TRIGGER_ILLUSORY_WALL)
+						type = TT_ILLUSORY_WALL;
+					else
+						Int3();
+
+					Triggers[i].type			= type;
+					Triggers[i].flags			= 0;
+					Triggers[i].num_links	= trig.num_links;
+					Triggers[i].num_links	= trig.num_links;
+					Triggers[i].value			= trig.value;
+					Triggers[i].time			= trig.time;
+
+					for (t=0;t<trig.num_links;t++) {
+						Triggers[i].seg[t] = trig.seg[t];
+						Triggers[i].side[t] = trig.side[t];
+					}
+				}
+				else {
+#ifndef MACINTOSH
+					if (cfread(&Triggers[i], game_fileinfo.triggers_sizeof,1,LoadFile)!=1)
+						Error( "Error reading Triggers[%d] in gamesave.c", i);
+#else
+					Triggers[i].type = read_byte(LoadFile);
+					Triggers[i].flags = read_byte(LoadFile);
+					Triggers[i].num_links = read_byte(LoadFile);
+					Triggers[i].pad = read_byte(LoadFile);
+					Triggers[i].value = read_fix(LoadFile);
+					Triggers[i].time = read_fix(LoadFile);
+					for (j=0; j<MAX_WALLS_PER_LINK; j++ )	
+						Triggers[i].seg[j] = read_short(LoadFile);
+					for (j=0; j<MAX_WALLS_PER_LINK; j++ )
+						Triggers[i].side[j] = read_short(LoadFile);
+#endif
+				}
 		}
 	}
 
@@ -1442,16 +1333,16 @@ load_game_data(CFILE *LoadFile)
 	{
 		if (!cfseek( LoadFile, game_fileinfo.control_offset,SEEK_SET ))	{
 			for (i=0;i<game_fileinfo.control_howmany;i++)
-				if ( sizeof(ControlCenterTriggers) == game_fileinfo.control_sizeof )	{
-					if (cfread(&ControlCenterTriggers, game_fileinfo.control_sizeof,1,LoadFile)!=1)
-					 	Error( "Error reading ControlCenterTriggers in gamesave.c", i);
-				} else {
-					ControlCenterTriggers.num_links = read_short( LoadFile );
-					for (j=0; j<MAX_WALLS_PER_LINK; j++ );
-						ControlCenterTriggers.seg[j] = read_short( LoadFile );
-					for (j=0; j<MAX_WALLS_PER_LINK; j++ );
-						ControlCenterTriggers.side[j] = read_short( LoadFile );
-				}
+#ifndef MACINTOSH
+				if (cfread(&ControlCenterTriggers, game_fileinfo.control_sizeof,1,LoadFile)!=1)
+					Error( "Error reading ControlCenterTriggers in gamesave.c", i);
+#else
+				ControlCenterTriggers.num_links = read_short(LoadFile);
+				for (j=0; j<MAX_CONTROLCEN_LINKS; j++ )
+					ControlCenterTriggers.seg[j] = read_short( LoadFile );
+				for (j=0; j<MAX_CONTROLCEN_LINKS; j++ )
+					ControlCenterTriggers.side[j] = read_short( LoadFile );
+#endif
 		}
 	}
 
@@ -1464,20 +1355,105 @@ load_game_data(CFILE *LoadFile)
 		if (!cfseek( LoadFile, game_fileinfo.matcen_offset,SEEK_SET ))	{
 			// mprintf((0, "Reading %i materialization centers.\n", game_fileinfo.matcen_howmany));
 			for (i=0;i<game_fileinfo.matcen_howmany;i++) {
-				Assert( sizeof(RobotCenters[i]) == game_fileinfo.matcen_sizeof );
-				if (cfread(&RobotCenters[i], game_fileinfo.matcen_sizeof,1,LoadFile)!=1)
-					Error( "Error reading RobotCenters in gamesave.c", i);
+				if (game_top_fileinfo.fileinfo_version < 27) {
+					old_matcen_info m;
+					Assert(game_fileinfo.matcen_sizeof == sizeof(m));
+					if (cfread(&m, game_fileinfo.matcen_sizeof,1,LoadFile)!=1)
+						Error( "Error reading RobotCenters in gamesave.c", i);
+					RobotCenters[i].robot_flags[0] = m.robot_flags;
+					RobotCenters[i].robot_flags[1] = 0;
+					RobotCenters[i].hit_points = m.hit_points;
+					RobotCenters[i].interval = m.interval;
+					RobotCenters[i].segnum = m.segnum;
+					RobotCenters[i].fuelcen_num = m.fuelcen_num;
+				}
+				else {
+					Assert(game_fileinfo.matcen_sizeof == sizeof(RobotCenters[i]));
+#ifndef MACINTOSH
+					if (cfread(&RobotCenters[i], game_fileinfo.matcen_sizeof,1,LoadFile)!=1)
+						Error( "Error reading RobotCenters in gamesave.c", i);
+#else
+					RobotCenters[i].robot_flags[0] = read_int(LoadFile);
+					RobotCenters[i].robot_flags[1] = read_int(LoadFile);
+					RobotCenters[i].hit_points = read_fix(LoadFile);
+					RobotCenters[i].interval = read_fix(LoadFile);
+					RobotCenters[i].segnum = read_short(LoadFile);
+					RobotCenters[i].fuelcen_num = read_short(LoadFile);
+#endif
+				}
+
 				//	Set links in RobotCenters to Station array
+
 				for (j=0; j<=Highest_segment_index; j++)
-					if (Segments[j].special == SEGMENT_IS_ROBOTMAKER)
-						if (Segments[j].matcen_num == i)
-							RobotCenters[i].fuelcen_num = Segments[j].value;
+					if (Segment2s[j].special == SEGMENT_IS_ROBOTMAKER)
+						if (Segment2s[j].matcen_num == i)
+							RobotCenters[i].fuelcen_num = Segment2s[j].value;
 
 				// mprintf((0, "   %i: flags = %08x\n", i, RobotCenters[i].robot_flags));
 			}
 		}
 	}
 
+
+	//================ READ DL_INDICES INFO ===============
+
+	Num_static_lights = 0;
+
+	if (game_fileinfo.dl_indices_offset > -1) {
+		int	i;
+
+		if (!cfseek( LoadFile, game_fileinfo.dl_indices_offset, SEEK_SET ))	{
+			Num_static_lights = game_fileinfo.dl_indices_howmany;
+			for (i=0; i<game_fileinfo.dl_indices_howmany; i++) {
+				if (game_top_fileinfo.fileinfo_version < 29) {
+					mprintf((0, "Warning: Old mine version.  Not reading Dl_indices info.\n"));
+					Int3();	//shouldn't be here!!!
+				} else {
+#ifndef MACINTOSH
+					if (cfread(&Dl_indices[i], game_fileinfo.dl_indices_sizeof, 1, LoadFile) != 1)
+						Error( "Error reading Dl_indices in gamesave.c", i);
+#else
+					Dl_indices[i].segnum = read_short(LoadFile);					
+					Dl_indices[i].sidenum = read_byte(LoadFile);
+					Dl_indices[i].count = read_byte(LoadFile);
+					Dl_indices[i].index = read_short(LoadFile);
+#endif
+				}
+
+			}
+		}
+	}
+
+	//	Indicate that no light has been subtracted from any vertices.
+	clear_light_subtracted();
+
+	//================ READ DELTA LIGHT INFO ===============
+
+	if (game_fileinfo.delta_light_offset > -1) {
+		int	i;
+
+		if (!cfseek( LoadFile, game_fileinfo.delta_light_offset, SEEK_SET ))	{
+			for (i=0; i<game_fileinfo.delta_light_howmany; i++) {
+				if (game_top_fileinfo.fileinfo_version < 29) {
+					mprintf((0, "Warning: Old mine version.  Not reading delta light info.\n"));
+				} else {
+#ifndef MACINTOSH
+					if (cfread(&Delta_lights[i], game_fileinfo.delta_light_sizeof, 1, LoadFile) != 1)
+						Error( "Error reading Delta Lights in gamesave.c", i);
+#else
+					Delta_lights[i].segnum = read_short(LoadFile);
+					Delta_lights[i].sidenum = read_byte(LoadFile);
+					Delta_lights[i].dummy = read_byte(LoadFile);
+					Delta_lights[i].vert_light[0] = read_byte(LoadFile);
+					Delta_lights[i].vert_light[1] = read_byte(LoadFile);
+					Delta_lights[i].vert_light[2] = read_byte(LoadFile);
+					Delta_lights[i].vert_light[3] = read_byte(LoadFile);
+#endif
+				}
+
+			}
+		}
+	}
 
 	//========================= UPDATE VARIABLES ======================
 
@@ -1520,6 +1496,68 @@ load_game_data(CFILE *LoadFile)
 	Num_open_doors = game_fileinfo.doors_howmany;
 	Num_triggers = game_fileinfo.triggers_howmany;
 
+	//go through all walls, killing references to invalid triggers
+	for (i=0;i<Num_walls;i++)
+		if (Walls[i].trigger >= Num_triggers) {
+			mprintf((0,"Removing reference to invalid trigger %d from wall %d\n",Walls[i].trigger,i));
+			Walls[i].trigger = -1;	//kill trigger
+		}
+
+	//go through all triggers, killing unused ones
+	for (i=0;i<Num_triggers;) {
+		int w;
+
+		//	Find which wall this trigger is connected to.
+		for (w=0; w<Num_walls; w++)
+			if (Walls[w].trigger == i)
+				break;
+
+	#ifdef EDITOR
+		if (w == Num_walls) {
+			mprintf((0,"Removing unreferenced trigger %d\n",i));
+			remove_trigger_num(i);
+		}
+		else
+	#endif
+			i++;
+	}
+
+	//	MK, 10/17/95: Make walls point back at the triggers that control them.
+	//	Go through all triggers, stuffing controlling_trigger field in Walls.
+	{	int t;
+
+	for (i=0; i<Num_walls; i++)
+		Walls[i].controlling_trigger = -1;
+
+	for (t=0; t<Num_triggers; t++) {
+		int	l;
+		for (l=0; l<Triggers[t].num_links; l++) {
+			int	seg_num, side_num, wall_num;
+
+			seg_num = Triggers[t].seg[l];
+			side_num = Triggers[t].side[l];
+			wall_num = Segments[seg_num].sides[side_num].wall_num;
+
+			// -- if (Walls[wall_num].controlling_trigger != -1)
+			// -- 	Int3();
+
+			//check to see that if a trigger requires a wall that it has one,
+			//and if it requires a matcen that it has one
+
+			if (Triggers[t].type == TT_MATCEN) {
+				if (Segment2s[seg_num].special != SEGMENT_IS_ROBOTMAKER)
+					Int3();		//matcen trigger doesn't point to matcen
+			}
+			else if (Triggers[t].type != TT_LIGHT_OFF && Triggers[t].type != TT_LIGHT_ON) {	//light triggers don't require walls
+				if (wall_num == -1)
+					Int3();	//	This is illegal.  This trigger requires a wall
+				else
+					Walls[wall_num].controlling_trigger = t;
+			}
+		}
+	}
+	}
+
 	Num_robot_centers = game_fileinfo.matcen_howmany;
 
 	//fix old wall structs
@@ -1555,7 +1593,7 @@ load_game_data(CFILE *LoadFile)
 	dump_mine_info();
 	#endif
 
-	if (game_top_fileinfo.fileinfo_version < GAME_VERSION)
+	if (game_top_fileinfo.fileinfo_version < GAME_VERSION && !(game_top_fileinfo.fileinfo_version==25 && GAME_VERSION==26))
 		return 1;		//means old version
 	else
 		return 0;
@@ -1564,13 +1602,22 @@ load_game_data(CFILE *LoadFile)
 
 int check_segment_connections(void);
 
+extern void	set_ambient_sound_flags(void);
+
 // -----------------------------------------------------------------------------
 //loads from an already-open file
 // returns 0=everything ok, 1=old version, -1=error
 int load_mine_data(CFILE *LoadFile);
 int load_mine_data_compiled(CFILE *LoadFile);
 
-#define LEVEL_FILE_VERSION		1
+#define LEVEL_FILE_VERSION		8
+//1 -> 2  add palette name
+//2 -> 3  add control center explosion time
+//3 -> 4  add reactor strength
+//4 -> 5  killed hostage text stuff
+//5 -> 6  added Secret_return_segment and Secret_return_orient
+//6 -> 7	 added flickering lights
+//7 -> 8  made version 8 to be not compatible with D2 1.0 & 1.1
 
 #ifndef RELEASE
 char *Level_being_loaded=NULL;
@@ -1580,7 +1627,14 @@ char *Level_being_loaded=NULL;
 extern void ncache_flush();
 #endif
 
+extern int HoardEquipped();
+
+extern	int	Slide_segs_computed;
+
+int no_old_level_file_error=0;
+
 //loads a level (.LVL) file from disk
+//returns 0 if success, else error code
 int load_level(char * filename_passed)
 {
 	#ifdef EDITOR
@@ -1588,8 +1642,19 @@ int load_level(char * filename_passed)
 	#endif
 	CFILE * LoadFile;
 	char filename[128];
-	int sig,version,minedata_offset,gamedata_offset,hostagetext_offset;
-	int mine_err,game_err;
+	int sig,version,minedata_offset,gamedata_offset;
+	int mine_err,game_err,i;
+
+	Slide_segs_computed = 0;
+
+   if (Game_mode & GM_NETWORK)
+	 {
+	  for (i=0;i<MAX_POWERUP_TYPES;i++)
+		{
+			MaxPowerupsAllowed[i]=0;
+			PowerupsInMine[i]=0;
+		}
+	 }
 
 	#ifdef COMPACT_SEGS
 	ncache_flush();
@@ -1600,45 +1665,32 @@ int load_level(char * filename_passed)
 	#endif
 
 	strcpy(filename,filename_passed);
-
-	#ifdef EDITOR
-	//check extension to see what file type this is
 	strupr(filename);
 
-	if (strstr(filename,".LVL"))
+	#ifdef EDITOR
+		//if we have the editor, try the LVL first, no matter what was passed.
+		//if we don't have an LVL, try RDL  
+		//if we don't have the editor, we just use what was passed
+	
+		change_filename_extension(filename,filename_passed,".LVL");
 		use_compiled_level = 0;
-		#ifdef SHAREWARE
-	else if (!strstr(filename,".SDL")) {
-		convert_name_to_CDL(filename,filename_passed);
-		use_compiled_level = 1;
-	}
-		#else
-	else if (!strstr(filename,".RDL")) {
-		convert_name_to_CDL(filename,filename_passed);
-		use_compiled_level = 1;
-	}
-		#endif
-
-	// If we're trying to load a CDL, and we can't find it, and we have
-	// the editor compiled in, then load the LVL.
-	if ( (!cfexist(filename)) && use_compiled_level )	{
-		convert_name_to_LVL(filename,filename_passed);
-		use_compiled_level = 0;
-	}		
+	
+		if (!cfexist(filename))	{
+			change_filename_extension(filename,filename,".RL2");
+			use_compiled_level = 1;
+		}		
 	#endif
 
 	LoadFile = cfopen( filename, "rb" );
-//CF_READ_MODE );
 
-#ifdef EDITOR
 	if (!LoadFile)	{
-		mprintf((0,"Can't open file <%s>\n", filename));
-		return 1;
+		#ifdef EDITOR
+			mprintf((0,"Can't open level file <%s>\n", filename));
+			return 1;
+		#else
+			Error("Can't open file <%s>\n",filename);
+		#endif
 	}
-#else
-	if (!LoadFile)
-		Error("Can't open file <%s>\n",filename);
-#endif
 
 	strcpy( Gamesave_current_filename, filename );
 
@@ -1647,40 +1699,112 @@ int load_level(char * filename_passed)
 //		newdemo_record_start_demo();
 //	#endif
 
-	sig						= read_int(LoadFile);
-	version					= read_int(LoadFile);
+	sig					= read_int(LoadFile);
+	version				= read_int(LoadFile);
 	minedata_offset		= read_int(LoadFile);
 	gamedata_offset		= read_int(LoadFile);
-	hostagetext_offset	= read_int(LoadFile);
 
 	Assert(sig == 'PLVL');
 
+	if (version >= 8) {			//read dummy data
+		if (HoardEquipped())
+		{
+			read_int(LoadFile);
+			read_short(LoadFile);
+			read_byte(LoadFile);
+		}
+		else Error("This level requires the Vertigo Enhanced version of D2.");
+
+	}
+
+	if (version < 5)
+		read_int(LoadFile);		//was hostagetext_offset
+
+	if (version > 1) {
+		cfgets(Current_level_palette,sizeof(Current_level_palette),LoadFile);
+		if (Current_level_palette[strlen(Current_level_palette)-1] == '\n')
+			Current_level_palette[strlen(Current_level_palette)-1] = 0;
+	}
+
+	if (version >= 3)
+		Base_control_center_explosion_time = read_int(LoadFile);
+	else
+		Base_control_center_explosion_time = DEFAULT_CONTROL_CENTER_EXPLOSION_TIME;
+		
+	if (version >= 4)
+		Reactor_strength = read_int(LoadFile);
+	else
+		Reactor_strength = -1;	//use old defaults
+
+	if (version >= 7) {
+		Num_flickering_lights = read_int(LoadFile);
+		#ifdef MACINTOSH
+			Assert((Num_flickering_lights >= 0) && (Num_flickering_lights < MAX_FLICKERING_LIGHTS));
+			for (i = 0; i < Num_flickering_lights; i++)
+			{
+				Flickering_lights[i].segnum 	= read_short(LoadFile);
+				Flickering_lights[i].sidenum 	= read_short(LoadFile);
+				Flickering_lights[i].mask		= read_int(LoadFile);
+				Flickering_lights[i].timer		= read_fix(LoadFile);
+				Flickering_lights[i].delay		= read_fix(LoadFile);
+			}
+		#else
+			cfread(Flickering_lights,sizeof(*Flickering_lights),Num_flickering_lights,LoadFile);
+		#endif
+	}
+	else
+		Num_flickering_lights = 0;
+
+	if (version <= 1 || Current_level_palette[0]==0)
+		strcpy(Current_level_palette,"groupa.256");
+
+	if (version < 6) {
+		Secret_return_segment = 0;
+		Secret_return_orient.rvec.x = F1_0;	Secret_return_orient.rvec.y = 0;			Secret_return_orient.rvec.z = 0;
+		Secret_return_orient.fvec.x =    0;	Secret_return_orient.fvec.y = F1_0;		Secret_return_orient.fvec.z = 0;
+		Secret_return_orient.uvec.x =    0;	Secret_return_orient.uvec.y = 0;			Secret_return_orient.uvec.z = F1_0;
+	} else {
+		Secret_return_segment = read_int(LoadFile);
+		Secret_return_orient.rvec.x = read_int(LoadFile);
+		Secret_return_orient.rvec.y = read_int(LoadFile);
+		Secret_return_orient.rvec.z = read_int(LoadFile);
+		Secret_return_orient.fvec.x = read_int(LoadFile);
+		Secret_return_orient.fvec.y = read_int(LoadFile);
+		Secret_return_orient.fvec.z = read_int(LoadFile);
+		Secret_return_orient.uvec.x = read_int(LoadFile);
+		Secret_return_orient.uvec.y = read_int(LoadFile);
+		Secret_return_orient.uvec.z = read_int(LoadFile);
+	}
+
 	cfseek(LoadFile,minedata_offset,SEEK_SET);
 	#ifdef EDITOR
-	if (!use_compiled_level)
+	if (!use_compiled_level) {
 		mine_err = load_mine_data(LoadFile);
-	else
+		//	Compress all uv coordinates in mine, improves texmap precision. --MK, 02/19/96
+		compress_uv_coordinates_all();
+	} else
 	#endif
 		//NOTE LINK TO ABOVE!!
 		mine_err = load_mine_data_compiled(LoadFile);
 
-	if (mine_err == -1)	//error!!
-		return 1;
+	if (mine_err == -1) {	//error!!
+		cfclose(LoadFile);
+		return 2;
+	}
 
 	cfseek(LoadFile,gamedata_offset,SEEK_SET);
 	game_err = load_game_data(LoadFile);
 
-	if (game_err == -1)	//error!!
-		return 1;
-
-	#ifdef HOSTAGE_FACES
-	cfseek(LoadFile,hostagetext_offset,SEEK_SET);
-	load_hostage_data(LoadFile,(version>=1));
-	#endif
+	if (game_err == -1) {	//error!!
+		cfclose(LoadFile);
+		return 3;
+	}
 
 	//======================== CLOSE FILE =============================
 
 	cfclose( LoadFile );
+
+	set_ambient_sound_flags();
 
 	#ifdef EDITOR
 	write_game_text_file(filename);
@@ -1700,11 +1824,13 @@ int load_level(char * filename_passed)
 
 	#ifdef EDITOR
 	//If an old version, ask the use if he wants to save as new version
-	if (((LEVEL_FILE_VERSION>1) && version<LEVEL_FILE_VERSION) || mine_err==1 || game_err==1) {
+	if (!no_old_level_file_error && (Function_mode == FMODE_EDITOR) && (((LEVEL_FILE_VERSION>3) && version<LEVEL_FILE_VERSION) || mine_err==1 || game_err==1)) {
 		char  ErrorMessage[200];
 
-		sprintf( ErrorMessage, "You just loaded a old version level.  Would\n"
-						"you like to save it as a current version level?");
+		sprintf( ErrorMessage, 
+					"You just loaded a old version\n"
+					"level.  Would you like to save\n"
+					"it as a current version level?");
 
 		stop_time();
 		gr_palette_load(gr_palette);
@@ -1778,10 +1904,25 @@ void get_level_name()
 int	Errors_in_mine;
 
 // -----------------------------------------------------------------------------
+int compute_num_delta_light_records(void)
+{
+	int	i;
+	int	total = 0;
+
+	for (i=0; i<Num_static_lights; i++) {
+		total += Dl_indices[i].count;
+	}
+
+	return total;
+
+}
+
+// -----------------------------------------------------------------------------
 // Save game
 int save_game_data(FILE * SaveFile)
 {
 	int  player_offset, object_offset, walls_offset, doors_offset, triggers_offset, control_offset, matcen_offset; //, links_offset;
+	int	dl_indices_offset, delta_light_offset;
 	int start_offset,end_offset;
 
 	start_offset = ftell(SaveFile);
@@ -1813,15 +1954,22 @@ int save_game_data(FILE * SaveFile)
 	game_fileinfo.matcen_howmany		=	Num_robot_centers;
 	game_fileinfo.matcen_sizeof		=	sizeof(matcen_info);
 
+ 	game_fileinfo.dl_indices_offset		=	-1;
+	game_fileinfo.dl_indices_howmany		=	Num_static_lights;
+	game_fileinfo.dl_indices_sizeof		=	sizeof(dl_index);
+
+ 	game_fileinfo.delta_light_offset		=	-1;
+	game_fileinfo.delta_light_howmany	=	compute_num_delta_light_records();
+	game_fileinfo.delta_light_sizeof		=	sizeof(delta_light);
+
 	// Write the fileinfo
 	fwrite( &game_fileinfo, sizeof(game_fileinfo), 1, SaveFile );
 
 	// Write the mine name
-	fprintf(SaveFile,Current_level_name);
-	fputc(0,SaveFile);		//terminator for string
+	fprintf(SaveFile,"%s\n",Current_level_name);
 
-	fwrite(&N_save_pof_names,2,1,SaveFile);
-	fwrite(Pof_names,N_polygon_models,13,SaveFile);
+	fwrite(&N_polygon_models,2,1,SaveFile);
+	fwrite(Pof_names,N_polygon_models,sizeof(*Pof_names),SaveFile);
 
 	//==================== SAVE PLAYER INFO ===========================
 
@@ -1869,6 +2017,13 @@ int save_game_data(FILE * SaveFile)
 	// }
 	fwrite( RobotCenters, sizeof(matcen_info), game_fileinfo.matcen_howmany, SaveFile );
 
+	//================ SAVE DELTA LIGHT INFO ===============
+	dl_indices_offset = ftell(SaveFile);
+	fwrite( Dl_indices, sizeof(dl_index), game_fileinfo.dl_indices_howmany, SaveFile );
+
+	delta_light_offset = ftell(SaveFile);
+	fwrite( Delta_lights, sizeof(delta_light), game_fileinfo.delta_light_howmany, SaveFile );
+
 	//============= REWRITE FILE INFO, TO SAVE OFFSETS ===============
 
 	// Update the offset fields
@@ -1879,6 +2034,8 @@ int save_game_data(FILE * SaveFile)
 	game_fileinfo.triggers_offset		=	triggers_offset;
 	game_fileinfo.control_offset		=	control_offset;
 	game_fileinfo.matcen_offset		=	matcen_offset;
+	game_fileinfo.dl_indices_offset	=	dl_indices_offset;
+	game_fileinfo.delta_light_offset	=	delta_light_offset;
 
 
 	end_offset = ftell(SaveFile);
@@ -1902,7 +2059,7 @@ int save_level_sub(char * filename, int compiled_version)
 	FILE * SaveFile;
 	char temp_filename[128];
 	int sig = 'PLVL',version=LEVEL_FILE_VERSION;
-	int minedata_offset,gamedata_offset,hostagetext_offset;
+	int minedata_offset,gamedata_offset;
 
 	if ( !compiled_version )	{
 		write_game_text_file(filename);
@@ -1923,9 +2080,16 @@ int save_level_sub(char * filename, int compiled_version)
 			} else
 				mprintf((1, "Error: %i errors in this mine.  See the 'txm' file.\n", Errors_in_mine));
 		}
-		convert_name_to_LVL(temp_filename,filename);
-	} else {
-		convert_name_to_CDL(temp_filename,filename);
+		change_filename_extension(temp_filename,filename,".LVL");
+	}
+	else
+	{
+		// macs are using the regular hog/rl2 files for shareware
+		#if defined(SHAREWARE) && !defined(MACINTOSH)
+			change_filename_extension(temp_filename,filename,".SL2");
+		#else		
+			change_filename_extension(temp_filename,filename,".RL2");
+		#endif
 	}
 
 	SaveFile = fopen( temp_filename, "wb" );
@@ -1970,9 +2134,33 @@ int save_level_sub(char * filename, int compiled_version)
 	//save placeholders
 	gs_write_int(minedata_offset,SaveFile);
 	gs_write_int(gamedata_offset,SaveFile);
-	gs_write_int(hostagetext_offset,SaveFile);
 
 	//Now write the damn data
+
+	//write the version 8 data (to make file unreadable by 1.0 & 1.1)
+	gs_write_int(GameTime,SaveFile);
+	gs_write_short(FrameCount,SaveFile);
+	gs_write_byte(FrameTime,SaveFile);
+
+	// Write the palette file name
+	fprintf(SaveFile,"%s\n",Current_level_palette);
+
+	gs_write_int(Base_control_center_explosion_time,SaveFile);
+	gs_write_int(Reactor_strength,SaveFile);
+
+	gs_write_int(Num_flickering_lights,SaveFile);
+	fwrite(Flickering_lights,sizeof(*Flickering_lights),Num_flickering_lights,SaveFile);
+	
+	gs_write_int(Secret_return_segment, SaveFile);
+	gs_write_int(Secret_return_orient.rvec.x, SaveFile);
+	gs_write_int(Secret_return_orient.rvec.y, SaveFile);
+	gs_write_int(Secret_return_orient.rvec.z, SaveFile);
+	gs_write_int(Secret_return_orient.fvec.x, SaveFile);
+	gs_write_int(Secret_return_orient.fvec.y, SaveFile);
+	gs_write_int(Secret_return_orient.fvec.z, SaveFile);
+	gs_write_int(Secret_return_orient.uvec.x, SaveFile);
+	gs_write_int(Secret_return_orient.uvec.y, SaveFile);
+	gs_write_int(Secret_return_orient.uvec.z, SaveFile);
 
 	minedata_offset = ftell(SaveFile);
 	if ( !compiled_version )	
@@ -1981,16 +2169,10 @@ int save_level_sub(char * filename, int compiled_version)
 		save_mine_data_compiled(SaveFile);
 	gamedata_offset = ftell(SaveFile);
 	save_game_data(SaveFile);
-	hostagetext_offset = ftell(SaveFile);
-
-	#ifdef HOSTAGE_FACES
-	save_hostage_data(SaveFile);
-	#endif
 
 	fseek(SaveFile,sizeof(sig)+sizeof(version),SEEK_SET);
 	gs_write_int(minedata_offset,SaveFile);
 	gs_write_int(gamedata_offset,SaveFile);
-	gs_write_int(hostagetext_offset,SaveFile);
 
 	//==================== CLOSE THE FILE =============================
 	fclose(SaveFile);
@@ -2004,6 +2186,8 @@ int save_level_sub(char * filename, int compiled_version)
 
 }
 
+extern void compress_uv_coordinates_all(void);
+
 int save_level(char * filename)
 {
 	int r1;
@@ -2016,38 +2200,6 @@ int save_level(char * filename)
 
 	return r1;
 }
-
-
-#ifdef HOSTAGE_FACES
-void save_hostage_data(FILE * fp)
-{
-	int i,num_hostages=0;
-
-	// Find number of hostages in mine...
-	for (i=0; i<=Highest_object_index; i++ )	{
-		int num;
-		if ( Objects[i].type == OBJ_HOSTAGE )	{
-			num = Objects[i].id;
-			#ifndef SHAREWARE
-			if (num<0 || num>=MAX_HOSTAGES || Hostage_face_clip[Hostages[num].vclip_num].num_frames<=0)
-				num=0;
-			#else
-			num = 0;
-			#endif
-			if (num+1 > num_hostages)
-				num_hostages = num+1;
-		}
-	}
-
-	gs_write_int(HOSTAGE_DATA_VERSION,fp);
-
-	for (i=0; i<num_hostages; i++ )	{
-		gs_write_int(Hostages[i].vclip_num,fp);
-		fputs(Hostages[i].text,fp);
-		fputc('\n',fp);		//fgets wants a newline
-	}
-}
-#endif	//HOSTAGE_FACES
 
 #endif	//EDITOR
 
@@ -2072,8 +2224,8 @@ void dump_mine_info(void)
 			int	vertnum;
 			side	*sidep = &Segments[segnum].sides[sidenum];
 
-			if (Segments[segnum].static_light > max_sl)
-				max_sl = Segments[segnum].static_light;
+			if (Segment2s[segnum].static_light > max_sl)
+				max_sl = Segment2s[segnum].static_light;
 
 			for (vertnum=0; vertnum<4; vertnum++) {
 				if (sidep->uvls[vertnum].u < min_u)
@@ -2103,67 +2255,47 @@ void dump_mine_info(void)
 
 #endif
 
-#ifdef HOSTAGE_FACES
-void load_hostage_data(CFILE * fp,int do_read)
+#ifdef EDITOR
+
+//read in every level in mission and save out compiled version 
+void save_all_compiled_levels(void)
 {
-	int version,i,num,num_hostages;
+	do_load_save_levels(1);
+}
 
-	hostage_init_all();
+//read in every level in mission
+void load_all_levels(void)
+{
+	do_load_save_levels(0);
+}
 
-	num_hostages = 0;
 
-	// Find number of hostages in mine...
-	for (i=0; i<=Highest_object_index; i++ )	{
-		if ( Objects[i].type == OBJ_HOSTAGE )	{
-			num = Objects[i].id;
-			if (num+1 > num_hostages)
-				num_hostages = num+1;
+void do_load_save_levels(int save)
+{
+	int level_num;
 
-			if (Hostages[num].objnum != -1) {		//slot already used
-				num = hostage_get_next_slot();		//..so get new slot
-				if (num+1 > num_hostages)
-					num_hostages = num+1;
-				Objects[i].id = num;
-			}
+	if (! SafetyCheck())
+		return;
 
-			if ( num > -1 && num < MAX_HOSTAGES )	{
-				Assert(Hostages[num].objnum == -1);		//make sure not used
-				// -- Matt -- commented out by MK on 11/19/94, hit often in level 3, level 4.  Assert(Hostages[num].objnum == -1);		//make sure not used
-				Hostages[num].objnum = i;
-				Hostages[num].objsig = Objects[i].signature;
-			}
-		}
+	no_old_level_file_error=1;
+
+	for (level_num=1;level_num<=Last_level;level_num++) {
+		load_level(Level_names[level_num-1]);
+		load_palette(Current_level_palette,1,1);		//don't change screen
+		if (save)
+			save_level_sub(Level_names[level_num-1],1);
 	}
 
-	if (do_read) {
-		version = read_int(fp);
-
-		for (i=0;i<num_hostages;i++) {
-
-			Assert(Hostages[i].objnum != -1);		//make sure slot filled in
-
-			Hostages[i].vclip_num = read_int(fp);
-
-			#ifndef SHAREWARE
-			if (Hostages[i].vclip_num<0 || Hostages[i].vclip_num>=MAX_HOSTAGES || Hostage_face_clip[Hostages[i].vclip_num].num_frames<=0)
-				Hostages[i].vclip_num=0;
-
-			Assert(Hostage_face_clip[Hostages[i].vclip_num].num_frames);
-			#endif
-
-			cfgets(Hostages[i].text, HOSTAGE_MESSAGE_LEN, fp);
-
-			if (Hostages[i].text[strlen(Hostages[i].text)-1]=='\n')
-				Hostages[i].text[strlen(Hostages[i].text)-1] = 0;
-		}
+	for (level_num=-1;level_num>=Last_secret_level;level_num--) {
+		load_level(Secret_level_names[-level_num-1]);
+		load_palette(Current_level_palette,1,1);		//don't change screen
+		if (save)
+			save_level_sub(Secret_level_names[-level_num-1],1);
 	}
-	else
-		for (i=0;i<num_hostages;i++) {
-			Assert(Hostages[i].objnum != -1);		//make sure slot filled in
-			Hostages[i].vclip_num = 0;
-		}
+
+	no_old_level_file_error=0;
 
 }
-#endif	//HOSTAGE_FACES
 
-
+#endif
+

@@ -8,82 +8,12 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/dpmi.c $
- * $Revision: 1.19 $
- * $Author: john $
- * $Date: 1995/02/23 09:02:57 $
- * 
- * Routines that access DPMI services...
- * 
- * $Log: dpmi.c $
- * Revision 1.19  1995/02/23  09:02:57  john
- * Fixed bug with dos_selector.
- * 
- * Revision 1.18  1995/02/02  11:10:22  john
- * Made real mode calls have a 2K stack.
- * 
- * Revision 1.17  1995/01/14  19:20:28  john
- * Added function to set a selector's base address.
- * 
- * Revision 1.16  1994/12/14  16:11:40  john
- * Locked down the memory referenced by GETDS.
- * 
- * Revision 1.15  1994/12/06  16:08:06  john
- * MAde memory checking return better results.
- * 
- * Revision 1.14  1994/12/05  23:34:54  john
- * Made dpmi_init lock down GETDS and chain_intr.
- * 
- * Revision 1.13  1994/11/28  21:19:02  john
- * Made memory checking a bit better.
- * 
- * Revision 1.12  1994/11/28  20:22:18  john
- * Added some variables that return the amount of available 
- * memory.
- * 
- * Revision 1.11  1994/11/15  18:27:21  john
- * *** empty log message ***
- * 
- * Revision 1.10  1994/11/15  18:26:45  john
- * Added verbose flag.
- * 
- * Revision 1.9  1994/10/27  19:54:37  john
- * Added unlock region function,.
- * 
- * Revision 1.8  1994/10/05  16:17:31  john
- * Took out locked down message.
- * 
- * Revision 1.7  1994/10/03  17:21:20  john
- * Added the code that allocates a 1K DOS buffer.
- * 
- * Revision 1.6  1994/09/29  18:29:40  john
- * Shorted mem info printout
- * 
- * Revision 1.5  1994/09/27  11:54:35  john
- * Added DPMI init function.
- * 
- * Revision 1.4  1994/09/19  14:50:43  john
- * Took out mono debug.
- * 
- * Revision 1.3  1994/09/19  14:41:23  john
- * Fixed some bugs with allocating selectors.
- * 
- * Revision 1.2  1994/08/24  18:53:51  john
- * Made Cyberman read like normal mouse; added dpmi module; moved
- * mouse from assembly to c. Made mouse buttons return time_down.
- * 
- * Revision 1.1  1994/08/24  10:22:34  john
- * Initial revision
- * 
- * 
- */
 
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: dpmi.c 1.19 1995/02/23 09:02:57 john Exp $";
+static char rcsid[] = "$Id: dpmi.c 1.21 1996/02/07 11:00:22 matt Exp $";
 #pragma on (unreferenced)
 
 #include <i86.h>
@@ -95,6 +25,7 @@ static char rcsid[] = "$Id: dpmi.c 1.19 1995/02/23 09:02:57 john Exp $";
 #include <conio.h>
 
 #include "types.h"
+#include "error.h"
 #include "mono.h"
 #include "error.h"
 #include "dpmi.h"
@@ -200,7 +131,7 @@ void dpmi_real_call(dpmi_real_regs * rregs)
    regs.x.edi = FP_OFF(rregs);
    int386x( 0x31, &regs, &regs, &sregs );
 	if ( regs.x.cflag )
-		exit(regs.w.ax);
+		Error("bad return value <%x> in dpmi_call_real()", regs.w.ax);
 }
 
 int total_bytes = 0;
@@ -230,6 +161,8 @@ int dpmi_lock_region(void *address, unsigned length)
 {
 	union REGS regs;
 	unsigned int linear;
+
+	Assert(length != 0);
 
 	linear = (unsigned int) address;
 
@@ -355,8 +288,7 @@ int dpmi_init(int verbose)
 	dpmi_dos_buffer = dpmi_real_malloc( 1024, &dpmi_dos_selector);
 	if (!dpmi_dos_buffer) {
 		dpmi_dos_selector = 0;
-		printf( "Error allocating 1K of DOS memory\n" );
-		exit(1);
+		Error( "Error allocating 1K of DOS memory\n" );
 	}
 	atexit(dpmi_close);
 
@@ -396,16 +328,13 @@ int dpmi_init(int verbose)
 	}
 	
 	if (!dpmi_lock_region( _GETDS, 4096 ))	{
-		printf( "Error locking _GETDS" );
-		exit(1);
+		Error( "Can't lock _GETDS" );
 	}
 	if (!dpmi_lock_region( cstart_, 4096 ))	{
-		printf( "Error locking cstart" );
-		exit(1);
+		Error( "Can't lock cstart" );
 	}
 	if (!dpmi_lock_region( _chain_intr, 4096 ))	{
-		printf( "Error locking _chain_intr" );
-		exit(1);
+		Error( "Can't lock _chain_intr" );
 	}
 	return 1;
 }
@@ -434,4 +363,3 @@ int dpmi_set_pm_handler(unsigned intnum, void far * isr )
 	return 1;
 }
 
-

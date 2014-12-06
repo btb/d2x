@@ -8,204 +8,18 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/gameseg.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/20 18:15:39 $
- * 
- * Functions moved from segment.c to make editor separable from game.
- * 
- * $Log: gameseg.c $
- * Revision 2.2  1995/03/20  18:15:39  john
- * Added code to not store the normals in the segment structure.
- * 
- * Revision 2.1  1995/03/08  12:11:39  allender
- * fix shortpos reading/writing
- * 
- * Revision 2.0  1995/02/27  11:29:21  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.78  1995/02/22  13:52:22  allender
- * remove anonymous unions from object structure
- * 
- * Revision 1.77  1995/02/22  13:24:47  john
- * Removed the vecmat anonymous unions.
- * 
- * Revision 1.76  1995/02/13  20:35:01  john
- * Lintized
- * 
- * Revision 1.75  1995/02/09  13:10:51  mike
- * remove an annoying mprintf.
- * 
- * Revision 1.74  1995/02/05  17:49:28  rob
- * Added assert to gameseg.c.
- * 
- * Revision 1.73  1995/02/02  00:49:26  mike
- * new automap segment-depth functionality.
- * 
- * Revision 1.72  1995/01/16  21:06:51  mike
- * Move function pick_random_point_in_segment from fireball.c to gameseg.c.
- * 
- * Revision 1.71  1994/12/21  19:54:32  matt
- * Added error checking
- * 
- * Revision 1.70  1994/12/11  21:34:09  matt
- * Changed assert() to int3()
- * 
- * Revision 1.69  1994/12/01  21:04:37  matt
- * Several important changes:
- *  (1) Checking against triangulated sides has been standardized a bit
- *  (2) Code has been added to de-triangulate some sides
- *  (3) BIG ONE: the tolerance for checking a point against a plane has
- *      been drastically relaxed
- * 
- * 
- * Revision 1.67  1994/11/27  23:12:21  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.66  1994/11/26  22:51:40  matt
- * Removed editor-only fields from segment structure when editor is compiled
- * out, and padded segment structure to even multiple of 4 bytes.
- * 
- * Revision 1.65  1994/11/22  16:55:38  mike
- * use memset in place of loop to clear array.
- * 
- * Revision 1.64  1994/11/19  15:20:37  mike
- * rip out unused code and data
- * 
- * Revision 1.63  1994/11/18  18:31:48  matt
- * Fixed code again (and maybe for real)
- * 
- * Revision 1.62  1994/11/18  16:54:24  matt
- * Fixed extract_orient_from_segment()
- * 
- * Revision 1.61  1994/11/17  14:56:50  mike
- * moved segment validation functions from editor to main.
- * 
- * Revision 1.60  1994/11/16  23:38:53  mike
- * new improved boss teleportation behavior.
- * 
- * Revision 1.59  1994/10/30  14:12:46  mike
- * rip out local segments stuff.
- * 
- * Revision 1.58  1994/10/27  10:53:39  matt
- * Made connectivity error checking put up warning if errors found
- * 
- * Revision 1.57  1994/10/25  21:19:26  mike
- * debugging code.
- * 
- * Revision 1.56  1994/10/25  11:26:09  mike
- * *** empty log message ***
- * 
- * Revision 1.55  1994/10/22  22:36:08  matt
- * Improved error finding routine
- * 
- * Revision 1.54  1994/10/22  18:56:51  matt
- * Fixed obscure bug in segment trace code
- * Added error find routine, check_segment_connections()
- * 
- * Revision 1.53  1994/10/17  14:05:19  matt
- * Don't give recursion assert if doing lighting
- * 
- * Revision 1.52  1994/10/15  19:03:48  mike
- * Don't do exhaustive search in smooth lighting.
- * 
- * Revision 1.51  1994/10/12  09:46:44  mike
- * Add debug code for trapping exhaustive searches.
- * 
- * Revision 1.50  1994/10/11  20:50:41  matt
- * Made find_point_seg() take -1 as segnum, meaning to search all segments
- * 
- * Revision 1.49  1994/10/11  17:40:31  matt
- * Fixed bug that caused segment trace to only go through sides you can fly through
- * 
- * Revision 1.48  1994/10/10  14:48:16  matt
- * Fixed mistake that caused odd pauses and occasional int3's
- * 
- * Revision 1.47  1994/10/09  23:50:41  matt
- * Made find_hitpoint_uv() work with triangulated sides
- * 
- * Revision 1.46  1994/10/08  23:06:52  matt
- * trace_segs() didn't know about external walls
- * 
- * Revision 1.45  1994/10/07  22:18:57  mike
- * Put in asserts to trap bad segnums.
- * 
- * Revision 1.44  1994/10/06  14:08:07  matt
- * Added new function, extract_orient_from_segment()
- * 
- * Revision 1.43  1994/10/04  16:24:11  mike
- * Set global Connected_segment_distance for debug reasons for aipath.c.
- * 
- * Revision 1.42  1994/10/04  09:18:42  mike
- * Comment out a variable definition, preventing a warning message.
- * 
- * Revision 1.41  1994/10/03  23:43:42  mike
- * Put in a warning for overrunning point_segs buffer.
- * 
- * Revision 1.40  1994/10/03  20:55:43  rob
- * Added velocity to shortpos.
- * 
- * Revision 1.39  1994/09/27  11:46:06  rob
- * re-fixed that same bug (ugh).
- * 
- * Revision 1.38  1994/09/27  10:10:51  rob
- * Fixed bug in extract_shortpos (obj_relink added).
- * 
- * Revision 1.37  1994/09/25  23:41:02  matt
- * Changed the object load & save code to read/write the structure fields one
- * at a time (rather than the whole structure at once).  This mean that the
- * object structure can be changed without breaking the load/save functions.
- * As a result of this change, the local_object data can be and has been 
- * incorporated into the object array.  Also, timeleft is now a property 
- * of all objects, and the object structure has been otherwise cleaned up.
- * 
- * Revision 1.36  1994/09/22  19:03:05  mike
- * Add shortpos manipulation functions create_shortpos and extract_shortpos.
- * 
- * Revision 1.35  1994/09/19  21:21:16  mike
- * Minor optimization to find_connected_distance.
- * 
- * Revision 1.34  1994/09/19  21:05:25  mike
- * Write function find_connected_distance,
- * returns distance between two points as travellable through the mine.
- * 
- * Revision 1.33  1994/08/30  15:07:15  matt
- * Changed find_point_seg() to deal with some infinite recursion problems.
- * 
- * Revision 1.32  1994/08/11  18:58:32  mike
- * Use ints in place of shorts for optimization.
- * 
- * Revision 1.31  1994/08/04  00:20:09  matt
- * Cleaned up fvi & physics error handling; put in code to make sure objects
- * are in correct segment; simplified segment finding for objects and points
- * 
- * Revision 1.30  1994/08/03  16:46:12  mike
- * not much...
- * 
- * Revision 1.29  1994/08/02  20:41:31  matt
- * Fixed bug in get_side_verts()
- * 
- * Revision 1.28  1994/08/02  19:04:25  matt
- * Cleaned up vertex list functions
- * 
- * Revision 1.27  1994/08/01  10:39:44  matt
- * find_new_seg() now will look through any kind of wall but a totally solid one
- * 
- * Revision 1.26  1994/07/28  19:15:59  matt
- * Fixed yet another bug in get_seg_masks()
- * 
- */
 
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>	//for stackavail()
 #include <string.h>	//	for memset()
+
+#ifdef MACINTOSH
+#include <Memory.h>
+#endif
 
 #include "inferno.h"
 #include "game.h"
@@ -215,13 +29,20 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gameseg.h"
 #include "wall.h"
 #include "fuelcen.h"
+#include "bm.h"
+#include "fvi.h"
+#include "byteswap.h"
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gameseg.c 2.2 1995/03/20 18:15:39 john Exp $";
+static char rcsid[] = "$Id: gameseg.c 2.27 1996/10/25 11:36:33 samir Exp $";
 #pragma on (unreferenced)
 
 // How far a point can be from a plane, and still be "in" the plane
 #define PLANE_DIST_TOLERANCE	250
+
+dl_index		Dl_indices[MAX_DL_INDICES];
+delta_light Delta_lights[MAX_DELTA_LIGHTS];
+int	Num_static_lights;
 
 // ------------------------------------------------------------------------------------------
 // Compute the center point of a side of a segment.
@@ -278,17 +99,22 @@ int find_connect_side(segment *base_seg, segment *con_seg)
 int get_num_faces(side *sidep)
 {
 	switch (sidep->type) {
-		case SIDE_IS_QUAD:	return 1;	break;
+		case SIDE_IS_QUAD:	
+			return 1;	
+			break;
 		case SIDE_IS_TRI_02:
-		case SIDE_IS_TRI_13:	return 2;	break;
+		case SIDE_IS_TRI_13:	
+			return 2;	
+			break;
 		default:
 			Error("Illegal type = %i\n", sidep->type);
 			break;
 	}
+
 }
 
 // Fill in array with four absolute point numbers for a given side
-get_side_verts(short *vertlist,int segnum,int sidenum)
+void get_side_verts(short *vertlist,int segnum,int sidenum)
 {
 	int	i;
 	byte  *sv = Side_to_verts[sidenum];
@@ -358,7 +184,7 @@ void create_all_vertex_lists(int *num_faces, int *vertices, int segnum, int side
 			//CREATE_ABS_VERTEX_LISTS(), CREATE_ALL_VERTEX_LISTS(), CREATE_ALL_VERTNUM_LISTS()
 			break;
 		default:
-			Error("Illegal side type, type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
+			Error("Illegal side type (1), type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
 			break;
 	}
 
@@ -416,7 +242,7 @@ void create_all_vertnum_lists(int *num_faces, int *vertnums, int segnum, int sid
 			//CREATE_ABS_VERTEX_LISTS(), CREATE_ALL_VERTEX_LISTS(), CREATE_ALL_VERTNUM_LISTS()
 			break;
 		default:
-			Error("Illegal side type, type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
+			Error("Illegal side type (2), type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
 			break;
 	}
 
@@ -471,7 +297,7 @@ void create_abs_vertex_lists(int *num_faces, int *vertices, int segnum, int side
 			//CREATE_ABS_VERTEX_LISTS(), CREATE_ALL_VERTEX_LISTS(), CREATE_ALL_VERTNUM_LISTS()
 			break;
 		default:
-			Error("Illegal side type, type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
+			Error("Illegal side type (3), type = %i, segment # = %i, side # = %i\n", sidep->type, segnum, sidenum);
 			break;
 	}
 
@@ -487,6 +313,9 @@ segmasks get_seg_masks(vms_vector *checkp,int segnum,fix rad)
 	int			num_faces;
 	int			vertex_list[6];
 	segment		*seg;
+
+	if (segnum==-1)
+		Error("segnum == -1 in get_seg_masks()");
 
 	Assert((segnum <= Highest_segment_index) && (segnum >= 0));
 
@@ -632,6 +461,9 @@ ubyte get_side_dists(vms_vector *checkp,int segnum,fix *side_dists)
 	segment		*seg;
 
 	Assert((segnum <= Highest_segment_index) && (segnum >= 0));
+
+	if (segnum==-1)
+		Error("segnum == -1 in get_seg_dists()");
 
 	seg = &Segments[segnum];
 
@@ -904,11 +736,10 @@ int check_segment_connections(void)
 #endif
 #endif
 
-#ifdef EDITOR
+//	Used to become a constant based on editor, but I wanted to be able to set
+//	this for omega blob find_point_seg calls.  Would be better to pass a paremeter
+//	to the routine...--MK, 01/17/96
 int	Doing_lighting_hack_flag=0;
-#else
-#define Doing_lighting_hack_flag 0
-#endif
 
 //figure out what seg the given point is in, tracing through segments
 //returns segment number, or -1 if can't find segment
@@ -920,7 +751,13 @@ int trace_segs(vms_vector *p0,int oldsegnum)
 
 	Assert((oldsegnum <= Highest_segment_index) && (oldsegnum >= 0));
 
+#if defined(MACINTOSH)
+	if (StackSpace() < 1024) {
+#elif defined(WINDOWS)
+	if (stackavail() < 10240) {
+#else
 	if (stackavail() < 1024) {		//if no debugging, we'll get past assert
+#endif
 
 		#ifndef NDEBUG
 		if (!Doing_lighting_hack_flag)
@@ -1093,6 +930,58 @@ int find_point_seg(vms_vector *p,int segnum)
 
 int	Connected_segment_distance;
 
+#define	MIN_CACHE_FCD_DIST	(F1_0*80)	//	Must be this far apart for cache lookup to succeed.  Recognizes small changes in distance matter at small distances.
+#define	MAX_FCD_CACHE	8
+
+typedef struct {
+	int	seg0, seg1, csd;
+	fix	dist;
+} fcd_data;
+
+int	Fcd_index = 0;
+fcd_data Fcd_cache[MAX_FCD_CACHE];
+fix	Last_fcd_flush_time;
+
+//	----------------------------------------------------------------------------------------------------------
+void flush_fcd_cache(void)
+{
+	int	i;
+
+	Fcd_index = 0;
+
+	for (i=0; i<MAX_FCD_CACHE; i++)
+		Fcd_cache[i].seg0 = -1;
+}
+
+//	----------------------------------------------------------------------------------------------------------
+void add_to_fcd_cache(int seg0, int seg1, int depth, fix dist)
+{
+	if (dist > MIN_CACHE_FCD_DIST) {
+		Fcd_cache[Fcd_index].seg0 = seg0;
+		Fcd_cache[Fcd_index].seg1 = seg1;
+		Fcd_cache[Fcd_index].csd = depth;
+		Fcd_cache[Fcd_index].dist = dist;
+
+		Fcd_index++;
+
+		if (Fcd_index >= MAX_FCD_CACHE)
+			Fcd_index = 0;
+
+		// -- mprintf((0, "Adding seg0=%i, seg1=%i to cache.\n", seg0, seg1));
+	} else {
+		//	If it's in the cache, remove it.
+		int	i;
+
+		for (i=0; i<MAX_FCD_CACHE; i++)
+			if (Fcd_cache[i].seg0 == seg0)
+				if (Fcd_cache[i].seg1 == seg1) {
+					Fcd_cache[Fcd_index].seg0 = -1;
+					break;
+				}
+	}
+
+}
+
 //	----------------------------------------------------------------------------------------------------------
 //	Determine whether seg0 and seg1 are reachable in a way that allows sound to pass.
 //	Search up to a maximum depth of max_depth.
@@ -1112,6 +1001,10 @@ fix find_connected_distance(vms_vector *p0, int seg0, vms_vector *p1, int seg1, 
 	fix		dist;
 
 	//	If > this, will overrun point_segs buffer
+#ifdef WINDOWS
+	if (max_depth == -1) max_depth = 200;
+#endif	
+
 	if (max_depth > MAX_LOC_POINT_SEGS-2) {
 		mprintf((1, "Warning: In find_connected_distance, max_depth = %i, limited to %i\n", max_depth, MAX_LOC_POINT_SEGS-2));
 		max_depth = MAX_LOC_POINT_SEGS-2;
@@ -1120,19 +1013,35 @@ fix find_connected_distance(vms_vector *p0, int seg0, vms_vector *p1, int seg1, 
 	if (seg0 == seg1) {
 		Connected_segment_distance = 0;
 		return vm_vec_dist_quick(p0, p1);
-	} else if (find_connect_side(&Segments[seg0], &Segments[seg1]) != -1) {
-		Connected_segment_distance = 1;
-		return vm_vec_dist_quick(p0, p1);
+	} else {
+		int	conn_side;
+		if ((conn_side = find_connect_side(&Segments[seg0], &Segments[seg1])) != -1) {
+			if (WALL_IS_DOORWAY(&Segments[seg1], conn_side) & wid_flag) {
+				Connected_segment_distance = 1;
+				//mprintf((0, "\n"));
+				return vm_vec_dist_quick(p0, p1);
+			}
+		}
 	}
+
+	//	Periodically flush cache.
+	if ((GameTime - Last_fcd_flush_time > F1_0*2) || (GameTime < Last_fcd_flush_time)) {
+		flush_fcd_cache();
+		Last_fcd_flush_time = GameTime;
+	}
+
+	//	Can't quickly get distance, so see if in Fcd_cache.
+	for (i=0; i<MAX_FCD_CACHE; i++)
+		if ((Fcd_cache[i].seg0 == seg0) && (Fcd_cache[i].seg1 == seg1)) {
+			Connected_segment_distance = Fcd_cache[i].csd;
+			// -- mprintf((0, "In cache, seg0=%i, seg1=%i.  Returning.\n", seg0, seg1));
+			return Fcd_cache[i].dist;
+		}
 
 	num_points = 0;
 
-//	for (i=0; i<=Highest_segment_index; i++) {
-//		visited[i] = 0;
-//		depth[i] = 0;
-//	}
-memset(visited, 0, Highest_segment_index+1);
-memset(depth, 0, Highest_segment_index+1);
+	memset(visited, 0, Highest_segment_index+1);
+	memset(depth, 0, sizeof(depth[0]) * (Highest_segment_index+1));
 
 	cur_seg = seg0;
 	visited[cur_seg] = 1;
@@ -1156,9 +1065,8 @@ memset(depth, 0, Highest_segment_index+1);
 					if (max_depth != -1) {
 						if (depth[qtail-1] == max_depth) {
 							Connected_segment_distance = 1000;
+							add_to_fcd_cache(seg0, seg1, Connected_segment_distance, F1_0*1000);
 							return -1;
-//							seg1 = seg_queue[qtail-1].end;
-//							goto fcd_done1;
 						}
 					} else if (this_seg == seg1) {
 						goto fcd_done1;
@@ -1170,6 +1078,7 @@ memset(depth, 0, Highest_segment_index+1);
 
 		if (qhead >= qtail) {
 			Connected_segment_distance = 1000;
+			add_to_fcd_cache(seg0, seg1, Connected_segment_distance, F1_0*1000);
 			return -1;
 		}
 
@@ -1184,6 +1093,7 @@ fcd_done1: ;
 	while (seg_queue[--qtail].end != seg1)
 		if (qtail < 0) {
 			Connected_segment_distance = 1000;
+			add_to_fcd_cache(seg0, seg1, Connected_segment_distance, F1_0*1000);
 			return -1;
 		}
 
@@ -1207,12 +1117,6 @@ fcd_done1: ;
 	compute_segment_center(&point_segs[num_points].point,&Segments[seg0]);
 	num_points++;
 
-	//	Compute distance
-//		mprintf((0, "Path = "));
-//		for (i=0; i<num_points; i++)
-//			mprintf((0, "%2i ", point_segs[i].segnum));
-//	 	mprintf((0, "\n"));
-
 	if (num_points == 1) {
 		Connected_segment_distance = num_points;
 		return vm_vec_dist_quick(p0, p1);
@@ -1220,36 +1124,20 @@ fcd_done1: ;
 		dist = vm_vec_dist_quick(p1, &point_segs[1].point);
 		dist += vm_vec_dist_quick(p0, &point_segs[num_points-2].point);
 
-//		mprintf((0, "[%5.1f %2i %2i] [%5.1f %2i %2i] ", 
-//			f2fl(vm_vec_dist_quick(p1, &point_segs[1].point)), seg1, point_segs[1].segnum,
-//			f2fl(vm_vec_dist_quick(p0, &point_segs[num_points-2].point)), point_segs[num_points-2].segnum, seg0));
-
 		for (i=1; i<num_points-2; i++) {
 			fix	ndist;
 			ndist = vm_vec_dist_quick(&point_segs[i].point, &point_segs[i+1].point);
 			dist += ndist;
-//			mprintf((0, "[%5.1f %2i %2i] ", f2fl(ndist), point_segs[i].segnum, point_segs[i+1].segnum));
 		}
 
-//		mprintf((0, "\n"));
 	}
 
 	Connected_segment_distance = num_points;
+	add_to_fcd_cache(seg0, seg1, num_points, dist);
+
 	return dist;
 
 }
-
-//--unused-- int	Max_fcd_depth=30;
-
-//--unused-- fix fcd_test(void)
-//--unused-- {
-//--unused-- 	fix	rval;
-//--unused-- 
-//--unused-- 	rval = find_connected_distance(&Objects[0].pos, Objects[0].segnum, &Objects[1].pos, Objects[1].segnum, Max_fcd_depth, WID_RENDPAST_FLAG);
-//--unused-- 
-//--unused-- 	mprintf((0, "Distance as travelled = %5.1f\n", f2fl(rval)));
-//--unused-- 	return rval;
-//--unused-- }
 
 byte convert_to_byte(fix f)
 {
@@ -1267,7 +1155,7 @@ byte convert_to_byte(fix f)
 //	Extract the matrix into byte values.
 //	Create a position relative to vertex 0 with 1/256 normal "fix" precision.
 //	Stuff segment in a short.
-void create_shortpos(shortpos *spp, object *objp)
+void create_shortpos(shortpos *spp, object *objp, int swap_bytes)
 {
 	// int	segnum;
 	byte	*sp;
@@ -1294,6 +1182,17 @@ void create_shortpos(shortpos *spp, object *objp)
 	spp->vely = (objp->mtype.phys_info.velocity.y) >> VEL_PRECISION;
 	spp->velz = (objp->mtype.phys_info.velocity.z) >> VEL_PRECISION;
 
+// swap the short values for the big-endian machines.
+
+	if (swap_bytes) {
+		spp->xo = INTEL_SHORT(spp->xo);
+		spp->yo = INTEL_SHORT(spp->yo);
+		spp->zo = INTEL_SHORT(spp->zo);
+		spp->segment = INTEL_SHORT(spp->segment);
+		spp->velx = INTEL_SHORT(spp->velx);
+		spp->vely = INTEL_SHORT(spp->vely);
+		spp->velz = INTEL_SHORT(spp->velz);
+	}
 //	mprintf((0, "Matrix: %08x %08x %08x    %08x %08x %08x\n", objp->orient.m1,objp->orient.m2,objp->orient.m3,
 //					spp->bytemat[0] << MATRIX_PRECISION,spp->bytemat[1] << MATRIX_PRECISION,spp->bytemat[2] << MATRIX_PRECISION));
 //
@@ -1311,7 +1210,7 @@ void create_shortpos(shortpos *spp, object *objp)
 
 }
 
-void extract_shortpos(object *objp, shortpos *spp)
+void extract_shortpos(object *objp, shortpos *spp, int swap_bytes)
 {
 	int	segnum;
 	byte	*sp;
@@ -1327,6 +1226,16 @@ void extract_shortpos(object *objp, shortpos *spp)
 	objp->orient.rvec.z = *sp++ << MATRIX_PRECISION;
 	objp->orient.uvec.z = *sp++ << MATRIX_PRECISION;
 	objp->orient.fvec.z = *sp++ << MATRIX_PRECISION;
+
+	if (swap_bytes) {
+		spp->xo = INTEL_SHORT(spp->xo);
+		spp->yo = INTEL_SHORT(spp->yo);
+		spp->zo = INTEL_SHORT(spp->zo);
+		spp->segment = INTEL_SHORT(spp->segment);
+		spp->velx = INTEL_SHORT(spp->velx);
+		spp->vely = INTEL_SHORT(spp->vely);
+		spp->velz = INTEL_SHORT(spp->velz);
+	}
 
 	segnum = spp->segment;
 
@@ -1460,7 +1369,7 @@ void add_side_as_quad(segment *sp, int sidenum, vms_vector *normal)
 //	Return v0, v1, v2 = 3 vertices with smallest numbers.  If *negate_flag set, then negate normal after computation.
 //	Note, you cannot just compute the normal by treating the points in the opposite direction as this introduces
 //	small differences between normals which should merely be opposites of each other.
-get_verts_for_normal(int va, int vb, int vc, int vd, int *v0, int *v1, int *v2, int *v3, int *negate_flag)
+void get_verts_for_normal(int va, int vb, int vc, int vd, int *v0, int *v1, int *v2, int *v3, int *negate_flag)
 {
 	int	i,j;
 	int	v[4],w[4];
@@ -1501,7 +1410,7 @@ get_verts_for_normal(int va, int vb, int vc, int vd, int *v0, int *v1, int *v2, 
 void add_side_as_2_triangles(segment *sp, int sidenum)
 {
 	vms_vector	norm;
-	char			*vs = Side_to_verts[sidenum];
+	byte			*vs = Side_to_verts[sidenum];
 	fix			dot;
 	vms_vector	vec_13;		//	vector from vertex 1 to vertex 3
 
@@ -2017,16 +1926,304 @@ int set_segment_depths(int start_seg, ubyte *segbuf)
 	return parent_depth+1;
 }
 
-//--ubyte	Segbuf[MAX_SEGMENTS];
-//--
-//--void ssd_test(void)
-//--{
-//--	int	i;
-//--
-//--	for (i=0; i <=Highest_segment_index; i++)
-//--		Segbuf[i] = 1;
-//--
-//--	set_segment_depths(0, Segbuf);
-//--}
+//these constants should match the ones in seguvs
+#define	LIGHT_DISTANCE_THRESHOLD	(F1_0*80)
+#define	Magical_light_constant  (F1_0*16)
 
-
+#define MAX_CHANGED_SEGS 30
+short changed_segs[MAX_CHANGED_SEGS];
+int n_changed_segs;
+
+//	------------------------------------------------------------------------------------------
+//cast static light from a segment to nearby segments
+apply_light_to_segment(segment *segp,vms_vector *segment_center, fix light_intensity,int recursion_depth)
+{
+	vms_vector	r_segment_center;
+	fix			dist_to_rseg;
+	int 			i,segnum=segp-Segments,sidenum;
+
+	for (i=0;i<n_changed_segs;i++)
+		if (changed_segs[i] == segnum)
+			break;
+
+	if (i == n_changed_segs) {
+		compute_segment_center(&r_segment_center, segp);
+		dist_to_rseg = vm_vec_dist_quick(&r_segment_center, segment_center);
+	
+		if (dist_to_rseg <= LIGHT_DISTANCE_THRESHOLD) {
+			fix	light_at_point;
+			if (dist_to_rseg > F1_0)
+				light_at_point = fixdiv(Magical_light_constant, dist_to_rseg);
+			else
+				light_at_point = Magical_light_constant;
+	
+			if (light_at_point >= 0) {
+				segment2	*seg2p	= &Segment2s[segnum];
+				light_at_point = fixmul(light_at_point, light_intensity);
+				if (light_at_point >= F1_0)
+					light_at_point = F1_0-1;
+				if (light_at_point <= -F1_0)
+					light_at_point = -(F1_0-1);
+				seg2p->static_light += light_at_point;
+				if (seg2p->static_light < 0)	// if it went negative, saturate
+					seg2p->static_light = 0;
+			}	//	end if (light_at_point...
+		}	//	end if (dist_to_rseg...
+
+		changed_segs[n_changed_segs++] = segnum;
+	}
+
+	if (recursion_depth < 2)
+		for (sidenum=0; sidenum<6; sidenum++) {
+			if (WALL_IS_DOORWAY(segp,sidenum) & WID_RENDPAST_FLAG)
+				apply_light_to_segment(&Segments[segp->children[sidenum]],segment_center,light_intensity,recursion_depth+1);
+		}
+
+}
+
+
+extern object *old_viewer;
+
+//update the static_light field in a segment, which is used for object lighting
+//this code is copied from the editor routine calim_process_all_lights()
+change_segment_light(int segnum,int sidenum,int dir)
+{
+	segment *segp = &Segments[segnum];
+
+	if (WALL_IS_DOORWAY(segp, sidenum) & WID_RENDER_FLAG) {
+		side	*sidep = &segp->sides[sidenum];
+		fix	light_intensity;
+
+		light_intensity = TmapInfo[sidep->tmap_num].lighting + TmapInfo[sidep->tmap_num2 & 0x3fff].lighting;
+
+		light_intensity *= dir;
+
+		n_changed_segs = 0;
+
+		if (light_intensity) {
+			vms_vector	segment_center;
+			compute_segment_center(&segment_center, segp);
+			apply_light_to_segment(segp,&segment_center,light_intensity,0);
+		}
+	}
+
+	//this is a horrible hack to get around the horrible hack used to
+	//smooth lighting values when an object moves between segments
+	old_viewer = NULL;
+
+}
+
+//	------------------------------------------------------------------------------------------
+//	dir = +1 -> add light
+//	dir = -1 -> subtract light
+//	dir = 17 -> add 17x light
+//	dir =  0 -> you are dumb
+void change_light(int segnum, int sidenum, int dir)
+{
+	int	i, j, k;
+
+	for (i=0; i<Num_static_lights; i++) {
+		if ((Dl_indices[i].segnum == segnum) && (Dl_indices[i].sidenum == sidenum)) {
+			delta_light	*dlp;
+			dlp = &Delta_lights[Dl_indices[i].index];
+
+			for (j=0; j<Dl_indices[i].count; j++) {
+				for (k=0; k<4; k++) {
+					fix	dl,new_l;
+					dl = dir * dlp->vert_light[k] * DL_SCALE;
+					Assert((dlp->segnum >= 0) && (dlp->segnum <= Highest_segment_index));
+					Assert((dlp->sidenum >= 0) && (dlp->sidenum < MAX_SIDES_PER_SEGMENT));
+					new_l = (Segments[dlp->segnum].sides[dlp->sidenum].uvls[k].l += dl);
+					if (new_l < 0)
+						Segments[dlp->segnum].sides[dlp->sidenum].uvls[k].l = 0;
+				}
+				dlp++;
+			}
+		}
+	}
+
+	//recompute static light for segment
+	change_segment_light(segnum,sidenum,dir);
+}
+
+//	Subtract light cast by a light source from all surfaces to which it applies light.
+//	This is precomputed data, stored at static light application time in the editor (the slow lighting function).
+// returns 1 if lights actually subtracted, else 0
+int subtract_light(int segnum, int sidenum)
+{
+	if (Light_subtracted[segnum] & (1 << sidenum)) {
+		//mprintf((0, "Warning: Trying to subtract light from a source twice!\n"));
+		return 0;
+	}
+
+	Light_subtracted[segnum] |= (1 << sidenum);
+	change_light(segnum, sidenum, -1);
+	return 1;
+}
+
+//	Add light cast by a light source from all surfaces to which it applies light.
+//	This is precomputed data, stored at static light application time in the editor (the slow lighting function).
+//	You probably only want to call this after light has been subtracted.
+// returns 1 if lights actually added, else 0
+int add_light(int segnum, int sidenum)
+{
+	if (!(Light_subtracted[segnum] & (1 << sidenum))) {
+		//mprintf((0, "Warning: Trying to add light which has never been subtracted!\n"));
+		return 0;
+	}
+
+	Light_subtracted[segnum] &= ~(1 << sidenum);
+	change_light(segnum, sidenum, 1);
+	return 1;
+}
+
+//	Light_subtracted[i] contains bit indicators for segment #i.
+//	If bit n (1 << n) is set, then side #n in segment #i has had light subtracted from original (editor-computed) value.
+ubyte	Light_subtracted[MAX_SEGMENTS];
+
+//	Parse the Light_subtracted array, turning on or off all lights.
+void apply_all_changed_light(void)
+{
+	int	i,j;
+
+	for (i=0; i<=Highest_segment_index; i++) {
+		for (j=0; j<MAX_SIDES_PER_SEGMENT; j++)
+			if (Light_subtracted[i] & (1 << j))
+				change_light(i, j, -1);
+	}
+}
+
+//@@//	Scans Light_subtracted bit array.
+//@@//	For all light sources which have had their light subtracted, adds light back in.
+//@@void restore_all_lights_in_mine(void)
+//@@{
+//@@	int	i, j, k;
+//@@
+//@@	for (i=0; i<Num_static_lights; i++) {
+//@@		int	segnum, sidenum;
+//@@		delta_light	*dlp;
+//@@
+//@@		segnum = Dl_indices[i].segnum;
+//@@		sidenum = Dl_indices[i].sidenum;
+//@@		if (Light_subtracted[segnum] & (1 << sidenum)) {
+//@@			dlp = &Delta_lights[Dl_indices[i].index];
+//@@
+//@@			Light_subtracted[segnum] &= ~(1 << sidenum);
+//@@			for (j=0; j<Dl_indices[i].count; j++) {
+//@@				for (k=0; k<4; k++) {
+//@@					fix	dl;
+//@@					dl = dlp->vert_light[k] * DL_SCALE;
+//@@					Assert((dlp->segnum >= 0) && (dlp->segnum <= Highest_segment_index));
+//@@					Assert((dlp->sidenum >= 0) && (dlp->sidenum < MAX_SIDES_PER_SEGMENT));
+//@@					Segments[dlp->segnum].sides[dlp->sidenum].uvls[k].l += dl;
+//@@				}
+//@@				dlp++;
+//@@			}
+//@@		}
+//@@	}
+//@@}
+
+//	Should call this whenever a new mine gets loaded.
+//	More specifically, should call this whenever something global happens
+//	to change the status of static light in the mine.
+void clear_light_subtracted(void)
+{
+	int	i;
+
+	for (i=0; i<=Highest_segment_index; i++)
+		Light_subtracted[i] = 0;
+
+}
+
+//	-----------------------------------------------------------------------------
+fix find_connected_distance_segments( int seg0, int seg1, int depth, int wid_flag)
+{
+	vms_vector	p0, p1;
+
+	compute_segment_center(&p0, &Segments[seg0]);
+	compute_segment_center(&p1, &Segments[seg1]);
+
+	return find_connected_distance(&p0, seg0, &p1, seg1, depth, wid_flag);
+}
+
+#define	AMBIENT_SEGMENT_DEPTH		5
+
+//	-----------------------------------------------------------------------------
+//	Do a bfs from segnum, marking slots in marked_segs if the segment is reachable.
+void ambient_mark_bfs(int segnum, byte *marked_segs, int depth)
+{
+	int	i;
+
+	if (depth < 0)
+		return;
+
+	marked_segs[segnum] = 1;
+
+	for (i=0; i<MAX_SIDES_PER_SEGMENT; i++) {
+		int	child = Segments[segnum].children[i];
+
+		if (IS_CHILD(child) && (WALL_IS_DOORWAY(&Segments[segnum],i) & WID_RENDPAST_FLAG) && !marked_segs[child])
+			ambient_mark_bfs(child, marked_segs, depth-1);
+	}
+
+}
+
+//	-----------------------------------------------------------------------------
+//	Indicate all segments which are within audible range of falling water or lava,
+//	and so should hear ambient gurgles.
+void set_ambient_sound_flags_common(int tmi_bit, int s2f_bit)
+{
+	int	i, j;
+	byte	marked_segs[MAX_SEGMENTS];
+
+	//	Now, all segments containing ambient lava or water sound makers are flagged.
+	//	Additionally flag all segments which are within range of them.
+	for (i=0; i<=Highest_segment_index; i++) {
+		marked_segs[i] = 0;
+		Segment2s[i].s2_flags &= ~s2f_bit;
+	}
+
+	//	Mark all segments which are sources of the sound.
+	for (i=0; i<=Highest_segment_index; i++) {
+		segment	*segp = &Segments[i];
+		segment2	*seg2p = &Segment2s[i];
+
+		for (j=0; j<MAX_SIDES_PER_SEGMENT; j++) {
+			side	*sidep = &segp->sides[j];
+
+			if ((TmapInfo[sidep->tmap_num].flags & tmi_bit) || (TmapInfo[sidep->tmap_num2 & 0x3fff].flags & tmi_bit)) {
+				if (!IS_CHILD(segp->children[j]) || (sidep->wall_num != -1)) {
+					seg2p->s2_flags |= s2f_bit;
+					marked_segs[i] = 1;		//	Say it's itself that it is close enough to to hear something.
+				}
+			}
+
+		}
+
+	}
+
+	//	Next mark all segments within N segments of a source.
+	for (i=0; i<=Highest_segment_index; i++) {
+		segment2	*seg2p = &Segment2s[i];
+
+		if (seg2p->s2_flags & s2f_bit)
+			ambient_mark_bfs(i, marked_segs, AMBIENT_SEGMENT_DEPTH);
+	}
+
+	//	Now, flip bits in all segments which can hear the ambient sound.
+	for (i=0; i<=Highest_segment_index; i++)
+		if (marked_segs[i])
+			Segment2s[i].s2_flags |= s2f_bit;
+
+}
+
+
+//	-----------------------------------------------------------------------------
+//	Indicate all segments which are within audible range of falling water or lava,
+//	and so should hear ambient gurgles.
+//	Bashes values in Segment2s array.
+void set_ambient_sound_flags(void)
+{
+	set_ambient_sound_flags_common(TMI_VOLATILE, S2F_AMBIENT_LAVA);
+	set_ambient_sound_flags_common(TMI_WATER, S2F_AMBIENT_WATER);
+}

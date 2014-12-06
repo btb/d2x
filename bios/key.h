@@ -8,81 +8,14 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/key.h $
- * $Revision: 1.19 $
- * $Author: john $
- * $Date: 1994/10/24 13:58:12 $
- *
- * Header for keyboard functions
- *
- * $Log: key.h $
- * Revision 1.19  1994/10/24  13:58:12  john
- * Hacked in support for pause key onto code 0x61.
- * 
- * Revision 1.18  1994/10/21  15:17:10  john
- * Added KEY_PRINT_SCREEN
- * 
- * Revision 1.17  1994/08/31  12:22:13  john
- * Added KEY_DEBUGGED
- * 
- * Revision 1.16  1994/08/24  18:53:50  john
- * Made Cyberman read like normal mouse; added dpmi module; moved
- * mouse from assembly to c. Made mouse buttons return time_down.
- * 
- * Revision 1.15  1994/08/18  14:56:16  john
- * *** empty log message ***
- * 
- * Revision 1.14  1994/08/08  10:43:24  john
- * Recorded when a key was pressed for key_inkey_time.
- * 
- * Revision 1.13  1994/06/17  17:17:28  john
- * Added keyd_time_last_key_was_pressed or something like that.
- * 
- * Revision 1.12  1994/04/29  12:14:19  john
- * Locked all memory used during interrupts so that program
- * won't hang when using virtual memory.
- * 
- * Revision 1.11  1994/02/17  15:57:14  john
- * Changed key libary to C.
- * 
- * Revision 1.10  1994/01/31  08:34:09  john
- * Fixed reversed lshift/rshift keys.
- * 
- * Revision 1.9  1994/01/18  10:58:17  john
- * *** empty log message ***
- * 
- * Revision 1.8  1993/10/16  19:24:43  matt
- * Added new function key_clear_times() & key_clear_counts()
- * 
- * Revision 1.7  1993/10/15  10:17:09  john
- * added keyd_last_key_pressed and released for use with recorder.
- * 
- * Revision 1.6  1993/10/06  16:20:37  john
- * fixed down arrow bug
- * 
- * Revision 1.5  1993/10/04  13:26:42  john
- * changed the #defines for scan codes.
- * 
- * Revision 1.4  1993/09/28  11:35:20  john
- * added key_peekkey
- * 
- * Revision 1.3  1993/09/20  18:36:43  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/07/10  13:10:39  matt
- * Initial revision
- * 
- *
- */
 
 #ifndef _KEY_H
 #define _KEY_H 
 
+#include "pstypes.h"
 #include "fix.h"
-#include "types.h"
 
 //==========================================================================
 // This installs the int9 vector and initializes the keyboard in buffered
@@ -108,6 +41,7 @@ extern volatile int keyd_time_when_last_pressed;
 // These are the "buffered" keypress routines.  Use them by setting the
 // "keyd_buffer_type" variable.
 
+extern void key_putkey (unsigned short); // simulates a keystroke
 extern void key_flush();    // Clears the 256 char buffer
 extern int key_checkch();   // Returns 1 if a char is waiting
 extern int key_getch();     // Gets key if one waiting other waits for one.
@@ -263,4 +197,3 @@ extern unsigned int key_up_count(int scancode);
 #define KEY_PAUSE			0x61
 
 #endif
-

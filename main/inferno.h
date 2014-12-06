@@ -8,29 +8,39 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/inferno.h $
- * $Revision: 2.4 $
- * $Author: john $
- * $Date: 1995/05/26 16:16:17 $
- *
- * Header file for Inferno.  Should be included in all source files. 
- *
- */
 
 #ifndef _INFERNO_H
 #define _INFERNO_H
 
 #include	"settings.h"	//include personal settings
 
+#include "pstypes.h"
+
+
+//	MACRO for single line #ifdef WINDOWS #else DOS
+#ifdef WINDOWS
+#define WINDOS(x,y) x
+#define WIN(x) x
+#else
+#define WINDOS(x,y) y
+#define WIN(x)
+#endif
+
+#ifdef MACINTOSH
+#define MAC(x) x
+#else
+#define MAC(x)
+#endif
+
+
 /**
  **	Constants
  **/
 
-//	How close two points must be in all dimensions to be considered the same point.
-#define	FIX_EPSILON	10
+//the maximum length of a filename
+#define FILENAME_LEN 13
 
 //for Function_mode variable
 #define FMODE_EXIT		0		//leaving the program
@@ -48,13 +58,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 extern int Function_mode;			//in game or editor?
 extern int Screen_mode;				//editor screen or game screen?
-extern char Menu_pcx_name[13];
 
-#ifdef USE_CD
-extern char destsat_cdpath[128];
+//The version number of the game
+extern ubyte Version_major,Version_minor;
+
+#ifdef MACINTOSH
+extern ubyte Version_fix;
 #endif
 
 #endif
 
 
-

@@ -1,26 +1,20 @@
 #
 # $Source: f:/miner/source/misc/rcs/makefile $
-# $Revision: 1.4 $
+# $Revision: 1.7 $
 # $Author: matt $
-# $Date: 1994/11/27 22:27:23 $
+# $Date: 1996/01/23 22:32:42 $
 #
 # Makefile for misc libaray
 #
 
-LIBDIR = ..\main
-
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
 # What to install
-INSTALL_TARGS = misc.lib parsarg.h error.h
+INSTALL_TARGS = misc.lib parsarg.h debug.h hash.h args.h byteswap.h
 
 # What libs to build
 LIBS = misc
 
 # What objs in the lib
-MISC_OBJS = parsarg.obj error.obj
+MISC_OBJS = parsarg.obj hash.obj args.obj
 
 # What to clean
 CLEAN_TARGS = $(OBJDIR)\*.obj
@@ -35,21 +29,17 @@ PARSTEST_LIBS = misc.lib
 ERRTEST_SRCS = errtest.c
 ERRTEST_LIBS = misc.lib
 
-misc.lib: $(MISC_OBJS)
-	wlib misc.lib $(MISC_OBJS)
-	copy *.lib $(LIBDIR)
+#rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
 
-error.obj: error.c error.h 
-	wcc386 $(CCFLAGS) error.c
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
 
-errtest.obj: errtest.c error.h 
-	wcc386 $(CCFLAGS) errtest.c
+args.obj: stdio.h stdlib.h string.h
 
-parsarg.obj: parsarg.c parsarg.h
+errtest.obj: error.h stdio.h
 
-	wcc386 $(CCFLAGS) parsarg.c
+hash.obj: error.h hash.h stdio.h stdlib.h string.h
 
-parstest.obj: parstest.c parsarg.h 
+parsarg.obj: dos.h i86.h parsarg.h stdio.h stdlib.h string.h
 
-	wcc386 $(CCFLAGS) parstest.c
-
+parstest.obj: parsarg.h stdio.h

@@ -8,34 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/scroll.c $
- * $Revision: 1.5 $
- * $Author: john $
- * $Date: 1994/11/18 23:07:33 $
- *
- * Routines for doing vertical scroll bars.
- *
- * $Log: scroll.c $
- * Revision 1.5  1994/11/18  23:07:33  john
- * Changed a bunch of shorts to ints.
- * 
- * Revision 1.4  1993/12/07  12:30:35  john
- * new version.
- * 
- * Revision 1.3  1993/10/26  13:46:10  john
- * *** empty log message ***
- * 
- * Revision 1.2  1993/10/05  17:31:04  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/09/20  10:35:29  john
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: scroll.c 1.5 1994/11/18 23:07:33 john Exp $";
@@ -266,4 +240,3 @@ void ui_scrollbar_do( UI_GADGET_SCROLLBAR * scrollbar, int keypress )
 
 }
 
-

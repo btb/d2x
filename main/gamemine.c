@@ -8,133 +8,11 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/gamemine.c $
- * $Revision: 2.2 $
- * $Author: john $
- * $Date: 1995/03/06 15:23:14 $
- * 
- * Functions for loading mines in the game
- * 
- * $Log: gamemine.c $
- * Revision 2.2  1995/03/06  15:23:14  john
- * New screen techniques.
- * 
- * Revision 2.1  1995/02/27  13:13:37  john
- * Removed floating point.
- * 
- * Revision 2.0  1995/02/27  11:27:45  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.70  1995/02/13  20:35:09  john
- * Lintized
- * 
- * Revision 1.69  1995/02/07  17:12:03  rob
- * Added ifdef's for Editor.
- * 
- * Revision 1.68  1995/02/07  16:51:48  mike
- * fix gray rock josh problem.
- * 
- * Revision 1.67  1995/02/01  15:46:26  yuan
- * Fixed matcen_nums.
- * 
- * Revision 1.66  1995/01/19  15:19:28  mike
- * new super-compressed registered file format.
- * 
- * Revision 1.65  1994/12/10  16:44:59  matt
- * Added debugging code to track down door that turns into rock
- * 
- * Revision 1.64  1994/12/10  14:58:24  yuan
- * *** empty log message ***
- * 
- * Revision 1.63  1994/12/08  17:19:10  yuan
- * Cfiling stuff.
- * 
- * Revision 1.62  1994/12/07  14:05:33  yuan
- * Fixed wall assert problem... Bashed highest_segment
- * _index before WALL_IS_DOORWAY check.
- * 
- * Revision 1.61  1994/11/27  23:14:52  matt
- * Made changes for new mprintf calling convention
- * 
- * Revision 1.60  1994/11/27  18:05:20  matt
- * Compile out LVL reader when editor compiled out
- * 
- * Revision 1.59  1994/11/26  22:51:45  matt
- * Removed editor-only fields from segment structure when editor is compiled
- * out, and padded segment structure to even multiple of 4 bytes.
- * 
- * Revision 1.58  1994/11/26  21:48:02  matt
- * Fixed saturation in short light value 
- * 
- * Revision 1.57  1994/11/20  22:11:49  mike
- * comment out an apparently unnecessary call to fuelcen_reset().
- * 
- * Revision 1.56  1994/11/18  21:56:42  john
- * Added a better, leaner pig format.
- * 
- * Revision 1.55  1994/11/17  20:09:18  john
- * Added new compiled level format.
- * 
- * Revision 1.54  1994/11/17  15:40:17  mike
- * Comment out mprintf which was causing important information to scroll away.
- * 
- * Revision 1.53  1994/11/17  14:56:37  mike
- * moved segment validation functions from editor to main.
- * 
- * Revision 1.52  1994/11/17  11:39:35  matt
- * Ripped out code to load old mines
- * 
- * Revision 1.51  1994/11/14  20:47:53  john
- * Attempted to strip out all the code in the game 
- * directory that uses any ui code.
- * 
- * Revision 1.50  1994/11/14  16:05:38  matt
- * Fixed, maybe, again, errors when can't find texture during remap
- * 
- * Revision 1.49  1994/11/14  14:34:03  matt
- * Fixed up handling when textures can't be found during remap
- * 
- * Revision 1.48  1994/11/14  13:01:55  matt
- * Added Int3() when can't find texture
- * 
- * Revision 1.47  1994/10/30  14:12:21  mike
- * rip out local segments stuff.
- * 
- * Revision 1.46  1994/10/27  19:43:07  john
- * Disable the piglet option.
- * 
- * Revision 1.45  1994/10/27  18:51:42  john
- * Added -piglet option that only loads needed textures for a 
- * mine.  Only saved ~1MB, and code still doesn't free textures
- * before you load a new mine.
- * 
- * Revision 1.44  1994/10/20  12:47:22  matt
- * Replace old save files (MIN/SAV/HOT) with new LVL files
- * 
- * Revision 1.43  1994/10/19  16:46:40  matt
- * Made tmap overrides for robots remap texture numbers
- * 
- * Revision 1.42  1994/10/03  23:37:01  mike
- * Adapt to changed fuelcen_activate parameters.
- * 
- * Revision 1.41  1994/09/23  22:14:49  matt
- * Took out obsolete structure fields
- * 
- * Revision 1.40  1994/08/01  11:04:11  yuan
- * New materialization centers.
- * 
- * Revision 1.39  1994/07/21  19:01:47  mike
- * Call Lsegment stuff.
- * 
- * 
- */
 
 #pragma off (unreferenced)
-static char rcsid[] = "$Id: gamemine.c 2.2 1995/03/06 15:23:14 john Exp $";
+static char rcsid[] = "$Id: gamemine.c 2.21 1996/05/07 16:09:17 jeremy Exp $";
 #pragma on (unreferenced)
 
 #include <stdio.h>
@@ -168,18 +46,140 @@ static char rcsid[] = "$Id: gamemine.c 2.2 1995/03/06 15:23:14 john Exp $";
 #include "key.h"
 #include "piggy.h"
 
+#include "byteswap.h"
+
 #define REMOVE_EXT(s)  (*(strchr( (s), '.' ))='\0')
+
+fix	Level_shake_frequency = 0, Level_shake_duration = 0;
+int	Secret_return_segment = 0;
+vms_matrix	Secret_return_orient;
 
 struct mtfi mine_top_fileinfo;    // Should be same as first two fields below...
 struct mfi mine_fileinfo;
 struct mh mine_header;
 struct me mine_editor;
 
+typedef struct v16_segment {
+	#ifdef	EDITOR
+	short		segnum;								// segment number, not sure what it means
+	#endif
+	side		sides[MAX_SIDES_PER_SEGMENT];	// 6 sides
+	short		children[MAX_SIDES_PER_SEGMENT];	// indices of 6 children segments, front, left, top, right, bottom, back
+	short		verts[MAX_VERTICES_PER_SEGMENT];	// vertex ids of 4 front and 4 back vertices
+	#ifdef	EDITOR
+	short		group;								// group number to which the segment belongs.
+	#endif
+	short		objects;								// pointer to objects in this segment
+	ubyte		special;								// what type of center this is 
+	byte		matcen_num;							//	which center segment is associated with.
+	short		value;
+	fix		static_light;						//average static light in segment
+	#ifndef	EDITOR
+	short		pad;			//make structure longword aligned
+	#endif
+} v16_segment;
+
+struct mfi_v19 {
+	ushort	fileinfo_signature;
+	ushort	fileinfo_version;
+	int		fileinfo_sizeof;
+	int		header_offset;		// Stuff common to game & editor
+	int		header_size;
+	int		editor_offset;   // Editor specific stuff
+	int		editor_size;
+	int		segment_offset;
+	int		segment_howmany;
+	int		segment_sizeof;
+	int		newseg_verts_offset;
+	int		newseg_verts_howmany;
+	int		newseg_verts_sizeof;
+	int		group_offset;
+	int		group_howmany;
+	int		group_sizeof;
+	int		vertex_offset;
+	int		vertex_howmany;
+	int		vertex_sizeof;
+	int		texture_offset;
+	int		texture_howmany;
+	int		texture_sizeof;
+	int		walls_offset;
+	int		walls_howmany;
+	int		walls_sizeof;
+	int		triggers_offset;
+	int		triggers_howmany;
+	int		triggers_sizeof;
+	int		links_offset;
+	int		links_howmany;
+	int		links_sizeof;
+	int		object_offset;				// Object info
+	int	  	object_howmany;    	
+	int	  	object_sizeof;  
+	int	  	unused_offset;			//was: doors_offset
+	int		unused_howmamy;		//was: doors_howmany
+	int		unused_sizeof;			//was: doors_sizeof
+	short		level_shake_frequency, level_shake_duration;	//	Shakes every level_shake_frequency seconds
+																			// for level_shake_duration seconds (on average, random).  In 16ths second.
+	int		secret_return_segment;
+	vms_matrix	secret_return_orient;
+
+	int		dl_indices_offset;
+	int		dl_indices_howmany;
+	int		dl_indices_sizeof;
+
+	int		delta_light_offset;
+	int		delta_light_howmany;
+	int		delta_light_sizeof;
+
+};
+
 int CreateDefaultNewSegment();
+
+// hmm.. moved here by allender from gamesave.c -- We should really put these
+// routines into the cfile library (i.e. cfile_read_int, etc....)
+// This is yet another quick and dirty hack....yeech
+
+static fix read_fix(CFILE *file)
+{
+	fix f;
+
+	if (cfread( &f, sizeof(f), 1, file) != 1)
+		Error( "Error reading fix in gamesave.c" );
+
+	f = (fix)INTEL_INT((int)f);
+	return f;
+}
+
+static void read_vector(vms_vector *v,CFILE *file)
+{
+	v->x = read_fix(file);
+	v->y = read_fix(file);
+	v->z = read_fix(file);
+}
+
+static short read_short(CFILE *file)
+{
+	short s;
+
+	if (cfread( &s, sizeof(s), 1, file) != 1)
+		Error( "Error reading short in gamesave.c" );
+
+	s = INTEL_SHORT(s);
+	return s;
+}
+
+static byte read_byte(CFILE *file)
+{
+	byte b;
+
+	if (cfread( &b, sizeof(b), 1, file) != 1)
+		Error( "Error reading byte in gamesave.c" );
+
+	return b;
+}
 
 #ifdef EDITOR
 
-static char old_tmap_list[MAX_TEXTURES][13];
+static char old_tmap_list[MAX_TEXTURES][FILENAME_LEN];
 short tmap_xlate_table[MAX_TEXTURES];
 static short tmap_times_used[MAX_TEXTURES];
 
@@ -188,12 +188,13 @@ static short tmap_times_used[MAX_TEXTURES];
 // returns 0=everything ok, 1=old version, -1=error
 int load_mine_data(CFILE *LoadFile)
 {
-	int   i, j;
+	int   i, j,oldsizeadjust;
 	short tmap_xlate;
 	int 	translate;
 	char 	*temptr;
 	int	mine_start = cftell(LoadFile);
 
+	oldsizeadjust=(sizeof(int)*2)+sizeof (vms_matrix);
 	fuelcen_reset();
 
 	for (i=0; i<MAX_TEXTURES; i++ )
@@ -227,7 +228,7 @@ int load_mine_data(CFILE *LoadFile)
 	mine_fileinfo.group_sizeof		  =	sizeof(group);
 	mine_fileinfo.texture_offset    =   -1;
 	mine_fileinfo.texture_howmany   =   0;
-	mine_fileinfo.texture_sizeof    =   13;  // num characters in a name
+ 	mine_fileinfo.texture_sizeof    =   FILENAME_LEN;  // num characters in a name
  	mine_fileinfo.walls_offset		  =	-1;
 	mine_fileinfo.walls_howmany	  =	0;
 	mine_fileinfo.walls_sizeof		  =	sizeof(wall);  
@@ -237,6 +238,25 @@ int load_mine_data(CFILE *LoadFile)
 	mine_fileinfo.object_offset		=	-1;
 	mine_fileinfo.object_howmany		=	1;
 	mine_fileinfo.object_sizeof		=	sizeof(object);  
+
+	mine_fileinfo.level_shake_frequency		=	0;
+	mine_fileinfo.level_shake_duration		=	0;
+
+	//	Delta light stuff for blowing out light sources.
+//	if (mine_top_fileinfo.fileinfo_version >= 19) {
+		mine_fileinfo.dl_indices_offset		=	-1;
+		mine_fileinfo.dl_indices_howmany		=	0;
+		mine_fileinfo.dl_indices_sizeof		=	sizeof(dl_index);  
+
+		mine_fileinfo.delta_light_offset		=	-1;
+		mine_fileinfo.delta_light_howmany		=	0;
+		mine_fileinfo.delta_light_sizeof		=	sizeof(delta_light);  
+
+//	}
+
+	mine_fileinfo.segment2_offset		= -1;
+	mine_fileinfo.segment2_howmany	= 0;
+	mine_fileinfo.segment2_sizeof    = sizeof(segment2);
 
 	// Read in mine_top_fileinfo to get size of saved fileinfo.
 	
@@ -261,6 +281,19 @@ int load_mine_data(CFILE *LoadFile)
 
 	if (cfread( &mine_fileinfo, mine_top_fileinfo.fileinfo_sizeof, 1, LoadFile )!=1)
 		Error( "Error reading mine_fileinfo in gamemine.c" );
+
+	if (mine_top_fileinfo.fileinfo_version < 18) {
+		mprintf((1, "Old version, setting shake intensity to 0.\n"));
+		Level_shake_frequency = 0;
+		Level_shake_duration = 0;
+		Secret_return_segment = 0;
+		Secret_return_orient = vmd_identity_matrix;
+	} else {
+		Level_shake_frequency = mine_fileinfo.level_shake_frequency << 12;
+		Level_shake_duration = mine_fileinfo.level_shake_duration << 12;
+		Secret_return_segment = mine_fileinfo.secret_return_segment;
+		Secret_return_orient = mine_fileinfo.secret_return_orient;
+	}
 
 	//===================== READ HEADER INFO ========================
 
@@ -355,7 +388,7 @@ int load_mine_data(CFILE *LoadFile)
 			mprintf( (0, "This mine has %d unique textures in it (~%d KB)\n", count, (count*4096) /1024 ));
 		}
 	
-		mprintf( (0, "Translate=%d\n", translate ));
+		// -- mprintf( (0, "Translate=%d\n", translate ));
 	
 		hashtable_free( &ht );
 	}
@@ -392,6 +425,7 @@ int load_mine_data(CFILE *LoadFile)
 	if ( mine_fileinfo.segment_howmany > MAX_SEGMENTS ) {
 		mprintf((0, "Num segments exceeds maximum.  Loading MAX %d segments\n", MAX_SEGMENTS));
 		mine_fileinfo.segment_howmany = MAX_SEGMENTS;
+		mine_fileinfo.segment2_howmany = MAX_SEGMENTS;
 	}
 
 	// [commented out by mk on 11/20/94 (weren't we supposed to hit final in October?) because it looks redundant.  I think I'll test it now...]  fuelcen_reset();
@@ -405,23 +439,43 @@ int load_mine_data(CFILE *LoadFile)
 		Highest_segment_index = mine_fileinfo.segment_howmany-1;
 
 		for (i=0; i< mine_fileinfo.segment_howmany; i++ ) {
-			segment v16_seg;
 
 			// Set the default values for this segment (clear to zero )
 			//memset( &Segments[i], 0, sizeof(segment) );
 
-			if (mine_top_fileinfo.fileinfo_version >= 16) {
+			if (mine_top_fileinfo.fileinfo_version < 20) {
+				v16_segment v16_seg;
 
 				Assert(mine_fileinfo.segment_sizeof == sizeof(v16_seg));
 
 				if (cfread( &v16_seg, mine_fileinfo.segment_sizeof, 1, LoadFile )!=1)
 					Error( "Error reading segments in gamemine.c" );
 
-			}				
-			else 
-				Error("Invalid mine version");
+				#ifdef EDITOR
+				Segments[i].segnum = v16_seg.segnum;
+				// -- Segments[i].pad = v16_seg.pad;
+				#endif
 
-			Segments[i] = v16_seg;
+				for (j=0; j<MAX_SIDES_PER_SEGMENT; j++)
+					Segments[i].sides[j] = v16_seg.sides[j];
+
+				for (j=0; j<MAX_SIDES_PER_SEGMENT; j++)
+					Segments[i].children[j] = v16_seg.children[j];
+
+				for (j=0; j<MAX_VERTICES_PER_SEGMENT; j++)
+					Segments[i].verts[j] = v16_seg.verts[j];
+
+				Segment2s[i].special = v16_seg.special;
+				Segment2s[i].value = v16_seg.value;
+				Segment2s[i].s2_flags = 0;
+				Segment2s[i].matcen_num = v16_seg.matcen_num;
+				Segment2s[i].static_light = v16_seg.static_light;
+				fuelcen_activate( &Segments[i], Segment2s[i].special );
+
+			} else  {
+				if (cfread( &Segments[i], mine_fileinfo.segment_sizeof, 1, LoadFile )!=1)
+					Error("Unable to read segment %i\n", i);
+			}
 
 			Segments[i].objects = -1;
 			#ifdef EDITOR
@@ -439,8 +493,6 @@ int load_mine_data(CFILE *LoadFile)
 					}
 			}
 
-			fuelcen_activate( &Segments[i], Segments[i].special );
-
 			if (translate == 1)
 				for (j=0;j<MAX_SIDES_PER_SEGMENT;j++) {
 					unsigned short orient;
@@ -450,7 +502,7 @@ int load_mine_data(CFILE *LoadFile)
 						if (Segments[i].sides[j].tmap_num < 0)	{
 							mprintf( (0, "Couldn't find texture '%s' for Segment %d, side %d\n", old_tmap_list[tmap_xlate],i,j));
 							Int3();
-							Segments[i].sides[j].tmap_num = 0;
+							Segments[i].sides[j].tmap_num = NumTextures-1;
 						}
 					tmap_xlate = Segments[i].sides[j].tmap_num2 & 0x3FFF;
 					orient = Segments[i].sides[j].tmap_num2 & (~0x3FFF);
@@ -461,12 +513,19 @@ int load_mine_data(CFILE *LoadFile)
 							if (xlated_tmap <= 0)	{
 								mprintf( (0, "Couldn't find texture '%s' for Segment %d, side %d\n", old_tmap_list[tmap_xlate],i,j));
 								Int3();
-								Segments[i].sides[j].tmap_num2 = 0;
+								Segments[i].sides[j].tmap_num2 = NumTextures-1;
 							}
 						Segments[i].sides[j].tmap_num2 = xlated_tmap | orient;
 					}
 				}
 		}
+
+
+		if (mine_top_fileinfo.fileinfo_version >= 20)
+			for (i=0; i<=Highest_segment_index; i++) {
+				cfread(&Segment2s[i], sizeof(segment2), 1, LoadFile);
+				fuelcen_activate( &Segments[i], Segment2s[i].special );
+			}
 	}
 
 	//===================== READ NEWSEGMENT INFO =====================
@@ -569,122 +628,48 @@ int load_mine_data(CFILE *LoadFile)
 
 #define COMPILED_MINE_VERSION 0
 
-int	New_file_format_load = 1;
-
-int load_mine_data_compiled(CFILE *LoadFile)
+void read_children(int segnum,ubyte bit_mask,CFILE *LoadFile)
 {
-	int i,segnum,sidenum;
-	ubyte version;
-	short temp_short;
-	ushort temp_ushort;
+	int bit;
 
-#ifndef SHAREWARE
-	if (New_file_format_load)
-		return load_mine_data_compiled_new(LoadFile);
-#endif
-
-	//	For compiled levels, textures map to themselves, prevent tmap_override always being gray,
-	//	bug which Matt and John refused to acknowledge, so here is Mike, fixing it.
-	// 
-	// Although in a cloud of arrogant glee, he forgot to ifdef it on EDITOR!
-	// (Matt told me to write that!)
-#ifdef EDITOR
-	for (i=0; i<MAX_TEXTURES; i++)
-		tmap_xlate_table[i] = i;
-#endif
-//	memset( Segments, 0, sizeof(segment)*MAX_SEGMENTS );
-	fuelcen_reset();
-
-	//=============================== Reading part ==============================
-	cfread( &version, sizeof(ubyte), 1, LoadFile );						// 1 byte = compiled version
-	Assert( version==COMPILED_MINE_VERSION );
-	cfread( &Num_vertices, sizeof(int), 1, LoadFile );					// 4 bytes = Num_vertices
-	Assert( Num_vertices <= MAX_VERTICES );
-	cfread( &Num_segments, sizeof(int), 1, LoadFile );					// 4 bytes = Num_segments
-	Assert( Num_segments <= MAX_SEGMENTS );
-	cfread( Vertices, sizeof(vms_vector), Num_vertices, LoadFile );
-
-	for (segnum=0; segnum<Num_segments; segnum++ )	{
-		#ifdef EDITOR
-		Segments[segnum].segnum = segnum;
-		Segments[segnum].group = 0;
-		#endif
-
-		// Read short Segments[segnum].children[MAX_SIDES_PER_SEGMENT]
- 		cfread( Segments[segnum].children, sizeof(short), MAX_SIDES_PER_SEGMENT, LoadFile );
-		// Read short Segments[segnum].verts[MAX_VERTICES_PER_SEGMENT]
-		cfread( Segments[segnum].verts, sizeof(short), MAX_VERTICES_PER_SEGMENT, LoadFile );
-		Segments[segnum].objects = -1;
-
-		// Read ubyte	Segments[segnum].special
-		cfread( &Segments[segnum].special, sizeof(ubyte), 1, LoadFile );
-		// Read byte	Segments[segnum].matcen_num
-		cfread( &Segments[segnum].matcen_num, sizeof(ubyte), 1, LoadFile );
-		// Read short	Segments[segnum].value
-		cfread( &Segments[segnum].value, sizeof(short), 1, LoadFile );
-
-		// Read fix	Segments[segnum].static_light (shift down 5 bits, write as short)
-		cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
-		Segments[segnum].static_light	= ((fix)temp_ushort) << 4;
-		//cfread( &Segments[segnum].static_light, sizeof(fix), 1, LoadFile );
-	
-		// Read the walls as a 6 byte array
-		for (sidenum=0; sidenum<MAX_SIDES_PER_SEGMENT; sidenum++ )	{
-			ubyte byte_wallnum;
-			Segments[segnum].sides[sidenum].pad = 0;
-			cfread( &byte_wallnum, sizeof(ubyte), 1, LoadFile );
-			if ( byte_wallnum == 255 )			
-				Segments[segnum].sides[sidenum].wall_num = -1;
-			else		
-				Segments[segnum].sides[sidenum].wall_num = byte_wallnum;
-		}
-
-		for (sidenum=0; sidenum<MAX_SIDES_PER_SEGMENT; sidenum++ )	{
-
-			if ( (Segments[segnum].children[sidenum]==-1) || (Segments[segnum].sides[sidenum].wall_num!=-1) )	{
-				// Read short Segments[segnum].sides[sidenum].tmap_num;
-				cfread( &Segments[segnum].sides[sidenum].tmap_num, sizeof(short), 1, LoadFile );
-				// Read short Segments[segnum].sides[sidenum].tmap_num2;
-				cfread( &Segments[segnum].sides[sidenum].tmap_num2, sizeof(short), 1, LoadFile );
-				// Read uvl Segments[segnum].sides[sidenum].uvls[4] (u,v>>5, write as short, l>>1 write as short)
-				for (i=0; i<4; i++ )	{
-					cfread( &temp_short, sizeof(short), 1, LoadFile );
-					Segments[segnum].sides[sidenum].uvls[i].u = ((fix)temp_short) << 5;
-					cfread( &temp_short, sizeof(short), 1, LoadFile );
-					Segments[segnum].sides[sidenum].uvls[i].v = ((fix)temp_short) << 5;
-					cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
-					Segments[segnum].sides[sidenum].uvls[i].l = ((fix)temp_ushort) << 1;
-					//cfread( &Segments[segnum].sides[sidenum].uvls[i].l, sizeof(fix), 1, LoadFile );
-				}	
-			} else {
-				Segments[segnum].sides[sidenum].tmap_num = 0;
-				Segments[segnum].sides[sidenum].tmap_num2 = 0;
-				for (i=0; i<4; i++ )	{
-					Segments[segnum].sides[sidenum].uvls[i].u = 0;
-					Segments[segnum].sides[sidenum].uvls[i].v = 0;
-					Segments[segnum].sides[sidenum].uvls[i].l = 0;
-				}	
-			}
-		}
+	for (bit=0; bit<MAX_SIDES_PER_SEGMENT; bit++) {
+		if (bit_mask & (1 << bit)) {
+			Segments[segnum].children[bit] = read_short(LoadFile);
+//	 		cfread( &Segments[segnum].children[bit], sizeof(short), 1, LoadFile );
+		} else
+			Segments[segnum].children[bit] = -1;
 	}
-
-	Highest_vertex_index = Num_vertices-1;
-	Highest_segment_index = Num_segments-1;
-
-	validate_segment_all();			// Fill in side type and normals.
-
-	// Activate fuelcentes
-	for (i=0; i< Num_segments; i++ ) {
-		fuelcen_activate( &Segments[i], Segments[i].special );
-	}
-
-	reset_objects(1);		//one object, the player
-
-	return 0;
 }
 
-#ifndef SHAREWARE
-int load_mine_data_compiled_new(CFILE *LoadFile)
+void read_verts(int segnum,CFILE *LoadFile)
+{
+	int i;
+	// Read short Segments[segnum].verts[MAX_VERTICES_PER_SEGMENT]
+//	cfread( Segments[segnum].verts, sizeof(short), MAX_VERTICES_PER_SEGMENT, LoadFile );
+	for (i = 0; i < MAX_VERTICES_PER_SEGMENT; i++)
+		Segments[segnum].verts[i] = read_short(LoadFile);
+}
+
+// -- void read_special(int segnum,ubyte bit_mask,CFILE *LoadFile)
+// -- {
+// -- 	if (bit_mask & (1 << MAX_SIDES_PER_SEGMENT)) {
+// -- 		// Read ubyte	Segments[segnum].special
+// -- //		cfread( &Segments[segnum].special, sizeof(ubyte), 1, LoadFile );
+// -- 		Segment2s[segnum].special = read_byte(LoadFile);
+// -- 		// Read byte	Segments[segnum].matcen_num
+// -- //		cfread( &Segments[segnum].matcen_num, sizeof(ubyte), 1, LoadFile );
+// -- 		Segment2s[segnum].matcen_num = read_byte(LoadFile);
+// -- 		// Read short	Segments[segnum].value
+// -- //		cfread( &Segments[segnum].value, sizeof(short), 1, LoadFile );
+// -- 		Segment2s[segnum].value = read_short(LoadFile);
+// -- 	} else {
+// -- 		Segment2s[segnum].special = 0;
+// -- 		Segment2s[segnum].matcen_num = -1;
+// -- 		Segment2s[segnum].value = 0;
+// -- 	}
+// -- }
+
+int load_mine_data_compiled(CFILE *LoadFile)
 {
 	int		i,segnum,sidenum;
 	ubyte		version;
@@ -703,21 +688,26 @@ int load_mine_data_compiled_new(CFILE *LoadFile)
 	fuelcen_reset();
 
 	//=============================== Reading part ==============================
-	cfread( &version, sizeof(ubyte), 1, LoadFile );						// 1 byte = compiled version
+//	cfread( &version, sizeof(ubyte), 1, LoadFile );						// 1 byte = compiled version
+	version = read_byte(LoadFile);
 	Assert( version==COMPILED_MINE_VERSION );
 
-	cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );					// 2 bytes = Num_vertices
-	Num_vertices = temp_ushort;
+//	cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );					// 2 bytes = Num_vertices
+//	Num_vertices = temp_ushort;
+	Num_vertices = read_short(LoadFile);
 	Assert( Num_vertices <= MAX_VERTICES );
 
-	cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );					// 2 bytes = Num_segments
-	Num_segments = temp_ushort;
+//	cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );					// 2 bytes = Num_segments
+//	Num_segments = INTEL_SHORT(temp_ushort);
+	Num_segments = read_short(LoadFile);
 	Assert( Num_segments <= MAX_SEGMENTS );
 
-	cfread( Vertices, sizeof(vms_vector), Num_vertices, LoadFile );
+//	cfread( Vertices, sizeof(vms_vector), Num_vertices, LoadFile );
+
+	for (i = 0; i < Num_vertices; i++)
+		read_vector( &(Vertices[i]), LoadFile);
 
 	for (segnum=0; segnum<Num_segments; segnum++ )	{
-		int	bit;
 
 		#ifdef EDITOR
 		Segments[segnum].segnum = segnum;
@@ -726,33 +716,22 @@ int load_mine_data_compiled_new(CFILE *LoadFile)
 
  		cfread( &bit_mask, sizeof(ubyte), 1, LoadFile );
 
-		for (bit=0; bit<MAX_SIDES_PER_SEGMENT; bit++) {
-			if (bit_mask & (1 << bit))
-		 		cfread( &Segments[segnum].children[bit], sizeof(short), 1, LoadFile );
-			else
-				Segments[segnum].children[bit] = -1;
-		}
+		#if defined(SHAREWARE) && !defined(MACINTOSH)
+			// -- read_special(segnum,bit_mask,LoadFile);
+			read_verts(segnum,LoadFile);
+			read_children(segnum,bit_mask,LoadFile);
+		#else
+			read_children(segnum,bit_mask,LoadFile);
+			read_verts(segnum,LoadFile);
+			// --read_special(segnum,bit_mask,LoadFile);
+		#endif
 
-		// Read short Segments[segnum].verts[MAX_VERTICES_PER_SEGMENT]
-		cfread( Segments[segnum].verts, sizeof(short), MAX_VERTICES_PER_SEGMENT, LoadFile );
 		Segments[segnum].objects = -1;
 
-		if (bit_mask & (1 << MAX_SIDES_PER_SEGMENT)) {
-			// Read ubyte	Segments[segnum].special
-			cfread( &Segments[segnum].special, sizeof(ubyte), 1, LoadFile );
-			// Read byte	Segments[segnum].matcen_num
-			cfread( &Segments[segnum].matcen_num, sizeof(ubyte), 1, LoadFile );
-			// Read short	Segments[segnum].value
-			cfread( &Segments[segnum].value, sizeof(short), 1, LoadFile );
-		} else {
-			Segments[segnum].special = 0;
-			Segments[segnum].matcen_num = -1;
-			Segments[segnum].value = 0;
-		}
-
 		// Read fix	Segments[segnum].static_light (shift down 5 bits, write as short)
-		cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
-		Segments[segnum].static_light	= ((fix)temp_ushort) << 4;
+//		cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
+//		temp_ushort = read_short(LoadFile);
+//		Segment2s[segnum].static_light	= ((fix)temp_ushort) << 4;
 		//cfread( &Segments[segnum].static_light, sizeof(fix), 1, LoadFile );
 	
 		// Read the walls as a 6 byte array
@@ -778,24 +757,28 @@ int load_mine_data_compiled_new(CFILE *LoadFile)
 
 			if ( (Segments[segnum].children[sidenum]==-1) || (Segments[segnum].sides[sidenum].wall_num!=-1) )	{
 				// Read short Segments[segnum].sides[sidenum].tmap_num;
-				cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );
-
+//				cfread( &temp_ushort, sizeof(ushort), 1, LoadFile );
+				temp_ushort = read_short(LoadFile);
 				Segments[segnum].sides[sidenum].tmap_num = temp_ushort & 0x7fff;
 
 				if (!(temp_ushort & 0x8000))
 					Segments[segnum].sides[sidenum].tmap_num2 = 0;
 				else {
 					// Read short Segments[segnum].sides[sidenum].tmap_num2;
-					cfread( &Segments[segnum].sides[sidenum].tmap_num2, sizeof(short), 1, LoadFile );
+//					cfread( &Segments[segnum].sides[sidenum].tmap_num2, sizeof(short), 1, LoadFile );
+					Segments[segnum].sides[sidenum].tmap_num2 = read_short(LoadFile);
 				}
 
 				// Read uvl Segments[segnum].sides[sidenum].uvls[4] (u,v>>5, write as short, l>>1 write as short)
 				for (i=0; i<4; i++ )	{
-					cfread( &temp_short, sizeof(short), 1, LoadFile );
+//					cfread( &temp_short, sizeof(short), 1, LoadFile );
+					temp_short = read_short(LoadFile);
 					Segments[segnum].sides[sidenum].uvls[i].u = ((fix)temp_short) << 5;
-					cfread( &temp_short, sizeof(short), 1, LoadFile );
+//					cfread( &temp_short, sizeof(short), 1, LoadFile );
+					temp_short = read_short(LoadFile);
 					Segments[segnum].sides[sidenum].uvls[i].v = ((fix)temp_short) << 5;
-					cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
+//					cfread( &temp_ushort, sizeof(temp_ushort), 1, LoadFile );
+					temp_ushort = read_short(LoadFile);
 					Segments[segnum].sides[sidenum].uvls[i].l = ((fix)temp_ushort) << 1;
 					//cfread( &Segments[segnum].sides[sidenum].uvls[i].l, sizeof(fix), 1, LoadFile );
 				}	
@@ -811,20 +794,54 @@ int load_mine_data_compiled_new(CFILE *LoadFile)
 		}
 	}
 
+#if 0	
+	{
+		FILE *fp;
+		
+		fp = fopen("segments.out", "wt");
+		for (i = 0; i <= Highest_segment_index; i++) {
+
+	side		sides[MAX_SIDES_PER_SEGMENT];	// 6 sides
+	short		children[MAX_SIDES_PER_SEGMENT];	// indices of 6 children segments, front, left, top, right, bottom, back
+	short		verts[MAX_VERTICES_PER_SEGMENT];	// vertex ids of 4 front and 4 back vertices
+	int		objects;								// pointer to objects in this segment
+
+			for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
+	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
+	ubyte		pad;									//keep us longword alligned
+	short		wall_num;
+	short		tmap_num;
+	short		tmap_num2;
+	uvl		uvls[4];
+	vms_vector	normals[2];						// 2 normals, if quadrilateral, both the same.
+				fprintf(fp, "%d\n", Segments[i].sides[j].type;
+				fprintf(fp, "%d\n", Segments[i].sides[j].pad;
+				fprintf(fp, "%d\n", Segments[i].sides[j].wall_num;
+				fprintf(fp, "%d\n", Segments[i].tmap_num
+			
+		}
+		fclose(fp);
+	}
+#endif	
+
 	Highest_vertex_index = Num_vertices-1;
 	Highest_segment_index = Num_segments-1;
 
 	validate_segment_all();			// Fill in side type and normals.
 
-	// Activate fuelcentes
-	for (i=0; i< Num_segments; i++ ) {
-		fuelcen_activate( &Segments[i], Segments[i].special );
+// MIKE!!!!! You should know better than this when the mac is involved!!!!!!
+
+	for (i=0; i<Num_segments; i++) {
+// NO NO!!!!		cfread( &Segment2s[i], sizeof(segment2), 1, LoadFile );
+		Segment2s[i].special = read_byte(LoadFile);
+		Segment2s[i].matcen_num = read_byte(LoadFile);
+		Segment2s[i].value = read_byte(LoadFile);
+		Segment2s[i].s2_flags = read_byte(LoadFile);
+		Segment2s[i].static_light = read_fix(LoadFile);
+		fuelcen_activate( &Segments[i], Segment2s[i].special );
 	}
 
 	reset_objects(1);		//one object, the player
 
 	return 0;
 }
-
-#endif
-

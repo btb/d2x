@@ -1,17 +1,11 @@
 #
 # $Source: f:/miner/source/3d/rcs/makefile $
-# $Revision: 1.9 $
+# $Revision: 1.10 $
 # $Author: matt $
-# $Date: 1994/03/15 21:22:47 $
+# $Date: 1996/01/08 14:59:22 $
 #
 # Makefile for 3d library
 #
-
-LIBDIR = ..\main
-#
-
-CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-
 
 # What to install
 INSTALL_TARGS = 3d.lib 3d.h 3d.inc
@@ -31,51 +25,39 @@ TEST_PROGS = 3dtest
 3DTEST_LIBS = 3d.lib vecmat.lib gr.lib io.lib fix.lib div0.lib texmap.lib misc.lib bm.lib
 
 #rules and targets common to all Miner makefiles
+%include $(INIT)\makefile.def
 
-3d.lib: $(3D_OBJS)
-	wlib 3d.lib $(3D_OBJS)
-	copy *.lib $(LIBDIR)
-3dtest.obj: 3dtest.c
-	wcc386 $(CCFLAGS) 3dtest.c
+### OPUS MKMF:  Do not remove this line!  Generated dependencies follow.
 
-clipper.obj: clipper.asm
-	masm clipper.asm clipper.obj
-draw.obj: draw.asm
-	masm draw.asm draw.obj
-globvars.obj: globvars.asm
-	masm globvars.asm globvars.obj
-horizon.obj: horizon.asm
-	masm horizon.asm horizon.obj
-instance.obj: instance.asm 
-	masm instance.asm instance.obj
+3dtest.obj: 3d.h conio.h fix.h gr.h mono.h mouse.h out.c pstypes.h vecmat.h
 
-interp.obj: interp.asm
-	masm interp.asm interp.obj
-matrix.obj: matrix.asm
-	masm matrix.asm matrix.obj
+clipper.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-objects.obj: objects.asm
-	masm objects.asm objects.obj
+draw.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-out.obj: out.asm
-	masm out.asm out.obj
+globvars.obj: 3d.inc fix.inc psmacros.inc pstypes.inc vecmat.inc
 
-points.obj: points.asm
-	masm points.asm points.obj
+horizon.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-rod.obj: rod.asm
-	masm rod.asm rod.obj
+instance.obj: 3d.inc fix.inc psmacros.inc pstypes.inc vecmat.inc
 
-segment.obj: segment.asm
-	masm segment.asm segment.obj
+interp.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-setup.obj: setup.asm
-	masm setup.asm setup.obj
+matrix.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-#trakball.obj: trackball.asm
+objects.obj: 3d.inc fix.inc psmacros.inc pstypes.inc vecmat.inc
 
-upvecs.obj: upvecs.asm
-	masm upvecs.asm upvecs.obj
+points.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
 
-upvecs2.obj: fix.h types.h vecmat.h
+rod.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
+
+segment.obj: 3d.h fix.h gr.h pstypes.h vecmat.h
+
+setup.obj: 3d.inc fix.inc gr.inc psmacros.inc pstypes.inc vecmat.inc
+
+trakball.obj: fix.h math.h mono.h pstypes.h
+
+upvecs.obj: fix.h pstypes.h vecmat.h
+
+upvecs2.obj: fix.h pstypes.h vecmat.h
 

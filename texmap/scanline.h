@@ -8,25 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/texmap/rcs/scanline.h $
- * $Revision: 1.2 $
- * $Author: john $
- * $Date: 1995/02/20 18:23:40 $
- * 
- * Prototypes for C versions of texture mapped scanlines.
- * 
- * $Log: scanline.h $
- * Revision 1.2  1995/02/20  18:23:40  john
- * Added new module for C versions of inner loops.
- * 
- * Revision 1.1  1995/02/20  17:44:16  john
- * Initial revision
- * 
- * 
- */
 
 
 
@@ -41,4 +24,3 @@ extern void c_tmap_scanline_flat();
 extern void c_tmap_scanline_shaded();
 
 #endif
-

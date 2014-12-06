@@ -8,91 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/main/rcs/wall.h $
- * $Revision: 2.0 $
- * $Author: john $
- * $Date: 1995/02/27 11:31:36 $
- * 
- * $Log: wall.h $
- * Revision 2.0  1995/02/27  11:31:36  john
- * New version 2.0, which has no anonymous unions, builds with
- * Watcom 10.0, and doesn't require parsing BITMAPS.TBL.
- * 
- * Revision 1.47  1994/11/19  15:20:35  mike
- * rip out unused code and data
- * 
- * Revision 1.46  1994/10/25  15:40:12  yuan
- * MAX_WALLS pumped up
- * 
- * Revision 1.45  1994/10/23  19:17:07  matt
- * Fixed bug with "no key" messages
- * 
- * Revision 1.44  1994/10/18  15:38:03  mike
- * Define hidden walls.
- * 
- * Revision 1.43  1994/10/04  13:32:26  adam
- * commented out MAX_DOOR_ANIMS
- * 
- * Revision 1.42  1994/10/04  13:31:21  adam
- * upped MAX_WALL_ANIMS to 30
- * 
- * Revision 1.41  1994/09/29  00:42:30  matt
- * Made hitting a locked door play a sound
- * 
- * Revision 1.40  1994/09/27  15:42:41  mike
- * Prototype Wall_names.
- * 
- * Revision 1.39  1994/09/23  22:15:32  matt
- * Made doors not close on objects, made doors open again if shot while
- * closing, and cleaned up walls/doors a bit.
- * 
- * Revision 1.38  1994/09/22  15:31:33  matt
- * Mucked with, and hopefully improved, exploding walls
- * 
- * Revision 1.37  1994/09/21  17:17:05  mike
- * Make objects stuck in doors go away when door opens.
- * 
- * Revision 1.36  1994/09/13  21:10:46  matt
- * Added wclips that use tmap1 instead of tmap2, saving lots of merging
- * 
- * Revision 1.35  1994/09/13  20:11:08  yuan
- * *** empty log message ***
- * 
- * Revision 1.34  1994/09/10  13:31:53  matt
- * Made exploding walls a type of blastable walls.
- * Cleaned up blastable walls, making them tmap2 bitmaps.
- * 
- * Revision 1.33  1994/08/17  12:55:34  matt
- * Added external walls to wall_is_doorway
- * 
- * Revision 1.32  1994/08/15  17:54:35  john
- * *** empty log message ***
- * 
- * Revision 1.31  1994/08/15  17:46:56  yuan
- * Added external walls, fixed blastable walls.
- * 
- * Revision 1.30  1994/08/05  21:17:21  matt
- * Allow two doors to be linked together
- * 
- * Revision 1.29  1994/08/01  10:39:10  matt
- * Parenthesized parms to WID() macro
- * 
- * Revision 1.28  1994/07/20  17:35:03  yuan
- * Some minor bug fixes and new key gauges...
- * 
- * Revision 1.27  1994/07/19  14:32:03  yuan
- * Fixed keys bug... renumbered some constants.
- * 
- * Revision 1.26  1994/07/14  22:38:29  matt
- * Added exploding doors
- * 
- * Revision 1.25  1994/07/11  15:08:43  yuan
- * Wall anim file names stored in structure.
- *  
- */
 
 #ifndef _WALL_H
 #define _WALL_H
@@ -103,10 +20,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //#include "vclip.h"
 
-#define MAX_WALLS					175	// Maximum number of walls
-#define MAX_WALL_ANIMS			30		// Maximum different types of doors
-#define MAX_DOORS					50		// Maximum number of open doors
-// not used -> #define MAX_DOOR_ANIMS			20		// Maximum different types of doors
+#define MAX_WALLS					254	// Maximum number of walls
+#define MAX_WALL_ANIMS			60		// Maximum different types of doors
+#define MAX_DOORS					90		// Maximum number of open doors
 
 // Various wall types.
 #define WALL_NORMAL				0  	// Normal wall
@@ -115,6 +31,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WALL_ILLUSION			3  	// Wall that appears to be there, but you can fly thru
 #define WALL_OPEN					4		// Just an open side. (Trigger)
 #define WALL_CLOSED				5		// Wall.  Used for transparent walls.
+#define WALL_OVERLAY				6		// Goes over an actual solid side.  For triggers 
+#define WALL_CLOAKED				7		// Can see it, and see through it
 
 // Various wall flags.
 #define WALL_BLASTED				1  	// Blasted out wall.
@@ -122,12 +40,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WALL_DOOR_LOCKED		8		// Door is locked.
 #define WALL_DOOR_AUTO			16		// Door automatically closes after time.
 #define WALL_ILLUSION_OFF		32		// Illusionary wall is shut off.
+#define WALL_WALL_SWITCH		64		// This wall is openable by a wall switch.
+#define WALL_BUDDY_PROOF		128	// Buddy assumes he cannot get through this wall.
 
 // Wall states
 #define WALL_DOOR_CLOSED		0		// Door is closed
 #define WALL_DOOR_OPENING		1		// Door is opening.
 #define WALL_DOOR_WAITING		2		// Waiting to close
 #define WALL_DOOR_CLOSING		3		// Door is closing
+#define WALL_DOOR_OPEN 			4		// Door is open, and staying open
+#define WALL_DOOR_CLOAKING		5		// Wall is going from closed -> open
+#define WALL_DOOR_DECLOAKING	6		// Wall is going from open -> closed
 
 //note: a door is considered opened (i.e., it has WALL_OPENED set) when it 
 //is more than half way open.  Thus, it can have any of OPENING, CLOSING, 
@@ -144,21 +67,22 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define DOOR_OPEN_TIME			i2f(2)		// How long takes to open
 #define DOOR_WAIT_TIME			i2f(5)		// How long before auto door closes
 
-#define MAX_CLIP_FRAMES			20
+#define MAX_CLIP_FRAMES			50
 
 // WALL_IS_DOORWAY flags.
 #define WID_FLY_FLAG					1
 #define WID_RENDER_FLAG				2
 #define WID_RENDPAST_FLAG			4
 #define WID_EXTERNAL_FLAG			8
+#define WID_CLOAKED_FLAG			16
 
-//	WALL_IS_DOORWAY return values			F/R/RP
-#define WID_WALL						2	// 0/1/0		wall	
-#define WID_TRANSPARENT_WALL		6	//	0/1/1		transparent wall
-#define WID_ILLUSORY_WALL			3	//	1/1/0		illusory wall
-#define WID_TRANSILLUSORY_WALL	7	//	1/1/1		transparent illusory wall
-#define WID_NO_WALL					5	//	1/0/1		no wall, can fly through
-#define WID_EXTERNAL					8	// 0/0/0/1	don't see it, dont fly through it
+//@@//	WALL_IS_DOORWAY return values			F/R/RP
+//@@#define WID_WALL						2	// 0/1/0		wall	
+//@@#define WID_TRANSPARENT_WALL		6	//	0/1/1		transparent wall
+//@@#define WID_ILLUSORY_WALL			3	//	1/1/0		illusory wall
+//@@#define WID_TRANSILLUSORY_WALL	7	//	1/1/1		transparent illusory wall
+//@@#define WID_NO_WALL					5	//	1/0/1		no wall, can fly through
+//@@#define WID_EXTERNAL					8	// 0/0/0/1	don't see it, dont fly through it
 
 #define	MAX_STUCK_OBJECTS	32
 
@@ -177,7 +101,9 @@ typedef struct wall {
 	byte	trigger;				// Which trigger is associated with the wall.
 	byte	clip_num;			// Which	animation associated with the wall. 
 	ubyte	keys;					// which keys are required
-	short	pad;					// keep longword aligned
+	byte	controlling_trigger;	// which trigger causes something to happen here.  Not like "trigger" above, which is the trigger on this wall.
+									//	Note: This gets stuffed at load time in gamemine.c.  Don't try to use it in the editor.  You will be sorry!
+	byte	cloak_value;		// if this wall is cloaked, the fade value
 	} wall;
 
 typedef struct active_door {
@@ -186,6 +112,14 @@ typedef struct active_door {
 	short		back_wallnum[2]; 		// back wall numbers for this door
 	fix		time;						// how long been opening, closing, waiting
 } active_door;
+
+typedef struct cloaking_wall {
+	short		front_wallnum;		// front wall numbers for this door
+	short		back_wallnum; 		// back wall numbers for this door
+	fix		front_ls[4]; 		// front wall saved light values
+	fix		back_ls[4];	 		// back wall saved light values
+	fix		time;			 		// how long been cloaking or decloaking
+} cloaking_wall;
 
 //wall clip flags
 #define WCF_EXPLODES		1		//door explodes when opening
@@ -208,13 +142,16 @@ extern char	Wall_names[7][10];
 
 //#define WALL_IS_DOORWAY(seg,side) wall_is_doorway(seg, side)
 
-#define WALL_IS_DOORWAY(seg,side) (((seg)->children[(side)] == -1) ? WID_WALL : ((seg)->children[(side)] == -2) ? WID_EXTERNAL_FLAG : ((seg)->sides[(side)].wall_num == -1) ? WID_NO_WALL : wall_is_doorway((seg), (side)))
+#define WALL_IS_DOORWAY(seg,side) (((seg)->children[(side)] == -1) ? WID_RENDER_FLAG : ((seg)->children[(side)] == -2) ? WID_EXTERNAL_FLAG : ((seg)->sides[(side)].wall_num == -1) ? (WID_FLY_FLAG|WID_RENDPAST_FLAG) : wall_is_doorway((seg), (side)))
 
 extern wall Walls[MAX_WALLS];			// Master walls array
 extern int Num_walls;					// Number of walls
 
 extern active_door ActiveDoors[MAX_DOORS];	//	Master doors array
 extern int Num_open_doors;				// Number of open doors
+
+extern cloaking_wall CloakingWalls[];
+extern int Num_cloaking_walls;
 
 extern wclip WallAnims[MAX_WALL_ANIMS];
 extern int Num_wall_anims;
@@ -246,8 +183,8 @@ void do_door_close(int door_num);
 // Opens a door  
 extern void wall_open_door(segment *seg, int side);
 
-// Closes a door (called after given interval)
-extern void wall_close_door(int wall_num);
+// Closes a door  
+extern void wall_close_door(segment *seg, int side);
 
 //return codes for wall_hit_process()
 #define WHP_NOT_SPECIAL		0		//wasn't a quote-wall-unquote
@@ -277,5 +214,12 @@ extern void remove_obsolete_stuck_objects(void);
 
 //set the tmap_num or tmap_num2 field for a wall/door
 extern void wall_set_tmap_num(segment *seg,int side,segment *csegp,int cside,int anim_num,int frame_num);
+
+// Remove any flares from a wall
+void kill_stuck_objects(int wallnum);
+
+//start wall open <-> closed transitions
+void start_wall_cloak(segment *seg, int side);
+void start_wall_decloak(segment *seg, int side);
 
 #endif

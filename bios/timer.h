@@ -8,55 +8,14 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/bios/rcs/timer.h $
- * $Revision: 1.8 $
- * $Author: john $
- * $Date: 1994/12/10 12:27:23 $
- *
- * Header for timer functions
- *
- * $Log: timer.h $
- * Revision 1.8  1994/12/10  12:27:23  john
- * Added timer_get_approx_seconds.
- * 
- * Revision 1.7  1994/12/10  12:10:25  john
- * Added types.h.
- * 
- * 
- * 
- * 
- * Revision 1.6  1994/12/10  12:07:06  john
- * Added tick counter variable.
- * 
- * Revision 1.5  1994/11/15  12:04:15  john
- * Cleaned up timer code a bit... took out unused functions
- * like timer_get_milliseconds, etc.
- * 
- * Revision 1.4  1994/04/28  23:50:08  john
- * Changed calling for init_timer.  Made the function that the
- * timer calls be a far function. All of this was done to make
- * our timer system compatible with the HMI sound stuff.
- * 
- * Revision 1.3  1994/02/17  15:57:12  john
- * Changed key libary to C.
- * 
- * Revision 1.2  1994/01/18  10:58:34  john
- * Added timer_get_fixed_seconds
- * 
- * Revision 1.1  1993/07/10  13:10:41  matt
- * Initial revision
- * 
- *
- */
 
 
 #ifndef _TIMER_H
 #define _TIMER_H
 
-#include "types.h"
+#include "pstypes.h"
 #include "fix.h"
 
 //==========================================================================
@@ -94,9 +53,9 @@ extern fix timer_get_approx_seconds();		// Returns time since program started...
 
 //==========================================================================
 // Use to access the BIOS ticker... ie...   i = TICKER
-#define TICKER (*(volatile int *)0x46C)
-#define USECS_PER_READING( start, stop, frames ) (((stop-start)*54945)/frames)
+void timer_delay(fix seconds);
+
+//#define USECS_PER_READING( start, stop, frames ) (((stop-start)*54945)/frames)
 
 #endif
 
-

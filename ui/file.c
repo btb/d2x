@@ -8,39 +8,8 @@ SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
-COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
+COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-/*
- * $Source: f:/miner/source/ui/rcs/file.c $
- * $Revision: 1.6 $
- * $Author: john $
- * $Date: 1994/06/09 12:18:29 $
- *
- * File dialog box stuff.
- *
- * $Log: file.c $
- * Revision 1.6  1994/06/09  12:18:29  john
- * Took out keyboard flushes.
- * 
- * Revision 1.5  1994/04/27  18:30:49  john
- * Fixed bug with enter a directory without a slash on
- * the end not working.
- *  .
- * 
- * Revision 1.4  1994/04/22  11:09:47  john
- * Speed up directory loading by only searching for *. instead of *.*
- * 
- * Revision 1.3  1993/12/07  12:30:18  john
- * new version.
- * 
- * Revision 1.2  1993/10/26  13:46:22  john
- * *** empty log message ***
- * 
- * Revision 1.1  1993/10/06  11:10:23  john
- * Initial revision
- * 
- *
- */
 
 #pragma off (unreferenced)
 static char rcsid[] = "$Id: file.c 1.6 1994/06/09 12:18:29 john Exp $";
@@ -110,9 +79,7 @@ int __far critical_error_handler( unsigned deverr, unsigned errcode, unsigned fa
 
 void InstallErrorHandler()
 {
-	_harderr((void *) critical_error_handler );
-	//Above line modified by KRB, added (void *) cast
-	//for the compiler.
+	_harderr( critical_error_handler );
 }
 
 void file_sort( int n, char list[][13] )
@@ -594,8 +561,7 @@ int ui_get_file( char * filename, char * Filespec  )
 
 	for (i=0; i< NumFiles; i++ )
 	{
-		//MALLOC( text[i], char, 15 );//Another compile hack -KRB
-		text[i]=(char *)malloc(15*sizeof(char));
+		MALLOC( text[i], char, 15 );
 		strcpy(text[i], filename_list[i] );
 	}
 
@@ -616,4 +582,3 @@ int ui_get_file( char * filename, char * Filespec  )
 
 }
 
-
