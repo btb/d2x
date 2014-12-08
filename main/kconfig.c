@@ -1700,12 +1700,13 @@ void kc_change_joyaxis( kc_item * item )
 		
 		for (i=0; i<numaxis; i++ )	{
 #if defined (MACINTOSH)
-			if ( abs(axis[i]-old_axis[i])>100 )	{
+			if ( abs(axis[i]-old_axis[i])>100 )
 #elif defined(WINDOWS)
-			if ( abs(axis[i]-old_axis[i])>1024 )	{
-#else 
-  			if ( abs(axis[i]-old_axis[i])>200 )	{
+			if ( abs(axis[i]-old_axis[i])>1024 )
+#else
+			if ( abs(axis[i]-old_axis[i])>200 )
 #endif
+			{
 				code = i;
 				con_printf(CON_DEBUG, "Axis Movement detected: Axis %i\n", i);
 			}
