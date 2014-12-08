@@ -75,6 +75,7 @@ static char rcsid[] = "$Id: kconfig.c,v 1.40 2005-08-02 06:13:56 chris Exp $";
 #ifdef USE_LINUX_JOY
 #include "joystick.h"
 #endif
+#include "cmd.h"
 
 ubyte ExtGameStatus=1;
 
@@ -3587,6 +3588,28 @@ if (!Player_is_dead)
 	#endif
 }
 #endif
+
+
+void controls_read_console()
+{
+	//	Controls.pitch_time += fixmul(kc_external_control->pitch_time,FrameTime);
+	//	Controls.vertical_thrust_time += fixmul(kc_external_control->vertical_thrust_time,FrameTime);
+	//	Controls.heading_time += fixmul(kc_external_control->heading_time,FrameTime);
+	//	Controls.sideways_thrust_time += fixmul(kc_external_control->sideways_thrust_time ,FrameTime);
+	//	Controls.bank_time += fixmul(kc_external_control->bank_time ,FrameTime);
+	//	Controls.forward_thrust_time += fixmul(kc_external_control->forward_thrust_time ,FrameTime);
+	//	Controls.rear_view_down_count += kc_external_control->rear_view_down_count;
+	//	Controls.rear_view_down_state |= kc_external_control->rear_view_down_state;
+	//	Controls.fire_primary_down_count += kc_external_control->fire_primary_down_count;
+	Controls.fire_primary_state |= Console_button_states[CMD_ATTACK];
+	Controls.fire_secondary_state |= Console_button_states[CMD_ATTACK2];
+	//	Controls.fire_secondary_down_count += kc_external_control->fire_secondary_down_count;
+	//	Controls.fire_flare_down_count += kc_external_control->fire_flare_down_count;
+	//	Controls.drop_bomb_down_count += kc_external_control->drop_bomb_down_count;
+	//	Controls.automap_down_count += kc_external_control->automap_down_count;
+	//	Controls.automap_state |= kc_external_control->automap_state;
+}
+
 
 void reset_cruise(void)
 {

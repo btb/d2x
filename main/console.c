@@ -63,10 +63,7 @@ void con_parse(ConsoleInformation *console, char *command);
 void con_hide();
 
 
-/* ======
- * con_free - Free the console.
- * ======
- */
+/* Free the console */
 void con_free(void)
 {
 	CON_Free(Console);
@@ -74,11 +71,8 @@ void con_free(void)
 #endif
 
 
-/* ======
- * con_init - Initialise the console.
- * ======
- */
-int con_init(void)
+/* Initialise the console */
+void con_init(void)
 {
 	grs_screen fake_screen;
 	grs_font   fake_font;
@@ -93,12 +87,13 @@ int con_init(void)
 	CON_SetExecuteFunction(Console, con_parse);
 	CON_SetHideFunction(Console, con_hide);
 
+
+	cmd_init();
+
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
 
 	atexit(con_free);
-
-	return 0;
 }
 
 #ifdef CONSOLE
@@ -141,10 +136,7 @@ void con_resize(void)
 #endif
 }
 
-/* ======
- * con_printf - Print a message to the console.
- * ======
- */
+/* Print a message to the console */
 void con_printf(int priority, char *fmt, ...)
 {
 	va_list arglist;
@@ -167,7 +159,7 @@ void con_printf(int priority, char *fmt, ...)
 
 		if (text_console_enabled)
 		{
-			/* Produce a sanitised version and send it to the console */
+			/* Produce a sanitised version and send it to the standard output */
 			char *p1, *p2;
 
 			p1 = p2 = buffer;
@@ -191,10 +183,7 @@ void con_printf(int priority, char *fmt, ...)
 	}
 }
 
-/* ======
- * con_update - Check for new console input. If it's there, use it.
- * ======
- */
+/* Check for new console input. If it's there, use it */
 void con_update(void)
 {
 #if 0
@@ -220,10 +209,7 @@ int con_events(int key)
 }
 
 
-/* ======
- * cvar_registervariable - Register a CVar
- * ======
- */
+/* Register a CVar */
 void cvar_registervariable (cvar_t *cvar)
 {
 	cvar_t *ptr;
@@ -243,10 +229,7 @@ void cvar_registervariable (cvar_t *cvar)
 	}
 }
 
-/* ======
- * cvar_set - Set a CVar's value
- * ======
- */
+/* Set a CVar's value */
 void cvar_set (char *cvar_name, char *value)
 {
 	cvar_t *ptr;
@@ -259,10 +242,7 @@ void cvar_set (char *cvar_name, char *value)
 	ptr->value = strtod(value, (char **) NULL);
 }
 
-/* ======
- * cvar() - Get a CVar's value
- * ======
- */
+/* Get a CVar's value */
 float cvar (char *cvar_name)
 {
 	cvar_t *ptr;
@@ -276,10 +256,7 @@ float cvar (char *cvar_name)
 }
 
 
-/* ==========================================================================
- * DRAWING
- * ==========================================================================
- */
+/* Draw the console */
 void con_draw(void)
 {
 #ifdef CONSOLE
@@ -298,6 +275,7 @@ void con_draw(void)
 #endif
 }
 
+/* Show the console */
 void con_show(void)
 {
 	Console_open = 1;

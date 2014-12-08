@@ -12,7 +12,7 @@
 #define CON_VERBOSE   1
 #define CON_DEBUG     2
 
-int  con_init(void);
+void con_init(void);
 void con_init_gfx(void);
 void con_resize(void);
 void con_printf(int level, char *fmt, ...);

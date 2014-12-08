@@ -2434,6 +2434,7 @@ void ReadControls()
 					controls_read_all();		//NOTE LINK TO ABOVE!!!
 				#endif
 
+		controls_read_console();
 		check_rear_view();
 
 		//	If automap key pressed, enable automap unless you are in network mode, control center destroyed and < 10 seconds left

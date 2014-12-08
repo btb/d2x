@@ -2,6 +2,7 @@
 #define _CMD_H_ 1
 
 
+void cmd_init(void);
 
 /* Maximum length for a single command */
 #define CMD_MAX_LENGTH 2048
@@ -11,11 +12,22 @@
 /* Parse an input string */
 void cmd_parse(char *input);
 
-typedef void (*xcommand_t)(void);
+typedef void (*cmd_handler_t)(int argc, char *argv[]);
 
-/* Warning: these commands are NOT REENTRANT. Do not attempt to thread them! */
-void cmd_tokenize(char *string);
-int cmd_argc(void);
-char *cmd_argv(int w);
+void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func);
+
+
+/* +/- actions */
+
+#define CMD_NUM_BUTTONS 2
+
+typedef enum
+{
+	CMD_ATTACK,  // Fire primary weapon
+	CMD_ATTACK2, // Fire secondary weapon
+} cmd_button;
+
+extern int Console_button_states[CMD_NUM_BUTTONS];
+
 
 #endif /* _CMD_H_ */
