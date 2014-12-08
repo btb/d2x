@@ -1857,7 +1857,7 @@ void game()
 				if (cg_fov.value > 170)
 					cvar_set("fov", "170");
 				Render_zoom = fl2f(cg_fov.value * M_PI / 180); // convert to radians
-				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)", cg_fov.value, Render_zoom);
+				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", cg_fov.value, Render_zoom);
 			}
 
 			//if the player is taking damage, give up guided missile control
