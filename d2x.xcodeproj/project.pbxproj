@@ -2047,7 +2047,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "build/d2x-soft";
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
 			name = "d2x-soft";
@@ -2061,7 +2061,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "build/d2x-opengl";
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
 			name = "d2x-opengl";

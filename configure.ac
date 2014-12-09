@@ -373,7 +373,6 @@ AC_SUBST(CFLAGS)
 
 AC_OUTPUT(
     Makefile
-    utilities/Makefile
     debian/changelog
     rpm/d2x.spec
 )
