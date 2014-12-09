@@ -15,6 +15,7 @@
 #include "strutil.h"
 
 
+/* The list of cmds */
 typedef struct cmd_s
 {
 	char          *name;

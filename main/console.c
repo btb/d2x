@@ -29,6 +29,7 @@
 #include "error.h"
 #include "console.h"
 #include "cmd.h"
+#include "cvar.h"
 #include "gr.h"
 #include "gamefont.h"
 #include "pcx.h"
@@ -42,7 +43,6 @@ int isvga();
 #endif
 
 int Console_open = 0;
-cvar_t *cvar_vars = NULL;
 
 /* Console specific cvars */
 /* How discriminating we are about which messages are displayed */
@@ -213,53 +213,6 @@ int con_events(int key)
 #else
 	return key;
 #endif
-}
-
-
-/* Register a CVar */
-void cvar_registervariable (cvar_t *cvar)
-{
-	cvar_t *ptr;
-
-	Assert(cvar != NULL);
-
-	cvar->next = NULL;
-	cvar->value = strtod(cvar->string, (char **) NULL);
-
-	if (cvar_vars == NULL)
-	{
-		cvar_vars = cvar;
-	} else
-	{
-		for (ptr = cvar_vars; ptr->next != NULL; ptr = ptr->next) ;
-		ptr->next = cvar;
-	}
-}
-
-/* Set a CVar's value */
-void cvar_set (char *cvar_name, char *value)
-{
-	cvar_t *ptr;
-
-	for (ptr = cvar_vars; ptr != NULL; ptr = ptr->next)
-		if (!strcmp(cvar_name, ptr->name)) break;
-
-	if (ptr == NULL) return; // If we didn't find the cvar, give up
-
-	ptr->value = strtod(value, (char **) NULL);
-}
-
-/* Get a CVar's value */
-float cvar (char *cvar_name)
-{
-	cvar_t *ptr;
-
-	for (ptr = cvar_vars; ptr != NULL; ptr = ptr->next)
-		if (!strcmp(cvar_name, ptr->name)) break;
-
-	if (ptr == NULL) return 0.0; // If we didn't find the cvar, give up
-
-	return ptr->value;
 }
 
 

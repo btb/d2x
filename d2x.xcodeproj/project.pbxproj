@@ -157,6 +157,7 @@
 		146698F51A2729870070D41D /* scanline.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697631A2729870070D41D /* scanline.c */; };
 		146698FC1A2729870070D41D /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
 		14E0A3221A2C4DDE0039A9FC /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
+		14E97E071A3703D40027FB84 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -894,6 +895,8 @@
 		146699AE1A2729C60070D41D /* txb2tex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../../../../usr/local/lib/libphysfs.a; sourceTree = "<group>"; };
+		14E97E051A3703BE0027FB84 /* cvar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvar.h; sourceTree = "<group>"; };
+		14E97E061A3703D40027FB84 /* cvar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cvar.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1555,6 +1558,8 @@
 				1466966A1A2729870070D41D /* credits.c */,
 				1466966B1A2729870070D41D /* credits.h */,
 				1466966C1A2729870070D41D /* crypt.c */,
+				14E97E061A3703D40027FB84 /* cvar.c */,
+				14E97E051A3703BE0027FB84 /* cvar.h */,
 				1466966D1A2729870070D41D /* desc_id.h */,
 				1466966E1A2729870070D41D /* descent.cfg */,
 				1466966F1A2729870070D41D /* desw.h */,
@@ -2173,6 +2178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				146698D01A2729870070D41D /* state.c in Sources */,
+				14E97E071A3703D40027FB84 /* cvar.c in Sources */,
 				146698CC1A2729870070D41D /* scores.c in Sources */,
 				146697811A2729870070D41D /* rect.c in Sources */,
 				146698DF1A2729870070D41D /* vecmat.c in Sources */,
