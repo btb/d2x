@@ -13,6 +13,7 @@
 #include "error.h"
 #include "u_mem.h"
 #include "strutil.h"
+#include "weapon.h"
 
 
 /* The list of cmds */
@@ -81,7 +82,7 @@ void cmd_parse(char *input)
 	for (i=0; isspace(input[i]); i++) ;
 	strncpy( buffer, &input[i], CMD_MAX_LENGTH );
 
-	printf("lead strip \"%s\"\n",buffer);
+	//printf("lead strip \"%s\"\n",buffer);
 	l = strlen(buffer);
 	/* If command is empty, give up */
 	if (l==0) return;
@@ -89,7 +90,7 @@ void cmd_parse(char *input)
 	/* Strip trailing spaces */
 	for (i=l-1; i>0 && isspace(buffer[i]); i--) ;
 	buffer[i+1] = 0;
-	printf("trail strip \"%s\"\n",buffer);
+	//printf("trail strip \"%s\"\n",buffer);
 
 	/* Split into tokens */
 	l = strlen(buffer);
@@ -119,6 +120,25 @@ void cmd_attack_off(int argc, char **argv) { Console_button_states[CMD_ATTACK] =
 void cmd_attack2_on(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 1; }
 void cmd_attack2_off(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 0; }
 
+/* weapon select */
+void cmd_impulse(int argc, char**argv) {
+	int n = atoi(argv[1]);
+	if (n >= 1 && n <= 20) {
+		select_weapon((n-1) % 10, (n-1) / 10, 0, 1);
+	}
+}
+
+/* echo to console */
+void cmd_echo(int argc, char **argv) {
+	char buf[1024] = "";
+	int i;
+	for (i = 1; i < argc; i++) {
+		strncat(buf, " ", 1024);
+		strncat(buf, argv[i], 1024);
+	}
+	con_printf(CON_NORMAL, "%s\n", buf);
+}
+
 
 void cmd_free(void)
 {
@@ -139,6 +159,10 @@ void cmd_init(void){
 	cmd_addcommand("-attack", cmd_attack_off);
 	cmd_addcommand("+attack2", cmd_attack2_on);
 	cmd_addcommand("-attack2", cmd_attack2_off);
+
+	cmd_addcommand("impulse", cmd_impulse);
+
+	cmd_addcommand("echo", cmd_echo);
 
 	atexit(cmd_free);
 }
