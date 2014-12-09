@@ -121,10 +121,8 @@ void Error(char *fmt,...)
 	vsprintf(exit_message+strlen(exit_message),fmt,arglist);
 	va_end(arglist);
 
-	Int3();
-
 	if (!err_initialized) print_exit_message();
-
+	Int3();
 	exit(1);
 }
 
