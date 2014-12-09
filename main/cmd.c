@@ -119,6 +119,18 @@ void cmd_attack2_on(int argc, char **argv) { Console_button_states[CMD_ATTACK2] 
 void cmd_attack2_off(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 0; }
 
 
+void cmd_free(void)
+{
+	cmd_t *p = cmd_list, *temp;
+
+	while (p) {
+		temp = p;
+		p = p->next;
+		d_free(temp);
+	}
+}
+
+
 void cmd_init(void){
 	memset(Console_button_states, 0, sizeof(int) * CMD_NUM_BUTTONS);
 
@@ -126,4 +138,6 @@ void cmd_init(void){
 	cmd_addcommand("-attack", cmd_attack_off);
 	cmd_addcommand("+attack2", cmd_attack2_on);
 	cmd_addcommand("-attack2", cmd_attack2_off);
+
+	atexit(cmd_free);
 }
