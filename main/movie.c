@@ -1,4 +1,3 @@
-/* $Id: movie.c,v 1.40 2006-02-26 02:29:06 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -20,10 +19,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
-#endif
-
-#ifdef RCS
-static char rcsid[] = "$Id: movie.c,v 1.40 2006-02-26 02:29:06 chris Exp $";
 #endif
 
 #include <string.h>
@@ -62,11 +57,6 @@ static char rcsid[] = "$Id: movie.c,v 1.40 2006-02-26 02:29:06 chris Exp $";
 
 extern int MenuHiresAvailable;
 extern char CDROM_dir[];
-
-#define VID_PLAY 0
-#define VID_PAUSE 1
-
-int Vid_State;
 
 
 // Subtitle data
@@ -309,6 +299,8 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 	MVE_memCallbacks(MPlayAlloc, MPlayFree);
 	MVE_ioCallbacks(FileRead);
+	MVE_sfCallbacks(MovieShowFrame);
+	MVE_palCallbacks(MovieSetPalette);
 
 	if (hires_flag) {
 		gr_set_mode(SM(640,480));
@@ -322,16 +314,10 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	gr_palette_load(gr_palette);
 #endif
 
-	MVE_sfCallbacks(MovieShowFrame);
-	MVE_palCallbacks(MovieSetPalette);
-
 	if (MVE_rmPrepMovie((void *)filehndl, dx, dy, track)) {
 		Int3();
 		return MOVIE_NOT_PLAYED;
 	}
-
-	MVE_sfCallbacks(MovieShowFrame);
-	MVE_palCallbacks(MovieSetPalette);
 
 	frame_num = 0;
 
@@ -454,8 +440,6 @@ int InitRobotMovie(char *filename)
 		con_printf(CON_URGENT, "Can't open movie <%s>: %s\n", filename, PHYSFS_getLastError());
 		return MOVIE_NOT_PLAYED;
 	}
-
-	Vid_State = VID_PLAY;
 
 	if (MVE_rmPrepMovie((void *)RoboFile, MenuHires?280:140, MenuHires?200:80, 0)) {
 		Int3();

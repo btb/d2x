@@ -1,4 +1,3 @@
-/* $Id: movie.h,v 1.3 2003-10-10 09:36:35 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -26,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define MOVIE_NOT_PLAYED    0   // movie wasn't present
 #define MOVIE_PLAYED_FULL   1   // movie was played all the way through
-#define MOVIE_ABORTED       2   // movie started by was aborted
+#define MOVIE_ABORTED       2   // movie started but was aborted
 
 extern int PlayMovie(const char *filename, int allow_abort);
 extern int PlayMovies(int num_files, const char *filename[], int graphmode, int allow_abort);
