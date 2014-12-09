@@ -39,32 +39,23 @@ void clear_warn_func(void (*f)(char *s));//say this function no longer valid
 void _Assert(int expr,char *expr_text,char *filename,int linenum);	//assert func
 void Error(char *fmt,...) __noreturn __format;				//exit with error code=1, print message
 void Assert(int expr);
-void Int3();
+void Int3(void);
 
 #ifndef NDEBUG		//macros for debugging
 
-#if defined(__GNUC__) && (defined(__i386__) || defined(__amd64__))
-
-#define Int3() asm volatile ("int $3")
-
+/* generate a debug break */
+#if defined(__clang__)
+#define Int3() __builtin_debugtrap()
+#elif defined(__GNUC__) && (defined(__i386__) || defined(__amd64__))
+#define Int3() ({ asm volatile ("int $3") })
 #elif defined __WATCOMC__
-
-void Int3(void);								      //generate int3
 #pragma aux Int3 = "int 3h";
-
 #elif defined _MSC_VER
-
-#define Int3() __asm { int 3 }
-
+#define Int3() __debugbreak()
 #elif defined(__APPLE__) || defined(macintosh)
-
-extern void Debugger(void);	// Avoids some name clashes
-#define Int3 Debugger
-
+#define Int3() Debugger()
 #else
-
-#error Unknown Compiler!
-
+#error Debug break not defined for your compiler or platform.
 #endif
 
 #define Assert(expr) ((expr)?(void)0:(void)_Assert(0,#expr,__FILE__,__LINE__))
