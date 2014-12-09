@@ -40,7 +40,7 @@
 
 #include "inferno.h"
 #include "screens.h"
-
+#include "timer.h"
 #include "strutil.h"
 #include "mono.h"
 #include "args.h"
@@ -708,6 +708,49 @@ void gr_palette_load( ubyte *pal )
 
 int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 {
+	int j;
+	unsigned char *buf;
+
+	if (gr_palette_faded_out) return 0;
+
+	if (grd_fades_disabled) {
+		gr_palette_clear();
+		return 0;
+	}
+
+	if (!ogl_readpixels_ok) {
+		gr_palette_faded_out = 1;
+		return 0;
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+
+	glReadBuffer(GL_FRONT);
+
+	MALLOC(buf, unsigned char, grd_curscreen->sc_w * grd_curscreen->sc_h * 3);
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h, GL_RGB, GL_UNSIGNED_BYTE, buf);
+
+	for (j = 0; j < nsteps; j++) {
+		glRasterPos2f(0,0);
+		glDrawPixels(grd_curscreen->sc_w, grd_curscreen->sc_h, GL_RGB, GL_UNSIGNED_BYTE, buf);
+
+		glColor4f(0.0, 0.0, 0.0, (float)(j) / (nsteps - 1)); // go from 0 to 1
+		glBegin(GL_QUADS);
+		glVertex2i(0, 0);
+		glVertex2i(0, 1);
+		glVertex2i(1, 1);
+		glVertex2i(1, 0);
+		glEnd();
+
+		gr_update();
+
+		timer_delay(f0_1 / 10);
+	}
+	d_free(buf);
+
 	gr_palette_faded_out=1;
 	return 0;
 }
@@ -716,6 +759,49 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 
 int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 {
+	int j;
+	unsigned char *buf;
+
+	if (!gr_palette_faded_out) return 0;
+
+	if (grd_fades_disabled) {
+		gr_palette_clear();
+		return 0;
+	}
+
+	if (!ogl_readpixels_ok) {
+		gr_palette_faded_out = 0;
+		return 0;
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+
+	glReadBuffer(GL_FRONT);
+
+	MALLOC(buf, unsigned char, grd_curscreen->sc_w * grd_curscreen->sc_h * 3);
+	glReadBuffer(GL_FRONT);
+	glReadPixels(0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h, GL_RGB, GL_UNSIGNED_BYTE, buf);
+
+	for (j = 0; j < nsteps; j++) {
+		glRasterPos2f(0,0);
+		glDrawPixels(grd_curscreen->sc_w, grd_curscreen->sc_h, GL_RGB, GL_UNSIGNED_BYTE, buf);
+
+		glColor4f(0.0, 0.0, 0.0, (float)(nsteps - 1 - j) / (nsteps - 1)); // go from 1 to 0
+		glBegin(GL_QUADS);
+		glVertex2i(0, 0);
+		glVertex2i(0, 1);
+		glVertex2i(1, 1);
+		glVertex2i(1, 0);
+		glEnd();
+
+		gr_update();
+
+		timer_delay(f0_1 / 10);
+	}
+	d_free(buf);
+
 	gr_palette_faded_out=0;
 	return 0;
 }
