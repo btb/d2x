@@ -183,11 +183,7 @@ int show_title_screen( char * filename, int allow_keys, int from_hog_only )
 	memcpy(palette_save,gr_palette,sizeof(palette_save));
 
 	//vfx_set_palette_sub( New_pal );
-#ifdef OGL
-	gr_palette_load( New_pal );
-#else
 	gr_palette_clear();
-#endif
 
 	gr_set_current_canvas( NULL );
 	show_fullscr(&title_bm);
@@ -706,6 +702,9 @@ int load_new_briefing_screen( char *fname )
 	mprintf ((0,"Loading new briefing <%s>\n",fname));
 	strcpy (CurBriefScreenName,fname);
 
+#if 1 //defined (MACINTOSH) || defined(WINDOWS)
+	memcpy(New_pal,gr_palette,sizeof(gr_palette));		// attempt to get fades after briefing screens done correctly.
+#endif
 	if (gr_palette_fade_out( New_pal, 32, 0 ))
 		return 0;
 
@@ -888,7 +887,7 @@ int show_briefing_message(int screen_num, char *message)
 					if (RobotPlaying) {
 						RotateRobot();
 						DoBriefingColorStuff ();
-						mprintf ((0,"Robot playing is %d!!!",RobotPlaying));
+						mprintf ((0,"Robot playing is %d!!!\n",RobotPlaying));
 					}
 				}
 				prev_ch = 10;                           // read to eoln
@@ -1364,11 +1363,7 @@ int show_briefing_screen( int screen_num, int allow_keys)
 		//memcpy(New_pal, gr_palette, sizeof(gr_palette));
 
 		//vfx_set_palette_sub( New_pal );
-#ifdef OGL
-		gr_palette_load(New_pal);
-#else
 		gr_palette_clear();
-#endif
 		gr_set_current_canvas( NULL );
 		show_fullscr(&briefing_bm);
 #endif
@@ -1396,7 +1391,7 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	key_init();
 	#endif
 
-	#if defined (MACINTOSH) || defined(WINDOWS)
+	#if 1 //defined (MACINTOSH) || defined(WINDOWS)
 	memcpy(New_pal,gr_palette,sizeof(gr_palette));		// attempt to get fades after briefing screens done correctly.
 	#endif
 

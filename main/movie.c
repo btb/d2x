@@ -203,7 +203,7 @@ void MovieSetPalette(unsigned char *p, unsigned start, unsigned count)
 	memcpy(gr_palette+start*3,p+start*3,count*3);
 
 	//finally set the palette in the hardware
-	//gr_palette_load(gr_palette);
+	gr_palette_load(gr_palette);
 
 	//MVE_SetPalette(p, start, count);
 }
@@ -280,9 +280,6 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	int track = 0;
 	int frame_num;
 	int key;
-#ifdef OGL
-	ubyte pal_save[768];
-#endif
 
 	result=1;
 
@@ -309,9 +306,6 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	}
 #ifdef OGL
 	set_screen_mode(SCREEN_MENU);
-	gr_copy_palette(pal_save, gr_palette, 768);
-	memset(gr_palette, 0, 768);
-	gr_palette_load(gr_palette);
 #endif
 
 	if (MVE_rmPrepMovie((void *)filehndl, dx, dy, track)) {
@@ -326,8 +320,6 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	while((result = MVE_rmStepMovie()) == 0) {
 
 		draw_subtitles(frame_num);
-
-		gr_palette_load(gr_palette); // moved this here because of flashing
 
 		gr_update();
 
@@ -365,10 +357,6 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	// Restore old graphic state
 
 	Screen_mode=-1;  //force reset of screen mode
-#ifdef OGL
-	gr_copy_palette(gr_palette, pal_save, 768);
-	gr_palette_load(pal_save);
-#endif
 
 	return (aborted?MOVIE_ABORTED:MOVIE_PLAYED_FULL);
 }
@@ -396,8 +384,6 @@ int RotateRobot()
 	int err;
 
 	err = MVE_rmStepMovie();
-
-	gr_palette_load(gr_palette);
 
 	if (err == MVE_ERR_EOF)     //end of movie, so reset
 	{
