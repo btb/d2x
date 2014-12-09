@@ -23,7 +23,7 @@
 #include "u_mem.h"
 #include "error.h"
 #include "menu.h"
-
+#include "timer.h"
 //added 10/05/98 by Matt Mueller - make fullscreen mode optional
 #include "args.h"
 
@@ -516,6 +516,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
          fade_colors[k].b = c * 4;
          i++;
      }
+     timer_delay(f0_1/10);
 
   SDL_SetColors(screen, fade_colors, 0, 256);
  }
