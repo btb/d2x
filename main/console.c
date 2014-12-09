@@ -57,6 +57,8 @@ static int  con_line; /* Current display line */
 #endif
 
 #ifdef CONSOLE
+static int con_initialized;
+
 ConsoleInformation *Console;
 
 void con_parse(ConsoleInformation *console, char *command);
@@ -66,7 +68,9 @@ void con_hide();
 /* Free the console */
 void con_free(void)
 {
-	CON_Free(Console);
+	if (con_initialized)
+		CON_Free(Console);
+	con_initialized = 0;
 }
 #endif
 
@@ -92,6 +96,8 @@ void con_init(void)
 
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);
+
+	con_initialized = 1;
 
 	atexit(con_free);
 }
@@ -149,7 +155,8 @@ void con_printf(int priority, char *fmt, ...)
 		va_end (arglist);
 
 #ifdef CONSOLE
-		CON_Out(Console, buffer);
+		if (con_initialized)
+			CON_Out(Console, buffer);
 #endif
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
