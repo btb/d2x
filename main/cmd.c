@@ -16,7 +16,6 @@
 #include "weapon.h"
 
 
-/* The list of cmds */
 typedef struct cmd_s
 {
 	char          *name;
@@ -24,6 +23,7 @@ typedef struct cmd_s
 	struct cmd_s  *next;
 } cmd_t;
 
+/* The list of cmds */
 static cmd_t *cmd_list = NULL;
 
 
@@ -112,9 +112,7 @@ void cmd_parse(char *input)
 
 
 /* +/- actions */
-
 int Console_button_states[CMD_NUM_BUTTONS];
-
 void cmd_attack_on(int argc, char **argv) { Console_button_states[CMD_ATTACK] = 1; }
 void cmd_attack_off(int argc, char **argv) { Console_button_states[CMD_ATTACK] = 0; }
 void cmd_attack2_on(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 1; }
@@ -132,7 +130,7 @@ void cmd_impulse(int argc, char**argv) {
 
 /* echo to console */
 void cmd_echo(int argc, char **argv) {
-	char buf[1024] = "";
+	char buf[CMD_MAX_LENGTH] = "";
 	int i;
 	for (i = 1; i < argc; i++) {
 		if (i > 1)
@@ -145,7 +143,7 @@ void cmd_echo(int argc, char **argv) {
 /* execute script */
 void cmd_exec(int argc, char **argv) {
 	PHYSFS_File *f;
-	char buf[1024] = "";
+	char buf[CMD_MAX_LENGTH] = "";
 
 	if (argc < 2)
 		return;
