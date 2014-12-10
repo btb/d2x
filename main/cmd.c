@@ -122,6 +122,8 @@ void cmd_attack2_off(int argc, char **argv) { Console_button_states[CMD_ATTACK2]
 
 /* weapon select */
 void cmd_impulse(int argc, char**argv) {
+	if (argc < 2)
+		return;
 	int n = atoi(argv[1]);
 	if (n >= 1 && n <= 20) {
 		select_weapon((n-1) % 10, (n-1) / 10, 0, 1);
