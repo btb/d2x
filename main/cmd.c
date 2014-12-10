@@ -133,7 +133,8 @@ void cmd_echo(int argc, char **argv) {
 	char buf[1024] = "";
 	int i;
 	for (i = 1; i < argc; i++) {
-		strncat(buf, " ", 1024);
+		if (i > 1)
+			strncat(buf, " ", 1024);
 		strncat(buf, argv[i], 1024);
 	}
 	con_printf(CON_NORMAL, "%s\n", buf);
