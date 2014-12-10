@@ -27,6 +27,18 @@ typedef struct cmd_s
 static cmd_t *cmd_list = NULL;
 
 
+#define ALIAS_NAME_MAX 32
+typedef struct cmd_alias_s
+{
+	char           name[ALIAS_NAME_MAX];
+	char           *value;
+	struct cmd_alias_s *next;
+} cmd_alias_t;
+
+/* The list of aliases */
+static cmd_alias_t *cmd_alias_list = NULL;
+
+
 /* add a new console command */
 void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func)
 {
@@ -56,9 +68,16 @@ void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func)
 void cmd_execute(int argc, char **argv)
 {
 	cmd_t *cmd;
+	cmd_alias_t *alias;
+
 	for (cmd = cmd_list; cmd; cmd = cmd->next) {
 		if (!stricmp(argv[0], cmd->name))
 			return cmd->function(argc, argv);
+	}
+
+	for (alias = cmd_alias_list; alias; alias = alias->next) {
+		if (!stricmp(argv[0], alias->name))
+			return cmd_parse(alias->value);
 	}
 
 	/* Otherwise */
@@ -111,6 +130,43 @@ void cmd_parse(char *input)
 
 
 
+/* alias */
+void cmd_alias(int argc, char **argv)
+{
+	cmd_alias_t *alias;
+	char buf[CMD_MAX_LENGTH] = "";
+	int i;
+
+	if (argc < 2)
+	{
+		con_printf(CON_NORMAL, "aliases:\n");
+		for (alias = cmd_alias_list; alias; alias = alias->next)
+			con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
+		return;
+	}
+
+	for (i = 2; i < argc; i++) {
+		if (i > 2)
+			strncat(buf, " ", CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH);
+	}
+
+	for (alias = cmd_alias_list; alias; alias = alias->next) {
+		if (!stricmp(argv[1], alias->name))
+		{
+			d_free(alias->value);
+			alias->value = d_strdup(buf);
+			return;
+		}
+	}
+
+	MALLOC(alias, cmd_alias_t, 1);
+	strncpy(alias->name, argv[1], ALIAS_NAME_MAX);
+	alias->value = d_strdup(buf);
+	alias->next = cmd_alias_list;
+	cmd_alias_list = alias;
+}
+
 /* +/- actions */
 int Console_button_states[CMD_NUM_BUTTONS];
 void cmd_attack_on(int argc, char **argv) { Console_button_states[CMD_ATTACK] = 1; }
@@ -134,8 +190,8 @@ void cmd_echo(int argc, char **argv) {
 	int i;
 	for (i = 1; i < argc; i++) {
 		if (i > 1)
-			strncat(buf, " ", 1024);
-		strncat(buf, argv[i], 1024);
+			strncat(buf, " ", CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH);
 	}
 	con_printf(CON_NORMAL, "%s\n", buf);
 }
@@ -161,11 +217,20 @@ void cmd_exec(int argc, char **argv) {
 
 void cmd_free(void)
 {
-	cmd_t *p = cmd_list, *temp;
+	void *p, *temp;
 
+	p = cmd_list;
 	while (p) {
 		temp = p;
-		p = p->next;
+		p = ((cmd_t *)p)->next;
+		d_free(temp);
+	}
+
+	p = cmd_alias_list;
+	while (p) {
+		d_free(((cmd_alias_t *)p)->value);
+		temp = p;
+		p = ((cmd_alias_t *)p)->next;
 		d_free(temp);
 	}
 }
@@ -173,6 +238,8 @@ void cmd_free(void)
 
 void cmd_init(void){
 	memset(Console_button_states, 0, sizeof(int) * CMD_NUM_BUTTONS);
+
+	cmd_addcommand("alias", cmd_alias);
 
 	cmd_addcommand("+attack", cmd_attack_on);
 	cmd_addcommand("-attack", cmd_attack_off);
