@@ -159,6 +159,8 @@ int CON_Events(int event)
 			CON_Hide(Topmost);
 			return 0;
 		default:
+			if (key_to_ascii(event) == 255)
+				break;
 			if(Topmost->InsMode)
 				Cursor_Add(Topmost, event);
 			else {
