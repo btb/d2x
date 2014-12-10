@@ -142,6 +142,24 @@ void cmd_echo(int argc, char **argv) {
 	con_printf(CON_NORMAL, "%s\n", buf);
 }
 
+/* execute script */
+void cmd_exec(int argc, char **argv) {
+	PHYSFS_File *f;
+	char buf[1024] = "";
+
+	if (argc < 2)
+		return;
+	f = PHYSFSX_openReadBuffered(argv[1]);
+	if (!f) {
+		con_printf(CON_CRITICAL, "exec: %s not found\n", argv[1]);
+		return;
+	}
+	while (PHYSFSX_gets(f, buf)) {
+		cmd_parse(buf);
+	}
+	PHYSFS_close(f);
+}
+
 
 void cmd_free(void)
 {
@@ -166,6 +184,8 @@ void cmd_init(void){
 	cmd_addcommand("impulse", cmd_impulse);
 
 	cmd_addcommand("echo", cmd_echo);
+
+	cmd_addcommand("exec", cmd_exec);
 
 	atexit(cmd_free);
 }
