@@ -1425,6 +1425,9 @@ extern void DropFlag();
 
 void HandleGameKey(int key)
 {
+	if (cmd_handle_keybinding(key))
+		return;
+
 	switch (key) {
 
 		#if defined(MACINTOSH)  && !defined(RELEASE)

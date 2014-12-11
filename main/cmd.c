@@ -14,6 +14,7 @@
 #include "u_mem.h"
 #include "strutil.h"
 #include "weapon.h"
+#include "key.h"
 
 
 typedef struct cmd_s
@@ -37,6 +38,10 @@ typedef struct cmd_alias_s
 
 /* The list of aliases */
 static cmd_alias_t *cmd_alias_list = NULL;
+
+
+/* The list of keybindings */
+static char *cmd_keybinding_list[256];
 
 
 /* add a new console command */
@@ -129,6 +134,16 @@ void cmd_parse(char *input)
 }
 
 
+int cmd_handle_keybinding(unsigned char key)
+{
+	if (cmd_keybinding_list[key]) {
+		cmd_parse(cmd_keybinding_list[key]);
+		return 1;
+	}
+	return 0;
+}
+
+
 
 /* alias */
 void cmd_alias(int argc, char **argv)
@@ -165,6 +180,48 @@ void cmd_alias(int argc, char **argv)
 	alias->value = d_strdup(buf);
 	alias->next = cmd_alias_list;
 	cmd_alias_list = alias;
+}
+
+/* bind */
+/* FIXME: key_text is not really adequate for this */
+void cmd_bind(int argc, char **argv)
+{
+	char buf[CMD_MAX_LENGTH] = "";
+	unsigned char key = 0;
+	int i;
+
+	if (argc < 2)
+	{
+		con_printf(CON_NORMAL, "key bindings:\n");
+		for (i = 0; i < 256; i++) {
+			if (!cmd_keybinding_list[i])
+				continue;
+			con_printf(CON_NORMAL, "%s: %s\n", key_text[i], cmd_keybinding_list[i]);
+		}
+		return;
+	}
+
+	for (i = 2; i < argc; i++) {
+		if (i > 2)
+			strncat(buf, " ", CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH);
+	}
+
+	for (i = 0; i < 256; i++) {
+		if (!stricmp(argv[1], key_text[i])) {
+			key = i;
+			break;
+		}
+	}
+
+	if (!key) {
+		con_printf(CON_CRITICAL, "bind: key %s not found\n", argv[1]);
+		return;
+	}
+
+	if (cmd_keybinding_list[key])
+		d_free(cmd_keybinding_list[key]);
+	cmd_keybinding_list[key] = d_strdup(buf);
 }
 
 /* +/- actions */
@@ -217,6 +274,7 @@ void cmd_exec(int argc, char **argv) {
 
 void cmd_free(void)
 {
+	int i;
 	void *p, *temp;
 
 	p = cmd_list;
@@ -233,6 +291,10 @@ void cmd_free(void)
 		p = ((cmd_alias_t *)p)->next;
 		d_free(temp);
 	}
+
+	for (i = 0; i < 256; i++)
+		if (cmd_keybinding_list[i])
+			d_free(cmd_keybinding_list[i]);
 }
 
 
@@ -240,6 +302,7 @@ void cmd_init(void){
 	memset(Console_button_states, 0, sizeof(int) * CMD_NUM_BUTTONS);
 
 	cmd_addcommand("alias", cmd_alias);
+	cmd_addcommand("bind", cmd_bind);
 
 	cmd_addcommand("+attack", cmd_attack_on);
 	cmd_addcommand("-attack", cmd_attack_off);

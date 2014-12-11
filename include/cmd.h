@@ -30,4 +30,8 @@ typedef enum
 extern int Console_button_states[CMD_NUM_BUTTONS];
 
 
+/* execute a bound key's command */
+int cmd_handle_keybinding(unsigned char key);
+
+
 #endif /* _CMD_H_ */
