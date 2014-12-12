@@ -12,6 +12,9 @@ void cmd_init(void);
 /* Parse an input string */
 void cmd_parse(char *input);
 
+/* Attempt to autocomplete an input string */
+char *cmd_complete(char *input);
+
 typedef void (*cmd_handler_t)(int argc, char *argv[]);
 
 void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func);

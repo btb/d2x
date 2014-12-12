@@ -87,8 +87,6 @@ typedef struct console_information_td {
 	unsigned char ConsoleAlpha;	//! The consoles alpha level
 #endif
 	int CommandScrollBack;		//! How much the users scrolled back in the command lines
-	void(*CmdFunction)(char* command);	//! The Function that is executed if you press <Return> in the console
-	char*(*TabFunction)(char* command);	//! The Function that is executed if you press <Tab> in the console
 }
 ConsoleInformation;
 

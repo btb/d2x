@@ -134,6 +134,14 @@ void cmd_parse(char *input)
 }
 
 
+/* Attempt to autocomplete an input string */
+char *cmd_complete(char *input)
+{
+	CON_Out("     No autocomplete yet");
+	return NULL;
+}
+
+
 int cmd_handle_keybinding(unsigned char key)
 {
 	if (cmd_keybinding_list[key]) {

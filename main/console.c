@@ -64,15 +64,6 @@ void CON_SetPrompt(char* newprompt);
 void CON_SetHideKey(int key);
 /*! Internal: executes the command typed in at the console (called if you press ENTER)*/
 void CON_Execute(char* command);
-/*! Sets the callback function that is called if a command was typed in. The function could look like this:
- void my_command_handler(char* command). @param console: the console the command
- came from. @param command: the command string that was typed in. */
-void CON_SetExecuteFunction(void(*CmdFunction)(char* command));
-/*! Sets the callback tabulator completion function. char* my_tabcompletion(char* command). If Tab is
- pressed, the function gets called with the already typed in command. my_tabcompletion then checks if if can
- complete the command or if it should display a list of all matching commands (with CON_Out()). Returns the
- completed command or NULL if no completion was made. */
-void CON_SetTabCompletion(char*(*TabFunction)(char* command));
 /*! Internal: Gets called when TAB was pressed */
 void CON_TabCompletion(void);
 /*! Internal: makes newline (same as printf("\n") or CON_Out("\n") ) */
@@ -82,11 +73,6 @@ void CON_NewLineCommand(void);
 /*! Internal: updates console after resize etc. */
 void CON_UpdateConsole(void);
 
-
-/*! Internal: Default Execute callback */
-void Default_CmdFunction(char* command);
-/*! Internal: Default TabCompletion callback */
-char* Default_TabFunction(char* command);
 
 /*! Internal: draws the commandline the user is typing in to the screen. called by update? */
 void DrawCommandLine();
@@ -510,9 +496,6 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 	newinfo->OutputScreen = DisplayScreen;
 	newinfo->Prompt = CON_DEFAULT_PROMPT;
 	newinfo->HideKey = CON_DEFAULT_HIDEKEY;
-	
-	CON_SetExecuteFunction(Default_CmdFunction);
-	CON_SetTabCompletion(Default_TabFunction);
 	
 	/* make sure that the size of the console is valid */
 	if(w > newinfo->OutputScreen->sc_w || w < Font->ft_w * 32)
@@ -990,24 +973,7 @@ void CON_SetHideKey(int key) {
 /* Executes the command entered */
 void CON_Execute(char* command) {
 	if(console)
-		console->CmdFunction(command);
-}
-
-void CON_SetExecuteFunction(void(*CmdFunction)(char* command)) {
-	if(console)
-		console->CmdFunction = CmdFunction;
-}
-
-void Default_CmdFunction(char* command) {
-	CON_Out("     No CommandFunction registered");
-	CON_Out("     use 'CON_SetExecuteFunction' to register one");
-	CON_Out(" ");
-	CON_Out("Unknown Command \"%s\"", command);
-}
-
-void CON_SetTabCompletion(char*(*TabFunction)(char* command)) {
-	if(console)
-		console->TabFunction = TabFunction;
+		cmd_parse(command);
 }
 
 void CON_TabCompletion(void) {
@@ -1018,7 +984,7 @@ void CON_TabCompletion(void) {
 		return;
 	
 	command = d_strdup(console->LCommand);
-	command = console->TabFunction(command);
+	command = cmd_complete(command);
 	
 	if(!command)
 		return;	//no tab completion took place so return silently
@@ -1038,13 +1004,6 @@ void CON_TabCompletion(void) {
 	console->CursorPos++;
 	console->LCommand[j] = ' ';
 	console->LCommand[j+1] = '\0';
-}
-
-char* Default_TabFunction(char* command) {
-	CON_Out("     No TabFunction registered");
-	CON_Out("     use 'CON_SetTabCompletion' to register one");
-	CON_Out(" ");
-	return NULL;
 }
 
 void Cursor_Left(void) {
@@ -1218,8 +1177,6 @@ void con_init(void)
 
 	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
 	console = Console;
-
-	CON_SetExecuteFunction(cmd_parse);
 
 	cmd_init();
 
