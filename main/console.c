@@ -377,7 +377,7 @@ void CON_UpdateConsole(void) {
 #endif
 	
 #if 0
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
+	if(grd_curscreen->flags & SDL_OPENGLBLIT)
 		SDL_SetAlpha(console->ConsoleSurface, 0, SDL_ALPHA_OPAQUE);
 #endif
 	
@@ -390,7 +390,7 @@ void CON_UpdateConsole(void) {
 	 * for the font, and then clear it when we're done.
 	 */
 #if 0
-	if((console->OutputScreen->flags & SDL_OPENGLBLIT) && (console->OutputScreen->format->BytesPerPixel > 2)) {
+	if((grd_curscreen->flags & SDL_OPENGLBLIT) && (grd_curscreen->format->BytesPerPixel > 2)) {
 		Uint32 *pix = (Uint32 *) (CurrentFont->FontSurface->pixels);
 		SDL_SetColorKey(CurrentFont->FontSurface, SDL_SRCCOLORKEY, *pix);
 	}
@@ -416,7 +416,7 @@ void CON_UpdateConsole(void) {
 	gr_set_current_canvas(canv_save);
 	
 #if 0
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
+	if(grd_curscreen->flags & SDL_OPENGLBLIT)
 		SDL_SetColorKey(CurrentFont->FontSurface, 0, 0);
 #endif
 }
@@ -461,12 +461,12 @@ void CON_DrawConsole(void) {
 #if 0
 	/* before drawing, make sure the alpha channel of the console surface is set
 	 * properly.  (sigh) I wish we didn't have to do this every frame... */
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
+	if(grd_curscreen->flags & SDL_OPENGLBLIT)
 		CON_AlphaGL(console->ConsoleSurface, console->ConsoleAlpha);
 #endif
 	
 	canv_save = grd_curcanv;
-	gr_set_current_canvas(&console->OutputScreen->sc_canvas);
+	gr_set_current_canvas(&grd_curscreen->sc_canvas);
 	
 	clip = gr_create_sub_bitmap(&console->ConsoleSurface->cv_bitmap, 0, console->ConsoleSurface->cv_h - console->RaiseOffset, console->ConsoleSurface->cv_w, console->RaiseOffset);
 	
@@ -474,8 +474,8 @@ void CON_DrawConsole(void) {
 	gr_free_sub_bitmap(clip);
 	
 #if 0
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT)
-		SDL_UpdateRects(console->OutputScreen, 1, &DestRect);
+	if(grd_curscreen->flags & SDL_OPENGLBLIT)
+		SDL_UpdateRects(grd_curscreen, 1, &DestRect);
 #endif
 	
 	gr_set_current_canvas(canv_save);
@@ -502,7 +502,6 @@ void CON_Init()
 	console->InsMode = 1;
 	console->CursorPos = 0;
 	console->CommandScrollBack = 0;
-	console->OutputScreen = NULL;
 	console->Prompt = CON_DEFAULT_PROMPT;
 	console->HideKey = CON_DEFAULT_HIDEKEY;
 
@@ -544,8 +543,6 @@ void CON_InitGFX(int w, int h)
 	grs_bitmap bmp;
 	ubyte pal[256*3];
 
-	console->OutputScreen = grd_curscreen;
-	
 	if (console->ConsoleSurface) {
 		/* resize console surface */
 		gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);
@@ -559,10 +556,10 @@ void CON_InitGFX(int w, int h)
 	CON_Font(SMALL_FONT, gr_getcolor(63,63,63), -1);
 
 	/* make sure that the size of the console is valid */
-	if(w > console->OutputScreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
-		w = console->OutputScreen->sc_w;
-	if(h > console->OutputScreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
-		h = console->OutputScreen->sc_h;
+	if(w > grd_curscreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
+		w = grd_curscreen->sc_w;
+	if(h > grd_curscreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
+		h = grd_curscreen->sc_h;
 
 	/* Load the dirty rectangle for user input */
 	if (console->InputBackground)
@@ -716,7 +713,7 @@ void DrawCommandLine() {
 #if 0
 	//once again we're drawing text, so in OpenGL context we need to temporarily set up
 	//software-mode transparency.
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT) {
+	if(grd_curscreen->flags & SDL_OPENGLBLIT) {
 		Uint32 *pix = (Uint32 *) (CurrentFont->FontSurface->pixels);
 		SDL_SetColorKey(CurrentFont->FontSurface, SDL_SRCCOLORKEY, *pix);
 	}
@@ -768,7 +765,7 @@ void DrawCommandLine() {
 	
 	
 #if 0
-	if(console->OutputScreen->flags & SDL_OPENGLBLIT) {
+	if(grd_curscreen->flags & SDL_OPENGLBLIT) {
 		SDL_SetColorKey(CurrentFont->FontSurface, 0, 0);
 	}
 #endif
@@ -816,7 +813,7 @@ void CON_Alpha(unsigned char alpha) {
 	/* store alpha as state! */
 	console->ConsoleAlpha = alpha;
 	
-	if((console->OutputScreen->flags & SDL_OPENGLBLIT) == 0) {
+	if((grd_curscreen->flags & SDL_OPENGLBLIT) == 0) {
 		if(alpha == 0)
 			SDL_SetAlpha(console->ConsoleSurface, 0, alpha);
 		else
@@ -874,10 +871,10 @@ void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h,
 void CON_Resize(int w, int h)
 {
 	/* make sure that the size of the console is valid */
-	if(w > console->OutputScreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
-		w = console->OutputScreen->sc_w;
-	if(h > console->OutputScreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
-		h = console->OutputScreen->sc_h;
+	if(w > grd_curscreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
+		w = grd_curscreen->sc_w;
+	if(h > grd_curscreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
+		h = grd_curscreen->sc_h;
 	
 	/* resize console surface */
 	gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);

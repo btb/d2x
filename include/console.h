@@ -79,7 +79,6 @@ typedef struct console_information_td {
 	int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
 	int InsMode;			//! Insert or Overwrite characters?
 	grs_canvas *ConsoleSurface;	//! Canvas of the console
-	grs_screen *OutputScreen;	//! This is the screen to draw the console to
 	grs_bitmap *BackgroundImage;	//! Background image for the console
 	grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
 #if 0
