@@ -464,42 +464,41 @@ void CON_DrawConsole(void) {
 void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h)
 {
 	int loop;
-	ConsoleInformation *newinfo = console;
-	
-	newinfo->Visible = CON_CLOSED;
-	newinfo->RaiseOffset = 0;
-	newinfo->ConsoleLines = NULL;
-	newinfo->CommandLines = NULL;
-	newinfo->TotalConsoleLines = 0;
-	newinfo->ConsoleScrollBack = 0;
-	newinfo->TotalCommands = 0;
-	newinfo->BackgroundImage = NULL;
+
+	console->Visible = CON_CLOSED;
+	console->RaiseOffset = 0;
+	console->ConsoleLines = NULL;
+	console->CommandLines = NULL;
+	console->TotalConsoleLines = 0;
+	console->ConsoleScrollBack = 0;
+	console->TotalCommands = 0;
+	console->BackgroundImage = NULL;
 #if 0
-	newinfo->ConsoleAlpha = SDL_ALPHA_OPAQUE;
+	console->ConsoleAlpha = SDL_ALPHA_OPAQUE;
 #endif
-	newinfo->Offset = 0;
-	newinfo->InsMode = 1;
-	newinfo->CursorPos = 0;
-	newinfo->CommandScrollBack = 0;
-	newinfo->OutputScreen = DisplayScreen;
-	newinfo->Prompt = CON_DEFAULT_PROMPT;
-	newinfo->HideKey = CON_DEFAULT_HIDEKEY;
+	console->Offset = 0;
+	console->InsMode = 1;
+	console->CursorPos = 0;
+	console->CommandScrollBack = 0;
+	console->OutputScreen = DisplayScreen;
+	console->Prompt = CON_DEFAULT_PROMPT;
+	console->HideKey = CON_DEFAULT_HIDEKEY;
 	
 	/* make sure that the size of the console is valid */
-	if(w > newinfo->OutputScreen->sc_w || w < Font->ft_w * 32)
-		w = newinfo->OutputScreen->sc_w;
-	if(h > newinfo->OutputScreen->sc_h || h < Font->ft_h)
-		h = newinfo->OutputScreen->sc_h;
+	if(w > console->OutputScreen->sc_w || w < Font->ft_w * 32)
+		w = console->OutputScreen->sc_w;
+	if(h > console->OutputScreen->sc_h || h < Font->ft_h)
+		h = console->OutputScreen->sc_h;
 	
 	/* load the console surface */
-	newinfo->ConsoleSurface = gr_create_canvas(w, h);
+	console->ConsoleSurface = gr_create_canvas(w, h);
 	
 	/* Load the consoles font */
 	{
 		grs_canvas *canv_save;
 		
 		canv_save = grd_curcanv;
-		gr_set_current_canvas(newinfo->ConsoleSurface);
+		gr_set_current_canvas(console->ConsoleSurface);
 		gr_set_curfont(Font);
 		gr_set_fontcolor(gr_getcolor(63,63,63), -1);
 		gr_set_current_canvas(canv_save);
@@ -507,33 +506,33 @@ void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y
 	
 	
 	/* Load the dirty rectangle for user input */
-	newinfo->InputBackground = gr_create_bitmap(w, newinfo->ConsoleSurface->cv_font->ft_h);
+	console->InputBackground = gr_create_bitmap(w, console->ConsoleSurface->cv_font->ft_h);
 #if 0
-	SDL_FillRect(newinfo->InputBackground, NULL, SDL_MapRGBA(newinfo->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+	SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
 #endif
 	
 	/* calculate the number of visible characters in the command line */
-	newinfo->VChars = (w - CON_CHAR_BORDER) / newinfo->ConsoleSurface->cv_font->ft_w;
-	if(newinfo->VChars > CON_CHARS_PER_LINE)
-		newinfo->VChars = CON_CHARS_PER_LINE;
+	console->VChars = (w - CON_CHAR_BORDER) / console->ConsoleSurface->cv_font->ft_w;
+	if(console->VChars > CON_CHARS_PER_LINE)
+		console->VChars = CON_CHARS_PER_LINE;
 	
 	/* We would like to have a minumum # of lines to guarentee we don't create a memory error */
-	if(h / (CON_LINE_SPACE + newinfo->ConsoleSurface->cv_font->ft_h) > lines)
-		newinfo->LineBuffer = h / (CON_LINE_SPACE + newinfo->ConsoleSurface->cv_font->ft_h);
+	if(h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h) > lines)
+		console->LineBuffer = h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h);
 	else
-		newinfo->LineBuffer = lines;
+		console->LineBuffer = lines;
 	
 	
-	newinfo->ConsoleLines = (char **)d_malloc(sizeof(char *) * newinfo->LineBuffer);
-	newinfo->CommandLines = (char **)d_malloc(sizeof(char *) * newinfo->LineBuffer);
-	for(loop = 0; loop <= newinfo->LineBuffer - 1; loop++) {
-		newinfo->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
-		newinfo->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+	console->ConsoleLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
+	console->CommandLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
+	for(loop = 0; loop <= console->LineBuffer - 1; loop++) {
+		console->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+		console->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
 	}
-	memset(newinfo->Command, 0, CON_CHARS_PER_LINE);
-	memset(newinfo->LCommand, 0, CON_CHARS_PER_LINE);
-	memset(newinfo->RCommand, 0, CON_CHARS_PER_LINE);
-	memset(newinfo->VCommand, 0, CON_CHARS_PER_LINE);
+	memset(console->Command, 0, CON_CHARS_PER_LINE);
+	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
+	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
+	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
 	
 	
 	CON_Out("Console initialised.");
