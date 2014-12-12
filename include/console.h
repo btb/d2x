@@ -87,7 +87,7 @@ typedef struct console_information_td {
 	unsigned char ConsoleAlpha;	//! The consoles alpha level
 #endif
 	int CommandScrollBack;		//! How much the users scrolled back in the command lines
-	void(*CmdFunction)(struct console_information_td *console, char* command);	//! The Function that is executed if you press <Return> in the console
+	void(*CmdFunction)(char* command);	//! The Function that is executed if you press <Return> in the console
 	char*(*TabFunction)(char* command);	//! The Function that is executed if you press <Tab> in the console
 	void(*HideFunction)(void); //! The Function that is executed when the console is hidden
 }
@@ -98,19 +98,19 @@ ConsoleInformation;
 	the function returns the event for further processing. */
 int CON_Events(int event);
 /*! Makes the console visible */
-void CON_Show(ConsoleInformation *console);
+void CON_Show(void);
 /*! Hides the console */
-void CON_Hide(ConsoleInformation *console);
+void CON_Hide(void);
 /*! Returns 1 if the console is visible, 0 else */
-int CON_isVisible(ConsoleInformation *console);
+int CON_isVisible(void);
 /*! Draws the console to the screen if it isVisible()*/
-void CON_DrawConsole(ConsoleInformation *console);
+void CON_DrawConsole(void);
 /*! Initializes a new console */
 ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h);
 /*! printf for the console */
-void CON_Out(ConsoleInformation *console, const char *str, ...);
+void CON_Out(const char *str, ...);
 /*! Changes the size of the console */
-int CON_Resize(ConsoleInformation *console, int x, int y, int w, int h);
+int CON_Resize(int x, int y, int w, int h);
 
 
 /* Priority levels */
