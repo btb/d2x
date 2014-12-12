@@ -1082,27 +1082,21 @@ void con_init(void)
 #define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
 #define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
 
-void con_background(char *filename)
+void con_init_gfx(void)
 {
 	int pcx_error;
 	grs_bitmap bmp;
 	ubyte pal[256*3];
 
+	CON_Font(SMALL_FONT, gr_getcolor(63, 63, 63), -1);
+	CON_Transfer(grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
+
 	gr_init_bitmap_data(&bmp);
-	pcx_error = pcx_read_bitmap(filename, &bmp, BM_LINEAR, pal);
+	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
 	Assert(pcx_error == PCX_ERROR_NONE);
 	gr_remap_bitmap_good(&bmp, pal, -1, -1);
 	CON_Background(&bmp);
 	gr_free_bitmap_data(&bmp);
-}
-
-
-void con_init_gfx(void)
-{
-	CON_Font(SMALL_FONT, gr_getcolor(63, 63, 63), -1);
-	CON_Transfer(grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
-
-	con_background(CON_BG);
 }
 
 
