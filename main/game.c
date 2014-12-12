@@ -660,7 +660,7 @@ int set_screen_mode(int sm)
 			else
 				FontHires = 0;
 		}
-		con_resize();
+		con_init_gfx();
 
 		break;
 	#ifdef EDITOR

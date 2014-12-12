@@ -1106,13 +1106,6 @@ void con_init_gfx(void)
 }
 
 
-void con_resize(void)
-{
-	CON_Font(SMALL_FONT, gr_getcolor(63, 63, 63), -1);
-	CON_Resize(0, 0, SWIDTH, SHEIGHT / 2);
-	con_background(CON_BG);
-}
-
 /* Print a message to the console */
 void con_printf(int priority, char *fmt, ...)
 {

@@ -118,7 +118,6 @@ int CON_Resize(int x, int y, int w, int h);
 
 void con_init(void);
 void con_init_gfx(void);
-void con_resize(void);
 void con_printf(int level, char *fmt, ...);
 
 /* Console CVars */
