@@ -330,9 +330,6 @@ void CON_UpdateConsole(void) {
 	grs_canvas *canv_save;
 	short orig_color;
 	
-	if(!console)
-		return;
-	
 	/* Due to the Blits, the update is not very fast: So only update if it's worth it */
 	if(!CON_isVisible())
 		return;
@@ -394,9 +391,6 @@ void CON_UpdateConsole(void) {
 }
 
 void CON_UpdateOffset(void) {
-	if(!console)
-		return;
-	
 	switch(console->Visible) {
 		case CON_CLOSING:
 			console->RaiseOffset -= CON_OPENCLOSE_SPEED;
@@ -422,9 +416,6 @@ void CON_UpdateOffset(void) {
 void CON_DrawConsole(void) {
 	grs_canvas *canv_save;
 	grs_bitmap *clip;
-	
-	if(!console)
-		return;
 	
 	/* only draw if console is visible: here this means, that the console is not CON_CLOSED */
 	if(console->Visible == CON_CLOSED)
@@ -541,31 +532,23 @@ void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y
 
 /* Makes the console visible */
 void CON_Show(void) {
-	if(console) {
-		console->Visible = CON_OPENING;
-		CON_UpdateConsole();
-	}
+	console->Visible = CON_OPENING;
+	CON_UpdateConsole();
 }
 
 /* Hides the console (make it invisible) */
 void CON_Hide(void) {
-	if(console)
-		console->Visible = CON_CLOSING;
+	console->Visible = CON_CLOSING;
 }
 
 /* tells wether the console is visible or not */
 int CON_isVisible(void) {
-	if(!console)
-		return CON_CLOSED;
 	return((console->Visible == CON_OPEN) || (console->Visible == CON_OPENING));
 }
 
 /* Frees all the memory loaded by the console */
 void CON_Free(void) {
 	int i;
-	
-	if(!console)
-		return;
 	
 	for(i = 0; i <= console->LineBuffer - 1; i++) {
 		d_free(console->ConsoleLines[i]);
@@ -594,9 +577,6 @@ void CON_NewLineConsole(void) {
 	int loop;
 	char* temp;
 	
-	if(!console)
-		return;
-	
 	temp = console->ConsoleLines[console->LineBuffer - 1];
 	
 	for(loop = console->LineBuffer - 1; loop > 0; loop--)
@@ -623,9 +603,6 @@ void CON_NewLineConsole(void) {
 void CON_NewLineCommand(void) {
 	int loop;
 	char *temp;
-	
-	if(!console)
-		return;
 	
 	temp  = console->CommandLines[console->LineBuffer - 1];
 	
@@ -750,9 +727,6 @@ void CON_Out(const char *str, ...) {
 	char temp[CON_CHARS_PER_LINE + 128];
 	char* ptemp;
 	
-	if(!console)
-		return;
-	
 	va_start(marker, str);
 	vsnprintf(temp, CON_CHARS_PER_LINE + 127, str, marker);
 	va_end(marker);
@@ -781,9 +755,6 @@ void CON_Out(const char *str, ...) {
 #if 0
 /* Sets the alpha level of the console, 0 turns off alpha blending */
 void CON_Alpha(unsigned char alpha) {
-	if(!console)
-		return;
-	
 	/* store alpha as state! */
 	console->ConsoleAlpha = alpha;
 	
@@ -802,9 +773,6 @@ void CON_Alpha(unsigned char alpha) {
 /* Adds  background image to the console, scaled to size of console*/
 int CON_Background(grs_bitmap *image)
 {
-	if(!console)
-		return 1;
-	
 	/* Free the background from the console */
 	if (image == NULL) {
 		if (console->BackgroundImage)
@@ -847,9 +815,6 @@ void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h,
  * returns 1 on error */
 int CON_Resize(int x, int y, int w, int h)
 {
-	if(!console)
-		return 1;
-	
 	/* make sure that the size of the console is valid */
 	if(w > console->OutputScreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
 		w = console->OutputScreen->sc_w;
@@ -885,9 +850,6 @@ int CON_Resize(int x, int y, int w, int h)
 /* Transfers the console to another screen surface, and adjusts size */
 int CON_Transfer(grs_screen *new_outputscreen, int x, int y, int w, int h)
 {
-	if(!console)
-		return 1;
-	
 	console->OutputScreen = new_outputscreen;
 	
 	return(CON_Resize(x, y, w, h));
@@ -895,9 +857,6 @@ int CON_Transfer(grs_screen *new_outputscreen, int x, int y, int w, int h)
 
 /* Sets the Prompt for console */
 void CON_SetPrompt(char* newprompt) {
-	if(!console)
-		return;
-	
 	//check length so we can still see at least 1 char :-)
 	if(strlen(newprompt) < console->VChars)
 		console->Prompt = d_strdup(newprompt);
@@ -907,22 +866,17 @@ void CON_SetPrompt(char* newprompt) {
 
 /* Sets the key that deactivates (hides) the console. */
 void CON_SetHideKey(int key) {
-	if(console)
-		console->HideKey = key;
+	console->HideKey = key;
 }
 
 /* Executes the command entered */
 void CON_Execute(char* command) {
-	if(console)
-		cmd_parse(command);
+	cmd_parse(command);
 }
 
 void CON_TabCompletion(void) {
 	int i,j;
 	char* command;
-	
-	if(!console)
-		return;
 	
 	command = d_strdup(console->LCommand);
 	command = cmd_complete(command);
