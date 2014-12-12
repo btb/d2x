@@ -33,6 +33,10 @@
 static ConsoleInformation Console;
 #define console (&Console)
 
+/* console is ready to be written to */
+static int con_initialized;
+
+
 /* Internals */
 void CON_UpdateOffset(void);
 /*! Frees all the memory loaded by the console */
@@ -569,6 +573,8 @@ void CON_Free(void) {
 	
 	gr_free_bitmap(console->InputBackground);
 	console->InputBackground = NULL;
+
+	con_initialized = 0;
 }
 
 
@@ -1047,17 +1053,6 @@ cvar_t con_threshold = {"con_threshold", "0",};
 /* Private console stuff */
 #define CON_NUM_LINES 40
 
-static int con_initialized;
-
-
-/* Free the console */
-void con_free(void)
-{
-	if (con_initialized)
-		CON_Free();
-	con_initialized = 0;
-}
-
 
 /* Initialise the console */
 void con_init(void)
@@ -1079,7 +1074,7 @@ void con_init(void)
 
 	con_initialized = 1;
 
-	atexit(con_free);
+	atexit(CON_Free);
 }
 
 
