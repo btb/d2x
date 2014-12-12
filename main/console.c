@@ -1210,7 +1210,6 @@ cvar_t con_threshold = {"con_threshold", "0",};
 
 static int con_initialized;
 
-void con_parse(char *command);
 void con_hide();
 
 
@@ -1237,7 +1236,7 @@ void con_init(void)
 	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
 	console = Console;
 
-	CON_SetExecuteFunction(con_parse);
+	CON_SetExecuteFunction(cmd_parse);
 	CON_SetHideFunction(con_hide);
 
 
@@ -1333,25 +1332,6 @@ void con_printf(int priority, char *fmt, ...)
 	}
 }
 
-/* Check for new console input. If it's there, use it */
-void con_update(void)
-{
-	con_draw();
-}
-
-
-int con_events(int key)
-{
-	return CON_Events(key);
-}
-
-
-/* Draw the console */
-void con_draw(void)
-{
-	CON_DrawConsole();
-}
-
 /* Show the console */
 void con_show(void)
 {
@@ -1362,9 +1342,4 @@ void con_show(void)
 void con_hide(void)
 {
 	Console_open = 0;
-}
-
-void con_parse(char *command)
-{
-	cmd_parse(command);
 }

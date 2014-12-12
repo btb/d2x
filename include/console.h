@@ -126,9 +126,6 @@ void con_resize(void);
 void con_printf(int level, char *fmt, ...);
 
 void con_show(void);
-void con_draw(void);
-void con_update(void);
-int  con_events(int key);
 
 extern int Console_open;
 

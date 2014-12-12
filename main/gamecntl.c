@@ -2522,7 +2522,7 @@ void ReadControls()
 		#endif
 		#endif
 
-		if(!con_events(key))
+		if(!CON_Events(key))
 			continue;
 
 		if (Player_is_dead)

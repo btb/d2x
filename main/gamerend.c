@@ -1037,7 +1037,7 @@ void game_render_frame_mono(void)
 			Game_mode = GM_NORMAL;
 	}
 
-	con_update();
+	CON_DrawConsole();
 
 	gr_update();
 #ifdef OGL
