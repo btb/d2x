@@ -1051,7 +1051,7 @@ int HandleSystemKey(int key)
 
 		case KEY_LAPOSTRO:
 		case KEY_SHIFTED + KEY_LAPOSTRO:
-			con_show();
+			CON_Show();
 			break;
 
 		case KEY_SHIFTED + KEY_ESC:     //quick exit
@@ -2424,7 +2424,7 @@ void ReadControls()
 	if (!Endlevel_sequence) // && !Player_is_dead  //this was taken out of the if statement by WraithX
 	{
 
-			if ( (Newdemo_state == ND_STATE_PLAYBACK) || DefiningMarkerMessage || Console_open
+			if ( (Newdemo_state == ND_STATE_PLAYBACK) || DefiningMarkerMessage || CON_isVisible()
 				#ifdef NETWORK
 				|| multi_sending_message || multi_defining_message
 				#endif

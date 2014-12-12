@@ -89,7 +89,6 @@ typedef struct console_information_td {
 	int CommandScrollBack;		//! How much the users scrolled back in the command lines
 	void(*CmdFunction)(char* command);	//! The Function that is executed if you press <Return> in the console
 	char*(*TabFunction)(char* command);	//! The Function that is executed if you press <Tab> in the console
-	void(*HideFunction)(void); //! The Function that is executed when the console is hidden
 }
 ConsoleInformation;
 
@@ -124,10 +123,6 @@ void con_init(void);
 void con_init_gfx(void);
 void con_resize(void);
 void con_printf(int level, char *fmt, ...);
-
-void con_show(void);
-
-extern int Console_open;
 
 /* Console CVars */
 /* How discriminating we are about which messages are displayed */

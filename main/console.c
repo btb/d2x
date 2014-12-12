@@ -63,8 +63,6 @@ void CON_SetPrompt(char* newprompt);
  ESCAPE and the HideKey. compared against event->key.keysym.sym !! */
 void CON_SetHideKey(int key);
 /*! Internal: executes the command typed in at the console (called if you press ENTER)*/
-void CON_SetHideFunction(void(*HideFunction)(void));
-/*! Sets the callback function that is called after a console has been hidden */
 void CON_Execute(char* command);
 /*! Sets the callback function that is called if a command was typed in. The function could look like this:
  void my_command_handler(char* command). @param console: the console the command
@@ -89,8 +87,6 @@ void CON_UpdateConsole(void);
 void Default_CmdFunction(char* command);
 /*! Internal: Default TabCompletion callback */
 char* Default_TabFunction(char* command);
-/*! Internal: Default Hide callback */
-void Default_HideFunction(void);
 
 /*! Internal: draws the commandline the user is typing in to the screen. called by update? */
 void DrawCommandLine();
@@ -517,7 +513,6 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 	
 	CON_SetExecuteFunction(Default_CmdFunction);
 	CON_SetTabCompletion(Default_TabFunction);
-	CON_SetHideFunction(Default_HideFunction);
 	
 	/* make sure that the size of the console is valid */
 	if(w > newinfo->OutputScreen->sc_w || w < Font->ft_w * 32)
@@ -597,7 +592,6 @@ void CON_Show(void) {
 void CON_Hide(void) {
 	if(console)
 		console->Visible = CON_CLOSING;
-	console->HideFunction();
 }
 
 /* tells wether the console is visible or not */
@@ -993,14 +987,6 @@ void CON_SetHideKey(int key) {
 		console->HideKey = key;
 }
 
-void CON_SetHideFunction(void(*HideFunction)(void)) {
-	if(console)
-		console->HideFunction = HideFunction;
-}
-
-void Default_HideFunction(void) {
-}
-
 /* Executes the command entered */
 void CON_Execute(char* command) {
 	if(console)
@@ -1199,7 +1185,6 @@ int isvga();
 #define text_console_enabled (!isvga())
 #endif
 
-int Console_open = 0;
 
 /* Console specific cvars */
 /* How discriminating we are about which messages are displayed */
@@ -1209,8 +1194,6 @@ cvar_t con_threshold = {"con_threshold", "0",};
 #define CON_NUM_LINES 40
 
 static int con_initialized;
-
-void con_hide();
 
 
 /* Free the console */
@@ -1237,8 +1220,6 @@ void con_init(void)
 	console = Console;
 
 	CON_SetExecuteFunction(cmd_parse);
-	CON_SetHideFunction(con_hide);
-
 
 	cmd_init();
 
@@ -1330,16 +1311,4 @@ void con_printf(int priority, char *fmt, ...)
 			printf("%s", buffer);
 		}
 	}
-}
-
-/* Show the console */
-void con_show(void)
-{
-	Console_open = 1;
-	CON_Show();
-}
-
-void con_hide(void)
-{
-	Console_open = 0;
 }
