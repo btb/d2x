@@ -2522,10 +2522,8 @@ void ReadControls()
 		#endif
 		#endif
 
-#ifdef CONSOLE
 		if(!con_events(key))
 			continue;
-#endif
 
 		if (Player_is_dead)
 			HandleDeathKey(key);

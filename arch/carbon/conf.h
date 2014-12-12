@@ -2,9 +2,6 @@
 /* conf.h.in.  Generated from configure.ac by autoheader.  */
 // Modified by Chris to work for an Apple computer with OS 9 or above
 
-/* Define to enable console */
-/* #undef CONSOLE */
-
 /* d2x major version */
 #define D2XMAJOR 0
 

@@ -1207,13 +1207,7 @@ cvar_t con_threshold = {"con_threshold", "0",};
 
 /* Private console stuff */
 #define CON_NUM_LINES 40
-#if 0
-#define CON_LINE_LEN 40
-static char con_display[40][40];
-static int  con_line; /* Current display line */
-#endif
 
-#ifdef CONSOLE
 static int con_initialized;
 
 void con_parse(char *command);
@@ -1227,7 +1221,6 @@ void con_free(void)
 		CON_Free();
 	con_initialized = 0;
 }
-#endif
 
 
 /* Initialise the console */
@@ -1258,7 +1251,6 @@ void con_init(void)
 	atexit(con_free);
 }
 
-#ifdef CONSOLE
 
 #define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
 #define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
@@ -1286,16 +1278,13 @@ void con_init_gfx(void)
 
 	con_background(CON_BG);
 }
-#endif
 
 
 void con_resize(void)
 {
-#ifdef CONSOLE
 	CON_Font(SMALL_FONT, gr_getcolor(63, 63, 63), -1);
 	CON_Resize(0, 0, SWIDTH, SHEIGHT / 2);
 	con_background(CON_BG);
-#endif
 }
 
 /* Print a message to the console */
@@ -1310,10 +1299,8 @@ void con_printf(int priority, char *fmt, ...)
 		vsprintf (buffer,  fmt, arglist);
 		va_end (arglist);
 
-#ifdef CONSOLE
 		if (con_initialized)
 			CON_Out(buffer);
-#endif
 
 /*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
 		{
@@ -1349,55 +1336,27 @@ void con_printf(int priority, char *fmt, ...)
 /* Check for new console input. If it's there, use it */
 void con_update(void)
 {
-#if 0
-	char buffer[CMD_MAX_LENGTH], *t;
-
-	/* Check for new input */
-	t = fgets(buffer, sizeof(buffer), stdin);
-	if (t == NULL) return;
-
-	cmd_parse(buffer);
-#endif
 	con_draw();
 }
 
 
 int con_events(int key)
 {
-#ifdef CONSOLE
 	return CON_Events(key);
-#else
-	return key;
-#endif
 }
 
 
 /* Draw the console */
 void con_draw(void)
 {
-#ifdef CONSOLE
 	CON_DrawConsole();
-#else
-#if 0
-	char buffer[CON_LINE_LEN+1];
-	int i,j;
-	for (i = con_line, j=0; j < 20; i = (i+1) % CON_NUM_LINES, j++)
-	{
-		memcpy(buffer, con_display[i], CON_LINE_LEN);
-		buffer[CON_LINE_LEN] = 0;
-		gr_string(1,j*10,buffer);
-	}
-#endif
-#endif
 }
 
 /* Show the console */
 void con_show(void)
 {
 	Console_open = 1;
-#ifdef CONSOLE
 	CON_Show();
-#endif
 }
 
 void con_hide(void)
@@ -1405,9 +1364,7 @@ void con_hide(void)
 	Console_open = 0;
 }
 
-#ifdef CONSOLE
 void con_parse(char *command)
 {
 	cmd_parse(command);
 }
-#endif

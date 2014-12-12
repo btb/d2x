@@ -147,16 +147,6 @@ if test x$enable_fastfileio != xno; then
     D2X_FEATURES="fastfileio ${D2X_FEATURES}"
 fi
 
-dnl Build with CONSOLE?
-AC_ARG_ENABLE(console,
-    [  --disable-console        Disable graphical console ],,)
-if test x$enable_console != xno; then
-    AC_DEFINE(CONSOLE,,[Define to enable console])
-    D2X_FEATURES="console ${D2X_FEATURES}"
-
-fi
-AM_CONDITIONAL(USE_CONSOLE, test x$enable_console != xno)
-
 AC_ARG_WITH(sharepath,
     [[  --with-sharepath=DIR    Use DIR for shared game data (unix only) [DATADIR/games/d2x]]],
     sharepath=$withval, sharepath="auto")
