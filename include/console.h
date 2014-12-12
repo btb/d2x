@@ -102,7 +102,9 @@ int CON_isVisible(void);
 /*! Draws the console to the screen if it isVisible()*/
 void CON_DrawConsole(void);
 /*! Initializes the console */
-void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h);
+void CON_Init(void);
+/*! Initializes the graphical console */
+void CON_InitGFX(int w, int h);
 /*! printf for the console */
 void CON_Out(const char *str, ...);
 /*! Changes the size of the console */
@@ -116,8 +118,6 @@ int CON_Resize(int x, int y, int w, int h);
 #define CON_VERBOSE   1
 #define CON_DEBUG     2
 
-void con_init(void);
-void con_init_gfx(void);
 void con_printf(int level, char *fmt, ...);
 
 /* Console CVars */

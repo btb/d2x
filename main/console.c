@@ -18,15 +18,45 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#ifndef _WIN32_WCE
+#include <fcntl.h>
+#endif
+#include <ctype.h>
 
 #include "console.h"
+
 #include "u_mem.h"
 #include "gr.h"
 #include "timer.h"
+#include "pstypes.h"
+#include "error.h"
+#include "cvar.h"
+#include "gamefont.h"
+#include "pcx.h"
+#include "cfile.h"
 
+
+#ifndef __MSDOS__
+int text_console_enabled = 1;
+#else
+int isvga();
+#define text_console_enabled (!isvga())
+#endif
+
+
+/* Console specific cvars */
+/* How discriminating we are about which messages are displayed */
+cvar_t con_threshold = {"con_threshold", "0",};
+
+/* Private console stuff */
+#define CON_NUM_LINES 40
 
 #define FG_COLOR    grd_curcanv->cv_font_fg_color
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
+
+#define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
+#define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
+#define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
 
 
 /* our one console */
@@ -456,7 +486,7 @@ void CON_DrawConsole(void) {
 
 
 /* Initializes the console */
-void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h)
+void CON_Init()
 {
 	int loop;
 
@@ -475,31 +505,61 @@ void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y
 	console->InsMode = 1;
 	console->CursorPos = 0;
 	console->CommandScrollBack = 0;
-	console->OutputScreen = DisplayScreen;
+	console->OutputScreen = NULL;
 	console->Prompt = CON_DEFAULT_PROMPT;
 	console->HideKey = CON_DEFAULT_HIDEKEY;
-	
-	/* make sure that the size of the console is valid */
-	if(w > console->OutputScreen->sc_w || w < Font->ft_w * 32)
-		w = console->OutputScreen->sc_w;
-	if(h > console->OutputScreen->sc_h || h < Font->ft_h)
-		h = console->OutputScreen->sc_h;
+
+	/* load the console surface */
+	console->ConsoleSurface = NULL;
+
+	/* Load the dirty rectangle for user input */
+	console->InputBackground = NULL;
+
+	console->VChars = CON_CHARS_PER_LINE;
+	console->LineBuffer = CON_NUM_LINES;
+
+	console->ConsoleLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
+	console->CommandLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
+	for(loop = 0; loop <= console->LineBuffer - 1; loop++) {
+		console->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+		console->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+	}
+	memset(console->Command, 0, CON_CHARS_PER_LINE);
+	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
+	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
+	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
+
+	cmd_init();
+
+	/* Initialise the cvars */
+	cvar_registervariable (&con_threshold);
+
+	con_initialized = 1;
+
+	atexit(CON_Free);
+}
+
+
+void CON_InitGFX(int w, int h)
+{
+	int pcx_error;
+	grs_bitmap bmp;
+	ubyte pal[256*3];
+
+	console->OutputScreen = grd_curscreen;
 	
 	/* load the console surface */
 	console->ConsoleSurface = gr_create_canvas(w, h);
-	
+
 	/* Load the consoles font */
-	{
-		grs_canvas *canv_save;
-		
-		canv_save = grd_curcanv;
-		gr_set_current_canvas(console->ConsoleSurface);
-		gr_set_curfont(Font);
-		gr_set_fontcolor(gr_getcolor(63,63,63), -1);
-		gr_set_current_canvas(canv_save);
-	}
-	
-	
+	CON_Font(SMALL_FONT, gr_getcolor(63,63,63), -1);
+
+	/* make sure that the size of the console is valid */
+	if(w > console->OutputScreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
+		w = console->OutputScreen->sc_w;
+	if(h > console->OutputScreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
+		h = console->OutputScreen->sc_h;
+
 	/* Load the dirty rectangle for user input */
 	console->InputBackground = gr_create_bitmap(w, console->ConsoleSurface->cv_font->ft_h);
 #if 0
@@ -511,28 +571,16 @@ void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y
 	if(console->VChars > CON_CHARS_PER_LINE)
 		console->VChars = CON_CHARS_PER_LINE;
 	
-	/* We would like to have a minumum # of lines to guarentee we don't create a memory error */
-	if(h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h) > lines)
-		console->LineBuffer = h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h);
-	else
-		console->LineBuffer = lines;
+	CON_Transfer(grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
 	
-	
-	console->ConsoleLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
-	console->CommandLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
-	for(loop = 0; loop <= console->LineBuffer - 1; loop++) {
-		console->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
-		console->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
-	}
-	memset(console->Command, 0, CON_CHARS_PER_LINE);
-	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
-	
-	
-	CON_Out("Console initialised.");
-	CON_NewLineConsole();
+	gr_init_bitmap_data(&bmp);
+	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
+	Assert(pcx_error == PCX_ERROR_NONE);
+	gr_remap_bitmap_good(&bmp, pal, -1, -1);
+	CON_Background(&bmp);
+	gr_free_bitmap_data(&bmp);
 }
+
 
 /* Makes the console visible */
 void CON_Show(void) {
@@ -1017,88 +1065,6 @@ void Command_Down(void) {
 		CON_UpdateConsole();
 	}
 }
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#ifndef _WIN32_WCE
-#include <fcntl.h>
-#endif
-#include <ctype.h>
-
-#include "pstypes.h"
-#include "u_mem.h"
-#include "error.h"
-#include "console.h"
-#include "cmd.h"
-#include "cvar.h"
-#include "gr.h"
-#include "gamefont.h"
-#include "pcx.h"
-#include "cfile.h"
-
-#ifndef __MSDOS__
-int text_console_enabled = 1;
-#else
-int isvga();
-#define text_console_enabled (!isvga())
-#endif
-
-
-/* Console specific cvars */
-/* How discriminating we are about which messages are displayed */
-cvar_t con_threshold = {"con_threshold", "0",};
-
-/* Private console stuff */
-#define CON_NUM_LINES 40
-
-
-/* Initialise the console */
-void con_init(void)
-{
-	grs_screen fake_screen;
-	grs_font   fake_font;
-
-	fake_screen.sc_w = 320;
-	fake_screen.sc_h = 200;
-	fake_font.ft_w = 5;
-	fake_font.ft_h = 5;
-
-	CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
-
-	cmd_init();
-
-	/* Initialise the cvars */
-	cvar_registervariable (&con_threshold);
-
-	con_initialized = 1;
-
-	atexit(CON_Free);
-}
-
-
-#define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
-#define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
-#define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
-
-void con_init_gfx(void)
-{
-	int pcx_error;
-	grs_bitmap bmp;
-	ubyte pal[256*3];
-
-	CON_Font(SMALL_FONT, gr_getcolor(63, 63, 63), -1);
-	CON_Transfer(grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
-
-	gr_init_bitmap_data(&bmp);
-	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
-	Assert(pcx_error == PCX_ERROR_NONE);
-	gr_remap_bitmap_good(&bmp, pal, -1, -1);
-	CON_Background(&bmp);
-	gr_free_bitmap_data(&bmp);
-}
-
 
 /* Print a message to the console */
 void con_printf(int priority, char *fmt, ...)
