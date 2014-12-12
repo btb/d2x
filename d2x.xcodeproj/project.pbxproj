@@ -60,7 +60,6 @@
 		146697F91A2729870070D41D /* mouse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959D1A2729860070D41D /* mouse.c */; };
 		146697FA1A2729870070D41D /* rbaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959E1A2729860070D41D /* rbaudio.c */; };
 		146697FB1A2729870070D41D /* timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959F1A2729860070D41D /* timer.c */; };
-		146698291A2729870070D41D /* CON_console.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695ED1A2729860070D41D /* CON_console.c */; };
 		146698441A2729870070D41D /* iff.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696111A2729860070D41D /* iff.c */; };
 		1466984B1A2729870070D41D /* decoder16.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696481A2729870070D41D /* decoder16.c */; };
 		1466984C1A2729870070D41D /* decoder8.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696491A2729870070D41D /* decoder8.c */; };
@@ -423,7 +422,6 @@
 		146695E91A2729860070D41D /* win32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = win32.c; sourceTree = "<group>"; };
 		146695EA1A2729860070D41D /* winmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = winmain.cpp; sourceTree = "<group>"; };
 		146695EB1A2729860070D41D /* winnet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = winnet.c; sourceTree = "<group>"; };
-		146695ED1A2729860070D41D /* CON_console.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CON_console.c; sourceTree = "<group>"; };
 		1466960C1A2729860070D41D /* iff15bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff15bpp.c; sourceTree = "<group>"; };
 		1466960D1A2729860070D41D /* iff8bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff8bpp.c; sourceTree = "<group>"; };
 		1466960E1A2729860070D41D /* iffmike.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iffmike.c; sourceTree = "<group>"; };
@@ -436,7 +434,6 @@
 		146696181A2729860070D41D /* cfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cfile.h; sourceTree = "<group>"; };
 		146696191A2729860070D41D /* checker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = checker.h; sourceTree = "<group>"; };
 		1466961A1A2729860070D41D /* cmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmd.h; sourceTree = "<group>"; };
-		1466961B1A2729860070D41D /* CON_console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CON_console.h; sourceTree = "<group>"; };
 		1466961C1A2729860070D41D /* console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = console.h; sourceTree = "<group>"; };
 		1466961D1A2729860070D41D /* d1x.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = d1x.xpm; sourceTree = "<group>"; };
 		1466961E1A2729860070D41D /* descent.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = descent.xpm; sourceTree = "<group>"; };
@@ -928,7 +925,6 @@
 				146694D01A2729860070D41D /* 2d */,
 				146694ED1A2729860070D41D /* 3d */,
 				146694FC1A2729860070D41D /* arch */,
-				146695EC1A2729860070D41D /* console */,
 				1466960A1A2729860070D41D /* iff */,
 				146696141A2729860070D41D /* include */,
 				146696471A2729870070D41D /* libmve */,
@@ -1430,14 +1426,6 @@
 			path = include;
 			sourceTree = "<group>";
 		};
-		146695EC1A2729860070D41D /* console */ = {
-			isa = PBXGroup;
-			children = (
-				146695ED1A2729860070D41D /* CON_console.c */,
-			);
-			path = console;
-			sourceTree = "<group>";
-		};
 		1466960A1A2729860070D41D /* iff */ = {
 			isa = PBXGroup;
 			children = (
@@ -1468,7 +1456,6 @@
 				146696181A2729860070D41D /* cfile.h */,
 				146696191A2729860070D41D /* checker.h */,
 				1466961A1A2729860070D41D /* cmd.h */,
-				1466961B1A2729860070D41D /* CON_console.h */,
 				1466961C1A2729860070D41D /* console.h */,
 				1466961D1A2729860070D41D /* d1x.xpm */,
 				1466961E1A2729860070D41D /* descent.xpm */,
@@ -2292,7 +2279,6 @@
 				146698F41A2729870070D41D /* ntmap.c in Sources */,
 				146698971A2729870070D41D /* gamerend.c in Sources */,
 				146698611A2729870070D41D /* crypt.c in Sources */,
-				146698291A2729870070D41D /* CON_console.c in Sources */,
 				146698AF1A2729870070D41D /* multibot.c in Sources */,
 				1466978D1A2729870070D41D /* interp.c in Sources */,
 				146698B01A2729870070D41D /* netmisc.c in Sources */,

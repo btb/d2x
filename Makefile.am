@@ -51,10 +51,6 @@ else
 d2x_SOURCES += 2d/tmerge.c maths/fixc.c
 endif
 
-if USE_CONSOLE
-d2x_SOURCES += console/CON_console.c
-endif
-
 if USE_NETWORK
 d2x_SOURCES += main/kmatrix.c main/multi.c main/multibot.c main/network.c main/netmisc.c
 endif
