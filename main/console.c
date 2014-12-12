@@ -83,9 +83,6 @@ void CON_AlphaGL(SDL_Surface *s, int alpha);
 int CON_Background(grs_bitmap *image);
 /*! Sets font info for the console */
 void CON_Font(grs_font *font, int fg, int bg);
-/*! Beams a console to another screen surface. Needed if you want to make a Video restart in your program. This
- function first changes the OutputScreen Pointer then calls CON_Resize to adjust the new size. */
-int CON_Transfer(grs_screen* new_outputscreen, int x, int y, int w, int h);
 /*! Modify the prompt of the console */
 void CON_SetPrompt(char* newprompt);
 /*! Set the key, that invokes a CON_Hide() after press. default is ESCAPE and you can always hide using
@@ -540,6 +537,7 @@ void CON_Init()
 }
 
 
+void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
 void CON_InitGFX(int w, int h)
 {
 	int pcx_error;
@@ -548,8 +546,14 @@ void CON_InitGFX(int w, int h)
 
 	console->OutputScreen = grd_curscreen;
 	
-	/* load the console surface */
-	console->ConsoleSurface = gr_create_canvas(w, h);
+	if (console->ConsoleSurface) {
+		/* resize console surface */
+		gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);
+		gr_init_bitmap_alloc(&console->ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
+	} else {
+		/* load the console surface */
+		console->ConsoleSurface = gr_create_canvas(w, h);
+	}
 
 	/* Load the consoles font */
 	CON_Font(SMALL_FONT, gr_getcolor(63,63,63), -1);
@@ -561,6 +565,8 @@ void CON_InitGFX(int w, int h)
 		h = console->OutputScreen->sc_h;
 
 	/* Load the dirty rectangle for user input */
+	if (console->InputBackground)
+		gr_free_bitmap(console->InputBackground);
 	console->InputBackground = gr_create_bitmap(w, console->ConsoleSurface->cv_font->ft_h);
 #if 0
 	SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
@@ -570,8 +576,6 @@ void CON_InitGFX(int w, int h)
 	console->VChars = (w - CON_CHAR_BORDER) / console->ConsoleSurface->cv_font->ft_w;
 	if(console->VChars > CON_CHARS_PER_LINE)
 		console->VChars = CON_CHARS_PER_LINE;
-	
-	CON_Transfer(grd_curscreen, 0, 0, SWIDTH, SHEIGHT / 2);
 	
 	gr_init_bitmap_data(&bmp);
 	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
@@ -867,7 +871,7 @@ void CON_Font(grs_font *font, int fg, int bg)
 void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
-int CON_Resize(int x, int y, int w, int h)
+void CON_Resize(int w, int h)
 {
 	/* make sure that the size of the console is valid */
 	if(w > console->OutputScreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
@@ -898,15 +902,6 @@ int CON_Resize(int x, int y, int w, int h)
 	/* restore the alpha level */
 	CON_Alpha(console->ConsoleAlpha);
 #endif
-	return 0;
-}
-
-/* Transfers the console to another screen surface, and adjusts size */
-int CON_Transfer(grs_screen *new_outputscreen, int x, int y, int w, int h)
-{
-	console->OutputScreen = new_outputscreen;
-	
-	return(CON_Resize(x, y, w, h));
 }
 
 /* Sets the Prompt for console */

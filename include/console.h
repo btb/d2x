@@ -108,7 +108,7 @@ void CON_InitGFX(int w, int h);
 /*! printf for the console */
 void CON_Out(const char *str, ...);
 /*! Changes the size of the console */
-int CON_Resize(int x, int y, int w, int h);
+void CON_Resize(int w, int h);
 
 
 /* Priority levels */
