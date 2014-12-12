@@ -29,10 +29,9 @@
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
 
-static ConsoleInformation *Console;
-
-/* Pointer to our one console */
-static ConsoleInformation *console;
+/* our one console */
+static ConsoleInformation Console;
+#define console (&Console)
 
 /* Internals */
 void CON_UpdateOffset(void);
@@ -462,17 +461,11 @@ void CON_DrawConsole(void) {
 
 
 /* Initializes the console */
-ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h)
+void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h)
 {
 	int loop;
-	ConsoleInformation *newinfo;
+	ConsoleInformation *newinfo = console;
 	
-	
-	/* Create a new console struct and init it. */
-	if((newinfo = (ConsoleInformation *) d_malloc(sizeof(ConsoleInformation))) == NULL) {
-		//PRINT_ERROR("Could not allocate the space for a new console info struct.\n");
-		return NULL;
-	}
 	newinfo->Visible = CON_CLOSED;
 	newinfo->RaiseOffset = 0;
 	newinfo->ConsoleLines = NULL;
@@ -545,8 +538,6 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 	
 	CON_Out("Console initialised.");
 	CON_NewLineConsole();
-	
-	return newinfo;
 }
 
 /* Makes the console visible */
@@ -596,8 +587,6 @@ void CON_Free(void) {
 	
 	gr_free_bitmap(console->InputBackground);
 	console->InputBackground = NULL;
-	
-	d_free(console);
 }
 
 
@@ -1128,8 +1117,7 @@ void con_init(void)
 	fake_font.ft_w = 5;
 	fake_font.ft_h = 5;
 
-	Console = CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
-	console = Console;
+	CON_Init(&fake_font, &fake_screen, CON_NUM_LINES, 0, 0, 320, 200);
 
 	cmd_init();
 

@@ -58,7 +58,7 @@ enum {
 	CON_OPEN	//! The console is open and visible
 };
 
-/*! This is a struct for each consoles data */
+/*! This is a struct for the console's data */
 typedef struct console_information_td {
 	int Visible;			//! enum that tells which visible state we are in CON_HIDE, CON_SHOW, CON_RAISE, CON_LOWER
 	int RaiseOffset;			//! Offset used when scrolling in the console
@@ -101,8 +101,8 @@ void CON_Hide(void);
 int CON_isVisible(void);
 /*! Draws the console to the screen if it isVisible()*/
 void CON_DrawConsole(void);
-/*! Initializes a new console */
-ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h);
+/*! Initializes the console */
+void CON_Init(grs_font *Font, grs_screen *DisplayScreen, int lines, int x, int y, int w, int h);
 /*! printf for the console */
 void CON_Out(const char *str, ...);
 /*! Changes the size of the console */
