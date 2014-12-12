@@ -217,7 +217,6 @@ int CON_Events(int event)
 					CON_UpdateConsole();
 					
 					CON_Execute(console->Command);
-					//printf("Command: %s\n", console->Command);
 					
 					Clear_Command();
 					console->CommandScrollBack = -1;
@@ -548,7 +547,6 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 	
 	CON_Out("Console initialised.");
 	CON_NewLineConsole();
-	//CON_ListCommands();
 	
 	return newinfo;
 }
@@ -586,7 +584,6 @@ void CON_Free(void) {
 	if(!console)
 		return;
 	
-	//CON_DestroyCommands();
 	for(i = 0; i <= console->LineBuffer - 1; i++) {
 		d_free(console->ConsoleLines[i]);
 		d_free(console->CommandLines[i]);
@@ -797,9 +794,6 @@ void CON_Out(const char *str, ...) {
 		console->ConsoleLines[0][console->VChars] = '\0';
 		CON_UpdateConsole();
 	}
-	
-	/* And print to stdout */
-	//printf("%s\n", temp);
 }
 
 
@@ -1204,11 +1198,6 @@ void con_printf(int priority, char *fmt, ...)
 
 		if (con_initialized)
 			CON_Out(buffer);
-
-/*		for (i=0; i<l; i+=CON_LINE_LEN,con_line++)
-		{
-			memcpy(con_display, &buffer[i], min(80, l-i));
-		}*/
 
 		if (text_console_enabled)
 		{
