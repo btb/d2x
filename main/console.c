@@ -36,8 +36,6 @@ static ConsoleInformation *console;
 
 /* Internals */
 void CON_UpdateOffset(void);
-/*! Calls CON_Free */
-void CON_Destroy(void);
 /*! Frees all the memory loaded by the console */
 void CON_Free(void);
 #if 0
@@ -570,11 +568,6 @@ int CON_isVisible(void) {
 	if(!console)
 		return CON_CLOSED;
 	return((console->Visible == CON_OPEN) || (console->Visible == CON_OPENING));
-}
-
-/* Frees all the memory loaded by the console */
-void CON_Destroy(void) {
-	CON_Free();
 }
 
 /* Frees all the memory loaded by the console */
