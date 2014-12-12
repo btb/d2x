@@ -52,8 +52,6 @@ void CON_AlphaGL(SDL_Surface *s, int alpha);
 int CON_Background(grs_bitmap *image);
 /*! Sets font info for the console */
 void CON_Font(grs_font *font, int fg, int bg);
-/*! Changes current position of the console */
-void CON_Position(int x, int y);
 /*! Beams a console to another screen surface. Needed if you want to make a Video restart in your program. This
  function first changes the OutputScreen Pointer then calls CON_Resize to adjust the new size. */
 int CON_Transfer(grs_screen* new_outputscreen, int x, int y, int w, int h);
@@ -454,7 +452,7 @@ void CON_DrawConsole(void) {
 	
 	clip = gr_create_sub_bitmap(&console->ConsoleSurface->cv_bitmap, 0, console->ConsoleSurface->cv_h - console->RaiseOffset, console->ConsoleSurface->cv_w, console->RaiseOffset);
 	
-	gr_bitmap(console->DispX, console->DispY, clip);
+	gr_bitmap(0, 0, clip);
 	gr_free_sub_bitmap(clip);
 	
 #if 0
@@ -502,14 +500,6 @@ ConsoleInformation *CON_Init(grs_font *Font, grs_screen *DisplayScreen, int line
 		w = newinfo->OutputScreen->sc_w;
 	if(h > newinfo->OutputScreen->sc_h || h < Font->ft_h)
 		h = newinfo->OutputScreen->sc_h;
-	if(x < 0 || x > newinfo->OutputScreen->sc_w - w)
-		newinfo->DispX = 0;
-	else
-		newinfo->DispX = x;
-	if(y < 0 || y > newinfo->OutputScreen->sc_h - h)
-		newinfo->DispY = 0;
-	else
-		newinfo->DispY = y;
 	
 	/* load the console surface */
 	newinfo->ConsoleSurface = gr_create_canvas(w, h);
@@ -877,22 +867,6 @@ void CON_Font(grs_font *font, int fg, int bg)
 	gr_set_current_canvas(canv_save);
 }
 
-/* takes a new x and y of the top left of the console window */
-void CON_Position(int x, int y) {
-	if(!console)
-		return;
-	
-	if(x < 0 || x > console->OutputScreen->sc_w - console->ConsoleSurface->cv_w)
-		console->DispX = 0;
-	else
-		console->DispX = x;
-	
-	if(y < 0 || y > console->OutputScreen->sc_h - console->ConsoleSurface->cv_h)
-		console->DispY = 0;
-	else
-		console->DispY = y;
-}
-
 void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
@@ -906,14 +880,6 @@ int CON_Resize(int x, int y, int w, int h)
 		w = console->OutputScreen->sc_w;
 	if(h > console->OutputScreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
 		h = console->OutputScreen->sc_h;
-	if(x < 0 || x > console->OutputScreen->sc_w - w)
-		console->DispX = 0;
-	else
-		console->DispX = x;
-	if(y < 0 || y > console->OutputScreen->sc_h - h)
-		console->DispY = 0;
-	else
-		console->DispY = y;
 	
 	/* resize console surface */
 	gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);

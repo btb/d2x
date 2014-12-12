@@ -82,7 +82,6 @@ typedef struct console_information_td {
 	grs_screen *OutputScreen;	//! This is the screen to draw the console to
 	grs_bitmap *BackgroundImage;	//! Background image for the console
 	grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
-	int DispX, DispY;		//! The top left x and y coords of the console on the display screen
 #if 0
 	unsigned char ConsoleAlpha;	//! The consoles alpha level
 #endif
