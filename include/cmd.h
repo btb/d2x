@@ -11,6 +11,7 @@ void cmd_init(void);
 
 /* Parse an input string */
 void cmd_parse(char *input);  // FIXME: make this handle compound statements, add flag for insert/append?
+void cmd_parsef(char *fmt, ...);
 /* Add some commands to the queue to be executed */
 void cmd_insert(char *input);
 /* Add some commands to the queue to be executed */

@@ -472,6 +472,11 @@ int main(int argc, char *argv[])
 	error_init(NULL, NULL);
 	PHYSFSX_init(argc, argv);
 
+	if ((t = FindArg("-autoexec")))
+		cmd_parsef("exec %s", Args[t+1]);
+	else
+		cmd_parse("exec autoexec.cfg");
+
 	if (FindArg("-debug"))
 		con_threshold.value = (float)CON_DEBUG;
 	else if (FindArg("-verbose"))

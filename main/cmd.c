@@ -145,6 +145,17 @@ void cmd_parse(char *input)
 	cmd_execute(num_tokens, tokens);
 }
 
+void cmd_parsef(char *fmt, ...){
+	va_list arglist;
+	char buf[CMD_MAX_LENGTH];
+
+	va_start (arglist, fmt);
+	vsnprintf (buf, CMD_MAX_LENGTH, fmt, arglist);
+	va_end (arglist);
+
+	cmd_parse(buf);
+}
+
 
 /* Add some commands to the queue to be executed */
 void cmd_insert(char *input)
