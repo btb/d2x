@@ -1091,6 +1091,11 @@ int ogl_internal_string(int x, int y, char *s )
 				continue;
 			}
 
+			if (*text_ptr == CC_UNDERLINE )	{
+				text_ptr++;
+				continue;
+			}
+
 			letter = (unsigned char)*text_ptr - FMINCHAR;
 
 			get_char_width(text_ptr[0],text_ptr[1],&width,&spacing);
