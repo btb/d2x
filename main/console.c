@@ -27,6 +27,7 @@
 
 #include "u_mem.h"
 #include "gr.h"
+#include "key.h"
 #include "timer.h"
 #include "pstypes.h"
 #include "error.h"
@@ -58,8 +59,59 @@ cvar_t con_threshold = {"con_threshold", "0",};
 #define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
 #define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
 
+//! Cut the buffer line if it becomes longer than this
+#define CON_CHARS_PER_LINE   128
+//! Cursor blink frequency in ms
+#define CON_BLINK_RATE       500
+//! Border in pixels from the most left to the first letter
+#define CON_CHAR_BORDER      4
+//! Spacing in pixels between lines
+#define CON_LINE_SPACE       1
+//! Default prompt used at the commandline
+#define CON_DEFAULT_PROMPT	"]"
+//! Scroll this many lines at a time (when pressing PGUP or PGDOWN)
+#define CON_LINE_SCROLL	2
+//! Indicator showing that you scrolled up the history
+#define CON_SCROLL_INDICATOR "^"
+//! Cursor shown if we are in insert mode
+#define CON_INS_CURSOR "_"
+//! Cursor shown if we are in overwrite mode
+#define CON_OVR_CURSOR "|"
+//! Defines the default hide key (Hide() the console if pressed)
+#define CON_DEFAULT_HIDEKEY	KEY_ESC
+//! Defines the opening/closing speed
+#define CON_OPENCLOSE_SPEED 50
 
-/* our one console */
+
+/*! This is a struct for the console's data */
+typedef struct console_information_td {
+	int Visible;			//! enum that tells which visible state we are in CON_HIDE, CON_SHOW, CON_RAISE, CON_LOWER
+	int RaiseOffset;			//! Offset used when scrolling in the console
+	int HideKey;			//! the key that can hide the console
+	char **ConsoleLines;		//! List of all the past lines
+	char **CommandLines;		//! List of all the past commands
+	int TotalConsoleLines;		//! Total number of lines in the console
+	int ConsoleScrollBack;		//! How much the user scrolled back in the console
+	int TotalCommands;		//! Number of commands in the Back Commands
+	int LineBuffer;			//! The number of visible lines in the console (autocalculated)
+	int VChars;			//! The number of visible characters in one console line (autocalculated)
+	char* Prompt;			//! Prompt displayed in command line
+	char Command[CON_CHARS_PER_LINE];	//! current command in command line = lcommand + rcommand
+	char RCommand[CON_CHARS_PER_LINE];	//! left hand side of cursor
+	char LCommand[CON_CHARS_PER_LINE];	//! right hand side of cursor
+	char VCommand[CON_CHARS_PER_LINE];	//! current visible command line
+	int CursorPos;			//! Current cursor position in CurrentCommand
+	int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
+	int InsMode;			//! Insert or Overwrite characters?
+	grs_canvas *ConsoleSurface;	//! Canvas of the console
+	grs_bitmap *BackgroundImage;	//! Background image for the console
+	grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
+#if 0
+	unsigned char ConsoleAlpha;	//! The consoles alpha level
+#endif
+	int CommandScrollBack;		//! How much the users scrolled back in the command lines
+}
+ConsoleInformation;
 static ConsoleInformation Console;
 #define console (&Console)
 
