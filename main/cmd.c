@@ -69,6 +69,17 @@ void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func)
 }
 
 
+typedef struct cmd_queue_s
+{
+	char *command_line;
+	struct cmd_queue_s *next;
+} cmd_queue_t;
+
+/* The list of commands to be executed */
+static cmd_queue_t *cmd_queue_start = NULL;
+static cmd_queue_t *cmd_queue_end = NULL;
+
+
 /* execute a parsed command */
 void cmd_execute(int argc, char **argv)
 {
@@ -83,6 +94,7 @@ void cmd_execute(int argc, char **argv)
 	for (alias = cmd_alias_list; alias; alias = alias->next) {
 		if (!stricmp(argv[0], alias->name))
 			return cmd_parse(alias->value);
+			//return cmd_insert(alias->value);
 	}
 
 	/* Otherwise */
@@ -122,8 +134,8 @@ void cmd_parse(char *input)
 
 	tokens[0] = buffer;
 	for (i=1; i<l; i++) {
-        	if (isspace(buffer[i])) {
-                	buffer[i] = 0;
+		if (isspace(buffer[i])) {
+			buffer[i] = 0;
 			while (isspace(buffer[i+1]) && (i+1 < l)) i++;
 			tokens[num_tokens++] = &buffer[i+1];
 		}
@@ -131,6 +143,59 @@ void cmd_parse(char *input)
 
 	/* Check for matching commands */
 	cmd_execute(num_tokens, tokens);
+}
+
+
+/* Add some commands to the queue to be executed */
+void cmd_insert(char *input)
+{
+}
+
+/* Add some commands to the queue to be executed */
+void cmd_append(char *input)
+{
+	char *line_start, *line_end;
+
+	Assert(input != NULL);
+
+	while (*input) {
+		int quoted = 0;
+		char *c = NULL;
+
+		/* Strip leading spaces */
+		while(isspace(*input) || *input == ';')
+			input++;
+
+		/* If command is empty, give up */
+		if (! *input)
+			continue;
+
+		/* Now at start of a command line */
+		line_start = input;
+
+		/* Find the end of this line (\n, ;, or nul) */
+		while (*(c = input++)) {
+			if (*c == '"') {
+				quoted = 1 - quoted;
+				continue;
+			} else if ( *c == '\n' || (!quoted && *c == ';') ) {
+				*c = 0;
+				break;
+			}
+		}
+
+		line_end = c - 1;
+
+		/* Strip trailing spaces */
+		while(line_end > line_start && isspace(*line_end))
+			line_end--;
+
+		// Write new null terminator
+		*(line_end + 1) = 0;
+
+		printf("append: got line: %s\n", line_start);
+
+	}
 }
 
 

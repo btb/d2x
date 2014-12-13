@@ -10,7 +10,11 @@ void cmd_init(void);
 #define CMD_MAX_TOKENS 64
 
 /* Parse an input string */
-void cmd_parse(char *input);
+void cmd_parse(char *input);  // FIXME: make this handle compound statements, add flag for insert/append?
+/* Add some commands to the queue to be executed */
+void cmd_insert(char *input);
+/* Add some commands to the queue to be executed */
+void cmd_append(char *input);
 
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input);
