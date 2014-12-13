@@ -1056,6 +1056,7 @@ int ogl_internal_string(int x, int y, char *s )
 	int width, spacing,letter;
 	int xx,yy;
 	int orig_color=FG_COLOR;//to allow easy reseting to default string color with colored strings -MPM
+	int skip_lines = 0;
 
 	next_row = s;
 
@@ -1082,6 +1083,12 @@ int ogl_internal_string(int x, int y, char *s )
 				next_row = &text_ptr[1];
 				yy += FHEIGHT;
 				break;
+			}
+
+			if (*text_ptr == CC_LSPACING) {
+				skip_lines = *(text_ptr+1) - '0';
+				text_ptr += 2;
+				continue;
 			}
 
 			letter = (unsigned char)*text_ptr - FMINCHAR;
@@ -1115,6 +1122,8 @@ int ogl_internal_string(int x, int y, char *s )
 			text_ptr++;
 		}
 
+		yy += skip_lines;
+		skip_lines = 0;
 	}
 	return 0;
 }
