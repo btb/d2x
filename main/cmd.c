@@ -204,7 +204,7 @@ void cmd_enqueue(int insert, char *input)
 		
 		/* make a new queue item, add it to list */
 		MALLOC(new, cmd_queue_t, 1);
-		new->command_line = strdup(line);
+		new->command_line = d_strdup(line);
 		new->next = NULL;
 
 		if (!head)
