@@ -474,8 +474,10 @@ int main(int argc, char *argv[])
 
 	if ((t = FindArg("-autoexec")))
 		cmd_parsef("exec %s", Args[t+1]);
-	else
+	else {
+		cmd_append("exec autoexec.cfg");
 		cmd_parse("exec autoexec.cfg");
+	}
 
 	if (FindArg("-debug"))
 		con_threshold.value = (float)CON_DEBUG;

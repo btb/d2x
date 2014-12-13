@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #endif
 #include <ctype.h>
+#include <unistd.h>
 
 #include "console.h"
 
@@ -1126,8 +1127,13 @@ void con_printf(int priority, char *fmt, ...)
 		if (con_initialized)
 			CON_Out(buffer);
 
-		if (text_console_enabled)
-		{
+		if (!text_console_enabled)
+			return;
+
+		if (isatty(fileno(stdout))) {
+			
+
+		} else {
 			/* Produce a sanitised version and send it to the standard output */
 			char *p1, *p2;
 

@@ -76,8 +76,8 @@ typedef struct cmd_queue_s
 } cmd_queue_t;
 
 /* The list of commands to be executed */
-static cmd_queue_t *cmd_queue_start = NULL;
-static cmd_queue_t *cmd_queue_end = NULL;
+static cmd_queue_t *cmd_queue_head = NULL;
+static cmd_queue_t *cmd_queue_tail = NULL;
 
 
 /* execute a parsed command */
@@ -92,9 +92,11 @@ void cmd_execute(int argc, char **argv)
 	}
 
 	for (alias = cmd_alias_list; alias; alias = alias->next) {
-		if (!stricmp(argv[0], alias->name))
-			return cmd_parse(alias->value);
-			//return cmd_insert(alias->value);
+		if (!stricmp(argv[0], alias->name)) {
+			cmd_insert(alias->value);
+			cmd_parse(alias->value);
+			return;
+		}
 	}
 
 	/* Otherwise */
@@ -111,6 +113,7 @@ void cmd_parse(char *input)
 	char *tokens[CMD_MAX_TOKENS];
 	int num_tokens;
 	int i, l;
+	int quoted = 0;
 
 	Assert(input != NULL);
 	
@@ -134,7 +137,11 @@ void cmd_parse(char *input)
 
 	tokens[0] = buffer;
 	for (i=1; i<l; i++) {
-		if (isspace(buffer[i])) {
+		if (buffer[i] == '"') {
+			quoted = 1 - quoted;
+			continue;
+		}
+		if (isspace(buffer[i]) && !quoted) {
 			buffer[i] = 0;
 			while (isspace(buffer[i+1]) && (i+1 < l)) i++;
 			tokens[num_tokens++] = &buffer[i+1];
@@ -158,20 +165,16 @@ void cmd_parsef(char *fmt, ...){
 
 
 /* Add some commands to the queue to be executed */
-void cmd_insert(char *input)
+void cmd_enqueue(int insert, char *input)
 {
-}
-
-/* Add some commands to the queue to be executed */
-void cmd_append(char *input)
-{
-	char *line_start, *line_end;
+	cmd_queue_t *new, *head, *tail;
+	char *line;
 
 	Assert(input != NULL);
+	head = tail = NULL;
 
 	while (*input) {
 		int quoted = 0;
-		char *c = NULL;
 
 		/* Strip leading spaces */
 		while(isspace(*input) || *input == ';')
@@ -182,31 +185,63 @@ void cmd_append(char *input)
 			continue;
 
 		/* Now at start of a command line */
-		line_start = input;
+		line = input;
 
 		/* Find the end of this line (\n, ;, or nul) */
-		while (*(c = input++)) {
-			if (*c == '"') {
+		do {
+			if (!*input)
+				break;
+			if (*input == '"') {
 				quoted = 1 - quoted;
 				continue;
-			} else if ( *c == '\n' || (!quoted && *c == ';') ) {
-				*c = 0;
+			} else if ( *input == '\n' || (!quoted && *input == ';') ) {
+				*input = 0;
 				break;
 			}
-		}
+		} while (*input++);
 
-		line_end = c - 1;
+		printf("enqueue: got line: %s\n", line);
+		
+		/* make a new queue item, add it to list */
+		MALLOC(new, cmd_queue_t, 1);
+		new->command_line = strdup(line);
+		new->next = NULL;
 
-		/* Strip trailing spaces */
-		while(line_end > line_start && isspace(*line_end))
-			line_end--;
-
-		// Write new null terminator
-		*(line_end + 1) = 0;
-
-		printf("append: got line: %s\n", line_start);
-
+		if (!head)
+			head = new;
+		if (tail)
+			tail->next = new;
+		tail = new;
 	}
+
+	if (insert) {
+		 /* add our list to the head of the main list */
+		if (cmd_queue_head)
+			tail->next = cmd_queue_head;
+		if (!cmd_queue_tail)
+			cmd_queue_tail = tail;
+		
+		cmd_queue_head = head;
+	} else {
+		/* add our list to the tail of the main list */
+		if (!cmd_queue_head)
+			cmd_queue_head = new;
+		if (cmd_queue_tail)
+			cmd_queue_tail->next = head;
+		
+		cmd_queue_tail = tail;
+	}
+}
+
+void cmd_enqueuef(int insert, char *fmt, ...){
+	va_list arglist;
+	char buf[CMD_MAX_LENGTH];
+	
+	va_start (arglist, fmt);
+	vsnprintf (buf, CMD_MAX_LENGTH, fmt, arglist);
+	va_end (arglist);
+	
+	cmd_enqueue(insert, buf);
 }
 
 
@@ -350,6 +385,7 @@ void cmd_exec(int argc, char **argv) {
 		return;
 	}
 	while (PHYSFSX_gets(f, buf)) {
+		cmd_append(buf);
 		cmd_parse(buf);
 	}
 	PHYSFS_close(f);

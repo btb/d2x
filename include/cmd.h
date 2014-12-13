@@ -13,9 +13,13 @@ void cmd_init(void);
 void cmd_parse(char *input);  // FIXME: make this handle compound statements, add flag for insert/append?
 void cmd_parsef(char *fmt, ...);
 /* Add some commands to the queue to be executed */
-void cmd_insert(char *input);
-/* Add some commands to the queue to be executed */
-void cmd_append(char *input);
+void cmd_enqueue(int insert, char *input);
+void cmd_enqueuef(int insert, char *fmt, ...);
+#define cmd_append(input) cmd_enqueue(0, (input))
+#define cmd_appendf(...) cmd_enqueue(0, __VA_ARGS__)
+#define cmd_insert(input) cmd_enqueue(1, (input))
+#define cmd_insertf(...) cmd_enqueue(1, __VA_ARGS__)
+
 
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input);
