@@ -511,7 +511,7 @@ void CON_Init()
 	/* Load the dirty rectangle for user input */
 	console->InputBackground = NULL;
 
-	console->VChars = CON_CHARS_PER_LINE;
+	console->VChars = CON_CHARS_PER_LINE - 1;
 	console->LineBuffer = CON_NUM_LINES;
 
 	console->ConsoleLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
@@ -571,8 +571,8 @@ void CON_InitGFX(int w, int h)
 	
 	/* calculate the number of visible characters in the command line */
 	console->VChars = (w - CON_CHAR_BORDER) / console->ConsoleSurface->cv_font->ft_w;
-	if(console->VChars > CON_CHARS_PER_LINE)
-		console->VChars = CON_CHARS_PER_LINE;
+	if(console->VChars >= CON_CHARS_PER_LINE)
+		console->VChars = CON_CHARS_PER_LINE - 1;
 	
 	gr_init_bitmap_data(&bmp);
 	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
