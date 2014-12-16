@@ -88,13 +88,14 @@ void cmd_execute(int argc, char **argv)
 
 	for (cmd = cmd_list; cmd; cmd = cmd->next) {
 		if (!stricmp(argv[0], cmd->name))
+			printf("executing command: %s\n", argv[0]);
 			return cmd->function(argc, argv);
 	}
 
 	for (alias = cmd_alias_list; alias; alias = alias->next) {
 		if (!stricmp(argv[0], alias->name)) {
+			printf("executing alias \"%s\": %s\n", alias->name, alias->value);
 			cmd_insert(alias->value);
-			cmd_parse(alias->value);
 			return;
 		}
 	}
@@ -152,15 +153,21 @@ void cmd_parse(char *input)
 	cmd_execute(num_tokens, tokens);
 }
 
-void cmd_parsef(char *fmt, ...){
-	va_list arglist;
-	char buf[CMD_MAX_LENGTH];
+void cmd_queue_process()
+{
+	cmd_queue_t *cmd;
 
-	va_start (arglist, fmt);
-	vsnprintf (buf, CMD_MAX_LENGTH, fmt, arglist);
-	va_end (arglist);
+	while (cmd_queue_head) {
+		cmd = cmd_queue_head;
+		cmd_queue_head = cmd_queue_head->next;
+		if (!cmd_queue_head)
+			cmd_queue_tail = NULL;
 
-	cmd_parse(buf);
+		cmd_parse(cmd->command_line);  // Note, this may change the queue
+
+		d_free(cmd->command_line);
+		d_free(cmd);
+	}
 }
 
 
@@ -256,7 +263,7 @@ char *cmd_complete(char *input)
 int cmd_handle_keybinding(unsigned char key)
 {
 	if (cmd_keybinding_list[key]) {
-		cmd_parse(cmd_keybinding_list[key]);
+		cmd_insert(cmd_keybinding_list[key]);
 		return 1;
 	}
 	return 0;
@@ -385,8 +392,7 @@ void cmd_exec(int argc, char **argv) {
 		return;
 	}
 	while (PHYSFSX_gets(f, buf)) {
-		cmd_append(buf);
-		cmd_parse(buf);
+		cmd_insert(buf);
 	}
 	PHYSFS_close(f);
 }

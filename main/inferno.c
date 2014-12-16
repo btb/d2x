@@ -473,10 +473,9 @@ int main(int argc, char *argv[])
 	PHYSFSX_init(argc, argv);
 
 	if ((t = FindArg("-autoexec")))
-		cmd_parsef("exec %s", Args[t+1]);
+		cmd_appendf("exec %s", Args[t+1]);
 	else {
 		cmd_append("exec autoexec.cfg");
-		cmd_parse("exec autoexec.cfg");
 	}
 
 	if (FindArg("-debug"))

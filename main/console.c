@@ -971,7 +971,6 @@ void CON_SetHideKey(int key) {
 /* Executes the command entered */
 void CON_Execute(char* command) {
 	cmd_append(command);
-	cmd_parse(command);
 }
 
 void CON_TabCompletion(void) {
