@@ -75,7 +75,7 @@ static char rcsid[] = "$Id: kconfig.c,v 1.40 2005-08-02 06:13:56 chris Exp $";
 #ifdef USE_LINUX_JOY
 #include "joystick.h"
 #endif
-#include "cmd.h"
+#include "console.h"
 
 ubyte ExtGameStatus=1;
 
