@@ -65,6 +65,7 @@ void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func)
 	cmd->name = cmd_name;
 	cmd->function = cmd_func;
 	cmd->next = cmd_list;
+	con_printf(CON_DEBUG, "cmd_addcommand: added %s\n", cmd->name);
 	cmd_list = cmd;
 }
 
@@ -88,13 +89,13 @@ void cmd_execute(int argc, char **argv)
 
 	for (cmd = cmd_list; cmd; cmd = cmd->next) {
 		if (!stricmp(argv[0], cmd->name))
-			printf("executing command: %s\n", argv[0]);
+			con_printf(CON_DEBUG, "cmd_execute: executing %s\n", argv[0]);
 			return cmd->function(argc, argv);
 	}
 
 	for (alias = cmd_alias_list; alias; alias = alias->next) {
 		if (!stricmp(argv[0], alias->name)) {
-			printf("executing alias \"%s\": %s\n", alias->name, alias->value);
+			con_printf(CON_DEBUG, "cmd_execute: pushing alias \"%s\": %s\n", alias->name, alias->value);
 			cmd_insert(alias->value);
 			return;
 		}
@@ -163,6 +164,7 @@ void cmd_queue_process()
 		if (!cmd_queue_head)
 			cmd_queue_tail = NULL;
 
+		con_printf(CON_DEBUG, "cmd_queue_process: processing %s\n", cmd->command_line);
 		cmd_parse(cmd->command_line);  // Note, this may change the queue
 
 		d_free(cmd->command_line);
@@ -207,8 +209,6 @@ void cmd_enqueue(int insert, char *input)
 			}
 		} while (*input++);
 
-		printf("enqueue: got line: %s\n", line);
-		
 		/* make a new queue item, add it to list */
 		MALLOC(new, cmd_queue_t, 1);
 		new->command_line = d_strdup(line);
@@ -219,6 +219,8 @@ void cmd_enqueue(int insert, char *input)
 		if (tail)
 			tail->next = new;
 		tail = new;
+
+		con_printf(CON_DEBUG, "cmd_enqueue: adding %s\n", line);
 	}
 
 	if (insert) {
@@ -229,6 +231,7 @@ void cmd_enqueue(int insert, char *input)
 			cmd_queue_tail = tail;
 		
 		cmd_queue_head = head;
+		con_printf(CON_DEBUG, "cmd_enqueue: added to front of list\n");
 	} else {
 		/* add our list to the tail of the main list */
 		if (!cmd_queue_head)
@@ -237,6 +240,7 @@ void cmd_enqueue(int insert, char *input)
 			cmd_queue_tail->next = head;
 		
 		cmd_queue_tail = tail;
+		con_printf(CON_DEBUG, "cmd_enqueue: added to back of list\n");
 	}
 }
 
