@@ -1111,6 +1111,9 @@ void Command_Down(void) {
 	}
 }
 
+/* convert to ansi rgb colors 17-231 */
+#define PAL2ANSI(x) ((36*gr_palette[(x)*3]/11) + (6*gr_palette[(x)*3+1]/11) + (gr_palette[(x)*3+2]/11) + 16)
+
 /* Print a message to the console */
 void con_printf(int priority, char *fmt, ...)
 {
@@ -1130,7 +1133,40 @@ void con_printf(int priority, char *fmt, ...)
 			return;
 
 		if (isatty(fileno(stdout))) {
+			char *buf, *p;
+			unsigned char color, spacing, underline;
+
+			p = buf = buffer;
+			do
+				switch (*p)
+				{
+				case CC_COLOR:
+					*p++ = 0;
+					printf("%s", buf);
+					color = *p++;
+					printf("\x1B[38;5;%dm", PAL2ANSI(color));
+					buf = p;
+					break;
+				case CC_LSPACING:
+					*p++ = 0;
+					printf("%s", buf);
+					spacing = *p++;
+					//printf("<SPACING %d>", color);
+					buf = p;
+					break;
+				case CC_UNDERLINE:
+					*p++ = 0;
+					printf("%s", buf);
+					underline = 1;
+					//printf("<UNDERLINE>");
+					buf = p;
+					break;
+				default:
+					p++;
+				}
+			while (*p);
 			
+			printf("%s", buf);
 
 		} else {
 			/* Produce a sanitised version and send it to the standard output */
