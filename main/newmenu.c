@@ -1398,18 +1398,16 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			RBAEjectDisk();
 			k = -1;		// force key not to register
 			break;
+		#endif
 			
 		case KEY_COMMAND+KEY_Q: {
-			extern void macintosh_quit();
-			
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			if (!joydefs_calibrating)
 				newmenu_show_cursor();
 			k = -1;		// force key not to register
 			break;
 		}
-		#endif
 
 		#ifndef NDEBUG
 		case KEY_BACKSP:	

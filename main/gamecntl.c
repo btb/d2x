@@ -209,10 +209,6 @@ void speedtest_frame(void);
 void advance_sound(void);
 void play_test_sound(void);
 
-#ifdef MACINTOSH
-extern void macintosh_quit(void);	// dialog-style quit function
-#endif
-
 #define key_isfunc(k) (((k&0xff)>=KEY_F1 && (k&0xff)<=KEY_F10) || (k&0xff)==KEY_F11 || (k&0xff)==KEY_F12)
 #define key_ismod(k)  ((k&0xff)==KEY_LALT || (k&0xff)==KEY_RALT || (k&0xff)==KEY_LSHIFT || (k&0xff)==KEY_RSHIFT || (k&0xff)==KEY_LCTRL || (k&0xff)==KEY_RCTRL)
 
@@ -1281,12 +1277,12 @@ int HandleSystemKey(int key)
 		case KEY_COMMAND+KEY_DOWN:
 			songs_stop_redbook();
 			break;
+		#endif
 
 		case KEY_COMMAND+KEY_Q:
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			break;
-		#endif
 
 //added 8/23/99 by Matt Mueller for hot key res/fullscreen changing, and menu access
 		case KEY_CTRLED+KEY_SHIFTED+KEY_PADDIVIDE:
