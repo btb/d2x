@@ -1426,7 +1426,7 @@ void HandleGameKey(int key)
 
 	switch (key) {
 
-		#if defined(MACINTOSH)  && !defined(RELEASE)
+		#if !defined(RELEASE)
 		case KEY_COMMAND+KEY_F:	r_framerate.value = !r_framerate.value; break;
 		#endif
 
