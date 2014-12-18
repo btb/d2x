@@ -665,14 +665,16 @@ void CON_Free(void) {
 	console->ConsoleLines = NULL;
 	console->CommandLines = NULL;
 	
-	gr_free_canvas(console->ConsoleSurface);
+	if (console->ConsoleSurface)
+		gr_free_canvas(console->ConsoleSurface);
 	console->ConsoleSurface = NULL;
 	
 	if (console->BackgroundImage)
 		gr_free_bitmap(console->BackgroundImage);
 	console->BackgroundImage = NULL;
 	
-	gr_free_bitmap(console->InputBackground);
+	if (console->InputBackground)
+		gr_free_bitmap(console->InputBackground);
 	console->InputBackground = NULL;
 
 	con_initialized = 0;
