@@ -168,7 +168,7 @@ void load_text()
 
 		//scan for special chars (like \n)
 		for (p=Text_string[i];(p=strchr(p,'\\'));) {
-			char newchar;
+			char newchar, *q;
 
 			if (p[1] == 'n') newchar = '\n';
 			else if (p[1] == 't') newchar = '\t';
@@ -179,7 +179,7 @@ void load_text()
 			p[0] = newchar;
 
 			//shift rest of string to left
-			for (char *q = p+1; *q; q++) {
+			for (q = p+1; *q; q++) {
 				*q = *(q+1);
 			}
 
