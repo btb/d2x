@@ -53,6 +53,7 @@ void Int3(void);
 #elif defined _MSC_VER
 #define Int3() __debugbreak()
 #elif defined(__APPLE__) || defined(macintosh)
+#include <CoreServices/CoreServices.h>
 #define Int3() Debugger()
 #else
 #error Debug break not defined for your compiler or platform.
