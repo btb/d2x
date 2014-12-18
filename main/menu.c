@@ -210,10 +210,11 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 		curtime = timer_get_approx_seconds();
 		//if ( ((keyd_time_when_last_pressed+i2f(20)) < curtime) && ((last_joy_time+i2f(20)) < curtime) && (!Speedtest_on)  ) {
 		#ifndef MACINTOSH		// for now only!!!!
-		if ( ((keyd_time_when_last_pressed+i2f(25)) < curtime) && (!Speedtest_on)  ) {
+		if ( ((keyd_time_when_last_pressed+i2f(25)) < curtime) && (!Speedtest_on)  )
 		#else
-		if ( (keyd_time_when_last_pressed+i2f(40)) < curtime ) {
+		if ( (keyd_time_when_last_pressed+i2f(40)) < curtime )
 		#endif
+		{
 			int n_demos;
 
 			n_demos = newdemo_count_demos();
