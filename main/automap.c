@@ -680,8 +680,6 @@ void do_automap( int key_code )	{
 
 	init_automap_colors();
 
-	key_code = key_code;	// disable warning...
-
 	if ((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence))
 		pause_game = 0;
 

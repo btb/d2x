@@ -180,8 +180,6 @@ void kmatrix_draw_names(int *sorted)
 }
 void kmatrix_draw_coop_names(int *sorted)
 {
-	sorted=sorted;
-
    if (Kmatrix_nomovie_message)
     {
 		gr_set_fontcolor( BM_XRGB(63,0,0),-1 );
@@ -200,8 +198,6 @@ void kmatrix_draw_deaths(int *sorted)
 {
 	int y,x;
 	char reactor_message[50];
-
-   sorted=sorted;
 
    y = LHY(55 + 72 + 35);
 	x = LHX(35);

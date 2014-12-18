@@ -407,7 +407,6 @@ void nm_string_black( bkg * b, int w1,int x, int y, char * s )
 {
 	int w,h,aw;
 	gr_get_string_size(s, &w, &h, &aw  );
-	b = b;					
 	if (w1 == 0) w1 = w;
 
 		gr_setcolor( BM_XRGB(2,2,2) );

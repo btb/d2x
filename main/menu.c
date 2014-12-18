@@ -164,10 +164,6 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 {
 	int curtime;
 
-	nitems = nitems;
-	items=items;
-	citem = citem;
-
 	//draw copyright message
 	if ( Menu_draw_copyright )              {
 		int w,h,aw;
@@ -615,10 +611,6 @@ void do_detail_level_menu(void)
 //      -----------------------------------------------------------------------------
 void do_detail_level_menu_custom_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
-	nitems = nitems;
-	*last_key = *last_key;
-	citem = citem;
-
 	Object_complexity = items[0].value;
 	Object_detail = items[1].value;
 	Wall_detail = items[2].value;
@@ -1350,9 +1342,6 @@ WIN(static BOOL windigi_driver_off=FALSE);
 
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
-	nitems=nitems;          
-	*last_key = *last_key;
-
 	if ( Config_digi_volume != items[0].value )     {
 		Config_digi_volume = items[0].value;
 

@@ -766,5 +766,4 @@ void g3_init_polygon_model(void *model_ptr)
 void g3_uninit_polygon_model(void *model_ptr)
 {
 	// not required, the above g3_init_polygon_model doesn't change the data
-	model_ptr = model_ptr;
 }

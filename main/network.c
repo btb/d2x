@@ -568,11 +568,6 @@ network_endlevel_poll2( int nitems, newmenu_item * menus, int * key, int citem )
 	int num_ready = 0;
 	int goto_secret = 0;
 
-	menus = menus;
-	citem = citem;
-	nitems = nitems;
-	key = key;
-
 	// Send our endlevel packet at regular intervals
 
 	if (timer_get_approx_seconds() > (t1+ENDLEVEL_SEND_INTERVAL))
@@ -610,11 +605,6 @@ network_endlevel_poll3( int nitems, newmenu_item * menus, int * key, int citem )
 	// Polling loop for End-of-level menu
 
    int num_ready=0,i;
- 
-	menus = menus;
-	citem = citem;
-	nitems = nitems;
-	key = key;
 
 	if (timer_get_approx_seconds() > (StartAbortMenuTime+(F1_0 * 8)))
     *key=-2;
@@ -1080,8 +1070,6 @@ void network_send_door_updates(int pnum)
 	// Send door status when new player joins
 	
 	int i;
-   
-   pnum=pnum;
 
 //   Assert (pnum>-1 && pnum<N_players);
 
@@ -1766,7 +1754,10 @@ void
 network_send_endlevel_sub(int player_num)
 {
 	endlevel_info end;
-	int i, j = 0;
+	int i = 0;
+#ifdef WORDS_BIGENDIAN
+	int j = 0;
+#endif
 
 	// Send an endlevel packet for a player
 	end.type                = PID_ENDLEVEL;
@@ -1779,8 +1770,6 @@ network_send_endlevel_sub(int player_num)
 	for (i = 0; i < MAX_PLAYERS; i++)
 		for (j = 0; j < MAX_PLAYERS; j++)
 			end.kill_matrix[i][j] = INTEL_SHORT(end.kill_matrix[i][j]);
-#else
-	j = j;          // to satisfy compiler
 #endif
 
 	if (Players[player_num].connected == 1) // Still playing
@@ -2263,8 +2252,6 @@ void network_process_packet(ubyte *data, int length )
    //mprintf( (0, "Got packet of length %d, type %d\n", length, their->type ));
 	
 //      if ( length < sizeof(sequence_packet) ) return;
-
-	length = length;
 
 	switch( data[0] )       {
 	
@@ -2777,10 +2764,6 @@ void network_sync_poll( int nitems, newmenu_item * menus, int * key, int citem )
 
 	static fix t1 = 0;
 
-	menus = menus;
-	citem = citem;
-	nitems = nitems;
-
 	network_listen();
 
 	if (Network_status != NETSTAT_WAITING)  // Status changed to playing, exit the menu
@@ -2804,9 +2787,6 @@ void network_sync_poll( int nitems, newmenu_item * menus, int * key, int citem )
 void network_start_poll( int nitems, newmenu_item * menus, int * key, int citem )
 {
 	int i,n,nm;
-
-	key=key;
-	citem=citem;
 
 	Assert(Network_status == NETSTAT_STARTING);
 
@@ -3836,11 +3816,6 @@ void network_join_poll( int nitems, newmenu_item * menus, int * key, int citem )
 	static fix t1 = 0;
 	int i, osocket,join_status,temp;
 
-	menus = menus;
-	citem = citem;
-	nitems = nitems;
-	key = key;
-
 	if ( (Network_game_type == IPX_GAME) && Network_allow_socket_changes ) {
 		osocket = Network_socket;
 
@@ -4072,11 +4047,6 @@ network_request_poll( int nitems, newmenu_item * menus, int * key, int citem )
 
 	int i = 0;
 	int num_ready = 0;
-
-	menus = menus;
-	citem = citem;
-	nitems = nitems;
-	key = key;
 
 	// Send our endlevel packet at regular intervals
 
@@ -4563,10 +4533,6 @@ int WaitAllChoice=0;
 void network_wait_all_poll( int nitems, newmenu_item * menus, int * key, int citem )
  {
   static fix t1=0;
-
-  menus=menus;
-  nitems=nitems;
-  citem=citem;
 
   if (timer_get_approx_seconds() > t1+ALL_INFO_REQUEST_INTERVAL)
 	{
@@ -5824,11 +5790,6 @@ void network_more_game_options ()
 
 void network_more_options_poll( int nitems, newmenu_item * menus, int * key, int citem )
  {
-   menus = menus;
-   citem = citem;      // kills compile warnings
-   nitems = nitems;
-   key = key;
-
    if ( last_cinvul != menus[opt_cinvul].value )   {
 	sprintf( menus[opt_cinvul].text, "%s: %d %s", TXT_REACTOR_LIFE, menus[opt_cinvul].value*5, TXT_MINUTES_ABBREV );
 	last_cinvul = menus[opt_cinvul].value;
@@ -5896,8 +5857,6 @@ void network_send_smash_lights (int pnum)
 
   int i;
 
-  pnum=pnum;
-  
   for (i=0;i<=Highest_segment_index;i++)
    if (Light_subtracted[i])
     multi_send_light_specific(pnum,i,Light_subtracted[i]);
@@ -6066,8 +6025,6 @@ void DoRefuseStuff (sequence_packet *their)
 int GetNewPlayerNumber (sequence_packet *their)
   {
 	 int i;
-	
-	 their=their;
 	
 		if ( N_players < MaxNumNetPlayers)
 			return (N_players);

@@ -39,10 +39,6 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 	int i;
 	int oc_type = Config_control_type;
 
-	nitems = nitems;
-	last_key = last_key;
-	citem = citem;		
-
 	for (i=0; i<3; i++ )
 		if (items[i].value) Config_control_type = i;
 
