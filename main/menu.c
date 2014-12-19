@@ -760,68 +760,6 @@ void set_display_mode(uint32_t mode)
 	Screen_mode = -1;		//force screen reset
 }
 
-#ifdef MACINTOSH	// use Mac version of do_screen_res_menu
-
-void do_screen_res_menu()
-{
-	#define N_SCREENRES_ITEMS 6
-	
-	newmenu_item m[N_SCREENRES_ITEMS];
-	int citem, i, n_items, odisplay_mode, result;
-	int w[N_SCREENRES_ITEMS] = { 0, 640, 0, 800, 1024, 1280 };
-	int h[N_SCREENRES_ITEMS] = { 0, 480, 0, 600, 768, 1024 };
-
-	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) //special VR mode
-	{				
-		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
-				"You may not change screen\n"
-				"resolution when VR modes enabled.");
-		return;
-	}
-
-	m[0].type=NM_TYPE_TEXT;	 m[0].value=0; m[0].text="Modes w/ Cockpit:";
-	m[1].type=NM_TYPE_RADIO; m[1].value=0; m[1].group=0; m[1].text=" 640x480";
-	m[2].type=NM_TYPE_TEXT;	 m[2].value=0; m[2].text="Modes w/o Cockpit:";
-	m[3].type=NM_TYPE_RADIO; m[3].value=0; m[3].group=0; m[3].text=" 800x600";
-//	m[4].type=NM_TYPE_RADIO; m[4].value=0; m[4].group=0; m[4].text=" 1024x768";
-//	m[5].type=NM_TYPE_RADIO; m[5].value=0; m[5].group=0; m[5].text=" 1280x1024";
-	n_items = 4;
-
-	odisplay_mode = VGA_current_mode;
-
-	citem = 0;
-	for (i = 0; i < n_items; i++) {
-		if (SM(w[i], h[i]) == Current_display_mode) {
-			citem = i;
-			break;
-		}
-	}
-
-	m[citem].value = 1;
-
-	newmenu_do1( NULL, "Select screen mode", n_items, m, NULL, citem);
-
-	for (i=0;i<n_items;i++)
-		if (m[i].value)
-			break;
-	if (i >= 3)
-		i++;
-
-	result = vga_check_mode(SM(w[i], h[i]));
-	
-	if (result) {
-		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
-				"Cannot set requested\n"
-				"mode on this video card.");
-		return;
-	}
-
-	set_display_mode(SM(w[i], h[i]));
-	reset_cockpit();
-
-}
-
-#else	// PC version of do_screen_res_menu is below
 
 void do_screen_res_menu()
 {
@@ -845,11 +783,15 @@ void do_screen_res_menu()
 	}
 
 	m[i].type=NM_TYPE_TEXT;  m[i].value=0;               m[i].text="Modes w/ Cockpit:";  modes[i] = 0;             i++;
+#ifndef MACINTOSH
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 320x200";           modes[i] = SM(320,200);   i++;
+#endif
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 640x480";           modes[i] = SM(640,480);   i++;
 	m[i].type=NM_TYPE_TEXT;  m[i].value=0;               m[i].text="Modes w/o Cockpit:"; modes[i] = 0;             i++;
+#ifndef MACINTOSH
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 320x400";           modes[i] = SM(320,400);   i++;
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 640x400";           modes[i] = SM(640,400);   i++;
+#endif
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 800x600";           modes[i] = SM(800,600);   i++;
 #if 0
 	if ((FindArg("-superhires"))
@@ -916,9 +858,12 @@ void do_screen_res_menu()
 
 	if (screen_mode != Current_display_mode)
 		set_display_mode(screen_mode);
-}
-#endif	// end of PC version of do_screen_res_menu()
 
+#ifdef MACINTOSH
+	reset_cockpit();
+#endif
+
+}
 
 
 void do_new_game_menu()
