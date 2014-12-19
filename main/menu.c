@@ -815,7 +815,7 @@ void do_screen_res_menu()
 				"mode on this video card.");
 		return;
 	}
-	
+
 	set_display_mode(SM(w[i], h[i]));
 	reset_cockpit();
 
@@ -825,18 +825,17 @@ void do_screen_res_menu()
 
 void do_screen_res_menu()
 {
+#define N_SCREENRES_ITEMS 12
 #ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-#define N_SCREENRES_ITEMS 10
 	int fullscreenc;
-#else
-        #define N_SCREENRES_ITEMS 9
 #endif
 	newmenu_item m[N_SCREENRES_ITEMS];
 	int citem;
-	int i;
+	int i = 0, customc;
 	int n_items;
-	int w[N_SCREENRES_ITEMS] = { 0, 320, 640, 0, 320, 640, 800, 1024, 1280 };
-	int h[N_SCREENRES_ITEMS] = { 0, 200, 480, 0, 400, 400, 600, 768, 1024 };
+	uint32_t modes[N_SCREENRES_ITEMS];
+	uint32_t screen_mode = 0;
+	char customres[16];
 
 	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) { //special VR mode
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
@@ -845,30 +844,37 @@ void do_screen_res_menu()
 		return;
 	}
 
-	m[0].type=NM_TYPE_TEXT;	 m[0].value=0;    			  m[0].text="Modes w/ Cockpit:";
-	
-	m[1].type=NM_TYPE_RADIO; m[1].value=0; m[1].group=0; m[1].text=" 320x200";
-	m[2].type=NM_TYPE_RADIO; m[2].value=0; m[2].group=0; m[2].text=" 640x480";
-	m[3].type=NM_TYPE_TEXT;	 m[3].value=0;   				  m[3].text="Modes w/o Cockpit:";
-	m[4].type=NM_TYPE_RADIO; m[4].value=0; m[4].group=0; m[4].text=" 320x400";
-	m[5].type=NM_TYPE_RADIO; m[5].value=0; m[5].group=0; m[5].text=" 640x400";
-	m[6].type=NM_TYPE_RADIO; m[6].value=0; m[6].group=0; m[6].text=" 800x600";
-	n_items = 7;
-	if (1) { //(FindArg("-superhires")) {
-		m[7].type=NM_TYPE_RADIO; m[7].value=0; m[7].group=0; m[7].text=" 1024x768";
-		m[8].type=NM_TYPE_RADIO; m[8].value=0; m[8].group=0; m[8].text=" 1280x1024";
-		n_items += 2;
+	m[i].type=NM_TYPE_TEXT;  m[i].value=0;               m[i].text="Modes w/ Cockpit:";  modes[i] = 0;             i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 320x200";           modes[i] = SM(320,200);   i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 640x480";           modes[i] = SM(640,480);   i++;
+	m[i].type=NM_TYPE_TEXT;  m[i].value=0;               m[i].text="Modes w/o Cockpit:"; modes[i] = 0;             i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 320x400";           modes[i] = SM(320,400);   i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 640x400";           modes[i] = SM(640,400);   i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 800x600";           modes[i] = SM(800,600);   i++;
+#if 0
+	if ((FindArg("-superhires"))
+#endif
+	{
+		m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1024x768";          modes[i] = SM(1024,768);  i++;
+		m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1280x1024";         modes[i] = SM(1280,1024); i++;
 	}
 
+	customc = i;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text="Custom:";            modes[i] = 0;             i++;
+	sprintf(customres, "%ix%i", SM_W(Current_display_mode), SM_H(Current_display_mode));
+	m[i].type = NM_TYPE_INPUT; m[i].text = customres; m[i].text_len = 11; modes[i] = 0; i++;
+
 #ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	m[n_items].type = NM_TYPE_CHECK; m[n_items].text = "Fullscreen";
-	m[n_items].value = gr_check_fullscreen();
-	fullscreenc=n_items++;
+	m[i].type = NM_TYPE_CHECK; m[i].text = "Fullscreen";
+	m[i].value = gr_check_fullscreen();
+	fullscreenc = i++;
 #endif
 
-	citem = 0;
+	n_items = i;
+
+	citem = customc;
 	for (i = 0; i < n_items; i++) {
-		if (SM(w[i], h[i]) == Current_display_mode) {
+		if (modes[i] == Current_display_mode) {
 			citem = i;
 			break;
 		}
@@ -885,19 +891,31 @@ void do_screen_res_menu()
 	}
 #endif
 
-	for (i=0;i<n_items;i++)
+	for (i =0;i<n_items;i++)
 		if (m[i].value)
 			break;
 
-	if (((w[i] > 320) && !MenuHiresAvailable) || gr_check_mode(SM(w[i], h[i]))) {
+	if (i == customc)
+	{
+		char *h = strchr(customres, 'x');
+		if (!h)
+			return;
+		screen_mode = SM(atoi(customres), atoi(h+1));
+	}
+	else
+	{
+		screen_mode = modes[i];
+	}
+	
+	if (((SM_H(screen_mode) > 320) && !MenuHiresAvailable) || gr_check_mode(screen_mode)) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"Cannot set requested\n"
 				"mode on this video card.");
 		return;
 	}
 
-	if (SM(w[i], h[i]) != Current_display_mode)
-		set_display_mode(SM(w[i], h[i]));
+	if (screen_mode != Current_display_mode)
+		set_display_mode(screen_mode);
 }
 #endif	// end of PC version of do_screen_res_menu()
 
@@ -979,121 +997,6 @@ void options_menuset(int nitems, newmenu_item * items, int *last_key, int citem 
 }
 
 
-// added on 9/20/98 by Victor Rachels to attempt to add screen res change ingame
-// Changed on 3/24/99 by Owen Evans to make it work  =)
-void change_res_poll()
-{
-}
-
-void change_res()
-{
-	// edited 05/27/99 Matt Mueller - ingame fullscreen changing
-	newmenu_item m[11];
-	u_int32_t modes[11];
-	int i = 0, mc = 0, num_presets = 0;
-	char customres[16];
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	int fullscreenc;
-#endif
-	//end edit -MM
-	u_int32_t screen_mode = 0;
-	int screen_width = 0;
-	int screen_height = 0;
-	int vr_mode = VR_NONE;
-	int screen_flags = 0;
-
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "320x200"; m[mc].value = (Game_screen_mode == SM(320, 200)); m[mc].group = 0; modes[mc] = SM(320, 200); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "640x480"; m[mc].value = (Game_screen_mode == SM(640, 480)); m[mc].group = 0; modes[mc] = SM(640, 480); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "320x400"; m[mc].value = (Game_screen_mode == SM(320, 400)); m[mc].group = 0; modes[mc] = SM(320, 400); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "640x400"; m[mc].value = (Game_screen_mode == SM(640, 400)); m[mc].group = 0; modes[mc] = SM(640, 400); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "800x600"; m[mc].value = (Game_screen_mode == SM(800, 600)); m[mc].group = 0; modes[mc] = SM(800, 600); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "1024x768"; m[mc].value = (Game_screen_mode == SM(1024, 768)); m[mc].group = 0; modes[mc] = SM(1024, 768); mc++;
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "1280x1024"; m[mc].value = (Game_screen_mode == SM(1280, 1024)); m[mc].group = 0; modes[mc] = SM(1280, 1024); mc++;
-
-	num_presets = mc;
-	for (i = 0; i < mc; i++)
-		if (m[mc].value)
-			break;
-
-	m[mc].type = NM_TYPE_RADIO; m[mc].text = "custom:"; m[mc].value = (i == mc); m[mc].group = 0; modes[mc] = 0; mc++;
-	sprintf(customres, "%ix%i", SM_W(Game_screen_mode), SM_H(Game_screen_mode));
-	m[mc].type = NM_TYPE_INPUT; m[mc].text = customres; m[mc].text_len = 11; modes[mc] = 0; mc++;
-
-	//m[mc].type = NM_TYPE_CHECK; m[mc].text = "No Doublebuffer"; m[mc].value = use_double_buffer;
-
-	// added 05/27/99 Matt Mueller - ingame fullscreen changing
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	fullscreenc = mc; m[mc].type = NM_TYPE_CHECK; m[mc].text = "Fullscreen"; m[mc].value = gr_check_fullscreen(); mc++;
-#endif
-	// end addition -MM
-
-
-	i = newmenu_do1(NULL, "Screen Resolution", mc, m, &change_res_poll, 0);
-
-	// added 05/27/99 Matt Mueller - ingame fullscreen changing
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	if (m[fullscreenc].value != gr_check_fullscreen())
-	{
-		gr_toggle_fullscreen();
-        Game_screen_mode = -1;
-	}
-#endif
-	// end addition -MM
-
-	for (i = 0; (m[i].value == 0) && (i < num_presets); i++);
-
-	for(i = 0; (m[i].value == 0) && (i < num_presets); i++);
-
-	if (modes[i]==0)
-	{
-		char *h = strchr(customres, 'x');
-		if (!h)
-			return;
-		screen_mode = SM(atoi(customres), atoi(h+1));
-	}
-	else
-	{
-		screen_mode = modes[i];
-	}
-
-	screen_width = SM_W(screen_mode);
-	screen_height = SM_H(screen_mode);
-	if (screen_height <= 0 || screen_width <= 0)
-		return;
-
-	switch (screen_mode)
-	{
-	case SM(320, 200):
-	case SM(640, 480):
-		screen_flags = VRF_ALLOW_COCKPIT + VRF_COMPATIBLE_MENUS;
-		break;
-	default:
-		screen_flags = VRF_COMPATIBLE_MENUS;
-		break;
-	}
-
-#ifdef __MSDOS__
-	if (FindArg("-nodoublebuffer"))
-#endif
-	{
-		screen_flags &= ~VRF_USE_PAGING;
-	}
-
-	// added 6/15/1999 by Owen Evans to eliminate unneccesary mode modification
-	if (Game_screen_mode == screen_mode)
-		return;
-	//gr_set_mode(Game_screen_mode);
-	// end section - OE
-
-	//VR_offscreen_buffer = 0; // Disable VR (so that VR_Screen_mode doesnt mess us up
-	Game_screen_mode = screen_mode;
-	Game_window_w = screen_width;
-	Game_window_h = screen_height;
-	game_init_render_buffers(screen_mode, screen_width, screen_height, vr_mode, screen_flags);
-}
-//End changed section (OE)
-
-
 //added on 8/18/98 by Victor Rachels to add d1x options menu, maxfps setting
 //added/edited on 8/18/98 by Victor Rachels to set maxfps always on, max=80
 //added/edited on 9/7/98 by Victor Rachels to attempt dir browsing.  failed.
@@ -1134,10 +1037,6 @@ void d2x_options_menu()
 	m[opt].type = NM_TYPE_MENU;  m[opt].text = "D2X Keys"; opt++;
 	//end this section addition - VR
 #endif
-
-	// enabled 3/24/99 - Owen Evans
-	m[opt].type = NM_TYPE_MENU; m[opt].text = "Change Screen Resolution"; opt++;
-	// end enabled stuff - OE
 
 	commands=opt;
 #if 0
@@ -1187,9 +1086,6 @@ void d2x_options_menu()
 				case 0: kconfig(4, "D2X Keys"); break;
 					//end this section addition - VR
 #endif
-					// enabled 3/24/99 - Owen Evans
-				case 0: change_res(); break;
-					// end enabled stuff - OE
 				}
 			}
 
