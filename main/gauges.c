@@ -166,36 +166,34 @@ static inline void _page_in_gauge(int x)
 
 //Coordinats for gauges
 
-extern int Current_display_mode;
-
 // cockpit keys
 
 #define GAUGE_BLUE_KEY_X_L		272
 #define GAUGE_BLUE_KEY_Y_L		152
 #define GAUGE_BLUE_KEY_X_H		535
 #define GAUGE_BLUE_KEY_Y_H		374
-#define GAUGE_BLUE_KEY_X		(Current_display_mode?GAUGE_BLUE_KEY_X_H:GAUGE_BLUE_KEY_X_L)
-#define GAUGE_BLUE_KEY_Y		(Current_display_mode?GAUGE_BLUE_KEY_Y_H:GAUGE_BLUE_KEY_Y_L)
+#define GAUGE_BLUE_KEY_X        (SM_HIRES?GAUGE_BLUE_KEY_X_H:GAUGE_BLUE_KEY_X_L)
+#define GAUGE_BLUE_KEY_Y        (SM_HIRES?GAUGE_BLUE_KEY_Y_H:GAUGE_BLUE_KEY_Y_L)
 
 #define GAUGE_GOLD_KEY_X_L		273
 #define GAUGE_GOLD_KEY_Y_L		162
 #define GAUGE_GOLD_KEY_X_H		537
 #define GAUGE_GOLD_KEY_Y_H		395
-#define GAUGE_GOLD_KEY_X		(Current_display_mode?GAUGE_GOLD_KEY_X_H:GAUGE_GOLD_KEY_X_L)
-#define GAUGE_GOLD_KEY_Y		(Current_display_mode?GAUGE_GOLD_KEY_Y_H:GAUGE_GOLD_KEY_Y_L)
+#define GAUGE_GOLD_KEY_X        (SM_HIRES?GAUGE_GOLD_KEY_X_H:GAUGE_GOLD_KEY_X_L)
+#define GAUGE_GOLD_KEY_Y        (SM_HIRES?GAUGE_GOLD_KEY_Y_H:GAUGE_GOLD_KEY_Y_L)
 
 #define GAUGE_RED_KEY_X_L		274
 #define GAUGE_RED_KEY_Y_L		172
 #define GAUGE_RED_KEY_X_H		539
 #define GAUGE_RED_KEY_Y_H		416
-#define GAUGE_RED_KEY_X			(Current_display_mode?GAUGE_RED_KEY_X_H:GAUGE_RED_KEY_X_L)
-#define GAUGE_RED_KEY_Y			(Current_display_mode?GAUGE_RED_KEY_Y_H:GAUGE_RED_KEY_Y_L)
+#define GAUGE_RED_KEY_X         (SM_HIRES?GAUGE_RED_KEY_X_H:GAUGE_RED_KEY_X_L)
+#define GAUGE_RED_KEY_Y         (SM_HIRES?GAUGE_RED_KEY_Y_H:GAUGE_RED_KEY_Y_L)
 
 // status bar keys
 
 #define SB_GAUGE_KEYS_X_L	   11
 #define SB_GAUGE_KEYS_X_H		26
-#define SB_GAUGE_KEYS_X			(Current_display_mode?SB_GAUGE_KEYS_X_H:SB_GAUGE_KEYS_X_L)
+#define SB_GAUGE_KEYS_X         (SM_HIRES?SB_GAUGE_KEYS_X_H:SB_GAUGE_KEYS_X_L)
 
 #define SB_GAUGE_BLUE_KEY_Y_L		153
 #define SB_GAUGE_GOLD_KEY_Y_L		169
@@ -205,9 +203,9 @@ extern int Current_display_mode;
 #define SB_GAUGE_GOLD_KEY_Y_H		422
 #define SB_GAUGE_RED_KEY_Y_H		454
 
-#define SB_GAUGE_BLUE_KEY_Y	(Current_display_mode?SB_GAUGE_BLUE_KEY_Y_H:SB_GAUGE_BLUE_KEY_Y_L)
-#define SB_GAUGE_GOLD_KEY_Y	(Current_display_mode?SB_GAUGE_GOLD_KEY_Y_H:SB_GAUGE_GOLD_KEY_Y_L)
-#define SB_GAUGE_RED_KEY_Y		(Current_display_mode?SB_GAUGE_RED_KEY_Y_H:SB_GAUGE_RED_KEY_Y_L)
+#define SB_GAUGE_BLUE_KEY_Y     (SM_HIRES?SB_GAUGE_BLUE_KEY_Y_H:SB_GAUGE_BLUE_KEY_Y_L)
+#define SB_GAUGE_GOLD_KEY_Y     (SM_HIRES?SB_GAUGE_GOLD_KEY_Y_H:SB_GAUGE_GOLD_KEY_Y_L)
+#define SB_GAUGE_RED_KEY_Y      (SM_HIRES?SB_GAUGE_RED_KEY_Y_H:SB_GAUGE_RED_KEY_Y_L)
 
 // cockpit enery gauges
 
@@ -221,15 +219,15 @@ extern int Current_display_mode;
 #define LEFT_ENERGY_GAUGE_W_H 	133
 #define LEFT_ENERGY_GAUGE_H_H 	21
 
-#define LEFT_ENERGY_GAUGE_X 	(Current_display_mode?LEFT_ENERGY_GAUGE_X_H:LEFT_ENERGY_GAUGE_X_L)
-#define LEFT_ENERGY_GAUGE_Y 	(Current_display_mode?LEFT_ENERGY_GAUGE_Y_H:LEFT_ENERGY_GAUGE_Y_L)
-#define LEFT_ENERGY_GAUGE_W 	(Current_display_mode?LEFT_ENERGY_GAUGE_W_H:LEFT_ENERGY_GAUGE_W_L)
-#define LEFT_ENERGY_GAUGE_H 	(Current_display_mode?LEFT_ENERGY_GAUGE_H_H:LEFT_ENERGY_GAUGE_H_L)
+#define LEFT_ENERGY_GAUGE_X     (SM_HIRES?LEFT_ENERGY_GAUGE_X_H:LEFT_ENERGY_GAUGE_X_L)
+#define LEFT_ENERGY_GAUGE_Y     (SM_HIRES?LEFT_ENERGY_GAUGE_Y_H:LEFT_ENERGY_GAUGE_Y_L)
+#define LEFT_ENERGY_GAUGE_W     (SM_HIRES?LEFT_ENERGY_GAUGE_W_H:LEFT_ENERGY_GAUGE_W_L)
+#define LEFT_ENERGY_GAUGE_H     (SM_HIRES?LEFT_ENERGY_GAUGE_H_H:LEFT_ENERGY_GAUGE_H_L)
 
-#define RIGHT_ENERGY_GAUGE_X 	(Current_display_mode?380:190)
-#define RIGHT_ENERGY_GAUGE_Y 	(Current_display_mode?314:131)
-#define RIGHT_ENERGY_GAUGE_W 	(Current_display_mode?133:64)
-#define RIGHT_ENERGY_GAUGE_H 	(Current_display_mode?21:8)
+#define RIGHT_ENERGY_GAUGE_X    (SM_HIRES?380:190)
+#define RIGHT_ENERGY_GAUGE_Y    (SM_HIRES?314:131)
+#define RIGHT_ENERGY_GAUGE_W    (SM_HIRES?133:64)
+#define RIGHT_ENERGY_GAUGE_H    (SM_HIRES?21:8)
 
 // cockpit afterburner gauge
 
@@ -243,87 +241,87 @@ extern int Current_display_mode;
 #define AFTERBURNER_GAUGE_W_H	21
 #define AFTERBURNER_GAUGE_H_H	65
 
-#define AFTERBURNER_GAUGE_X	(Current_display_mode?AFTERBURNER_GAUGE_X_H:AFTERBURNER_GAUGE_X_L)
-#define AFTERBURNER_GAUGE_Y	(Current_display_mode?AFTERBURNER_GAUGE_Y_H:AFTERBURNER_GAUGE_Y_L)
-#define AFTERBURNER_GAUGE_W	(Current_display_mode?AFTERBURNER_GAUGE_W_H:AFTERBURNER_GAUGE_W_L)
-#define AFTERBURNER_GAUGE_H	(Current_display_mode?AFTERBURNER_GAUGE_H_H:AFTERBURNER_GAUGE_H_L)
+#define AFTERBURNER_GAUGE_X     (SM_HIRES?AFTERBURNER_GAUGE_X_H:AFTERBURNER_GAUGE_X_L)
+#define AFTERBURNER_GAUGE_Y     (SM_HIRES?AFTERBURNER_GAUGE_Y_H:AFTERBURNER_GAUGE_Y_L)
+#define AFTERBURNER_GAUGE_W     (SM_HIRES?AFTERBURNER_GAUGE_W_H:AFTERBURNER_GAUGE_W_L)
+#define AFTERBURNER_GAUGE_H     (SM_HIRES?AFTERBURNER_GAUGE_H_H:AFTERBURNER_GAUGE_H_L)
 
 // sb energy gauge
 
-#define SB_ENERGY_GAUGE_X 		(Current_display_mode?196:98)
-#define SB_ENERGY_GAUGE_Y 		(Current_display_mode?382:(155-2))
-#define SB_ENERGY_GAUGE_W 		(Current_display_mode?32:16)
-#define SB_ENERGY_GAUGE_H 		(Current_display_mode?60:29)
+#define SB_ENERGY_GAUGE_X       (SM_HIRES?196:98)
+#define SB_ENERGY_GAUGE_Y       (SM_HIRES?382:(155-2))
+#define SB_ENERGY_GAUGE_W       (SM_HIRES?32:16)
+#define SB_ENERGY_GAUGE_H       (SM_HIRES?60:29)
 
 // sb afterburner gauge
 
-#define SB_AFTERBURNER_GAUGE_X 		(Current_display_mode?196:98)
-#define SB_AFTERBURNER_GAUGE_Y 		(Current_display_mode?446:184)
-#define SB_AFTERBURNER_GAUGE_W 		(Current_display_mode?33:16)
-#define SB_AFTERBURNER_GAUGE_H 		(Current_display_mode?29:13)
+#define SB_AFTERBURNER_GAUGE_X  (SM_HIRES?196:98)
+#define SB_AFTERBURNER_GAUGE_Y  (SM_HIRES?446:184)
+#define SB_AFTERBURNER_GAUGE_W  (SM_HIRES?33:16)
+#define SB_AFTERBURNER_GAUGE_H  (SM_HIRES?29:13)
 
-#define SB_ENERGY_NUM_X 		(SB_ENERGY_GAUGE_X+(Current_display_mode?4:2))
-#define SB_ENERGY_NUM_Y 		(Current_display_mode?457:175)
+#define SB_ENERGY_NUM_X         (SB_ENERGY_GAUGE_X+(SM_HIRES?4:2))
+#define SB_ENERGY_NUM_Y         (SM_HIRES?457:175)
 
-#define SHIELD_GAUGE_X 			(Current_display_mode?292:146)
-#define SHIELD_GAUGE_Y			(Current_display_mode?374:155)
-#define SHIELD_GAUGE_W 			(Current_display_mode?70:35)
-#define SHIELD_GAUGE_H			(Current_display_mode?77:32)
+#define SHIELD_GAUGE_X          (SM_HIRES?292:146)
+#define SHIELD_GAUGE_Y          (SM_HIRES?374:155)
+#define SHIELD_GAUGE_W          (SM_HIRES?70:35)
+#define SHIELD_GAUGE_H          (SM_HIRES?77:32)
 
-#define SHIP_GAUGE_X 			(SHIELD_GAUGE_X+(Current_display_mode?11:5))
-#define SHIP_GAUGE_Y				(SHIELD_GAUGE_Y+(Current_display_mode?10:5))
+#define SHIP_GAUGE_X            (SHIELD_GAUGE_X+(SM_HIRES?11:5))
+#define SHIP_GAUGE_Y            (SHIELD_GAUGE_Y+(SM_HIRES?10:5))
 
-#define SB_SHIELD_GAUGE_X 		(Current_display_mode?247:123)		//139
-#define SB_SHIELD_GAUGE_Y 		(Current_display_mode?395:163)
+#define SB_SHIELD_GAUGE_X       (SM_HIRES?247:123) //139
+#define SB_SHIELD_GAUGE_Y       (SM_HIRES?395:163)
 
-#define SB_SHIP_GAUGE_X 		(SB_SHIELD_GAUGE_X+(Current_display_mode?11:5))
-#define SB_SHIP_GAUGE_Y 		(SB_SHIELD_GAUGE_Y+(Current_display_mode?10:5))
+#define SB_SHIP_GAUGE_X         (SB_SHIELD_GAUGE_X+(SM_HIRES?11:5))
+#define SB_SHIP_GAUGE_Y         (SB_SHIELD_GAUGE_Y+(SM_HIRES?10:5))
 
-#define SB_SHIELD_NUM_X 		(SB_SHIELD_GAUGE_X+(Current_display_mode?21:12))	//151
-#define SB_SHIELD_NUM_Y 		(SB_SHIELD_GAUGE_Y-(Current_display_mode?16:8))			//156 -- MWA used to be hard coded to 156
+#define SB_SHIELD_NUM_X         (SB_SHIELD_GAUGE_X+(SM_HIRES?21:12)) //151
+#define SB_SHIELD_NUM_Y         (SB_SHIELD_GAUGE_Y-(SM_HIRES?16:8))  //156 -- MWA used to be hard coded to 156
 
-#define NUMERICAL_GAUGE_X		(Current_display_mode?308:154)
-#define NUMERICAL_GAUGE_Y		(Current_display_mode?316:130)
-#define NUMERICAL_GAUGE_W		(Current_display_mode?38:19)
-#define NUMERICAL_GAUGE_H		(Current_display_mode?55:22)
+#define NUMERICAL_GAUGE_X       (SM_HIRES?308:154)
+#define NUMERICAL_GAUGE_Y       (SM_HIRES?316:130)
+#define NUMERICAL_GAUGE_W       (SM_HIRES?38:19)
+#define NUMERICAL_GAUGE_H       (SM_HIRES?55:22)
 
-#define PRIMARY_W_PIC_X			(Current_display_mode?(135-10):64)
-#define PRIMARY_W_PIC_Y			(Current_display_mode?370:154)
-#define PRIMARY_W_TEXT_X		(Current_display_mode?182:87)
-#define PRIMARY_W_TEXT_Y		(Current_display_mode?400:157)
-#define PRIMARY_AMMO_X			(Current_display_mode?186:(96-3))
-#define PRIMARY_AMMO_Y			(Current_display_mode?420:171)
+#define PRIMARY_W_PIC_X         (SM_HIRES?(135-10):64)
+#define PRIMARY_W_PIC_Y         (SM_HIRES?370:154)
+#define PRIMARY_W_TEXT_X        (SM_HIRES?182:87)
+#define PRIMARY_W_TEXT_Y        (SM_HIRES?400:157)
+#define PRIMARY_AMMO_X          (SM_HIRES?186:(96-3))
+#define PRIMARY_AMMO_Y          (SM_HIRES?420:171)
 
-#define SECONDARY_W_PIC_X		(Current_display_mode?466:234)
-#define SECONDARY_W_PIC_Y		(Current_display_mode?374:154)
-#define SECONDARY_W_TEXT_X		(Current_display_mode?413:207)
-#define SECONDARY_W_TEXT_Y		(Current_display_mode?378:157)
-#define SECONDARY_AMMO_X		(Current_display_mode?428:213)
-#define SECONDARY_AMMO_Y		(Current_display_mode?407:171)
+#define SECONDARY_W_PIC_X       (SM_HIRES?466:234)
+#define SECONDARY_W_PIC_Y       (SM_HIRES?374:154)
+#define SECONDARY_W_TEXT_X      (SM_HIRES?413:207)
+#define SECONDARY_W_TEXT_Y      (SM_HIRES?378:157)
+#define SECONDARY_AMMO_X        (SM_HIRES?428:213)
+#define SECONDARY_AMMO_Y        (SM_HIRES?407:171)
 
-#define SB_LIVES_X				(Current_display_mode?(550-10-3):266)
-#define SB_LIVES_Y				(Current_display_mode?450-3:185)
-#define SB_LIVES_LABEL_X		(Current_display_mode?475:237)
+#define SB_LIVES_X              (SM_HIRES?(550-10-3):266)
+#define SB_LIVES_Y              (SM_HIRES?450-3:185)
+#define SB_LIVES_LABEL_X        (SM_HIRES?475:237)
 #define SB_LIVES_LABEL_Y		(SB_LIVES_Y+1)
 
 #define SB_SCORE_RIGHT_L		301
 #define SB_SCORE_RIGHT_H		(605+8)
-#define SB_SCORE_RIGHT			(Current_display_mode?SB_SCORE_RIGHT_H:SB_SCORE_RIGHT_L)
+#define SB_SCORE_RIGHT          (SM_HIRES?SB_SCORE_RIGHT_H:SB_SCORE_RIGHT_L)
 
-#define SB_SCORE_Y				(Current_display_mode?398:158)
-#define SB_SCORE_LABEL_X		(Current_display_mode?475:237)
+#define SB_SCORE_Y              (SM_HIRES?398:158)
+#define SB_SCORE_LABEL_X        (SM_HIRES?475:237)
 
-#define SB_SCORE_ADDED_RIGHT	(Current_display_mode?SB_SCORE_RIGHT_H:SB_SCORE_RIGHT_L)
-#define SB_SCORE_ADDED_Y		(Current_display_mode?413:165)
+#define SB_SCORE_ADDED_RIGHT    (SM_HIRES?SB_SCORE_RIGHT_H:SB_SCORE_RIGHT_L)
+#define SB_SCORE_ADDED_Y        (SM_HIRES?413:165)
 
-#define HOMING_WARNING_X		(Current_display_mode?14:7)
-#define HOMING_WARNING_Y		(Current_display_mode?415:171)
+#define HOMING_WARNING_X        (SM_HIRES?14:7)
+#define HOMING_WARNING_Y        (SM_HIRES?415:171)
 
-#define BOMB_COUNT_X			(Current_display_mode?546:275)
-#define BOMB_COUNT_Y			(Current_display_mode?445:186)
+#define BOMB_COUNT_X            (SM_HIRES?546:275)
+#define BOMB_COUNT_Y            (SM_HIRES?445:186)
 
-#define SB_BOMB_COUNT_X			(Current_display_mode?342:171)
-#define SB_BOMB_COUNT_Y			(Current_display_mode?458:191)
+#define SB_BOMB_COUNT_X         (SM_HIRES?342:171)
+#define SB_BOMB_COUNT_Y         (SM_HIRES?458:191)
 
 #define LHX(x)		((x)*(MenuHires?2:1))
 #define LHY(y)		((y)*(MenuHires?2.4:1))
@@ -699,10 +697,10 @@ span weapon_window_right_hires[] = {		//first span 207,154
 #define PRIMARY_W_BOX_RIGHT_H		242
 #define PRIMARY_W_BOX_BOT_H		(PRIMARY_W_BOX_TOP_H+N_LEFT_WINDOW_SPANS_H-1)		//470
 											
-#define PRIMARY_W_BOX_LEFT		(Current_display_mode?PRIMARY_W_BOX_LEFT_H:PRIMARY_W_BOX_LEFT_L)
-#define PRIMARY_W_BOX_TOP		(Current_display_mode?PRIMARY_W_BOX_TOP_H:PRIMARY_W_BOX_TOP_L)
-#define PRIMARY_W_BOX_RIGHT	(Current_display_mode?PRIMARY_W_BOX_RIGHT_H:PRIMARY_W_BOX_RIGHT_L)
-#define PRIMARY_W_BOX_BOT		(Current_display_mode?PRIMARY_W_BOX_BOT_H:PRIMARY_W_BOX_BOT_L)
+#define PRIMARY_W_BOX_LEFT      (SM_HIRES?PRIMARY_W_BOX_LEFT_H:PRIMARY_W_BOX_LEFT_L)
+#define PRIMARY_W_BOX_TOP       (SM_HIRES?PRIMARY_W_BOX_TOP_H:PRIMARY_W_BOX_TOP_L)
+#define PRIMARY_W_BOX_RIGHT     (SM_HIRES?PRIMARY_W_BOX_RIGHT_H:PRIMARY_W_BOX_RIGHT_L)
+#define PRIMARY_W_BOX_BOT       (SM_HIRES?PRIMARY_W_BOX_BOT_H:PRIMARY_W_BOX_BOT_L)
 
 #define SECONDARY_W_BOX_LEFT_L	202	//207
 #define SECONDARY_W_BOX_TOP_L		151
@@ -714,10 +712,10 @@ span weapon_window_right_hires[] = {		//first span 207,154
 #define SECONDARY_W_BOX_RIGHT_H	529
 #define SECONDARY_W_BOX_BOT_H		(SECONDARY_W_BOX_TOP_H+N_RIGHT_WINDOW_SPANS_H-1)		//470
 
-#define SECONDARY_W_BOX_LEFT	(Current_display_mode?SECONDARY_W_BOX_LEFT_H:SECONDARY_W_BOX_LEFT_L)
-#define SECONDARY_W_BOX_TOP	(Current_display_mode?SECONDARY_W_BOX_TOP_H:SECONDARY_W_BOX_TOP_L)
-#define SECONDARY_W_BOX_RIGHT	(Current_display_mode?SECONDARY_W_BOX_RIGHT_H:SECONDARY_W_BOX_RIGHT_L)
-#define SECONDARY_W_BOX_BOT	(Current_display_mode?SECONDARY_W_BOX_BOT_H:SECONDARY_W_BOX_BOT_L)
+#define SECONDARY_W_BOX_LEFT    (SM_HIRES?SECONDARY_W_BOX_LEFT_H:SECONDARY_W_BOX_LEFT_L)
+#define SECONDARY_W_BOX_TOP     (SM_HIRES?SECONDARY_W_BOX_TOP_H:SECONDARY_W_BOX_TOP_L)
+#define SECONDARY_W_BOX_RIGHT   (SM_HIRES?SECONDARY_W_BOX_RIGHT_H:SECONDARY_W_BOX_RIGHT_L)
+#define SECONDARY_W_BOX_BOT     (SM_HIRES?SECONDARY_W_BOX_BOT_H:SECONDARY_W_BOX_BOT_L)
 
 #define SB_PRIMARY_W_BOX_LEFT_L		34		//50
 #define SB_PRIMARY_W_BOX_TOP_L		153
@@ -729,10 +727,10 @@ span weapon_window_right_hires[] = {		//first span 207,154
 #define SB_PRIMARY_W_BOX_RIGHT_H		179
 #define SB_PRIMARY_W_BOX_BOT_H		473
 											
-#define SB_PRIMARY_W_BOX_LEFT		(Current_display_mode?SB_PRIMARY_W_BOX_LEFT_H:SB_PRIMARY_W_BOX_LEFT_L)
-#define SB_PRIMARY_W_BOX_TOP		(Current_display_mode?SB_PRIMARY_W_BOX_TOP_H:SB_PRIMARY_W_BOX_TOP_L)
-#define SB_PRIMARY_W_BOX_RIGHT	(Current_display_mode?SB_PRIMARY_W_BOX_RIGHT_H:SB_PRIMARY_W_BOX_RIGHT_L)
-#define SB_PRIMARY_W_BOX_BOT		(Current_display_mode?SB_PRIMARY_W_BOX_BOT_H:SB_PRIMARY_W_BOX_BOT_L)
+#define SB_PRIMARY_W_BOX_LEFT   (SM_HIRES?SB_PRIMARY_W_BOX_LEFT_H:SB_PRIMARY_W_BOX_LEFT_L)
+#define SB_PRIMARY_W_BOX_TOP    (SM_HIRES?SB_PRIMARY_W_BOX_TOP_H:SB_PRIMARY_W_BOX_TOP_L)
+#define SB_PRIMARY_W_BOX_RIGHT  (SM_HIRES?SB_PRIMARY_W_BOX_RIGHT_H:SB_PRIMARY_W_BOX_RIGHT_L)
+#define SB_PRIMARY_W_BOX_BOT    (SM_HIRES?SB_PRIMARY_W_BOX_BOT_H:SB_PRIMARY_W_BOX_BOT_L)
 											
 #define SB_SECONDARY_W_BOX_LEFT_L	169
 #define SB_SECONDARY_W_BOX_TOP_L		153
@@ -744,24 +742,24 @@ span weapon_window_right_hires[] = {		//first span 207,154
 #define SB_SECONDARY_W_BOX_RIGHT_H	449
 #define SB_SECONDARY_W_BOX_BOT_H		473
 
-#define SB_SECONDARY_W_BOX_LEFT	(Current_display_mode?SB_SECONDARY_W_BOX_LEFT_H:SB_SECONDARY_W_BOX_LEFT_L)	//210
-#define SB_SECONDARY_W_BOX_TOP	(Current_display_mode?SB_SECONDARY_W_BOX_TOP_H:SB_SECONDARY_W_BOX_TOP_L)
-#define SB_SECONDARY_W_BOX_RIGHT	(Current_display_mode?SB_SECONDARY_W_BOX_RIGHT_H:SB_SECONDARY_W_BOX_RIGHT_L)
-#define SB_SECONDARY_W_BOX_BOT	(Current_display_mode?SB_SECONDARY_W_BOX_BOT_H:SB_SECONDARY_W_BOX_BOT_L)
+#define SB_SECONDARY_W_BOX_LEFT (SM_HIRES?SB_SECONDARY_W_BOX_LEFT_H:SB_SECONDARY_W_BOX_LEFT_L) //210
+#define SB_SECONDARY_W_BOX_TOP  (SM_HIRES?SB_SECONDARY_W_BOX_TOP_H:SB_SECONDARY_W_BOX_TOP_L)
+#define SB_SECONDARY_W_BOX_RIGHT (SM_HIRES?SB_SECONDARY_W_BOX_RIGHT_H:SB_SECONDARY_W_BOX_RIGHT_L)
+#define SB_SECONDARY_W_BOX_BOT  (SM_HIRES?SB_SECONDARY_W_BOX_BOT_H:SB_SECONDARY_W_BOX_BOT_L)
 
 #define SB_PRIMARY_W_PIC_X			(SB_PRIMARY_W_BOX_LEFT+1)	//51
-#define SB_PRIMARY_W_PIC_Y			(Current_display_mode?382:154)
-#define SB_PRIMARY_W_TEXT_X		(SB_PRIMARY_W_BOX_LEFT+(Current_display_mode?50:24))	//(51+23)
-#define SB_PRIMARY_W_TEXT_Y		(Current_display_mode?390:157)
-#define SB_PRIMARY_AMMO_X			(SB_PRIMARY_W_BOX_LEFT+(Current_display_mode?(38+20):30))	//((SB_PRIMARY_W_BOX_LEFT+33)-3)	//(51+32)
-#define SB_PRIMARY_AMMO_Y			(Current_display_mode?410:171)
+#define SB_PRIMARY_W_PIC_Y      (SM_HIRES?382:154)
+#define SB_PRIMARY_W_TEXT_X     (SB_PRIMARY_W_BOX_LEFT+(SM_HIRES?50:24)) //(51+23)
+#define SB_PRIMARY_W_TEXT_Y     (SM_HIRES?390:157)
+#define SB_PRIMARY_AMMO_X       (SB_PRIMARY_W_BOX_LEFT+(SM_HIRES?(38+20):30))	//((SB_PRIMARY_W_BOX_LEFT+33)-3) //(51+32)
+#define SB_PRIMARY_AMMO_Y       (SM_HIRES?410:171)
 
-#define SB_SECONDARY_W_PIC_X		(Current_display_mode?385:(SB_SECONDARY_W_BOX_LEFT+29))	//(212+27)
-#define SB_SECONDARY_W_PIC_Y		(Current_display_mode?382:154)
+#define SB_SECONDARY_W_PIC_X    (SM_HIRES?385:(SB_SECONDARY_W_BOX_LEFT+29))	//(212+27)
+#define SB_SECONDARY_W_PIC_Y    (SM_HIRES?382:154)
 #define SB_SECONDARY_W_TEXT_X		(SB_SECONDARY_W_BOX_LEFT+2)	//212
-#define SB_SECONDARY_W_TEXT_Y		(Current_display_mode?389:157)
-#define SB_SECONDARY_AMMO_X		(SB_SECONDARY_W_BOX_LEFT+(Current_display_mode?(14-4):11))	//(212+9)
-#define SB_SECONDARY_AMMO_Y		(Current_display_mode?414:171)
+#define SB_SECONDARY_W_TEXT_Y   (SM_HIRES?389:157)
+#define SB_SECONDARY_AMMO_X     (SB_SECONDARY_W_BOX_LEFT+(SM_HIRES?(14-4):11))	//(212+9)
+#define SB_SECONDARY_AMMO_Y     (SM_HIRES?414:171)
 
 typedef struct gauge_box {
 	int left,top;
@@ -790,10 +788,10 @@ gauge_box gauge_boxes[] = {
 
 // these macros refer to arrays above
 
-#define COCKPIT_PRIMARY_BOX		(!Current_display_mode?0:4)
-#define COCKPIT_SECONDARY_BOX		(!Current_display_mode?1:5)
-#define SB_PRIMARY_BOX				(!Current_display_mode?2:6)
-#define SB_SECONDARY_BOX			(!Current_display_mode?3:7)
+#define COCKPIT_PRIMARY_BOX     (SM_HIRES?4:0)
+#define COCKPIT_SECONDARY_BOX   (SM_HIRES?5:1)
+#define SB_PRIMARY_BOX          (SM_HIRES?6:2)
+#define SB_SECONDARY_BOX        (SM_HIRES?7:3)
 
 int	Color_0_31_0 = -1;
 
@@ -987,7 +985,7 @@ void sb_show_score()
 	
 	//erase old score
 	gr_setcolor(BM_XRGB(0,0,0));
-	gr_rect(last_x[(Current_display_mode?2:0)+VR_current_page],y,SB_SCORE_RIGHT,y+GAME_FONT->ft_h);
+	gr_rect(last_x[(SM_HIRES?2:0) + VR_current_page], y, SB_SCORE_RIGHT, y + GAME_FONT->ft_h);
 
 	if ( (Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP) ) 
 		gr_set_fontcolor(gr_getcolor(0,20,0),-1 );
@@ -996,7 +994,7 @@ void sb_show_score()
  
  	gr_printf(x,y,score_str);
 
-	last_x[(Current_display_mode?2:0)+VR_current_page] = x;
+	last_x[(SM_HIRES?2:0) + VR_current_page] = x;
 }
 
 void sb_show_score_added()
@@ -1021,7 +1019,7 @@ void sb_show_score_added()
 		if (score_display[VR_current_page] != last_score_display[VR_current_page])
 		{
 			gr_setcolor(BM_XRGB(0,0,0));
-			gr_rect(last_x[(Current_display_mode?2:0)+VR_current_page],SB_SCORE_ADDED_Y,SB_SCORE_ADDED_RIGHT,SB_SCORE_ADDED_Y+GAME_FONT->ft_h);
+			gr_rect(last_x[(SM_HIRES?2:0) + VR_current_page], SB_SCORE_ADDED_Y, SB_SCORE_ADDED_RIGHT, SB_SCORE_ADDED_Y + GAME_FONT->ft_h);
 
 			last_score_display[VR_current_page] = score_display[VR_current_page];
 		}
@@ -1045,12 +1043,12 @@ void sb_show_score_added()
 		gr_printf(x, SB_SCORE_ADDED_Y, score_str);
 
 
-		last_x[(Current_display_mode?2:0)+VR_current_page] = x;
+		last_x[(SM_HIRES?2:0) + VR_current_page] = x;
 
 	} else {
 		//erase old score
 		gr_setcolor(BM_XRGB(0,0,0));
-		gr_rect(last_x[(Current_display_mode?2:0)+VR_current_page],SB_SCORE_ADDED_Y,SB_SCORE_ADDED_RIGHT,SB_SCORE_ADDED_Y+GAME_FONT->ft_h);
+		gr_rect(last_x[(SM_HIRES?2:0) + VR_current_page], SB_SCORE_ADDED_Y, SB_SCORE_ADDED_RIGHT, SB_SCORE_ADDED_Y + GAME_FONT->ft_h);
 
 		score_time = 0;
 		score_display[VR_current_page] = 0;
@@ -1320,7 +1318,7 @@ void show_bomb_count(int x,int y,int bg_color,int always_show)
 
 	if (Cockpit_mode == CM_STATUS_BAR) {		//draw background
 		gr_setcolor(bg_color);
-		if (!Current_display_mode) {
+		if SM_HIRES {
 			gr_rect(169,189,189,196);
 			gr_setcolor(gr_find_closest_color(10,10,10));
 			gr_scanline(168,189,189);
@@ -1550,11 +1548,11 @@ void sb_show_lives()
 		sprintf(killed_str, "%5d", Players[Player_num].net_killed_total);
 		gr_get_string_size(killed_str, &w, &h, &aw);
 		gr_setcolor(BM_XRGB(0,0,0));
-		gr_rect(last_x[(Current_display_mode?2:0)+VR_current_page], y+1, SB_SCORE_RIGHT, y+GAME_FONT->ft_h);
+		gr_rect(last_x[(SM_HIRES?2:0) + VR_current_page], y + 1, SB_SCORE_RIGHT, y + GAME_FONT->ft_h);
 		gr_set_fontcolor(gr_getcolor(0,20,0),-1);
 		x = SB_SCORE_RIGHT-w-2;		
 		gr_printf(x, y+1, killed_str);
-		last_x[(Current_display_mode?2:0)+VR_current_page] = x;
+		last_x[(SM_HIRES?2:0) + VR_current_page] = x;
 		return;
 	}
 
@@ -1758,7 +1756,7 @@ void draw_energy_bar(int energy)
 	gr_ubitmapm( 0, 0, &GameBitmaps[ GET_GAUGE_INDEX(GAUGE_ENERGY_LEFT)] );
 	gr_setcolor( BM_XRGB(0,0,0) );
 
-	if ( !Current_display_mode )
+	if SM_HIRES
 		not_energy = 61 - (energy*61)/100;
 	else
 		not_energy = 125 - (energy*125)/100;
@@ -1921,8 +1919,8 @@ void draw_afterburner_bar(int afterburner)
 
 	for (y=0;y<not_afterburner;y++) {
 
-		gr_uline( i2f(Current_display_mode ? afterburner_bar_table_hires[y*2] : afterburner_bar_table[y*2]), i2f(y),
-						i2f((Current_display_mode ? afterburner_bar_table_hires[y*2 + 1] : afterburner_bar_table[y*2 + 1]) + 1), i2f(y) ); 
+		gr_uline( i2f(SM_HIRES ? afterburner_bar_table_hires[y*2] : afterburner_bar_table[y*2]), i2f(y),
+						i2f((SM_HIRES ? afterburner_bar_table_hires[y*2 + 1] : afterburner_bar_table[y*2 + 1]) + 1), i2f(y) );
 	}
 
 	gr_set_current_canvas( get_current_game_screen() );
@@ -2032,7 +2030,7 @@ void draw_numerical_display(int shield, int energy)
 
 	gr_set_fontcolor(gr_getcolor(14,14,23),-1 );
 
-	if (!Current_display_mode) {
+	if (!SM_HIRES) {
 		gr_printf((shield>99)?3:((shield>9)?5:7),15,"%d",shield);
 		gr_set_fontcolor(gr_getcolor(25,18,6),-1 );
 		gr_printf((energy>99)?3:((energy>9)?5:7),2,"%d",energy);
@@ -2087,7 +2085,7 @@ void draw_weapon_info_sub(int info_index,gauge_box *box,int pic_x,int pic_y,char
    gr_rect(box->left,box->top,box->right,box->bot);
 
 	if (Piggy_hamfile_version >= 3 // !SHAREWARE
-		&& Current_display_mode)
+		&& SM_HIRES)
 	{
 		bm=&GameBitmaps[Weapon_info[info_index].hires_picture.index];
 		PIGGY_PAGE_IN( Weapon_info[info_index].hires_picture );
@@ -2428,11 +2426,11 @@ void sb_draw_shield_num(int shield)
 	gr_set_fontcolor(gr_getcolor(14,14,23),-1 );
 
 	//erase old one
-//	PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (Current_display_mode ? (Num_cockpits/2) : 0)]);
+//	PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES ? (Num_cockpits/2) : 0)]);
 
 //	gr_setcolor(gr_gpixel(&grd_curcanv->cv_bitmap, SB_SHIELD_NUM_X - 1, SB_SHIELD_NUM_Y - 1));
 
-//	gr_rect(SB_SHIELD_NUM_X, SB_SHIELD_NUM_Y, SB_SHIELD_NUM_X + (Current_display_mode ? 27 : 13), SB_SHIELD_NUM_Y + GAME_FONT->ft_h);
+//	gr_rect(SB_SHIELD_NUM_X, SB_SHIELD_NUM_Y, SB_SHIELD_NUM_X + (SM_HIRES ? 27 : 13), SB_SHIELD_NUM_Y + GAME_FONT->ft_h);
 	gr_printf((shield>99)?SB_SHIELD_NUM_X:((shield>9)?SB_SHIELD_NUM_X+2:SB_SHIELD_NUM_X+4),SB_SHIELD_NUM_Y,"%d",shield);
 }
 
@@ -2965,7 +2963,7 @@ extern short *BackBuffer;
 //print out some player statistics
 void render_gauges()
 {
-	static int old_display_mode = -2;
+	static uint32_t old_display_mode = 0xfffffffe;
 	int energy = f2ir(Players[Player_num].energy);
 	int shields = f2ir(Players[Player_num].shields);
 	int cloak = ((Players[Player_num].flags&PLAYER_FLAGS_CLOAKED) != 0);

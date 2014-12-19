@@ -283,7 +283,7 @@ void InitDescent()
 //	Set Display Mode
 	
 	if (!dd_VR_offscreen_buffer)	
-		set_display_mode(0);					
+		set_display_mode(Default_display_mode);
 
 //	Create and Set Initial Palette.
 	logentry("Initializing palette system...\n" );

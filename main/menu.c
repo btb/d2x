@@ -697,60 +697,63 @@ void do_detail_level_menu_custom(void)
 }
 
 #ifndef MACINTOSH
-int Default_display_mode=0;
-int Current_display_mode=0;
+uint32_t Default_display_mode = SM(320,200);
+uint32_t Current_display_mode = SM(320,200);
 #else
-int Default_display_mode=1;
-int Current_display_mode=1;
+uint32_t Default_display_mode = SM(640,480);
+uint32_t Current_display_mode = SM(640,480);
 #endif
 
 extern int MenuHiresAvailable;
 
-typedef struct {
-	int	VGA_mode;
-	short	w,h;
-	short	render_method;
-	short	flags;
-} dmi;
 
-dmi display_mode_info[7] = {
-			{SM(320,200),	 320,	200, VR_NONE, VRF_ALLOW_COCKPIT+VRF_COMPATIBLE_MENUS}, 
-			{SM(640,480),	 640, 480, VR_NONE, VRF_COMPATIBLE_MENUS+VRF_ALLOW_COCKPIT},
-			{SM(320,400),	 320, 400, VR_NONE, VRF_USE_PAGING},
-			{SM(640,400),	 640, 400, VR_NONE, VRF_COMPATIBLE_MENUS}, 
-			{SM(800,600),	 800, 600, VR_NONE, VRF_COMPATIBLE_MENUS}, 
-			{SM(1024,768),	1024,	768, VR_NONE, VRF_COMPATIBLE_MENUS}, 	
-			{SM(1280,1024),1280,1024, VR_NONE, VRF_COMPATIBLE_MENUS}, 
-};
-
-
-void set_display_mode(int mode)
+void set_display_mode(uint32_t mode)
 {
-	dmi *dmi;
-
-	if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE))	//special VR mode
+	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) //special VR mode
 		return;								//...don't change
 
-	if (0) // (mode >= 5 && !FindArg("-superhires"))
-		mode = 4;
+#if 0
+	if (SM_H(mode) > 600 && !FindArg("-superhires"))
+		mode = SM(800,600);
+#endif
 
-	if (!MenuHiresAvailable && (mode != 2))
-		mode = 0;
+	if (!MenuHiresAvailable && (mode != SM(320,400)))
+		mode = SM(320,200);
 
-	if (gr_check_mode(display_mode_info[mode].VGA_mode) != 0)		//can't do mode
-		#ifndef MACINTOSH
-		mode = 0;
-		#else
-		mode = 1;
-		#endif
+	if (gr_check_mode(mode) != 0) //can't do mode
+		mode = Default_display_mode;
 
 	Current_display_mode = mode;
 
-	dmi = &display_mode_info[mode];
+	if (Current_display_mode != 0xffffffff) {
+		short flags = 0;
 
-	if (Current_display_mode != -1) {
+		// flags need to be refacored
+		switch (mode)
+		{
+			case SM(320, 200):
+			case SM(640, 480):
+				flags = VRF_ALLOW_COCKPIT + VRF_COMPATIBLE_MENUS;
+				break;
+			case SM(320, 400):
+				flags = VRF_USE_PAGING;
+				break;
+			case SM(640, 400):
+			case SM(800, 600):
+			case SM(1024, 768):
+			case SM(1280, 1024):
+				flags = VRF_COMPATIBLE_MENUS;
+				break;
+		}
 
-		game_init_render_buffers(dmi->VGA_mode,dmi->w,dmi->h,dmi->render_method,dmi->flags);
+#ifdef __MSDOS__
+		if (FindArg("-nodoublebuffer"))
+#endif
+		{
+			flags &= ~VRF_USE_PAGING;
+		}
+
+		game_init_render_buffers(mode, SM_W(mode), SM_H(mode), VR_NONE, flags);
 		Default_display_mode = Current_display_mode;
 	}
 
@@ -765,8 +768,10 @@ void do_screen_res_menu()
 	
 	newmenu_item m[N_SCREENRES_ITEMS];
 	int citem, i, n_items, odisplay_mode, result;
+	int w[N_SCREENRES_ITEMS] = { 0, 640, 0, 800, 1024, 1280 };
+	int h[N_SCREENRES_ITEMS] = { 0, 480, 0, 600, 768, 1024 };
 
-	if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE))		//special VR mode
+	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) //special VR mode
 	{				
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"You may not change screen\n"
@@ -783,12 +788,14 @@ void do_screen_res_menu()
 	n_items = 4;
 
 	odisplay_mode = VGA_current_mode;
-	citem = Current_display_mode;
-	if (Current_display_mode >= 2)
-		citem--;
 
-	if (citem >= n_items)
-		citem = n_items-1;
+	citem = 0;
+	for (i = 0; i < n_items; i++) {
+		if (SM(w[i], h[i]) == Current_display_mode) {
+			citem = i;
+			break;
+		}
+	}
 
 	m[citem].value = 1;
 
@@ -800,15 +807,7 @@ void do_screen_res_menu()
 	if (i >= 3)
 		i++;
 
-#if 0 //def SHAREWARE
-	if (i > 1)
-		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
-			"High resolution modes are\n"
-			"only available in the\n"
-			"Commercial version of Descent 2.");
-	return;
-#else
-	result = vga_check_mode(display_mode_info[i].VGA_mode);
+	result = vga_check_mode(SM(w[i], h[i]));
 	
 	if (result) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
@@ -817,9 +816,8 @@ void do_screen_res_menu()
 		return;
 	}
 	
-	set_display_mode(i);
+	set_display_mode(SM(w[i], h[i]));
 	reset_cockpit();
-#endif
 
 }
 
@@ -837,8 +835,10 @@ void do_screen_res_menu()
 	int citem;
 	int i;
 	int n_items;
+	int w[N_SCREENRES_ITEMS] = { 0, 320, 640, 0, 320, 640, 800, 1024, 1280 };
+	int h[N_SCREENRES_ITEMS] = { 0, 200, 480, 0, 400, 400, 600, 768, 1024 };
 
-	if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE)) {				//special VR mode
+	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) { //special VR mode
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"You may not change screen\n"
 				"resolution when VR modes enabled.");
@@ -866,13 +866,13 @@ void do_screen_res_menu()
 	fullscreenc=n_items++;
 #endif
 
-	citem = Current_display_mode+1;
-	
-	if (Current_display_mode >= 2)
-		citem++;
-
-	if (citem >= n_items)
-		citem = n_items-1;
+	citem = 0;
+	for (i = 0; i < n_items; i++) {
+		if (SM(w[i], h[i]) == Current_display_mode) {
+			citem = i;
+			break;
+		}
+	}
 
 	m[citem].value = 1;
 
@@ -889,29 +889,15 @@ void do_screen_res_menu()
 		if (m[i].value)
 			break;
 
-	if (i >= 4)
-		i--;
-
-	i--;
-
-	if (((i != 0) && (i != 2) && !MenuHiresAvailable) || gr_check_mode(display_mode_info[i].VGA_mode)) {
+	if (((w[i] > 320) && !MenuHiresAvailable) || gr_check_mode(SM(w[i], h[i]))) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"Cannot set requested\n"
 				"mode on this video card.");
 		return;
 	}
-#ifdef SHAREWARE
-		if (i != 0)
-			nm_messagebox(TXT_SORRY, 1, TXT_OK, 
-				"High resolution modes are\n"
-				"only available in the\n"
-				"Commercial version of Descent 2.");
-		return;
-#else
-		if (i != Current_display_mode)
-			set_display_mode(i);
-#endif
 
+	if (SM(w[i], h[i]) != Current_display_mode)
+		set_display_mode(SM(w[i], h[i]));
 }
 #endif	// end of PC version of do_screen_res_menu()
 

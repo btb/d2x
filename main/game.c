@@ -140,7 +140,6 @@ int VGA_current_mode;
 
 
 extern void ReadControls(void);		// located in gamecntl.c
-extern int Current_display_mode;
 extern void do_final_boss_frame(void);
 
 int	Speedtest_on = 0;
@@ -381,9 +380,9 @@ void init_cockpit()
 	case CM_FULL_COCKPIT:
 	case CM_REAR_VIEW: {
 #if 0
-		grs_bitmap *bm = &GameBitmaps[cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)].index];
+		grs_bitmap *bm = &GameBitmaps[cockpit_bitmap[Cockpit_mode+(SM_HIRES?(Num_cockpits/2):0)].index];
 
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)]);
+		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode+(SM_HIRES?(Num_cockpits/2):0)]);
 
 		gr_set_current_canvas(VR_offscreen_buffer);
 
@@ -418,7 +417,7 @@ void init_cockpit()
 
 	case CM_STATUS_BAR:
 
-     	max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(Current_display_mode?(Num_cockpits/2):0)].index].bm_h;
+		max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
 
 		if (Game_window_h > max_window_h)
 			Game_window_h = max_window_h;
@@ -626,7 +625,7 @@ int set_screen_mode(int sm)
 
 			if (VR_screen_flags & VRF_ALLOW_COCKPIT) {
 				if (Cockpit_mode == CM_STATUS_BAR)
-		      	max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(Current_display_mode?(Num_cockpits/2):0)].index].bm_h;
+					max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
 			}
 			else if (Cockpit_mode != CM_LETTERBOX)
 				Cockpit_mode = CM_FULL_SCREEN;
@@ -651,7 +650,7 @@ int set_screen_mode(int sm)
 
 		init_cockpit();
 
-		FontHires = FontHiresAvailable && (MenuHires = ((Current_display_mode != 0) && (Current_display_mode != 2)));
+		FontHires = FontHiresAvailable && (MenuHires = SM_HIRES2);
 
 		if ( VR_render_mode != VR_NONE )	{
 			// for 640x480 or higher, use hires font.

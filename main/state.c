@@ -282,7 +282,6 @@ int state_get_save_file(char * fname, char * dsc, int multi, int blind_save)
 }
 
 int RestoringMenu=0;
-extern int Current_display_mode;
 
 int state_get_restore_file(char * fname, int multi)
 {
@@ -350,7 +349,7 @@ int state_get_restore_file(char * fname, int multi)
 		return 0;
 	}
 
-	if (Current_display_mode == 3)	//restore menu won't fit on 640x400
+	if (Current_display_mode == SM(640,400)) //restore menu won't fit on 640x400
 		VR_screen_flags ^= VRF_COMPATIBLE_MENUS;
 
 	sc_last_item = -1;
@@ -367,7 +366,7 @@ int state_get_restore_file(char * fname, int multi)
 	Hack_DblClick_MenuMode = 0;
 #endif
 
-	if (Current_display_mode == 3)	//set flag back
+	if (Current_display_mode == SM(640,400)) //set flag back
 		VR_screen_flags ^= VRF_COMPATIBLE_MENUS;
 
 

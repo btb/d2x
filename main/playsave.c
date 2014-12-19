@@ -285,6 +285,8 @@ WIN(extern char win95_current_joyname[]);
 ubyte control_type_dos,control_type_win;
 
 
+uint32_t legacy_display_mode[] = { SM(320,200), SM(640,480), SM(320,400), SM(640,400), SM(800,600), SM(1024,768), SM(1280,1024) };
+
 //read in the player's saved games.  returns errno (0 == no error)
 int read_player_file()
 {
@@ -363,7 +365,10 @@ int read_player_file()
 	Default_leveling_on       = cfile_read_byte(file);
 	Reticle_on                = cfile_read_byte(file);
 	Cockpit_mode              = cfile_read_byte(file);
-	Default_display_mode      = cfile_read_byte(file);
+
+	i                         = cfile_read_byte(file);
+	Default_display_mode = legacy_display_mode[i];
+
 	Missile_view_enabled      = cfile_read_byte(file);
 	Headlight_active_default  = cfile_read_byte(file);
 	Guided_in_big_window      = cfile_read_byte(file);
@@ -652,7 +657,13 @@ int write_player_file()
 	PHYSFSX_writeU8(file, Auto_leveling_on);
 	PHYSFSX_writeU8(file, Reticle_on);
 	PHYSFSX_writeU8(file, (Cockpit_mode_save!=-1)?Cockpit_mode_save:Cockpit_mode);	//if have saved mode, write it instead of letterbox/rear view
-	PHYSFSX_writeU8(file, Default_display_mode);
+
+	for (i = 0; i < (sizeof(legacy_display_mode) / sizeof(uint32_t)); i++) {
+		if (legacy_display_mode[i] == Current_display_mode)
+			break;
+	}
+	PHYSFSX_writeU8(file, i);
+
 	PHYSFSX_writeU8(file, Missile_view_enabled);
 	PHYSFSX_writeU8(file, Headlight_active_default);
 	PHYSFSX_writeU8(file, Guided_in_big_window);
