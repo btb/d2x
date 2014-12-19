@@ -9,10 +9,6 @@ please let me know.  Note that the "mve" files found in the Macintosh
 version of Descent II are not really mve files.  They appear to be
 some sort of quicktime-related format.
 
-To build mveplayer, configure the source tree as normal, then execute
-"make mveplayer" from within the libmve subdirectory.
-
-
 hogcreate
 =========
 Creates a hog file from all the files in the current directory.
@@ -36,8 +32,3 @@ Converts an ascii tex (briefing) file to an "encrypted" txb file.
 txb2tex
 =======
 Converts an encrypted txb file to an ascii tex file.
-
-To build the rest of the utilities, configure the source tree as
-normal.  Then, from within the utilities subdirectory, execute "make
-<utility>" to build just that utility, or "make utils" to build all of
-them.
