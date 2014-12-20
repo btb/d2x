@@ -229,21 +229,8 @@ int play_redbook_track(int tracknum,int keep_playing)
 	return (Redbook_playing != 0);
 }
 
-/*
- * Some of these have different Track listings!
- * Which one is the "correct" order?
- */
-#define D2_1_DISCID         0x7d0ff809 // Descent II
-#define D2_2_DISCID         0xe010a30e // Descent II
-#define D2_3_DISCID         0xd410070d // Descent II
-#define D2_4_DISCID         0xc610080d // Descent II
-#define D2_DEF_DISCID       0x87102209 // Definitive collection Disc 2
-#define D2_OEM_DISCID       0xac0bc30d // Destination: Quartzon
-#define D2_OEM2_DISCID      0xc40c0a0d // Destination: Quartzon
-#define D2_VERTIGO_DISCID   0x53078208 // Vertigo
-#define D2_VERTIGO2_DISCID  0x64071408 // Vertigo + DMB
-#define D2_MAC_DISCID       0xb70ee40e // Macintosh
-#define D2_IPLAY_DISCID     0x22115710 // iPlay for Macintosh
+
+#if 0
 
 #define REDBOOK_TITLE_TRACK         2
 #define REDBOOK_CREDITS_TRACK       3
@@ -251,37 +238,6 @@ int play_redbook_track(int tracknum,int keep_playing)
 
 // songs_haved2_cd returns 1 if the descent 2 CD is in the drive and
 // 0 otherwise
-
-#if 1
-int songs_haved2_cd()
-{
-	int discid;
-
-	if (!Redbook_enabled)
-		return 0;
-
-	discid = RBAGetDiscID();
-
-	switch (discid) {
-	case D2_1_DISCID:
-	case D2_2_DISCID:
-	case D2_3_DISCID:
-	case D2_4_DISCID:
-	case D2_DEF_DISCID:
-	case D2_OEM_DISCID:
-	case D2_OEM2_DISCID:
-	case D2_VERTIGO_DISCID:
-	case D2_VERTIGO2_DISCID:
-	case D2_MAC_DISCID:
-	case D2_IPLAY_DISCID:
-		printf("Found D2 CD! discid: %x\n", discid);
-		return 1;
-	default:
-		printf("Unknown CD! discid: %x\n", discid);
-		return 0;
-	}
-}
-#else
 int songs_haved2_cd()
 {
 	char temp[128],cwd[128];
@@ -302,6 +258,193 @@ int songs_haved2_cd()
 
 	return 0;
 }
+
+#else
+
+
+/* Redbook versions of 13 songs from Descent 1 as found on the Macintosh version.
+   All the same tracklist, but some versions have tracks mixed to different lengths
+ 1:  Data
+ 2:  Primitive Rage
+ 3:  Outer Limits
+ 4:  The Escape (aka Close Call)
+ 5:  Ether in the Air (aka The Darkness of Space)
+ 6:  Robotic Menace (aka Get It On)
+ 7:  Virtual Tension (aka Fight)
+ 8:  Time for the Big Guns (aka Death Lurks Beneath)
+ 9:  Mystery Metal (aka C-4 Home Recipe)
+ 10: Hydraulic Pressure (aka Escape)
+ 11: Not That Button! (aka Backwards Time)
+ 12: Industrial Accident (aka Crazyfactory)
+ 13: Overdrive (aka Machine Gune)
+ 14: A Big Problem (aka Insanity)
+ */
+#define D1_DISCID_1         0xb60d990e
+#define D1_DISCID_2         0xde0feb0e
+#define D1_DISCID_3         0xb70ee40e
+
+#define D1_RB_TITLE             2
+#define D1_RB_BRIEFING          3
+#define D1_RB_ENDLEVEL          4
+#define D1_RB_ENDGAME           3
+#define D1_RB_CREDITS           5
+#define D1_RB_FIRST_LEVEL_SONG  6
+
+/* Descent II
+ 1:  Data
+ 2:  Title
+ 3:  Crawl
+ 4:  Glut
+ 5:  Gunner Down
+ 6:  Cold Reality
+ 7:  Ratzez
+ 8:  Crush
+ 9:  Untitled
+ 10: Haunted (Instrumental Remix)
+ 11: Are You Descent?
+ 12: Techno Industry
+ 13: Robot Jungle
+ */
+#define D2_DISCID_1         0x22115710 // iPlay for Macintosh, tracklist unconfirmed
+#define D2_DISCID_2         0xac0bc30d
+#define D2_DISCID_3         0xc40c0a0d
+#define D2_DISCID_4         0xc610080d
+#define D2_DISCID_5         0xcc101b0d
+#define D2_DISCID_6         0xd00bf30d
+#define D2_DISCID_7         0xd2101d0d
+#define D2_DISCID_8         0xd410070d
+#define D2_DISCID_9         0xda10370d
+
+#define D2_RB_TITLE            2
+#define D2_RB_CREDITS          3
+#define D2_RB_FIRST_LEVEL_SONG 4
+
+/* Same as above, but all tracks shifted by one
+ 1:  Data
+ 2:  Data
+ 3:  Title
+ 4:  Crawl
+ 5:  Glut
+ 6:  Gunner Down
+ 7:  Cold Reality
+ 8:  Ratzez
+ 9:  Crush
+ 10: Untitled
+ 11: Haunted (Instrumental Remix)
+ 12: Are You Descent?
+ 13: Techno Industry
+ 14: Robot Jungle
+ */
+#define D2_2_DISCID_1       0xe010a30e
+
+#define D2_2_RB_TITLE               3
+#define D2_2_RB_CREDITS             4
+#define D2_2_RB_FIRST_LEVEL_SONG    5
+
+/* Descent II: The Infinite Abyss
+ 1:  Data
+ 2:  Title
+ 3:  Cold Reality - Extended Remix
+ 4:  Crawl - Extended Remix
+ 5:  Gunner Down - Extended Remix
+ 6:  Ratzez - Extended Remix
+ 7:  Techno Industry - Extended Remix
+ 8:  Are You Descent? - Extended Remix
+ 9:  Robot Jungle - Extended Remix
+ */
+#define D2_IA_DISCID_1      0x7d0ff809
+#define D2_IA_DISCID_2      0x8110ec09
+#define D2_IA_DISCID_3      0x82104909
+#define D2_IA_DISCID_4      0x85101d09
+#define D2_IA_DISCID_5      0x87102209
+
+#define D2_IA_RB_TITLE              2
+#define D2_IA_RB_CREDITS            3
+#define D2_IA_RB_FIRST_LEVEL_SONG   4
+
+/* Descent II: Vertigo Series
+ 1:  Data
+ 2:  Crush - Extended Remix
+ 3:  Glut - Extended Remix
+ 4:  Haunted - Instrumental Re-Remix
+ 5:  New Song #1
+ 6:  Untitled - Extended Remix
+ 7:  New Song #2
+ 8:  New Song #3
+ */
+#define D2_X_DISCID_1       0x53078208
+#define D2_X_DISCID_2       0x64071408
+
+
+int songs_redbook_track(int songnum)
+{
+	uint32_t discid;
+
+	if (!Redbook_enabled)
+		return 0;
+
+	discid = RBAGetDiscID();
+
+	switch (discid) {
+		case D1_DISCID_1:
+		case D1_DISCID_2:
+		case D1_DISCID_3:
+			switch (songnum) {
+				case SONG_TITLE:            return D1_RB_TITLE;
+				case SONG_BRIEFING:         return D1_RB_BRIEFING;
+				case SONG_ENDLEVEL:         return D1_RB_ENDLEVEL;
+				case SONG_ENDGAME:          return D1_RB_ENDGAME;
+				case SONG_CREDITS:          return D1_RB_CREDITS;
+				case SONG_FIRST_LEVEL_SONG: return D1_RB_FIRST_LEVEL_SONG;
+				default: Int3();
+			}
+		case D2_DISCID_1:
+		case D2_DISCID_2:
+		case D2_DISCID_3:
+		case D2_DISCID_4:
+		case D2_DISCID_5:
+		case D2_DISCID_6:
+		case D2_DISCID_7:
+		case D2_DISCID_8:
+		case D2_DISCID_9:
+			switch (songnum) {
+				case SONG_TITLE:            return D2_RB_TITLE;
+				case SONG_CREDITS:          return D2_RB_CREDITS;
+				case SONG_FIRST_LEVEL_SONG: return D2_RB_FIRST_LEVEL_SONG;
+				default: Int3();
+			}
+		case D2_2_DISCID_1:
+			switch (songnum) {
+				case SONG_TITLE:            return D2_2_RB_TITLE;
+				case SONG_CREDITS:          return D2_2_RB_CREDITS;
+				case SONG_FIRST_LEVEL_SONG: return D2_2_RB_FIRST_LEVEL_SONG;
+				default: Int3();
+			}
+		case D2_IA_DISCID_1:
+		case D2_IA_DISCID_2:
+		case D2_IA_DISCID_3:
+		case D2_IA_DISCID_4:
+		case D2_IA_DISCID_5:
+			switch (songnum) {
+				case SONG_TITLE:            return D2_IA_RB_TITLE;
+				case SONG_CREDITS:          return D2_IA_RB_CREDITS;
+				case SONG_FIRST_LEVEL_SONG: return D2_IA_RB_FIRST_LEVEL_SONG;
+				default: Int3();
+			}
+		case D2_X_DISCID_1:
+		case D2_X_DISCID_2:
+			return 2;
+
+		default:
+			con_printf(CON_DEBUG, "Unknown CD. discid: %x\n", discid);
+			return 1;
+	}
+}
+
+#define REDBOOK_TITLE_TRACK         (songs_redbook_track(SONG_TITLE))
+#define REDBOOK_CREDITS_TRACK       (songs_redbook_track(SONG_CREDITS))
+#define REDBOOK_FIRST_LEVEL_TRACK   (songs_redbook_track(SONG_FIRST_LEVEL_SONG))
+
 #endif
 
 
