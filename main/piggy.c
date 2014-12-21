@@ -616,9 +616,6 @@ void piggy_init_pigfile(char *filename)
 	char temp_name_read[16];
 	DiskBitmapHeader bmh;
 	int header_size, N_bitmaps, data_size, data_start;
-	#ifdef MACINTOSH
-	char name[255];		// filename + path for the mac
-	#endif
 
 	piggy_close_file();             //close old pig if still open
 
@@ -626,20 +623,14 @@ void piggy_init_pigfile(char *filename)
 	if (stricmp(DEFAULT_PIGFILE, DEFAULT_PIGFILE_SHAREWARE) == 0 && !cfexist(filename))
 		filename = DEFAULT_PIGFILE_SHAREWARE;
 
-	#ifndef MACINTOSH
 		Piggy_fp = cfopen( filename, "rb" );
-	#else
-		sprintf(name, ":Data:%s", filename);
-		Piggy_fp = cfopen( name, "rb" );
 
-		#ifdef SHAREWARE	// if we are in the shareware version, we must have the pig by now.
+#if defined(MACINTOSH) && defined(SHAREWARE) // if we are in the shareware version, we must have the pig by now.
 			if (Piggy_fp == NULL)
 			{
 				Error("Cannot load required file <%s>",name);
 			}
-		#endif	// end of if def shareware
-
-	#endif
+#endif	// end of if def shareware
 
 	if (!Piggy_fp) {
 		#ifdef EDITOR
@@ -746,9 +737,6 @@ void piggy_new_pigfile(char *pigname)
 	DiskBitmapHeader bmh;
 	int header_size, N_bitmaps, data_size, data_start;
 	int must_rewrite_pig = 0;
-	#ifdef MACINTOSH
-	char name[255];
-	#endif
 
 	strlwr(pigname);
 
@@ -771,19 +759,14 @@ void piggy_new_pigfile(char *pigname)
 
 	strncpy(Current_pigfile,pigname,sizeof(Current_pigfile));
 
-	#ifndef MACINTOSH
 		Piggy_fp = cfopen( pigname, "rb" );
-	#else
-		sprintf(name, ":Data:%s", pigname);
-		Piggy_fp = cfopen( name, "rb" );
 
-		#ifdef SHAREWARE	// if we are in the shareware version, we must have the pig by now.
+#if defined(MACINTOSH) && defined(SHAREWARE) // if we are in the shareware version, we must have the pig by now.
 			if (Piggy_fp == NULL)
 			{
 				Error("Cannot load required file <%s>",name);
 			}
-		#endif	// end of if def shareware
-	#endif
+#endif	// end of if def shareware
 
 	#ifndef EDITOR
 	if (!Piggy_fp)
@@ -1021,16 +1004,8 @@ int read_hamfile()
 	CFILE * ham_fp = NULL;
 	int ham_id;
 	int sound_offset = 0;
-	#ifdef MACINTOSH
-	char name[255];
-	#endif
 
-	#ifndef MACINTOSH
 	ham_fp = cfopen( DEFAULT_HAMFILE, "rb" );
-	#else
-	sprintf(name, ":Data:%s", DEFAULT_HAMFILE );
-	ham_fp = cfopen( name, "rb" );
-	#endif
 
 	if (ham_fp == NULL) {
 		Must_write_hamfile = 1;
@@ -1129,16 +1104,8 @@ int read_sndfile()
 	digi_sound temp_sound;
 	char temp_name_read[16];
 	int sbytes = 0;
-	#ifdef MACINTOSH
-	char name[255];
-	#endif
 
-	#ifndef MACINTOSH
 	snd_fp = cfopen( DEFAULT_SNDFILE, "rb" );
-	#else
-	sprintf( name, ":Data:%s", DEFAULT_SNDFILE );
-	snd_fp = cfopen( name, "rb");
-	#endif
 	
 	if (snd_fp == NULL)
 		return 0;
@@ -1278,19 +1245,11 @@ void piggy_read_sounds(void)
 	CFILE * fp = NULL;
 	ubyte * ptr;
 	int i, sbytes;
-	#ifdef MACINTOSH
-	char name[255];
-	#endif
 
 	ptr = SoundBits;
 	sbytes = 0;
 
-	#ifndef MACINTOSH
 	fp = cfopen( DEFAULT_SNDFILE, "rb" );
-	#else
-	sprintf( name, ":Data:%s", DEFAULT_SNDFILE );
-	fp = cfopen( name, "rb");
-	#endif
 
 	if (fp == NULL)
 		return;

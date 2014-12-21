@@ -118,6 +118,9 @@ static inline void PHYSFSX_init(int argc, char *argv[])
 	else if (!FindArg("-nohogdir"))
 		PHYSFS_addToSearchPath(SHAREPATH, 1);
 #endif
+#ifdef MACINTOSH
+	PHYSFS_addToSearchPath(":Data:", 1); // untested
+#endif
 }
 
 static inline PHYSFS_sint64 PHYSFSX_readString(PHYSFS_file *file, char *s)

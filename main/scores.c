@@ -97,11 +97,7 @@ char * get_scores_filename()
 		return scores_filename;
 	}
 #endif
-	#ifdef MACINTOSH		// put the high scores into the data folder
-	sprintf( scores_filename, ":Data:%s", SCORES_FILENAME );
-	#else
 	sprintf( scores_filename, "%s", SCORES_FILENAME );
-	#endif
 	return scores_filename;
 }
 
