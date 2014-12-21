@@ -276,7 +276,7 @@ int songs_haved2_cd()
  10: Hydraulic Pressure (aka Escape)
  11: Not That Button! (aka Backwards Time)
  12: Industrial Accident (aka Crazyfactory)
- 13: Overdrive (aka Machine Gune)
+ 13: Overdrive (aka Machine Gun)
  14: A Big Problem (aka Insanity)
  */
 #define D1_DISCID_1         0xb60d990e
@@ -305,7 +305,7 @@ int songs_haved2_cd()
  12: Techno Industry
  13: Robot Jungle
  */
-#define D2_DISCID_1         0x22115710 // iPlay for Macintosh, tracklist unconfirmed
+#define D2_DISCID_1         0x22115710 // Mac version, has some extended versions and 3 bonus tracks
 #define D2_DISCID_2         0xac0bc30d
 #define D2_DISCID_3         0xc40c0a0d
 #define D2_DISCID_4         0xc610080d
