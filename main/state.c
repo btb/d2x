@@ -222,17 +222,9 @@ int state_get_save_file(char * fname, char * dsc, int multi, int blind_save)
 	for (i=0;i<NUM_SAVES; i++ )	{
 		sc_bmp[i] = NULL;
 		if ( !multi )
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.sg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.sg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, i );
 		else
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.mg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.mg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.mg%x", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = PHYSFSX_openReadBuffered(filename[i]);
 		if ( fp ) {
@@ -298,17 +290,9 @@ int state_get_restore_file(char * fname, int multi)
 	for (i=0;i<NUM_SAVES+1; i++ )	{
 		sc_bmp[i] = NULL;
 		if (!multi)
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.sg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.sg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, i );
 		else
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.mg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.mg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.mg%x", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = PHYSFSX_openReadBuffered(filename[i]);
 		if ( fp ) {
@@ -540,11 +524,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 		if ( tfp ) {
 			char	newname[128];
 
-			#ifndef MACINTOSH
-			sprintf( newname, "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
-			#else
-			sprintf(newname, "Players/%s.sg%x", Players[Player_num].callsign, NUM_SAVES);
-			#endif
+			sprintf( newname, PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
 
 			PHYSFS_seek(tfp, DESC_OFFSET);
 			PHYSFS_write(tfp, "[autosave backup]", sizeof(char) * DESC_LENGTH, 1);
@@ -581,7 +561,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	}*/
 
 	#if defined(MACINTOSH) && !defined(NDEBUG)
-	if ( strncmp(filename, ":Players:", 9) )
+	if ( strncmp(filename, PLAYER_DIR, 9) )
 		Int3();
 	#endif
 
@@ -932,11 +912,7 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
 	if ((filenum != (NUM_SAVES+1)) && in_game) {
 		char	temp_filename[128];
 		mprintf((0, "Doing autosave, filenum = %i, != %i!\n", filenum, NUM_SAVES+1));
-		#ifndef MACINTOSH
-		sprintf( temp_filename, "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
-		#else
-		sprintf(temp_filename, "Players/%s.sg%x", Players[Player_num].callsign, NUM_SAVES);
-		#endif
+		sprintf( temp_filename, PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
 		state_save_all(!in_game, secret_restore, temp_filename, 0);
 	}
 
@@ -983,7 +959,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	short TempTmapNum2[MAX_SEGMENTS][MAX_SIDES_PER_SEGMENT];
 
 	#if defined(MACINTOSH) && !defined(NDEBUG)
-	if (strncmp(filename, "Players/", 9))
+	if (strncmp(filename, PLAYER_DIR, 9))
 		Int3();
 	#endif
 

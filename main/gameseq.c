@@ -747,17 +747,12 @@ int RegisterPlayer()
 do_menu_again:
 	;
 
-#ifndef MACINTOSH
-	if (!newmenu_get_filename(TXT_SELECT_PILOT, "plr", filename, allow_abort_flag))
+#ifndef APPLE_DEMO
+	//if (!newmenu_get_filename(TXT_SELECT_PILOT, PLAYER_DIR "*.plr", filename, allow_abort_flag))
+	if (!newmenu_get_filename(TXT_SELECT_PILOT, /* PLAYER_DIR */ "plr", filename, allow_abort_flag))
 		goto do_menu_again; //return 0;		// They hit Esc in file selector
 #else
-	#ifndef APPLE_DEMO
-	if (!newmenu_get_filename( TXT_SELECT_PILOT, ".\\Players\\*.plr", filename, allow_abort_flag ))	{
-		goto do_menu_again;		// They hit Esc in file selector
-	}
-	#else
-	newmenu_get_filename( "Select Pilot", ".\\Players\\*.plr", filename, 0 );		// no abort allowed ever -- and change title of menubox
-	#endif
+	newmenu_get_filename( "Select Pilot", PLAYER_DIR "*.plr", filename, 0 ); // no abort allowed ever -- and change title of menubox
 #endif
 	if ( filename[0] == '<' )	{
 		// They selected 'create new pilot'

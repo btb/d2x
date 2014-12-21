@@ -303,11 +303,7 @@ int read_player_file()
 
 	Assert(Player_num>=0 && Player_num<MAX_PLAYERS);
 
-#ifndef MACINTOSH
-	sprintf(filename,"%.8s.plr",Players[Player_num].callsign);
-#else
-	sprintf(filename, "Players/%.8s.plr",Players[Player_num].callsign);
-#endif
+	sprintf(filename, PLAYER_DIR "%.8s.plr", Players[Player_num].callsign);
 
 	if (!PHYSFS_exists(filename))
 		return ENOENT;
@@ -320,7 +316,7 @@ int read_player_file()
 	if (file && isatty(fileno(file))) {
 		//if the callsign is the name of a tty device, prepend a char
 		PHYSFS_close(file);
-		sprintf(filename,"$%.7s.plr",Players[Player_num].callsign);
+		sprintf(filename, PLAYER_DIR "$%.7s.plr",Players[Player_num].callsign);
 		file = PHYSFSX_openReadBuffered(filename);
 	}
 #endif
@@ -610,11 +606,7 @@ extern int Cockpit_mode_save;
 //write out player's saved games.  returns errno (0 == no error)
 int write_player_file()
 {
-	#ifdef MACINTOSH
 	char filename[FILENAME_LEN+15];
-	#else
-	char filename[FILENAME_LEN];		// because of ":Players:" path
-	#endif
 	PHYSFS_file *file;
 	int i;
 
@@ -624,11 +616,7 @@ int write_player_file()
 
 	WriteConfigFile();
 
-#ifndef MACINTOSH
-	sprintf(filename,"%s.plr",Players[Player_num].callsign);
-#else
-	sprintf(filename, ":Players:%.8s.plr",Players[Player_num].callsign);
-#endif
+	sprintf(filename, PLAYER_DIR "%s.plr", Players[Player_num].callsign);
 	file = PHYSFSX_openWriteBuffered(filename);
 
 #if 0 //ndef MACINTOSH
@@ -638,7 +626,7 @@ int write_player_file()
 		//if the callsign is the name of a tty device, prepend a char
 
 		PHYSFS_close(file);
-		sprintf(filename,"$%.7s.plr",Players[Player_num].callsign);
+		sprintf(filename, PLAYER_DIR "$%.7s.plr", Players[Player_num].callsign);
 		file = PHYSFSX_openWriteBuffered(filename);
 	}
 #endif

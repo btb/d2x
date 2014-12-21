@@ -65,7 +65,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "newdemo.h"
 #include "kconfig.h"
 #include "strutil.h"
-
+#include "playsave.h"
 #ifdef MACINTOSH
 #include <Events.h>
 #endif
@@ -1912,11 +1912,7 @@ void delete_player_saved_games(char * name)
 	char filename[16];
 
 	for (i=0;i<10; i++)	{
-#ifndef MACINTOSH
-		sprintf( filename, "%s.sg%d", name, i );
-#else
-		sprintf(filename, "Players/%s.sg%d", name, i);
-#endif
+		sprintf( filename, PLAYER_DIR "%s.sg%d", name, i );
 		PHYSFS_delete(filename);
 	}
 }
