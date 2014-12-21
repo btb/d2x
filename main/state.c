@@ -98,7 +98,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "laser.h"
 #include "multibot.h"
 #include "state.h"
-
+#include "playsave.h"
 #ifdef OGL
 #include "gr.h"
 #endif
@@ -438,13 +438,6 @@ int copy_file(char *old_file, char *new_file)
 	return 0;
 }
 
-#ifndef MACINTOSH
-#define SECRETB_FILENAME	"secret.sgb"
-#define SECRETC_FILENAME	"secret.sgc"
-#else
-#define SECRETB_FILENAME	":Players:secret.sgb"
-#define SECRETC_FILENAME	":Players:secret.sgc"
-#endif
 
 extern int Final_boss_is_dead;
 
@@ -479,7 +472,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 	//	return to the base level.
 	if (secret_save && (Control_center_destroyed)) {
 		mprintf((0, "Deleting secret.sgb so player can't return to base level.\n"));
-		PHYSFS_delete(SECRETB_FILENAME);
+		PHYSFS_delete(PLAYER_DIR "secret.sgb");
 		return 0;
 	}
 
@@ -487,10 +480,10 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 
 	if (secret_save == 1) {
 		filename_override = filename;
-		sprintf(filename_override, SECRETB_FILENAME);
+		sprintf(filename_override, PLAYER_DIR "secret.sgb");
 	} else if (secret_save == 2) {
 		filename_override = filename;
-		sprintf(filename_override, SECRETC_FILENAME);
+		sprintf(filename_override, PLAYER_DIR "secret.sgc");
 	} else {
 		if (filename_override) {
 			strcpy( filename, filename_override);
@@ -518,11 +511,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 			else
 				fc = '0' + filenum;
 
-			#ifndef MACINTOSH
-			sprintf(temp_fname, "%csecret.sgc", fc);
-			#else
-			sprintf(temp_fname, ":Players:%csecret.sgc", fc);
-			#endif
+			sprintf(temp_fname, PLAYER_DIR "%csecret.sgc", fc);
 
 			mprintf((0, "Trying to copy secret.sgc to %s.\n", temp_fname));
 
@@ -533,10 +522,10 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 					Error("Cannot delete file <%s>: %s", temp_fname, PHYSFS_getLastError());
 			}
 
-			if (PHYSFS_exists(SECRETC_FILENAME))
+			if (PHYSFS_exists(PLAYER_DIR "secret.sgc"))
 			{
 				mprintf((0, "Copying secret.sgc to %s.\n", temp_fname));
-				rval = copy_file(SECRETC_FILENAME, temp_fname);
+				rval = copy_file(PLAYER_DIR "secret.sgc", temp_fname);
 				Assert(rval == 0);	//	Oops, error copying secret.sgc to temp_fname!
 			}
 		}
@@ -925,21 +914,17 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
 			else
 				fc = '0' + filenum;
 			
-			#ifndef MACINTOSH
-			sprintf(temp_fname, "%csecret.sgc", fc);
-			#else
-			sprintf(temp_fname, "Players/%csecret.sgc", fc);
-			#endif
+			sprintf(temp_fname, PLAYER_DIR "%csecret.sgc", fc);
 
 			mprintf((0, "Trying to copy %s to secret.sgc.\n", temp_fname));
 
 			if (PHYSFS_exists(temp_fname))
 			{
 				mprintf((0, "Copying %s to secret.sgc\n", temp_fname));
-				rval = copy_file(temp_fname, SECRETC_FILENAME);
+				rval = copy_file(temp_fname, PLAYER_DIR "secret.sgc");
 				Assert(rval == 0);	//	Oops, error copying temp_fname to secret.sgc!
 			} else
-				PHYSFS_delete(SECRETC_FILENAME);
+				PHYSFS_delete(PLAYER_DIR "secret.sgc");
 		}
 	}
 

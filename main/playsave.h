@@ -29,6 +29,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define EZERO 0
 #endif
 
+#ifndef MACINTOSH
+#define PLAYER_DIR ""
+#else
+#define PLAYER_DIR ":Players:"
+#endif
+
 extern int Default_leveling_on;
 
 // update the player's highest level.  returns errno (0 == no error)

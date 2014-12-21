@@ -133,17 +133,6 @@ void DoEndGame(void);
 void AdvanceLevel(int secret_flag);
 void filter_objects_from_level();
 
-// From allender -- you'll find these defines in state.c and cntrlcen.c
-// since I couldn't think of a good place to put them and i wanted to
-// fix this stuff fast!  Sorry about that...
-
-#ifndef MACINTOSH
-#define SECRETB_FILENAME	"secret.sgb"
-#define SECRETC_FILENAME	"secret.sgc"
-#else
-#define SECRETB_FILENAME	":Players:secret.sgb"
-#define SECRETC_FILENAME	":Players:secret.sgc"
-#endif
 
 //Current_level_num starts at 1 for the first level
 //-1,-2,-3 are secret levels
@@ -1121,7 +1110,7 @@ int p_secret_level_destroyed(void)
 	if (First_secret_visit) {
 		return 0;		//	Never been there, can't have been destroyed.
 	} else {
-		if (PHYSFS_exists(SECRETC_FILENAME))
+		if (PHYSFS_exists(PLAYER_DIR "secret.sgc"))
 		{
 			return 0;
 		} else {
@@ -1176,7 +1165,7 @@ void StartNewLevelSecret(int level_num, int page_in_textures)
 		if (First_secret_visit) {
 			do_secret_message(TXT_SECRET_EXIT);
 		} else {
-			if (PHYSFS_exists(SECRETC_FILENAME))
+			if (PHYSFS_exists(PLAYER_DIR "secret.sgc"))
 			{
 				do_secret_message(TXT_SECRET_EXIT);
 			} else {
@@ -1223,13 +1212,13 @@ void StartNewLevelSecret(int level_num, int page_in_textures)
 		reset_special_effects();
 		StartSecretLevel();
 	} else {
-		if (PHYSFS_exists(SECRETC_FILENAME))
+		if (PHYSFS_exists(PLAYER_DIR "secret.sgc"))
 		{
 			int	pw_save, sw_save;
 
 			pw_save = Primary_weapon;
 			sw_save = Secondary_weapon;
-			state_restore_all(1, 1, SECRETC_FILENAME);
+			state_restore_all(1, 1, PLAYER_DIR "secret.sgc");
 			Primary_weapon = pw_save;
 			Secondary_weapon = sw_save;
 			reset_special_effects();
@@ -1274,17 +1263,17 @@ void ExitSecretLevel(void)
 		return;
 
 	if (!Control_center_destroyed) {
-		state_save_all(0, 2, SECRETC_FILENAME, 0);
+		state_save_all(0, 2, PLAYER_DIR "secret.sgc", 0);
 	}
 
-	if (PHYSFS_exists(SECRETB_FILENAME))
+	if (PHYSFS_exists(PLAYER_DIR "secret.sgb"))
 	{
 		int	pw_save, sw_save;
 
 		returning_to_level_message();
 		pw_save = Primary_weapon;
 		sw_save = Secondary_weapon;
-		state_restore_all(1, 1, SECRETB_FILENAME);
+		state_restore_all(1, 1, PLAYER_DIR "secret.sgb");
 		Primary_weapon = pw_save;
 		Secondary_weapon = sw_save;
 	} else {
@@ -1706,10 +1695,10 @@ void DoPlayerDead()
 		died_in_mine_message(); // Give them some indication of what happened
 
 		if (Current_level_num < 0) {
-			if (PHYSFS_exists(SECRETB_FILENAME))
+			if (PHYSFS_exists(PLAYER_DIR "secret.sgb"))
 			{
 				returning_to_level_message();
-				state_restore_all(1, 2, SECRETB_FILENAME);			//	2 means you died
+				state_restore_all(1, 2, PLAYER_DIR "secret.sgb"); // 2 means you died
 				set_pos_from_return_segment();
 				Players[Player_num].lives--;						//	re-lose the life, Players[Player_num].lives got written over in restore.
 			} else {
@@ -1727,12 +1716,12 @@ void DoPlayerDead()
 		}
 
 	} else if (Current_level_num < 0) {
-		if (PHYSFS_exists(SECRETB_FILENAME))
+		if (PHYSFS_exists(PLAYER_DIR "secret.sgb"))
 		{
 			returning_to_level_message();
 			if (!Control_center_destroyed)
-				state_save_all(0, 2, SECRETC_FILENAME, 0);
-			state_restore_all(1, 2, SECRETB_FILENAME);
+				state_save_all(0, 2, PLAYER_DIR "secret.sgc", 0);
+			state_restore_all(1, 2, PLAYER_DIR "secret.sgb");
 			set_pos_from_return_segment();
 			Players[Player_num].lives--;						//	re-lose the life, Players[Player_num].lives got written over in restore.
 		} else {
