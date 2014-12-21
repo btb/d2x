@@ -1241,7 +1241,6 @@ int HandleSystemKey(int key)
 		#ifdef MACINTOSH
 		
 		case KEY_COMMAND+KEY_M:
-			#if !defined(SHAREWARE) || defined(APPLE_DEMO)
 			if ( (Game_mode & GM_MULTI) )		// don't process in multiplayer games
 				break;
 
@@ -1256,7 +1255,6 @@ int HandleSystemKey(int key)
 			clear_boxed_message();
 			key_init();
 			start_time();
-			#endif
 			
 			break;
 

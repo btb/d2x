@@ -1371,7 +1371,6 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 		case KEY_COMMAND+KEY_M:
 			k = -1;
-			#if !defined(SHAREWARE) || defined(APPLE_DEMO)
 			if ( (Game_mode & GM_MULTI) )		// don't process in multiplayer games
 				break;
 
@@ -1389,7 +1388,6 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			key_init();
 			key_flush();
 			start_time();
-			#endif
 			
 			break;
 

@@ -1228,9 +1228,6 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 	}
 #endif
 
-	// don't enable redbook for a non-apple demo version of the shareware demo
-	#if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
-
 	if (Config_redbook_volume != items[2].value )   {
 		Config_redbook_volume = items[2].value;
 		set_redbook_volume(Config_redbook_volume);
@@ -1274,8 +1271,6 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 		}
 	}
 
-	#endif
-
 	citem++;		//kill warning
 }
 
@@ -1302,33 +1297,14 @@ void do_sound_menu()
 		}
 	#endif
 
-		#ifdef SHAREWARE
-			m[ 2].type = NM_TYPE_TEXT; m[ 2].text="";
-			m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
-			m[ 4].type = NM_TYPE_TEXT; m[ 4].text="";
-			#ifdef MACINTOSH
-				m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
-
-				#ifdef APPLE_DEMO
-					m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
-					m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
-				#endif
-
-			#endif
-
-		#else		// ifdef SHAREWARE
-			m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
-
-			#ifndef MACINTOSH
-				m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
-			#else
-				m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8; 
-			#endif
-		
-			m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
-		#endif
-	
-		m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed; 
+		m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
+#ifndef MACINTOSH
+		m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
+#else
+		m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
+#endif
+		m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
+		m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed;
 				
 		i = newmenu_do1( NULL, "Sound Effects & Music", sizeof(m)/sizeof(*m), m, sound_menuset, i );
 

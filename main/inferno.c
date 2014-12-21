@@ -288,9 +288,7 @@ void print_commandline_help()
 	printf( "  -nomovies       %s\n","Don't play movies");
 	printf( "  -noscreens      %s\n","Skip briefing screens");
 #endif
-#if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
 	printf( "  -noredbook      %s\n","Disable redbook audio");
-#endif
 	printf( "  -norun          %s\n","Bail out after initialization");
 //	printf( "  -ordinaljoy     %s\n","FIXME: Undocumented");
 //	printf( "  -rtscts         %s\n","Same as -ctsrts");

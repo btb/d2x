@@ -122,7 +122,6 @@ void songs_init()
 	Songs_initialized = 1;
 
 	//	RBA Hook
-	#if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
 		if (FindArg("-noredbook"))
 		{
 			Redbook_enabled = 0;
@@ -142,7 +141,6 @@ void songs_init()
 			}
 		}
 		atexit(RBAStop);    // stop song on exit
-	#endif	// endof ifndef SHAREWARE, ie ifdef SHAREWARE
 }
 
 #define FADE_TIME (f1_0/2)
