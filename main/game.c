@@ -1552,57 +1552,62 @@ void show_help()
 {
 	int nitems = 0;
 	newmenu_item m[25];
-	#ifdef MACINTOSH
-	char command_help[64], pixel_double_help[64], save_help[64], restore_help[64];
-	#endif
+#ifdef MACINTOSH
+	char pixel_double_help[64];
+#endif
+#ifdef __APPLE__
+	char command_help[64], save_help[64], restore_help[64];
+#endif
 
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_ESC;
-	#ifndef MACINTOSH
+#ifndef __APPLE__
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_ALT_F2;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_ALT_F3;
-	#else
+#else
 	sprintf(save_help, "OPT-F2 (%c-s)\t Save Game", 133);
 	sprintf(restore_help, "OPT-F3 (%c-o)\t Load Game", 133);
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = save_help;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = restore_help;
-	#endif
+#endif
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_F2;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_F3;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_F4;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_F5;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "F6\t Fast Save";
-	#ifndef MACINTOSH
+#ifndef __APPLE__
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_PAUSE;
-	#else
+#else
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Pause (F15)\t  Pause";
-	#endif
+#endif
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_MINUSPLUS;
-	#ifndef MACINTOSH
+#ifndef __APPLE__
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_PRTSCN;
-	#else
+#else
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "printscrn (F13)\t  save screen shot";
-	#endif
+#endif
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_1TO5;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = TXT_HELP_6TO10;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F1\t  Cycle left window";
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F2\t  Cycle right window";
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F4\t  GuideBot menu";
-	#ifndef MACINTOSH
+#ifndef __APPLE__
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Alt-Shift-F4\t  Rename GuideBot";
-	#else
+#else
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Opt-Shift-F4\t  Rename GuideBot";
-	#endif
+#endif
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F5\t  Drop primary";
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F6\t  Drop secondary";
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-F7\t  Calibrate joystick";
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "Shift-number\t  GuideBot commands";
-	#ifdef MACINTOSH
+#ifdef MACINTOSH
 	sprintf(pixel_double_help, "%c-D\t  Toggle Pixel Double Mode", 133);
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = pixel_double_help;
+#endif
+#ifdef __APPLE__
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = "";
 	sprintf(command_help, "(Use %c-# for F#. i.e. %c-1 for F1)", 133, 133);
 	m[nitems].type = NM_TYPE_TEXT; m[nitems++].text = command_help;
-	#endif
+#endif
 
 	full_palette_save();
 
