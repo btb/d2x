@@ -906,10 +906,11 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	}
 
 //	if (Config_control_type == CONTROL_WINJOYSTICK) {
-//		WINDOS(
-//			joydefsw_win_joyselect(title2); title = title2,
-//			Int3()
-//		);												// Get Samir...
+//#ifdef WINDOWS
+//		joydefsw_win_joyselect(title2); title = title2;
+//#else
+//		Int3(); // Get Samir...
+//#endif
 //	}
 
 	save_canvas = grd_curcanv;
@@ -1673,10 +1674,11 @@ void kc_change_joyaxis( kc_item * item )
 	code=255;
 	k=255;
 
-	WINDOS(
-		joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, old_axis ),
-		joystick_read_raw_axis( JOY_ALL_AXIS, old_axis )
-	);
+#ifdef WINDOWS
+	joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, old_axis );
+#else
+	joystick_read_raw_axis( JOY_ALL_AXIS, old_axis );
+#endif
 
 	while( (k!=KEY_ESC) && (code==255))	
 	{				
@@ -1694,11 +1696,12 @@ void kc_change_joyaxis( kc_item * item )
 
 		kc_drawquestion( item );
 
-		WINDOS(
-			joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, axis ),
-			joystick_read_raw_axis( JOY_ALL_AXIS, axis )
-		);
-		
+#ifdef WINDOWS
+		joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, axis );
+#else
+		joystick_read_raw_axis( JOY_ALL_AXIS, axis );
+#endif
+
 		for (i=0; i<numaxis; i++ )	{
 #if defined (MACINTOSH)
 			if ( abs(axis[i]-old_axis[i])>100 )
