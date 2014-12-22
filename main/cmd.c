@@ -144,7 +144,7 @@ void cmd_parse(char *input)
 			quoted = 1 - quoted;
 			continue;
 		}
-		if (isspace(buffer[i]) && !quoted) {
+		if ((isspace(buffer[i]) || buffer[i] == '=') && !quoted) {
 			buffer[i] = 0;
 			while (isspace(buffer[i+1]) && (i+1 < l)) i++;
 			tokens[num_tokens++] = &buffer[i+1];
