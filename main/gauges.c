@@ -1318,7 +1318,7 @@ void show_bomb_count(int x,int y,int bg_color,int always_show)
 
 	if (Cockpit_mode == CM_STATUS_BAR) {		//draw background
 		gr_setcolor(bg_color);
-		if SM_HIRES {
+		if (!SM_HIRES) {
 			gr_rect(169,189,189,196);
 			gr_setcolor(gr_find_closest_color(10,10,10));
 			gr_scanline(168,189,189);
@@ -1756,7 +1756,7 @@ void draw_energy_bar(int energy)
 	gr_ubitmapm( 0, 0, &GameBitmaps[ GET_GAUGE_INDEX(GAUGE_ENERGY_LEFT)] );
 	gr_setcolor( BM_XRGB(0,0,0) );
 
-	if SM_HIRES
+	if (!SM_HIRES)
 		not_energy = 61 - (energy*61)/100;
 	else
 		not_energy = 125 - (energy*125)/100;
