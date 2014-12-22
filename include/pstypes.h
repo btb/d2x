@@ -21,9 +21,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _TYPES_H
 #define _TYPES_H
 
-// define a dboolean
-typedef int dboolean;
-
 //define a signed byte
 typedef signed char sbyte;
 

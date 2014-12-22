@@ -10,7 +10,7 @@ typedef struct cvar_s
 {
 	char *name;
 	char *string;
-	dboolean archive;
+	bool archive;
 	float value;
 	struct cvar_s *next;
 } cvar_t;
