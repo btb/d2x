@@ -373,6 +373,8 @@ int songs_haved2_cd()
 #define D2_X_DISCID_1       0x53078208
 #define D2_X_DISCID_2       0x64071408
 
+#define D2_X_RB_FIRST_LEVEL_SONG    2
+
 
 int songs_redbook_track(int songnum)
 {
@@ -394,7 +396,7 @@ int songs_redbook_track(int songnum)
 				case SONG_ENDGAME:          return D1_RB_ENDGAME;
 				case SONG_CREDITS:          return D1_RB_CREDITS;
 				case SONG_FIRST_LEVEL_SONG: return D1_RB_FIRST_LEVEL_SONG;
-				default: Int3();
+				default: Int3(); break;
 			}
 		case D2_DISCID_1:
 		case D2_DISCID_2:
@@ -409,14 +411,14 @@ int songs_redbook_track(int songnum)
 				case SONG_TITLE:            return D2_RB_TITLE;
 				case SONG_CREDITS:          return D2_RB_CREDITS;
 				case SONG_FIRST_LEVEL_SONG: return D2_RB_FIRST_LEVEL_SONG;
-				default: Int3();
+				default: Int3(); break;
 			}
 		case D2_2_DISCID_1:
 			switch (songnum) {
 				case SONG_TITLE:            return D2_2_RB_TITLE;
 				case SONG_CREDITS:          return D2_2_RB_CREDITS;
 				case SONG_FIRST_LEVEL_SONG: return D2_2_RB_FIRST_LEVEL_SONG;
-				default: Int3();
+				default: Int3(); break;
 			}
 		case D2_IA_DISCID_1:
 		case D2_IA_DISCID_2:
@@ -427,16 +429,17 @@ int songs_redbook_track(int songnum)
 				case SONG_TITLE:            return D2_IA_RB_TITLE;
 				case SONG_CREDITS:          return D2_IA_RB_CREDITS;
 				case SONG_FIRST_LEVEL_SONG: return D2_IA_RB_FIRST_LEVEL_SONG;
-				default: Int3();
+				default: Int3(); break;
 			}
 		case D2_X_DISCID_1:
 		case D2_X_DISCID_2:
-			return 2;
+			return D2_X_RB_FIRST_LEVEL_SONG;
 
 		default:
 			con_printf(CON_DEBUG, "Unknown CD. discid: %x\n", discid);
 			return 1;
 	}
+	return 1;
 }
 
 #define REDBOOK_TITLE_TRACK         (songs_redbook_track(SONG_TITLE))
