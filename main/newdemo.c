@@ -175,8 +175,15 @@ sbyte RenderingWasRecorded[32];
 #define INTERPOLATE_PLAYBACK    2
 #define INTERPOL_FACTOR         (F1_0 + (F1_0/5))
 
-#define DEMO_VERSION            15      // last D1 version was 13
-#define DEMO_GAME_TYPE          3       // 1 was shareware, 2 registered
+#define DEMO_VERSION_D1_SHARE   5
+#define DEMO_VERSION_D1         13
+#define DEMO_VERSION_D2         15
+#define DEMO_VERSION            DEMO_VERSION_D2
+
+#define DEMO_GAME_TYPE_D1_SHARE 1
+#define DEMO_GAME_TYPE_D1       2
+#define DEMO_GAME_TYPE_D2       3
+#define DEMO_GAME_TYPE          DEMO_GAME_TYPE_D2
 
 #define DEMO_FILENAME           DEMO_DIR "tmpdemo.dem"
 
@@ -190,6 +197,7 @@ int Newdemo_start_frame = -1;
 unsigned int Newdemo_size;
 int Newdemo_num_written;
 int Newdemo_game_mode;
+sbyte Newdemo_game_type;
 int Newdemo_old_cockpit;
 sbyte Newdemo_no_space;
 sbyte Newdemo_at_eof;
@@ -627,6 +635,10 @@ void nd_read_object(object *obj)
 
 		if ((obj->type != OBJ_ROBOT) && (obj->type != OBJ_PLAYER) && (obj->type != OBJ_CLUTTER)) {
 			nd_read_int(&(obj->rtype.pobj_info.model_num));
+			if (Newdemo_game_type < DEMO_GAME_TYPE_D2)
+				obj->rtype.pobj_info.model_num = D1_Polymodel_map[obj->rtype.pobj_info.model_num];
+			if (obj->rtype.pobj_info.model_num < 0)
+				Int3();
 			nd_read_int(&(obj->rtype.pobj_info.subobj_flags));
 		}
 
@@ -1426,7 +1438,7 @@ void newdemo_set_new_level(int level_num)
 
 int newdemo_read_demo_start(int rnd_demo)
 {
-	sbyte i, version, game_type, laser_level;
+	sbyte i, version, laser_level;
 	sbyte c, energy, shield;
 	char text[128], current_mission[9];
 
@@ -1440,8 +1452,8 @@ int newdemo_read_demo_start(int rnd_demo)
 		return 1;
 	}
 	nd_read_byte(&version);
-	nd_read_byte(&game_type);
-	if (game_type < DEMO_GAME_TYPE) {
+	nd_read_byte(&Newdemo_game_type);
+	if (Newdemo_game_type < DEMO_GAME_TYPE_D1) {
 		newmenu_item m[2];
 
 		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
@@ -1451,7 +1463,7 @@ int newdemo_read_demo_start(int rnd_demo)
 		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
 		return 1;
 	}
-	if (game_type != DEMO_GAME_TYPE) {
+	if (Newdemo_game_type > DEMO_GAME_TYPE) {
 		newmenu_item m[2];
 
 		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
@@ -1461,7 +1473,7 @@ int newdemo_read_demo_start(int rnd_demo)
 		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
 		return 1;
 	}
-	if (version < DEMO_VERSION) {
+	if (version < DEMO_VERSION_D1) {
 		if (!rnd_demo) {
 			newmenu_item m[1];
 			sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_DEMO_OLD);
@@ -1511,10 +1523,10 @@ int newdemo_read_demo_start(int rnd_demo)
 #endif
 		nd_read_int(&(Players[Player_num].score));      // Note link to above if!
 
-	for (i = 0; i < MAX_PRIMARY_WEAPONS; i++)
+	for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_PRIMARY_WEAPONS); i++)
 		nd_read_short((short*)&(Players[Player_num].primary_ammo[i]));
 
-	for (i = 0; i < MAX_SECONDARY_WEAPONS; i++)
+	for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_SECONDARY_WEAPONS); i++)
 			nd_read_short((short*)&(Players[Player_num].secondary_ammo[i]));
 
 	nd_read_byte(&laser_level);
@@ -1526,6 +1538,8 @@ int newdemo_read_demo_start(int rnd_demo)
 	// Support for missions
 
 	nd_read_string(current_mission);
+	if (!strcmp(current_mission, ""))
+		strcpy(current_mission, "descent");
 	if (!load_mission_by_name(current_mission)) {
 		if (!rnd_demo) {
 			newmenu_item m[1];
@@ -1634,7 +1648,10 @@ int newdemo_read_frame_information()
 		}
 
 		case ND_EVENT_VIEWER_OBJECT:        // Followed by an object structure
-			nd_read_byte (&WhichWindow);
+			if (Newdemo_game_type <  DEMO_GAME_TYPE_D2)
+				WhichWindow = 0;
+			else
+				nd_read_byte (&WhichWindow);
 			if (WhichWindow&15)
 			{
 				//mprintf ((0,"Reading extra!\n"));
@@ -2398,7 +2415,7 @@ int newdemo_read_frame_information()
 			LoadLevel((int)loaded_level,1);
 			Newdemo_cntrlcen_destroyed = 0;
 
-			if (JustStartedPlayback)
+			if (JustStartedPlayback && Newdemo_game_type >= DEMO_GAME_TYPE_D2)
 			{
 				nd_read_int (&Num_walls);
 				for (i=0;i<Num_walls;i++)    // restore the walls
@@ -2961,10 +2978,11 @@ void newdemo_start_recording()
 	outfile = PHYSFSX_openWriteBuffered(DEMO_FILENAME);
 
 #if !defined(MACINTOSH) && !defined(_WIN32_WCE)
-	if (outfile == NULL && errno == ENOENT) {   //dir doesn't exist?
+	if (outfile == NULL && errno == ENOENT)     //dir doesn't exist?
 #else
-	if (outfile == NULL) {                      //dir doesn't exist and no errno on mac!
+	if (outfile == NULL)                        //dir doesn't exist and no errno on mac!
 #endif
+	{
 		PHYSFS_mkdir(DEMO_DIR); //try making directory
 		outfile = PHYSFSX_openWriteBuffered(DEMO_FILENAME);
 	}
