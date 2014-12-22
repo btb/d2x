@@ -199,6 +199,7 @@ int Newdemo_num_written;
 int Newdemo_game_mode;
 sbyte Newdemo_game_type;
 int Newdemo_old_cockpit;
+int Newdemo_is_d2demo = 0;
 sbyte Newdemo_no_space;
 sbyte Newdemo_at_eof;
 sbyte Newdemo_do_interpolate = 0; // 1
@@ -637,6 +638,8 @@ void nd_read_object(object *obj)
 			nd_read_int(&(obj->rtype.pobj_info.model_num));
 			if (Newdemo_game_type < DEMO_GAME_TYPE_D2)
 				obj->rtype.pobj_info.model_num = D1_Polymodel_map[obj->rtype.pobj_info.model_num];
+			else if (Newdemo_is_d2demo)
+				obj->rtype.pobj_info.model_num = D2Demo_Polymodel_map[obj->rtype.pobj_info.model_num];
 			if (obj->rtype.pobj_info.model_num < 0)
 				Int3();
 			nd_read_int(&(obj->rtype.pobj_info.subobj_flags));
@@ -1540,6 +1543,10 @@ int newdemo_read_demo_start(int rnd_demo)
 	nd_read_string(current_mission);
 	if (!strcmp(current_mission, ""))
 		strcpy(current_mission, "descent");
+	if (!strcmp(current_mission, "d2demo") && !cfexist("d2demo.hog")) {
+		strcpy(current_mission, "d2");
+		Newdemo_is_d2demo = 1;
+	}
 	if (!load_mission_by_name(current_mission)) {
 		if (!rnd_demo) {
 			newmenu_item m[1];
