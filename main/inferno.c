@@ -737,7 +737,7 @@ int main(int argc, char *argv[])
 	Game_mode = GM_GAME_OVER;
 
 	if (Auto_demo)	{
-		newdemo_start_playback("descent.dem");		
+		newdemo_start_playback("foo.dem");		
 		if (Newdemo_state == ND_STATE_PLAYBACK )
 			Function_mode = FMODE_GAME;
 	}

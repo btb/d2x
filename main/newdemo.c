@@ -636,7 +636,9 @@ void nd_read_object(object *obj)
 
 		if ((obj->type != OBJ_ROBOT) && (obj->type != OBJ_PLAYER) && (obj->type != OBJ_CLUTTER)) {
 			nd_read_int(&(obj->rtype.pobj_info.model_num));
-			if (Newdemo_game_type < DEMO_GAME_TYPE_D2)
+			if (Newdemo_game_type == DEMO_GAME_TYPE_D1_SHARE)
+				obj->rtype.pobj_info.model_num = D1Share_Polymodel_map[obj->rtype.pobj_info.model_num];
+			else if (Newdemo_game_type == DEMO_GAME_TYPE_D1)
 				obj->rtype.pobj_info.model_num = D1_Polymodel_map[obj->rtype.pobj_info.model_num];
 			else if (Newdemo_is_d2demo)
 				obj->rtype.pobj_info.model_num = D2Demo_Polymodel_map[obj->rtype.pobj_info.model_num];
@@ -1443,7 +1445,7 @@ int newdemo_read_demo_start(int rnd_demo)
 {
 	sbyte i, version, laser_level;
 	sbyte c, energy, shield;
-	char text[128], current_mission[9];
+	char text[128], current_mission[9] = "";
 
 	nd_read_byte(&c);
 	if ((c != ND_EVENT_START_DEMO) || nd_bad_read) {
@@ -1456,7 +1458,7 @@ int newdemo_read_demo_start(int rnd_demo)
 	}
 	nd_read_byte(&version);
 	nd_read_byte(&Newdemo_game_type);
-	if (Newdemo_game_type < DEMO_GAME_TYPE_D1) {
+	if (Newdemo_game_type < DEMO_GAME_TYPE_D1_SHARE) {
 		newmenu_item m[2];
 
 		sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_RECORDED);
@@ -1476,7 +1478,7 @@ int newdemo_read_demo_start(int rnd_demo)
 		newmenu_do( NULL, NULL, sizeof(m)/sizeof(*m), m, NULL );
 		return 1;
 	}
-	if (version < DEMO_VERSION_D1) {
+	if (version < DEMO_VERSION_D1_SHARE) {
 		if (!rnd_demo) {
 			newmenu_item m[1];
 			sprintf(text, "%s %s", TXT_CANT_PLAYBACK, TXT_DEMO_OLD);
@@ -1495,8 +1497,12 @@ int newdemo_read_demo_start(int rnd_demo)
 	change_playernum_to((Newdemo_game_mode >> 16) & 0x7);
 	if (Newdemo_game_mode & GM_TEAM) {
 		nd_read_byte((sbyte *) &(Netgame.team_vector));
-		nd_read_string(Netgame.team_name[0]);
-		nd_read_string(Netgame.team_name[1]);
+
+		if (Newdemo_game_type >= DEMO_GAME_TYPE_D1) {
+			nd_read_string(Netgame.team_name[0]);
+			nd_read_string(Netgame.team_name[1]);
+		}
+
 	}
 	if (Newdemo_game_mode & GM_MULTI) {
 
@@ -1524,23 +1530,26 @@ int newdemo_read_demo_start(int rnd_demo)
 		Game_mode = GM_NORMAL;
 	} else
 #endif
-		nd_read_int(&(Players[Player_num].score));      // Note link to above if!
+		if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
+			nd_read_int(&(Players[Player_num].score));      // Note link to above if!
 
-	for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_PRIMARY_WEAPONS); i++)
-		nd_read_short((short*)&(Players[Player_num].primary_ammo[i]));
+	if (Newdemo_game_type >= DEMO_GAME_TYPE_D1) {
+		for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_PRIMARY_WEAPONS); i++)
+			nd_read_short((short*)&(Players[Player_num].primary_ammo[i]));
 
-	for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_SECONDARY_WEAPONS); i++)
+		for (i = 0; i < (Newdemo_game_type < DEMO_GAME_TYPE_D2 ? 5 : MAX_SECONDARY_WEAPONS); i++)
 			nd_read_short((short*)&(Players[Player_num].secondary_ammo[i]));
 
-	nd_read_byte(&laser_level);
-	if (laser_level != Players[Player_num].laser_level) {
-		Players[Player_num].laser_level = laser_level;
-		update_laser_weapon_info();
+		nd_read_byte(&laser_level);
+		if (laser_level != Players[Player_num].laser_level) {
+			Players[Player_num].laser_level = laser_level;
+			update_laser_weapon_info();
+		}
+
+		// Support for missions
+
+		nd_read_string(current_mission);
 	}
-
-	// Support for missions
-
-	nd_read_string(current_mission);
 	if (!strcmp(current_mission, ""))
 		strcpy(current_mission, "descent");
 	if (!strcmp(current_mission, "d2demo") && !cfexist("d2demo.hog")) {
@@ -1577,6 +1586,25 @@ int newdemo_read_demo_start(int rnd_demo)
 	// Next bit of code to fix problem that I introduced between 1.0 and 1.1
 	// check the next byte -- it _will_ be a load_new_level event.  If it is
 	// not, then we must shift all bytes up by one.
+
+	if (Newdemo_game_type < DEMO_GAME_TYPE_D1)
+	{
+		sbyte c;
+
+		nd_read_byte(&c);
+		if (c != ND_EVENT_NEW_LEVEL) {
+			int flags;
+
+			flags = Players[Player_num].flags;
+			energy = shield;
+			shield = (unsigned char)flags;
+			flags = (flags >> 8) & 0x00ffffff;
+			flags |= (Primary_weapon << 24);
+			Primary_weapon = Secondary_weapon;
+			Secondary_weapon = c;
+		} else
+			PHYSFS_seek(infile, PHYSFS_tell(infile) - 1);
+	}
 
 	Players[Player_num].energy = i2f(energy);
 	Players[Player_num].shields = i2f(shield);
@@ -1920,10 +1948,11 @@ int newdemo_read_frame_information()
 			sbyte energy;
 			sbyte old_energy;
 
-			nd_read_byte(&old_energy);
+			if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
+				nd_read_byte(&old_energy);
 			nd_read_byte(&energy);
 			if (nd_bad_read) {done = -1; break; }
-			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
+			if ((Newdemo_game_type < DEMO_GAME_TYPE_D1) || (Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].energy = i2f(energy);
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
 				if (old_energy != -128)
@@ -1952,10 +1981,11 @@ int newdemo_read_frame_information()
 			sbyte shield;
 			sbyte old_shield;
 
-			nd_read_byte(&old_shield);
+			if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
+				nd_read_byte(&old_shield);
 			nd_read_byte(&shield);
 			if (nd_bad_read) {done = -1; break; }
-			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
+			if ((Newdemo_game_type < DEMO_GAME_TYPE_D1) || (Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].shields = i2f(shield);
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
 				if (old_shield != -128)
@@ -2011,8 +2041,9 @@ int newdemo_read_frame_information()
 
 			nd_read_byte(&weapon_type);
 			nd_read_byte(&weapon_num);
-			nd_read_byte(&old_weapon);
-			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
+			if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
+				nd_read_byte(&old_weapon);
+			if ((Newdemo_game_type < DEMO_GAME_TYPE_D1) || (Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				if (weapon_type == 0)
 					Primary_weapon = (int)weapon_num;
 				else
@@ -2516,7 +2547,7 @@ void newdemo_goto_end()
 	sbyte energy, shield, c;
 	int i, loc, bint;
 
-	PHYSFS_seek(infile, PHYSFS_tell(infile) - 2);
+	PHYSFS_seek(infile, PHYSFS_fileLength(infile) - 2);
 	nd_read_byte(&level);
 
 	if ((level < Last_secret_level) || (level > Last_level)) {
@@ -2532,9 +2563,12 @@ void newdemo_goto_end()
 	if (level != Current_level_num)
 		LoadLevel(level,1);
 
-	PHYSFS_seek(infile, PHYSFS_tell(infile) - 4);
-	nd_read_short(&byte_count);
-	PHYSFS_seek(infile, PHYSFS_tell(infile) - 2 - byte_count);
+	if (Newdemo_game_type >= DEMO_GAME_TYPE_D1) {
+		PHYSFS_seek(infile, PHYSFS_fileLength(infile) - 4);
+		nd_read_short(&byte_count);
+		PHYSFS_seek(infile, PHYSFS_tell(infile) - 2 - byte_count);
+	} else
+		PHYSFS_seek(infile, PHYSFS_fileLength(infile) - 12);
 
 	nd_read_short(&frame_length);
 	loc = PHYSFS_tell(infile);
@@ -2815,7 +2849,10 @@ void newdemo_playback_one_frame()
 		else
 			frames_back = 1;
 		if (Newdemo_at_eof) {
-			PHYSFS_seek(infile, PHYSFS_tell(infile) + 11);
+			if (Newdemo_game_type == DEMO_GAME_TYPE_D1_SHARE)
+				PHYSFS_seek(infile, PHYSFS_fileLength(infile) - 2);
+			else
+				PHYSFS_seek(infile, PHYSFS_tell(infile) + 11);
 		}
 		newdemo_back_frames(frames_back);
 
