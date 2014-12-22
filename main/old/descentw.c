@@ -84,7 +84,6 @@ extern int DD_Emulation;
 extern int Skip_briefing_screens;		// So we can skip the briefing 
 extern int digi_system_initialized;
 extern int framerate_on;
-extern int Current_display_mode;
 extern ubyte gr_palette_faded_out;
 extern int piggy_low_memory;				// FROM PIGGY.C!
 extern RECT ViewportRect;
@@ -1057,7 +1056,6 @@ static int Saved_Game_window_h;
 static int SavedScreenMode = 0;
 
 extern int Digi_initialized;
-extern int Current_display_mode;
 extern BOOL WMVEPlaying, RMVEPlaying;
 extern int current_song_level;
 

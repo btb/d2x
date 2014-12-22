@@ -83,16 +83,13 @@ extern grs_canvas	VR_screen_sub_pages[2];		// Two sub pages of VRAM if paging is
 void game_init_render_buffers(int screen_mode, int render_max_w, int render_max_h, int render_method, int flags);
 void game_init_render_sub_buffers(int x, int y, int w, int h);
 
-void set_display_mode(int mode);
-extern int Default_display_mode;		// cannot be -1
-// values are:
-// -1: some special VR mode.
-//  0: 320 x 200
-//  1: 640 x 480
-//  2: 320 x 400
-//  3: 640 x 400
-//  4: 800 x 600
-//  5: 102 x 768
+void set_display_mode(uint32_t mode);
+extern uint32_t Default_display_mode; // cannot be 0xffffffff
+extern uint32_t Current_display_mode;
+
+// to be refactored later...
+#define SM_HIRES (SM_H(Current_display_mode) > 200)
+#define SM_HIRES2 (SM_W(Current_display_mode) > 320)
 
 // called to get the screen in a mode compatible with popup menus.
 // if we can't have popups over the game screen, switch to menu mode.

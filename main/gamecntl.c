@@ -209,10 +209,6 @@ void speedtest_frame(void);
 void advance_sound(void);
 void play_test_sound(void);
 
-#ifdef MACINTOSH
-extern void macintosh_quit(void);	// dialog-style quit function
-#endif
-
 #define key_isfunc(k) (((k&0xff)>=KEY_F1 && (k&0xff)<=KEY_F10) || (k&0xff)==KEY_F11 || (k&0xff)==KEY_F12)
 #define key_ismod(k)  ((k&0xff)==KEY_LALT || (k&0xff)==KEY_RALT || (k&0xff)==KEY_LSHIFT || (k&0xff)==KEY_RSHIFT || (k&0xff)==KEY_LCTRL || (k&0xff)==KEY_RCTRL)
 
@@ -1245,7 +1241,6 @@ int HandleSystemKey(int key)
 		#ifdef MACINTOSH
 		
 		case KEY_COMMAND+KEY_M:
-			#if !defined(SHAREWARE) || defined(APPLE_DEMO)
 			if ( (Game_mode & GM_MULTI) )		// don't process in multiplayer games
 				break;
 
@@ -1260,7 +1255,6 @@ int HandleSystemKey(int key)
 			clear_boxed_message();
 			key_init();
 			start_time();
-			#endif
 			
 			break;
 
@@ -1281,12 +1275,12 @@ int HandleSystemKey(int key)
 		case KEY_COMMAND+KEY_DOWN:
 			songs_stop_redbook();
 			break;
+		#endif
 
 		case KEY_COMMAND+KEY_Q:
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			break;
-		#endif
 
 //added 8/23/99 by Matt Mueller for hot key res/fullscreen changing, and menu access
 		case KEY_CTRLED+KEY_SHIFTED+KEY_PADDIVIDE:
@@ -1430,7 +1424,7 @@ void HandleGameKey(int key)
 
 	switch (key) {
 
-		#if defined(MACINTOSH)  && !defined(RELEASE)
+		#if !defined(RELEASE)
 		case KEY_COMMAND+KEY_F:	r_framerate.value = !r_framerate.value; break;
 		#endif
 

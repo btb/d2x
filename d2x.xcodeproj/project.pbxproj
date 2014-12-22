@@ -155,6 +155,8 @@
 		146698F41A2729870070D41D /* ntmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697621A2729870070D41D /* ntmap.c */; };
 		146698F51A2729870070D41D /* scanline.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697631A2729870070D41D /* scanline.c */; };
 		146698FC1A2729870070D41D /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
+		1478618F1A44120900DB53B9 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 1478618E1A44120900DB53B9 /* README */; };
+		147861911A44121000DB53B9 /* NEWS in Resources */ = {isa = PBXBuildFile; fileRef = 147861901A44121000DB53B9 /* NEWS */; };
 		14E0A3221A2C4DDE0039A9FC /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 		14E97E071A3703D40027FB84 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
 /* End PBXBuildFile section */
@@ -892,6 +894,9 @@
 		146699AE1A2729C60070D41D /* txb2tex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		14DB35EB1A3BE76D00F9E41C /* test.cfg */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.cfg; sourceTree = "<group>"; };
+		1478618B1A4410C500DB53B9 /* README.utils */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.utils; sourceTree = "<group>"; };
+		1478618E1A44120900DB53B9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		147861901A44121000DB53B9 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
 		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../../../../usr/local/lib/libphysfs.a; sourceTree = "<group>"; };
 		14E97E051A3703BE0027FB84 /* cvar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvar.h; sourceTree = "<group>"; };
 		14E97E061A3703D40027FB84 /* cvar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cvar.c; sourceTree = "<group>"; };
@@ -940,6 +945,9 @@
 				146699A01A2729C60070D41D /* utilities */,
 				141FE1001A2D36A600A4FB18 /* Makefile.am */,
 				14669A431A285F9B0070D41D /* configure.ac */,
+				1478618B1A4410C500DB53B9 /* README.utils */,
+				1478618E1A44120900DB53B9 /* README */,
+				147861901A44121000DB53B9 /* NEWS */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2147,6 +2155,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1478618F1A44120900DB53B9 /* README in Resources */,
+				147861911A44121000DB53B9 /* NEWS in Resources */,
 				146694B81A27246A0070D41D /* Images.xcassets in Resources */,
 				146694BB1A27246A0070D41D /* MainMenu.xib in Resources */,
 			);

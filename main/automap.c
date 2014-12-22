@@ -641,8 +641,6 @@ int Automap_active = 0;
 int Automap_always_hires=0;
 extern int MenuHiresAvailable;
 
-extern int Current_display_mode;
-
 u_int32_t automap_mode = SM(640,480);
 int automap_width = 640;
 int automap_height = 480;
@@ -680,8 +678,6 @@ void do_automap( int key_code )	{
 
 	init_automap_colors();
 
-	key_code = key_code;	// disable warning...
-
 	if ((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence))
 		pause_game = 0;
 
@@ -695,7 +691,7 @@ void do_automap( int key_code )	{
 	mprintf( (0, "Num_vertices=%d, Max_edges=%d, (MAX:%d)\n", Num_vertices, Max_edges, MAX_EDGES ));
 	mprintf( (0, "Allocated %d K for automap edge list\n", (sizeof(Edge_info)+sizeof(short))*Max_edges/1024 ));
 
-	if ((Current_display_mode!=0 && Current_display_mode!=2) || (Automap_always_hires && MenuHiresAvailable)) {
+	if (SM_HIRES2 || (Automap_always_hires && MenuHiresAvailable)) {
 		//edit 4/23/99 Matt Mueller - don't switch res unless we need to
 		if (grd_curscreen->sc_mode != AUTOMAP_MODE)
 			gr_set_mode( AUTOMAP_MODE );

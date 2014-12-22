@@ -67,7 +67,6 @@ static char rcsid[] = "$Id: gamerend.c,v 1.22 2006-11-26 01:05:24 chris Exp $";
 
 extern fix Cruise_speed;
 extern int LinearSVGABuffer;
-extern int Current_display_mode;
 extern cvar_t r_framerate;
 
 
@@ -1052,7 +1051,7 @@ void toggle_cockpit()
 	switch (Cockpit_mode) {
 
 		case CM_FULL_COCKPIT: {
-			int max_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(Current_display_mode?(Num_cockpits/2):0)].index].bm_h;
+			int max_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR + (SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
 			if (Game_window_h > max_h)		//too big for statusbar
 				new_mode = CM_FULL_SCREEN;
 			else
@@ -1288,8 +1287,8 @@ void update_cockpits(int force_redraw)
 	case CM_FULL_COCKPIT:
 	case CM_REAR_VIEW:
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0,0, &GameBitmaps[cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)].index]);	
+		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)]);
+		gr_ubitmapm(0,0, &GameBitmaps[cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)].index]);
 		break;
 
 	case CM_FULL_SCREEN:
@@ -1302,8 +1301,8 @@ void update_cockpits(int force_redraw)
 
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0,max_window_h,&GameBitmaps[cockpit_bitmap[Cockpit_mode+(Current_display_mode?(Num_cockpits/2):0)].index]);
+		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)]);
+		gr_ubitmapm(0,max_window_h,&GameBitmaps[cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)].index]);
 	
 		Game_window_x = (max_window_w - Game_window_w)/2;
 		Game_window_y = (max_window_h - Game_window_h)/2;

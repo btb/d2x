@@ -878,8 +878,6 @@ multi_explode_robot_sub(int botnum, int killer,char isthief)
 {
 	object *robot;
 
-	killer = killer;
-
 	if ((botnum < 0) || (botnum > Highest_object_index)) { // Objnum in range?
 		Int3(); // See rob
 		return 0;

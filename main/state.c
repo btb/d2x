@@ -98,7 +98,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "laser.h"
 #include "multibot.h"
 #include "state.h"
-
+#include "playsave.h"
 #ifdef OGL
 #include "gr.h"
 #endif
@@ -172,9 +172,6 @@ extern ubyte Hack_DblClick_MenuMode;
 //-------------------------------------------------------------------
 void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 {
-	nitems = nitems;
-	last_key = last_key;
-	
 //	if ( sc_last_item != citem )	{
 //		sc_last_item = citem;
 		if ( citem > 0 )	{
@@ -225,17 +222,9 @@ int state_get_save_file(char * fname, char * dsc, int multi, int blind_save)
 	for (i=0;i<NUM_SAVES; i++ )	{
 		sc_bmp[i] = NULL;
 		if ( !multi )
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.sg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.sg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, i );
 		else
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.mg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.mg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.mg%x", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = PHYSFSX_openReadBuffered(filename[i]);
 		if ( fp ) {
@@ -285,7 +274,6 @@ int state_get_save_file(char * fname, char * dsc, int multi, int blind_save)
 }
 
 int RestoringMenu=0;
-extern int Current_display_mode;
 
 int state_get_restore_file(char * fname, int multi)
 {
@@ -302,17 +290,9 @@ int state_get_restore_file(char * fname, int multi)
 	for (i=0;i<NUM_SAVES+1; i++ )	{
 		sc_bmp[i] = NULL;
 		if (!multi)
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.sg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.sg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, i );
 		else
-			#ifndef MACINTOSH
-			sprintf( filename[i], "%s.mg%x", Players[Player_num].callsign, i );
-			#else
-			sprintf( filename[i], ":Players:%s.mg%x", Players[Player_num].callsign, i );
-			#endif
+			sprintf( filename[i], PLAYER_DIR "%s.mg%x", Players[Player_num].callsign, i );
 		valid = 0;
 		fp = PHYSFSX_openReadBuffered(filename[i]);
 		if ( fp ) {
@@ -353,7 +333,7 @@ int state_get_restore_file(char * fname, int multi)
 		return 0;
 	}
 
-	if (Current_display_mode == 3)	//restore menu won't fit on 640x400
+	if (Current_display_mode == SM(640,400)) //restore menu won't fit on 640x400
 		VR_screen_flags ^= VRF_COMPATIBLE_MENUS;
 
 	sc_last_item = -1;
@@ -370,7 +350,7 @@ int state_get_restore_file(char * fname, int multi)
 	Hack_DblClick_MenuMode = 0;
 #endif
 
-	if (Current_display_mode == 3)	//set flag back
+	if (Current_display_mode == SM(640,400)) //set flag back
 		VR_screen_flags ^= VRF_COMPATIBLE_MENUS;
 
 
@@ -442,13 +422,6 @@ int copy_file(char *old_file, char *new_file)
 	return 0;
 }
 
-#ifndef MACINTOSH
-#define SECRETB_FILENAME	"secret.sgb"
-#define SECRETC_FILENAME	"secret.sgc"
-#else
-#define SECRETB_FILENAME	":Players:secret.sgb"
-#define SECRETC_FILENAME	":Players:secret.sgc"
-#endif
 
 extern int Final_boss_is_dead;
 
@@ -483,7 +456,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 	//	return to the base level.
 	if (secret_save && (Control_center_destroyed)) {
 		mprintf((0, "Deleting secret.sgb so player can't return to base level.\n"));
-		PHYSFS_delete(SECRETB_FILENAME);
+		PHYSFS_delete(PLAYER_DIR "secret.sgb");
 		return 0;
 	}
 
@@ -491,10 +464,10 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 
 	if (secret_save == 1) {
 		filename_override = filename;
-		sprintf(filename_override, SECRETB_FILENAME);
+		sprintf(filename_override, PLAYER_DIR "secret.sgb");
 	} else if (secret_save == 2) {
 		filename_override = filename;
-		sprintf(filename_override, SECRETC_FILENAME);
+		sprintf(filename_override, PLAYER_DIR "secret.sgc");
 	} else {
 		if (filename_override) {
 			strcpy( filename, filename_override);
@@ -522,11 +495,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 			else
 				fc = '0' + filenum;
 
-			#ifndef MACINTOSH
-			sprintf(temp_fname, "%csecret.sgc", fc);
-			#else
-			sprintf(temp_fname, ":Players:%csecret.sgc", fc);
-			#endif
+			sprintf(temp_fname, PLAYER_DIR "%csecret.sgc", fc);
 
 			mprintf((0, "Trying to copy secret.sgc to %s.\n", temp_fname));
 
@@ -537,10 +506,10 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 					Error("Cannot delete file <%s>: %s", temp_fname, PHYSFS_getLastError());
 			}
 
-			if (PHYSFS_exists(SECRETC_FILENAME))
+			if (PHYSFS_exists(PLAYER_DIR "secret.sgc"))
 			{
 				mprintf((0, "Copying secret.sgc to %s.\n", temp_fname));
-				rval = copy_file(SECRETC_FILENAME, temp_fname);
+				rval = copy_file(PLAYER_DIR "secret.sgc", temp_fname);
 				Assert(rval == 0);	//	Oops, error copying secret.sgc to temp_fname!
 			}
 		}
@@ -555,11 +524,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override,
 		if ( tfp ) {
 			char	newname[128];
 
-			#ifndef MACINTOSH
-			sprintf( newname, "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
-			#else
-			sprintf(newname, "Players/%s.sg%x", Players[Player_num].callsign, NUM_SAVES);
-			#endif
+			sprintf( newname, PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
 
 			PHYSFS_seek(tfp, DESC_OFFSET);
 			PHYSFS_write(tfp, "[autosave backup]", sizeof(char) * DESC_LENGTH, 1);
@@ -596,7 +561,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	}*/
 
 	#if defined(MACINTOSH) && !defined(NDEBUG)
-	if ( strncmp(filename, ":Players:", 9) )
+	if ( strncmp(filename, PLAYER_DIR, 9) )
 		Int3();
 	#endif
 
@@ -929,21 +894,17 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
 			else
 				fc = '0' + filenum;
 			
-			#ifndef MACINTOSH
-			sprintf(temp_fname, "%csecret.sgc", fc);
-			#else
-			sprintf(temp_fname, "Players/%csecret.sgc", fc);
-			#endif
+			sprintf(temp_fname, PLAYER_DIR "%csecret.sgc", fc);
 
 			mprintf((0, "Trying to copy %s to secret.sgc.\n", temp_fname));
 
 			if (PHYSFS_exists(temp_fname))
 			{
 				mprintf((0, "Copying %s to secret.sgc\n", temp_fname));
-				rval = copy_file(temp_fname, SECRETC_FILENAME);
+				rval = copy_file(temp_fname, PLAYER_DIR "secret.sgc");
 				Assert(rval == 0);	//	Oops, error copying temp_fname to secret.sgc!
 			} else
-				PHYSFS_delete(SECRETC_FILENAME);
+				PHYSFS_delete(PLAYER_DIR "secret.sgc");
 		}
 	}
 
@@ -951,11 +912,7 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
 	if ((filenum != (NUM_SAVES+1)) && in_game) {
 		char	temp_filename[128];
 		mprintf((0, "Doing autosave, filenum = %i, != %i!\n", filenum, NUM_SAVES+1));
-		#ifndef MACINTOSH
-		sprintf( temp_filename, "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
-		#else
-		sprintf(temp_filename, "Players/%s.sg%x", Players[Player_num].callsign, NUM_SAVES);
-		#endif
+		sprintf( temp_filename, PLAYER_DIR "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
 		state_save_all(!in_game, secret_restore, temp_filename, 0);
 	}
 
@@ -1002,7 +959,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	short TempTmapNum2[MAX_SEGMENTS][MAX_SIDES_PER_SEGMENT];
 
 	#if defined(MACINTOSH) && !defined(NDEBUG)
-	if (strncmp(filename, "Players/", 9))
+	if (strncmp(filename, PLAYER_DIR, 9))
 		Int3();
 	#endif
 

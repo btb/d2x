@@ -65,7 +65,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "newdemo.h"
 #include "kconfig.h"
 #include "strutil.h"
-
+#include "playsave.h"
 #ifdef MACINTOSH
 #include <Events.h>
 #endif
@@ -407,7 +407,6 @@ void nm_string_black( bkg * b, int w1,int x, int y, char * s )
 {
 	int w,h,aw;
 	gr_get_string_size(s, &w, &h, &aw  );
-	b = b;					
 	if (w1 == 0) w1 = w;
 
 		gr_setcolor( BM_XRGB(2,2,2) );
@@ -1372,7 +1371,6 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 		case KEY_COMMAND+KEY_M:
 			k = -1;
-			#if !defined(SHAREWARE) || defined(APPLE_DEMO)
 			if ( (Game_mode & GM_MULTI) )		// don't process in multiplayer games
 				break;
 
@@ -1390,7 +1388,6 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			key_init();
 			key_flush();
 			start_time();
-			#endif
 			
 			break;
 
@@ -1399,18 +1396,16 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			RBAEjectDisk();
 			k = -1;		// force key not to register
 			break;
+		#endif
 			
 		case KEY_COMMAND+KEY_Q: {
-			extern void macintosh_quit();
-			
 			if ( !(Game_mode & GM_MULTI) )
-				macintosh_quit();
+				quit_request();
 			if (!joydefs_calibrating)
 				newmenu_show_cursor();
 			k = -1;		// force key not to register
 			break;
 		}
-		#endif
 
 		#ifndef NDEBUG
 		case KEY_BACKSP:	
@@ -1915,11 +1910,7 @@ void delete_player_saved_games(char * name)
 	char filename[16];
 
 	for (i=0;i<10; i++)	{
-#ifndef MACINTOSH
-		sprintf( filename, "%s.sg%d", name, i );
-#else
-		sprintf(filename, "Players/%s.sg%d", name, i);
-#endif
+		sprintf( filename, PLAYER_DIR "%s.sg%d", name, i );
 		PHYSFS_delete(filename);
 	}
 }

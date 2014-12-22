@@ -55,6 +55,6 @@ extern int	RBAResume();
 int RBAGetTrackNum();
 
 // get the cddb discid for the current cd.
-unsigned long RBAGetDiscID();
+uint32_t RBAGetDiscID();
 
 #endif

@@ -56,6 +56,9 @@ typedef struct polymodel {
 
 // array of pointers to polygon objects
 extern polymodel Polygon_models[];
+extern int D1Share_Polymodel_map[];
+extern int D1_Polymodel_map[];
+extern int D2Demo_Polymodel_map[];
 
 // switch to simpler model when the object has depth
 // greater than this value times its radius.

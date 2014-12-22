@@ -1482,8 +1482,6 @@ multi_do_death(int objnum)
 {
 	// Do any miscellaneous stuff for a new network player after death
 
-	objnum = objnum;
-
 	if (!(Game_mode & GM_MULTI_COOP))
 	{
 		mprintf((0, "Setting all keys for player %d.\n", Player_num));
@@ -3683,11 +3681,7 @@ void multi_save_game(ubyte slot, uint id, char *desc)
 	if ((Endlevel_sequence) || (Control_center_destroyed))
 		return;
 
-#ifndef MACINTOSH
-	sprintf( filename, "%s.mg%d", Players[Player_num].callsign, slot );
-#else
-	sprintf( filename, ":Players:%s.mg%d", Players[Player_num].callsign, slot );
-#endif
+	sprintf( filename, PLAYER_DIR "%s.mg%d", Players[Player_num].callsign, slot );
 	mprintf(( 0, "Save game %x on slot %d\n", id, slot ));
 	HUD_init_message( "Saving game #%d, '%s'", slot, desc );
 	stop_time();
@@ -3707,11 +3701,7 @@ void multi_restore_game(ubyte slot, uint id)
 
 	mprintf(( 0, "Restore game %x from slot %d\n", id, slot ));
 	saved_player = Players[Player_num];
-#ifndef MACINTOSH
-	sprintf( filename, "%s.mg%d", Players[Player_num].callsign, slot );
-#else
-	sprintf( filename, ":Players:%s.mg%d", Players[Player_num].callsign, slot );
-#endif
+	sprintf( filename, PLAYER_DIR "%s.mg%d", Players[Player_num].callsign, slot );
 
 	for (i=0;i<N_players;i++)
 		multi_strip_robots(i);
@@ -4054,7 +4044,6 @@ void multi_do_wall_status (char *buf)
 
 void multi_send_jason_cheat (int num)
 {
-	num=num;
 	return;
 }
 
@@ -5305,7 +5294,6 @@ multi_process_data(char *buf, int len)
 	// if necessary) and act on it.
 
 	int type;
-	len = len;
 
 	type = buf[0];
 

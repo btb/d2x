@@ -58,6 +58,9 @@ void RBAInit()
 		Warning("Could not open cdrom for redbook audio!\n");
 		return;
 	}
+
+	SDL_CDStatus(s_cd); /* update the drive status */
+
 	atexit(RBAExit);
 	initialised = 1;
 }
@@ -190,7 +193,7 @@ static int cddb_sum(int n)
 }
 
 
-unsigned long RBAGetDiscID()
+uint32_t RBAGetDiscID()
 {
 	int i, t = 0, n = 0;
 

@@ -91,9 +91,6 @@ int	Erase_color;
 
 extern int check_button_press();
 
-#ifdef MACINTOSH
-extern void macintosh_quit(void);
-#endif
 
 // added by Jan Bobrowski for variable-size menu screen
 static int rescale_x(int x)

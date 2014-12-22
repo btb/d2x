@@ -288,9 +288,7 @@ void print_commandline_help()
 	printf( "  -nomovies       %s\n","Don't play movies");
 	printf( "  -noscreens      %s\n","Skip briefing screens");
 #endif
-#if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
 	printf( "  -noredbook      %s\n","Disable redbook audio");
-#endif
 	printf( "  -norun          %s\n","Bail out after initialization");
 //	printf( "  -ordinaljoy     %s\n","FIXME: Undocumented");
 //	printf( "  -rtscts         %s\n","Same as -ctsrts");
@@ -615,56 +613,18 @@ int main(int argc, char *argv[])
 	do_joystick_init();
 
 	if (!VR_offscreen_buffer)	//if hasn't been initialied (by headset init)
-		set_display_mode(0);		//..then set default display mode
+		set_display_mode(Default_display_mode); //..then set default display mode
 
 	{
 		int screen_width = 640;
 		int screen_height = 480;
-		int vr_mode = VR_NONE;
-		int screen_flags = VRF_USE_PAGING;
 
-		if (FindResArg("", &screen_width, &screen_height))
-		{
-			/* stuff below mirrors values from display_mode_info in
-			 * menu.c which is used by set_display_mode. In fact,
-			 * set_display_mode should probably be rewritten to allow
-			 * arbitrary resolutions, and then we get rid of this
-			 * stuff here.
-			 */
-			switch (SM(screen_width, screen_height))
-			{
-			case SM(320, 200):
-			case SM(640, 480):
-				screen_flags = VRF_ALLOW_COCKPIT + VRF_COMPATIBLE_MENUS;
-				break;
-			case SM(320, 400):
-				screen_flags = VRF_USE_PAGING;
-				break;
-			case SM(640, 400):
-			case SM(800, 600):
-			case SM(1024, 768):
-			case SM(1280, 1024):
-				screen_flags = VRF_COMPATIBLE_MENUS;
-				break;
-			}
-
-			con_printf(CON_VERBOSE, "Using %ix%i ...\n", screen_width, screen_height);
-		}
-
-// added ifdef on 9/30/98 by Matt Mueller to fix high res in linux
-#ifdef __MSDOS__
-		if (FindArg("-nodoublebuffer"))
-#endif
-// end addition -MM
-		{
-			con_printf(CON_VERBOSE, "Double-buffering disabled...\n");
-			screen_flags &= ~VRF_USE_PAGING;
-		}
+		FindResArg("", &screen_width, &screen_height);
 
 		// added 3/24/99 by Owen Evans for screen res changing
 		Game_screen_mode = SM(screen_width, screen_height);
 		// end added -OE
-		game_init_render_buffers(Game_screen_mode, screen_width, screen_height, vr_mode, screen_flags);
+		set_display_mode(Game_screen_mode);
 
 	}
 	{
@@ -783,7 +743,7 @@ int main(int argc, char *argv[])
 	Game_mode = GM_GAME_OVER;
 
 	if (Auto_demo)	{
-		newdemo_start_playback("descent.dem");		
+		newdemo_start_playback("foo.dem");		
 		if (Newdemo_state == ND_STATE_PLAYBACK )
 			Function_mode = FMODE_GAME;
 	}

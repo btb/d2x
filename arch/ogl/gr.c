@@ -679,11 +679,6 @@ void gr_palette_step_up(int r, int g, int b)
 	}
 }
 
-//added on 980913 by adb to fix palette problems
-// need a min without side effects...
-#undef min
-static inline int min(int x, int y) { return x < y ? x : y; }
-//end changes by adb
 
 void gr_palette_load( ubyte *pal )	
 {
@@ -899,7 +894,7 @@ void save_screen_shot(int automap_flag)
 //	gr_get_string_size(message,&w,&h,&aw);
 //		modex_print_message(32, 2, message);
 	} else {
-		hud_message(MSGC_GAME_FEEDBACK,message);
+		hud_message(MSGC_GAME_FEEDBACK, "%s", message);
 	}
 	
 	buf = d_malloc(grd_curscreen->sc_w*grd_curscreen->sc_h*3);
