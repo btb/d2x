@@ -386,20 +386,44 @@ void cmd_echo(int argc, char **argv) {
 
 /* execute script */
 void cmd_exec(int argc, char **argv) {
+	cmd_queue_t *new, *head, *tail;
 	PHYSFS_File *f;
-	char buf[CMD_MAX_LENGTH] = "";
+	char line[CMD_MAX_LENGTH] = "";
 
 	if (argc < 2)
 		return;
+
+	head = tail = NULL;
+
 	f = PHYSFSX_openReadBuffered(argv[1]);
 	if (!f) {
 		con_printf(CON_CRITICAL, "exec: %s not found\n", argv[1]);
 		return;
 	}
-	while (PHYSFSX_gets(f, buf)) {
-		cmd_insert(buf);
+	while (PHYSFSX_gets(f, line)) {
+		/* make a new queue item, add it to list */
+		MALLOC(new, cmd_queue_t, 1);
+		new->command_line = d_strdup(line);
+		new->next = NULL;
+
+		if (!head)
+			head = new;
+		if (tail)
+			tail->next = new;
+		tail = new;
+
+		con_printf(CON_DEBUG, "cmd_exec: adding %s\n", line);
 	}
 	PHYSFS_close(f);
+
+	/* add our list to the head of the main list */
+	if (cmd_queue_head)
+		tail->next = cmd_queue_head;
+	if (!cmd_queue_tail)
+		cmd_queue_tail = tail;
+
+	cmd_queue_head = head;
+	con_printf(CON_DEBUG, "cmd_exec: added to front of list\n");
 }
 
 
