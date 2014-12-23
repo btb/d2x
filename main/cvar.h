@@ -21,6 +21,7 @@ void cvar_registervariable (cvar_t *cvar);
 
 /* Equivalent to typing <var_name> <value> at the console */
 void cvar_set(char *cvar_name, char *value);
+void cvar_set_value(char *cvar_name, float value);
 
 /* Get a CVar's value */
 float cvar(char *cvar_name);

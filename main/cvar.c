@@ -78,6 +78,16 @@ void cvar_set (char *cvar_name, char *value)
 }
 
 
+void cvar_set_value(char *cvar_name, float value)
+{
+	char stringval[16];
+
+	snprintf(stringval, 16, "%f", value);
+
+	cvar_set(cvar_name, stringval);
+}
+
+
 /* Get a CVar's value */
 float cvar (char *cvar_name)
 {
