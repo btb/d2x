@@ -555,7 +555,7 @@ void CON_Init()
 	console->InsMode = 1;
 	console->CursorPos = 0;
 	console->CommandScrollBack = 0;
-	console->Prompt = CON_DEFAULT_PROMPT;
+	console->Prompt = d_strdup(CON_DEFAULT_PROMPT);
 	console->HideKey = CON_DEFAULT_HIDEKEY;
 
 	/* load the console surface */
@@ -678,6 +678,8 @@ void CON_Free(void) {
 	if (console->InputBackground)
 		gr_free_bitmap(console->InputBackground);
 	console->InputBackground = NULL;
+
+	d_free(console->Prompt);
 
 	con_initialized = 0;
 }
@@ -960,9 +962,10 @@ void CON_Resize(int w, int h)
 /* Sets the Prompt for console */
 void CON_SetPrompt(char* newprompt) {
 	//check length so we can still see at least 1 char :-)
-	if(strlen(newprompt) < console->VChars)
+	if(strlen(newprompt) < console->VChars) {
+		d_free(console->Prompt);
 		console->Prompt = d_strdup(newprompt);
-	else
+	} else
 		CON_Out("prompt too long. (max. %i chars)", console->VChars - 1);
 }
 
