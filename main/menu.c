@@ -606,7 +606,7 @@ void do_detail_level_menu(void)
 				break;
 		}
 	}
-	cvar_set_cvar_value( &MovieHires, m[7].value );
+	cvar_setint( &MovieHires, m[7].value );
 }
 
 //      -----------------------------------------------------------------------------
@@ -1170,7 +1170,7 @@ WIN(static BOOL windigi_driver_off=FALSE);
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	if ( Config_digi_volume.intval != items[0].value )     {
-		cvar_set_cvar_value( &Config_digi_volume, items[0].value );
+		cvar_setint( &Config_digi_volume, items[0].value );
 
 		#ifdef WINDOWS
 			if (windigi_driver_off) {
@@ -1192,19 +1192,19 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 #ifdef WINDOWS
 	if (!wmidi_support_volchange()) {
 		if (!items[1].value && Config_midi_volume.intval) {
-			cvar_set_cvar_value( &Config_midi_volume, 0 );
+			cvar_setint( &Config_midi_volume, 0 );
 			digi_set_midi_volume(0);
 			digi_play_midi_song( NULL, NULL, NULL, 0 );
 		}
 		else if (Config_midi_volume.intval == 0 && items[1].value) {
 			digi_set_midi_volume(64);
-			cvar_set_cvar_value( &Config_midi_volume, 4 );
+			cvar_setint( &Config_midi_volume, 4 );
 		}
 	}
 	else 	 // LINK TO BELOW IF
 #endif
 	if (Config_midi_volume.intval != items[1].value )   {
-		cvar_set_cvar_value( &Config_midi_volume, items[1].value );
+		cvar_setint( &Config_midi_volume, items[1].value );
 		#ifdef WINDOWS
 			if (!windigi_driver_off) {
 				Sleep(200);
@@ -1228,7 +1228,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 #endif
 
 	if (Config_redbook_volume.intval != items[2].value )   {
-		cvar_set_cvar_value( &Config_redbook_volume, items[2].value );
+		cvar_setint( &Config_redbook_volume, items[2].value );
 		set_redbook_volume(Config_redbook_volume.intval);
 	}
 
@@ -1240,7 +1240,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 			items[4].redraw = 1;
 		}
 		else {
-			cvar_set_cvar_value( &Redbook_enabled, items[4].value );
+			cvar_setint( &Redbook_enabled, items[4].value );
 
 			mprintf((1, "Redbook_enabled = %d\n", Redbook_enabled.intval));
 
@@ -1307,8 +1307,8 @@ void do_sound_menu()
 				
 		i = newmenu_do1( NULL, "Sound Effects & Music", sizeof(m)/sizeof(*m), m, sound_menuset, i );
 
-		cvar_set_cvar_value( &Redbook_enabled, m[4].value );
-		cvar_set_cvar_value( &Config_channels_reversed, m[5].value );
+		cvar_setint( &Redbook_enabled, m[4].value );
+		cvar_setint( &Config_channels_reversed, m[5].value );
 
 	} while( i>-1 );
 

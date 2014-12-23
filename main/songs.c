@@ -124,7 +124,7 @@ void songs_init()
 	//	RBA Hook
 		if (FindArg("-noredbook"))
 		{
-			cvar_set_cvar_value( &Redbook_enabled, 0 );
+			cvar_setint( &Redbook_enabled, 0 );
 		}
 		else	// use redbook
 		{

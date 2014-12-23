@@ -14,7 +14,7 @@
 #include "u_mem.h"
 
 
-#define FLOAT_STRING_SIZE (3 + DBL_MANT_DIG - DBL_MIN_EXP + 1)
+#define CVAR_MAX_LENGTH 1024
 
 
 /* The list of cvars */
@@ -109,29 +109,25 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 }
 
 
-void cvar_set_cvar_value(cvar_t *cvar, float value)
+void cvar_set_cvarf(cvar_t *cvar, char *fmt, ...)
 {
-	char stringval[FLOAT_STRING_SIZE];
+	va_list arglist;
+	char buf[CVAR_MAX_LENGTH];
+	int n;
 
-	snprintf(stringval, FLOAT_STRING_SIZE, "%f", value);
+	va_start (arglist, fmt);
+	n = vsnprintf (buf, CVAR_MAX_LENGTH, fmt, arglist);
+	va_end (arglist);
 
-	cvar_set_cvar(cvar, stringval);
+	Assert(!(n < 0 || n > CVAR_MAX_LENGTH));
+
+	cvar_set_cvar(cvar, buf);
 }
 
 
 void cvar_set (char *cvar_name, char *value)
 {
 	cvar_set_cvar(cvar_find(cvar_name), value);
-}
-
-
-void cvar_set_value(char *cvar_name, float value)
-{
-	char stringval[FLOAT_STRING_SIZE];
-
-	snprintf(stringval, FLOAT_STRING_SIZE, "%f", value);
-
-	cvar_set_cvar(cvar_find(cvar_name), stringval);
 }
 
 

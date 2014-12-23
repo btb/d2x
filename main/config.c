@@ -165,7 +165,7 @@ void CheckMovieAttributes()
 			len = sizeof(val);
 			lres = RegQueryValueEx(hKey, "HIRES", NULL, &type, &val, &len);
 			if (lres == ERROR_SUCCESS) {
-				cvar_set_cvar_value( &MovieHires, val );
+				cvar_setint( &MovieHires, val );
 				logentry("HIRES=%d\n", val);
 			}
 			RegCloseKey(hKey);
@@ -228,19 +228,19 @@ int ReadConfigFile()
 #endif
 
 #if 0
-	cvar_set_cvar_value(digi_driver_board, 0);
-	cvar_set_cvar_value(digi_driver_port, 0);
-	cvar_set_cvar_value(digi_driver_irq, 0);
-	cvar_set_cvar_value(digi_driver_dma, 0);
-	cvar_set_cvar_value(digi_midi_type, 0);
-	cvar_set_cvar_value(digi_midi_port, 0);
+	cvar_setint(digi_driver_board, 0);
+	cvar_setint(digi_driver_port, 0);
+	cvar_setint(digi_driver_irq, 0);
+	cvar_setint(digi_driver_dma, 0);
+	cvar_setint(digi_midi_type, 0);
+	cvar_setint(digi_midi_port, 0);
 #endif
 
-	cvar_set_cvar_value( &Config_digi_volume, 8 );
-	cvar_set_cvar_value( &Config_midi_volume, 8 );
-	cvar_set_cvar_value( &Config_redbook_volume, 8 );
+	cvar_setint( &Config_digi_volume, 8 );
+	cvar_setint( &Config_midi_volume, 8 );
+	cvar_setint( &Config_redbook_volume, 8 );
 	Config_control_type = 0;
-	cvar_set_cvar_value( &Config_channels_reversed, 0);
+	cvar_setint( &Config_channels_reversed, 0);
 
 	//set these here in case no cfg file
 	SaveMovieHires = MovieHires.intval;
@@ -292,14 +292,14 @@ int ReadConfigFile()
 		i = atoi( Args[i+1] );
 		if ( i < 0 ) i = 0;
 		if ( i > 100 ) i = 100;
-		cvar_set_cvar_value( &Config_digi_volume, (i * 8) / 100 );
-		cvar_set_cvar_value( &Config_midi_volume, (i * 8) / 100 );
-		cvar_set_cvar_value( &Config_redbook_volume, (i * 8) / 100 );
+		cvar_setint( &Config_digi_volume, (i * 8) / 100 );
+		cvar_setint( &Config_midi_volume, (i * 8) / 100 );
+		cvar_setint( &Config_redbook_volume, (i * 8) / 100 );
 	}
 
-	if ( Config_digi_volume.intval > 8 ) cvar_set_cvar_value( &Config_digi_volume, 8 );
-	if ( Config_midi_volume.intval > 8 ) cvar_set_cvar_value( &Config_midi_volume, 8 );
-	if ( Config_redbook_volume.intval > 8 ) cvar_set_cvar_value( &Config_redbook_volume, 8 );
+	if ( Config_digi_volume.intval > 8 ) cvar_setint( &Config_digi_volume, 8 );
+	if ( Config_midi_volume.intval > 8 ) cvar_setint( &Config_midi_volume, 8 );
+	if ( Config_redbook_volume.intval > 8 ) cvar_setint( &Config_redbook_volume, 8 );
 
 	digi_set_volume( (Config_digi_volume.intval * 32768) / 8, (Config_midi_volume.intval * 128) / 8 );
 
@@ -312,9 +312,9 @@ int ReadConfigFile()
 	printf( "MidiPort: 0x%x\n", digi_midi_port.intval );
   	key_getch();
 
-	cvar_set_cvar_value( &Config_midi_type, digi_midi_type );
-	cvar_set_cvar_value( &Config_digi_type, digi_driver_board );
-	cvar_set_cvar_value( &Config_digi_dma, digi_driver_dma );
+	cvar_setint( &Config_midi_type, digi_midi_type );
+	cvar_setint( &Config_digi_type, digi_driver_board );
+	cvar_setint( &Config_digi_dma, digi_driver_dma );
 #endif
 
 #if 0
@@ -380,7 +380,6 @@ int ReadConfigFile()
 int WriteConfigFile()
 {
 	PHYSFS_file *outfile;
-	char str[256];
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
@@ -397,31 +396,24 @@ int WriteConfigFile()
 #endif
 
 	if (FindArg("-noredbook"))
-		cvar_set_cvar_value( &Redbook_enabled, save_redbook_enabled );
+		cvar_setint( &Redbook_enabled, save_redbook_enabled );
 
-	cvar_set_cvar_value( &Config_gamma_level, gr_palette_get_gamma() );
+	cvar_setint( &Config_gamma_level, gr_palette_get_gamma() );
 
-	if (Detail_level == NUM_DETAIL_LEVELS-1) {
-		sprintf (str, "%d,%d,%d,%d,%d,%d,%d", Detail_level,
-				Object_complexity,Object_detail,Wall_detail,Wall_render_depth,Debris_amount,SoundChannels);
-		cvar_set_cvar( &Config_detail_level, str );
-	} else {
-		cvar_set_cvar_value( &Config_detail_level, Detail_level );
-	}
+	if (Detail_level == NUM_DETAIL_LEVELS-1)
+		cvar_set_cvarf( &Config_detail_level, "%d,%d,%d,%d,%d,%d,%d", Detail_level,
+					   Object_complexity,Object_detail,Wall_detail,Wall_render_depth,Debris_amount,SoundChannels );
+	else
+		cvar_setint( &Config_detail_level, Detail_level );
 
-	sprintf (str, "%d,%d,%d,%d", joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
-	cvar_set_cvar( &Config_joystick_min, str);
-
-	sprintf (str, "%d,%d,%d,%d", joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
-	cvar_set_cvar( &Config_joystick_cen, str);
-
-	sprintf (str, "%d,%d,%d,%d", joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
-	cvar_set_cvar( &Config_joystick_max, str);
+	cvar_set_cvarf( &Config_joystick_min, "%d,%d,%d,%d", joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
+	cvar_set_cvarf( &Config_joystick_cen, "%d,%d,%d,%d", joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
+	cvar_set_cvarf( &Config_joystick_max, "%d,%d,%d,%d", joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
 
 	cvar_set_cvar( &config_last_player, Players[Player_num].callsign );
 
 	if (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))
-		cvar_set_cvar_value( &MovieHires, SaveMovieHires );
+		cvar_setint( &MovieHires, SaveMovieHires );
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)
