@@ -105,7 +105,7 @@ void cmd_execute(int argc, char **argv)
 	/* Otherwise */
 	if (argc > 1)  // set value of cvar
 		cvar_set(argv[0], argv[1]);
-	con_printf(CON_NORMAL, "%s: %f\n", argv[0], cvar(argv[0]));
+	con_printf(CON_VERBOSE, "%s: %f\n", argv[0], cvar(argv[0]));
 }
 
 
