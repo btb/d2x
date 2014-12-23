@@ -44,7 +44,6 @@ void cvar_init(void)
 /* Register a cvar */
 void cvar_registervariable (cvar_t *cvar)
 {
-	cvar_t *ptr;
 	char *stringval;
 
 	if (!cvar_initialized)
@@ -54,19 +53,13 @@ void cvar_registervariable (cvar_t *cvar)
 
 	stringval = cvar->string;
 
-	cvar->next = NULL;
 	cvar->string = d_strdup(stringval);
 	cvar->value = strtod(cvar->string, (char **) NULL);
 	cvar->intval = cvar_round(cvar->value);
 
-	if (cvar_list == NULL)
-	{
-		cvar_list = cvar;
-	} else
-	{
-		for (ptr = cvar_list; ptr->next != NULL; ptr = ptr->next) ;
-		ptr->next = cvar;
-	}
+	/* insert at front of list */
+	cvar->next = cvar_list;
+	cvar_list = cvar;
 }
 
 
