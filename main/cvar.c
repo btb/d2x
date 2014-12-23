@@ -73,23 +73,29 @@ char *cvar_complete(char *text)
 void cvar_registervariable (cvar_t *cvar)
 {
 	char *stringval;
+	cvar_t *ptr;
 
 	if (!cvar_initialized)
 		cvar_init();
 
 	Assert(cvar != NULL);
 
-	Assert(!cvar_find(cvar->name));
-
 	stringval = cvar->string;
 
 	cvar->string = d_strdup(stringval);
 	cvar->value = strtod(cvar->string, (char **) NULL);
 	cvar->intval = cvar_round(cvar->value);
+	cvar->next = NULL;
 
-	/* insert at front of list */
-	cvar->next = cvar_list;
-	cvar_list = cvar;
+	if (cvar_list == NULL) {
+		cvar_list = cvar;
+		return;
+	}
+
+	/* insert at end of list */
+	for (ptr = cvar_list; ptr->next != NULL; ptr = ptr->next)
+		Assert(stricmp(cvar->name, ptr->name));
+	ptr->next = cvar;
 }
 
 
@@ -140,4 +146,15 @@ float cvar (char *cvar_name)
 		return 0.0; // If we didn't find the cvar, give up
 
 	return cvar->value;
+}
+
+
+/* Write archive cvars to file */
+void cvar_write(CFILE *file)
+{
+	cvar_t *ptr;
+
+	for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
+		if (ptr->archive)
+			PHYSFSX_printf(file, "%s=%s\n", ptr->name, ptr->string);
 }

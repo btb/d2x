@@ -187,8 +187,8 @@ static void config_init(void)
 	cvar_registervariable(&Config_gamma_level);
 	cvar_registervariable(&Config_detail_level);
 	cvar_registervariable(&Config_joystick_min);
-	cvar_registervariable(&Config_joystick_max);
 	cvar_registervariable(&Config_joystick_cen);
+	cvar_registervariable(&Config_joystick_max);
 	cvar_registervariable(&config_last_player);
 	cvar_registervariable(&config_last_mission);
 	cvar_registervariable(&Config_vr_type);
@@ -379,7 +379,7 @@ int ReadConfigFile()
 
 int WriteConfigFile()
 {
-	PHYSFS_file *infile;
+	PHYSFS_file *outfile;
 	char str[256];
 	int joy_axis_min[7];
 	int joy_axis_center[7];
@@ -396,84 +396,39 @@ int WriteConfigFile()
    }
 #endif
 
-	/* TODO: instead of hard-coding all these variables to write out, implement something like cvar_write() that writes out all variables with the archive flag set */
+	if (FindArg("-noredbook"))
+		cvar_set_cvar_value( &Redbook_enabled, save_redbook_enabled );
 
-	infile = PHYSFSX_openWriteBuffered("descent.cfg");
-	if (infile == NULL) {
-		return 1;
-	}
-
-#if 0
-	sprintf (str, "%s=0x%x\n", Config_digi_type.name, Config_digi_type.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", digi_driver_board_16.name, digi_driver_board_16.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", digi_driver_port.name, digi_driver_port.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", digi_driver_irq.name, digi_driver_irq.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_digi_dma.name, Config_digi_dma.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", digi_driver_dma.name, digi_driver_dma_16.intval);
-	PHYSFSX_puts(infile, str);
-#endif
-	sprintf (str, "%s=%d\n", Config_digi_volume.name, Config_digi_volume.intval);
-	PHYSFSX_puts(infile, str);
-#if 0
-	sprintf (str, "%s=0x%x\n", Config_midi_type.name, Config_midi_type.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", digi_midi_port.name, digi_midi_port.intval);
-	PHYSFSX_puts(infile, str);
-#endif
-	sprintf (str, "%s=%d\n", Config_midi_volume.name, Config_midi_volume.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Redbook_enabled.name, FindArg("-noredbook")?save_redbook_enabled:Redbook_enabled.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_redbook_volume.name, Config_redbook_volume.intval);
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_channels_reversed.name, Config_channels_reversed.intval);
-	PHYSFSX_puts(infile, str);
 	cvar_set_cvar_value( &Config_gamma_level, gr_palette_get_gamma() );
-	sprintf (str, "%s=%d\n", Config_gamma_level.name, Config_gamma_level.intval );
-	PHYSFSX_puts(infile, str);
+
 	if (Detail_level == NUM_DETAIL_LEVELS-1) {
 		sprintf (str, "%d,%d,%d,%d,%d,%d,%d", Detail_level,
 				Object_complexity,Object_detail,Wall_detail,Wall_render_depth,Debris_amount,SoundChannels);
 		cvar_set_cvar( &Config_detail_level, str );
-		sprintf (str, "%s=%s\n", Config_detail_level.name, Config_detail_level.string);
 	} else {
 		cvar_set_cvar_value( &Config_detail_level, Detail_level );
-		sprintf (str, "%s=%d\n", Config_detail_level.name, Config_detail_level.intval);
 	}
-	PHYSFSX_puts(infile, str);
 
 	sprintf (str, "%d,%d,%d,%d", joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
 	cvar_set_cvar( &Config_joystick_min, str);
-	sprintf (str, "%s=%s\n", Config_joystick_min.name, Config_joystick_min.string);
-	PHYSFSX_puts(infile, str);
+
 	sprintf (str, "%d,%d,%d,%d", joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
 	cvar_set_cvar( &Config_joystick_cen, str);
-	sprintf (str, "%s=%s\n", Config_joystick_cen.name, Config_joystick_cen.string);
-	PHYSFSX_puts(infile, str);
+
 	sprintf (str, "%d,%d,%d,%d", joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
 	cvar_set_cvar( &Config_joystick_max, str);
-	sprintf (str, "%s=%s\n", Config_joystick_max.name, Config_joystick_max.string);
-	PHYSFSX_puts(infile, str);
 
-	sprintf (str, "%s=%s\n", config_last_player.name, Players[Player_num].callsign );
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%s\n", config_last_mission.name, config_last_mission.string );
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_vr_type.name, Config_vr_type.intval );
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_vr_resolution.name, Config_vr_resolution.intval );
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", Config_vr_tracking.name, Config_vr_tracking.intval );
-	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", MovieHires.name, (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))?SaveMovieHires:MovieHires.intval);
-	PHYSFSX_puts(infile, str);
+	cvar_set_cvar( &config_last_player, Players[Player_num].callsign );
 
-	PHYSFS_close(infile);
+	if (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))
+		cvar_set_cvar_value( &MovieHires, SaveMovieHires );
+
+	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
+	if (outfile == NULL)
+		return 1;
+	cvar_write(outfile);
+	PHYSFS_close(outfile);
+
 
 #ifdef WINDOWS
 {

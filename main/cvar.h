@@ -4,6 +4,7 @@
 #define _CVAR_H 1
 
 #include "pstypes.h"
+#include "cfile.h"
 
 
 typedef struct cvar_s
@@ -36,6 +37,9 @@ char *cvar_complete(char *text);
 
 /* Get a CVar's value */
 float cvar(char *cvar_name);
+
+/* Write archive cvars to file */
+void cvar_write(CFILE *file);
 
 
 #endif /* _CVAR_H_ */
