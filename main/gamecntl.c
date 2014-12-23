@@ -1425,7 +1425,9 @@ void HandleGameKey(int key)
 	switch (key) {
 
 		#if !defined(RELEASE)
-		case KEY_COMMAND+KEY_F:	r_framerate.value = !r_framerate.value; break;
+		case KEY_COMMAND+KEY_F:
+			cvar_set_cvar_value( &r_framerate, !r_framerate.intval );
+			break;
 		#endif
 
 #ifndef D2X_KEYS // weapon selection handled in controls_read_all, d1x-style
@@ -1836,7 +1838,9 @@ void HandleTestKey(int key)
 						break;
 		}
 
-		case KEY_DEBUGGED+KEY_F:	r_framerate.value = !r_framerate.value; break;
+		case KEY_DEBUGGED+KEY_F:
+			cvar_set_cvar_value( &r_framerate, !r_framerate.intval );
+			break;
 
 		case KEY_DEBUGGED+KEY_SPACEBAR:		//KEY_F7:				// Toggle physics flying
 			slew_stop();
@@ -2045,7 +2049,7 @@ void FinalCheats(int key)
 
   if (!(strcmp (cryptstring,FramerateCheat)))
 		{
-			r_framerate.value = !r_framerate.value;
+			cvar_set_cvar_value( &r_framerate, !r_framerate.intval );
 		}
 
   if (Game_mode & GM_MULTI)

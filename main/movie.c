@@ -82,7 +82,7 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 #define N_BUILTIN_MOVIE_LIBS (N_MOVIE_LIBS - 1)
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 
-int MovieHires = 1;   //default is highres
+cvar_t MovieHires = { "MovieHires", "1", 1 }; //default is highres
 
 SDL_RWops *RoboFile;
 
@@ -152,7 +152,7 @@ int PlayMovie(const char *filename, int must_have)
 	else
 		MVE_sndInit(-1);
 
-	ret = RunMovie(name,MovieHires,must_have,-1,-1);
+	ret = RunMovie(name, MovieHires.intval, must_have, -1, -1);
 
 	if (!FindArg("-nosound"))
 		digi_init();
@@ -607,7 +607,7 @@ void close_movie(char *movielib, int is_robots)
 	if (is_robots)
 		high_res = MenuHiresAvailable;
 	else
-		high_res = MovieHires;
+		high_res = MovieHires.intval;
 
 	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 
@@ -705,7 +705,7 @@ void init_movie(char *movielib, int is_robots, int required)
 	if (is_robots)
 		high_res = MenuHiresAvailable;
 	else
-		high_res = MovieHires;
+		high_res = MovieHires.intval;
 
 	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 

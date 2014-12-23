@@ -23,16 +23,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _CONFIG_H
 
 #include "player.h"
+#include "cvar.h"
 
 extern int ReadConfigFile(void);
 extern int WriteConfigFile(void);
 
-extern char config_last_player[CALLSIGN_LEN+1];
+extern cvar_t config_last_player;
+extern cvar_t config_last_mission;
 
-extern char config_last_mission[];
-
-extern ubyte Config_digi_volume;
-extern ubyte Config_midi_volume;
+extern cvar_t Config_digi_volume;
+extern cvar_t Config_midi_volume;
 #ifdef MACINTOSH
 typedef struct ConfigInfoStruct
 {
@@ -51,9 +51,9 @@ typedef struct ConfigInfoStruct
 extern ConfigInfo gConfigInfo;
 extern ubyte Config_master_volume;
 #endif
-extern ubyte Config_redbook_volume;
+extern cvar_t Config_redbook_volume;
 extern ubyte Config_control_type;
-extern ubyte Config_channels_reversed;
+extern cvar_t Config_channels_reversed;
 extern ubyte Config_joystick_sensitivity;
 
 //values for Config_control_type

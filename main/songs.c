@@ -52,7 +52,7 @@ int Num_songs;
 
 extern void digi_stop_current_song();
 
-int Redbook_enabled = 1;
+cvar_t Redbook_enabled = { "RedbookEnabled", "1", 1 };
 
 //0 if redbook is no playing, else the track number
 int Redbook_playing = 0;
@@ -124,7 +124,7 @@ void songs_init()
 	//	RBA Hook
 		if (FindArg("-noredbook"))
 		{
-			Redbook_enabled = 0;
+			cvar_set_cvar_value( &Redbook_enabled, 0 );
 		}
 		else	// use redbook
 		{
@@ -136,7 +136,7 @@ void songs_init()
 
 				if (RBAEnabled())
 			{
-				set_redbook_volume(Config_redbook_volume);
+				set_redbook_volume(Config_redbook_volume.intval);
 				RBARegisterCD();
 			}
 		}
@@ -148,7 +148,7 @@ void songs_init()
 //stop the redbook, so we can read off the CD
 void songs_stop_redbook(void)
 {
-	int old_volume = Config_redbook_volume*REDBOOK_VOLUME_SCALE/8;
+	int old_volume = Config_redbook_volume.intval * REDBOOK_VOLUME_SCALE / 8;
 	fix old_time = timer_get_fixed_seconds();
 
 	if (Redbook_playing) {		//fade out volume
@@ -194,7 +194,7 @@ void reinit_redbook()
 
 	if (RBAEnabled())
 	{
-		set_redbook_volume(Config_redbook_volume);
+		set_redbook_volume(Config_redbook_volume.intval);
 		RBARegisterCD();
 		force_rb_register=0;
 	}
@@ -208,7 +208,7 @@ int play_redbook_track(int tracknum,int keep_playing)
 {
 	Redbook_playing = 0;
 
-	if (!RBAEnabled() && Redbook_enabled && !FindArg("-noredbook"))
+	if (!RBAEnabled() && Redbook_enabled.intval && !FindArg("-noredbook"))
 		reinit_redbook();
 
 	if (force_rb_register) {
@@ -216,7 +216,7 @@ int play_redbook_track(int tracknum,int keep_playing)
 		force_rb_register = 0;
 	}
 
-	if (Redbook_enabled && RBAEnabled()) {
+	if (Redbook_enabled.intval && RBAEnabled()) {
 		int num_tracks = RBAGetNumberOfTracks();
 		if (tracknum <= num_tracks)
 			if (RBAPlayTracks(tracknum,keep_playing?num_tracks:tracknum))  {
@@ -380,7 +380,7 @@ int songs_redbook_track(int songnum)
 {
 	uint32_t discid;
 
-	if (!Redbook_enabled)
+	if (!Redbook_enabled.intval)
 		return 0;
 
 	discid = RBAGetDiscID();
@@ -502,7 +502,7 @@ void songs_play_level_song( int levelnum )
 
 	songnum = (levelnum>0)?(levelnum-1):(-levelnum);
 
-	if (!RBAEnabled() && Redbook_enabled && !FindArg("-noredbook"))
+	if (!RBAEnabled() && Redbook_enabled.intval && !FindArg("-noredbook"))
 		reinit_redbook();
 
 	if (force_rb_register) {
@@ -510,7 +510,7 @@ void songs_play_level_song( int levelnum )
 		force_rb_register = 0;
 	}
 
-	if (Redbook_enabled && RBAEnabled() && (n_tracks = RBAGetNumberOfTracks()) > 1) {
+	if (Redbook_enabled.intval && RBAEnabled() && (n_tracks = RBAGetNumberOfTracks()) > 1) {
 
 		//try to play redbook
 
@@ -538,7 +538,7 @@ void songs_check_redbook_repeat()
 	static fix last_check_time;
 	fix current_time;
 
-	if (!Redbook_playing || Config_redbook_volume==0) return;
+	if (!Redbook_playing || Config_redbook_volume.intval==0) return;
 
 	current_time = timer_get_fixed_seconds();
 	if (current_time < last_check_time || (current_time - last_check_time) >= F2_0) {

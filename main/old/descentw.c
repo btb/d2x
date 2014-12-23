@@ -1154,7 +1154,7 @@ void D2Restore()
 
 EndD2Restore:
 	if (!Joystick_calibrating) joy_start_poll();
-	set_redbook_volume(Config_redbook_volume);
+	set_redbook_volume(Config_redbook_volume.intval);
 	mprintf((0, "...Descent 2 is awake!\n"));
 	
 	GameShutdown = FALSE;

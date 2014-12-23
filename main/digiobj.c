@@ -160,7 +160,7 @@ void digi_get_sound_loc( vms_matrix * listener, vms_vector * listener_pos, int l
 				angle_from_ear = vm_vec_delta_ang_norm(&listener->rvec,&vector_to_sound,&listener->uvec);
 				fix_sincos(angle_from_ear,&sinang,&cosang);
 				//mprintf( (0, "volume is %.2f\n", f2fl(*volume) ));
-				if (Config_channels_reversed) cosang *= -1;
+				if (Config_channels_reversed.intval) cosang *= -1;
 				*pan = (cosang + F1_0)/2;
 			} else {
 				*volume = 0;

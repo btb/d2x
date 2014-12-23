@@ -477,9 +477,9 @@ int main(int argc, char *argv[])
 	}
 
 	if (FindArg("-debug"))
-		con_threshold.value = (float)CON_DEBUG;
+		cvar_set_cvar_value( &con_threshold, CON_DEBUG );
 	else if (FindArg("-verbose"))
-		con_threshold.value = (float)CON_VERBOSE;
+		cvar_set_cvar_value( &con_threshold, CON_VERBOSE );
 
 	if (! cfile_init("descent2.hog"))
 		if (! cfile_init("d2demo.hog"))
@@ -654,13 +654,13 @@ int main(int argc, char *argv[])
 
 	//determine whether we're using high-res menus & movies
 	if (FindArg("-nohires") || FindArg("-nohighres") || (gr_check_mode(MENU_HIRES_MODE) != 0) || disable_high_res)
-		MovieHires = MenuHires = MenuHiresAvailable = 0;
+		cvar_set_cvar_value( &MovieHires, MenuHires = MenuHiresAvailable = 0 );
 	else
 		//NOTE LINK TO ABOVE!
 		MenuHires = MenuHiresAvailable = 1;
 
 	if (FindArg( "-lowresmovies" ))
-		MovieHires = 0;
+		cvar_set_cvar_value( &MovieHires, 0 );
 
 	if ((t=gr_init())!=0)				//doesn't do much
 		Error(TXT_CANT_INIT_GFX,t);
@@ -677,7 +677,7 @@ int main(int argc, char *argv[])
 
 #if 0
 	con_printf(CON_VERBOSE, "Going into graphics mode...\n");
-	gr_set_mode(MovieHires?SM(640,480):SM(320,200));
+	gr_set_mode(MovieHires.intval?SM(640,480):SM(320,200));
 #endif
 
 	if ( FindArg( "-notitles" ) )

@@ -61,12 +61,23 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 static char rcsid[] = "$Id: config.c,v 1.17 2005-07-30 01:50:17 chris Exp $";
 #endif
 
-ubyte Config_digi_volume = 8;
-ubyte Config_midi_volume = 8;
-ubyte Config_redbook_volume = 8;
 ubyte Config_control_type = 0;
-ubyte Config_channels_reversed = 0;
 ubyte Config_joystick_sensitivity = 8;
+
+cvar_t Config_digi_volume = { "DigiVolume", "8", 1 };
+cvar_t Config_midi_volume = { "MidiVolume", "8", 1 };
+cvar_t Config_redbook_volume = { "RedbookVolume", "8", 1 };
+cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
+cvar_t Config_gamma_level = { "GammaLevel", "0", 1 };
+cvar_t Config_detail_level = { "DetailLevel", "4", 1 };
+cvar_t Config_joystick_min = { "JoystickMin", "0,0,0,0", 1 };
+cvar_t Config_joystick_max = { "JoystickMax", "0,0,0,0", 1 };
+cvar_t Config_joystick_cen = { "JoystickCen", "0,0,0,0", 1 };
+cvar_t config_last_player = { "LastPlayer", "", 1 };
+cvar_t config_last_mission = { "LastMission", "", 1 };
+cvar_t Config_vr_type = { "VR_type", "0", 1 };
+cvar_t Config_vr_resolution = { "VR_resolution", "0", 1 };
+cvar_t Config_vr_tracking = { "VR_tracking", "0", 1 };
 
 #ifdef __MSDOS__
 static char *digi_dev8_str = "DigiDeviceID8";
@@ -83,25 +94,7 @@ static char *midi_port_str = "MidiPort";
 #define _AWE32_8_ST				0xe208
 #define _AWE32_16_ST				0xe209
 #endif
-static char *digi_volume_str = "DigiVolume";
-static char *midi_volume_str = "MidiVolume";
-static char *redbook_enabled_str = "RedbookEnabled";
-static char *redbook_volume_str = "RedbookVolume";
-static char *detail_level_str = "DetailLevel";
-static char *gamma_level_str = "GammaLevel";
-static char *stereo_rev_str = "StereoReverse";
-static char *joystick_min_str = "JoystickMin";
-static char *joystick_max_str = "JoystickMax";
-static char *joystick_cen_str = "JoystickCen";
-static char *last_player_str = "LastPlayer";
-static char *last_mission_str = "LastMission";
-static char *config_vr_type_str = "VR_type";
-static char *config_vr_resolution_str = "VR_resolution";
-static char *config_vr_tracking_str = "VR_tracking";
-static char *movie_hires_str = "MovieHires";
 
-char config_last_player[CALLSIGN_LEN+1] = "";
-char config_last_mission[MISSION_NAME_LEN+1] = "";
 
 int Config_digi_type = 0;
 int Config_digi_dma = 0;
@@ -115,11 +108,6 @@ int	 DOSJoySaveMax[4];
 char win95_current_joyname[256];
 #endif
 
-
-
-int Config_vr_type = 0;
-int Config_vr_resolution = 0;
-int Config_vr_tracking = 0;
 
 int digi_driver_board_16;
 int digi_driver_dma_16;
@@ -183,7 +171,7 @@ void CheckMovieAttributes()
 			len = sizeof(val);
 			lres = RegQueryValueEx(hKey, "HIRES", NULL, &type, &val, &len);
 			if (lres == ERROR_SUCCESS) {
-				MovieHires = val;
+				cvar_set_cvar_value( &MovieHires, val );
 				logentry("HIRES=%d\n", val);
 			}
 			RegCloseKey(hKey);
@@ -192,18 +180,45 @@ void CheckMovieAttributes()
 #endif
 
 
+static int config_initialized;
+
+static void config_init(void)
+{
+	/* make sure our cvars are registered */
+	cvar_registervariable(&Config_digi_volume);
+	cvar_registervariable(&Config_midi_volume);
+	cvar_registervariable(&Redbook_enabled);
+	cvar_registervariable(&Config_redbook_volume);
+	cvar_registervariable(&Config_channels_reversed);
+	cvar_registervariable(&Config_gamma_level);
+	cvar_registervariable(&Config_detail_level);
+	cvar_registervariable(&Config_joystick_min);
+	cvar_registervariable(&Config_joystick_max);
+	cvar_registervariable(&Config_joystick_cen);
+	cvar_registervariable(&config_last_player);
+	cvar_registervariable(&config_last_mission);
+	cvar_registervariable(&Config_vr_type);
+	cvar_registervariable(&Config_vr_resolution);
+	cvar_registervariable(&Config_vr_tracking);
+	cvar_registervariable(&MovieHires);
+
+	config_initialized = 1;
+}
+
 
 int ReadConfigFile()
 {
 	PHYSFS_file *infile;
 	char line[80], *token, *value, *ptr;
-	ubyte gamma;
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
 	int i;
 
-	strcpy( config_last_player, "" );
+	if (!config_initialized)
+		config_init();
+
+	cvar_set_cvar( &config_last_player, "" );
 
 	joy_axis_min[0] = joy_axis_min[1] = joy_axis_min[2] = joy_axis_min[3] = 0;
 	joy_axis_max[0] = joy_axis_max[1] = joy_axis_max[2] = joy_axis_max[3] = 0;
@@ -226,114 +241,44 @@ int ReadConfigFile()
 	digi_midi_type = 0;
 	digi_midi_port = 0;*/
 
-	Config_digi_volume = 8;
-	Config_midi_volume = 8;
-	Config_redbook_volume = 8;
+	cvar_set_cvar_value( &Config_digi_volume, 8 );
+	cvar_set_cvar_value( &Config_midi_volume, 8 );
+	cvar_set_cvar_value( &Config_redbook_volume, 8 );
 	Config_control_type = 0;
-	Config_channels_reversed = 0;
+	cvar_set_cvar_value( &Config_channels_reversed, 0);
 
 	//set these here in case no cfg file
-	SaveMovieHires = MovieHires;
-	save_redbook_enabled = Redbook_enabled;
+	SaveMovieHires = MovieHires.intval;
+	save_redbook_enabled = Redbook_enabled.intval;
 
-	infile = PHYSFSX_openReadBuffered("descent.cfg");
-	if (infile == NULL) {
-		WIN(CheckMovieAttributes());
-		return 1;
-	}
-	while (!PHYSFS_eof(infile))
-	{
-		memset(line, 0, 80);
-		PHYSFSX_gets(infile, line);
-		ptr = &(line[0]);
-		while (isspace(*ptr))
-			ptr++;
-		if (*ptr != '\0') {
-			token = strtok(ptr, "=");
-			value = strtok(NULL, "=");
-			if (!value)
-				value = "";
-/*			if (!strcmp(token, digi_dev8_str))
-				digi_driver_board = strtol(value, NULL, 16);
-			else if (!strcmp(token, digi_dev16_str))
-				digi_driver_board_16 = strtol(value, NULL, 16);
-			else if (!strcmp(token, digi_port_str))
-				digi_driver_port = strtol(value, NULL, 16);
-			else if (!strcmp(token, digi_irq_str))
-				digi_driver_irq = strtol(value, NULL, 10);
-			else if (!strcmp(token, digi_dma8_str))
-				digi_driver_dma = strtol(value, NULL, 10);
-			else if (!strcmp(token, digi_dma16_str))
-				digi_driver_dma_16 = strtol(value, NULL, 10);
-			else*/ if (!strcmp(token, digi_volume_str))
-				Config_digi_volume = strtol(value, NULL, 10);
-			else/* if (!strcmp(token, midi_dev_str))
-				digi_midi_type = strtol(value, NULL, 16);
-			else if (!strcmp(token, midi_port_str))
-				digi_midi_port = strtol(value, NULL, 16);
-			else*/ if (!strcmp(token, midi_volume_str))
-				Config_midi_volume = strtol(value, NULL, 10);
-			else if (!strcmp(token, redbook_enabled_str))
-				Redbook_enabled = save_redbook_enabled = strtol(value, NULL, 10);
-			else if (!strcmp(token, redbook_volume_str))
-				Config_redbook_volume = strtol(value, NULL, 10);
-			else if (!strcmp(token, stereo_rev_str))
-				Config_channels_reversed = strtol(value, NULL, 10);
-			else if (!strcmp(token, gamma_level_str)) {
-				gamma = strtol(value, NULL, 10);
-				gr_palette_set_gamma( gamma );
-			}
-			else if (!strcmp(token, detail_level_str)) {
-				Detail_level = strtol(value, NULL, 10);
-				if (Detail_level == NUM_DETAIL_LEVELS-1) {
-					int count,dummy,oc,od,wd,wrd,da,sc;
+	cmd_append("exec descent.cfg");
+	cmd_queue_process();
 
-					count = sscanf (value, "%d,%d,%d,%d,%d,%d,%d\n",&dummy,&oc,&od,&wd,&wrd,&da,&sc);
+	/* TODO: allow cvars to define a callback that will carry out these initialization things on change. */
 
-					if (count == 7) {
-						Object_complexity = oc;
-						Object_detail = od;
-						Wall_detail = wd;
-						Wall_render_depth = wrd;
-						Debris_amount = da;
-						SoundChannels = sc;
-						set_custom_detail_vars();
-					}
-				}
-			}
-			else if (!strcmp(token, joystick_min_str))	{
-				sscanf( value, "%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3] );
-			}
-			else if (!strcmp(token, joystick_max_str))	{
-				sscanf( value, "%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3] );
-			}
-			else if (!strcmp(token, joystick_cen_str))	{
-				sscanf( value, "%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3] );
-			}
-			else if (!strcmp(token, last_player_str))	{
-				char * p;
-				strncpy( config_last_player, value, CALLSIGN_LEN );
-				p = strchr( config_last_player, '\n');
-				if ( p ) *p = 0;
-			}
-			else if (!strcmp(token, last_mission_str))	{
-				char * p;
-				strncpy( config_last_mission, value, MISSION_NAME_LEN );
-				p = strchr( config_last_mission, '\n');
-				if ( p ) *p = 0;
-			} else if (!strcmp(token, config_vr_type_str)) {
-				Config_vr_type = strtol(value, NULL, 10);
-			} else if (!strcmp(token, config_vr_resolution_str)) {
-				Config_vr_resolution = strtol(value, NULL, 10);
-			} else if (!strcmp(token, config_vr_tracking_str)) {
-				Config_vr_tracking = strtol(value, NULL, 10);
-			} else if (!strcmp(token, movie_hires_str)) {
-				SaveMovieHires = MovieHires = strtol(value, NULL, 10);
-			}
+	gr_palette_set_gamma( Config_gamma_level.intval );
+
+	Detail_level = strtol(Config_detail_level.string, NULL, 10);
+	if (Detail_level == NUM_DETAIL_LEVELS - 1) {
+		int count,dummy,oc,od,wd,wrd,da,sc;
+
+		count = sscanf (Config_detail_level.string, "%d,%d,%d,%d,%d,%d,%d\n",&dummy,&oc,&od,&wd,&wrd,&da,&sc);
+
+		if (count == 7) {
+			Object_complexity = oc;
+			Object_detail = od;
+			Wall_detail = wd;
+			Wall_render_depth = wrd;
+			Debris_amount = da;
+			SoundChannels = sc;
+			set_custom_detail_vars();
 		}
 	}
 
-	PHYSFS_close(infile);
+	sscanf( Config_joystick_min.string, "%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3] );
+	sscanf( Config_joystick_max.string, "%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3] );
+	sscanf( Config_joystick_cen.string, "%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3] );
+
 
 #ifdef WINDOWS
 	for (i=0;i<4;i++)
@@ -352,16 +297,16 @@ int ReadConfigFile()
 		i = atoi( Args[i+1] );
 		if ( i < 0 ) i = 0;
 		if ( i > 100 ) i = 100;
-		Config_digi_volume = (i*8)/100;
-		Config_midi_volume = (i*8)/100;
-		Config_redbook_volume = (i*8)/100;
+		cvar_set_cvar_value( &Config_digi_volume, (i * 8) / 100 );
+		cvar_set_cvar_value( &Config_midi_volume, (i * 8) / 100 );
+		cvar_set_cvar_value( &Config_redbook_volume, (i * 8) / 100 );
 	}
 
-	if ( Config_digi_volume > 8 ) Config_digi_volume = 8;
-	if ( Config_midi_volume > 8 ) Config_midi_volume = 8;
-	if ( Config_redbook_volume > 8 ) Config_redbook_volume = 8;
+	if ( Config_digi_volume.intval > 8 ) cvar_set_cvar_value( &Config_digi_volume, 8 );
+	if ( Config_midi_volume.intval > 8 ) cvar_set_cvar_value( &Config_midi_volume, 8 );
+	if ( Config_redbook_volume.intval > 8 ) cvar_set_cvar_value( &Config_redbook_volume, 8 );
 
-	digi_set_volume( (Config_digi_volume*32768)/8, (Config_midi_volume*128)/8 );
+	digi_set_volume( (Config_digi_volume.intval * 32768) / 8, (Config_midi_volume.intval * 128) / 8 );
 /*
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
 	printf( "DigiPort: 0x%x\n", digi_driver_port		);
@@ -418,13 +363,13 @@ int ReadConfigFile()
 			if (*ptr != '\0') {
 				token = strtok(ptr, "=");
 				value = strtok(NULL, "=");
-				if (!strcmp(token, joystick_min_str))	{
+				if (!strcmp(token, Config_joystick_min.name)) {
 					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3], &joy_axis_min[4], &joy_axis_min[5], &joy_axis_min[6] );
 				}
-				else if (!strcmp(token, joystick_max_str))	{
+				else if (!strcmp(token, Config_joystick_max.name)) {
 					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3], &joy_axis_max[4], &joy_axis_max[5], &joy_axis_max[6] );
 				}
-				else if (!strcmp(token, joystick_cen_str))	{
+				else if (!strcmp(token, Config_joystick_cen.name)) {
 					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3], &joy_axis_center[4], &joy_axis_center[5], &joy_axis_center[6] );
 				}
 			}
@@ -443,7 +388,6 @@ int WriteConfigFile()
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
-	ubyte gamma = gr_palette_get_gamma();
 	
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 
@@ -455,6 +399,8 @@ int WriteConfigFile()
 	 joy_axis_max[i]=DOSJoySaveMax[i];
    }
 #endif
+
+	/* TODO: instead of hard-coding all these variables to write out, implement something like cvar_write() that writes out all variables with the archive flag set */
 
 	infile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (infile == NULL) {
@@ -472,47 +418,58 @@ int WriteConfigFile()
 	PHYSFSX_puts(infile, str);
 	sprintf (str, "%s=%d\n", digi_dma16_str, digi_driver_dma_16);
 	PHYSFSX_puts(infile, str);*/
-	sprintf (str, "%s=%d\n", digi_volume_str, Config_digi_volume);
+	sprintf (str, "%s=%d\n", Config_digi_volume.name, Config_digi_volume.intval);
 	PHYSFSX_puts(infile, str);
 	/*sprintf (str, "%s=0x%x\n", midi_dev_str, Config_midi_type);
 	PHYSFSX_puts(infile, str);
 	sprintf (str, "%s=0x%x\n", midi_port_str, digi_midi_port);
 	PHYSFSX_puts(infile, str);*/
-	sprintf (str, "%s=%d\n", midi_volume_str, Config_midi_volume);
+	sprintf (str, "%s=%d\n", Config_midi_volume.name, Config_midi_volume.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", redbook_enabled_str, FindArg("-noredbook")?save_redbook_enabled:Redbook_enabled);
+	sprintf (str, "%s=%d\n", Redbook_enabled.name, FindArg("-noredbook")?save_redbook_enabled:Redbook_enabled.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", redbook_volume_str, Config_redbook_volume);
+	sprintf (str, "%s=%d\n", Config_redbook_volume.name, Config_redbook_volume.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", stereo_rev_str, Config_channels_reversed);
+	sprintf (str, "%s=%d\n", Config_channels_reversed.name, Config_channels_reversed.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", gamma_level_str, gamma);
+	cvar_set_cvar_value( &Config_gamma_level, gr_palette_get_gamma() );
+	sprintf (str, "%s=%d\n", Config_gamma_level.name, Config_gamma_level.intval );
 	PHYSFSX_puts(infile, str);
-	if (Detail_level == NUM_DETAIL_LEVELS-1)
-		sprintf (str, "%s=%d,%d,%d,%d,%d,%d,%d\n", detail_level_str, Detail_level,
+	if (Detail_level == NUM_DETAIL_LEVELS-1) {
+		sprintf (str, "%d,%d,%d,%d,%d,%d,%d", Detail_level,
 				Object_complexity,Object_detail,Wall_detail,Wall_render_depth,Debris_amount,SoundChannels);
-	else
-		sprintf (str, "%s=%d\n", detail_level_str, Detail_level);
+		cvar_set_cvar( &Config_detail_level, str );
+		sprintf (str, "%s=%s\n", Config_detail_level.name, Config_detail_level.string);
+	} else {
+		cvar_set_cvar_value( &Config_detail_level, Detail_level );
+		sprintf (str, "%s=%d\n", Config_detail_level.name, Config_detail_level.intval);
+	}
 	PHYSFSX_puts(infile, str);
 
-	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_min_str, joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
+	sprintf (str, "%d,%d,%d,%d", joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3] );
+	cvar_set_cvar( &Config_joystick_min, str);
+	sprintf (str, "%s=%s\n", Config_joystick_min.name, Config_joystick_min.string);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_cen_str, joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
+	sprintf (str, "%d,%d,%d,%d", joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3] );
+	cvar_set_cvar( &Config_joystick_cen, str);
+	sprintf (str, "%s=%s\n", Config_joystick_cen.name, Config_joystick_cen.string);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d,%d,%d,%d\n", joystick_max_str, joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
+	sprintf (str, "%d,%d,%d,%d", joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3] );
+	cvar_set_cvar( &Config_joystick_max, str);
+	sprintf (str, "%s=%s\n", Config_joystick_max.name, Config_joystick_max.string);
 	PHYSFSX_puts(infile, str);
 
-	sprintf (str, "%s=%s\n", last_player_str, Players[Player_num].callsign );
+	sprintf (str, "%s=%s\n", config_last_player.name, Players[Player_num].callsign );
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%s\n", last_mission_str, config_last_mission );
+	sprintf (str, "%s=%s\n", config_last_mission.name, config_last_mission.string );
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", config_vr_type_str, Config_vr_type );
+	sprintf (str, "%s=%d\n", Config_vr_type.name, Config_vr_type.intval );
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", config_vr_resolution_str, Config_vr_resolution );
+	sprintf (str, "%s=%d\n", Config_vr_resolution.name, Config_vr_resolution.intval );
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", config_vr_tracking_str, Config_vr_tracking );
+	sprintf (str, "%s=%d\n", Config_vr_tracking.name, Config_vr_tracking.intval );
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", movie_hires_str, (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))?SaveMovieHires:MovieHires);
+	sprintf (str, "%s=%d\n", MovieHires.name, (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))?SaveMovieHires:MovieHires.intval);
 	PHYSFSX_puts(infile, str);
 
 	PHYSFS_close(infile);

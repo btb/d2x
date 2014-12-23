@@ -289,7 +289,7 @@ int digi_init_midi(void)
 		MIDIDriverInit = TRUE;
 	}
 
-	digi_set_midi_volume(Config_midi_volume*16);
+	digi_set_midi_volume(Config_midi_volume.intval * 16);
 
 	return 0;
 }		

@@ -853,7 +853,7 @@ int select_mission(int anarchy_mode, char *message)
         default_mission = 0;
         for (i = 0; i < num_missions; i++) {
             m[i] = mission_list[i].mission_name;
-            if ( !stricmp( m[i], config_last_mission ) )
+            if ( !stricmp( m[i], config_last_mission.string ) )
                 default_mission = i;
         }
 
@@ -861,7 +861,7 @@ int select_mission(int anarchy_mode, char *message)
 
         if (new_mission_num >= 0) {
 			// Chose a mission
-			strcpy(config_last_mission, m[new_mission_num]  );
+			cvar_set_cvar( &config_last_mission, m[new_mission_num] );
 	
 			if (!load_mission(mission_list + new_mission_num)) {
 				nm_messagebox( NULL, 1, TXT_OK, TXT_MISSION_ERROR);

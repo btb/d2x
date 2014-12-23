@@ -20,6 +20,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _MOVIE_H
 #define _MOVIE_H
 
+#include "cvar.h"
+
 #define MOVIE_ABORT_ON  1
 #define MOVIE_ABORT_OFF 0
 
@@ -39,6 +41,6 @@ void init_movies();
 int init_subtitles(char *filename);
 void close_subtitles();
 
-extern int MovieHires;      // specifies whether movies use low or high res
+extern cvar_t MovieHires; // specifies whether movies use low or high res
 
 #endif /* _MOVIE_H */

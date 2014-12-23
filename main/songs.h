@@ -21,6 +21,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _SONGS_H
 #define _SONGS_H
 
+#include "cvar.h"
+
 typedef struct song_info {
 	char    filename[16];
 	char    melodic_bank_file[16];
@@ -50,7 +52,7 @@ extern int Num_songs;   //how many MIDI songs
 #endif
 
 //whether or not redbook audio should be played
-extern int Redbook_enabled;
+extern cvar_t Redbook_enabled;
 extern int Redbook_playing;     // track that is currently playing
 
 void songs_play_song( int songnum, int repeat );

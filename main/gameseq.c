@@ -738,9 +738,9 @@ int RegisterPlayer()
 		//----------------------------------------------------------------
 
 		// Read the last player's name from config file, not lastplr.txt
-		strncpy( Players[Player_num].callsign, config_last_player, CALLSIGN_LEN );
+		strncpy( Players[Player_num].callsign, config_last_player.string, CALLSIGN_LEN );
 
-		if (config_last_player[0]==0)
+		if (config_last_player.string[0]==0)
 			allow_abort_flag = 0;
 	}
 

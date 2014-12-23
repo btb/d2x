@@ -383,7 +383,7 @@ mprintf((0,"line_spacing=%d ",line_spacing));
 		}
 	}
 
-	if (r_framerate.value)
+	if (r_framerate.intval)
 		show_framerate();
 
 	if ( Newdemo_state == ND_STATE_PLAYBACK )

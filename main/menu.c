@@ -585,7 +585,7 @@ void do_detail_level_menu(void)
 	m[4].type=NM_TYPE_MENU; m[4].text=MENU_DETAIL_TEXT(4);
 	m[5].type=NM_TYPE_TEXT; m[5].text="";
 	m[6].type=NM_TYPE_MENU; m[6].text=MENU_DETAIL_TEXT(5);
-	m[7].type=NM_TYPE_CHECK; m[7].text="Show High Res movies"; m[7].value=MovieHires;
+	m[7].type=NM_TYPE_CHECK; m[7].text="Show High Res movies"; m[7].value=MovieHires.intval;
 
 	s = newmenu_do1( NULL, TXT_DETAIL_LEVEL , NDL+3, m, NULL, Detail_level);
 
@@ -606,7 +606,7 @@ void do_detail_level_menu(void)
 				break;
 		}
 	}
-	MovieHires = m[7].value;
+	cvar_set_cvar_value( &MovieHires, m[7].value );
 }
 
 //      -----------------------------------------------------------------------------
@@ -928,7 +928,6 @@ try_again:
 
 extern void GameLoop(int, int );
 
-extern int Redbook_enabled;
 
 void options_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
@@ -1170,8 +1169,8 @@ WIN(static BOOL windigi_driver_off=FALSE);
 
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
-	if ( Config_digi_volume != items[0].value )     {
-		Config_digi_volume = items[0].value;
+	if ( Config_digi_volume.intval != items[0].value )     {
+		cvar_set_cvar_value( &Config_digi_volume, items[0].value );
 
 		#ifdef WINDOWS
 			if (windigi_driver_off) {
@@ -1183,29 +1182,29 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 		#endif			
 		
 		#ifndef MACINTOSH
-			digi_set_digi_volume( (Config_digi_volume*32768)/8 );
+			digi_set_digi_volume( (Config_digi_volume.intval * 32768) / 8 );
 		#else
-			digi_set_digi_volume( (Config_digi_volume*256)/8 );
+			digi_set_digi_volume( (Config_digi_volume.intval * 256) / 8 );
 		#endif
 		digi_play_sample_once( SOUND_DROP_BOMB, F1_0 );
 	}
 
 #ifdef WINDOWS
 	if (!wmidi_support_volchange()) {
-		if (!items[1].value && Config_midi_volume) {
-			Config_midi_volume = 0;
+		if (!items[1].value && Config_midi_volume.intval) {
+			cvar_set_cvar_value( &Config_midi_volume, 0 );
 			digi_set_midi_volume(0);
 			digi_play_midi_song( NULL, NULL, NULL, 0 );
 		}
-		else if (Config_midi_volume == 0 && items[1].value) {
+		else if (Config_midi_volume.intval == 0 && items[1].value) {
 			digi_set_midi_volume(64);
-			Config_midi_volume = 4;
+			cvar_set_cvar_value( &Config_midi_volume, 4 );
 		}
 	}
 	else 	 // LINK TO BELOW IF
 #endif
-	if (Config_midi_volume != items[1].value )   {
- 		Config_midi_volume = items[1].value;
+	if (Config_midi_volume.intval != items[1].value )   {
+		cvar_set_cvar_value( &Config_midi_volume, items[1].value );
 		#ifdef WINDOWS
 			if (!windigi_driver_off) {
 				Sleep(200);
@@ -1215,9 +1214,9 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 			}
 		#endif
 		#ifndef MACINTOSH
-			digi_set_midi_volume( (Config_midi_volume*128)/8 );
+			digi_set_midi_volume( (Config_midi_volume.intval * 128) / 8 );
 		#else
-			digi_set_midi_volume( (Config_midi_volume*256)/8 );
+			digi_set_midi_volume( (Config_midi_volume.intval * 256) / 8 );
 		#endif
 	}
 #ifdef MACINTOSH
@@ -1228,9 +1227,9 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 	}
 #endif
 
-	if (Config_redbook_volume != items[2].value )   {
-		Config_redbook_volume = items[2].value;
-		set_redbook_volume(Config_redbook_volume);
+	if (Config_redbook_volume.intval != items[2].value )   {
+		cvar_set_cvar_value( &Config_redbook_volume, items[2].value );
+		set_redbook_volume(Config_redbook_volume.intval);
 	}
 
 	if (items[4].value != (Redbook_playing!=0)) {
@@ -1241,9 +1240,9 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 			items[4].redraw = 1;
 		}
 		else {
-			Redbook_enabled = items[4].value;
+			cvar_set_cvar_value( &Redbook_enabled, items[4].value );
 
-			mprintf((1, "Redbook_enabled = %d\n", Redbook_enabled));
+			mprintf((1, "Redbook_enabled = %d\n", Redbook_enabled.intval));
 
 			if (Function_mode == FMODE_MENU)
 				songs_play_song(SONG_TITLE,1);
@@ -1286,30 +1285,30 @@ void do_sound_menu()
  #endif
 
 	do {
-		m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; 
-		m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8;
+		m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume.intval;m[0].min_value=0; m[0].max_value=8;
+		m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume.intval;m[1].min_value=0; m[1].max_value=8;
 
 	#ifdef WINDOWS
 		if (!wmidi_support_volchange() && !Redbook_playing) {
 			m[1].type = NM_TYPE_CHECK;
 			m[1].text = "MIDI MUSIC";
-			if (Config_midi_volume) m[1].value = 1;
+			if (Config_midi_volume.intval) m[1].value = 1;
 		}
 	#endif
 
-		m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
+		m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume.intval;m[2].min_value=0; m[2].max_value=8;
 #ifndef MACINTOSH
 		m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
 #else
 		m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
 #endif
 		m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
-		m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed;
+		m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed.intval;
 				
 		i = newmenu_do1( NULL, "Sound Effects & Music", sizeof(m)/sizeof(*m), m, sound_menuset, i );
 
-		Redbook_enabled = m[4].value;
-		Config_channels_reversed = m[5].value;
+		cvar_set_cvar_value( &Redbook_enabled, m[4].value );
+		cvar_set_cvar_value( &Config_channels_reversed, m[5].value );
 
 	} while( i>-1 );
 
@@ -1323,7 +1322,7 @@ void do_sound_menu()
 #endif
 
 
-	if ( Config_midi_volume < 1 )   {
+	if ( Config_midi_volume.intval < 1 )   {
 		#ifndef MACINTOSH
 			digi_play_midi_song( NULL, NULL, NULL, 0 );
 		#else
