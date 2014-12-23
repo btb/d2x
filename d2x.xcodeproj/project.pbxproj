@@ -893,7 +893,6 @@
 		146699AD1A2729C60070D41D /* txb2tex.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = txb2tex.1; sourceTree = "<group>"; };
 		146699AE1A2729C60070D41D /* txb2tex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
-		14DB35EB1A3BE76D00F9E41C /* test.cfg */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.cfg; sourceTree = "<group>"; };
 		1478618B1A4410C500DB53B9 /* README.utils */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.utils; sourceTree = "<group>"; };
 		1478618E1A44120900DB53B9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		147861901A44121000DB53B9 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
@@ -924,7 +923,6 @@
 		1466949C1A27246A0070D41D = {
 			isa = PBXGroup;
 			children = (
-				14DB35EB1A3BE76D00F9E41C /* test.cfg */,
 				14E0A3211A2C4DDE0039A9FC /* libphysfs.a */,
 				146694A71A27246A0070D41D /* xcd2x */,
 				146694C31A27246A0070D41D /* d2xTests */,
