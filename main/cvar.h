@@ -31,6 +31,9 @@ void cvar_set_value(char *cvar_name, float value);
 /* Get the pointer to a cvar by name */
 cvar_t *cvar_find(char *cvar_name);
 
+/* Try to autocomplete a cvar name */
+char *cvar_complete(char *text);
+
 /* Get a CVar's value */
 float cvar(char *cvar_name);
 

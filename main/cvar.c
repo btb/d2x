@@ -51,6 +51,22 @@ cvar_t *cvar_find(char *cvar_name)
 }
 
 
+char *cvar_complete(char *text)
+{
+	cvar_t *ptr;
+	int len = strlen(text);
+
+	if (!len)
+		return NULL;
+
+	for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
+		if (!strnicmp(text, ptr->name, len))
+			return ptr->name;
+
+	return NULL;
+}
+
+
 #define cvar_round(x) ((x)>=0?(int)((x)+0.5):(int)((x)-0.5))
 
 /* Register a cvar */

@@ -260,8 +260,7 @@ void cmd_enqueuef(int insert, char *fmt, ...){
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input)
 {
-	CON_Out("     No autocomplete yet");
-	return NULL;
+	return cvar_complete(input);
 }
 
 
