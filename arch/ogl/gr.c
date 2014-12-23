@@ -319,6 +319,9 @@ return 0;
 	if (mode<=0)
 		return 0;
 
+	if (mode == VGA_current_mode)
+		return 0;
+
 	w=SM_W(mode);
 	h=SM_H(mode);
 	VGA_current_mode = mode;
