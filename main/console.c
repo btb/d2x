@@ -983,8 +983,7 @@ void CON_TabCompletion(void) {
 	int i,j;
 	char* command;
 	
-	command = d_strdup(console->LCommand);
-	command = cmd_complete(command);
+	command = cmd_complete(console->LCommand);
 	
 	if(!command)
 		return;	//no tab completion took place so return silently
