@@ -147,6 +147,7 @@ static inline PHYSFS_sint64 PHYSFSX_gets(PHYSFS_file *file, char *s)
 		do
 			PHYSFS_read(file, ptr, 1, 1);
 		while (!PHYSFS_eof(file) && *ptr++ != '\n');
+	*ptr = 0;
 
 	return strlen(s);
 }
