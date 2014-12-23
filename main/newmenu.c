@@ -2241,7 +2241,10 @@ ReadFileNames:
 			
 		case KEY_COMMAND+KEY_Q: {
 			if ( !(Game_mode & GM_MULTI) )
+			{
+				d_free(filenames);
 				quit_request();
+			}
 			newmenu_show_cursor();
 			key_flush();
 			break;
