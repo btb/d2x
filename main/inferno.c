@@ -473,7 +473,8 @@ int main(int argc, char *argv[])
 	if ((t = FindArg("-autoexec")))
 		cmd_appendf("exec %s", Args[t+1]);
 	else {
-		cmd_append("exec autoexec.cfg");
+		if (cfexist("autoexec.cfg"))
+			cmd_append("exec autoexec.cfg");
 	}
 
 	if (FindArg("-debug"))
