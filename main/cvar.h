@@ -25,6 +25,7 @@ void cvar_registervariable (cvar_t *cvar);
 void cvar_set_cvar(cvar_t *cvar, char *value);
 void cvar_set_cvarf(cvar_t *cvar, char *fmt, ...);
 #define cvar_setint(cvar, x) cvar_set_cvarf((cvar), "%d", (x))
+#define cvar_toggle(cvar) cvar_setint((cvar), !(cvar)->intval)
 
 /* Equivalent to typing <var_name> <value> at the console */
 void cvar_set(char *cvar_name, char *value);

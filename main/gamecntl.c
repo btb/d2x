@@ -1426,7 +1426,7 @@ void HandleGameKey(int key)
 
 		#if !defined(RELEASE)
 		case KEY_COMMAND+KEY_F:
-			cvar_setint( &r_framerate, !r_framerate.intval );
+			cvar_toggle( &r_framerate );
 			break;
 		#endif
 
@@ -1839,7 +1839,7 @@ void HandleTestKey(int key)
 		}
 
 		case KEY_DEBUGGED+KEY_F:
-			cvar_setint( &r_framerate, !r_framerate.intval );
+			cvar_toggle( &r_framerate );
 			break;
 
 		case KEY_DEBUGGED+KEY_SPACEBAR:		//KEY_F7:				// Toggle physics flying
@@ -2049,7 +2049,7 @@ void FinalCheats(int key)
 
   if (!(strcmp (cryptstring,FramerateCheat)))
 		{
-			cvar_setint( &r_framerate, !r_framerate.intval );
+			cvar_toggle( &r_framerate );
 		}
 
   if (Game_mode & GM_MULTI)
