@@ -64,41 +64,38 @@ static char rcsid[] = "$Id: config.c,v 1.17 2005-07-30 01:50:17 chris Exp $";
 ubyte Config_control_type = 0;
 ubyte Config_joystick_sensitivity = 8;
 
-cvar_t Config_digi_volume = { "DigiVolume", "8", 1 };
-cvar_t Config_midi_volume = { "MidiVolume", "8", 1 };
-cvar_t Config_redbook_volume = { "RedbookVolume", "8", 1 };
-cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
-cvar_t Config_gamma_level = { "GammaLevel", "0", 1 };
-cvar_t Config_detail_level = { "DetailLevel", "4", 1 };
-cvar_t Config_joystick_min = { "JoystickMin", "0,0,0,0", 1 };
-cvar_t Config_joystick_max = { "JoystickMax", "0,0,0,0", 1 };
-cvar_t Config_joystick_cen = { "JoystickCen", "0,0,0,0", 1 };
-cvar_t config_last_player = { "LastPlayer", "", 1 };
-cvar_t config_last_mission = { "LastMission", "", 1 };
-cvar_t Config_vr_type = { "VR_type", "0", 1 };
-cvar_t Config_vr_resolution = { "VR_resolution", "0", 1 };
-cvar_t Config_vr_tracking = { "VR_tracking", "0", 1 };
 
 #ifdef __MSDOS__
-static char *digi_dev8_str = "DigiDeviceID8";
-static char *digi_dev16_str = "DigiDeviceID16";
-static char *digi_port_str = "DigiPort";
-static char *digi_irq_str = "DigiIrq";
-static char *digi_dma8_str = "DigiDma8";
-static char *digi_dma16_str = "DigiDma16";
-static char *midi_dev_str = "MidiDeviceID";
-static char *midi_port_str = "MidiPort";
+cvar_t Config_digi_type         = { "DigiDeviceID8", "0", 1 };
+cvar_t digi_driver_board_16     = { "DigiDeviceID16", "0", 1 };
+//cvar_t digi_driver_port         = { "DigiPort", "0", 1 };
+//cvar_t digi_driver_irq          = { "DigiIrq", "0", 1 };
+cvar_t Config_digi_dma          = { "DigiDma8", "0", 1 };
+cvar_t digi_driver_dma_16       = { "DigiDma16", "0", 1 };
+cvar_t Config_midi_type         = { "MidiDeviceID", "0", 1 };
+//cvar_t digi_midi_port           = { "MidiPort", "0", 1 };
+#endif
+cvar_t Config_digi_volume       = { "DigiVolume", "8", 1 };
+cvar_t Config_midi_volume       = { "MidiVolume", "8", 1 };
+cvar_t Config_redbook_volume    = { "RedbookVolume", "8", 1 };
+cvar_t Config_detail_level      = { "DetailLevel", "4", 1 };
+cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
+cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
+cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
+cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
+cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", 1 };
+cvar_t config_last_player       = { "LastPlayer", "", 1 };
+cvar_t config_last_mission      = { "LastMission", "", 1 };
+cvar_t Config_vr_type           = { "VR_type", "0", 1 };
+cvar_t Config_vr_resolution     = { "VR_resolution", "0", 1 };
+cvar_t Config_vr_tracking       = { "VR_tracking", "0", 1 };
+
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
 #define _CRYSTAL_LAKE_16_ST	0xe202
 #define _AWE32_8_ST				0xe208
 #define _AWE32_16_ST				0xe209
-#endif
 
-
-int Config_digi_type = 0;
-int Config_digi_dma = 0;
-int Config_midi_type = 0;
 
 #ifdef WINDOWS
 int	 DOSJoySaveMin[4];
@@ -108,9 +105,6 @@ int	 DOSJoySaveMax[4];
 char win95_current_joyname[256];
 #endif
 
-
-int digi_driver_board_16;
-int digi_driver_dma_16;
 
 extern sbyte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, Debris_amount, SoundChannels;
 
@@ -233,13 +227,14 @@ int ReadConfigFile()
 	joy_set_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 #endif
 
-	/*digi_driver_board = 0;
-	digi_driver_port = 0;
-	digi_driver_irq = 0;
-	digi_driver_dma = 0;
-
-	digi_midi_type = 0;
-	digi_midi_port = 0;*/
+#if 0
+	cvar_set_cvar_value(digi_driver_board, 0);
+	cvar_set_cvar_value(digi_driver_port, 0);
+	cvar_set_cvar_value(digi_driver_irq, 0);
+	cvar_set_cvar_value(digi_driver_dma, 0);
+	cvar_set_cvar_value(digi_midi_type, 0);
+	cvar_set_cvar_value(digi_midi_port, 0);
+#endif
 
 	cvar_set_cvar_value( &Config_digi_volume, 8 );
 	cvar_set_cvar_value( &Config_midi_volume, 8 );
@@ -307,24 +302,25 @@ int ReadConfigFile()
 	if ( Config_redbook_volume.intval > 8 ) cvar_set_cvar_value( &Config_redbook_volume, 8 );
 
 	digi_set_volume( (Config_digi_volume.intval * 32768) / 8, (Config_midi_volume.intval * 128) / 8 );
-/*
-	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
-	printf( "DigiPort: 0x%x\n", digi_driver_port		);
-	printf( "DigiIrq: 0x%x\n",  digi_driver_irq		);
-	printf( "DigiDma: 0x%x\n",	digi_driver_dma	);
-	printf( "MidiDeviceID: 0x%x\n", digi_midi_type	);
-	printf( "MidiPort: 0x%x\n", digi_midi_port		);
-  	key_getch();
-*/
-
-	/*Config_midi_type = digi_midi_type;
-	Config_digi_type = digi_driver_board;
-	Config_digi_dma = digi_driver_dma;*/
 
 #if 0
-	if (digi_driver_board_16 > 0 && !FindArg("-no16bit") && digi_driver_board_16 != _GUS_16_ST) {
-		digi_driver_board = digi_driver_board_16;
-		digi_driver_dma = digi_driver_dma_16;
+	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
+	printf( "DigiPort: 0x%x\n", digi_driver_port.intval );
+	printf( "DigiIrq: 0x%x\n",  digi_driver_irq.intval );
+	printf( "DigiDma: 0x%x\n",	digi_driver_dma.intval );
+	printf( "MidiDeviceID: 0x%x\n", digi_midi_type.intval );
+	printf( "MidiPort: 0x%x\n", digi_midi_port.intval );
+  	key_getch();
+
+	cvar_set_cvar_value( &Config_midi_type, digi_midi_type );
+	cvar_set_cvar_value( &Config_digi_type, digi_driver_board );
+	cvar_set_cvar_value( &Config_digi_dma, digi_driver_dma );
+#endif
+
+#if 0
+	if (digi_driver_board_16.intval > 0 && !FindArg("-no16bit") && digi_driver_board_16.intval != _GUS_16_ST) {
+		digi_driver_board = digi_driver_board_16.intval;
+		digi_driver_dma = digi_driver_dma_16.intval;
 	}
 
 	// HACK!!!
@@ -406,24 +402,29 @@ int WriteConfigFile()
 	if (infile == NULL) {
 		return 1;
 	}
-	/*sprintf (str, "%s=0x%x\n", digi_dev8_str, Config_digi_type);
+
+#if 0
+	sprintf (str, "%s=0x%x\n", Config_digi_type.name, Config_digi_type.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", digi_dev16_str, digi_driver_board_16);
+	sprintf (str, "%s=0x%x\n", digi_driver_board_16.name, digi_driver_board_16.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", digi_port_str, digi_driver_port);
+	sprintf (str, "%s=0x%x\n", digi_driver_port.name, digi_driver_port.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", digi_irq_str, digi_driver_irq);
+	sprintf (str, "%s=%d\n", digi_driver_irq.name, digi_driver_irq.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", digi_dma8_str, Config_digi_dma);
+	sprintf (str, "%s=%d\n", Config_digi_dma.name, Config_digi_dma.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=%d\n", digi_dma16_str, digi_driver_dma_16);
-	PHYSFSX_puts(infile, str);*/
+	sprintf (str, "%s=%d\n", digi_driver_dma.name, digi_driver_dma_16.intval);
+	PHYSFSX_puts(infile, str);
+#endif
 	sprintf (str, "%s=%d\n", Config_digi_volume.name, Config_digi_volume.intval);
 	PHYSFSX_puts(infile, str);
-	/*sprintf (str, "%s=0x%x\n", midi_dev_str, Config_midi_type);
+#if 0
+	sprintf (str, "%s=0x%x\n", Config_midi_type.name, Config_midi_type.intval);
 	PHYSFSX_puts(infile, str);
-	sprintf (str, "%s=0x%x\n", midi_port_str, digi_midi_port);
-	PHYSFSX_puts(infile, str);*/
+	sprintf (str, "%s=0x%x\n", digi_midi_port.name, digi_midi_port.intval);
+	PHYSFSX_puts(infile, str);
+#endif
 	sprintf (str, "%s=%d\n", Config_midi_volume.name, Config_midi_volume.intval);
 	PHYSFSX_puts(infile, str);
 	sprintf (str, "%s=%d\n", Redbook_enabled.name, FindArg("-noredbook")?save_redbook_enabled:Redbook_enabled.intval);

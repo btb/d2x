@@ -49,11 +49,11 @@ typedef struct digi_sound       {
 
 #ifdef __DJGPP__
 extern int digi_driver_board;
-extern int digi_driver_port;
-extern int digi_driver_irq;
+extern cvar_t digi_driver_port;
+extern cvar_t digi_driver_irq;
 extern int digi_driver_dma;
 extern int digi_midi_type;
-extern int digi_midi_port;
+extern cvar_t digi_midi_port;
 #endif
 
 extern int digi_sample_rate;
