@@ -645,6 +645,7 @@ void CON_Show(void) {
 /* Hides the console (make it invisible) */
 void CON_Hide(void) {
 	console->Visible = CON_CLOSING;
+	key_flush();
 }
 
 /* tells wether the console is visible or not */
