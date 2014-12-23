@@ -260,6 +260,22 @@ void cmd_enqueuef(int insert, char *fmt, ...){
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input)
 {
+	cmd_t *ptr;
+	cmd_alias_t *aptr;
+
+	int len = strlen(input);
+
+	if (!len)
+		return NULL;
+
+	for (ptr = cmd_list; ptr != NULL; ptr = ptr->next)
+		if (!strnicmp(input, ptr->name, len))
+			return ptr->name;
+
+	for (aptr = cmd_alias_list; aptr != NULL; aptr = aptr->next)
+		if (!strnicmp(input, aptr->name, len))
+			return aptr->name;
+
 	return cvar_complete(input);
 }
 
