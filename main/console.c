@@ -606,7 +606,7 @@ void CON_InitGFX(int w, int h)
 	}
 
 	/* Load the consoles font */
-	CON_Font(SMALL_FONT, gr_getcolor(63,63,63), -1);
+	CON_Font(SMALL_FONT, gr_getcolor(50,40,30), -1);
 
 	/* make sure that the size of the console is valid */
 	if(w > grd_curscreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
