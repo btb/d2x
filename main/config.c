@@ -202,8 +202,6 @@ static void config_init(void)
 
 int ReadConfigFile()
 {
-	PHYSFS_file *infile;
-	char line[80], *token, *value, *ptr;
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
@@ -228,12 +226,12 @@ int ReadConfigFile()
 #endif
 
 #if 0
-	cvar_setint(digi_driver_board, 0);
-	cvar_setint(digi_driver_port, 0);
-	cvar_setint(digi_driver_irq, 0);
-	cvar_setint(digi_driver_dma, 0);
-	cvar_setint(digi_midi_type, 0);
-	cvar_setint(digi_midi_port, 0);
+	cvar_setint(&digi_driver_board, 0);
+	cvar_setint(&digi_driver_port, 0);
+	cvar_setint(&digi_driver_irq, 0);
+	cvar_setint(&digi_driver_dma, 0);
+	cvar_setint(&digi_midi_type, 0);
+	cvar_setint(&digi_midi_port, 0);
 #endif
 
 	cvar_setint( &Config_digi_volume, 8 );
@@ -347,30 +345,14 @@ int ReadConfigFile()
 	} else
 		digi_driver_board		= digi_driver_board;
 #else
-	infile = PHYSFSX_openReadBuffered("descentw.cfg");
-	if (infile) {
-		while (!PHYSFS_eof(infile))
-		{
-			memset(line, 0, 80);
-			PHYSFSX_gets(infile, line);
-			ptr = &(line[0]);
-			while (isspace(*ptr))
-				ptr++;
-			if (*ptr != '\0') {
-				token = strtok(ptr, "=");
-				value = strtok(NULL, "=");
-				if (!strcmp(token, Config_joystick_min.name)) {
-					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3], &joy_axis_min[4], &joy_axis_min[5], &joy_axis_min[6] );
-				}
-				else if (!strcmp(token, Config_joystick_max.name)) {
-					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3], &joy_axis_max[4], &joy_axis_max[5], &joy_axis_max[6] );
-				}
-				else if (!strcmp(token, Config_joystick_cen.name)) {
-					sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3], &joy_axis_center[4], &joy_axis_center[5], &joy_axis_center[6] );
-				}
-			}
-		}
-		PHYSFS_close(infile);
+
+	if (cfexist("descentw.cfg")) {
+		cmd_append("exec descentw.cfg");
+		cmd_queue_process();
+
+		sscanf( Config_joystick_min.string, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3], &joy_axis_min[4], &joy_axis_min[5], &joy_axis_min[6] );
+		sscanf( Config_joystick_max.string, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3], &joy_axis_max[4], &joy_axis_max[5], &joy_axis_max[6] );
+		sscanf( Config_joystick_cen.string, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3], &joy_axis_center[4], &joy_axis_center[5], &joy_axis_center[6] );
 	}
 #endif
 
@@ -425,28 +407,28 @@ int WriteConfigFile()
 #ifdef WINDOWS
 {
 //	Save Windows Config File
-	char joyname[256];
+	char str[256];
 						
 
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 	
-	infile = PHYSFSX_openWriteBuffered("descentw.cfg");
-	if (infile == NULL) return 1;
+	outfile = PHYSFSX_openWriteBuffered("descentw.cfg");
+	if (outfile == NULL) return 1;
 
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_min_str,
+	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_min.name,
 			joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3],
 			joy_axis_min[4], joy_axis_min[5], joy_axis_min[6]);
-	cfputs(str, infile);
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_cen_str,
+	PHYSFSX_puts(outfile, str);
+	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_cen.name,
 			joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3],
 			joy_axis_center[4], joy_axis_center[5], joy_axis_center[6]);
-	cfputs(str, infile);
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_max_str,
+	PHYSFSX_puts(outfile, str);
+	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_max.name,
 			joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3],
 			joy_axis_max[4], joy_axis_max[5], joy_axis_max[6]);
-	cfputs(str, infile);
+	PHYSFSX_puts(outfile, str);
 
-	cfclose(infile);
+	cfclose(outfile);
 }
 	CheckMovieAttributes();
 #endif
