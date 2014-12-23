@@ -28,6 +28,9 @@ void cvar_set_cvar_value(cvar_t *cvar, float value);
 void cvar_set(char *cvar_name, char *value);
 void cvar_set_value(char *cvar_name, float value);
 
+/* Get the pointer to a cvar by name */
+cvar_t *cvar_find(char *cvar_name);
+
 /* Get a CVar's value */
 float cvar(char *cvar_name);
 

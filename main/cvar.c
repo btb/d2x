@@ -39,6 +39,18 @@ void cvar_init(void)
 }
 
 
+cvar_t *cvar_find(char *cvar_name)
+{
+	cvar_t *ptr;
+
+	for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
+		if (!stricmp(cvar_name, ptr->name))
+			return ptr;
+
+	return NULL;
+}
+
+
 #define cvar_round(x) ((x)>=0?(int)((x)+0.5):(int)((x)-0.5))
 
 /* Register a cvar */
@@ -50,6 +62,8 @@ void cvar_registervariable (cvar_t *cvar)
 		cvar_init();
 
 	Assert(cvar != NULL);
+
+	Assert(!cvar_find(cvar->name));
 
 	stringval = cvar->string;
 
@@ -85,14 +99,7 @@ void cvar_set_cvar_value(cvar_t *cvar, float value)
 
 void cvar_set (char *cvar_name, char *value)
 {
-	cvar_t *ptr;
-
-	for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
-		if (!stricmp(cvar_name, ptr->name)) break;
-
-	if (ptr == NULL) return; // If we didn't find the cvar, give up
-
-	cvar_set_cvar(ptr, value);
+	cvar_set_cvar(cvar_find(cvar_name), value);
 }
 
 
@@ -102,19 +109,19 @@ void cvar_set_value(char *cvar_name, float value)
 
 	snprintf(stringval, FLOAT_STRING_SIZE, "%f", value);
 
-	cvar_set(cvar_name, stringval);
+	cvar_set_cvar(cvar_find(cvar_name), stringval);
 }
 
 
 /* Get a CVar's value */
 float cvar (char *cvar_name)
 {
-	cvar_t *ptr;
+	cvar_t *cvar;
 
-	for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
-		if (!strcmp(cvar_name, ptr->name)) break;
+	cvar = cvar_find(cvar_name);
 
-	if (ptr == NULL) return 0.0; // If we didn't find the cvar, give up
+	if (!cvar)
+		return 0.0; // If we didn't find the cvar, give up
 
-	return ptr->value;
+	return cvar->value;
 }
