@@ -12,12 +12,17 @@ typedef struct cvar_s
 	char *string;
 	bool archive;
 	float value;
+	int intval;
 	struct cvar_s *next;
 } cvar_t;
 
 
 /* Register a CVar with the name and string and optionally archive elements set */
 void cvar_registervariable (cvar_t *cvar);
+
+/* Set a CVar's value */
+void cvar_set_cvar(cvar_t *cvar, char *value);
+void cvar_set_cvar_value(cvar_t *cvar, float value);
 
 /* Equivalent to typing <var_name> <value> at the console */
 void cvar_set(char *cvar_name, char *value);

@@ -6,11 +6,15 @@
 #endif
 
 #include <stdlib.h>
+#include <float.h>
 
 #include "cvar.h"
 #include "error.h"
 #include "strutil.h"
 #include "u_mem.h"
+
+
+#define FLOAT_STRING_SIZE (3 + DBL_MANT_DIG - DBL_MIN_EXP + 1)
 
 
 /* The list of cvars */
@@ -35,6 +39,8 @@ void cvar_init(void)
 }
 
 
+#define cvar_round(x) ((x)>=0?(int)((x)+0.5):(int)((x)-0.5))
+
 /* Register a cvar */
 void cvar_registervariable (cvar_t *cvar)
 {
@@ -47,9 +53,11 @@ void cvar_registervariable (cvar_t *cvar)
 	Assert(cvar != NULL);
 
 	stringval = cvar->string;
+
 	cvar->next = NULL;
-	cvar->value = strtod(cvar->string, (char **) NULL);
 	cvar->string = d_strdup(stringval);
+	cvar->value = strtod(cvar->string, (char **) NULL);
+	cvar->intval = cvar_round(cvar->value);
 
 	if (cvar_list == NULL)
 	{
@@ -63,6 +71,25 @@ void cvar_registervariable (cvar_t *cvar)
 
 
 /* Set a CVar's value */
+void cvar_set_cvar(cvar_t *cvar, char *value)
+{
+	d_free(cvar->string);
+	cvar->string = d_strdup(value);
+	cvar->value = strtod(cvar->string, (char **) NULL);
+	cvar->intval = cvar_round(cvar->value);
+}
+
+
+void cvar_set_cvar_value(cvar_t *cvar, float value)
+{
+	char stringval[FLOAT_STRING_SIZE];
+
+	snprintf(stringval, FLOAT_STRING_SIZE, "%f", value);
+
+	cvar_set_cvar(cvar, stringval);
+}
+
+
 void cvar_set (char *cvar_name, char *value)
 {
 	cvar_t *ptr;
@@ -72,17 +99,15 @@ void cvar_set (char *cvar_name, char *value)
 
 	if (ptr == NULL) return; // If we didn't find the cvar, give up
 
-	d_free(ptr->string);
-	ptr->string = d_strdup(value);
-	ptr->value = strtod(value, (char **) NULL);
+	cvar_set_cvar(ptr, value);
 }
 
 
 void cvar_set_value(char *cvar_name, float value)
 {
-	char stringval[16];
+	char stringval[FLOAT_STRING_SIZE];
 
-	snprintf(stringval, 16, "%f", value);
+	snprintf(stringval, FLOAT_STRING_SIZE, "%f", value);
 
 	cvar_set(cvar_name, stringval);
 }
