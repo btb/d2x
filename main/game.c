@@ -334,6 +334,34 @@ void game_cmd_map(int argc, char **argv)
 }
 
 
+/* send network message */
+void game_cmd_say(int argc, char **argv)
+{
+	int ret, i;
+
+	if (argc < 2)
+		return;
+
+	Network_message[0] = 0;
+
+	ret = snprintf(Network_message, MAX_MESSAGE_LEN, "%s", argv[1]);
+	if (ret >= MAX_MESSAGE_LEN) {
+		con_printf(CON_CRITICAL, "say: message too long (max %d characters)\n", MAX_MESSAGE_LEN);
+		return;
+	}
+
+	for (i = 2; i < argc; i++) {
+		ret = snprintf(Network_message, MAX_MESSAGE_LEN, "%s %s", Network_message, argv[i]);
+		if (ret >= MAX_MESSAGE_LEN) {
+			con_printf(CON_CRITICAL, "say: message too long (max %d characters)\n", MAX_MESSAGE_LEN);
+			return;
+		}
+	}
+
+	multi_send_message_end();
+}
+
+
 //this is called once per game
 void init_game()
 {
@@ -358,8 +386,9 @@ void init_game()
 	cvar_registervariable(&cg_fov);
 
 	/* Register cmds */
-	cmd_addcommand("map", game_cmd_map);
 	cmd_addcommand("player", game_cmd_player);
+	cmd_addcommand("map", game_cmd_map);
+	cmd_addcommand("say", game_cmd_say);
 }
 
 
