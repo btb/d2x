@@ -352,7 +352,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
     MVE_rmEndMovie();
 
-	SDL_FreeRW(filehndl);                           // Close Movie File
+	filehndl->close(filehndl); // Close Movie File
 
 	// Restore old graphic state
 
@@ -406,7 +406,7 @@ int RotateRobot()
 void DeInitRobotMovie(void)
 {
 	MVE_rmEndMovie();
-	SDL_FreeRW(RoboFile);                           // Close Movie File
+	RoboFile->close(RoboFile); // Close Movie File
 }
 
 
