@@ -288,6 +288,23 @@ void load_background_bitmap()
 }
 
 
+/* load player */
+void game_cmd_player(int argc, char **argv)
+{
+	if (argc < 2)
+		return;
+
+	strncpy(Players[Player_num].callsign, argv[1], CALLSIGN_LEN);
+
+	if (read_player_file() != EZERO) {
+		con_printf(CON_CRITICAL, "player: unable to load player file");
+		return;
+	}
+
+	WriteConfigFile();		// Update lastplr
+}
+
+
 /* load mission */
 void game_cmd_map(int argc, char **argv)
 {
@@ -342,6 +359,7 @@ void init_game()
 
 	/* Register cmds */
 	cmd_addcommand("map", game_cmd_map);
+	cmd_addcommand("player", game_cmd_player);
 }
 
 
