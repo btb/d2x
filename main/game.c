@@ -288,6 +288,35 @@ void load_background_bitmap()
 }
 
 
+/* load mission */
+void game_cmd_map(int argc, char **argv)
+{
+	int level_num = 1;
+
+	if (argc < 2)
+		return;
+
+	if (!strlen(Players[Player_num].callsign)) {
+		con_printf(CON_CRITICAL, "map: no player selected, not starting level\n");
+		return;
+	}
+
+	load_mission_by_name(argv[1]);
+
+	if (argc > 2)
+		level_num = atoi(argv[2]);
+
+	if (level_num == 0)
+		level_num = 1;
+	if (level_num > Last_level)
+		level_num = Last_level;
+	if (level_num < Last_secret_level)
+		level_num = Last_secret_level;
+
+	StartNewGame(level_num);
+}
+
+
 //this is called once per game
 void init_game()
 {
@@ -311,6 +340,8 @@ void init_game()
 	cvar_registervariable(&r_framerate);
 	cvar_registervariable(&cg_fov);
 
+	/* Register cmds */
+	cmd_addcommand("map", game_cmd_map);
 }
 
 
