@@ -1075,7 +1075,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 #ifdef NEWMENU_MOUSE
 	mouse_state = omouse_state = 0;
 	if (filename == NULL && !MenuReordering) {
-		draw_close_box(0,0);
+		//draw_close_box(0,0);
 		close_box = 1;
 	}
 
@@ -2115,7 +2115,7 @@ ReadFileNames:
 #ifdef NEWMENU_MOUSE
 	mouse_state = omouse_state = 0;
 	mouse2_state = omouse2_state = 0;
-	draw_close_box(w_x,w_y);
+	//draw_close_box(w_x,w_y);
 	newmenu_show_cursor();
 #endif
 
@@ -2616,7 +2616,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 	mouse_state = omouse_state = 0;	//dblclick_flag = 0;
 	close_x = wx-border_size;
 	close_y = wy-title_height-border_size;
-	draw_close_box(close_x,close_y);
+	//draw_close_box(close_x,close_y);
 	newmenu_show_cursor();
 #endif
 
