@@ -155,11 +155,14 @@ void cmd_parse(char *input)
 	cmd_execute(num_tokens, tokens);
 }
 
+
+int cmd_queue_wait = 0;
+
 void cmd_queue_process()
 {
 	cmd_queue_t *cmd;
 
-	while (cmd_queue_head) {
+	while (!cmd_queue_wait && cmd_queue_head) {
 		cmd = cmd_queue_head;
 		cmd_queue_head = cmd_queue_head->next;
 		if (!cmd_queue_head)
@@ -170,6 +173,12 @@ void cmd_queue_process()
 
 		d_free(cmd->command_line);
 		d_free(cmd);
+	}
+
+	if (cmd_queue_wait) {
+		con_printf(CON_DEBUG, "cmd_queue_process: waiting\n");
+		cmd_queue_wait--;
+		return;
 	}
 }
 
@@ -206,7 +215,6 @@ void cmd_enqueue(int insert, char *input)
 				continue;
 			} else if ( *input == '\n' || (!quoted && *input == ';') ) {
 				*input = 0;
-				break;
 			}
 		} while (*input++);
 
@@ -236,7 +244,7 @@ void cmd_enqueue(int insert, char *input)
 	} else {
 		/* add our list to the tail of the main list */
 		if (!cmd_queue_head)
-			cmd_queue_head = new;
+			cmd_queue_head = head;
 		if (cmd_queue_tail)
 			cmd_queue_tail->next = head;
 		
@@ -245,7 +253,8 @@ void cmd_enqueue(int insert, char *input)
 	}
 }
 
-void cmd_enqueuef(int insert, char *fmt, ...){
+void cmd_enqueuef(int insert, char *fmt, ...)
+{
 	va_list arglist;
 	char buf[CMD_MAX_LENGTH];
 	
@@ -378,7 +387,8 @@ void cmd_attack2_on(int argc, char **argv) { Console_button_states[CMD_ATTACK2] 
 void cmd_attack2_off(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 0; }
 
 /* weapon select */
-void cmd_impulse(int argc, char**argv) {
+void cmd_impulse(int argc, char**argv)
+{
 	if (argc < 2)
 		return;
 	int n = atoi(argv[1]);
@@ -388,7 +398,8 @@ void cmd_impulse(int argc, char**argv) {
 }
 
 /* echo to console */
-void cmd_echo(int argc, char **argv) {
+void cmd_echo(int argc, char **argv)
+{
 	char buf[CMD_MAX_LENGTH] = "";
 	int i;
 	for (i = 1; i < argc; i++) {
@@ -442,6 +453,16 @@ void cmd_exec(int argc, char **argv) {
 }
 
 
+/* execute script */
+void cmd_wait(int argc, char **argv)
+{
+	if (argc < 2)
+		cmd_queue_wait = 1;
+	else
+		cmd_queue_wait = atoi(argv[1]);
+}
+
+
 void cmd_free(void)
 {
 	int i;
@@ -468,7 +489,8 @@ void cmd_free(void)
 }
 
 
-void cmd_init(void){
+void cmd_init(void)
+{
 	memset(Console_button_states, 0, sizeof(int) * CMD_NUM_BUTTONS);
 
 	cmd_addcommand("alias", cmd_alias);
@@ -484,6 +506,8 @@ void cmd_init(void){
 	cmd_addcommand("echo", cmd_echo);
 
 	cmd_addcommand("exec", cmd_exec);
+
+	cmd_addcommand("wait", cmd_wait);
 
 	atexit(cmd_free);
 }
