@@ -425,7 +425,9 @@ void do_register_player(ubyte *title_pal)
 		//work.  Second, we need to remap the fonts.  Third, we need to fill
 		//in part of the fade tables so the darkening of the menu edges works
 
+#if 0
 		memcpy(gr_palette,title_pal,sizeof(gr_palette));
+#endif
 		remap_fonts_and_menus(1);
 		RegisterPlayer();		//get player's name
 	}
@@ -469,13 +471,6 @@ int main(int argc, char *argv[])
 
 	error_init(NULL, NULL);
 	PHYSFSX_init(argc, argv);
-
-	if ((t = FindArg("-autoexec")))
-		cmd_appendf("exec %s", Args[t+1]);
-	else {
-		if (cfexist("autoexec.cfg"))
-			cmd_append("exec autoexec.cfg");
-	}
 
 	if (FindArg("-debug"))
 		cvar_setint( &con_threshold, CON_DEBUG );
@@ -720,6 +715,15 @@ int main(int argc, char *argv[])
 
 	init_game();
 
+	remap_fonts_and_menus(1);
+
+	if ((t = FindArg("-autoexec")))
+		cmd_appendf("exec %s", Args[t+1]);
+	else if (cfexist("autoexec.cfg"))
+		cmd_append("exec autoexec.cfg");
+
+	cmd_queue_process();
+
 	//	If built with editor, option to auto-load a level and quit game
 	//	to write certain data.
 	#ifdef	EDITOR
@@ -735,9 +739,8 @@ int main(int argc, char *argv[])
 		strcpy(Players[0].callsign, "dummy");
 	} else
 	#endif
-		do_register_player(title_pal);
-
-	gr_palette_fade_out( title_pal, 32, 0 );
+		if (!strlen(Players[0].callsign))
+			do_register_player(title_pal);
 
 	Game_mode = GM_GAME_OVER;
 
@@ -751,8 +754,12 @@ int main(int argc, char *argv[])
 	//autostart a demo from the main menu, never having gone into the game
 	setjmp(LeaveGame);
 
+	remap_fonts_and_menus(1);
+
 	while (Function_mode != FMODE_EXIT)
 	{
+		cmd_queue_process();
+
 		switch( Function_mode )	{
 		case FMODE_MENU:
 			set_screen_mode(SCREEN_MENU);
