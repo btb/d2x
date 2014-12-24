@@ -102,6 +102,9 @@ void cvar_registervariable (cvar_t *cvar)
 /* Set a CVar's value */
 void cvar_set_cvar(cvar_t *cvar, char *value)
 {
+	if (!cvar)
+		return;
+
 	d_free(cvar->string);
 	cvar->string = d_strdup(value);
 	cvar->value = strtod(cvar->string, (char **) NULL);
