@@ -160,10 +160,6 @@ extern void vfx_set_palette_sub(ubyte *);
 
 extern int VR_low_res;
 
-extern int Config_vr_type;
-extern int Config_vr_resolution;
-extern int Config_vr_tracking;
-
 #define LINE_LEN	100
 
 //read help from a file & print to screen
