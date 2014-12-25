@@ -111,7 +111,7 @@ grs_font * names_font;
 
 typedef struct box {
 	int left, top, width, height;
-} box;
+} box_t;
 
 #define CREDITS_FILE    (cfexist("mcredits.tex")?"mcredits.tex":cfexist("ocredits.tex")?"ocredits.tex":"credits.tex")
 
@@ -134,7 +134,7 @@ void credits_show(char *credits_filename)
 	char * tempp;
 	char filename[32];
 
-	box dirty_box[NUM_LINES_HIRES];
+	box_t dirty_box[NUM_LINES_HIRES];
 	grs_canvas *CreditsOffscreenBuf=NULL;
 	grs_canvas *save_canv;
 
@@ -324,7 +324,7 @@ get_line:;
 			}
 
 			{	// Wacky Fast Credits Thing
-				box	*new_box;
+				box_t *new_box;
 				grs_bitmap *tempbmp;
 
 				for (j=0; j<NUM_LINES; j++ )
