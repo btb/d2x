@@ -703,12 +703,7 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 
 	if (gr_palette_faded_out) return 0;
 
-	if (grd_fades_disabled) {
-		gr_palette_clear();
-		return 0;
-	}
-
-	if (!ogl_readpixels_ok) {
+	if (grd_fades_disabled || !ogl_readpixels_ok) {
 		gr_palette_faded_out = 1;
 		return 0;
 	}
@@ -716,8 +711,6 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
-
-	glReadBuffer(GL_FRONT);
 
 	MALLOC(buf, unsigned char, grd_curscreen->sc_w * grd_curscreen->sc_h * 3);
 	glReadBuffer(GL_FRONT);
@@ -735,7 +728,7 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 		glVertex2i(1, 0);
 		glEnd();
 
-		gr_update();
+		glFlush();
 
 		timer_delay(f0_1 / 10);
 	}
@@ -754,12 +747,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 
 	if (!gr_palette_faded_out) return 0;
 
-	if (grd_fades_disabled) {
-		gr_palette_clear();
-		return 0;
-	}
-
-	if (!ogl_readpixels_ok) {
+	if (grd_fades_disabled || !ogl_readpixels_ok) {
 		gr_palette_faded_out = 0;
 		return 0;
 	}
@@ -767,8 +755,6 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
-
-	glReadBuffer(GL_FRONT);
 
 	MALLOC(buf, unsigned char, grd_curscreen->sc_w * grd_curscreen->sc_h * 3);
 	glReadBuffer(GL_FRONT);
@@ -786,7 +772,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 		glVertex2i(1, 0);
 		glEnd();
 
-		gr_update();
+		glFlush();
 
 		timer_delay(f0_1 / 10);
 	}
