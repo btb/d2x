@@ -676,40 +676,25 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 int load_briefing_screen( int screen_num )
 {
 	int	pcx_error;
-	char *fname;
 
 	if (EMULATING_D1)
-		fname = Briefing_screens[screen_num].bs_name;
-	else
-		fname = CurBriefScreenName;
+		strcpy (CurBriefScreenName, Briefing_screens[screen_num].bs_name);
 
-	if ((pcx_error = pcx_read_fullscr(fname, New_pal)) != PCX_ERROR_NONE) {
-		printf( "File '%s', PCX load error: %s\n  (It's a briefing screen.  Does this cause you pain?)\n", fname, pcx_errormsg(pcx_error));
-		printf( "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n", fname, pcx_errormsg(pcx_error), pcx_error);
-		Error( "Error loading briefing screen <%s>, PCX load error: %s (%i)\n", fname, pcx_errormsg(pcx_error), pcx_error);
-	}
+	if ((pcx_error = pcx_read_fullscr(CurBriefScreenName, New_pal)) != PCX_ERROR_NONE)
+		Error( "Error loading briefing screen <%s>, PCX load error: %s (%i)\n", CurBriefScreenName, pcx_errormsg(pcx_error), pcx_error);
 
 	return 0;
 }
 
 int load_new_briefing_screen( char *fname )
 {
-	int pcx_error;
-
 	mprintf ((0,"Loading new briefing <%s>\n",fname));
 	strcpy (CurBriefScreenName,fname);
 
-#if 1 //defined (MACINTOSH) || defined(WINDOWS)
-	memcpy(New_pal,gr_palette,sizeof(gr_palette));		// attempt to get fades after briefing screens done correctly.
-#endif
 	if (gr_palette_fade_out( New_pal, 32, 0 ))
 		return 0;
 
-	if ((pcx_error=pcx_read_fullscr( fname, New_pal ))!=PCX_ERROR_NONE)     {
-	//if ((pcx_error=pcx_read_bitmap( fname, &grd_curcanv->cv_bitmap, grd_curcanv->cv_bitmap.bm_type, New_pal ))!=PCX_ERROR_NONE)     {
-		printf( "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n",fname, pcx_errormsg(pcx_error), pcx_error);
-		Error( "Error loading briefing screen <%s>, PCX load error: %s (%i)\n",fname, pcx_errormsg(pcx_error), pcx_error);
-	}
+	load_briefing_screen(-1);
 
 	gr_copy_palette(gr_palette, New_pal, sizeof(gr_palette));
 
@@ -1340,44 +1325,12 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	}
 
 	if (EMULATING_D1) {
-		int pcx_error;
-#if 1
-		grs_bitmap briefing_bm;
+		load_briefing_screen(screen_num);
 
-		gr_init_bitmap_data(&briefing_bm);
-		if ((pcx_error=pcx_read_bitmap(Briefing_screens[screen_num].bs_name, &briefing_bm, BM_LINEAR, New_pal))!=PCX_ERROR_NONE) {
-#else
-		if ((pcx_error=pcx_read_fullscr(Briefing_screens[screen_num].bs_name, New_pal))!=PCX_ERROR_NONE) {
-#endif
-			printf("PCX load error: %s.  File '%s'\n\n", pcx_errormsg(pcx_error), Briefing_screens[screen_num].bs_name);
-			mprintf((0, "File '%s', PCX load error: %s (%i)\n  (It's a briefing screen.  Does this cause you pain?)\n", Briefing_screens[screen_num].bs_name, pcx_errormsg(pcx_error), pcx_error));
-			Int3();
-			return 0;
-		}
-
-#if 1
-		//memcpy(palette_save, gr_palette, sizeof(palette_save));
-		//memcpy(New_pal, gr_palette, sizeof(gr_palette));
-
-		//vfx_set_palette_sub( New_pal );
 		gr_palette_clear();
-		gr_set_current_canvas( NULL );
-		show_fullscr(&briefing_bm);
-#endif
-
-		//added on 9/13/98 by adb to make arch's requiring updates work
-		gr_update();
-		//end changes by adb
-
-#if 1
-		gr_free_bitmap_data (&briefing_bm);
-#endif
 
 		if (gr_palette_fade_in( New_pal, 32, allow_keys ))
 			return 1;
-
-		//memcpy(gr_palette,New_pal,sizeof(gr_palette));
-
 	}
 
 	#ifdef MACINTOSH
@@ -1388,7 +1341,7 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	key_init();
 	#endif
 
-	#if 1 //defined (MACINTOSH) || defined(WINDOWS)
+	#if defined (MACINTOSH) || defined(WINDOWS)
 	memcpy(New_pal,gr_palette,sizeof(gr_palette));		// attempt to get fades after briefing screens done correctly.
 	#endif
 
