@@ -154,6 +154,15 @@ int local_key_inkey(void)
 }
 #endif
 
+
+void delay_until(fix time)
+{
+	fix t = timer_get_fixed_seconds();
+	if (time > t)
+		timer_delay(time - t);
+}
+
+
 int show_title_screen( char * filename, int allow_keys, int from_hog_only )
 {
 	fix timer;
@@ -641,12 +650,20 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 	if (RobotPlaying && (delay != 0))
 		RotateRobot();
 
+	if ((robot_num != -1) && (delay != 0))
+		show_spinning_robot_frame(robot_num);
+
 	while (timer_get_fixed_seconds() < (start_time + delay)) {
+		gr_update();
+
 		if (RobotPlaying && delay != 0)
 			RotateRobot();
+
+		if ((robot_num != -1) && (delay != 0)) {
+			show_spinning_robot_frame(robot_num);
+			delay_until(start_time + delay);
+		}
 	}
-	if (robot_num != -1)
-		show_spinning_robot_frame(robot_num);
 
 	start_time = timer_get_fixed_seconds();
 
@@ -985,11 +1002,9 @@ int show_briefing_message(int screen_num, char *message)
 
 				gr_update();
 
-				start_time = timer_get_fixed_seconds();
 				while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
+					start_time = timer_get_fixed_seconds();
 
-					while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
-						;
 					flash_cursor(flashing_cursor);
 
 					if (RobotPlaying)
@@ -999,7 +1014,8 @@ int show_briefing_message(int screen_num, char *message)
 
 					if (Bitmap_name[0] != 0)
 						show_bitmap_frame();
-					start_time += KEY_DELAY_DEFAULT/2;
+
+					delay_until(start_time + KEY_DELAY_DEFAULT/2);
 				}
 
 #ifndef NDEBUG
@@ -1118,8 +1134,7 @@ int show_briefing_message(int screen_num, char *message)
 
 			start_time = timer_get_fixed_seconds();
 			while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
-				while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
-					;
+				gr_update();
 				flash_cursor(flashing_cursor);
 				if (RobotPlaying)
 					RotateRobot();
@@ -1128,6 +1143,7 @@ int show_briefing_message(int screen_num, char *message)
 				if (Bitmap_name[0] != 0)
 					show_bitmap_frame();
 				start_time += KEY_DELAY_DEFAULT/2;
+				delay_until(start_time + KEY_DELAY_DEFAULT/2);
 			}
 
 			if (RobotPlaying)
