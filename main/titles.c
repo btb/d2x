@@ -452,6 +452,8 @@ void init_char_pos(int x, int y)
 grs_canvas	*Robot_canv = NULL;
 vms_angvec	Robot_angles;
 
+ubyte   Bitmap_palette[768];
+
 char    Bitmap_name[32] = "";
 #define EXIT_DOOR_MAX   14
 #define OTHER_THING_MAX 10      //  Adam: This is the number of frames in your new animating thing.
@@ -549,6 +551,8 @@ void show_bitmap_frame(void)
 		gr_bitmapm(0, 0, bitmap_ptr);
 
 		grd_curcanv = curcanv_save;
+		gr_copy_palette(gr_palette, New_pal, sizeof(New_pal));
+		gr_remap_bitmap_good(&bitmap_canv->cv_bitmap, Bitmap_palette, 255, 254);
 		d_free(bitmap_canv);
 
 		switch (Animating_bitmap_type) {
@@ -595,6 +599,8 @@ void show_spinning_robot_frame(int robot_num)
 		Assert(Robot_info[robot_num].model_num != -1);
 		draw_model_picture(Robot_info[robot_num].model_num, &Robot_angles);
 		grd_curcanv = curcanv_save;
+		gr_copy_palette(gr_palette, New_pal, sizeof(New_pal));
+		gr_remap_bitmap_good(&Robot_canv->cv_bitmap, Bitmap_palette, 255, 254);
 	}
 
 }
@@ -610,6 +616,9 @@ void init_spinning_robot(void) //(int x,int y,int w,int h)
 	int y = rescale_y(55);
 	int w = rescale_x(166);
 	int h = rescale_y(138);
+
+	gr_use_palette_table(DEFAULT_LEVEL_PALETTE);
+	memcpy(Bitmap_palette, gr_palette, sizeof(Bitmap_palette));
 
 	Robot_canv = gr_create_sub_canvas(grd_curcanv, x, y, w, h);
 	// 138, 55, 166, 138
