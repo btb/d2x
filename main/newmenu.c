@@ -712,6 +712,8 @@ void draw_close_box(int x,int y)
 	gr_rect(x + CLOSE_X + LHX(1), y + CLOSE_Y + LHX(1), x + CLOSE_X + CLOSE_SIZE - LHX(1), y + CLOSE_Y + CLOSE_SIZE - LHX(1));
 }
 
+extern int Num_bitmap_files;
+
 int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem), int citem, char * filename, int width, int height, int TinyMode )
 {
 	int old_keyd_repeat, done;
@@ -1412,6 +1414,70 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			if ( (choice>-1) && (item[choice].type!=NM_TYPE_INPUT)&&(item[choice].type!=NM_TYPE_INPUT_MENU))
 				Int3(); 
 			break;
+
+			case KEY_B:
+			case KEY_SHIFTED + KEY_B:
+			{
+				static int n = 0;
+				grs_canvas *canv_save = grd_curcanv;
+				grs_canvas *temp_canv;
+				grs_bitmap *bm;
+				ubyte bm_pal[768];
+				ubyte pal_save[768];
+
+				memcpy(pal_save, gr_palette, 768);
+				gr_use_palette_table(DEFAULT_LEVEL_PALETTE);
+				memcpy(bm_pal, gr_palette, 768);
+				gr_copy_palette(gr_palette, pal_save, 768);
+
+				if (k & KEY_SHIFTED)
+					n--;
+				else
+					n++;
+
+				if (n < 0)
+					n = Num_bitmap_files - 1;
+				n %= Num_bitmap_files;
+				bm = &GameBitmaps[n];
+				PIGGY_PAGE_IN( *(bitmap_index *)&n );
+				con_printf(CON_DEBUG, "showing bitmap %d of %d: %s\n", n, Num_bitmap_files, piggy_game_bitmap_name(bm));
+
+				temp_canv = gr_create_canvas(bm->bm_w, bm->bm_h);
+				gr_set_current_canvas(temp_canv);
+				gr_bitmap(0, 0, bm);
+				gr_set_current_canvas(&grd_curscreen->sc_canvas);
+				gr_remap_bitmap_good(&temp_canv->cv_bitmap, bm_pal, -1, -1);
+				gr_bitmap(0, 0, &temp_canv->cv_bitmap);
+				gr_free_canvas(temp_canv);
+				gr_set_current_canvas(canv_save);
+				break;
+			}
+
+			case KEY_P:
+			case KEY_SHIFTED + KEY_P:
+			{
+				char *palettes[] = {
+					"default.256",
+					"groupa.256",
+					"alien1.256",
+					"alien2.256",
+					"credits.256",
+					"fire.256",
+					"ice.256",
+					"water.256",
+				};
+				static unsigned int palnum = 0;
+
+				if (k & KEY_SHIFTED)
+					palnum--;
+				else
+					palnum++;
+
+				palnum %= sizeof(palettes)/sizeof(char *);
+				load_palette(palettes[palnum], 0, 0);
+
+				break;
+			}
 		#endif
 
 		}
