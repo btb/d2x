@@ -793,6 +793,47 @@ void flash_cursor(int cursor_flag)
 
 extern int InitMovieBriefing();
 
+static int robot_movie_model_map(char kludge)
+{
+	switch (tolower(kludge)) {
+		case 'a': return 24; // bper
+		case 'b': return 25; // smelter
+		case 'c': return 34; // unused?
+		case 'd': return 26; // ice spindle
+		case 'e': return 27; // bulk destroyer
+		case 'f': return 28; // trn racer
+		case 'g': return 29; // fox
+		case 'h': return 30; // sidearm
+		case 'i': return 51; // lou guard
+		case 'j': return 33; // guide bot
+		case 'k': return 36; // itsc
+		case 'l': return 49; // omega defense spawn
+		case 'm': return 37; // itd
+		case 'n': return 38; // pest
+		case 'o': return 50; // sidearm modula
+		case 'p': return 39; // pig
+		case 'q': return 61; // spawn
+		case 'r': return 40; // diamond claw
+		case 's': return 43; // seeker
+		case 't': return 42; // bandit
+		case 'u': return 44; // e-bandit
+		case 'w': return 47; // boarshead
+		case 'x': return 48; // spider
+		case 'y': return 41; // red hornet
+			/* vertigo robots, possibly not constant */
+		case '1': return 70; // smelter ii
+		case '2': return 74; // canary
+		case '3': return 66; // compact lifter
+		case '4': return 69; // class 2 heavy driller
+		case '5': return 73; // logikill
+		case '6': return 71; // max
+		case '7': return 72; // sniper ng
+		case '8': return 68; // fiddler
+		case '9': return 67; // fervid 99
+		case '$': return 77; // spike
+		default: Int3(); return -1;
+	}
+}
 
 //-----------------------------------------------------------------------------
 // Return true if message got aborted by user (pressed ESC), else return false.
@@ -899,6 +940,9 @@ int show_briefing_message(int screen_num, char *message)
 						RotateRobot();
 						DoBriefingColorStuff ();
 						mprintf ((0,"Robot playing is %d!!!\n",RobotPlaying));
+					} else {
+						init_spinning_robot();
+						robot_num = robot_movie_model_map(kludge);
 					}
 				}
 				prev_ch = 10;                           // read to eoln
