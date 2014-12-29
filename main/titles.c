@@ -457,7 +457,7 @@ ubyte   Bitmap_palette[768];
 char    Bitmap_name[32] = "";
 #define EXIT_DOOR_MAX   14
 #define OTHER_THING_MAX 10      //  Adam: This is the number of frames in your new animating thing.
-#define DOOR_DIV_INIT   6
+#define DOOR_DIV_INIT   3
 sbyte   Door_dir=1, Door_div_count=0, Animating_bitmap_type=0;
 
 //-----------------------------------------------------------------------------
@@ -559,10 +559,10 @@ void show_bitmap_frame(void)
 		case 0:
 			if (num == EXIT_DOOR_MAX) {
 				Door_dir = -1;
-				Door_div_count = 64;
+				Door_div_count = 32;
 			} else if (num == 0) {
 				Door_dir = 1;
-				Door_div_count = 64;
+				Door_div_count = 32;
 			}
 			break;
 		case 1:
@@ -668,10 +668,13 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 		if (RobotPlaying && delay != 0)
 			RotateRobot();
 
-		if ((robot_num != -1) && (delay != 0)) {
+		if ((robot_num != -1) && (delay != 0))
 			show_spinning_robot_frame(robot_num);
-			delay_until(start_time + delay);
-		}
+
+		if ((Bitmap_name[0] != 0) && (delay != 0))
+			show_bitmap_frame();
+
+		delay_until(start_time + delay/2);
 	}
 
 	start_time = timer_get_fixed_seconds();
