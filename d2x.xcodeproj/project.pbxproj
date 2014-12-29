@@ -27,6 +27,14 @@
 		14804D751A4CA16A001CB0FB /* rect.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E51A2729860070D41D /* rect.c */; };
 		14804D761A4CA16A001CB0FB /* rle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E61A2729860070D41D /* rle.c */; };
 		14804D781A4CA16A001CB0FB /* scalec.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EA1A2729860070D41D /* scalec.c */; };
+		14D6967C1A520CAA009ABFD2 /* decoder16.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696481A2729870070D41D /* decoder16.c */; };
+		14D6967D1A520CAA009ABFD2 /* decoder8.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696491A2729870070D41D /* decoder8.c */; };
+		14D6967E1A520CAA009ABFD2 /* mve_audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466964D1A2729870070D41D /* mve_audio.c */; };
+		14D6967F1A520CAA009ABFD2 /* mvelib.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696501A2729870070D41D /* mvelib.c */; };
+		14D696801A520CAA009ABFD2 /* mveplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696521A2729870070D41D /* mveplay.c */; };
+		14D696811A520CB6009ABFD2 /* mve_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466964F1A2729870070D41D /* mve_main.c */; };
+		14D696821A520DC5009ABFD2 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
+		14D696831A520DE4009ABFD2 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
 		14F0D5141A4CA39800682BB0 /* clipper.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EE1A2729860070D41D /* clipper.c */; };
 		14F0D5151A4CA39800682BB0 /* draw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F01A2729860070D41D /* draw.c */; };
 		14F0D5161A4CA39800682BB0 /* globvars.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F11A2729860070D41D /* globvars.c */; };
@@ -296,6 +304,15 @@
 
 /* Begin PBXCopyFilesBuildPhase section */
 		14804D571A4C9E7F001CB0FB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		14D696751A520C80009ABFD2 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -615,7 +632,7 @@
 		1466964A1A2729870070D41D /* decoders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = decoders.h; sourceTree = "<group>"; };
 		1466964D1A2729870070D41D /* mve_audio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_audio.c; sourceTree = "<group>"; };
 		1466964E1A2729870070D41D /* mve_audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mve_audio.h; sourceTree = "<group>"; };
-		1466964F1A2729870070D41D /* mveplayer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mveplayer.c; sourceTree = "<group>"; };
+		1466964F1A2729870070D41D /* mve_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_main.c; sourceTree = "<group>"; };
 		146696501A2729870070D41D /* mvelib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mvelib.c; sourceTree = "<group>"; };
 		146696511A2729870070D41D /* mvelib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvelib.h; sourceTree = "<group>"; };
 		146696521A2729870070D41D /* mveplay.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mveplay.c; sourceTree = "<group>"; };
@@ -1033,6 +1050,7 @@
 		14804D661A4C9FE0001CB0FB /* SDL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDL.h; sourceTree = "<group>"; };
 		14804D7A1A4CA253001CB0FB /* sdl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sdl; sourceTree = "<group>"; };
 		14804D7B1A4CA263001CB0FB /* iff */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iff; sourceTree = "<group>"; };
+		14D696771A520C80009ABFD2 /* mveplayer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mveplayer; sourceTree = BUILT_PRODUCTS_DIR; };
 		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = /usr/local/Cellar/physfs/2.0.3/lib/libphysfs.a; sourceTree = "<absolute>"; };
 		14E97E051A3703BE0027FB84 /* cvar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvar.h; sourceTree = "<group>"; };
 		14E97E061A3703D40027FB84 /* cvar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cvar.c; sourceTree = "<group>"; };
@@ -1048,6 +1066,14 @@
 				14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */,
 				14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */,
 				14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		14D696741A520C80009ABFD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14D696821A520DC5009ABFD2 /* SDL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1100,7 +1126,9 @@
 				1478618B1A4410C500DB53B9 /* README.utils */,
 				1478618E1A44120900DB53B9 /* README */,
 				147861901A44121000DB53B9 /* NEWS */,
+				14D696781A520C81009ABFD2 /* mveplayer */,
 				141635ED1A4CB608005E575E /* Products */,
+				14D696771A520C80009ABFD2 /* mveplayer */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1620,14 +1648,16 @@
 		146696471A2729870070D41D /* libmve */ = {
 			isa = PBXGroup;
 			children = (
-				146696481A2729870070D41D /* decoder16.c */,
 				146696491A2729870070D41D /* decoder8.c */,
+				146696481A2729870070D41D /* decoder16.c */,
 				1466964A1A2729870070D41D /* decoders.h */,
 				1466964D1A2729870070D41D /* mve_audio.c */,
 				1466964E1A2729870070D41D /* mve_audio.h */,
+				1466964F1A2729870070D41D /* mve_main.c */,
 				146696501A2729870070D41D /* mvelib.c */,
 				146696511A2729870070D41D /* mvelib.h */,
 				146696521A2729870070D41D /* mveplay.c */,
+				146696531A2729870070D41D /* mveplayer.1 */,
 			);
 			path = libmve;
 			sourceTree = "<group>";
@@ -2128,20 +2158,25 @@
 			children = (
 				146699A11A2729C60070D41D /* hogcreate.1 */,
 				146699A31A2729C60070D41D /* hogextract.1 */,
-				146696531A2729870070D41D /* mveplayer.1 */,
 				146699A71A2729C60070D41D /* mvlcreate.1 */,
 				146699A91A2729C60070D41D /* mvlextract.1 */,
 				146699AB1A2729C60070D41D /* tex2txb.1 */,
 				146699AD1A2729C60070D41D /* txb2tex.1 */,
 				146699A21A2729C60070D41D /* hogcreate.c */,
 				146699A41A2729C60070D41D /* hogextract.c */,
-				1466964F1A2729870070D41D /* mveplayer.c */,
 				146699A81A2729C60070D41D /* mvlcreate.c */,
 				146699AA1A2729C60070D41D /* mvlextract.c */,
 				146699AC1A2729C60070D41D /* tex2txb.c */,
 				146699AE1A2729C60070D41D /* txb2tex.c */,
 			);
 			path = utilities;
+			sourceTree = "<group>";
+		};
+		14D696781A520C81009ABFD2 /* mveplayer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = mveplayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2195,6 +2230,23 @@
 			productReference = 141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */;
 			productType = "com.apple.product-type.tool";
 		};
+		14D696761A520C80009ABFD2 /* mveplayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14D696791A520C81009ABFD2 /* Build configuration list for PBXNativeTarget "mveplayer" */;
+			buildPhases = (
+				14D696731A520C80009ABFD2 /* Sources */,
+				14D696741A520C80009ABFD2 /* Frameworks */,
+				14D696751A520C80009ABFD2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mveplayer;
+			productName = mveplayer;
+			productReference = 14D696771A520C80009ABFD2 /* mveplayer */;
+			productType = "com.apple.product-type.tool";
+		};
 		14F0D5921A4CB34F00682BB0 /* xcode-d2x-soft */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14F0D6251A4CB34F00682BB0 /* Build configuration list for PBXNativeTarget "xcode-d2x-soft" */;
@@ -2227,6 +2279,9 @@
 					14804D581A4C9E7F001CB0FB = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
+					14D696761A520C80009ABFD2 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
 				};
 			};
 			buildConfigurationList = 146694A01A27246A0070D41D /* Build configuration list for PBXProject "d2x" */;
@@ -2246,6 +2301,7 @@
 				14E97DFF1A3550680027FB84 /* d2x-opengl */,
 				14F0D5921A4CB34F00682BB0 /* xcode-d2x-soft */,
 				14804D581A4C9E7F001CB0FB /* xcode-d2x-opengl */,
+				14D696761A520C80009ABFD2 /* mveplayer */,
 			);
 		};
 /* End PBXProject section */
@@ -2394,6 +2450,20 @@
 				14804D751A4CA16A001CB0FB /* rect.c in Sources */,
 				14804D761A4CA16A001CB0FB /* rle.c in Sources */,
 				14804D781A4CA16A001CB0FB /* scalec.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		14D696731A520C80009ABFD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14D696831A520DE4009ABFD2 /* SDLMain.m in Sources */,
+				14D6967C1A520CAA009ABFD2 /* decoder16.c in Sources */,
+				14D6967D1A520CAA009ABFD2 /* decoder8.c in Sources */,
+				14D6967E1A520CAA009ABFD2 /* mve_audio.c in Sources */,
+				14D6967F1A520CAA009ABFD2 /* mvelib.c in Sources */,
+				14D696801A520CAA009ABFD2 /* mveplay.c in Sources */,
+				14D696811A520CB6009ABFD2 /* mve_main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2552,7 +2622,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -2597,7 +2667,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -2699,6 +2769,38 @@
 			};
 			name = Release;
 		};
+		14D6967A1A520C81009ABFD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HAVE_STRUCT_TIMEVAL=1",
+					"HAVE_STRUCT_TIMESPEC=1",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		14D6967B1A520C81009ABFD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"HAVE_STRUCT_TIMEVAL=1",
+					HAVE_STRUCT_TIMESPEC,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		14E97E011A3550680027FB84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2793,6 +2895,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		14D696791A520C81009ABFD2 /* Build configuration list for PBXNativeTarget "mveplayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14D6967A1A520C81009ABFD2 /* Debug */,
+				14D6967B1A520C81009ABFD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		14E97E001A3550680027FB84 /* Build configuration list for PBXLegacyTarget "d2x-opengl" */ = {
 			isa = XCConfigurationList;
