@@ -1738,6 +1738,10 @@ void gr_bitmap_scale_to(grs_bitmap *src, grs_bitmap *dst)
 	int a = dst->bm_h/h, b = dst->bm_h%h;
 	int c = 0, i, y;
 
+	if ( src->bm_flags & BM_FLAG_RLE ) {
+		src = rle_expand_texture(src);
+		s = src->bm_data;
+	}
 	for(y=0; y<h; y++) {
 		i = a;
 		c += b;
