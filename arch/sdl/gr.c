@@ -519,7 +519,6 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
          fade_colors[k].b = c * 4;
          i++;
      }
-     timer_delay(f0_1/10);
 
   SDL_SetColors(screen, fade_colors, 0, 256);
  }
