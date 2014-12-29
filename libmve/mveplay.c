@@ -676,7 +676,8 @@ int MVE_rmPrepMovie(void *src, int x, int y, int track)
 	mve_set_handler(mve, MVE_OPCODE_VIDEODATA,            video_data_handler);
 
 	mve_play_next_chunk(mve); /* video initialization chunk */
-	mve_play_next_chunk(mve); /* audio initialization chunk */
+	if (track)
+		mve_play_next_chunk(mve); /* audio initialization chunk */
 
 	return 0;
 }

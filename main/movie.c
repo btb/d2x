@@ -277,7 +277,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 {
 	SDL_RWops *filehndl;
 	int result=1,aborted=0;
-	int track = 0;
+	int track = 1;
 	int frame_num;
 	int key;
 

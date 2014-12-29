@@ -23,6 +23,7 @@ static SDL_Surface *real_screen;
 #endif
 static unsigned char g_palette[768];
 static int g_truecolor;
+static int track;
 
 static int doPlay(const char *filename);
 
@@ -34,8 +35,15 @@ static void usage(void)
 
 int main(int c, char **v)
 {
-	if (c != 2)
+	if (c < 2)
 		usage();
+
+	if (!strcmp(v[1], "-nosound")) {
+		track = 0;
+		c--;
+		v++;
+	} else
+		track = 1;
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
@@ -226,7 +234,7 @@ static int doPlay(const char *filename)
 	MVE_sfCallbacks(showFrame);
 	MVE_palCallbacks(setPalette);
 
-	MVE_rmPrepMovie(mve, -1, -1, 1);
+	MVE_rmPrepMovie(mve, -1, -1, track);
 
 	MVE_getVideoSpec(&vSpec);
 
