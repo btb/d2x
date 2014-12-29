@@ -490,10 +490,10 @@ void show_bitmap_frame(void)
 
 		switch (Animating_bitmap_type) {
 		case 0:
-			bitmap_canv = gr_create_sub_canvas(grd_curcanv, rescale_x(220), rescale_x(45), 64, 64);
+			bitmap_canv = gr_create_canvas(rescale_x(64), rescale_y(64));
 			break;
 		case 1:
-			bitmap_canv = gr_create_sub_canvas(grd_curcanv, rescale_x(220), rescale_x(45), 94, 94);
+			bitmap_canv = gr_create_canvas(rescale_x(94), rescale_y(94));
 			break;
 
 			// Adam: Change here for your new animating bitmap thing. 94, 94 are bitmap size.
@@ -548,11 +548,11 @@ void show_bitmap_frame(void)
 			PIGGY_PAGE_IN( bi );
 		}
 
-		gr_bitmapm(0, 0, bitmap_ptr);
+		gr_bitmap_scale_to(bitmap_ptr, &bitmap_canv->cv_bitmap);
 
 		grd_curcanv = curcanv_save;
-		gr_copy_palette(gr_palette, New_pal, sizeof(New_pal));
 		gr_remap_bitmap_good(&bitmap_canv->cv_bitmap, Bitmap_palette, 255, 254);
+		gr_bitmapm(rescale_x(220), rescale_y(45), &bitmap_canv->cv_bitmap);
 		d_free(bitmap_canv);
 
 		switch (Animating_bitmap_type) {
