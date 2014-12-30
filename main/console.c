@@ -851,15 +851,27 @@ void CON_Out(const char *str, ...) {
 	// width so we have to cut it into several pieces
 	
 	if(console->ConsoleLines) {
-		while(strlen(ptemp) > console->VChars) {
-			CON_NewLineConsole();
-			strncpy(console->ConsoleLines[0], ptemp, console->VChars);
-			console->ConsoleLines[0][console->VChars] = '\0';
-			ptemp = &ptemp[console->VChars];
+		char *p = ptemp;
+
+		while (*p) {
+			if (*p == '\n') {
+				*p = '\0';
+				CON_NewLineConsole();
+				strcat(console->ConsoleLines[0], ptemp);
+				ptemp = p+1;
+			}
+			if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0])) {
+				CON_NewLineConsole();
+				strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
+				console->ConsoleLines[0][console->VChars] = '\0';
+				ptemp = p;
+			}
+			p++;
 		}
-		CON_NewLineConsole();
-		strncpy(console->ConsoleLines[0], ptemp, console->VChars);
-		console->ConsoleLines[0][console->VChars] = '\0';
+		if (strlen(ptemp)) {
+			strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
+			console->ConsoleLines[0][console->VChars] = '\0';
+		}
 		CON_UpdateConsole();
 	}
 }
