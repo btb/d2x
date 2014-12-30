@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-#include "cvar.h"
+#include "console.h"
 #include "error.h"
 #include "strutil.h"
 #include "u_mem.h"
@@ -32,8 +32,35 @@ void cvar_free(void)
 }
 
 
+void cvar_cmd_set(int argc, char **argv)
+{
+	char buf[CVAR_MAX_LENGTH];
+	int ret, i;
+
+	if (argc < 3)
+		return;
+
+	ret = snprintf(buf, CVAR_MAX_LENGTH, "%s", argv[2]);
+	if (ret >= CVAR_MAX_LENGTH) {
+		con_printf(CON_CRITICAL, "set: value too long (max %d characters)\n", CVAR_MAX_LENGTH);
+		return;
+	}
+
+	for (i = 3; i < argc; i++) {
+		ret = snprintf(buf, CVAR_MAX_LENGTH, "%s %s", buf, argv[i]);
+		if (ret >= CVAR_MAX_LENGTH) {
+			con_printf(CON_CRITICAL, "set: value too long (max %d characters)\n", CVAR_MAX_LENGTH);
+			return;
+		}
+	}
+	cvar_set(argv[1], buf);
+}
+
+
 void cvar_init(void)
 {
+	cmd_addcommand("set", cvar_cmd_set);
+
 	atexit(cvar_free);
 	cvar_initialized = 1;
 }

@@ -81,6 +81,9 @@ static cmd_queue_t *cmd_queue_head = NULL;
 static cmd_queue_t *cmd_queue_tail = NULL;
 
 
+void cvar_cmd_set(int argc, char **argv);
+
+
 /* execute a parsed command */
 void cmd_execute(int argc, char **argv)
 {
@@ -103,8 +106,15 @@ void cmd_execute(int argc, char **argv)
 	}
 
 	/* Otherwise */
-	if (argc > 1)  // set value of cvar
-		cvar_set(argv[0], argv[1]);
+	if (argc > 1) {  // set value of cvar
+		char *new_argv[argc+1];
+		int i;
+
+		new_argv[0] = "set";
+		for (i = 0; i < argc; i++)
+			new_argv[i+1] = argv[i];
+		cvar_cmd_set(argc + 1, new_argv);
+	}
 	con_printf(CON_VERBOSE, "%s: %f\n", argv[0], cvar(argv[0]));
 }
 
