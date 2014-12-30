@@ -1166,7 +1166,8 @@ int show_briefing_message(int screen_num, char *message)
 			delay_count = 0;
 
 #ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-		if ((key_check == KEY_ALTED+KEY_ENTER) ||
+		if ((key_check == KEY_COMMAND+KEY_SHIFTED+KEY_F) ||
+			(key_check == KEY_ALTED+KEY_ENTER) ||
 			(key_check == KEY_ALTED+KEY_PADENTER))
 			gr_toggle_fullscreen();
 #endif

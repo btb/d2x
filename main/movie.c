@@ -340,7 +340,8 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		}
 
 #ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-		if ((key == KEY_ALTED+KEY_ENTER) ||
+		if ((key == KEY_COMMAND+KEY_SHIFTED+KEY_F) ||
+			(key == KEY_ALTED+KEY_ENTER) ||
 		    (key == KEY_ALTED+KEY_PADENTER))
 			gr_toggle_fullscreen();
 #endif
