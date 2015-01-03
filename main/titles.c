@@ -968,14 +968,10 @@ int show_briefing_message(int screen_num, char *message)
 			} else if (ch=='Z') {
 				//mprintf ((0,"Got a Z!\n"));
 				GotZ=1;
-#if 1 //defined (D2_OEM) || defined(COMPILATION) || (defined(MACINTOSH) && defined(SHAREWARE))
-				DumbAdjust=1;
-#else
-				if (LineAdjustment==1)
+				if (LineAdjustment==1 || is_D2_OEM || is_MAC_SHARE)
 					DumbAdjust=1;
 				else
 					DumbAdjust=2;
-#endif
 
 				i=0;
 				while ((fname[i]=*message) != '\n') {
@@ -1107,7 +1103,10 @@ int show_briefing_message(int screen_num, char *message)
 			if (prev_ch != '\\') {
 				prev_ch = ch;
 				if (DumbAdjust==0)
-					Briefing_text_y += (8*(MenuHires+1));
+					if (EMULATING_D1)
+						Briefing_text_y += (8*(MenuHires*1.4+1));
+					else
+						Briefing_text_y += (8*(MenuHires+1));
 				else
 					DumbAdjust--;
 				Briefing_text_x = bsp->text_ulx;
