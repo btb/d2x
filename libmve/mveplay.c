@@ -704,6 +704,9 @@ int MVE_rmStepMovie()
 		cont = mve_play_next_chunk(mve);
 	g_frameUpdated = 0;
 
+	if (!cont)
+		return MVE_ERR_EOF;
+
 	if (micro_frame_delay  && !init_timer) {
 		timer_start();
 		init_timer = 1;
@@ -711,10 +714,7 @@ int MVE_rmStepMovie()
 
 	do_timer_wait();
 
-	if (cont)
-		return 0;
-	else
-		return MVE_ERR_EOF;
+	return 0;
 }
 
 void MVE_rmEndMovie()
