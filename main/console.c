@@ -294,7 +294,7 @@ int CON_Events(int event)
 					strcpy(console->CommandLines[0], console->Command);
 					
 					// display the command including the prompt
-					CON_Out("%s%s", console->Prompt, console->Command);
+					CON_Out("%s%s\n", console->Prompt, console->Command);
 					CON_UpdateConsole();
 					
 					CON_Execute(console->Command);
@@ -978,7 +978,7 @@ void CON_SetPrompt(char* newprompt) {
 		d_free(console->Prompt);
 		console->Prompt = d_strdup(newprompt);
 	} else
-		CON_Out("prompt too long. (max. %i chars)", console->VChars - 1);
+		CON_Out("prompt too long. (max. %i chars)\n", console->VChars - 1);
 }
 
 /* Sets the key that deactivates (hides) the console. */
@@ -1026,7 +1026,7 @@ void Cursor_Left(void) {
 		strcpy(console->RCommand, &console->LCommand[strlen(console->LCommand)-1]);
 		strcat(console->RCommand, temp);
 		console->LCommand[strlen(console->LCommand)-1] = '\0';
-		//CON_Out("L:%s, R:%s", console->LCommand, console->RCommand);
+		//CON_Out("L:%s, R:%s\n", console->LCommand, console->RCommand);
 	}
 }
 
@@ -1038,7 +1038,7 @@ void Cursor_Right(void) {
 		strncat(console->LCommand, console->RCommand, 1);
 		strcpy(temp, console->RCommand);
 		strcpy(console->RCommand, &temp[1]);
-		//CON_Out("L:%s, R:%s", console->LCommand, console->RCommand);
+		//CON_Out("L:%s, R:%s\n", console->LCommand, console->RCommand);
 	}
 }
 
