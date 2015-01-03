@@ -935,7 +935,7 @@ void CON_Font(grs_font *font, int fg, int bg)
 	gr_set_current_canvas(canv_save);
 }
 
-void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
+
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
 void CON_Resize(int w, int h)
