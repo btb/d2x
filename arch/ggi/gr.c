@@ -1,14 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/arch/ggi/gr.c,v $
- * $Revision: 1.1 $
- * $Author: bradleyb $
- * $Date: 2001-10-25 08:25:34 $
  *
  * Graphics functions for GGI.
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.3  2001/01/29 13:47:51  bradleyb
- * Fixed build, some minor cleanups.
  *
  */
 

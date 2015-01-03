@@ -13,10 +13,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //#define PASS_KEYS_TO_BIOS	1			//if set, bios gets keys
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: key.c,v 1.1.1.1 2001-01-19 03:30:14 bradleyb Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>

@@ -1,4 +1,3 @@
-/* $Id: iff.c,v 1.11 2007-01-31 04:20:05 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -20,10 +19,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
-#endif
-
-#ifdef RCS
-static char rcsid[] = "$Id: iff.c,v 1.11 2007-01-31 04:20:05 btb Exp $";
 #endif
 
 #define COMPRESS		1	//do the RLE or not? (for debugging mostly)

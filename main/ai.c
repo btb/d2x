@@ -1,4 +1,3 @@
-/* $Id: ai.c,v 1.9 2004-12-01 12:48:13 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -22,8 +21,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif
-
-char ai_rcsid[] = "$Id: ai.c,v 1.9 2004-12-01 12:48:13 btb Exp $";
 
 #include <stdio.h>
 #include <stdlib.h>

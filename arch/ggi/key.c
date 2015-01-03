@@ -1,17 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/arch/ggi/key.c,v $
- * $Revision: 1.2 $
- * $Author: btb $
- * $Date: 2003-02-27 22:07:21 $
  *
  * GGI keyboard input support
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.1  2001/10/24 09:25:05  bradleyb
- * Moved input stuff to arch subdirs, as in d1x.
- *
- * Revision 1.3  2001/01/29 14:03:57  bradleyb
- * Fixed build, minor fixes
  *
  */
 

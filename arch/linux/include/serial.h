@@ -1,4 +1,3 @@
-/* $Id: serial.h,v 1.2 2003-03-13 00:20:21 btb Exp $ */
 /*
  *
  * Name: Serial port support for Linux D1X

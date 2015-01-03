@@ -1,4 +1,3 @@
-/* $Id: ukali.c,v 1.6 2003-10-03 07:58:14 btb Exp $ */
 /*
  *
  * Kali support functions

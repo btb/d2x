@@ -1,4 +1,3 @@
-/* $Id: ipx_ld.h,v 1.4 2003-03-13 00:20:21 btb Exp $ */
 /*
  *
  * parts from:

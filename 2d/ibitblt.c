@@ -1,4 +1,3 @@
-/* $Id: ibitblt.c,v 1.12 2005-07-30 09:17:06 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -28,10 +27,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
-#endif
-
-#ifdef RCS
-static char rcsid[] = "$Id: ibitblt.c,v 1.12 2005-07-30 09:17:06 chris Exp $";
 #endif
 
 #ifdef __MSDOS__ //ndef MACINTOSH

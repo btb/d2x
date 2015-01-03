@@ -1,4 +1,3 @@
-/* $Id: ogl.c,v 1.39 2006-11-30 13:42:20 chris Exp $ */
 /*
  *
  * Graphics support functions for OpenGL.

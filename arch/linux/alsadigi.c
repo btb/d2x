@@ -1,4 +1,3 @@
-/* $Id: alsadigi.c,v 1.4 2005-02-25 10:49:48 btb Exp $ */
 /*
  *
  * ALSA digital audio support

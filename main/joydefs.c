@@ -1,4 +1,3 @@
-/* $Id: joydefs.c,v 1.3 2004-08-28 23:17:45 schaffner Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Joystick Settings Stuff
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: joydefs.c,v 1.3 2004-08-28 23:17:45 schaffner Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>

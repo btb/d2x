@@ -1,4 +1,3 @@
-/* $Id: centers.c,v 1.8 2005-07-03 13:12:47 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Dialog box stuff for control centers, material centers, etc.
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: centers.c,v 1.8 2005-07-03 13:12:47 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

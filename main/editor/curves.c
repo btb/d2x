@@ -1,4 +1,3 @@
-/* $Id: curves.c,v 1.4 2004-12-21 11:58:14 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * curve generation stuff
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: curves.c,v 1.4 2004-12-21 11:58:14 btb Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

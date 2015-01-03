@@ -1,4 +1,3 @@
-/* $Id: keytrap.c,v 1.3 2005-01-24 22:19:10 schaffner Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

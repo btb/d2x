@@ -1,4 +1,3 @@
-/* $Id: joyhh.c,v 1.6 2005-04-04 09:18:08 btb Exp $ */
 //JOYC.C for D1_3Dfx and D1OpenGL
 //D1_3Dfx is a Win32 executable using Glide and DirectX 3
 //D1OpenGL is a Win32 executable using OpenGL and DirectX 3

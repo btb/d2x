@@ -9,31 +9,9 @@
 ;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 ;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ;
-; $Source: /cvs/cvsroot/d2x/arch/dos/tweak.inc,v $
-; $Revision: 1.3 $
-; $Author: bradleyb $
-; $Date: 2001-10-19 09:01:56 $
 ;
 ; Parameters used by modex.asm to set various modex resolutions.
 ;
-; $Log: not supported by cvs2svn $
-; Revision 1.2  2001/01/29 13:35:08  bradleyb
-; Fixed build system, minor fixes
-;
-; Revision 1.1.1.1  2001/01/19 03:30:15  bradleyb
-; Import of d2x-0.0.8
-;
-; Revision 1.1.1.1  1999/06/14 21:58:45  donut
-; Import of d1x 1.37 source.
-;
-; Revision 1.3  1993/11/16  11:28:09  john
-; *** empty log message ***
-; 
-; Revision 1.2  1993/10/15  16:23:18  john
-; y
-; 
-; Revision 1.1  1993/09/08  11:41:09  john
-; Initial revision
 ; 
 ;
 ;

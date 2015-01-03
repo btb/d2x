@@ -1,4 +1,3 @@
-/* $Id: ipx_hlpr.h,v 1.4 2003-03-13 00:20:21 btb Exp $ */
 /*
  *
  * FIXME: add description

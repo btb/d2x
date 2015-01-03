@@ -1,4 +1,3 @@
-/* $Id: mveplay.c,v 1.20 2004-10-21 16:33:11 schaffner Exp $ */
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
 #endif

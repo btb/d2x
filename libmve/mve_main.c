@@ -1,4 +1,3 @@
-/* $Id: mve_main.c,v 1.8 2004-06-01 07:49:07 btb Exp $ */
 
 #include <stdlib.h>
 #include <string.h>

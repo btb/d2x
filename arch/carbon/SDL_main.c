@@ -20,11 +20,6 @@
     slouken@libsdl.org
 */
 
-#ifdef SAVE_RCSID
-static char rcsid =
- "@(#) $Id: SDL_main.c,v 1.1 2004-08-01 13:08:34 schaffner Exp $";
-#endif
-
 /* This file takes care of command line argument parsing, and stdio redirection
    in the MacOS environment.
  */

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
- * $Source: /cvs/cvsroot/d2x/arch/dos/key.c,v $
- * $Revision: 1.4 $
- * $Author: schaffner $
- * $Date: 2004-08-28 23:17:45 $
  * 
  * Functions for keyboard handler.
  * 

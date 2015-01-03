@@ -1,4 +1,3 @@
-/* $Id: init.c,v 1.5 2004-05-21 00:48:12 btb Exp $ */
 /*
  *
  * Dos initialization

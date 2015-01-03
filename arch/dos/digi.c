@@ -1,20 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/arch/dos/digi.c,v $
- * $Revision: 1.4 $
- * $Author: btb $
- * $Date: 2005-02-25 10:49:48 $
  *
  * DOS digital audio support
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.3  2001/10/25 08:25:33  bradleyb
- * Finished moving stuff to arch/blah.  I know, it's ugly, but It'll be easier to sync with d1x.
- *
- * Revision 1.3  2001/01/31 14:04:45  bradleyb
- * Fix compiler warnings
- *
- * Revision 1.2  2001/01/29 13:53:28  bradleyb
- * Fixed build, minor fixes
  *
  */
 

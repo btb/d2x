@@ -1,4 +1,3 @@
-/* $Id: texpage.c,v 1.5 2005-03-31 13:21:47 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -26,10 +25,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-
-#ifdef RCS
-static char rcsid[] = "$Id: texpage.c,v 1.5 2005-03-31 13:21:47 chris Exp $";
-#endif
 
 #include "inferno.h"
 #include "gameseg.h"

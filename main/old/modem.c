@@ -15,10 +15,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define DOS4G
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: modem.c,v 1.1.1.1 2001-01-19 03:30:07 bradleyb Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <dos.h>

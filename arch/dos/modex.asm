@@ -9,80 +9,9 @@
 ;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 ;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ;
-; $Source: /cvs/cvsroot/d2x/arch/dos/modex.asm,v $
-; $Revision: 1.4 $
-; $Author: bradleyb $
-; $Date: 2001-10-19 10:08:01 $
 ;
 ; Routines to access ModeX VGA memory
 ;
-; $Log: not supported by cvs2svn $
-; Revision 1.3  2001/10/19 09:01:56  bradleyb
-; Moved arch/sdl_* to arch/sdl
-;
-; Revision 1.3  2001/01/31 14:04:44  bradleyb
-; Fix compiler warnings
-;
-; Revision 1.2  2001/01/29 13:35:08  bradleyb
-; Fixed build system, minor fixes
-;
-; Revision 1.1.1.1  2001/01/19 03:30:15  bradleyb
-; Import of d2x-0.0.8
-;
-; Revision 1.1.1.1  1999/06/14 21:57:56  donut
-; Import of d1x 1.37 source.
-;
-; Revision 1.19  1995/03/01  15:37:46  john
-; Better ModeX support.
-; 
-; Revision 1.18  1994/11/24  13:24:20  john
-; Made sure that some rep movs had the cld set first.
-; Took some unused functions out.
-; 
-; Revision 1.17  1994/09/22  18:15:02  john
-; Made flip page wait for retrace.
-; 
-; Revision 1.16  1994/09/22  16:08:27  john
-; Fixed some palette stuff.
-; 
-; Revision 1.15  1994/07/13  12:03:05  john
-; Added assembly modex line-drawer.
-; 
-; Revision 1.14  1994/05/06  12:50:34  john
-; Added supertransparency; neatend things up; took out warnings.
-; 
-; Revision 1.13  1994/05/03  19:39:04  john
-; *** empty log message ***
-; 
-; Revision 1.12  1994/02/18  15:32:32  john
-; *** empty log message ***
-; 
-; Revision 1.11  1993/12/21  11:40:36  john
-; *** empty log message ***
-; 
-; Revision 1.10  1993/12/09  15:02:26  john
-; Changed palette stuff majorly
-; 
-; Revision 1.9  1993/12/03  12:11:32  john
-; fixed cx/ecx loop bugs.
-; 
-; Revision 1.8  1993/11/16  11:28:18  john
-; *** empty log message ***
-; 
-; Revision 1.7  1993/10/15  16:23:23  john
-; y
-; 
-; Revision 1.6  1993/09/28  19:07:19  john
-; stripped the waitforretrace out of fade to speed things up.
-; 
-; Revision 1.5  1993/09/26  18:58:58  john
-; fade stuff
-; 
-; Revision 1.4  1993/09/21  14:01:15  john
-; turned off video before mode set to reduce flicker.
-; 
-; Revision 1.3  1993/09/08  11:38:36  john
-; changed rcs stuff at beginning.
 ; 
 ;
 ;

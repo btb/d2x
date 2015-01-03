@@ -1,4 +1,3 @@
-/* $Id: ipx_mcast4.h,v 1.1 2003-10-12 09:17:47 btb Exp $ */
 /*
  *
  * FIXME: add description

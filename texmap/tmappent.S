@@ -1,4 +1,3 @@
-/// $Id: tmappent.S,v 1.5 2003-12-08 21:21:16 btb Exp $
 /// tmap_scanline_per - Pentium-optimized assembly version
 /// written by Brian Raiter, Mar 1998.
 /// lighting roundoff error fixed by Matt Mueller, July 1999

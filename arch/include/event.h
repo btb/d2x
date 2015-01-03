@@ -1,12 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/arch/include/event.h,v $
- * $Revision: 1.1 $
- * $Author: bradleyb $
- * $Date: 2001-01-28 16:10:57 $
  *
  * Event header file
  *
- * $Log: not supported by cvs2svn $
  *
  */
 

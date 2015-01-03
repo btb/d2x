@@ -1,4 +1,3 @@
-/* $Id: pngfile.c,v 1.1 2004-05-22 23:41:29 btb Exp $ */
 #include <stdio.h>
 #include <png.h>
 

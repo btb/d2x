@@ -11,10 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: /cvs/cvsroot/d2x/include/texmap.h,v $
- * $Revision: 1.3 $
- * $Author: schaffner $
- * $Date: 2004-08-28 23:17:45 $
  *
  * Include file for entities using texture mapper library.
  *

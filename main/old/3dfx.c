@@ -11,8 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char _3dfx_rcsid[] = "$Id: 3dfx.c,v 1.1.1.1 2001-01-19 03:30:14 bradleyb Exp $";
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

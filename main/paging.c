@@ -1,4 +1,3 @@
-/* $Id: paging.c,v 1.5 2005-08-02 06:13:56 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -23,10 +22,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 //#define PSX_BUILD_TOOLS
-
-#ifdef RCS
-static char rcsid[] = "$Id: paging.c,v 1.5 2005-08-02 06:13:56 chris Exp $";
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>

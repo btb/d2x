@@ -1,4 +1,3 @@
-/* $Id: joystick.h,v 1.5 2005-04-04 09:18:08 btb Exp $ */
 
 typedef struct joystick_device {
 	int		device_number;

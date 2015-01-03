@@ -1,44 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/unused/vga/vga.jas,v $
- * $Revision: 1.1.1.2 $
- * $Author: bradleyb $
- * $Date: 2001-01-19 03:33:51 $
  * 
  * VGA library code
  * 
- * $Log: not supported by cvs2svn $
- * Revision 1.14  1996/01/02  18:00:51  matt
- * New parms for gr_init_screen
- * 
- * Revision 1.13  1995/12/19  13:46:05  matt
- * Use symbolic constant for special 3dmax mode
- * 
- * Revision 1.12  1995/12/13  18:03:03  matt
- * From JOHN: added code for special 3dbios mode
- * 
- * Revision 1.11  1995/12/13  16:28:54  matt
- * Use more legal way of checking screen mode
- * 
- * Revision 1.10  1995/11/28  10:30:22  matt
- * Added support for 1280x1024
- * 
- * Revision 1.9  1995/11/22  12:52:42  matt
- * Changed numeric literals to symbolic constants
- * 
- * Revision 1.8  1995/11/16  12:00:17  jed
- * killed some prototype stuff
- * 
- * Revision 1.7  1995/11/14  18:11:07  jed
- * added code to support linear frame buffering
- * 
- * Revision 1.6  1995/08/30  21:11:26  matt
- * Added global containing current VGA mode
- * 
- * Revision 1.5  1995/06/05  12:41:37  samir
- * Moved gr_palette_clear from gr.c to vga.c
- * 
- * Revision 1.4  1995/05/31  10:54:26  matt
- * Added RCS header
  * 
  * 
  * 

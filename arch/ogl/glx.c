@@ -1,4 +1,3 @@
-/* $Id: glx.c,v 1.6 2004-05-20 02:15:15 btb Exp $ */
 /*
  *
  * opengl platform specific functions for GLX - Added 9/15/99 Matthew Mueller

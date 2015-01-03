@@ -1,4 +1,3 @@
-/* $Id: wgl.c,v 1.9 2004-05-22 22:43:52 btb Exp $ */
 /*
  *
  * opengl platform specific functions for WGL - added by Peter Hawkins

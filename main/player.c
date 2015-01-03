@@ -1,4 +1,3 @@
-/* $Id: player.c,v 1.3 2003-10-10 09:36:35 btb Exp $ */
 
 /*
  *
@@ -12,10 +11,6 @@
 
 #include "player.h"
 #include "cfile.h"
-
-#ifdef RCS
-static char rcsid[] = "$Id: player.c,v 1.3 2003-10-10 09:36:35 btb Exp $";
-#endif
 
 /*
  * reads a player_ship structure from a CFILE

@@ -1,4 +1,3 @@
-/* $Id: loadgl.h,v 1.12 2005-01-25 19:23:58 schaffner Exp $ */
 /*
  *
  * dynamic opengl loading - courtesy of Jeff Slutter

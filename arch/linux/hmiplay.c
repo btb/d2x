@@ -1,4 +1,3 @@
-/* $Id: hmiplay.c,v 1.9 2004-05-19 19:20:16 btb Exp $ */
 /*
  * HMI midi playing routines by Jani Frilander
  *

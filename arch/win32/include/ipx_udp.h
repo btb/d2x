@@ -1,4 +1,3 @@
-/* $Id: ipx_udp.h,v 1.1 2003-10-05 22:27:01 btb Exp $ */
 /*
  *
  * FIXME: add description

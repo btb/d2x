@@ -1,4 +1,3 @@
-/* $Id: medwall.c,v 1.9 2005-07-03 13:12:47 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Created from version 1.11 of main\wall.c
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: medwall.c,v 1.9 2005-07-03 13:12:47 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

@@ -1,4 +1,3 @@
-/* $Id: init.c,v 1.6 2003-03-19 23:20:09 btb Exp $ */
 /*
  *
  * linux init.c - added Matt Mueller 9/6/98

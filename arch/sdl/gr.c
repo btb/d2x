@@ -1,4 +1,3 @@
-/* $Id: gr.c,v 1.15 2003-11-27 09:10:52 btb Exp $ */
 /*
  *
  * SDL video functions.

@@ -1,4 +1,3 @@
-/* $Id: segment.c,v 1.4 2005-06-22 09:08:21 chris Exp $ */
 
 /*
  *
@@ -13,10 +12,6 @@
 
 #include "segment.h"
 #include "cfile.h"
-
-#ifdef RCS
-static char rcsid[] = "$Id: segment.c,v 1.4 2005-06-22 09:08:21 chris Exp $";
-#endif
 
 #ifndef FAST_FILE_IO
 /*

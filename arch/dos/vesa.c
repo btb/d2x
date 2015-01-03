@@ -1,17 +1,7 @@
 /*
- * $Source: /cvs/cvsroot/d2x/arch/dos/vesa.c,v $
- * $Revision: 1.4 $
- * $Author: btb $
- * $Date: 2004-05-21 01:31:49 $
  *
  * Dos VESA
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.3  2001/10/19 09:01:56  bradleyb
- * Moved arch/sdl_* to arch/sdl
- *
- * Revision 1.2  2001/01/29 13:35:08  bradleyb
- * Fixed build system, minor fixes
  *
  */
 

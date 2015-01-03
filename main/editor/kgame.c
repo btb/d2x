@@ -1,4 +1,3 @@
-/* $Id: kgame.c,v 1.6 2005-06-22 08:58:11 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Game Loading editor functions
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: kgame.c,v 1.6 2005-06-22 08:58:11 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

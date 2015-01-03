@@ -1,4 +1,3 @@
-/* $Id: key.c,v 1.3 2004-05-22 22:58:09 btb Exp $ */
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>

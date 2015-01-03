@@ -11,22 +11,9 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 /*
- * $Source: /cvs/cvsroot/d2x/arch/win32/include/mouse.h,v $
- * $Revision: 1.2 $
- * $Author: schaffner $
- * $Date: 2004-08-28 23:17:45 $
  *
  * Header for mouse functions
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2001/01/19 03:30:15  bradleyb
- * Import of d2x-0.0.8
- *
- * Revision 1.2  1999/10/09 05:04:34  donut
- * added mouse_init and mouse_close declarations
- *
- * Revision 1.1.1.1  1999/06/14 22:01:24  donut
- * Import of d1x 1.37 source.
  *
  */
 

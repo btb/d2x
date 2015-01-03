@@ -1,4 +1,3 @@
-/* $Id: eglobal.c,v 1.5 2005-03-31 09:38:53 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Globals for editor.
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: eglobal.c,v 1.5 2005-03-31 09:38:53 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

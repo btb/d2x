@@ -1,4 +1,3 @@
-/* $Id: kbuild.c,v 1.3 2004-12-19 15:21:11 btb Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Functions for building parts of mines.
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: kbuild.c,v 1.3 2004-12-19 15:21:11 btb Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

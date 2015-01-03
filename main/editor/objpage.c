@@ -1,4 +1,3 @@
-/* $Id: objpage.c,v 1.4 2005-03-31 09:38:53 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * object selection stuff.
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: objpage.c,v 1.4 2005-03-31 09:38:53 chris Exp $";
-#endif
 
 // Num_robot_types -->  N_polygon_models
 // Cur_robot_type --> Cur_robot_type

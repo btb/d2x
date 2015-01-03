@@ -1,4 +1,3 @@
-/* $Id: ipx_bsd.c,v 1.7 2003-10-12 09:17:47 btb Exp $ */
 /*
  *
  * IPX driver using BSD style sockets

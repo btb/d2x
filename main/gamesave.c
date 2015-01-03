@@ -1,4 +1,3 @@
-/* $Id: gamesave.c,v 1.35 2006-03-05 12:19:42 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -20,10 +19,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef HAVE_CONFIG_H
 #include <conf.h>
-#endif
-
-#ifdef RCS
-char gamesave_rcsid[] = "$Id: gamesave.c,v 1.35 2006-03-05 12:19:42 chris Exp $";
 #endif
 
 #include <stdio.h>

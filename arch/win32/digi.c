@@ -1,4 +1,3 @@
-/* $Id: digi.c,v 1.12 2005-02-25 10:49:48 btb Exp $ */
 #define DIGI_SOUND
 #define MIDI_SOUND
 

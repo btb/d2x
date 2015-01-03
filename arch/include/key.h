@@ -12,16 +12,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 /*
- * $Source: /cvs/cvsroot/d2x/arch/include/key.h,v $
- * $Revision: 1.2 $
- * $Author: bradleyb $
- * $Date: 2001-01-28 16:21:54 $
  *
  * Header for keyboard functions
  *
- * $Log: not supported by cvs2svn $
- * Revision 1.1  2001/01/28 05:46:33  bradleyb
- * Unified arch headers
  *
  */
 

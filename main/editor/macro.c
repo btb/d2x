@@ -1,4 +1,3 @@
-/* $Id: macro.c,v 1.8 2005-02-26 10:13:51 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Routines for recording/playing/saving macros
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: macro.c,v 1.8 2005-02-26 10:13:51 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

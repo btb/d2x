@@ -9,51 +9,9 @@
 ;AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 ;COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ;
-; $Source: /cvs/cvsroot/d2x/arch/dos/joy2.asm,v $
-; $Revision: 1.3 $
-; $Author: bradleyb $
-; $Date: 2001-10-24 09:25:05 $
 ;
 ; Contains routines for joystick interface.
 ;
-; $Log: not supported by cvs2svn $
-; Revision 1.1.1.1  2001/01/19 03:33:43  bradleyb
-; Import of d2x-0.0.9-pre1
-;
-; Revision 1.1.1.1  1999/06/14 21:57:53  donut
-; Import of d1x 1.37 source.
-;
-; Revision 1.17  1995/10/07  13:22:11  john
-; Added new method of reading joystick that allows higher-priority
-; interrupts to go off.
-; 
-; Revision 1.16  1995/03/30  11:03:30  john
-; Made -JoyBios read buttons using BIOS.
-; 
-; Revision 1.15  1995/02/14  11:39:36  john
-; Added polled/bios joystick readers..
-; 
-; Revision 1.14  1995/01/29  18:36:00  john
-; Made timer count in mode 2 instead of mode 3.
-; 
-; Revision 1.13  1994/12/28  15:32:21  john
-; Added code to read joystick axis not all at one time.
-; 
-; Revision 1.12  1994/12/27  15:44:59  john
-; Made the joystick timeout be at 1/100th of a second, 
-; regardless of CPU speed.
-; 
-; Revision 1.11  1994/11/15  12:04:40  john
-; Cleaned up timer code a bit... took out unused functions
-; like timer_get_milliseconds, etc.
-; 
-; Revision 1.10  1994/07/01  10:55:54  john
-; Fixed some bugs... added support for 4 axis.
-; 
-; Revision 1.9  1994/06/30  20:36:54  john
-; Revamped joystick code.
-; 
-; Revision 1.8  1994/04/22  12:52:06  john
 
 [BITS 32]
 

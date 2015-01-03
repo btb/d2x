@@ -1,4 +1,3 @@
-/* $Id: joy.c,v 1.18 2005-04-05 07:35:09 btb Exp $ */
 /*
  *
  * SDL joystick support

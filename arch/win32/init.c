@@ -1,4 +1,3 @@
-/* $Id: init.c,v 1.3 2004-05-20 23:06:24 btb Exp $ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

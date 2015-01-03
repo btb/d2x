@@ -1,4 +1,3 @@
-/* $Id: mine.c,v 1.9 2005-06-22 09:42:04 chris Exp $ */
 /*
 THE COMPUTER CODE CONTAINED HEREIN IS THE SOLE PROPERTY OF PARALLAX
 SOFTWARE CORPORATION ("PARALLAX").  PARALLAX, IN DISTRIBUTING THE CODE TO
@@ -17,10 +16,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  * Mine specific editing functions, such as load_mine, save_mine
  *
  */
-
-#ifdef RCS
-static char rcsid[] = "$Id: mine.c,v 1.9 2005-06-22 09:42:04 chris Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include "conf.h"

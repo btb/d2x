@@ -35,8 +35,6 @@
 
 _DATA   SEGMENT BYTE PUBLIC USE32 'DATA'
 
-rcsid	db	"$Id: timer.asm,v 1.1.1.2 2001-01-19 03:33:50 bradleyb Exp $"
-
 TDATA       	EQU 	40h
 TCOMMAND    	EQU 	43h
 PIC         	EQU 	020h
