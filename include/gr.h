@@ -95,7 +95,7 @@ typedef struct _grs_point {
 //@@#define SM_640x480V15   17
 //@@#define SM_800x600V15   18
 
-#define SM(w,h) ((((u_int32_t)w)<<16)+(((u_int32_t)h)&0xFFFF))
+#define SM(w,h) ((((uint32_t)w)<<16)+(((uint32_t)h)&0xFFFF))
 #define SM_W(m) (m>>16)
 #define SM_H(m) (m&0xFFFF)
 
@@ -183,8 +183,8 @@ int gr_init(void);
 // the video mode changes.
 int gr_init_screen(int mode, int w, int h, int x, int y, int rowsize, ubyte *data);
 
-int gr_check_mode(u_int32_t mode);
-int gr_set_mode(u_int32_t mode);
+int gr_check_mode(uint32_t mode);
+int gr_set_mode(uint32_t mode);
 
 
 // These 4 functions actuall change screen colors.

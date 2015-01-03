@@ -45,7 +45,7 @@ void gr_update()
 		ggiPutBox(screenvis, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h, screenbuffer);
 }
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
 	unsigned int w, h;
 	ggi_mode other_mode;

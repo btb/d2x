@@ -2336,7 +2336,7 @@ void bm_write_all(FILE *fp)
 void bm_write_extra_robots()
 {
 	FILE *fp;
-	u_int32_t t;
+	uint32_t t;
 	int i;
 
 	fp = fopen("robots.ham","wb");

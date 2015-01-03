@@ -45,7 +45,7 @@ void gr_update()
 		gl_copyscreen(physicalscreen);
 }
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
 	unsigned int w, h;
 	char vgamode[16];

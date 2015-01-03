@@ -23,7 +23,7 @@ typedef int16_t fixang;		//angles
 
 typedef struct quadint // integer 64 bit, previously called "quad"
   {
-    u_int32_t low;
+    uint32_t low;
     int32_t high;
   }
 quadint;
@@ -169,7 +169,7 @@ void fixmulaccum (quadint * q, fix a, fix b);
 fix fixquadadjust (quadint * q);
 
 //divide a quadint by a long
-int32_t fixdivquadlong (u_int32_t qlow, u_int32_t qhigh, u_int32_t d);
+int32_t fixdivquadlong(uint32_t qlow, uint32_t qhigh, uint32_t d);
 
 //negate a quadint
 void fixquadnegate (quadint * q);
@@ -178,7 +178,7 @@ void fixquadnegate (quadint * q);
 ushort long_sqrt (int32_t a);
 
 //computes the square root of a quadint, returning a long
-u_int32_t quad_sqrt (u_int32_t low, int32_t high);
+uint32_t quad_sqrt(uint32_t low, int32_t high);
 //unsigned long quad_sqrt (long low, long high);
 
 //computes the square root of a fix, returning a fix

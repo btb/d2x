@@ -641,7 +641,7 @@ int Automap_active = 0;
 int Automap_always_hires=0;
 extern int MenuHiresAvailable;
 
-u_int32_t automap_mode = SM(640,480);
+uint32_t automap_mode = SM(640,480);
 int automap_width = 640;
 int automap_height = 480;
 int automap_use_game_res=0;

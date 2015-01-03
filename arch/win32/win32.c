@@ -73,7 +73,7 @@ void arch_init()
 
 int gr_installed = 0;
 
-int gr_check_mode(u_int32_t mode)
+int gr_check_mode(uint32_t mode)
 {
 	if (mode == SM(320, 200))
 		return 0;
@@ -81,7 +81,7 @@ int gr_check_mode(u_int32_t mode)
 	return 11;
 }
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
 	unsigned int w,h,t,r;
 

@@ -38,7 +38,7 @@ extern char MarkerOwner[NUM_MARKERS][CALLSIGN_LEN+1];
 extern int  MarkerObject[NUM_MARKERS];
 
 //added on 9/30/98 by Matt Mueller for selectable automap modes
-extern u_int32_t automap_mode;
+extern uint32_t automap_mode;
 #define AUTOMAP_MODE (automap_use_game_res?grd_curscreen->sc_mode:automap_mode)
 //extern int automap_width;
 //extern int automap_height;

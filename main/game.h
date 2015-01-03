@@ -91,7 +91,7 @@ extern int ft_preference;
 
 extern int Game_mode;
 //added 3/24/99 by Owen Evans
-extern u_int32_t Game_screen_mode;
+extern uint32_t Game_screen_mode;
 //end added - OE
 
 extern int Game_paused;

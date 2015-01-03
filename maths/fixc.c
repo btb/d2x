@@ -56,9 +56,9 @@ void fixquadnegate(quadint *q)
 //multiply two ints & add 64-bit result to 64-bit sum
 void fixmulaccum(quadint *q,fix a,fix b)
 {
-	u_int32_t aa,bb;
-	u_int32_t ah,al,bh,bl;
-	u_int32_t t,c=0,old;
+	uint32_t aa, bb;
+	uint32_t ah, al, bh, bl;
+	uint32_t t, c = 0, old;
 	int neg;
 
 	neg = ((a^b) < 0);
@@ -174,12 +174,12 @@ fixang fix_atan2(fix cos,fix sin)
 
 #ifdef NO_FIX_INLINE
 //divide a quadint by a fix, returning a fix
-int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
+int32_t fixdivquadlong(uint32_t nl, uint32_t nh, uint32_t d)
 {
 	int i;
-	u_int32_t tmp0;
+	uint32_t tmp0;
 	ubyte tmp1;
-	u_int32_t r;
+	uint32_t r;
 	ubyte T,Q,M;
 
 	r = 0;
@@ -201,7 +201,7 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 		
 			case 0:
 				Q = (unsigned char)((0x80000000L & nh) != 0 );
-				nh = (nh << 1) | (u_int32_t)T;
+				nh = (nh << 1) | (uint32_t)T;
 
 				tmp0 = nh;
 				nh -= d;
@@ -213,7 +213,7 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 				break;
 			case 1:
 				Q = (unsigned char)((0x80000000L & nh) != 0 );
-				nh = (nh << 1) | (u_int32_t)T;
+				nh = (nh << 1) | (uint32_t)T;
 
 				tmp0 = nh;
 				nh += d;
@@ -240,7 +240,7 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 		
 			case 0:
 				Q = (unsigned char)((0x80000000L & nh) != 0 );
-				nh = (nh << 1) | (u_int32_t)T;
+				nh = (nh << 1) | (uint32_t)T;
 
 				tmp0 = nh;
 				nh += d;
@@ -252,7 +252,7 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 				break;
 			case 1: 
 				Q = (unsigned char)((0x80000000L & nh) != 0 );
-				nh = (nh << 1) | (u_int32_t)T;
+				nh = (nh << 1) | (uint32_t)T;
 
 				tmp0 = nh;
 				nh = nh - d;
@@ -278,18 +278,19 @@ int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d)
 //           0x4cd40ad8/*high=1288964824*/);
 unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
 {
-  return fixdivquadlong((u_int32_t) nl,(u_int32_t) nh,(u_int32_t) d);
+  return fixdivquadlong((uint32_t) nl,(uint32_t) nh,(uint32_t) d);
 }
 #endif
 
 unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
 {
-  u_int64_t n = (u_int64_t)nl | (((u_int64_t)nh) << 32 );
-  return n / ((u_int64_t)d);
+  uint64_t n = (uint64_t)nl | (((uint64_t)nh) << 32 );
+  return n / ((uint64_t)d);
 }
 
 #else //of ifdef NO_FIX_INLINE
-int32_t fixdivquadlong(u_int32_t nl,u_int32_t nh,u_int32_t d) {
+int32_t fixdivquadlong(uint32_t nl, uint32_t nh, uint32_t d)
+{
 int32_t a;
 __asm__("idivl %3"
          :"=a" (a)
@@ -298,8 +299,9 @@ __asm__("idivl %3"
          );
 return (a);
 }
-static inline u_int32_t fixdivquadlongu(u_int32_t nl,u_int32_t nh,u_int32_t d) {
-u_int32_t a;
+static inline uint32_t fixdivquadlongu(uint32_t nl, uint32_t nh, uint32_t d)
+{
+uint32_t a;
 __asm__("divl %3"
          :"=a" (a)
 	 :"a" (nl), "d" (nh), "r" (d)
@@ -309,10 +311,10 @@ return (a);
 }
 #endif //def NO_FIX_INLINE
 
-u_int32_t quad_sqrt(u_int32_t low,int32_t high)
+uint32_t quad_sqrt(uint32_t low, int32_t high)
 {
 	int i, cnt;
-	u_int32_t r,old_r,t;
+	uint32_t r, old_r, t;
 	quadint tq;
 
 	if (high<0)

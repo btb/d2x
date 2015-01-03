@@ -295,7 +295,7 @@ void ogl_get_verinfo(void)
 }
 
 
-int gr_check_mode(u_int32_t mode)
+int gr_check_mode(uint32_t mode)
 {
 	int w, h;
 
@@ -307,7 +307,7 @@ int gr_check_mode(u_int32_t mode)
 
 extern int VGA_current_mode; // DPH: kludge - remove at all costs
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
 	unsigned int w,h;
 	char *gr_bm_data;

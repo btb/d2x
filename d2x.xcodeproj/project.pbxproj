@@ -1048,7 +1048,6 @@
 		14804D621A4C9F5C001CB0FB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../../../../../Library/Frameworks/SDL.framework; sourceTree = "<group>"; };
 		14804D641A4C9F74001CB0FB /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = ../../../../../Library/Frameworks/SDL_mixer.framework; sourceTree = "<group>"; };
 		14804D661A4C9FE0001CB0FB /* SDL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDL.h; sourceTree = "<group>"; };
-		14804D7A1A4CA253001CB0FB /* sdl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sdl; sourceTree = "<group>"; };
 		14804D7B1A4CA263001CB0FB /* iff */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iff; sourceTree = "<group>"; };
 		14D696771A520C80009ABFD2 /* mveplayer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mveplayer; sourceTree = BUILT_PRODUCTS_DIR; };
 		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = /usr/local/Cellar/physfs/2.0.3/lib/libphysfs.a; sourceTree = "<absolute>"; };
@@ -1466,7 +1465,6 @@
 				1466959D1A2729860070D41D /* mouse.c */,
 				1466959E1A2729860070D41D /* rbaudio.c */,
 				1466959F1A2729860070D41D /* timer.c */,
-				14804D7A1A4CA253001CB0FB /* sdl */,
 			);
 			path = sdl;
 			sourceTree = "<group>";
@@ -2903,6 +2901,7 @@
 				14D6967B1A520C81009ABFD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14E97E001A3550680027FB84 /* Build configuration list for PBXLegacyTarget "d2x-opengl" */ = {
 			isa = XCConfigurationList;

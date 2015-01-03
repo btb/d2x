@@ -325,7 +325,7 @@ int gr_vesa_setmode( int mode )
 #endif
 
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
 	int retcode;
 	unsigned int w,h,t,data, r;
@@ -566,7 +566,7 @@ int gr_mode13_checkmode()
 // 10=Error allocating selector for A0000h
 // 11=Not a valid mode support by gr.lib
 
-int gr_check_mode(u_int32_t mode)
+int gr_check_mode(uint32_t mode)
 {
 	switch(mode)
 	{

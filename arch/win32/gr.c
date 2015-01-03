@@ -226,7 +226,7 @@ void gr_update()
 
 
 
-int gr_set_mode(u_int32_t mode)
+int gr_set_mode(uint32_t mode)
 {
         DDSURFACEDESC       ddsd;
 //        DDSURFACEDESC       DDSDesc;
