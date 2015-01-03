@@ -389,8 +389,7 @@ int WriteConfigFile()
 
 	cvar_set_cvar( &config_last_player, Players[Player_num].callsign );
 
-	if (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))
-		cvar_setint( &MovieHires, SaveMovieHires );
+	cvar_setint( &MovieHires, SaveMovieHires );
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)
@@ -398,6 +397,8 @@ int WriteConfigFile()
 	cvar_write(outfile);
 	PHYSFS_close(outfile);
 
+	if (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))
+		cvar_setint( &MovieHires, 0 );
 
 #ifdef WINDOWS
 {
