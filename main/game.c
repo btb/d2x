@@ -357,6 +357,20 @@ void game_cmd_say(int argc, char **argv)
 }
 
 
+/* increase window size */
+void game_cmd_sizeup(int argc, char **argv)
+{
+	grow_window();
+}
+
+
+/* decrease window size */
+void game_cmd_sizedown(int argc, char **argv)
+{
+	shrink_window();
+}
+
+
 //this is called once per game
 void init_game()
 {
@@ -384,6 +398,8 @@ void init_game()
 	cmd_addcommand("player", game_cmd_player);
 	cmd_addcommand("map", game_cmd_map);
 	cmd_addcommand("say", game_cmd_say);
+	cmd_addcommand("sizeup", game_cmd_sizeup);
+	cmd_addcommand("sizedown", game_cmd_sizedown);
 }
 
 
