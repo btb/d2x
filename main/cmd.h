@@ -28,8 +28,4 @@ typedef void (*cmd_handler_t)(int argc, char *argv[]);
 void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func);
 
 
-/* execute a bound key's command */
-int cmd_handle_keybinding(unsigned char key);
-
-
 #endif /* _CMD_H_ */

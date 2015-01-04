@@ -18,6 +18,8 @@
 #include "error.h"
 #include "key.h"
 #include "timer.h"
+#include "console.h"
+#include "u_mem.h"
 
 
 #define KEY_BUFFER_SIZE 16
@@ -361,6 +363,66 @@ unsigned char key_to_ascii(int keycode )
 		return key_properties[keycode].ascii_value;
 }
 
+
+/* The list of keybindings */
+static char *key_binding_list[256];
+
+
+/* bind */
+/* FIXME: key_text is not really adequate for this */
+void key_cmd_bind(int argc, char **argv)
+{
+	char buf[CMD_MAX_LENGTH] = "";
+	unsigned char key = 0;
+	int i;
+
+	if (argc < 2)
+	{
+		con_printf(CON_NORMAL, "key bindings:\n");
+		for (i = 0; i < 256; i++) {
+			if (!key_binding_list[i])
+				continue;
+			con_printf(CON_NORMAL, "%s: %s\n", key_text[i], key_binding_list[i]);
+		}
+		return;
+	}
+
+	for (i = 2; i < argc; i++) {
+		if (i > 2)
+			strncat(buf, " ", CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH);
+	}
+
+	for (i = 0; i < 256; i++) {
+		if (!stricmp(argv[1], key_text[i])) {
+			key = i;
+			break;
+		}
+	}
+
+	if (!key) {
+		con_printf(CON_CRITICAL, "bind: key %s not found\n", argv[1]);
+		return;
+	}
+
+	if (key_binding_list[key])
+		d_free(key_binding_list[key]);
+	key_binding_list[key] = d_strdup(buf);
+}
+
+
+static void key_handle_binding(int keycode, int state)
+{
+	if (!key_binding_list[keycode])
+		return;
+
+	if (!state && key_binding_list[keycode][0] == '+')
+		cmd_appendf("-%s", &key_binding_list[keycode][1]);
+	else
+		cmd_append(key_binding_list[keycode]);
+}
+
+
 void key_handler(SDL_KeyboardEvent *event)
 {
 	ubyte state;
@@ -379,9 +441,10 @@ void key_handler(SDL_KeyboardEvent *event)
 
 		keycode = i;
 		key = &(key_data.keys[keycode]);
-                if (key_properties[i].sym == event_key)
+		if (key_properties[i].sym == event_key) {
 			state = key_state;
-		else
+			key_handle_binding(keycode, state);
+		} else
 			state = key->last_state;
 			
 		if ( key->last_state == state )	{
@@ -433,6 +496,12 @@ void key_handler(SDL_KeyboardEvent *event)
 
 void key_close()
 {
+	int i;
+
+	for (i = 0; i < 256; i++)
+		if (key_binding_list[i])
+			d_free(key_binding_list[i]);
+
  Installed = 0;
 }
 
@@ -450,7 +519,9 @@ void key_init()
   
   for(i=0; i<256; i++)
      key_text[i] = key_properties[i].key_text;
-     
+
+	cmd_addcommand("bind", key_cmd_bind);
+
   // Clear the keyboard array
   key_flush();
   atexit(key_close);
