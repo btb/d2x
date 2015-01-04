@@ -389,12 +389,6 @@ void cmd_bind(int argc, char **argv)
 	cmd_keybinding_list[key] = d_strdup(buf);
 }
 
-/* +/- actions */
-int Console_button_states[CMD_NUM_BUTTONS];
-void cmd_attack_on(int argc, char **argv) { Console_button_states[CMD_ATTACK] = 1; }
-void cmd_attack_off(int argc, char **argv) { Console_button_states[CMD_ATTACK] = 0; }
-void cmd_attack2_on(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 1; }
-void cmd_attack2_off(int argc, char **argv) { Console_button_states[CMD_ATTACK2] = 0; }
 
 /* weapon select */
 void cmd_impulse(int argc, char**argv)
@@ -501,22 +495,11 @@ void cmd_free(void)
 
 void cmd_init(void)
 {
-	memset(Console_button_states, 0, sizeof(int) * CMD_NUM_BUTTONS);
-
 	cmd_addcommand("alias", cmd_alias);
 	cmd_addcommand("bind", cmd_bind);
-
-	cmd_addcommand("+attack", cmd_attack_on);
-	cmd_addcommand("-attack", cmd_attack_off);
-	cmd_addcommand("+attack2", cmd_attack2_on);
-	cmd_addcommand("-attack2", cmd_attack2_off);
-
 	cmd_addcommand("impulse", cmd_impulse);
-
 	cmd_addcommand("echo", cmd_echo);
-
 	cmd_addcommand("exec", cmd_exec);
-
 	cmd_addcommand("wait", cmd_wait);
 
 	atexit(cmd_free);

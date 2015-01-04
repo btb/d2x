@@ -579,6 +579,7 @@ void CON_Init()
 	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
 
 	cmd_init();
+	console_control_init();
 
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);

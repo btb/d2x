@@ -184,7 +184,6 @@ typedef struct advanced_ext_control_info {
 extern ubyte ExtGameStatus;
 extern control_info Controls;
 extern void controls_read_all();
-extern void controls_read_console();
 extern void kconfig(int n, char *title);
 
 // added on 2/4/99 by Victor Rachels to add new keys menu

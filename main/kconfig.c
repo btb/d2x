@@ -3024,6 +3024,10 @@ void controls_read_all()
 	// From keyboard...
 	if ( kc_keyboard[8].value < 255 ) slide_on |= keyd_pressed[ kc_keyboard[8].value ];
 	if ( kc_keyboard[9].value < 255 ) slide_on |= keyd_pressed[ kc_keyboard[9].value ];
+
+	// From console...
+	slide_on |= console_control_state(CONCNTL_STRAFE);
+
 	// From joystick...
 	if ((use_joystick)&&(kc_joystick[5].value<255)) slide_on |= joy_get_button_state( kc_joystick[5].value );
 	// From mouse...
@@ -3034,6 +3038,10 @@ void controls_read_all()
 	// From keyboard...
 	if ( kc_keyboard[18].value < 255 ) bank_on |= keyd_pressed[ kc_keyboard[18].value ];
 	if ( kc_keyboard[19].value < 255 ) bank_on |= keyd_pressed[ kc_keyboard[19].value ];
+
+	// From console...
+	bank_on |= console_control_state(CONCNTL_BANK);
+
 	// From joystick...
 	if ( (use_joystick)&&(kc_joystick[10].value < 255 )) bank_on |= joy_get_button_state( kc_joystick[10].value );
 	// From mouse...
@@ -3053,6 +3061,10 @@ void controls_read_all()
 		if ( kc_keyboard[1].value < 255 ) kp += k1/PH_SCALE;
 		if ( kc_keyboard[2].value < 255 ) kp -= k2/PH_SCALE;
 		if ( kc_keyboard[3].value < 255 ) kp -= k3/PH_SCALE;
+
+		// From console...
+		kp += console_control_down_time(CONCNTL_LOOKDOWN) / (PH_SCALE * 2);
+		kp -= console_control_down_time(CONCNTL_LOOKUP) / (PH_SCALE * 2);
 
 		// From Cyberman...
 		if ((use_mouse)&&(Config_control_type==CONTROL_CYBERMAN))	{
@@ -3109,6 +3121,10 @@ if (!Player_is_dead)
 		if ( kc_keyboard[2].value < 255 ) Controls.vertical_thrust_time -= k2;
 		if ( kc_keyboard[3].value < 255 ) Controls.vertical_thrust_time -= k3;
 
+		// From console...
+		Controls.vertical_thrust_time += console_control_down_time(CONCNTL_LOOKUP);
+		Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_LOOKDOWN);
+
 		// From Cyberman...
 		if ((use_mouse)&&(Config_control_type==CONTROL_CYBERMAN))	{
 			Controls.vertical_thrust_time -= mouse_button_down_time(MB_PITCH_FORWARD);
@@ -3138,6 +3154,10 @@ if (!Player_is_dead)
 	if ( kc_keyboard[16].value < 255 ) Controls.vertical_thrust_time -= speed_factor*key_down_time( kc_keyboard[16].value );
 	if ( kc_keyboard[17].value < 255 ) Controls.vertical_thrust_time -= speed_factor*key_down_time( kc_keyboard[17].value );
 	
+	// From console...
+	Controls.vertical_thrust_time += console_control_down_time(CONCNTL_MOVEUP);
+	Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_MOVEDOWN);
+
 	// From joystick...
 	if ((use_joystick)&&( kc_joystick[19].value < 255 ))	{
 		if ( !kc_joystick[20].value )		// If not inverted...
@@ -3184,6 +3204,10 @@ if (!Player_is_dead)
 		if ( kc_keyboard[5].value < 255 ) kh -= k5/PH_SCALE;
 		if ( kc_keyboard[6].value < 255 ) kh += k6/PH_SCALE;
 		if ( kc_keyboard[7].value < 255 ) kh += k7/PH_SCALE;
+
+		// From console...
+		kh -= console_control_down_time(CONCNTL_LEFT) / PH_SCALE;
+		kh += console_control_down_time(CONCNTL_RIGHT) / PH_SCALE;
 
 		// From Cyberman...
 		if ((use_mouse)&&(Config_control_type==CONTROL_CYBERMAN))	{
@@ -3237,7 +3261,11 @@ if (!Player_is_dead)
 		if ( kc_keyboard[5].value < 255 ) Controls.sideways_thrust_time -= k1;
 		if ( kc_keyboard[6].value < 255 ) Controls.sideways_thrust_time += k2;
 		if ( kc_keyboard[7].value < 255 ) Controls.sideways_thrust_time += k3;
-	
+
+		// From console...
+		Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_LEFT);
+		Controls.sideways_thrust_time += console_control_down_time(CONCNTL_RIGHT);
+
 		// From joystick...
 		if ( (use_joystick)&&(kc_joystick[15].value < 255 ))	{
 			if ( !kc_joystick[16].value )		// If not inverted...
@@ -3267,6 +3295,10 @@ if (!Player_is_dead)
 	if ( kc_keyboard[12].value < 255 ) Controls.sideways_thrust_time += speed_factor*key_down_time( kc_keyboard[12].value );
 	if ( kc_keyboard[13].value < 255 ) Controls.sideways_thrust_time += speed_factor*key_down_time( kc_keyboard[13].value );
 	
+	// From console...
+	Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_MOVELEFT);
+	Controls.sideways_thrust_time += console_control_down_time(CONCNTL_MOVERIGHT);
+
 	// From joystick...
 	if ( (use_joystick)&&(kc_joystick[17].value < 255 ))	{
 		if ( !kc_joystick[18].value )		// If not inverted...
@@ -3306,6 +3338,10 @@ if (!Player_is_dead)
 		if ( kc_keyboard[6].value < 255 ) Controls.bank_time -= k2;
 		if ( kc_keyboard[7].value < 255 ) Controls.bank_time -= k3;
 
+		// From console...
+		Controls.bank_time -= console_control_down_time(CONCNTL_LEFT);
+		Controls.bank_time += console_control_down_time(CONCNTL_RIGHT);
+
 		// From Cyberman...
 		if ((use_mouse)&&(Config_control_type==CONTROL_CYBERMAN))	{
 			Controls.bank_time -= mouse_button_down_time(MB_HEAD_LEFT);
@@ -3334,6 +3370,10 @@ if (!Player_is_dead)
 	if ( kc_keyboard[21].value < 255 ) Controls.bank_time += speed_factor*key_down_time( kc_keyboard[21].value );
 	if ( kc_keyboard[22].value < 255 ) Controls.bank_time -= speed_factor*key_down_time( kc_keyboard[22].value );
 	if ( kc_keyboard[23].value < 255 ) Controls.bank_time -= speed_factor*key_down_time( kc_keyboard[23].value );
+
+	// From console...
+	Controls.bank_time += console_control_down_time(CONCNTL_BANKLEFT);
+	Controls.bank_time -= console_control_down_time(CONCNTL_BANKRIGHT);
 
 	// From joystick...
 	if ( (use_joystick)&&(kc_joystick[21].value < 255) )	{
@@ -3377,6 +3417,10 @@ if (!Player_is_dead)
 	if ( kc_keyboard[32].value < 255 ) Controls.forward_thrust_time -= speed_factor*key_down_time( kc_keyboard[32].value );
 	if ( kc_keyboard[33].value < 255 ) Controls.forward_thrust_time -= speed_factor*key_down_time( kc_keyboard[33].value );
 
+	// From console...
+	Controls.forward_thrust_time += console_control_down_time(CONCNTL_FORWARD);
+	Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
+
 	// From joystick...
 	if ( (use_joystick)&&(kc_joystick[23].value < 255 ))	{
 		if ( !kc_joystick[24].value )		// If not inverted...
@@ -3407,6 +3451,9 @@ if (!Player_is_dead)
 	if ( kc_keyboard[46].value < 255 ) Controls.afterburner_state |= keyd_pressed[kc_keyboard[46].value];
 	if ( kc_keyboard[47].value < 255 ) Controls.afterburner_state |= keyd_pressed[kc_keyboard[47].value];
 
+	// From console...
+	Controls.afterburner_state |= console_control_state(CONCNTL_LEFT);
+
         if ( (use_mouse)&&(kc_mouse[27].value < 255 )) Controls.afterburner_state |= mouse_button_state(kc_mouse[27].value);
 
         if ( (use_joystick)&&(kc_joystick[27].value < 255 )) Controls.afterburner_state |= joy_get_button_state(kc_joystick[27].value);
@@ -3417,6 +3464,10 @@ if (!Player_is_dead)
 		   Controls.headlight_count=key_down_count(kc_keyboard[52].value);
         if (kc_keyboard[53].value < 255 )
 		   Controls.headlight_count+=key_down_count(kc_keyboard[53].value);
+
+	// From console...
+	Controls.headlight_count += console_control_down_count(CONCNTL_HEADLIGHT);
+
 		  if ((use_joystick)&&(kc_joystick[30].value < 255 )) 
 	       Controls.headlight_count+=joy_get_button_down_cnt(kc_joystick[30].value);
 
@@ -3426,6 +3477,10 @@ if (!Player_is_dead)
 			 Controls.cycle_primary_count=key_down_count(kc_keyboard[48].value);
 		  if (kc_keyboard[49].value<255)
 			Controls.cycle_primary_count+=key_down_count(kc_keyboard[49].value);
+
+	// From console...
+	Controls.cycle_primary_count += console_control_down_count(CONCNTL_CYCLE);
+
 	     if ((use_joystick)&&(kc_joystick[28].value < 255 )) 
          Controls.cycle_primary_count+=joy_get_button_down_cnt(kc_joystick[28].value);
 
@@ -3436,12 +3491,18 @@ if (!Player_is_dead)
 			 Controls.cycle_secondary_count=key_down_count(kc_keyboard[50].value);
 		  if (kc_keyboard[51].value<255)
 			Controls.cycle_secondary_count+=key_down_count(kc_keyboard[51].value);
+
+	// From console...
+	Controls.cycle_secondary_count += console_control_down_count(CONCNTL_CYCLE2);
+
 	     if ((use_joystick)&&(kc_joystick[29].value < 255 )) 
 			Controls.cycle_secondary_count=joy_get_button_down_cnt(kc_joystick[29].value);
 
 //--------Read Toggle Bomb key----------------------
 
-		  if (kc_keyboard[56].value<255 && key_down_count(kc_keyboard[56].value))
+	if ((kc_keyboard[56].value<255 && key_down_count(kc_keyboard[56].value))
+		// From console...
+		|| console_control_down_count(CONCNTL_TOGGLEBOMB))
          {
           int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
 
@@ -3473,51 +3534,87 @@ if (!Player_is_dead)
         if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && keyd_pressed[kc_keyboard[55].value])
                 transfer_energy_to_shield(key_down_time(kc_keyboard[55].value));
 
+	// From console...
+	if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && console_control_state(CONCNTL_NRGSHIELD))
+		transfer_energy_to_shield(console_control_down_time(CONCNTL_NRGSHIELD));
+
 //----------- Read fire_primary_down_count
 	if (kc_keyboard[24].value < 255 ) Controls.fire_primary_down_count += key_down_count(kc_keyboard[24].value);
 	if (kc_keyboard[25].value < 255 ) Controls.fire_primary_down_count += key_down_count(kc_keyboard[25].value);
+
+	// From console...
+	Controls.fire_primary_down_count += console_control_down_count(CONCNTL_ATTACK);
+
 	if ((use_joystick)&&(kc_joystick[0].value < 255 )) Controls.fire_primary_down_count += joy_get_button_down_cnt(kc_joystick[0].value);
 	if ((use_mouse)&&(kc_mouse[0].value < 255 )) Controls.fire_primary_down_count += mouse_button_down_count(kc_mouse[0].value);
 
 //----------- Read fire_primary_state
 	if (kc_keyboard[24].value < 255 ) Controls.fire_primary_state |= keyd_pressed[kc_keyboard[24].value];
 	if (kc_keyboard[25].value < 255 ) Controls.fire_primary_state |= keyd_pressed[kc_keyboard[25].value];
+
+	// From console...
+	Controls.fire_primary_state |= console_control_state(CONCNTL_ATTACK);
+
 	if ((use_joystick)&&(kc_joystick[0].value < 255 )) Controls.fire_primary_state |= joy_get_button_state(kc_joystick[0].value);
 	if ((use_mouse)&&(kc_mouse[0].value < 255) ) Controls.fire_primary_state |= mouse_button_state(kc_mouse[0].value);
 
 //----------- Read fire_secondary_down_count
 	if (kc_keyboard[26].value < 255 ) Controls.fire_secondary_down_count += key_down_count(kc_keyboard[26].value);
 	if (kc_keyboard[27].value < 255 ) Controls.fire_secondary_down_count += key_down_count(kc_keyboard[27].value);
+
+	// From console...
+	Controls.fire_secondary_down_count += console_control_down_count(CONCNTL_ATTACK2);
+
 	if ((use_joystick)&&(kc_joystick[1].value < 255 )) Controls.fire_secondary_down_count += joy_get_button_down_cnt(kc_joystick[1].value);
 	if ((use_mouse)&&(kc_mouse[1].value < 255 )) Controls.fire_secondary_down_count += mouse_button_down_count(kc_mouse[1].value);
 
 //----------- Read fire_secondary_state
 	if (kc_keyboard[26].value < 255 ) Controls.fire_secondary_state |= keyd_pressed[kc_keyboard[26].value];
 	if (kc_keyboard[27].value < 255 ) Controls.fire_secondary_state |= keyd_pressed[kc_keyboard[27].value];
+
+	// From console...
+	Controls.fire_secondary_state |= console_control_state(CONCNTL_ATTACK2);
+
 	if ((use_joystick)&&(kc_joystick[1].value < 255 )) Controls.fire_secondary_state |= joy_get_button_state(kc_joystick[1].value);
 	if ((use_mouse)&&(kc_mouse[1].value < 255) ) Controls.fire_secondary_state |= mouse_button_state(kc_mouse[1].value);
 
 //----------- Read fire_flare_down_count
 	if (kc_keyboard[28].value < 255 ) Controls.fire_flare_down_count += key_down_count(kc_keyboard[28].value);
 	if (kc_keyboard[29].value < 255 ) Controls.fire_flare_down_count += key_down_count(kc_keyboard[29].value);
+
+	// From console...
+	Controls.fire_flare_down_count += console_control_down_count(CONCNTL_FLARE);
+
 	if ((use_joystick)&&(kc_joystick[4].value < 255 )) Controls.fire_flare_down_count += joy_get_button_down_cnt(kc_joystick[4].value);
 	if ((use_mouse)&&(kc_mouse[4].value < 255 )) Controls.fire_flare_down_count += mouse_button_down_count(kc_mouse[4].value);
 
 //----------- Read drop_bomb_down_count
 	if (kc_keyboard[34].value < 255 ) Controls.drop_bomb_down_count += key_down_count(kc_keyboard[34].value);
 	if (kc_keyboard[35].value < 255 ) Controls.drop_bomb_down_count += key_down_count(kc_keyboard[35].value);
+
+	// From console...
+	Controls.drop_bomb_down_count += console_control_down_count(CONCNTL_BOMB);
+
 	if ((use_joystick)&&(kc_joystick[26].value < 255 )) Controls.drop_bomb_down_count += joy_get_button_down_cnt(kc_joystick[26].value);
 	if ((use_mouse)&&(kc_mouse[26].value < 255 )) Controls.drop_bomb_down_count += mouse_button_down_count(kc_mouse[26].value);
 
 //----------- Read rear_view_down_count
 	if (kc_keyboard[36].value < 255 ) Controls.rear_view_down_count += key_down_count(kc_keyboard[36].value);
 	if (kc_keyboard[37].value < 255 ) Controls.rear_view_down_count += key_down_count(kc_keyboard[37].value);
+
+	// From console...
+	Controls.rear_view_down_count += console_control_down_count(CONCNTL_REARVIEW);
+
 	if ((use_joystick)&&(kc_joystick[25].value < 255 )) Controls.rear_view_down_count += joy_get_button_down_cnt(kc_joystick[25].value);
 	if ((use_mouse)&&(kc_mouse[25].value < 255 )) Controls.rear_view_down_count += mouse_button_down_count(kc_mouse[25].value);
 
 //----------- Read rear_view_down_state
 	if (kc_keyboard[36].value < 255 ) Controls.rear_view_down_state |= keyd_pressed[kc_keyboard[36].value];
 	if (kc_keyboard[37].value < 255 ) Controls.rear_view_down_state |= keyd_pressed[kc_keyboard[37].value];
+
+	// From console...
+	Controls.rear_view_down_state |= console_control_state(CONCNTL_REARVIEW);
+
 	if ((use_joystick)&&(kc_joystick[25].value < 255 )) Controls.rear_view_down_state |= joy_get_button_state(kc_joystick[25].value);
 	if ((use_mouse)&&(kc_mouse[25].value < 255 )) Controls.rear_view_down_state |= mouse_button_state(kc_mouse[25].value);
 
@@ -3527,9 +3624,15 @@ if (!Player_is_dead)
 	if (kc_keyboard[44].value < 255 ) Controls.automap_down_count += key_down_count(kc_keyboard[44].value);
 	if (kc_keyboard[45].value < 255 ) Controls.automap_down_count += key_down_count(kc_keyboard[45].value);
 
+	// From console...
+	Controls.automap_down_count += console_control_down_count(CONCNTL_AUTOMAP);
+
 //----------- Read automap_state
 	if (kc_keyboard[44].value < 255 ) Controls.automap_state |= keyd_pressed[kc_keyboard[44].value];
 	if (kc_keyboard[45].value < 255 ) Controls.automap_state |= keyd_pressed[kc_keyboard[45].value];
+
+	// From console...
+	Controls.automap_state |= console_control_state(CONCNTL_AUTOMAP);
 
 //----------- Read stupid-cruise-control-type of throttle.
 	{
@@ -3537,11 +3640,20 @@ if (!Player_is_dead)
 		if ( kc_keyboard[39].value < 255 ) Cruise_speed += fixdiv(speed_factor*key_down_time(kc_keyboard[39].value)*5,FrameTime);
 		if ( kc_keyboard[40].value < 255 ) Cruise_speed -= fixdiv(speed_factor*key_down_time(kc_keyboard[40].value)*5,FrameTime);
 		if ( kc_keyboard[41].value < 255 ) Cruise_speed -= fixdiv(speed_factor*key_down_time(kc_keyboard[41].value)*5,FrameTime);
+
+		// From console...
+		Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);
+		Cruise_speed -= console_control_down_time(CONCNTL_CRUISEDOWN);
+
 		if ( (kc_keyboard[42].value < 255) && (key_down_count(kc_keyboard[42].value)) )
 			Cruise_speed = 0;
 		if ( (kc_keyboard[43].value < 255) && (key_down_count(kc_keyboard[43].value)) )
 			Cruise_speed = 0;
-	
+
+		// From console...
+		if (console_control_down_count(CONCNTL_CRUISEOFF))
+			Cruise_speed = 0;
+
 		if (Cruise_speed > i2f(100) ) Cruise_speed = i2f(100);
 		if (Cruise_speed < 0 ) Cruise_speed = 0;
 	
@@ -3586,27 +3698,6 @@ if (!Player_is_dead)
 	#endif
 }
 #endif
-
-
-void controls_read_console()
-{
-	//	Controls.pitch_time += fixmul(kc_external_control->pitch_time,FrameTime);
-	//	Controls.vertical_thrust_time += fixmul(kc_external_control->vertical_thrust_time,FrameTime);
-	//	Controls.heading_time += fixmul(kc_external_control->heading_time,FrameTime);
-	//	Controls.sideways_thrust_time += fixmul(kc_external_control->sideways_thrust_time ,FrameTime);
-	//	Controls.bank_time += fixmul(kc_external_control->bank_time ,FrameTime);
-	//	Controls.forward_thrust_time += fixmul(kc_external_control->forward_thrust_time ,FrameTime);
-	//	Controls.rear_view_down_count += kc_external_control->rear_view_down_count;
-	//	Controls.rear_view_down_state |= kc_external_control->rear_view_down_state;
-	//	Controls.fire_primary_down_count += kc_external_control->fire_primary_down_count;
-	Controls.fire_primary_state |= Console_button_states[CMD_ATTACK];
-	Controls.fire_secondary_state |= Console_button_states[CMD_ATTACK2];
-	//	Controls.fire_secondary_down_count += kc_external_control->fire_secondary_down_count;
-	//	Controls.fire_flare_down_count += kc_external_control->fire_flare_down_count;
-	//	Controls.drop_bomb_down_count += kc_external_control->drop_bomb_down_count;
-	//	Controls.automap_down_count += kc_external_control->automap_down_count;
-	//	Controls.automap_state |= kc_external_control->automap_state;
-}
 
 
 void reset_cruise(void)

@@ -28,19 +28,6 @@ typedef void (*cmd_handler_t)(int argc, char *argv[]);
 void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func);
 
 
-/* +/- actions */
-
-#define CMD_NUM_BUTTONS 2
-
-typedef enum
-{
-	CMD_ATTACK,  // Fire primary weapon
-	CMD_ATTACK2, // Fire secondary weapon
-} cmd_button;
-
-extern int Console_button_states[CMD_NUM_BUTTONS];
-
-
 /* execute a bound key's command */
 int cmd_handle_keybinding(unsigned char key);
 
