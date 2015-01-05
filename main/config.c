@@ -52,7 +52,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "player.h"
 #include "mission.h"
 #include "mono.h"
-
+#include "key.h"
 #include "physfsx.h"
 
 
@@ -395,6 +395,7 @@ int WriteConfigFile()
 	if (outfile == NULL)
 		return 1;
 	cvar_write(outfile);
+	key_write_bindings(outfile);
 	PHYSFS_close(outfile);
 
 	if (FindArg("-nohires") || FindArg("-nohighres") || FindArg("-lowresmovies"))

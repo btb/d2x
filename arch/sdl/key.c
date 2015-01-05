@@ -368,6 +368,17 @@ unsigned char key_to_ascii(int keycode )
 static char *key_binding_list[256];
 
 
+/* Write key bindings to file */
+void key_write_bindings(CFILE *file)
+{
+	int i;
+
+	for (i = 0; i < 256; i++)
+		if (key_binding_list[i])
+			PHYSFSX_printf(file, "bind %s \"%s\"\n", key_text[i], key_binding_list[i]);
+}
+
+
 /* bind */
 /* FIXME: key_text is not really adequate for this */
 void key_cmd_bind(int argc, char **argv)

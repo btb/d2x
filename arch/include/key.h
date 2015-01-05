@@ -23,6 +23,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pstypes.h"
 #include "fix.h"
+#include "cfile.h"
+
 
 //==========================================================================
 // This installs the int9 vector and initializes the keyboard in buffered
@@ -83,6 +85,10 @@ extern unsigned int key_up_count(int scancode);
 //void key_clear_counts();
 
 extern char * key_text[256];
+
+/* Write key bindings to file */
+void key_write_bindings(CFILE *file);
+
 
 #define KEY_SHIFTED     0x100
 #define KEY_ALTED       0x200
@@ -209,5 +215,6 @@ extern char * key_text[256];
 
 #define KEY_PRINT_SCREEN	0xB7
 #define KEY_PAUSE			0x61
+
 
 #endif
