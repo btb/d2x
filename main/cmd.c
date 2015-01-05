@@ -121,7 +121,6 @@ void cmd_parse(char *input)
 	char *tokens[CMD_MAX_TOKENS];
 	int num_tokens;
 	int i, l;
-	int quoted = 0;
 
 	Assert(input != NULL);
 	
@@ -146,10 +145,13 @@ void cmd_parse(char *input)
 	tokens[0] = buffer;
 	for (i=1; i<l; i++) {
 		if (buffer[i] == '"') {
-			quoted = 1 - quoted;
+			tokens[num_tokens - 1] = &buffer[++i];
+			while (i < l && buffer[i] != '"')
+				i++;
+			buffer[i] = 0;
 			continue;
 		}
-		if ((isspace(buffer[i]) || buffer[i] == '=') && !quoted) {
+		if (isspace(buffer[i]) || buffer[i] == '=') {
 			buffer[i] = 0;
 			while (isspace(buffer[i+1]) && (i+1 < l)) i++;
 			tokens[num_tokens++] = &buffer[i+1];
