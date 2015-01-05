@@ -3122,8 +3122,8 @@ if (!Player_is_dead)
 		if ( kc_keyboard[3].value < 255 ) Controls.vertical_thrust_time -= k3;
 
 		// From console...
-		Controls.vertical_thrust_time += console_control_down_time(CONCNTL_LOOKUP);
-		Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_LOOKDOWN);
+		Controls.vertical_thrust_time += console_control_down_time(CONCNTL_LOOKDOWN);
+		Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_LOOKUP);
 
 		// From Cyberman...
 		if ((use_mouse)&&(Config_control_type==CONTROL_CYBERMAN))	{
