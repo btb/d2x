@@ -194,12 +194,14 @@ void cmd_queue_process()
 void cmd_enqueue(int insert, char *input)
 {
 	cmd_queue_t *new, *head, *tail;
-	char *line;
+	char output[CMD_MAX_LENGTH];
+	char *optr;
 
 	Assert(input != NULL);
 	head = tail = NULL;
 
 	while (*input) {
+		optr = output;
 		int quoted = 0;
 
 		/* Strip leading spaces */
@@ -210,9 +212,6 @@ void cmd_enqueue(int insert, char *input)
 		if (! *input)
 			continue;
 
-		/* Now at start of a command line */
-		line = input;
-
 		/* Find the end of this line (\n, ;, or nul) */
 		do {
 			if (!*input)
@@ -221,13 +220,15 @@ void cmd_enqueue(int insert, char *input)
 				quoted = 1 - quoted;
 				continue;
 			} else if ( *input == '\n' || (!quoted && *input == ';') ) {
-				*input = 0;
+				input++;
+				break;
 			}
-		} while (*input++);
+		} while ((*optr++ = *input++));
+		*optr = 0;
 
 		/* make a new queue item, add it to list */
 		MALLOC(new, cmd_queue_t, 1);
-		new->command_line = d_strdup(line);
+		new->command_line = d_strdup(output);
 		new->next = NULL;
 
 		if (!head)
@@ -236,7 +237,7 @@ void cmd_enqueue(int insert, char *input)
 			tail->next = new;
 		tail = new;
 
-		con_printf(CON_DEBUG, "cmd_enqueue: adding %s\n", line);
+		con_printf(CON_DEBUG, "cmd_enqueue: adding %s\n", output);
 	}
 
 	if (insert) {
