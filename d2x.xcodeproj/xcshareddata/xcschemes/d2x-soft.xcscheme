@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
-               BuildableName = "xcode-d2x-opengl"
-               BlueprintName = "xcode-d2x-opengl"
+               BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
+               BuildableName = "xcode-d2x-soft"
+               BlueprintName = "d2x-soft"
                ReferencedContainer = "container:d2x.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
-            BuildableName = "xcode-d2x-opengl"
-            BlueprintName = "xcode-d2x-opengl"
+            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
+            BuildableName = "xcode-d2x-soft"
+            BlueprintName = "d2x-soft"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,9 +51,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
-            BuildableName = "xcode-d2x-opengl"
-            BlueprintName = "xcode-d2x-opengl"
+            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
+            BuildableName = "xcode-d2x-soft"
+            BlueprintName = "d2x-soft"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -79,9 +79,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
-            BuildableName = "xcode-d2x-opengl"
-            BlueprintName = "xcode-d2x-opengl"
+            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
+            BuildableName = "xcode-d2x-soft"
+            BlueprintName = "d2x-soft"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

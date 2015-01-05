@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
-               BuildableName = "xcode-d2x-soft"
-               BlueprintName = "xcode-d2x-soft"
+               BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
+               BuildableName = "d2x-opengl"
+               BlueprintName = "d2x-opengl"
                ReferencedContainer = "container:d2x.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
-            BuildableName = "xcode-d2x-soft"
-            BlueprintName = "xcode-d2x-soft"
+            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
+            BuildableName = "d2x-opengl"
+            BlueprintName = "d2x-opengl"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,16 +51,20 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
-            BuildableName = "xcode-d2x-soft"
-            BlueprintName = "xcode-d2x-soft"
+            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
+            BuildableName = "d2x-opengl"
+            BlueprintName = "d2x-opengl"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-nomovies"
-            isEnabled = "YES">
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-debug"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
@@ -75,9 +79,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14F0D5921A4CB34F00682BB0"
-            BuildableName = "xcode-d2x-soft"
-            BlueprintName = "xcode-d2x-soft"
+            BlueprintIdentifier = "14804D581A4C9E7F001CB0FB"
+            BuildableName = "d2x-opengl"
+            BlueprintName = "d2x-opengl"
             ReferencedContainer = "container:d2x.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

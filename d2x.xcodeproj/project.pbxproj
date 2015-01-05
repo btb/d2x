@@ -335,7 +335,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		141635EB1A4CB5B3005E575E /* xcode-d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "xcode-d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
+		141635EB1A4CB5B3005E575E /* d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "xcode-d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
@@ -1099,7 +1099,7 @@
 		141635ED1A4CB608005E575E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				141635EB1A4CB5B3005E575E /* xcode-d2x-soft */,
+				141635EB1A4CB5B3005E575E /* d2x-soft */,
 				141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */,
 			);
 			name = Products;
@@ -2189,41 +2189,10 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXLegacyTarget section */
-		14669A3F1A285C280070D41D /* d2x-soft */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "";
-			buildConfigurationList = 14669A421A285C280070D41D /* Build configuration list for PBXLegacyTarget "d2x-soft" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = "d2x-soft";
-			passBuildSettingsInEnvironment = 0;
-			productName = "d2x ext";
-		};
-		14E97DFF1A3550680027FB84 /* d2x-opengl */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "";
-			buildConfigurationList = 14E97E001A3550680027FB84 /* Build configuration list for PBXLegacyTarget "d2x-opengl" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = "d2x-opengl";
-			passBuildSettingsInEnvironment = 0;
-			productName = "d2x ext";
-		};
-/* End PBXLegacyTarget section */
-
 /* Begin PBXNativeTarget section */
-		14804D581A4C9E7F001CB0FB /* xcode-d2x-opengl */ = {
+		14804D581A4C9E7F001CB0FB /* d2x-opengl */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14804D5F1A4C9E7F001CB0FB /* Build configuration list for PBXNativeTarget "xcode-d2x-opengl" */;
+			buildConfigurationList = 14804D5F1A4C9E7F001CB0FB /* Build configuration list for PBXNativeTarget "d2x-opengl" */;
 			buildPhases = (
 				14804D551A4C9E7F001CB0FB /* Sources */,
 				14804D561A4C9E7F001CB0FB /* Frameworks */,
@@ -2233,7 +2202,7 @@
 			);
 			dependencies = (
 			);
-			name = "xcode-d2x-opengl";
+			name = "d2x-opengl";
 			productName = d2x_n;
 			productReference = 141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */;
 			productType = "com.apple.product-type.tool";
@@ -2255,9 +2224,9 @@
 			productReference = 14D696771A520C80009ABFD2 /* mveplayer */;
 			productType = "com.apple.product-type.tool";
 		};
-		14F0D5921A4CB34F00682BB0 /* xcode-d2x-soft */ = {
+		14F0D5921A4CB34F00682BB0 /* d2x-soft */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14F0D6251A4CB34F00682BB0 /* Build configuration list for PBXNativeTarget "xcode-d2x-soft" */;
+			buildConfigurationList = 14F0D6251A4CB34F00682BB0 /* Build configuration list for PBXNativeTarget "d2x-soft" */;
 			buildPhases = (
 				14F0D5931A4CB34F00682BB0 /* Sources */,
 				14F0D61F1A4CB34F00682BB0 /* Frameworks */,
@@ -2267,9 +2236,9 @@
 			);
 			dependencies = (
 			);
-			name = "xcode-d2x-soft";
+			name = "d2x-soft";
 			productName = d2x_n;
-			productReference = 141635EB1A4CB5B3005E575E /* xcode-d2x-soft */;
+			productReference = 141635EB1A4CB5B3005E575E /* d2x-soft */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -2281,9 +2250,6 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = icculus.org;
 				TargetAttributes = {
-					14669A3F1A285C280070D41D = {
-						CreatedOnToolsVersion = 6.1;
-					};
 					14804D581A4C9E7F001CB0FB = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -2305,10 +2271,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				14669A3F1A285C280070D41D /* d2x-soft */,
-				14E97DFF1A3550680027FB84 /* d2x-opengl */,
-				14F0D5921A4CB34F00682BB0 /* xcode-d2x-soft */,
-				14804D581A4C9E7F001CB0FB /* xcode-d2x-opengl */,
+				14F0D5921A4CB34F00682BB0 /* d2x-soft */,
+				14804D581A4C9E7F001CB0FB /* d2x-opengl */,
 				14D696761A520C80009ABFD2 /* mveplayer */,
 			);
 		};
@@ -2713,28 +2677,6 @@
 			};
 			name = Release;
 		};
-		14669A401A285C280070D41D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		14669A411A285C280070D41D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		14804D5D1A4C9E7F001CB0FB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2811,28 +2753,6 @@
 			};
 			name = Release;
 		};
-		14E97E011A3550680027FB84 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "d2x-opengl";
-			};
-			name = Debug;
-		};
-		14E97E021A3550680027FB84 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "d2x-opengl";
-			};
-			name = Release;
-		};
 		14F0D6261A4CB34F00682BB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2852,7 +2772,7 @@
 					arch/cocoa,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				PRODUCT_NAME = "xcode-d2x-soft";
+				PRODUCT_NAME = "d2x-soft";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -2871,7 +2791,7 @@
 					arch/cocoa,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				PRODUCT_NAME = "xcode-d2x-soft";
+				PRODUCT_NAME = "d2x-soft";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
@@ -2888,16 +2808,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14669A421A285C280070D41D /* Build configuration list for PBXLegacyTarget "d2x-soft" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				14669A401A285C280070D41D /* Debug */,
-				14669A411A285C280070D41D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		14804D5F1A4C9E7F001CB0FB /* Build configuration list for PBXNativeTarget "xcode-d2x-opengl" */ = {
+		14804D5F1A4C9E7F001CB0FB /* Build configuration list for PBXNativeTarget "d2x-opengl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				14804D5D1A4C9E7F001CB0FB /* Debug */,
@@ -2915,16 +2826,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14E97E001A3550680027FB84 /* Build configuration list for PBXLegacyTarget "d2x-opengl" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				14E97E011A3550680027FB84 /* Debug */,
-				14E97E021A3550680027FB84 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		14F0D6251A4CB34F00682BB0 /* Build configuration list for PBXNativeTarget "xcode-d2x-soft" */ = {
+		14F0D6251A4CB34F00682BB0 /* Build configuration list for PBXNativeTarget "d2x-soft" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				14F0D6261A4CB34F00682BB0 /* Debug */,
