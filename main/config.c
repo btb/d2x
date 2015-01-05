@@ -195,6 +195,42 @@ static void config_init(void)
 }
 
 
+void LoadConfigDefaults(void)
+{
+	cmd_append("bind UP     +lookdown;      bind PAD8   +lookdown");
+	cmd_append("bind DOWN   +lookup;        bind PAD2   +lookup");
+	cmd_append("bind LEFT   +left;          bind PAD4   +left");
+	cmd_append("bind RIGHT  +right;         bind PAD6   +right");
+
+	cmd_append("bind LALT   +strafe");
+	cmd_append("bind PAD1   +moveleft");
+	cmd_append("bind PAD3   +moveright");
+	cmd_append("bind PAD-   +moveup");
+	cmd_append("bind PAD+   +movedown");
+
+	cmd_append("bind Q      +bankleft;      bind PAD7   +bankleft");
+	cmd_append("bind E      +bankright;     bind PAD9   +bankright");
+
+	cmd_append("bind ,      +cycle");
+	cmd_append("bind .      +cycle2");
+
+	cmd_append("bind LCTRL  +attack;        bind RCTRL  +attack");
+	cmd_append("bind SPC    +attack2");
+	cmd_append("bind F      +flare");
+	cmd_append("bind B      +bomb");
+
+	cmd_append("bind R      +rearview");
+	cmd_append("bind TAB    +automap");
+
+	cmd_append("bind A      +forward");
+	cmd_append("bind Z      +back");
+	cmd_append("bind S      +afterburner");
+
+	cmd_append("bind H      +headlight");
+	cmd_append("bind T      +nrgshield");
+}
+
+
 int ReadConfigFile()
 {
 	int joy_axis_min[7];
@@ -239,7 +275,11 @@ int ReadConfigFile()
 	SaveMovieHires = MovieHires.intval;
 	save_redbook_enabled = Redbook_enabled.intval;
 
-	cmd_append("exec descent.cfg");
+	if (cfexist("descent.cfg"))
+		cmd_append("exec descent.cfg");
+	else
+		LoadConfigDefaults();
+
 	cmd_queue_process();
 
 	/* TODO: allow cvars to define a callback that will carry out these initialization things on change. */
