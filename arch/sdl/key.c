@@ -422,6 +422,26 @@ void key_cmd_bind(int argc, char **argv)
 }
 
 
+/* unbind */
+void key_cmd_unbind(int argc, char **argv)
+{
+	unsigned int key;
+
+	if (argc < 2)
+		return;
+
+	for (key = 0; key < 256; key++) {
+		if (!stricmp(argv[1], key_text[key])) {
+			break;
+		}
+	}
+
+	if (key_binding_list[key])
+		d_free(key_binding_list[key]);
+	key_binding_list[key] = NULL;
+}
+
+
 static void key_handle_binding(int keycode, int state)
 {
 	if (!key_binding_list[keycode])
@@ -532,6 +552,7 @@ void key_init()
      key_text[i] = key_properties[i].key_text;
 
 	cmd_addcommand("bind", key_cmd_bind);
+	cmd_addcommand("unbind", key_cmd_unbind);
 
   // Clear the keyboard array
   key_flush();
