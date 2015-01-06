@@ -860,8 +860,7 @@ void CON_Out(const char *str, ...) {
 				CON_NewLineConsole();
 				strcat(console->ConsoleLines[0], ptemp);
 				ptemp = p+1;
-			}
-			if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0])) {
+			} else if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0])) {
 				CON_NewLineConsole();
 				strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
 				console->ConsoleLines[0][console->VChars] = '\0';
