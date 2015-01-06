@@ -69,7 +69,7 @@ void joydefs_config()
 #ifdef D2X_KEYS
 	int nitems = 10;
 #else
-	int nitems = 10;
+	int nitems = 9;
 #endif
 
 	m[0].type = NM_TYPE_RADIO;  m[0].text = "KEYBOARD"; m[0].value = 0; m[0].group = 0;
@@ -81,7 +81,6 @@ void joydefs_config()
 	m[6].type = NM_TYPE_SLIDER; m[6].text = TXT_JOYS_SENSITIVITY; m[6].value = Config_joystick_sensitivity; m[6].min_value = 0; m[6].max_value = 16;
 	m[7].type = NM_TYPE_TEXT;   m[7].text = "";
 	m[8].type = NM_TYPE_MENU;   m[8].text = TXT_CUST_KEYBOARD;
-	m[9].type = NM_TYPE_MENU;   m[9].text = "CUSTOMIZE KEYBINDINGS";
 #ifdef D2X_KEYS
 	m[9].type = NM_TYPE_MENU;   m[9].text = "CUSTOMIZE D2X KEYS";
 #endif
@@ -109,9 +108,6 @@ void joydefs_config()
 			break;
 		case 8:
 			kconfig(0, "KEYBOARD");
-			break;
-		case 9:
-			kconfig(4, "KEYBINDINGS");
 			break;
 #ifdef D2X_KEYS
 		case 9:
