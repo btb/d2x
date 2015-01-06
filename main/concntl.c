@@ -6,6 +6,8 @@
 
 #include "console.h"
 #include "timer.h"
+#include "weapon.h"
+
 
 typedef struct _console_control_info {
 	ubyte state;
@@ -75,6 +77,23 @@ void concntl_cmd_nrgshield_on(int argc, char **argv)    { Console_controls[CONCN
 void concntl_cmd_nrgshield_off(int argc, char **argv)   { Console_controls[CONCNTL_NRGSHIELD].state  = 0; }
 void concntl_cmd_togglebomb_on(int argc, char **argv)   { Console_controls[CONCNTL_TOGGLEBOMB].state = 1; }
 void concntl_cmd_togglebomb_off(int argc, char **argv)  { Console_controls[CONCNTL_TOGGLEBOMB].state = 1; }
+
+/* select / toggle weapons */
+void concntl_cmd_weapon(int argc, char **argv)
+{
+	int n;
+
+	if (argc < 2)
+		return;
+
+	n = atoi(argv[1]);
+	if (n == 0)
+		n = 10;
+	if (n < 1 || n > 10)
+		return;
+
+	do_weapon_select((n-1) % 5, (n-1) / 5);
+}
 
 
 // Returns the number of seconds this 'button' has been down since last call.
@@ -184,4 +203,6 @@ void console_control_init(void)
 	cmd_addcommand("-nrgshield",    concntl_cmd_nrgshield_off);
 	cmd_addcommand("+togglebomb",   concntl_cmd_togglebomb_on);
 	cmd_addcommand("-togglebomb",   concntl_cmd_togglebomb_off);
+
+	cmd_addcommand("weapon", concntl_cmd_weapon);
 }

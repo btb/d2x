@@ -228,6 +228,17 @@ void LoadConfigDefaults(void)
 
 	cmd_append("bind H      +headlight");
 	cmd_append("bind T      +nrgshield");
+
+	cmd_append("bind 1 weapon 1");
+	cmd_append("bind 2 weapon 2");
+	cmd_append("bind 3 weapon 3");
+	cmd_append("bind 4 weapon 4");
+	cmd_append("bind 5 weapon 5");
+	cmd_append("bind 6 weapon 6");
+	cmd_append("bind 7 weapon 7");
+	cmd_append("bind 8 weapon 8");
+	cmd_append("bind 9 weapon 9");
+	cmd_append("bind 0 weapon 10");
 }
 
 
