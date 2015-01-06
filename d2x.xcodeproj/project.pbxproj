@@ -336,7 +336,7 @@
 
 /* Begin PBXFileReference section */
 		141635EB1A4CB5B3005E575E /* d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
-		141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "xcode-d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
+		141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "xcode-d2x-opengl"; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
 		146694D21A2729860070D41D /* bitblt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitblt.c; sourceTree = "<group>"; };
@@ -664,7 +664,6 @@
 		1466966B1A2729870070D41D /* credits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = credits.h; sourceTree = "<group>"; };
 		1466966C1A2729870070D41D /* crypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crypt.c; sourceTree = "<group>"; };
 		1466966D1A2729870070D41D /* desc_id.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = desc_id.h; sourceTree = "<group>"; };
-		1466966E1A2729870070D41D /* descent.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = descent.cfg; sourceTree = "<group>"; };
 		1466966F1A2729870070D41D /* desw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = desw.h; sourceTree = "<group>"; };
 		146696701A2729870070D41D /* digi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = digi.h; sourceTree = "<group>"; };
 		146696711A2729870070D41D /* digiobj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = digiobj.c; sourceTree = "<group>"; };
@@ -1701,7 +1700,6 @@
 				14E97E061A3703D40027FB84 /* cvar.c */,
 				14E97E051A3703BE0027FB84 /* cvar.h */,
 				1466966D1A2729870070D41D /* desc_id.h */,
-				1466966E1A2729870070D41D /* descent.cfg */,
 				1466966F1A2729870070D41D /* desw.h */,
 				146696701A2729870070D41D /* digi.h */,
 				146696711A2729870070D41D /* digiobj.c */,
