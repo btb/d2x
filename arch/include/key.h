@@ -89,6 +89,9 @@ extern char * key_text[256];
 /* Write key bindings to file */
 void key_write_bindings(CFILE *file);
 
+/* get the action bound to a key, if any */
+char *key_binding(ubyte keycode);
+
 
 #define KEY_SHIFTED     0x100
 #define KEY_ALTED       0x200

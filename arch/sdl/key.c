@@ -368,6 +368,13 @@ unsigned char key_to_ascii(int keycode )
 static char *key_binding_list[256];
 
 
+/* get the action bound to a key, if any */
+char *key_binding(ubyte keycode)
+{
+	return key_binding_list[keycode];
+}
+
+
 /* Write key bindings to file */
 void key_write_bindings(CFILE *file)
 {

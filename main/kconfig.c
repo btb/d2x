@@ -331,6 +331,124 @@ kc_item kc_keyboard[NUM_KEY_CONTROLS] = {
 	{ 55,158,171,112, 26, 53,  0, 54,  0,"Energy->Shield", BT_KEY, 255 },
    { 56,158,179,83,  26, 54,  0, 0,  0, "Toggle Bomb",  BT_KEY,255},
 };
+kc_item kc_keybindings[NUM_KEY_CONTROLS] = {
+	{  0, 15, 49, 71, 26, 55,  2, 55,  1,"Pitch forward", BT_KEY, 255 },
+	{  1, 15, 49,100, 26, 50,  3,  0, 24,"Pitch forward", BT_KEY, 255 },
+	{  2, 15, 57, 71, 26,  0,  4, 25,  3,"Pitch backward", BT_KEY, 255 },
+	{  3, 15, 57,100, 26,  1,  5,  2, 26,"Pitch backward", BT_KEY, 255 },
+	{  4, 15, 65, 71, 26,  2,  6, 27,  5,"Turn left", BT_KEY, 255 },
+	{  5, 15, 65,100, 26,  3,  7,  4, 28,"Turn left", BT_KEY, 255 },
+	{  6, 15, 73, 71, 26,  4,  8, 29,  7,"Turn right", BT_KEY, 255 },
+	{  7, 15, 73,100, 26,  5,  9,  6, 34,"Turn right", BT_KEY, 255 },
+	{  8, 15, 85, 71, 26,  6, 10, 35,  9,"Slide on", BT_KEY, 255 },
+	{  9, 15, 85,100, 26,  7, 11,  8, 36,"Slide on", BT_KEY, 255 },
+	{ 10, 15, 93, 71, 26,  8, 12, 37, 11,"Slide left", BT_KEY, 255 },
+	{ 11, 15, 93,100, 26,  9, 13, 10, 44,"Slide left", BT_KEY, 255 },
+	{ 12, 15,101, 71, 26, 10, 14, 45, 13,"Slide right", BT_KEY, 255 },
+	{ 13, 15,101,100, 26, 11, 15, 12, 30,"Slide right", BT_KEY, 255 },
+	{ 14, 15,109, 71, 26, 12, 16, 31, 15,"Slide up", BT_KEY, 255 },
+	{ 15, 15,109,100, 26, 13, 17, 14, 32,"Slide up", BT_KEY, 255 },
+	{ 16, 15,117, 71, 26, 14, 18, 33, 17,"Slide down", BT_KEY, 255 },
+	{ 17, 15,117,100, 26, 15, 19, 16, 46,"Slide down", BT_KEY, 255 },
+	{ 18, 15,129, 71, 26, 16, 20, 47, 19,"Bank on", BT_KEY, 255 },
+	{ 19, 15,129,100, 26, 17, 21, 18, 38,"Bank on", BT_KEY, 255 },
+	{ 20, 15,137, 71, 26, 18, 22, 39, 21,"Bank left", BT_KEY, 255 },
+	{ 21, 15,137,100, 26, 19, 23, 20, 40,"Bank left", BT_KEY, 255 },
+	{ 22, 15,145, 71, 26, 20, 48, 41, 23,"Bank right", BT_KEY, 255 },
+	{ 23, 15,145,100, 26, 21, 49, 22, 42,"Bank right", BT_KEY, 255 },
+	{ 24,158, 49, 83, 26, 51, 26,  1, 25,"Fire primary", BT_KEY, 255 },
+	{ 25,158, 49,112, 26, 54, 27, 24,  2,"Fire primary", BT_KEY, 255 },
+	{ 26,158, 57, 83, 26, 24, 28,  3, 27,"Fire secondary", BT_KEY, 255 },
+	{ 27,158, 57,112, 26, 25, 29, 26,  4,"Fire secondary", BT_KEY, 255 },
+	{ 28,158, 65, 83, 26, 26, 34,  5, 29,"Fire flare", BT_KEY, 255 },
+	{ 29,158, 65,112, 26, 27, 35, 28,  6,"Fire flare", BT_KEY, 255 },
+	{ 30,158,105, 83, 26, 44, 32, 13, 31,"Accelerate", BT_KEY, 255 },
+	{ 31,158,105,112, 26, 45, 33, 30, 14,"Accelerate", BT_KEY, 255 },
+	{ 32,158,113, 83, 26, 30, 46, 15, 33,"reverse", BT_KEY, 255 },
+	{ 33,158,113,112, 26, 31, 47, 32, 16,"reverse", BT_KEY, 255 },
+	{ 34,158, 73, 83, 26, 28, 36,  7, 35,"Drop Bomb", BT_KEY, 255 },
+	{ 35,158, 73,112, 26, 29, 37, 34,  8,"Drop Bomb", BT_KEY, 255 },
+	{ 36,158, 85, 83, 26, 34, 44,  9, 37,"REAR VIEW", BT_KEY, 255 },
+	{ 37,158, 85,112, 26, 35, 45, 36, 10,"REAR VIEW", BT_KEY, 255 },
+	{ 38,158,133, 83, 26, 46, 40, 19, 39,"Cruise Faster", BT_KEY, 255 },
+	{ 39,158,133,112, 26, 47, 41, 38, 20,"Cruise Faster", BT_KEY, 255 },
+	{ 40,158,141, 83, 26, 38, 42, 21, 41,"Cruise Slower", BT_KEY, 255 },
+	{ 41,158,141,112, 26, 39, 43, 40, 22,"Cruise Slower", BT_KEY, 255 },
+	{ 42,158,149, 83, 26, 40, 52, 23, 43,"Cruise Off", BT_KEY, 255 },
+	{ 43,158,149,112, 26, 41, 53, 42, 48,"Cruise Off", BT_KEY, 255 },
+	{ 44,158, 93, 83, 26, 36, 30, 11, 45,"Automap", BT_KEY, 255 },
+	{ 45,158, 93,112, 26, 37, 31, 44, 12,"Automap", BT_KEY, 255 },
+	{ 46,158,121, 83, 26, 32, 38, 17, 47,"Afterburner", BT_KEY, 255 },
+	{ 47,158,121,112, 26, 33, 39, 46, 18,"Afterburner", BT_KEY, 255 },
+	{ 48, 15,161, 71, 26, 22, 50, 43, 49,"Cycle Primary", BT_KEY, 255 },
+	{ 49, 15,161,100, 26, 23, 51, 48, 52,"Cycle Primary", BT_KEY, 255 },
+	{ 50, 15,169, 71, 26, 48,  1, 53, 51,"Cycle Second", BT_KEY, 255 },
+	{ 51, 15,169,100, 26, 49, 24, 50, 54,"Cycle Second", BT_KEY, 255 },
+	{ 52,158,163, 83, 26, 42, 54, 49, 53,"Headlight", BT_KEY, 255 },
+	{ 53,158,163,112, 26, 43, 55, 52, 50,"Headlight", BT_KEY, 255 },
+	{ 54,158,171, 83, 26, 52, 56, 51, 55,"Energy->Shield", BT_KEY, 255 },
+	{ 55,158,171,112, 26, 53,  0, 54,  0,"Energy->Shield", BT_KEY, 255 },
+	{ 56,158,179,83,  26, 54,  0, 0,  0, "Toggle Bomb",  BT_KEY,255},
+};
+char *kc_bind_text[NUM_KEY_CONTROLS] = {
+	"+lookdown",
+	"+lookdown",
+	"+lookup",
+	"+lookup",
+	"+left",
+	"+left",
+	"+right",
+	"+right",
+	"+strafe",
+	"+strafe",
+	"+moveleft",
+	"+moveleft",
+	"+moveright",
+	"+moveright",
+	"+moveup",
+	"+moveup",
+	"+movedown",
+	"+movedown",
+	"+bank",
+	"+bank",
+	"+bankleft",
+	"+bankleft",
+	"+bankright",
+	"+bankright",
+	"+attack",
+	"+attack",
+	"+attack2",
+	"+attack2",
+	"+flare",
+	"+flare",
+	"+forward",
+	"+forward",
+	"+back",
+	"+back",
+	"+bomb",
+	"+bomb",
+	"+rearview",
+	"+rearview",
+	"+cruiseup",
+	"+cruiseup",
+	"+cruisedown",
+	"+cruisedown",
+	"+cruiseoff",
+	"+cruiseoff",
+	"+automap",
+	"+automap",
+	"+afterburner",
+	"+afterburner",
+	"+cycle",
+	"+cycle",
+	"+cycle2",
+	"+cycle2",
+	"+headlight",
+	"+headlight",
+	"+nrgshield",
+	"+nrgshield",
+	"+togglebomb",
+};
 kc_item kc_joystick[NUM_OTHER_CONTROLS] = {
 	{  0, 25, 46, 85, 40, 15,  1, 24,  5,"Fire primary", BT_JOY_BUTTON, 255 },
 	{  1, 25, 54, 85, 40,  0,  4,  5,  6,"Fire secondary", BT_JOY_BUTTON, 255 },
@@ -985,6 +1103,28 @@ KConfigPaint:
 
 		gr_string( LHX(264), LHY(40), "OR" );
 
+	} else 	if ( items == kc_keybindings )	{
+		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
+		gr_setcolor( BM_XRGB(31,27,6) );
+
+		gr_scanline( LHX(98), LHX(106), LHY(42) );
+		gr_scanline( LHX(120), LHX(128), LHY(42) );
+		gr_pixel( LHX(98), LHY(43) );
+		gr_pixel( LHX(98), LHY(44) );
+		gr_pixel( LHX(128), LHY(43) );
+		gr_pixel( LHX(128), LHY(44) );
+
+		gr_string( LHX(109), LHY(40), "OR" );
+
+		gr_scanline( LHX(253), LHX(261), LHY(42) );
+		gr_scanline( LHX(274), LHX(283), LHY(42) );
+		gr_pixel( LHX(253), LHY(43) );
+		gr_pixel( LHX(253), LHY(44) );
+		gr_pixel( LHX(283), LHY(43) );
+		gr_pixel( LHX(283), LHY(44) );
+
+		gr_string( LHX(264), LHY(40), "OR" );
+
 	} if ( items == kc_joystick )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
@@ -1072,6 +1212,12 @@ KConfigPaint:
 		case KEY_CTRLED+KEY_R:	
 			if ( items==kc_keyboard )	{
 				for (i=0; i<NUM_KEY_CONTROLS; i++ )		{
+					items[i].value=default_kconfig_settings[0][i];
+					kc_drawitem( &items[i], 0 );
+				}
+			} else if ( items==kc_keybindings ) {
+				for (i=0; i<NUM_KEY_CONTROLS; i++ )
+				{
 					items[i].value=default_kconfig_settings[0][i];
 					kc_drawitem( &items[i], 0 );
 				}
@@ -1816,7 +1962,7 @@ void kc_change_invert( kc_item * item )
 
 void kconfig(int n, char * title)
 {
-	int i;
+	int i, j;
 	grs_bitmap *save_bm;
 
 	set_screen_mode( SCREEN_MENU );
@@ -1835,6 +1981,7 @@ void kconfig(int n, char * title)
 	case 1:kconfig_sub( kc_joystick, NUM_OTHER_CONTROLS, title );break;
 	case 2:kconfig_sub( kc_mouse, NUM_OTHER_CONTROLS, title ); break;
 	case 3:kconfig_sub( kc_superjoy, NUM_OTHER_CONTROLS, title); break;
+	case 4:kconfig_sub( kc_keybindings, NUM_KEY_CONTROLS, title ); break;
 #ifdef D2X_KEYS
 	//added on 2/4/99 by Victor Rachels for new keys menu
 	case 4:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
@@ -1857,6 +2004,21 @@ void kconfig(int n, char * title)
 	
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )	
 		kconfig_settings[0][i] = kc_keyboard[i].value;
+
+	for (j=0; j<256; j++)
+		if (key_binding(j))
+			for (i=0; i<NUM_KEY_CONTROLS; i++ )
+				if (!strncmp(key_binding(j), kc_bind_text[i], 13)) {
+					cmd_appendf("unbind %s", key_text[j]);
+					break;
+				}
+
+	for (i=0; i<NUM_KEY_CONTROLS; i++ )
+		if (kc_keybindings[i].value != 255)
+			cmd_appendf("bind %s \"%s\"", key_text[kc_keybindings[i].value], kc_bind_text[i]);
+
+	while (cmd_queue_process())
+		;
 
 	if ( (Config_control_type>0) && (Config_control_type<5)) { 
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
@@ -3708,10 +3870,22 @@ void reset_cruise(void)
 
 void kc_set_controls()
 {
-	int i;
+	int i, j;
 
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )	
 		kc_keyboard[i].value = kconfig_settings[0][i];
+
+	for (i=0; i<NUM_KEY_CONTROLS; i++ )
+		kc_keybindings[i].value = 255;
+
+	for (j=0; j<256; j++)
+		if (key_binding(j))
+			for (i=0; i<NUM_KEY_CONTROLS; i++ )
+				if (kc_keybindings[i].value == 255
+					&& !strncmp(key_binding(j), kc_bind_text[i], 13)) {
+					kc_keybindings[i].value = j;
+					break;
+				}
 
 	if ( (Config_control_type>0) && (Config_control_type<5)) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
