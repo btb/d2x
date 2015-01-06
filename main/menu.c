@@ -970,16 +970,9 @@ void d2x_options_menu()
 	sprintf(smaxfps,"%d",maxfps);
 #if 0
 	sprintf(shudmaxnumdisp,"%d",HUD_max_num_disp);
-
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "Primary autoselect ordering...";   opt++;
-	m[opt].type = NM_TYPE_MENU;  m[opt].text = "Secondary autoselect ordering..."; opt++;
 #endif
 
-#ifdef D2X_KEYS
-	//added on 2/4/99 by Victor Rachels for new key menu
 	m[opt].type = NM_TYPE_MENU;  m[opt].text = "D2X Keys"; opt++;
-	//end this section addition - VR
-#endif
 
 	commands=opt;
 #if 0
@@ -1020,15 +1013,7 @@ void d2x_options_menu()
 			{
 				switch(i)
 				{
-#if 0
-				case 0: reorder_primary(); break;
-				case 1: reorder_secondary(); break;
-#endif
-#ifdef D2X_KEYS
-					//added on 2/4/99 by Victor Rachels for new key menu
 				case 0: kconfig(4, "D2X Keys"); break;
-					//end this section addition - VR
-#endif
 				}
 			}
 
