@@ -14,6 +14,8 @@
 
 #include <SDL.h>
 
+#include "inferno.h"
+#include "game.h"
 #include "event.h"
 #include "error.h"
 #include "key.h"
@@ -452,6 +454,15 @@ void key_cmd_unbind(int argc, char **argv)
 static void key_handle_binding(int keycode, int state)
 {
 	if (!key_binding_list[keycode])
+		return;
+
+	if (Game_paused)
+		return;
+
+	if (Function_mode != FMODE_GAME)
+		return;
+
+	if (CON_isVisible())
 		return;
 
 	if (!state && key_binding_list[keycode][0] == '+')
