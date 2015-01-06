@@ -178,13 +178,7 @@ char * key_text[256] = {         \
 #endif /* OGL */
 #endif
 
-#ifdef D2X_KEYS
-//added/removed by Victor Rachels for adding rebindable keys for these
-// KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0
 ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_MINUS, KEY_EQUAL, KEY_PRINT_SCREEN };
-#else
-ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS, KEY_EQUAL, KEY_PRINT_SCREEN };
-#endif
 
 //extern void GameLoop(int, int );
 
@@ -2842,13 +2836,6 @@ int allowed_to_toggle(int i)
 }
 
 
-#ifdef D2X_KEYS
-//added on 2/7/99 by Victor Rachels for jostick state setting
-int d2x_joystick_ostate[20]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-//end this section adition - VR
-#endif
-
-
 void controls_read_all()
 {
 	int i;
@@ -2993,89 +2980,6 @@ void controls_read_all()
 		mouse_buttons = 0;
 		use_mouse=0;
 	}
-
-#ifdef D2X_KEYS
-	//added on 2/4/99 by Victor Rachels for d1x keys
-	//--------- Read primary weapon select -------------
-	//the following "if" added by WraithX to stop deadies from switchin weapons, 4/14/00
-	if (!Player_is_dead)
-	{
-		{
-			int d2x_joystick_state[10];
-
-			for(i=0;i<10;i++)
-				d2x_joystick_state[i] = joy_get_button_state(kc_d2x[i*2+1].value);
-
-
-			//----------------Weapon 1----------------
-			if(key_down_count(kc_d2x[0].value) ||
-			   (joy_get_button_state(kc_d2x[1].value) &&
-				(d2x_joystick_state[0]!=d2x_joystick_ostate[0]) ) )
-			{
-				//int i, valu=0;
-				do_weapon_select(0,0);
-				/*
-				for(i=MAX_PRIMARY_WEAPONS;i<MAX_PRIMARY_WEAPONS+NEWPRIMS;i++)
-					if(primary_order[i]>primary_order[valu]&&player_has_weapon(i,0))
-						valu = i;
-				LaserPowSelected = valu;
-				*/
-			}
-			//----------------Weapon 2----------------
-			if(key_down_count(kc_d2x[2].value) ||
-			   (joy_get_button_state(kc_d2x[3].value) &&
-				(d2x_joystick_state[1]!=d2x_joystick_ostate[1]) ) )
-				do_weapon_select(1,0);
-			//----------------Weapon 3----------------
-			if(key_down_count(kc_d2x[4].value) ||
-			   (joy_get_button_state(kc_d2x[5].value) &&
-				(d2x_joystick_state[2]!=d2x_joystick_ostate[2]) ) )
-				do_weapon_select(2,0);
-			//----------------Weapon 4----------------
-			if(key_down_count(kc_d2x[6].value) ||
-			   (joy_get_button_state(kc_d2x[7].value) &&
-				(d2x_joystick_state[3]!=d2x_joystick_ostate[3]) ) )
-				do_weapon_select(3,0);
-			//----------------Weapon 5----------------
-			if(key_down_count(kc_d2x[8].value) ||
-			   (joy_get_button_state(kc_d2x[9].value) &&
-				(d2x_joystick_state[4]!=d2x_joystick_ostate[4]) ) )
-				do_weapon_select(4,0);
- 
-			//--------- Read secondary weapon select ----------
-			//----------------Weapon 6----------------
-			if(key_down_count(kc_d2x[10].value) ||
-			   (joy_get_button_state(kc_d2x[11].value) &&
-				(d2x_joystick_state[5]!=d2x_joystick_ostate[5]) ) )
-				do_weapon_select(0,1);
-			//----------------Weapon 7----------------
-			if(key_down_count(kc_d2x[12].value) ||
-			   (joy_get_button_state(kc_d2x[13].value) &&
-				(d2x_joystick_state[6]!=d2x_joystick_ostate[6]) ) )
-				do_weapon_select(1,1);
-			//----------------Weapon 8----------------
-			if(key_down_count(kc_d2x[14].value) ||
-			   (joy_get_button_state(kc_d2x[15].value) &&
-				(d2x_joystick_state[7]!=d2x_joystick_ostate[7]) ) )
-				do_weapon_select(2,1);
-			//----------------Weapon 9----------------
-			if(key_down_count(kc_d2x[16].value) ||
-			   (joy_get_button_state(kc_d2x[17].value) &&
-				(d2x_joystick_state[8]!=d2x_joystick_ostate[8]) ) )
-				do_weapon_select(3,1);
-			//----------------Weapon 0----------------
-			if(key_down_count(kc_d2x[18].value) ||
-			   (joy_get_button_state(kc_d2x[19].value) &&
-				(d2x_joystick_state[9]!=d2x_joystick_ostate[9]) ) )
-				do_weapon_select(4,1);
-			memcpy(d2x_joystick_ostate,d2x_joystick_state,10*sizeof(int));
-		}
-		//end this section addition - VR
-
-
-	}//end "if (!Player_is_dead)" - WraithX
-#endif
-
 
 //------------- Read slide_on -------------
 	
