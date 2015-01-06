@@ -486,8 +486,8 @@ kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 
 kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 //        id,x,y,w1,w2,u,d,l,r,text_num1,type,value
-	{  0, 15, 49, 71, 26, 27,  2, 27,  1, "WEAPON 1", BT_KEY, 255},
-	{  1, 15, 49,100, 26, 26,  3,  0,  2, "WEAPON 1", BT_JOY_BUTTON, 255},
+	{  0, 15, 49, 71, 26, 19,  2, 27,  1, "WEAPON 1", BT_KEY, 255},
+	{  1, 15, 49,100, 26, 18,  3,  0,  2, "WEAPON 1", BT_JOY_BUTTON, 255},
 	{  2, 15, 57, 71, 26,  0,  4,  1,  3, "WEAPON 2", BT_KEY, 255},
 	{  3, 15, 57,100, 26,  1,  5,  2,  4, "WEAPON 2", BT_JOY_BUTTON, 255},
 	{  4, 15, 65, 71, 26,  2,  6,  3,  5, "WEAPON 3", BT_KEY, 255},
@@ -505,8 +505,8 @@ kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 	{ 15, 15,105,100, 26, 13, 17, 14, 16, "WEAPON 8", BT_JOY_BUTTON, 255},
 	{ 16, 15,113, 71, 26, 14, 18, 15, 17, "WEAPON 9", BT_KEY, 255},
 	{ 17, 15,113,100, 26, 15, 19, 16, 18, "WEAPON 9", BT_JOY_BUTTON, 255},
-	{ 18, 15,121, 71, 26, 16, 20, 17, 19, "WEAPON 0", BT_KEY, 255},
-	{ 19, 15,121,100, 26, 17, 21, 18, 20, "WEAPON 0", BT_JOY_BUTTON, 255},
+	{ 18, 15,121, 71, 26, 16,  1, 17, 19, "WEAPON 0", BT_KEY, 255},
+	{ 19, 15,121,100, 26, 17,  0, 18,  0, "WEAPON 0", BT_JOY_BUTTON, 255},
 
 	//{ 20, 15,131, 71, 26, 18, 22, 19, 21, "CYC PRIMARY", BT_KEY, 255},
 	//{ 21, 15,131,100, 26, 19, 23, 20, 22, "CYC PRIMARY", BT_JOY_BUTTON, 255},

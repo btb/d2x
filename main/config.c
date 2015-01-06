@@ -238,7 +238,7 @@ void LoadConfigDefaults(void)
 	cmd_append("bind 7 weapon 7");
 	cmd_append("bind 8 weapon 8");
 	cmd_append("bind 9 weapon 9");
-	cmd_append("bind 0 weapon 10");
+	cmd_append("bind 0 weapon 0");
 }
 
 
