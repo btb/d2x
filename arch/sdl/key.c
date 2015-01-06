@@ -467,7 +467,7 @@ static void key_handle_binding(int keycode, int state)
 
 	if (!state && key_binding_list[keycode][0] == '+')
 		cmd_appendf("-%s", &key_binding_list[keycode][1]);
-	else
+	else if (state)
 		cmd_append(key_binding_list[keycode]);
 }
 
