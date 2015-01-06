@@ -190,7 +190,6 @@ extern void kconfig(int n, char *title);
 #define NUM_D2X_CONTROLS    20
 #define MAX_D2X_CONTROLS    40
 
-extern ubyte kconfig_d2x_settings[MAX_D2X_CONTROLS];
 extern ubyte default_kconfig_d2x_settings[MAX_D2X_CONTROLS];
 // end this section addition - VR
 

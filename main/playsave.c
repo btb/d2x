@@ -91,7 +91,7 @@ short n_highest_levels;
 
 hli highest_levels[MAX_MISSIONS];
 
-#define PLAYER_FILE_VERSION	25			//increment this every time the player file changes
+#define PLAYER_FILE_VERSION	24 //increment this every time the player file changes
 
 //version 5  ->  6: added new highest level information
 //version 6  ->  7: stripped out the old saved_game array.
@@ -112,7 +112,6 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: add d2x keys array
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -193,10 +192,6 @@ RetrySelection:
 	for (i=0;i<CONTROL_MAX_TYPES; i++ )
 		for (j=0;j<MAX_CONTROLS; j++ )
 			kconfig_settings[i][j] = default_kconfig_settings[i][j];
-	//added on 2/4/99 by Victor Rachels for new keys
-	for(i=0; i < MAX_D2X_CONTROLS; i++)
-		kconfig_d2x_settings[i] = default_kconfig_d2x_settings[i];
-	//end this section addition - VR
 	kc_set_controls();
 
 	Config_control_type = control_choice;
@@ -516,12 +511,6 @@ int read_player_file()
 	#endif
 	}
 
-	if (player_file_version >= 25)
-		PHYSFS_read(file, kconfig_d2x_settings, MAX_D2X_CONTROLS, 1);
-	else
-		for(i=0; i < MAX_D2X_CONTROLS; i++)
-			kconfig_d2x_settings[i] = default_kconfig_d2x_settings[i];
-
 	if (!PHYSFS_close(file))
 		goto read_player_file_failed;
 
@@ -725,8 +714,6 @@ int write_player_file()
 		#endif
 		PHYSFSX_writeString(file, buf);		// Write out current joystick for player.
 	}
-
-	PHYSFS_write(file, kconfig_d2x_settings, MAX_D2X_CONTROLS, 1);
 
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;

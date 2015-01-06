@@ -1427,45 +1427,6 @@ void HandleGameKey(int key)
 			break;
 		#endif
 
-#ifndef D2X_KEYS // weapon selection handled in controls_read_all, d1x-style
-// MWA changed the weapon select cases to have each case call
-// do_weapon_select the macintosh keycodes aren't consecutive from 1
-// -- 0 on the keyboard -- boy is that STUPID!!!!
-
-		//	Select primary or secondary weapon.
-		case KEY_1:
-			do_weapon_select(0 , 0);
-			break;
-		case KEY_2:
-			do_weapon_select(1 , 0);
-			break;
-		case KEY_3:
-			do_weapon_select(2 , 0);
-			break;
-		case KEY_4:
-			do_weapon_select(3 , 0);
-			break;
-		case KEY_5:
-			do_weapon_select(4 , 0);
-			break;
-
-		case KEY_6:
-			do_weapon_select(0 , 1);
-			break;
-		case KEY_7:
-			do_weapon_select(1 , 1);
-			break;
-		case KEY_8:
-			do_weapon_select(2 , 1);
-			break;
-		case KEY_9:
-			do_weapon_select(3 , 1);
-			break;
-		case KEY_0:
-			do_weapon_select(4 , 1);
-			break;
-#endif
-
 		case KEY_1 + KEY_SHIFTED:
 		case KEY_2 + KEY_SHIFTED:
 		case KEY_3 + KEY_SHIFTED:
