@@ -18,7 +18,7 @@ void cmd_enqueuef(int insert, char *fmt, ...);
 #define cmd_insertf(...) cmd_enqueuef(1, __VA_ARGS__)
 
 /* Execute pending commands */
-void cmd_queue_process(void);
+int cmd_queue_process(void);
 
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input);

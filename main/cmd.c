@@ -165,7 +165,7 @@ void cmd_parse(char *input)
 
 int cmd_queue_wait = 0;
 
-void cmd_queue_process()
+int cmd_queue_process(void)
 {
 	cmd_queue_t *cmd;
 
@@ -185,8 +185,10 @@ void cmd_queue_process()
 	if (cmd_queue_wait) {
 		con_printf(CON_DEBUG, "cmd_queue_process: waiting\n");
 		cmd_queue_wait--;
-		return;
+		return 1;
 	}
+
+	return 0;
 }
 
 
