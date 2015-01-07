@@ -962,10 +962,12 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 #ifdef NEWMENU_MOUSE
 	close_x = close_y = MenuHires?15:7;
 	close_size = MenuHires?10:5;
+	/*
 	gr_setcolor( BM_XRGB(0, 0, 0) );
 	gr_rect(close_x, close_y, close_x + close_size, close_y + close_size);
 	gr_setcolor( BM_XRGB(21, 21, 21) );
 	gr_rect(close_x + LHX(1), close_y + LHX(1), close_x + close_size - LHX(1), close_y + close_size - LHX(1));
+	*/
 #endif
 
 	grd_curcanv->cv_font = GAME_FONT;
