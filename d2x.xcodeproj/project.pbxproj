@@ -336,7 +336,7 @@
 
 /* Begin PBXFileReference section */
 		141635EB1A4CB5B3005E575E /* d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
-		141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "xcode-d2x-opengl"; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
+		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
 		146694D21A2729860070D41D /* bitblt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitblt.c; sourceTree = "<group>"; };
@@ -1099,7 +1099,7 @@
 			isa = PBXGroup;
 			children = (
 				141635EB1A4CB5B3005E575E /* d2x-soft */,
-				141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */,
+				141635EC1A4CB5B3005E575E /* d2x-opengl */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2202,7 +2202,7 @@
 			);
 			name = "d2x-opengl";
 			productName = d2x_n;
-			productReference = 141635EC1A4CB5B3005E575E /* xcode-d2x-opengl */;
+			productReference = 141635EC1A4CB5B3005E575E /* d2x-opengl */;
 			productType = "com.apple.product-type.tool";
 		};
 		14D696761A520C80009ABFD2 /* mveplayer */ = {
