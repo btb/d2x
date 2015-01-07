@@ -393,7 +393,7 @@ void key_write_bindings(CFILE *file)
 void key_cmd_bind(int argc, char **argv)
 {
 	char buf[CMD_MAX_LENGTH] = "";
-	unsigned char key = 0;
+	int key = -1;
 	int i;
 
 	if (argc < 2)
@@ -407,12 +407,6 @@ void key_cmd_bind(int argc, char **argv)
 		return;
 	}
 
-	for (i = 2; i < argc; i++) {
-		if (i > 2)
-			strncat(buf, " ", CMD_MAX_LENGTH);
-		strncat(buf, argv[i], CMD_MAX_LENGTH);
-	}
-
 	for (i = 0; i < 256; i++) {
 		if (!stricmp(argv[1], key_text[i])) {
 			key = i;
@@ -420,9 +414,23 @@ void key_cmd_bind(int argc, char **argv)
 		}
 	}
 
-	if (!key) {
+	if (key < 0) {
 		con_printf(CON_CRITICAL, "bind: key %s not found\n", argv[1]);
 		return;
+	}
+
+	if (argc < 3) {
+		if (key_binding_list[key])
+			con_printf(CON_NORMAL, "%s: %s\n", key_text[key], key_binding_list[key]);
+		else
+			con_printf(CON_NORMAL, "%s is unbound\n", key_text[key]);
+		return;
+	}
+
+	for (i = 2; i < argc; i++) {
+		if (i > 2)
+			strncat(buf, " ", CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH);
 	}
 
 	if (key_binding_list[key])
