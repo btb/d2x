@@ -667,12 +667,6 @@ int check_button_press()
 			if (mouse_button_down_count(i)>0) return 1;
 		break;
 #endif
-	case	CONTROL_WINJOYSTICK:
-	#ifdef WINDOWS	
-		for (i=0; i<4; i++ )	
-	 		if (joy_get_button_down_cnt(i)>0) return 1;
-	#endif	
-		break;
 	case	CONTROL_NONE:		//keyboard only
 		#ifdef APPLE_DEMO
 			if (key_checkch())	return 1;			

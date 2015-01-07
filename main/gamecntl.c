@@ -2387,11 +2387,7 @@ void ReadControls()
 				)	 // WATCH OUT!!! WEIRD CODE ABOVE!!!
 				memset( &Controls, 0, sizeof(control_info) );
 			else
-				#ifdef WINDOWS
-					controls_read_all_win();
-				#else
-					controls_read_all();		//NOTE LINK TO ABOVE!!!
-				#endif
+				controls_read_all();
 
 		check_rear_view();
 

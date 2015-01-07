@@ -63,8 +63,7 @@ extern ubyte Config_joystick_sensitivity;
 #define CONTROL_GRAVIS_GAMEPAD 4
 #define CONTROL_MOUSE 5
 #define CONTROL_CYBERMAN 6
-#define CONTROL_WINJOYSTICK 7
 
-#define CONTROL_MAX_TYPES 8
+#define CONTROL_MAX_TYPES 7
 
 #endif

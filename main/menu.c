@@ -1102,11 +1102,7 @@ void do_options_menu()
 		#else
 		m[ 2].type = NM_TYPE_MENU;   m[ 2].text=TXT_CONTROLS_;
 		#endif
-	#ifdef WINDOWS
-		m[ 3].type = NM_TYPE_MENU;   m[ 3].text="INVOKE JOYSTICK CONTROL PANEL";
-	#else
 		m[ 3].type = NM_TYPE_MENU;   m[ 3].text=TXT_CAL_JOYSTICK;
-	#endif
 		m[ 4].type = NM_TYPE_TEXT;   m[ 4].text="";
 
 		m[5].type = NM_TYPE_SLIDER;

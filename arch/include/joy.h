@@ -40,23 +40,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define JOY_MAX_AXES        32
 
-#if defined WINDOWS
-#define JOY_NUM_AXES        7
-#elif defined USE_LINUX_JOY
+#if defined USE_LINUX_JOY
 #define JOY_NUM_AXES        5
 #else
 #define JOY_NUM_AXES        4
 #endif
 
-#ifdef WINDOWS
-#define JOY_1_POV           8
-#define JOY_ALL_AXIS        (1+2+4+8)
-#define JOY_EXT_AXIS        (16+32+64)
-#else
 #define JOY_2_X_AXIS        4
 #define JOY_2_Y_AXIS        8
 #define JOY_ALL_AXIS        (1+2+4+8)
-#endif
 
 #define JOY_SLOW_READINGS       1
 #define JOY_POLLED_READINGS     2
@@ -77,14 +69,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // joystick was detected, 1 if everything is ok.
 // joy_init() is called.
 
-#ifdef WINDOWS
-# ifdef __NT__
-extern int joy_init(int joy, int spjoy);
-# endif
-extern int joy95_init_stick(int joy, int spjoy);
-#else
 extern int joy_init();
-#endif
 extern void joy_close();
 
 extern char joy_installed;

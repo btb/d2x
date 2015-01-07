@@ -143,15 +143,10 @@ int new_player_config()
 	{
 #endif
 RetrySelection:
-		#if !defined(MACINTOSH) && !defined(WINDOWS)
+		#if !defined(MACINTOSH)
 		for (i=0; i<mct; i++ )	{
 			m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
 		}
-		#elif defined(WINDOWS)
-			m[0].type = NM_TYPE_MENU; m[0].text = CONTROL_TEXT(0);
-	 		m[1].type = NM_TYPE_MENU; m[1].text = CONTROL_TEXT(5);
-			m[2].type = NM_TYPE_MENU; m[2].text = CONTROL_TEXT(7);
-		 	i = 3;
 		#else
 		for (i = 0; i < 6; i++) {
 			m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
@@ -163,14 +158,7 @@ RetrySelection:
 		nitems = i;
 		m[0].text = TXT_CONTROL_KEYBOARD;
 	
-		#ifdef WINDOWS
-			if (Config_control_type==CONTROL_NONE) control_choice = 0;
-			else if (Config_control_type == CONTROL_MOUSE) control_choice = 1;
-			else if (Config_control_type == CONTROL_WINJOYSTICK) control_choice = 2;
-			else control_choice = 0;
-		#else
 			control_choice = Config_control_type;				// Assume keyboard
-		#endif
 	
 		#ifndef APPLE_DEMO
 			control_choice = newmenu_do1( NULL, TXT_CHOOSE_INPUT, i, m, NULL, control_choice );
@@ -196,13 +184,6 @@ RetrySelection:
 
 	Config_control_type = control_choice;
 
-#ifdef WINDOWS
-	if (control_choice == 1) Config_control_type = CONTROL_MOUSE;
-	else if (control_choice == 2) Config_control_type = CONTROL_WINJOYSTICK;
-
-//	if (Config_control_type == CONTROL_WINJOYSTICK) 
-//		joydefs_calibrate();
-#else
 	#ifndef MACINTOSH
 	if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)	{
 		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, TXT_FCS );
@@ -244,7 +225,6 @@ RetrySelection:
 	}
 
 	#endif
-#endif
 	
 	Player_default_difficulty = 1;
 	Auto_leveling_on = Default_leveling_on = 1;
@@ -273,8 +253,6 @@ extern int Guided_in_big_window,Automap_always_hires;
 #define GUIDEBOT_NAME_LEN 9
 extern char guidebot_name[];
 extern char real_guidebot_name[];
-
-WIN(extern char win95_current_joyname[]);
 
 ubyte control_type_dos,control_type_win;
 
@@ -408,11 +386,7 @@ int read_player_file()
 		else if (PHYSFS_read(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) !=1 )
 			goto read_player_file_failed;
 
-		#ifdef WINDOWS
-		Config_control_type = control_type_win;
-		#else
 		Config_control_type = control_type_dos;
-		#endif
 		
 		#ifdef MACINTOSH
 		joydefs_set_type(Config_control_type);
@@ -490,25 +464,8 @@ int read_player_file()
 	{
 		char buf[128];
 
-	#ifdef WINDOWS
-		joy95_get_name(JOYSTICKID1, buf, 127);
-		if (player_file_version >= 24) 
-			PHYSFSX_readString(file, win95_current_joyname);
-		else
-			strcpy(win95_current_joyname, "Old Player File");
-		
-		mprintf((0, "Detected joystick: %s\n", buf));
-		mprintf((0, "Player's joystick: %s\n", win95_current_joyname));
-
-		if (strcmp(win95_current_joyname, buf)) {
-			for (i = 0; i < MAX_CONTROLS; i++)
-				kconfig_settings[CONTROL_WINJOYSTICK][i] = 
-					default_kconfig_settings[CONTROL_WINJOYSTICK][i];
-		}	 
-	#else
-		if (player_file_version >= 24) 
+		if (player_file_version >= 24)
 			PHYSFSX_readString(file, buf);			// Just read it in fpr DPS.
-	#endif
 	}
 
 	if (!PHYSFS_close(file))
@@ -665,11 +622,7 @@ int write_player_file()
 	//write kconfig info
 	{
 
-		#ifdef WINDOWS
-		control_type_win = Config_control_type;
-		#else
 		control_type_dos = Config_control_type;
-		#endif
 
 		if (PHYSFS_write(file, kconfig_settings, MAX_CONTROLS*CONTROL_MAX_TYPES, 1) != 1)
 			goto write_player_file_failed;
@@ -707,11 +660,7 @@ int write_player_file()
 
 	{
 		char buf[128];
-		#ifdef WINDOWS
-		joy95_get_name(JOYSTICKID1, buf, 127);
-		#else
 		strcpy(buf, "DOS joystick");
-		#endif
 		PHYSFSX_writeString(file, buf);		// Write out current joystick for player.
 	}
 

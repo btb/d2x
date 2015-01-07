@@ -92,15 +92,6 @@ cvar_t Config_vr_tracking       = { "VR_tracking", "0", 1 };
 #define _AWE32_16_ST				0xe209
 
 
-#ifdef WINDOWS
-int	 DOSJoySaveMin[4];
-int	 DOSJoySaveCen[4];
-int	 DOSJoySaveMax[4];
-
-char win95_current_joyname[256];
-#endif
-
-
 extern sbyte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, Debris_amount, SoundChannels;
 
 void set_custom_detail_vars(void);
@@ -258,14 +249,7 @@ int ReadConfigFile()
 	joy_axis_max[0] = joy_axis_max[1] = joy_axis_max[2] = joy_axis_max[3] = 0;
 	joy_axis_center[0] = joy_axis_center[1] = joy_axis_center[2] = joy_axis_center[3] = 0;
 
-#ifdef WINDOWS
-	memset(&joy_axis_min[0], 0, sizeof(int)*7);
-	memset(&joy_axis_max[0], 0, sizeof(int)*7);
-	memset(&joy_axis_center[0], 0, sizeof(int)*7);
-//@@	joy_set_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
-#else
 	joy_set_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
-#endif
 
 #if 0
 	cvar_setint(&digi_driver_board, 0);
@@ -318,17 +302,7 @@ int ReadConfigFile()
 	sscanf( Config_joystick_max.string, "%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3] );
 	sscanf( Config_joystick_cen.string, "%d,%d,%d,%d", &joy_axis_center[0], &joy_axis_center[1], &joy_axis_center[2], &joy_axis_center[3] );
 
-
-#ifdef WINDOWS
-	for (i=0;i<4;i++)
-	{
-	 DOSJoySaveMin[i]=joy_axis_min[i];
-	 DOSJoySaveCen[i]=joy_axis_center[i];
-	 DOSJoySaveMax[i]=joy_axis_max[i];
-   	}
-#else
 	joy_set_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
-#endif
 
 	i = FindArg( "-volume" );
 	
@@ -414,15 +388,6 @@ int WriteConfigFile()
 	
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 
-#ifdef WINDOWS
-	for (i=0;i<4;i++)
-   {
-	 joy_axis_min[i]=DOSJoySaveMin[i];
-	 joy_axis_center[i]=DOSJoySaveCen[i];
-	 joy_axis_max[i]=DOSJoySaveMax[i];
-   }
-#endif
-
 	if (FindArg("-noredbook"))
 		cvar_setint( &Redbook_enabled, save_redbook_enabled );
 
@@ -453,31 +418,6 @@ int WriteConfigFile()
 		cvar_setint( &MovieHires, 0 );
 
 #ifdef WINDOWS
-{
-//	Save Windows Config File
-	char str[256];
-						
-
-	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
-	
-	outfile = PHYSFSX_openWriteBuffered("descentw.cfg");
-	if (outfile == NULL) return 1;
-
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_min.name,
-			joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3],
-			joy_axis_min[4], joy_axis_min[5], joy_axis_min[6]);
-	PHYSFSX_puts(outfile, str);
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_cen.name,
-			joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3],
-			joy_axis_center[4], joy_axis_center[5], joy_axis_center[6]);
-	PHYSFSX_puts(outfile, str);
-	sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", Config_joystick_max.name,
-			joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3],
-			joy_axis_max[4], joy_axis_max[5], joy_axis_max[6]);
-	PHYSFSX_puts(outfile, str);
-
-	cfclose(outfile);
-}
 	CheckMovieAttributes();
 #endif
 
