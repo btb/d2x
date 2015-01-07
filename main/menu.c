@@ -1144,7 +1144,6 @@ void do_options_menu()
 extern int Redbook_playing;
 void set_redbook_volume(int volume);
 
-WIN(extern int RBCDROM_State);
 WIN(static BOOL windigi_driver_off=FALSE);
 
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
@@ -1232,11 +1231,6 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 				Int3();
 
 			if (items[4].value && !Redbook_playing) {
-			#ifdef WINDOWS
-				if (RBCDROM_State == -1) 
-					nm_messagebox (TXT_SORRY,1,TXT_OK,"Cannot start CD Music.\nAnother application is\nusing the CD player.\n");
-				else // link to next code line!
-			#endif
 				nm_messagebox (TXT_SORRY,1,TXT_OK,"Cannot start CD Music.  Insert\nyour Descent II CD and try again");
 				items[4].value = 0;
 				items[4].redraw = 1;

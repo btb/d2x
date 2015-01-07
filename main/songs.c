@@ -127,7 +127,7 @@ void songs_init()
 		}
 		else	// use redbook
 		{
-			#ifndef __MSDOS__ // defined(WINDOWS) || defined(MACINTOSH)
+			#ifndef __MSDOS__
 				RBAInit();
 			#else
 				RBAInit(toupper(CDROM_dir[0]) - 'A');
@@ -185,7 +185,7 @@ int force_rb_register=0;
 
 void reinit_redbook()
 {
-	#ifndef __MSDOS__ // defined(WINDOWS) || defined(MACINTOSH)
+	#ifndef __MSDOS__
 		RBAInit();
 	#else
 		RBAInit(toupper(CDROM_dir[0]) - 'A');
