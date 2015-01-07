@@ -164,7 +164,7 @@ extern int robot_fired[MAX_ROBOTS_CONTROLLED];
 extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 
-#if defined(WINDOWS) || defined(MACINTOSH)
+#ifdef NEWMENU_MOUSE
 extern ubyte Hack_DblClick_MenuMode;
 #endif
 
@@ -337,7 +337,7 @@ int state_get_restore_file(char * fname, int multi)
 
 	sc_last_item = -1;
 
-#if defined(WINDOWS) || defined(MACINTOSH)
+#ifdef NEWMENU_MOUSE
 	Hack_DblClick_MenuMode = 1;
 #endif
 
@@ -345,7 +345,7 @@ int state_get_restore_file(char * fname, int multi)
 	choice = newmenu_do3( NULL, "Select Game to Restore", NUM_SAVES+2, m, state_callback, state_default_item+1, NULL, 190, -1 );
    RestoringMenu=0;
 
-#if defined(WINDOWS) || defined(MACINTOSH)
+#ifdef NEWMENU_MOUSE
 	Hack_DblClick_MenuMode = 0;
 #endif
 
