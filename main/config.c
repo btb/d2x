@@ -220,6 +220,12 @@ void LoadConfigDefaults(void)
 	cmd_append("bind H      +headlight");
 	cmd_append("bind T      +nrgshield");
 
+	cmd_append("bind J1B1   +attack");
+	cmd_append("bind J1B2   +attack2");
+
+	cmd_append("bind MB1    +attack");
+	cmd_append("bind MB2    +attack2");
+
 	cmd_append("bind 1 weapon 1");
 	cmd_append("bind 2 weapon 2");
 	cmd_append("bind 3 weapon 3");
