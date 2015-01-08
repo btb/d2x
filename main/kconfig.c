@@ -2767,11 +2767,6 @@ if (!Player_is_dead)
 		Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);
 		Cruise_speed -= console_control_down_time(CONCNTL_CRUISEDOWN);
 
-		if ( (kc_keyboard[42].value < 255) && (key_down_count(kc_keyboard[42].value)) )
-			Cruise_speed = 0;
-		if ( (kc_keyboard[43].value < 255) && (key_down_count(kc_keyboard[43].value)) )
-			Cruise_speed = 0;
-
 		// From console...
 		if (console_control_down_count(CONCNTL_CRUISEOFF))
 			Cruise_speed = 0;
