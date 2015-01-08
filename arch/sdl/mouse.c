@@ -17,12 +17,11 @@
 #include "timer.h"
 #include "event.h"
 #include "mouse.h"
+#include "key.h"
 
 #ifdef _WIN32_WCE
 # define LANDSCAPE
 #endif
-
-#define MOUSE_MAX_BUTTONS       8
 
 #define Z_SENSITIVITY 100
 
@@ -64,6 +63,8 @@ void mouse_button_handler(SDL_MouseButtonEvent *mbe)
 	};
 
 	int button = button_remap[mbe->button - 1]; // -1 since SDL seems to start counting at 1
+
+	key_handle_binding(KEY_MB1 + button, mbe->state == SDL_PRESSED);
 
 	if (mbe->state == SDL_PRESSED) {
 		Mouse.buttons[button].pressed = 1;

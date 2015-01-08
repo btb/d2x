@@ -59,7 +59,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef USE_LINUX_JOY
 #define JOY_MAX_BUTTONS 64
 #else
-#define JOY_MAX_BUTTONS 20
+#define JOY_MAX_BUTTONS 32
 #endif
 
 //==========================================================================

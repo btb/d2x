@@ -22,6 +22,7 @@
 #include "timer.h"
 #include "console.h"
 #include "u_mem.h"
+#include "mouse.h"
 
 
 #define KEY_BUFFER_SIZE 16
@@ -438,7 +439,7 @@ void key_cmd_unbind(int argc, char **argv)
 }
 
 
-static void key_handle_binding(int keycode, int state)
+void key_handle_binding(int keycode, int state)
 {
 	if (!key_binding_list[keycode])
 		return;
@@ -541,6 +542,10 @@ void key_close()
 		if (key_binding_list[i])
 			d_free(key_binding_list[i]);
 
+	for (i = 0; i < MOUSE_MAX_BUTTONS; i++) {
+		d_free(key_text[KEY_MB1 + i]);
+	}
+
 	Installed = 0;
 }
 
@@ -558,6 +563,12 @@ void key_init()
   
 	for(i=0; i<256; i++)
 		key_text[i] = key_properties[i].key_text;
+
+	for (i = 0; i < MOUSE_MAX_BUTTONS; i++) {
+		char temp[10];
+		sprintf(temp, "MB%d", i + 1);
+		key_text[KEY_MB1 + i] = d_strdup(temp);
+	}
 
 	cmd_addcommand("bind", key_cmd_bind);
 	cmd_addcommand("unbind", key_cmd_unbind);

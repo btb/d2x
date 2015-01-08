@@ -19,6 +19,7 @@
 #include "event.h"
 #include "text.h"
 #include "u_mem.h"
+#include "key.h"
 
 #define MAX_JOYSTICKS 16
 
@@ -79,6 +80,8 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 	int button;
 
 	button = SDL_Joysticks[jbe->which].button_map[jbe->button];
+
+	key_handle_binding(KEY_JB1 + button, jbe->state == SDL_JOYBUTTONDOWN);
 
 	Joystick.buttons[button].state = jbe->state;
 
@@ -198,22 +201,35 @@ int joy_init()
 			}
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_buttons; j++)
 			{
-				sprintf(temp, "J%d B%d", i + 1, j + 1);
-				joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				sprintf(temp, "J%dB%d", i + 1, j + 1);
+				key_text[KEY_JB1 + Joystick.n_buttons] =
+					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
 				SDL_Joysticks[num_joysticks].button_map[j] = Joystick.n_buttons++;
 			}
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_hats; j++)
 			{
 				SDL_Joysticks[num_joysticks].hat_map[j] = Joystick.n_buttons;
 				//a hat counts as four buttons
-				sprintf(temp, "J%d H%d%c", i + 1, j + 1, 0202);
-				joybutton_text[Joystick.n_buttons++] = d_strdup(temp);
-				sprintf(temp, "J%d H%d%c", i + 1, j + 1, 0177);
-				joybutton_text[Joystick.n_buttons++] = d_strdup(temp);
-				sprintf(temp, "J%d H%d%c", i + 1, j + 1, 0200);
-				joybutton_text[Joystick.n_buttons++] = d_strdup(temp);
-				sprintf(temp, "J%d H%d%c", i + 1, j + 1, 0201);
-				joybutton_text[Joystick.n_buttons++] = d_strdup(temp);
+
+				sprintf(temp, "J%dH%dUP", i + 1, j + 1);
+				key_text[KEY_JB1 + Joystick.n_buttons] =
+					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				Joystick.n_buttons++;
+
+				sprintf(temp, "J%dH%dRIGHT", i + 1, j + 1);
+				key_text[KEY_JB1 + Joystick.n_buttons] =
+					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				Joystick.n_buttons++;
+
+				sprintf(temp, "J%dH%dDOWN", i + 1, j + 1);
+				key_text[KEY_JB1 + Joystick.n_buttons] =
+					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				Joystick.n_buttons++;
+
+				sprintf(temp, "J%dH%dLEFT", i + 1, j + 1);
+				key_text[KEY_JB1 + Joystick.n_buttons] =
+					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				Joystick.n_buttons++;
 			}
 
 			num_joysticks++;

@@ -92,6 +92,9 @@ void key_write_bindings(CFILE *file);
 /* get the action bound to a key, if any */
 char *key_binding(ubyte keycode);
 
+/* execute actions bound to key (or other button) */
+void key_handle_binding(int keycode, int state);
+
 
 #define KEY_SHIFTED     0x100
 #define KEY_ALTED       0x200
@@ -226,6 +229,56 @@ char *key_binding(ubyte keycode);
 
 #define KEY_PRINT_SCREEN 0xB7
 #define KEY_PAUSE       0x61
+
+#define KEY_MB1         0x80
+#define KEY_MB2         0x81
+#define KEY_MB3         0x82
+#define KEY_MB4         0x83
+#define KEY_MB5         0x84
+#define KEY_MB6         0x85
+#define KEY_MB7         0x86
+#define KEY_MB8         0x87
+#define KEY_MB9         0x88
+#define KEY_MB10        0x89
+#define KEY_MB11        0x8a
+#define KEY_MB12        0x8b
+#define KEY_MB13        0x8c
+#define KEY_MB14        0x8d
+#define KEY_MB15        0x8e
+#define KEY_MB16        0x8f
+
+#define KEY_JB1         0xe0
+#define KEY_JB2         0xe1
+#define KEY_JB3         0xe2
+#define KEY_JB4         0xe3
+#define KEY_JB5         0xe4
+#define KEY_JB6         0xe5
+#define KEY_JB7         0xe6
+#define KEY_JB8         0xe7
+#define KEY_JB9         0xe8
+#define KEY_JB10        0xe9
+#define KEY_JB11        0xea
+#define KEY_JB12        0xeb
+#define KEY_JB13        0xec
+#define KEY_JB14        0xed
+#define KEY_JB15        0xee
+#define KEY_JB16        0xef
+#define KEY_JB17        0xf0
+#define KEY_JB18        0xf1
+#define KEY_JB19        0xf2
+#define KEY_JB20        0xf3
+#define KEY_JB21        0xf4
+#define KEY_JB22        0xf5
+#define KEY_JB23        0xf6
+#define KEY_JB24        0xf7
+#define KEY_JB25        0xf8
+#define KEY_JB26        0xf9
+#define KEY_JB27        0xfa
+#define KEY_JB28        0xfb
+#define KEY_JB29        0xfc
+#define KEY_JB30        0xfd
+#define KEY_JB31        0xfe
+#define KEY_JB32        0xff
 
 
 #endif

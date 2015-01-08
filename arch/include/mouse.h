@@ -24,6 +24,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "fix.h"
 
+
+#define MOUSE_MAX_BUTTONS   16
+
 #define MB_LEFT			0
 #define MB_RIGHT		1
 #define MB_MIDDLE		2
