@@ -41,7 +41,7 @@ extern unsigned char keyd_repeat;     // 1=allow repeating, 0=dont allow repeat
 
 // keyd_editor_mode... 0=game mode, 1=editor mode.
 // Editor mode makes key_down_time always return 0 if modifiers are down.
-extern unsigned char keyd_editor_mode;		
+extern unsigned char keyd_editor_mode;
 
 // Time in seconds when last key was pressed...
 extern volatile int keyd_time_when_last_pressed;
@@ -96,7 +96,7 @@ char *key_binding(ubyte keycode);
 #define KEY_SHIFTED     0x100
 #define KEY_ALTED       0x200
 #define KEY_CTRLED      0x400
-#define KEY_DEBUGGED		0x800
+#define KEY_DEBUGGED    0x800
 #define KEY_METAED      0x1000
 #define KEY_COMMAND     KEY_METAED // Mac meta key
 
@@ -224,8 +224,8 @@ char *key_binding(ubyte keycode);
 #define KEY_LEFT        0xCB
 #define KEY_RIGHT       0xCD
 
-#define KEY_PRINT_SCREEN	0xB7
-#define KEY_PAUSE			0x61
+#define KEY_PRINT_SCREEN 0xB7
+#define KEY_PAUSE       0x61
 
 
 #endif

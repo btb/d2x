@@ -29,29 +29,29 @@
 static unsigned char Installed = 0;
 
 //-------- Variable accessed by outside functions ---------
-unsigned char 		keyd_buffer_type;		// 0=No buffer, 1=buffer ASCII, 2=buffer scans
-unsigned char 		keyd_repeat;
-unsigned char 		keyd_editor_mode;
-volatile unsigned char 	keyd_last_pressed;
-volatile unsigned char 	keyd_last_released;
-volatile unsigned char	keyd_pressed[256];
-volatile int		keyd_time_when_last_pressed;
+unsigned char           keyd_buffer_type; // 0=No buffer, 1=buffer ASCII, 2=buffer scans
+unsigned char           keyd_repeat;
+unsigned char           keyd_editor_mode;
+volatile unsigned char  keyd_last_pressed;
+volatile unsigned char  keyd_last_released;
+volatile unsigned char  keyd_pressed[256];
+volatile int            keyd_time_when_last_pressed;
 
 typedef struct Key_info {
-	ubyte		state;			// state of key 1 == down, 0 == up
-	ubyte		last_state;		// previous state of key
-	int		counter;		// incremented each time key is down in handler
-	fix		timewentdown;	// simple counter incremented each time in interrupt and key is down
-	fix		timehelddown;	// counter to tell how long key is down -- gets reset to 0 by key routines
-	ubyte		downcount;		// number of key counts key was down
-	ubyte		upcount;		// number of times key was released
+	ubyte   state;          // state of key 1 == down, 0 == up
+	ubyte   last_state;     // previous state of key
+	int     counter;        // incremented each time key is down in handler
+	fix     timewentdown;   // simple counter incremented each time in interrupt and key is down
+	fix     timehelddown;   // counter to tell how long key is down -- gets reset to 0 by key routines
+	ubyte   downcount;      // number of key counts key was down
+	ubyte   upcount;        // number of times key was released
 } Key_info;
 
-typedef struct keyboard	{
-	unsigned short		keybuffer[KEY_BUFFER_SIZE];
-	Key_info		keys[256];
-	fix			time_pressed[KEY_BUFFER_SIZE];
-	unsigned int 		keyhead, keytail;
+typedef struct keyboard {
+	unsigned short  keybuffer[KEY_BUFFER_SIZE];
+	Key_info        keys[256];
+	fix             time_pressed[KEY_BUFFER_SIZE];
+	unsigned int    keyhead, keytail;
 } keyboard;
 
 static keyboard key_data;
@@ -92,9 +92,7 @@ key_props key_properties[256] = {
 { "P",      'p',    'P',    SDLK_p             },
 { "[",      '[',    '{',    SDLK_LEFTBRACKET   },
 { "]",      ']',    '}',    SDLK_RIGHTBRACKET  },
-//edited 06/08/99 Matt Mueller - set to correct key_text
 { "\x83",   255,    255,    SDLK_RETURN        },
-//end edit -MM
 { "LCTRL",  255,    255,    SDLK_LCTRL         },
 { "A",      'a',    'A',    SDLK_a             },
 { "S",      's',    'S',    SDLK_s             },
@@ -105,15 +103,11 @@ key_props key_properties[256] = {
 { "J",      'j',    'J',    SDLK_j             },
 { "K",      'k',    'K',    SDLK_k             },
 { "L",      'l',    'L',    SDLK_l             },
-//edited 06/08/99 Matt Mueller - set to correct sym
-{ ";",      ';',    ':',    SDLK_SEMICOLON         },
-//end edit -MM
-{ "'",      '\'',   '"',    SDLK_QUOTE         },
-//edited 06/08/99 Matt Mueller - set to correct sym
+{ ";",      ';',    ':',    SDLK_SEMICOLON     },
+{ "'",     '\'',    '"',    SDLK_QUOTE         },
 { "`",      '`',    '~',    SDLK_BACKQUOTE     },
-//end edit -MM
 { "LSHFT",  255,    255,    SDLK_LSHIFT        },
-{ "\\",     '\\',   '|',    SDLK_BACKSLASH     },
+{ "\\",    '\\',    '|',    SDLK_BACKSLASH     },
 { "Z",      'z',    'Z',    SDLK_z             },
 { "X",      'x',    'X',    SDLK_x             },
 { "C",      'c',    'C',    SDLK_c             },
@@ -121,12 +115,10 @@ key_props key_properties[256] = {
 { "B",      'b',    'B',    SDLK_b             },
 { "N",      'n',    'N',    SDLK_n             },
 { "M",      'm',    'M',    SDLK_m             },
-//edited 06/08/99 Matt Mueller - set to correct syms
-{ ",",      ',',    '<',    SDLK_COMMA	},
-{ ".",      '.',    '>',    SDLK_PERIOD	},
-{ "/",      '/',    '?',    SDLK_SLASH	},
-//end edit -MM
-{ "RSHFT",  255,    255,    SDLK_RSHIFT	},
+{ ",",      ',',    '<',    SDLK_COMMA         },
+{ ".",      '.',    '>',    SDLK_PERIOD        },
+{ "/",      '/',    '?',    SDLK_SLASH         },
+{ "RSHFT",  255,    255,    SDLK_RSHIFT        },
 { "PAD*",   '*',    255,    SDLK_KP_MULTIPLY   },
 { "LALT",   255,    255,    SDLK_LALT          },
 { "SPC",    ' ',    ' ',    SDLK_SPACE         },
@@ -176,9 +168,7 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 #endif
 { "",       255,    255,    -1                 },
-//edited 06/08/99 Matt Mueller - add pause ability
-{ "PAUSE",       255,    255,    SDLK_PAUSE                 },
-//end edit -MM
+{ "PAUSE",  255,    255,    SDLK_PAUSE         },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
@@ -237,12 +227,8 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "PAD=",   255,    255,    SDLK_KP_EQUALS     },
-//edited 06/08/99 Matt Mueller - set to correct key_text
 { "PAD\x83",255,    255,    SDLK_KP_ENTER      },
-//end edit -MM
-//edited 06/08/99 Matt Mueller - set to correct sym
-{ "RCTRL",  255,    255,    SDLK_RCTRL            },
-//end edit -MM
+{ "RCTRL",  255,    255,    SDLK_RCTRL         },
 { "LCMD",   255,    255,    SDLK_LMETA         },
 { "RCMD",   255,    255,    SDLK_RMETA         },
 { "",       255,    255,    -1                 },
@@ -268,9 +254,7 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "PAD/",   255,    255,    SDLK_KP_DIVIDE     },
 { "",       255,    255,    -1                 },
-//edited 06/08/99 Matt Mueller - add printscreen ability
-{ "PRSCR",       255,    255,    SDLK_PRINT                 },
-//end edit -MM
+{ "PRSCR",  255,    255,    SDLK_PRINT         },
 { "RALT",   255,    255,    SDLK_RALT          },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
@@ -287,26 +271,18 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "HOME",   255,    255,    SDLK_HOME          },
-//edited 06/08/99 Matt Mueller - set to correct key_text
-{ "UP",		255,    255,    SDLK_UP            },
-//end edit -MM
+{ "UP",     255,    255,    SDLK_UP            },
 { "PGUP",   255,    255,    SDLK_PAGEUP        },
 { "",       255,    255,    -1                 },
-//edited 06/08/99 Matt Mueller - set to correct key_text
-{ "LEFT",	255,    255,    SDLK_LEFT          },
-//end edit -MM
+{ "LEFT",   255,    255,    SDLK_LEFT          },
 { "",       255,    255,    -1                 },
-//edited 06/08/99 Matt Mueller - set to correct key_text
-{ "RIGHT",	255,    255,    SDLK_RIGHT         },
-//end edit -MM
+{ "RIGHT",  255,    255,    SDLK_RIGHT         },
 { "",       255,    255,    -1                 },
-//edited 06/08/99 Matt Mueller - set to correct key_text
 { "END",    255,    255,    SDLK_END           },
-//end edit -MM
-{ "DOWN",	255,    255,    SDLK_DOWN          },
-{ "PGDN",	255,    255,    SDLK_PAGEDOWN      },
-{ "INS",	255,    255,    SDLK_INSERT        },
-{ "DEL",	255,    255,    SDLK_DELETE        },
+{ "DOWN",   255,    255,    SDLK_DOWN          },
+{ "PGDN",   255,    255,    SDLK_PAGEDOWN      },
+{ "INS",    255,    255,    SDLK_INSERT        },
+{ "DEL",    255,    255,    SDLK_DELETE        },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
@@ -355,9 +331,6 @@ key_props key_properties[256] = {
 
 char *key_text[256];
 
-void key_buid_key_text(void)
-{
-}
 
 unsigned char key_to_ascii(int keycode )
 {
@@ -495,11 +468,11 @@ void key_handler(SDL_KeyboardEvent *event)
 	unsigned char temp;
 
 	if (event->keysym.sym != SDLK_UNKNOWN)
-        event_key = event->keysym.sym;
+		event_key = event->keysym.sym;
 	else
 		event_key = 0x1000 | event->keysym.scancode; // hardware scancode, definitions in #ifdefs above
 
-        key_state = (event->state == SDL_PRESSED); //  !(wInfo & KF_UP);
+	key_state = (event->state == SDL_PRESSED);
 	//=====================================================
 	//Here a translation from win keycodes to mac keycodes!
 	//=====================================================
@@ -521,14 +494,14 @@ void key_handler(SDL_KeyboardEvent *event)
 				keyd_time_when_last_pressed = timer_get_fixed_seconds();
 			}
 		} else {
-			if (state)	{
+			if (state) {
 				keyd_last_pressed = keycode;
 				keyd_pressed[keycode] = 1;
 				key->downcount += state;
 				key->state = 1;
 				key->timewentdown = keyd_time_when_last_pressed = timer_get_fixed_seconds();
 				key->counter++;
-			} else {	
+			} else {
 				keyd_pressed[keycode] = 0;
 				keyd_last_released = keycode;
 				key->upcount += key->state;
@@ -544,12 +517,12 @@ void key_handler(SDL_KeyboardEvent *event)
 				keycode |= KEY_ALTED;
 			if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL])
 				keycode |= KEY_CTRLED;
-                        if ( keyd_pressed[KEY_DELETE] )
-                                keycode |= KEY_DEBUGGED;
 			if ( keyd_pressed[KEY_LMETA] || keyd_pressed[KEY_RMETA])
 				keycode |= KEY_METAED;
+			if ( keyd_pressed[KEY_DELETE] )
+				keycode |= KEY_DEBUGGED;
 
-			temp = key_data.keytail+1;
+			temp = key_data.keytail + 1;
 			if ( temp >= KEY_BUFFER_SIZE ) temp=0;
 			if (temp!=key_data.keyhead)	{
 				key_data.keybuffer[key_data.keytail] = keycode;
@@ -569,30 +542,30 @@ void key_close()
 		if (key_binding_list[i])
 			d_free(key_binding_list[i]);
 
- Installed = 0;
+	Installed = 0;
 }
 
 void key_init()
 {
-  int i;
-  
-  if (Installed) return;
+	int i;
 
-  Installed=1;
+	if (Installed) return;
 
-  keyd_time_when_last_pressed = timer_get_fixed_seconds();
-  keyd_buffer_type = 1;
-  keyd_repeat = 1;
+	Installed=1;
+
+	keyd_time_when_last_pressed = timer_get_fixed_seconds();
+	keyd_buffer_type = 1;
+	keyd_repeat = 1;
   
-  for(i=0; i<256; i++)
-     key_text[i] = key_properties[i].key_text;
+	for(i=0; i<256; i++)
+		key_text[i] = key_properties[i].key_text;
 
 	cmd_addcommand("bind", key_cmd_bind);
 	cmd_addcommand("unbind", key_cmd_unbind);
 
-  // Clear the keyboard array
-  key_flush();
-  atexit(key_close);
+	// Clear the keyboard array
+	key_flush();
+	atexit(key_close);
 }
 
 void key_flush()
@@ -606,7 +579,7 @@ void key_flush()
 	key_data.keyhead = key_data.keytail = 0;
 
 	//Clear the keyboard buffer
-	for (i=0; i<KEY_BUFFER_SIZE; i++ )	{
+	for (i=0; i<KEY_BUFFER_SIZE; i++ ) {
 		key_data.keybuffer[i] = 0;
 		key_data.time_pressed[i] = 0;
 	}
@@ -614,13 +587,13 @@ void key_flush()
 //use gettimeofday here:
 	curtime = timer_get_fixed_seconds();
 
-	for (i=0; i<256; i++ )	{
+	for (i=0; i<256; i++) {
 		keyd_pressed[i] = 0;
 		key_data.keys[i].state = 1;
 		key_data.keys[i].last_state = 0;
 		key_data.keys[i].timewentdown = curtime;
-		key_data.keys[i].downcount=0;
-		key_data.keys[i].upcount=0;
+		key_data.keys[i].downcount = 0;
+		key_data.keys[i].upcount = 0;
 		key_data.keys[i].timehelddown = 0;
 		key_data.keys[i].counter = 0;
 	}
@@ -628,35 +601,39 @@ void key_flush()
 
 int add_one(int n)
 {
- n++;
- if ( n >= KEY_BUFFER_SIZE ) n=0;
- return n;
+	n++;
+	if ( n >= KEY_BUFFER_SIZE ) n = 0;
+
+	return n;
 }
 
 int key_checkch()
 {
 	int is_one_waiting = 0;
+
 	event_poll();
-	if (key_data.keytail!=key_data.keyhead)
+	if (key_data.keytail != key_data.keyhead)
 		is_one_waiting = 1;
+
 	return is_one_waiting;
 }
 
 int key_inkey()
 {
 	int key = 0;
+
 	if (!Installed)
 		key_init();
-        event_poll();
+
+	event_poll();
 	if (key_data.keytail!=key_data.keyhead) {
 		key = key_data.keybuffer[key_data.keyhead];
 		key_data.keyhead = add_one(key_data.keyhead);
 	}
-//added 9/3/98 by Matt Mueller to free cpu time instead of hogging during menus and such
-	else timer_delay(1);
-//end addition - Matt Mueller
-	     
-        return key;
+	else
+		timer_delay(1);
+
+	return key;
 }
 
 int key_inkey_time(fix * time)
@@ -665,20 +642,23 @@ int key_inkey_time(fix * time)
 
 	if (!Installed)
 		key_init();
-        event_poll();
-	if (key_data.keytail!=key_data.keyhead)	{
+
+	event_poll();
+	if (key_data.keytail != key_data.keyhead) {
 		key = key_data.keybuffer[key_data.keyhead];
 		*time = key_data.time_pressed[key_data.keyhead];
 		key_data.keyhead = add_one(key_data.keyhead);
 	}
+
 	return key;
 }
 
 int key_peekkey()
 {
 	int key = 0;
-        event_poll();
-	if (key_data.keytail!=key_data.keyhead)
+
+	event_poll();
+	if (key_data.keytail != key_data.keyhead)
 		key = key_data.keybuffer[key_data.keyhead];
 
 	return key;
@@ -686,7 +666,7 @@ int key_peekkey()
 
 int key_getch()
 {
-	int dummy=0;
+	int dummy = 0;
 
 	if (!Installed)
 		return 0;
@@ -694,6 +674,7 @@ int key_getch()
 
 	while (!key_checkch())
 		dummy++;
+
 	return key_inkey();
 }
 
@@ -727,7 +708,7 @@ fix key_down_time(int scancode)
 	fix time_down, time;
 
 	event_poll();
-        if ((scancode<0)|| (scancode>255)) return 0;
+	if ((scancode<0) || (scancode>255)) return 0;
 
 	if (!keyd_pressed[scancode]) {
 		time_down = key_data.keys[scancode].timehelddown;
@@ -744,8 +725,9 @@ fix key_down_time(int scancode)
 unsigned int key_down_count(int scancode)
 {
 	int n;
-        event_poll();
-        if ((scancode<0)|| (scancode>255)) return 0;
+
+	event_poll();
+	if ((scancode<0) || (scancode>255)) return 0;
 
 	n = key_data.keys[scancode].downcount;
 	key_data.keys[scancode].downcount = 0;
@@ -756,8 +738,9 @@ unsigned int key_down_count(int scancode)
 unsigned int key_up_count(int scancode)
 {
 	int n;
-        event_poll();
-        if ((scancode<0)|| (scancode>255)) return 0;
+
+	event_poll();
+	if ((scancode<0) || (scancode>255)) return 0;
 
 	n = key_data.keys[scancode].upcount;
 	key_data.keys[scancode].upcount = 0;
