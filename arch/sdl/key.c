@@ -161,13 +161,20 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "F11",    255,    255,    SDLK_F11           },
 { "F12",    255,    255,    SDLK_F12           },
-{ "",       255,    255,    -1                 },	
+{ "F13",    255,    255,    SDLK_F13           },
+{ "F14",    255,    255,    SDLK_F14           },
+{ "F15",    255,    255,    SDLK_F15           },
+#ifdef __APPLE__
+{ "F16",    255,    255,    0x106A             },
+{ "F17",    255,    255,    0x1040             },
+{ "F18",    255,    255,    0x104F             },
+{ "F19",    255,    255,    0x1050             },
+#else
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
-{ "",       255,    255,    -1                 },
-{ "",       255,    255,    -1                 },
+#endif
 { "",       255,    255,    -1                 },
 //edited 06/08/99 Matt Mueller - add pause ability
 { "PAUSE",       255,    255,    SDLK_PAUSE                 },
@@ -229,7 +236,7 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
-{ "",       255,    255,    -1                 },
+{ "PAD=",   255,    255,    SDLK_KP_EQUALS     },
 //edited 06/08/99 Matt Mueller - set to correct key_text
 { "PAD\x83",255,    255,    SDLK_KP_ENTER      },
 //end edit -MM
@@ -487,7 +494,10 @@ void key_handler(SDL_KeyboardEvent *event)
 	Key_info *key;
 	unsigned char temp;
 
+	if (event->keysym.sym != SDLK_UNKNOWN)
         event_key = event->keysym.sym;
+	else
+		event_key = 0x1000 | event->keysym.scancode; // hardware scancode, definitions in #ifdefs above
 
         key_state = (event->state == SDL_PRESSED); //  !(wInfo & KF_UP);
 	//=====================================================

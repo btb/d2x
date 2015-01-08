@@ -187,6 +187,13 @@ char *key_binding(ubyte keycode);
 #define KEY_F10         0x44
 #define KEY_F11         0x57
 #define KEY_F12         0x58
+#define KEY_F13         0x59
+#define KEY_F14         0x5A
+#define KEY_F15         0x5B
+#define KEY_F16         0x5C
+#define KEY_F17         0x5D
+#define KEY_F18         0x5E
+#define KEY_F19         0x5F
 
 #define KEY_PAD0        0x52
 #define KEY_PAD1        0x4F
@@ -204,6 +211,7 @@ char *key_binding(ubyte keycode);
 #define KEY_PADDIVIDE   0xB5
 #define KEY_PADMULTIPLY 0x37
 #define KEY_PADENTER    0x9C
+#define KEY_PADEQUALS   0x9B
 
 #define KEY_INSERT      0xD2
 #define KEY_HOME        0xC7
