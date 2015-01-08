@@ -92,7 +92,7 @@ key_props key_properties[256] = {
 { "P",      'p',    'P',    SDLK_p             },
 { "[",      '[',    '{',    SDLK_LEFTBRACKET   },
 { "]",      ']',    '}',    SDLK_RIGHTBRACKET  },
-{ "\x83",   255,    255,    SDLK_RETURN        },
+{ "RETURN", 255,    255,    SDLK_RETURN        },
 { "LCTRL",  255,    255,    SDLK_LCTRL         },
 { "A",      'a',    'A',    SDLK_a             },
 { "S",      's',    'S',    SDLK_s             },
@@ -227,7 +227,7 @@ key_props key_properties[256] = {
 { "",       255,    255,    -1                 },
 { "",       255,    255,    -1                 },
 { "PAD=",   255,    255,    SDLK_KP_EQUALS     },
-{ "PAD\x83",255,    255,    SDLK_KP_ENTER      },
+{ "ENTER",  255,    255,    SDLK_KP_ENTER      },
 { "RCTRL",  255,    255,    SDLK_RCTRL         },
 { "LCMD",   255,    255,    SDLK_LMETA         },
 { "RCMD",   255,    255,    SDLK_RMETA         },
@@ -369,7 +369,6 @@ void key_write_bindings(CFILE *file)
 
 
 /* bind */
-/* FIXME: key_text is not really adequate for this */
 void key_cmd_bind(int argc, char **argv)
 {
 	char buf[CMD_MAX_LENGTH] = "";
