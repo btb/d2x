@@ -95,6 +95,9 @@ char *key_binding(ubyte keycode);
 /* execute actions bound to key (or other button) */
 void key_handle_binding(int keycode, int state);
 
+/* handler for keys including mouse/joystick buttons */
+void vkey_handler(int keycode, int state);
+
 
 #define KEY_SHIFTED     0x100
 #define KEY_ALTED       0x200

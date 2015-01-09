@@ -462,10 +462,7 @@ void key_handle_binding(int keycode, int state)
 
 void key_handler(SDL_KeyboardEvent *event)
 {
-	ubyte state;
-	int i, keycode, event_key, key_state;
-	Key_info *key;
-	unsigned char temp;
+	int i, event_key, key_state;
 
 	if (event->keysym.sym != SDLK_UNKNOWN)
 		event_key = event->keysym.sym;
@@ -478,22 +475,21 @@ void key_handler(SDL_KeyboardEvent *event)
 	//=====================================================
 
 	for (i = 255; i >= 0; i--) {
-
-		keycode = i;
-		key = &(key_data.keys[keycode]);
 		if (key_properties[i].sym == event_key) {
-			state = key_state;
+			vkey_handler(i, key_state);
+		}
+	}
+}
+
+
+void vkey_handler(int keycode, int state)
+{
+	unsigned char temp;
+	Key_info *key;
+
+		key = &(key_data.keys[keycode]);
 			key_handle_binding(keycode, state);
-		} else
-			state = key->last_state;
-			
-		if ( key->last_state == state )	{
-			if (state) {
-				key->counter++;
-				keyd_last_pressed = keycode;
-				keyd_time_when_last_pressed = timer_get_fixed_seconds();
-			}
-		} else {
+
 			if (state) {
 				keyd_last_pressed = keycode;
 				keyd_pressed[keycode] = 1;
@@ -509,7 +505,7 @@ void key_handler(SDL_KeyboardEvent *event)
 				key->counter = 0;
 				key->timehelddown += timer_get_fixed_seconds() - key->timewentdown;
 			}
-		}
+
 		if ( (state && !key->last_state) || (state && key->last_state && (key->counter > 30) && (key->counter & 0x01)) ) {
 			if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
 				keycode |= KEY_SHIFTED;
@@ -531,7 +527,6 @@ void key_handler(SDL_KeyboardEvent *event)
 			}
 		}
 		key->last_state = state;
-	}
 }
 
 void key_close()
