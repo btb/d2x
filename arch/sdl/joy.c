@@ -81,7 +81,7 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 
 	button = SDL_Joysticks[jbe->which].button_map[jbe->button];
 
-	key_handle_binding(KEY_JB1 + button, jbe->state == SDL_JOYBUTTONDOWN);
+	vkey_handler(KEY_JB1 + button, jbe->state == SDL_JOYBUTTONDOWN);
 
 	Joystick.buttons[button].state = jbe->state;
 
