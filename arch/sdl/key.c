@@ -487,47 +487,48 @@ void vkey_handler(int keycode, int state)
 	unsigned char temp;
 	Key_info *key;
 
-		key = &(key_data.keys[keycode]);
-			key_handle_binding(keycode, state);
+	key = &(key_data.keys[keycode]);
+	key_handle_binding(keycode, state);
 
-			if (state) {
-				keyd_last_pressed = keycode;
-				keyd_pressed[keycode] = 1;
-				key->downcount += state;
-				key->state = 1;
-				key->timewentdown = keyd_time_when_last_pressed = timer_get_fixed_seconds();
-				key->counter++;
-			} else {
-				keyd_pressed[keycode] = 0;
-				keyd_last_released = keycode;
-				key->upcount += key->state;
-				key->state = 0;
-				key->counter = 0;
-				key->timehelddown += timer_get_fixed_seconds() - key->timewentdown;
-			}
+	if (state) {
+		keyd_last_pressed = keycode;
+		keyd_pressed[keycode] = 1;
+		key->downcount += state;
+		key->state = 1;
+		key->timewentdown = keyd_time_when_last_pressed = timer_get_fixed_seconds();
+		key->counter++;
+	} else {
+		keyd_pressed[keycode] = 0;
+		keyd_last_released = keycode;
+		key->upcount += key->state;
+		key->state = 0;
+		key->counter = 0;
+		key->timehelddown += timer_get_fixed_seconds() - key->timewentdown;
+	}
 
-		if ( (state && !key->last_state) || (state && key->last_state && (key->counter > 30) && (key->counter & 0x01)) ) {
-			if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
-				keycode |= KEY_SHIFTED;
-			if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT])
-				keycode |= KEY_ALTED;
-			if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL])
-				keycode |= KEY_CTRLED;
-			if ( keyd_pressed[KEY_LMETA] || keyd_pressed[KEY_RMETA])
-				keycode |= KEY_METAED;
-			if ( keyd_pressed[KEY_DELETE] )
-				keycode |= KEY_DEBUGGED;
+	if ( (state && !key->last_state) || (state && key->last_state && (key->counter > 30) && (key->counter & 0x01)) ) {
+		if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
+			keycode |= KEY_SHIFTED;
+		if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT])
+			keycode |= KEY_ALTED;
+		if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL])
+			keycode |= KEY_CTRLED;
+		if ( keyd_pressed[KEY_LMETA] || keyd_pressed[KEY_RMETA])
+			keycode |= KEY_METAED;
+		if ( keyd_pressed[KEY_DELETE] )
+			keycode |= KEY_DEBUGGED;
 
-			temp = key_data.keytail + 1;
-			if ( temp >= KEY_BUFFER_SIZE ) temp=0;
-			if (temp!=key_data.keyhead)	{
-				key_data.keybuffer[key_data.keytail] = keycode;
-				key_data.time_pressed[key_data.keytail] = keyd_time_when_last_pressed;
-				key_data.keytail = temp;
-			}
+		temp = key_data.keytail + 1;
+		if ( temp >= KEY_BUFFER_SIZE ) temp=0;
+		if (temp!=key_data.keyhead)	{
+			key_data.keybuffer[key_data.keytail] = keycode;
+			key_data.time_pressed[key_data.keytail] = keyd_time_when_last_pressed;
+			key_data.keytail = temp;
 		}
-		key->last_state = state;
+	}
+	key->last_state = state;
 }
+
 
 void key_close()
 {
