@@ -89,39 +89,21 @@ ubyte ExtYVibrateClear=0;
 sbyte fades[64] = { 1,1,1,2,2,3,4,4,5,6,8,9,10,12,13,15,16,17,19,20,22,23,24,26,27,28,28,29,30,30,31,31,31,31,31,30,30,29,28,28,27,26,24,23,22,20,19,17,16,15,13,12,10,9,8,6,5,4,4,3,2,2,1,1 };
 
 //char * invert_text[2] = { "N", "Y" };
-//char * joybutton_text[28] = { "BTN 1", "BTN 2", "BTN 3", "BTN 4", "", "TRIG", "LEFT", "HAT \x81", "RIGHT", "", "", "HAT \x80", "MID", "", "", "HAT \x7f", "", "", "", "HAT \x82", "TRIG", "LEFT", "RIGHT", "", "UP","DOWN","LEFT", "RIGHT" };
 //char * joyaxis_text[4] = { "X1", "Y1", "X2", "Y2" };
 //char * mouseaxis_text[2] = { "L/R", "F/B" };
-//char * mousebutton_text[3] = { "Left", "Right", "Mid" };
 
 int invert_text[2] = { TNUM_N, TNUM_Y };
 
 #ifndef USE_LINUX_JOY
 #if defined(SDL_INPUT)
-char *joybutton_text[JOY_MAX_BUTTONS];
 char *joyaxis_text[JOY_MAX_AXES];
 #else
-	int joybutton_text[28] = 
-	{ TNUM_BTN_1, TNUM_BTN_2, TNUM_BTN_3, TNUM_BTN_4,
-	  -1, TNUM_TRIG, TNUM_LEFT, TNUM_HAT_L,
-	 TNUM_RIGHT, -1, TNUM_HAT2_D, TNUM_HAT_R,
-	 TNUM_MID, -1, TNUM_HAT2_R, TNUM_HAT_U,
-	 TNUM_HAT2_L, -1, TNUM_HAT2_U, TNUM_HAT_D,
-	 TNUM_TRIG, TNUM_LEFT, TNUM_RIGHT, -1, 
-	 TNUM_UP, TNUM_DOWN, TNUM_LEFT, TNUM_RIGHT };
-
 	int joyaxis_text[7] = { TNUM_X1, TNUM_Y1, TNUM_Z1, TNUM_UN, TNUM_P1,TNUM_R1,TNUM_YA1 };
 //	int joyaxis_text[4] = { TNUM_X1, TNUM_Y1, TNUM_X2, TNUM_Y2 };
 #endif
 #endif
 
 int mouseaxis_text[3] = { TNUM_L_R, TNUM_F_B, TNUM_Z1 };
-#ifndef MACINTOSH
-int mousebutton_text[3] = { TNUM_LEFT, TNUM_RIGHT, TNUM_MID };
-char * mousebutton_textra[13] = { "M4", "M5", "M6", "M7", "M8", "M9", "M10","M11","M12","M13","M14","M15","M16" };//text for buttons above 3. -MPM
-#else
-char *mousebutton_text[3] = { "Btn", "", "" };		// only one silly mouse button on the mac
-#endif
 
 #ifdef MACINTOSH
 char * key_text[256] = {         

@@ -27,7 +27,6 @@
 #define MAX_BUTTONS_PER_JOYSTICK 16
 #define MAX_HATS_PER_JOYSTICK 4
 
-extern char *joybutton_text[]; //from kconfig.c
 extern char *joyaxis_text[]; //from kconfig.c
 
 char joy_present = 0;
@@ -154,7 +153,6 @@ int joy_init()
 
 	memset(&Joystick,0,sizeof(Joystick));
 	memset(joyaxis_text, 0, JOY_MAX_AXES * sizeof(char *));
-	memset(joybutton_text, 0, JOY_MAX_BUTTONS * sizeof(char *));
 
 	n = SDL_NumJoysticks();
 
@@ -202,8 +200,7 @@ int joy_init()
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_buttons; j++)
 			{
 				sprintf(temp, "J%dB%d", i + 1, j + 1);
-				key_text[KEY_JB1 + Joystick.n_buttons] =
-					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				SDL_Joysticks[num_joysticks].button_map[j] = Joystick.n_buttons++;
 			}
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_hats; j++)
@@ -212,23 +209,19 @@ int joy_init()
 				//a hat counts as four buttons
 
 				sprintf(temp, "J%dH%dUP", i + 1, j + 1);
-				key_text[KEY_JB1 + Joystick.n_buttons] =
-					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
 				sprintf(temp, "J%dH%dRIGHT", i + 1, j + 1);
-				key_text[KEY_JB1 + Joystick.n_buttons] =
-					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
 				sprintf(temp, "J%dH%dDOWN", i + 1, j + 1);
-				key_text[KEY_JB1 + Joystick.n_buttons] =
-					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
 				sprintf(temp, "J%dH%dLEFT", i + 1, j + 1);
-				key_text[KEY_JB1 + Joystick.n_buttons] =
-					joybutton_text[Joystick.n_buttons] = d_strdup(temp);
+				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 			}
 
@@ -253,8 +246,6 @@ void joy_close()
 		SDL_JoystickClose(SDL_Joysticks[--num_joysticks].handle);
 	while (Joystick.n_axes--)
 		d_free(joyaxis_text[Joystick.n_axes]);
-	while (Joystick.n_buttons--)
-		d_free(joybutton_text[Joystick.n_buttons]);
 }
 
 void joy_get_pos(int *x, int *y)
