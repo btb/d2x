@@ -598,10 +598,10 @@ int main(int argc, char *argv[])
 	if (!WVIDEO_running)
 		con_printf(CON_DEBUG,"WVIDEO_running = %d\n",WVIDEO_running);
 
+	do_joystick_init();
+
 	con_printf (CON_VERBOSE, "%s", TXT_VERBOSE_1);
 	ReadConfigFile();
-
-	do_joystick_init();
 
 	if (!VR_offscreen_buffer)	//if hasn't been initialied (by headset init)
 		set_display_mode(Default_display_mode); //..then set default display mode
