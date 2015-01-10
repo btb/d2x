@@ -36,14 +36,6 @@ int joy_deadzone = 0;
 
 int joy_num_axes = 0;
 
-struct joybutton {
-	int state;
-	int last_state;
-	fix time_went_down;
-	int num_downs;
-	int num_ups;
-};
-
 struct joyaxis {
 	int		value;
 	int		min_val;
@@ -58,7 +50,6 @@ static struct joyinfo {
 	int n_axes;
 	int n_buttons;
 	struct joyaxis axes[JOY_MAX_AXES];
-	struct joybutton buttons[JOY_MAX_BUTTONS];
 } Joystick;
 
 /* This struct is an array, with one entry for each physical joystick
@@ -81,57 +72,16 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 	button = SDL_Joysticks[jbe->which].button_map[jbe->button];
 
 	vkey_handler(KEY_JB1 + button, jbe->state == SDL_PRESSED);
-
-	Joystick.buttons[button].state = jbe->state;
-
-	switch (jbe->type) {
-	case SDL_JOYBUTTONDOWN:
-		Joystick.buttons[button].time_went_down
-			= timer_get_fixed_seconds();
-		Joystick.buttons[button].num_downs++;
-		break;
-	case SDL_JOYBUTTONUP:
-		Joystick.buttons[button].num_ups++;
-		break;
-	}
 }
 
 void joy_hat_handler(SDL_JoyHatEvent *jhe)
 {
 	int hat = SDL_Joysticks[jhe->which].hat_map[jhe->hat];
-	int hbi;
 
 	vkey_handler(KEY_JB1 + hat + 0, (jhe->value & SDL_HAT_UP   ) > 0);
 	vkey_handler(KEY_JB1 + hat + 1, (jhe->value & SDL_HAT_RIGHT) > 0);
 	vkey_handler(KEY_JB1 + hat + 2, (jhe->value & SDL_HAT_DOWN ) > 0);
 	vkey_handler(KEY_JB1 + hat + 3, (jhe->value & SDL_HAT_LEFT ) > 0);
-
-	//Save last state of the hat-button
-	Joystick.buttons[hat  ].last_state = Joystick.buttons[hat  ].state;
-	Joystick.buttons[hat+1].last_state = Joystick.buttons[hat+1].state;
-	Joystick.buttons[hat+2].last_state = Joystick.buttons[hat+2].state;
-	Joystick.buttons[hat+3].last_state = Joystick.buttons[hat+3].state;
-
-	//get current state of the hat-button
-	Joystick.buttons[hat  ].state = ((jhe->value & SDL_HAT_UP)>0);
-	Joystick.buttons[hat+1].state = ((jhe->value & SDL_HAT_RIGHT)>0);
-	Joystick.buttons[hat+2].state = ((jhe->value & SDL_HAT_DOWN)>0);
-	Joystick.buttons[hat+3].state = ((jhe->value & SDL_HAT_LEFT)>0);
-
-	//determine if a hat-button up or down event based on state and last_state
-	for(hbi=0;hbi<4;hbi++)
-	{
-		if(	!Joystick.buttons[hat+hbi].last_state && Joystick.buttons[hat+hbi].state) //last_state up, current state down
-		{
-			Joystick.buttons[hat+hbi].time_went_down
-				= timer_get_fixed_seconds();
-			Joystick.buttons[hat+hbi].num_downs++;
-		}
-		else if(Joystick.buttons[hat+hbi].last_state && !Joystick.buttons[hat+hbi].state)  //last_state down, current state up
-		{
-			Joystick.buttons[hat+hbi].num_ups++;
-		}
-	}
 }
 
 void joy_axis_handler(SDL_JoyAxisEvent *jae)
@@ -275,11 +225,11 @@ int joy_get_btns()
 #if 0 // This is never used?
 	int i, buttons = 0;
 	for (i=0; i++; i<buttons) {
-		switch (Joystick.buttons[i].state) {
-		case SDL_PRESSED:
+		switch (keyd_pressed[KEY_JB1 + i]) {
+		case 1:
 			buttons |= 1<<i;
 			break;
-		case SDL_RELEASED:
+		case 0:
 			break;
 		}
 	}
@@ -289,42 +239,6 @@ int joy_get_btns()
 #endif
 }
 
-int joy_get_button_down_cnt( int btn )
-{
-	int num_downs;
-
-	if (!num_joysticks)
-		return 0;
-
-	event_poll();
-
-	num_downs = Joystick.buttons[btn].num_downs;
-	Joystick.buttons[btn].num_downs = 0;
-
-	return num_downs;
-}
-
-fix joy_get_button_down_time(int btn)
-{
-	fix time = F0_0;
-
-	if (!num_joysticks)
-		return 0;
-
-	event_poll();
-
-	switch (Joystick.buttons[btn].state) {
-	case SDL_PRESSED:
-		time = timer_get_fixed_seconds() - Joystick.buttons[btn].time_went_down;
-		Joystick.buttons[btn].time_went_down = timer_get_fixed_seconds();
-		break;
-	case SDL_RELEASED:
-		time = 0;
-		break;
-	}
-
-	return time;
-}
 
 ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 {
@@ -347,16 +261,8 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 
 void joy_flush()
 {
-	int i;
-
 	if (!num_joysticks)
 		return;
-
-	for (i = 0; i < Joystick.n_buttons; i++) {
-		Joystick.buttons[i].time_went_down = 0;
-		Joystick.buttons[i].num_downs = 0;
-	}
-	
 }
 
 int joy_get_button_state( int btn )
@@ -369,7 +275,7 @@ int joy_get_button_state( int btn )
 
 	event_poll();
 
-	return Joystick.buttons[btn].state;
+	return keyd_pressed[KEY_JB1 + btn];
 }
 
 void joy_get_cal_vals(int *axis_min, int *axis_center, int *axis_max)

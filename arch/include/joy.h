@@ -114,15 +114,15 @@ extern int joy_get_btns();
 //==========================================================================
 // This returns the number of times a button went either down or up since
 // the last call to this function.
-extern int joy_get_button_up_cnt(int btn);
-extern int joy_get_button_down_cnt(int btn);
+#define joy_get_button_up_cnt(btn) key_up_count(KEY_JB1 + (btn))
+#define joy_get_button_down_cnt(btn) key_down_count(KEY_JB1 + (btn))
 
 //==========================================================================
 // This returns how long (in approximate milliseconds) that each of the
 // buttons has been held down since the last call to this function.
 // It is the total time... say you pressed it down for 3 ticks, released
 // it, and held it down for 6 more ticks. The time returned would be 9.
-extern fix joy_get_button_down_time(int btn);
+#define joy_get_button_down_time(btn) key_down_time(KEY_JB1 + (btn))
 
 extern ubyte joy_read_raw_buttons();
 extern ubyte joystick_read_raw_axis(ubyte mask, int *axis);
