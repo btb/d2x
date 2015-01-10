@@ -152,10 +152,6 @@
 #endif
 
 #ifdef __unix__
-# ifdef GGI
-#  define GII_INPUT 1
-#  define GGI_VIDEO 1
-# else
 #  ifdef SVGA
 #   define SVGALIB_INPUT 1
 #   define SVGALIB_VIDEO 1
@@ -167,7 +163,6 @@
 #    define SDL_VIDEO 1
 #   endif
 #  endif
-# endif
 #endif
 
 #ifdef _WIN32

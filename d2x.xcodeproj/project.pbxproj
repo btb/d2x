@@ -455,11 +455,6 @@
 		146695591A2729860070D41D /* tweak.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = tweak.inc; sourceTree = "<group>"; };
 		1466955A1A2729860070D41D /* vesa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vesa.c; sourceTree = "<group>"; };
 		1466955B1A2729860070D41D /* vgaregs.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = vgaregs.inc; sourceTree = "<group>"; };
-		1466955D1A2729860070D41D /* event.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = event.c; sourceTree = "<group>"; };
-		1466955E1A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
-		1466955F1A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
-		146695601A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
-		146695631A2729860070D41D /* mouse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mouse.c; sourceTree = "<group>"; };
 		146695651A2729860070D41D /* event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = event.h; sourceTree = "<group>"; };
 		146695661A2729860070D41D /* gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui.h; sourceTree = "<group>"; };
 		146695671A2729860070D41D /* joy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = joy.h; sourceTree = "<group>"; };
@@ -1196,7 +1191,6 @@
 				146694FD1A2729860070D41D /* carbon */,
 				146695031A2729860070D41D /* cocoa */,
 				146695061A2729860070D41D /* dos */,
-				1466955C1A2729860070D41D /* ggi */,
 				146695641A2729860070D41D /* include */,
 				1466956A1A2729860070D41D /* linux */,
 				1466958A1A2729860070D41D /* ogl */,
@@ -1379,18 +1373,6 @@
 				1466954E1A2729860070D41D /* mtypes.h */,
 			);
 			path = include;
-			sourceTree = "<group>";
-		};
-		1466955C1A2729860070D41D /* ggi */ = {
-			isa = PBXGroup;
-			children = (
-				1466955D1A2729860070D41D /* event.c */,
-				1466955E1A2729860070D41D /* gr.c */,
-				1466955F1A2729860070D41D /* init.c */,
-				146695601A2729860070D41D /* key.c */,
-				146695631A2729860070D41D /* mouse.c */,
-			);
-			path = ggi;
 			sourceTree = "<group>";
 		};
 		146695641A2729860070D41D /* include */ = {

@@ -116,11 +116,6 @@ int WMMouse_Handler_Ready = 0;
 int mouse_wparam, mouse_lparam, mouse_msg;
 
 
-//GGI data:
-//extern  ggi_visual_t		visual;
-//extern  ggi_directbuffer_t		dbuf;	// GGI direct acces to screen memory
-//extern  ggi_pixellinearbuffer	*plb;
-
 //Mouse globals
 static double mouse_x, mouse_y;
 static double mouse_saved_x, mouse_saved_y; //used when hiding/unhiding to reset the real (displayed) postion
@@ -509,7 +504,6 @@ void show_cursor()
 }
 
 
-/* New mouse pointer stuff for GGI/DGA */
 //#include "cursor.h" /* cursor and mask */
 
 typedef struct Sprite {

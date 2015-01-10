@@ -17,9 +17,6 @@
 /* Define for faster i/o on little-endian cpus */
 /* #undef FAST_FILE_IO */
 
-/* Define if you want a GGI build */
-/* #undef GGI */
-
 /* Define to 1 if you have the declaration of `nanosleep', and to 0 if you
    don't. */
 #define HAVE_DECL_NANOSLEEP 1
@@ -163,10 +160,6 @@
 #endif	// OS 9/X
 
 #ifdef __unix__
-# ifdef GGI
-#  define GII_INPUT 1
-#  define GGI_VIDEO 1
-# else
 #  ifdef SVGA
 #   define SVGALIB_INPUT 1
 #   define SVGALIB_VIDEO 1
@@ -178,7 +171,6 @@
 #    define SDL_VIDEO 1
 #   endif
 #  endif
-# endif
 #endif
 
 #ifdef macintosh

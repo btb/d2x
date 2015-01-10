@@ -1,5 +1,5 @@
 bin_PROGRAMS = @TARGETS@ hogcreate hogextract mveplayer mvlcreate mvlextract txb2tex tex2txb
-EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-ggi d2x-svga
+EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga
 
 # Common to all d2x platforms/options
 
@@ -88,12 +88,6 @@ endif
 
 
 # Remaining targets are based on d2x_*
-
-d2x_ggi_CPPFLAGS = $(d2x_CPPFLAGS) -DGGI
-d2x_ggi_SOURCES = $(d2x_SOURCES) arch/ggi/event.c arch/ggi/gr.c arch/ggi/init.c arch/ggi/key.c arch/ggi/mouse.c
-d2x_ggi_LDFLAGS = $(d2x_LDFLAGS)
-d2x_ggi_LDADD = $(d2x_LDADD) -lggi -lgii
-
 
 d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA
 d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/gr.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c

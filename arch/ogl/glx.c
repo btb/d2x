@@ -218,9 +218,6 @@ int ogl_init_window(int x, int y){
 			ogl_do_fullscreen_internal();
 //			gr_do_fullscreen(ogl_fullscreen);
 	}
-#ifdef GII_XWIN
-	init_gii_xwin(dpy,win);
-#endif
 	return 0;
 }
 void ogl_destroy_window(void){

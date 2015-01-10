@@ -206,15 +206,6 @@ else
         TARGETS="d2x-gl $TARGETS"
     fi
 
-  # Check for GGI
-    AC_ARG_WITH(ggi,
-        [  --with-ggi              Build GGI support ],,)
-    if test x$with_ggi = xyes; then
-        TARGETS="d2x-ggi $TARGETS"
-    fi
-    AC_SUBST(GGI_LIBS)
-    AM_CONDITIONAL(USE_GGI, test x$with_ggi = xyes)
-
   # Check for SVGALib
     AC_ARG_WITH(svga,
         [  --with-svga             Build SVGALib support ],,)
@@ -323,10 +314,6 @@ AH_BOTTOM([
 #endif
 
 #ifdef __unix__
-# ifdef GGI
-#  define GII_INPUT 1
-#  define GGI_VIDEO 1
-# else
 #  ifdef SVGA
 #   define SVGALIB_INPUT 1
 #   define SVGALIB_VIDEO 1
@@ -338,7 +325,6 @@ AH_BOTTOM([
 #    define SDL_VIDEO 1
 #   endif
 #  endif
-# endif
 #endif
 
 #ifdef _WIN32
