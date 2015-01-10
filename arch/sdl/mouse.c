@@ -85,8 +85,6 @@ void mouse_motion_handler(SDL_MouseMotionEvent *mme)
 
 void mouse_flush()	// clears all mice events...
 {
-	int i;
-
 	event_poll();
 
 	Mouse.delta_x = 0;
