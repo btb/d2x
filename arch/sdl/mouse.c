@@ -25,16 +25,7 @@
 
 #define Z_SENSITIVITY 100
 
-struct mousebutton {
-	ubyte pressed;
-	fix time_went_down;
-	fix time_held_down;
-	uint num_downs;
-	uint num_ups;
-};
-
 static struct mouseinfo {
-	struct mousebutton buttons[MOUSE_MAX_BUTTONS];
 	int delta_x, delta_y, delta_z;
 	int x,y,z;
 } Mouse;
@@ -67,10 +58,6 @@ void mouse_button_handler(SDL_MouseButtonEvent *mbe)
 	vkey_handler(KEY_MB1 + button, mbe->state == SDL_PRESSED);
 
 	if (mbe->state == SDL_PRESSED) {
-		Mouse.buttons[button].pressed = 1;
-		Mouse.buttons[button].time_went_down = timer_get_fixed_seconds();
-		Mouse.buttons[button].num_downs++;
-
 		if (button == MB_Z_UP) {
 			Mouse.delta_z += Z_SENSITIVITY;
 			Mouse.z += Z_SENSITIVITY;
@@ -78,10 +65,6 @@ void mouse_button_handler(SDL_MouseButtonEvent *mbe)
 			Mouse.delta_z -= Z_SENSITIVITY;
 			Mouse.z -= Z_SENSITIVITY;
 		}
-	} else {
-		Mouse.buttons[button].pressed = 0;
-		Mouse.buttons[button].time_held_down += timer_get_fixed_seconds() - Mouse.buttons[button].time_went_down;
-		Mouse.buttons[button].num_ups++;
 	}
 }
 
@@ -103,18 +86,9 @@ void mouse_motion_handler(SDL_MouseMotionEvent *mme)
 void mouse_flush()	// clears all mice events...
 {
 	int i;
-	fix current_time;
 
 	event_poll();
 
-	current_time = timer_get_fixed_seconds();
-	for (i=0; i<MOUSE_MAX_BUTTONS; i++) {
-		Mouse.buttons[i].pressed=0;
-		Mouse.buttons[i].time_went_down=current_time;
-		Mouse.buttons[i].time_held_down=0;
-		Mouse.buttons[i].num_ups=0;
-		Mouse.buttons[i].num_downs=0;
-	}
 	Mouse.delta_x = 0;
 	Mouse.delta_y = 0;
 	Mouse.delta_z = 0;
@@ -176,7 +150,7 @@ int mouse_get_btns()
 	event_poll();
 
 	for (i=0; i<MOUSE_MAX_BUTTONS; i++ ) {
-		if (Mouse.buttons[i].pressed)
+		if (keyd_pressed[KEY_MB1 + i])
 			status |= flag;
 		flag <<= 1;
 	}
@@ -188,40 +162,10 @@ void mouse_get_cyberman_pos( int *x, int *y )
 {
 }
 
-// Returns how long this button has been down since last call.
-fix mouse_button_down_time(int button)
-{
-	fix time_down, time;
-
-	event_poll();
-
-	if (!Mouse.buttons[button].pressed) {
-		time_down = Mouse.buttons[button].time_held_down;
-		Mouse.buttons[button].time_held_down = 0;
-	} else {
-		time = timer_get_fixed_seconds();
-		time_down = time - Mouse.buttons[button].time_held_down;
-		Mouse.buttons[button].time_held_down = time;
-	}
-	return time_down;
-}
-
-// Returns how many times this button has went down since last call
-int mouse_button_down_count(int button)
-{
-	int count;
-
-	event_poll();
-
-	count = Mouse.buttons[button].num_downs;
-	Mouse.buttons[button].num_downs = 0;
-
-	return count;
-}
 
 // Returns 1 if this button is currently down
 int mouse_button_state(int button)
 {
 	event_poll();
-	return Mouse.buttons[button].pressed;
+	return keyd_pressed[KEY_MB1 + button];
 }

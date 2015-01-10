@@ -76,10 +76,10 @@ extern void mouse_set_pos( int x, int y);
 extern void mouse_get_cyberman_pos( int *x, int *y );
 
 // Returns how long this button has been down since last call.
-extern fix mouse_button_down_time(int button);
+#define mouse_button_down_time(button) key_down_time(KEY_MB1 + (button))
 
 // Returns how many times this button has went down since last call.
-extern int mouse_button_down_count(int button);
+#define mouse_button_down_count(button) key_down_count(KEY_MB1 + (button))
 
 // Returns 1 if this button is currently down
 extern int mouse_button_state(int button);
