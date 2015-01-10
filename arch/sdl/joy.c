@@ -80,7 +80,7 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 
 	button = SDL_Joysticks[jbe->which].button_map[jbe->button];
 
-	vkey_handler(KEY_JB1 + button, jbe->state == SDL_JOYBUTTONDOWN);
+	vkey_handler(KEY_JB1 + button, jbe->state == SDL_PRESSED);
 
 	Joystick.buttons[button].state = jbe->state;
 
@@ -100,6 +100,11 @@ void joy_hat_handler(SDL_JoyHatEvent *jhe)
 {
 	int hat = SDL_Joysticks[jhe->which].hat_map[jhe->hat];
 	int hbi;
+
+	vkey_handler(KEY_JB1 + hat + 0, (jhe->value & SDL_HAT_UP   ) > 0);
+	vkey_handler(KEY_JB1 + hat + 1, (jhe->value & SDL_HAT_RIGHT) > 0);
+	vkey_handler(KEY_JB1 + hat + 2, (jhe->value & SDL_HAT_DOWN ) > 0);
+	vkey_handler(KEY_JB1 + hat + 3, (jhe->value & SDL_HAT_LEFT ) > 0);
 
 	//Save last state of the hat-button
 	Joystick.buttons[hat  ].last_state = Joystick.buttons[hat  ].state;
