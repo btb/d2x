@@ -105,25 +105,6 @@ char *joyaxis_text[JOY_MAX_AXES];
 
 int mouseaxis_text[3] = { TNUM_L_R, TNUM_F_B, TNUM_Z1 };
 
-#ifdef MACINTOSH
-char * key_text[256] = {         
-"","S","D","F","H","G","Z","X","C","V","","B","Q", "W", "E", "R",
-"Y","T","1","2","3","4","6","5","=","9","7","-", "8", "0", "]", "O",
-"U","[","I","P","RET","L","J","'","K", ";", "\\", ",", "/", "N", "M", ".",
-"TAB","SPC","`","DEL","","ESC","","APL","SHIFT","CAPSL","OPTN","CTRL","","","","A",
-"","PAD.","","PAD*","","PAD+","","NMLCK","","","","PAD/","ENTER","","PAD-","",
-"","PAD=","PAD0","PAD1","PAD2","PAD3","PAD4","PAD5","PAD6","PAD7","","PAD8","PAD9","","","",
-"F5","F6","F7","","F8","F9","","F11","","F13","","F14","","F10","","F12",
-"","PAUSE","HELP","HOME","PGUP","DEL","","END","F2","","F1","LARW","RARW","DARW","UARW","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","","",
-"","","","","","","","","","","","","","","",""};
-#else
 #if !defined OGL && !defined SDL_INPUT
 char * key_text[256] = {         \
 "","ESC","1","2","3","4","5","6","7","8","9","0","-", 			\
@@ -147,7 +128,6 @@ char * key_text[256] = {         \
 "","","","","","","","","","","","","","","","","","","","",     \
 "","","","","","","" };
 #endif /* OGL */
-#endif
 
 ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_MINUS, KEY_EQUAL, KEY_PRINT_SCREEN };
 
@@ -211,7 +191,6 @@ ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
 {0x0,0x1,0xff,0xff,0x2,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff},
 };*/                                                                              
 
-#ifndef MACINTOSH
 ubyte default_kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS] = {
 {0xc8,0x48,0xd0,0x50,0xcb,0x4b,0xcd,0x4d,0x38,0xff,0xff,0x4f,0xff,0x51,0xff,0x4a,0xff,0x4e,0xff,0xff,0x10,0x47,0x12,0x49,0x1d,0x9d,0x39,0xff,0x21,0xff,0x1e,0xff,0x2c,0xff,0x30,0xff,0x13,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xf,0xff,0x1f,0xff,0x33,0xff,0x34,0xff,0x23,0xff,0x14,0xff,0xff,0xff,0x0,0x0},
 {0x0,0x1,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0},
@@ -458,182 +437,6 @@ kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 	//{ 26,  8,155, 78, 26, 24,  1, 25, 27, "TOGGLE SEC AUTO", BT_KEY, 255},
 	//{ 27,  8,155,107, 26, 25,  0, 26,  0, "TOGGLE SEC AUTO", BT_KEY, 255},
 };
-
-#else		// ifndef MACINTOSH (following are macintosh controls)
-
-ubyte default_kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS] = {
-{0x5b,0x7e,0x54,0x7d,0x56,0x7b,0x58,0x7c,0x3a,0xff,0xff,0x53,0xff,0x55,0xff,0x4e,0xff,0x45,0xff,0xff,0xc,0x59,0xe,0x5c,0x3b,0x24,0x31,0xff,0x3,0xff,0x3f,0xff,0x6,0xff,0xb,0xff,0xf,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x30,0xff,0x1,0xff,0x2b,0xff,0x2f,0xff,0x4,0xff,0x11,0xff,0xff,0xff,0x0,0x0},
-{0x0,0x1,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0},
-{0x0,0x3,0xff,0xff,0xff,0xff,0xb,0xc,0x9,0xa,0xff,0x1,0x2,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0},
-{0x5,0x4,0xff,0xff,0x6,0xff,0x3,0x2,0x0,0x1,0xff,0x8,0xa,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x3,0x1,0xb,0x7,0xd,0xe,0xf,0xc,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0},
-{0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0},
-{0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0},
-{0x0,0x1,0xff,0xff,0x2,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0},
-};
-
-ubyte default_firebird_settings[MAX_CONTROLS] =
-{0x0,0x1,0xff,0xff,0x2,0xff,0x4,0x6,0x5,0x7,0xff,0xb,0xc,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0x03,0x0,0xff,0x3,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0};
-
-ubyte default_mousestick_settings[MAX_CONTROLS] =
-{0x2,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x3,0x4,0x1,0x0,0x0,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0};
-
-kc_item kc_keyboard[NUM_KEY_CONTROLS] = {
-	{  0, 15, 49, 71, 26, 55,  2, 55,  1,"Pitch forward", BT_KEY, 255 },
-	{  1, 15, 49,100, 26, 50,  3,  0, 24,"Pitch forward", BT_KEY, 255 },
-	{  2, 15, 57, 71, 26,  0,  4, 25,  3,"Pitch backward", BT_KEY, 255 },
-	{  3, 15, 57,100, 26,  1,  5,  2, 26,"Pitch backward", BT_KEY, 255 },
-	{  4, 15, 65, 71, 26,  2,  6, 27,  5,"Turn left", BT_KEY, 255 },
-	{  5, 15, 65,100, 26,  3,  7,  4, 28,"Turn left", BT_KEY, 255 },
-	{  6, 15, 73, 71, 26,  4,  8, 29,  7,"Turn right", BT_KEY, 255 },
-	{  7, 15, 73,100, 26,  5,  9,  6, 34,"Turn right", BT_KEY, 255 },
-	{  8, 15, 85, 71, 26,  6, 10, 35,  9,"Slide on", BT_KEY, 255 },
-	{  9, 15, 85,100, 26,  7, 11,  8, 36,"Slide on", BT_KEY, 255 },
-	{ 10, 15, 93, 71, 26,  8, 12, 37, 11,"Slide left", BT_KEY, 255 },
-	{ 11, 15, 93,100, 26,  9, 13, 10, 44,"Slide left", BT_KEY, 255 },
-	{ 12, 15,101, 71, 26, 10, 14, 45, 13,"Slide right", BT_KEY, 255 },
-	{ 13, 15,101,100, 26, 11, 15, 12, 30,"Slide right", BT_KEY, 255 },
-	{ 14, 15,109, 71, 26, 12, 16, 31, 15,"Slide up", BT_KEY, 255 },
-	{ 15, 15,109,100, 26, 13, 17, 14, 32,"Slide up", BT_KEY, 255 },
-	{ 16, 15,117, 71, 26, 14, 18, 33, 17,"Slide down", BT_KEY, 255 },
-	{ 17, 15,117,100, 26, 15, 19, 16, 46,"Slide down", BT_KEY, 255 },
-	{ 18, 15,129, 71, 26, 16, 20, 47, 19,"Bank on", BT_KEY, 255 },
-	{ 19, 15,129,100, 26, 17, 21, 18, 38,"Bank on", BT_KEY, 255 },
-	{ 20, 15,137, 71, 26, 18, 22, 39, 21,"Bank left", BT_KEY, 255 },
-	{ 21, 15,137,100, 26, 19, 23, 20, 40,"Bank left", BT_KEY, 255 },
-	{ 22, 15,145, 71, 26, 20, 48, 41, 23,"Bank right", BT_KEY, 255 },
-	{ 23, 15,145,100, 26, 21, 49, 22, 42,"Bank right", BT_KEY, 255 },
-	{ 24,158, 49, 83, 26, 51, 26,  1, 25,"Fire primary", BT_KEY, 255 },
-	{ 25,158, 49,112, 26, 54, 27, 24,  2,"Fire primary", BT_KEY, 255 },
-	{ 26,158, 57, 83, 26, 24, 28,  3, 27,"Fire secondary", BT_KEY, 255 },
-	{ 27,158, 57,112, 26, 25, 29, 26,  4,"Fire secondary", BT_KEY, 255 },
-	{ 28,158, 65, 83, 26, 26, 34,  5, 29,"Fire flare", BT_KEY, 255 },
-	{ 29,158, 65,112, 26, 27, 35, 28,  6,"Fire flare", BT_KEY, 255 },
-	{ 30,158,105, 83, 26, 44, 32, 13, 31,"Accelerate", BT_KEY, 255 },
-	{ 31,158,105,112, 26, 45, 33, 30, 14,"Accelerate", BT_KEY, 255 },
-	{ 32,158,113, 83, 26, 30, 46, 15, 33,"reverse", BT_KEY, 255 },
-	{ 33,158,113,112, 26, 31, 47, 32, 16,"reverse", BT_KEY, 255 },
-	{ 34,158, 73, 83, 26, 28, 36,  7, 35,"Drop Bomb", BT_KEY, 255 },
-	{ 35,158, 73,112, 26, 29, 37, 34,  8,"Drop Bomb", BT_KEY, 255 },
-	{ 36,158, 85, 83, 26, 34, 44,  9, 37,"REAR VIEW", BT_KEY, 255 },
-	{ 37,158, 85,112, 26, 35, 45, 36, 10,"REAR VIEW", BT_KEY, 255 },
-	{ 38,158,133, 83, 26, 46, 40, 19, 39,"Cruise Faster", BT_KEY, 255 },
-	{ 39,158,133,112, 26, 47, 41, 38, 20,"Cruise Faster", BT_KEY, 255 },
-	{ 40,158,141, 83, 26, 38, 42, 21, 41,"Cruise Slower", BT_KEY, 255 },
-	{ 41,158,141,112, 26, 39, 43, 40, 22,"Cruise Slower", BT_KEY, 255 },
-	{ 42,158,149, 83, 26, 40, 52, 23, 43,"Cruise Off", BT_KEY, 255 },
-	{ 43,158,149,112, 26, 41, 53, 42, 48,"Cruise Off", BT_KEY, 255 },
-	{ 44,158, 93, 83, 26, 36, 30, 11, 45,"Automap", BT_KEY, 255 },
-	{ 45,158, 93,112, 26, 37, 31, 44, 12,"Automap", BT_KEY, 255 },
-	{ 46,158,121, 83, 26, 32, 38, 17, 47,"Afterburner", BT_KEY, 255 },
-	{ 47,158,121,112, 26, 33, 39, 46, 18,"Afterburner", BT_KEY, 255 },
-	{ 48, 15,161, 71, 26, 22, 50, 43, 49,"Cycle Primary", BT_KEY, 255 },
-	{ 49, 15,161,100, 26, 23, 51, 48, 52,"Cycle Primary", BT_KEY, 255 },
-	{ 50, 15,169, 71, 26, 48,  1, 53, 51,"Cycle Second", BT_KEY, 255 },
-	{ 51, 15,169,100, 26, 49, 24, 50, 54,"Cycle Second", BT_KEY, 255 },
-	{ 52,158,163, 83, 26, 42, 54, 49, 53,"Headlight", BT_KEY, 255 },
-	{ 53,158,163,112, 26, 43, 55, 52, 50,"Headlight", BT_KEY, 255 },
-	{ 54,158,171, 83, 26, 52, 25, 51, 55,"Energy->Shield", BT_KEY, 255 },
-	{ 55,158,171,112, 26, 53,  0, 54,  0,"Energy->Shield", BT_KEY, 255 },
-};
-kc_item kc_joystick[NUM_OTHER_CONTROLS] = {
-	{  0, 25, 46, 85, 28, 15,  1, 24,  5,"Fire primary", BT_JOY_BUTTON, 255 },
-	{  1, 25, 54, 85, 28,  0,  4,  5,  6,"Fire secondary", BT_JOY_BUTTON, 255 },
-	{  2, 25, 85, 85, 28, 26,  3,  9, 10,"Accelerate", BT_JOY_BUTTON, 255 },
-	{  3, 25, 93, 85, 28,  2, 25, 10, 11,"reverse", BT_JOY_BUTTON, 255 },
-	{  4, 25, 62, 85, 28,  1, 26,  6,  7,"Fire flare", BT_JOY_BUTTON, 255 },
-	{  5,180, 46, 79, 28, 23,  6,  0,  1,"Slide on", BT_JOY_BUTTON, 255 },
-	{  6,180, 54, 79, 28,  5,  7,  1,  4,"Slide left", BT_JOY_BUTTON, 255 },
-	{  7,180, 62, 79, 28,  6,  8,  4, 26,"Slide right", BT_JOY_BUTTON, 255 },
-	{  8,180, 70, 79, 28,  7,  9, 26,  9,"Slide up", BT_JOY_BUTTON, 255 },
-	{  9,180, 78, 79, 28,  8, 10,  8,  2,"Slide down", BT_JOY_BUTTON, 255 },
-	{ 10,180, 90, 79, 28,  9, 11,  2,  3,"Bank on", BT_JOY_BUTTON, 255 },
-	{ 11,180, 98, 79, 28, 10, 12,  3, 12,"Bank left", BT_JOY_BUTTON, 255 },
-	{ 12,180,106, 79, 28, 11, 28, 11, 25,"Bank right", BT_JOY_BUTTON, 255 },
-	{ 13, 22,154, 51, 26, 24, 15, 30, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
-	{ 14, 22,154, 99,  8, 30, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,162, 51, 26, 13,  0, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
-	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164,154, 58, 26, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
-	{ 18,164,154,106,  8, 29, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,162, 58, 26, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
-	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,172, 58, 26, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
-	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,180, 58, 26, 21,  5, 22, 24,"throttle", BT_JOY_AXIS, 255 },
-	{ 24,164,180,106,  8, 22, 13, 23,  0,"throttle", BT_INVERT, 255 },
-	{ 25, 25,109, 85, 28,  3, 27, 12, 28,"REAR VIEW", BT_JOY_BUTTON, 255 },
-	{ 26, 25, 70, 85, 28,  4,  2,  7,  8,"Drop Bomb", BT_JOY_BUTTON, 255 },
-	{ 27, 25,117, 85, 28, 25, 30, 28, 29,"Afterburner", BT_JOY_BUTTON, 255 },
-	{ 28,180,114, 79, 28, 12, 29, 25, 27,"Cycle Primary", BT_JOY_BUTTON, 255 },
-	{ 29,180,122, 79, 28, 28, 18, 27, 30,"Cycle Secondary", BT_JOY_BUTTON, 255 },
-	{ 30, 25,125, 85, 28, 27, 14, 29, 13,"Headlight", BT_JOY_BUTTON, 255 },
-};
-kc_item kc_superjoy[NUM_OTHER_CONTROLS] = {
-	{  0, 25, 46, 85, 26, 15,  1, 24,  5,"Fire primary", BT_JOY_BUTTON, 255 },
-	{  1, 25, 54, 85, 26,  0,  4,  5,  6,"Fire secondary", BT_JOY_BUTTON, 255 },
-	{  2, 25, 85, 85, 26, 26,  3,  9, 10,"Accelerate", BT_JOY_BUTTON, 255 },
-	{  3, 25, 93, 85, 26,  2, 25, 10, 11,"reverse", BT_JOY_BUTTON, 255 },
-	{  4, 25, 62, 85, 26,  1, 26,  6,  7,"Fire flare", BT_JOY_BUTTON, 255 },
-	{  5,180, 46, 79, 26, 23,  6,  0,  1,"Slide on", BT_JOY_BUTTON, 255 },
-	{  6,180, 54, 79, 26,  5,  7,  1,  4,"Slide left", BT_JOY_BUTTON, 255 },
-	{  7,180, 62, 79, 26,  6,  8,  4, 26,"Slide right", BT_JOY_BUTTON, 255 },
-	{  8,180, 70, 79, 26,  7,  9, 26,  9,"Slide up", BT_JOY_BUTTON, 255 },
-	{  9,180, 78, 79, 26,  8, 10,  8,  2,"Slide down", BT_JOY_BUTTON, 255 },
-	{ 10,180, 90, 79, 26,  9, 11,  2,  3,"Bank on", BT_JOY_BUTTON, 255 },
-	{ 11,180, 98, 79, 26, 10, 12,  3, 12,"Bank left", BT_JOY_BUTTON, 255 },
-	{ 12,180,106, 79, 26, 11, 28, 11, 25,"Bank right", BT_JOY_BUTTON, 255 },
-	{ 13, 22,154, 51, 26, 24, 15, 30, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
-	{ 14, 22,154, 99,  8, 30, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,162, 51, 26, 13,  0, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
-	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164,154, 58, 26, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
-	{ 18,164,154,106,  8, 29, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,162, 58, 26, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
-	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,172, 58, 26, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
-	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,180, 58, 26, 21,  5, 22, 24,"throttle", BT_JOY_AXIS, 255 },
-	{ 24,164,180,106,  8, 22, 13, 23,  0,"throttle", BT_INVERT, 255 },
-	{ 25, 25,109, 85, 26,  3, 27, 12, 28,"REAR VIEW", BT_JOY_BUTTON, 255 },
-	{ 26, 25, 70, 85, 26,  4,  2,  7,  8,"Drop Bomb", BT_JOY_BUTTON, 255 },
-	{ 27, 25,117, 85, 26, 25, 30, 28, 29,"Afterburner", BT_JOY_BUTTON, 255 },
-	{ 28,180,114, 79, 26, 12, 29, 25, 27,"Cycle Primary", BT_JOY_BUTTON, 255 },
-	{ 29,180,122, 79, 26, 28, 18, 27, 30,"Cycle Secondary", BT_JOY_BUTTON, 255 },
-	{ 30, 25,125, 85, 26, 27, 14, 29, 13,"Headlight", BT_JOY_BUTTON, 255 },
-};
-
-kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
-	{  0, 25, 46, 85, 26, 28,  1, 28,  5,"Fire primary", BT_MOUSE_BUTTON, 255 },
-	{  1, 25, 54, 85, 26,  0,  4,  5,  6,"Fire secondary", BT_MOUSE_BUTTON, 255 },
-	{  2, 25, 85, 85, 26, 26,  3,  9, 10,"Accelerate", BT_MOUSE_BUTTON, 255 },
-	{  3, 25, 93, 85, 26,  2, 25, 10, 11,"reverse", BT_MOUSE_BUTTON, 255 },
-	{  4, 25, 62, 85, 26,  1, 26,  6,  7,"Fire flare", BT_MOUSE_BUTTON, 255 },
-	{  5,180, 46, 59, 26, 24,  6,  0,  1,"Slide on", BT_MOUSE_BUTTON, 255 },
-	{  6,180, 54, 59, 26,  5,  7,  1,  4,"Slide left", BT_MOUSE_BUTTON, 255 },
-	{  7,180, 62, 59, 26,  6,  8,  4, 26,"Slide right", BT_MOUSE_BUTTON, 255 },
-	{  8,180, 70, 59, 26,  7,  9, 26,  9,"Slide up", BT_MOUSE_BUTTON, 255 },
-	{  9,180, 78, 59, 26,  8, 10,  8,  2,"Slide down", BT_MOUSE_BUTTON, 255 },
-	{ 10,180, 90, 59, 26,  9, 11,  2,  3,"Bank on", BT_MOUSE_BUTTON, 255 },
-	{ 11,180, 98, 59, 26, 10, 12,  3, 12,"Bank left", BT_MOUSE_BUTTON, 255 },
-	{ 12,180,106, 59, 26, 11, 28, 11, 25,"Bank right", BT_MOUSE_BUTTON, 255 },
-	{ 13,103,138, 58, 26, 27, 15, 27, 14,"Pitch U/D", BT_MOUSE_AXIS, 255 },
-	{ 14,103,138,106,  8, 23, 16, 13, 15,"Pitch U/D", BT_INVERT, 255 },
-	{ 15,103,146, 58, 26, 13, 17, 14, 16,"Turn L/R", BT_MOUSE_AXIS, 255 },
-	{ 16,103,146,106,  8, 14, 18, 15, 17,"Turn L/R", BT_INVERT, 255 },
-	{ 17,103,154, 58, 26, 15, 19, 16, 18,"Slide L/R", BT_MOUSE_AXIS, 255 },
-	{ 18,103,154,106,  8, 16, 20, 17, 19,"Slide L/R", BT_INVERT, 255 },
-	{ 19,103,162, 58, 26, 17, 21, 18, 20,"Slide U/D", BT_MOUSE_AXIS, 255 },
-	{ 20,103,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,103,170, 58, 26, 19, 23, 20, 22,"Bank L/R", BT_MOUSE_AXIS, 255 },
-	{ 22,103,170,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,103,182, 58, 26, 21, 14, 22, 24,"throttle", BT_MOUSE_AXIS, 255 },
-	{ 24,103,182,106,  8, 22,  5, 23, 28,"throttle", BT_INVERT, 255 },
-	{ 25, 25,109, 85, 26,  3, 27, 12, 27,"REAR VIEW", BT_MOUSE_BUTTON, 255 },
-	{ 26, 25, 70, 85, 26,  4,  2,  7,  8,"Drop Bomb", BT_MOUSE_BUTTON, 255 },
-	{ 27, 25,117, 85, 26, 25, 13, 25, 13,"Afterburner", BT_MOUSE_BUTTON, 255 },
-};
-
-#endif
 
 //added on 2/4/99 by Victor Rachels to add new keys system
 ubyte default_kconfig_d2x_settings[MAX_D2X_CONTROLS] = {
@@ -919,11 +722,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	grd_curcanv->cv_font = GAME_FONT;
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 
-	#ifndef MACINTOSH
 	gr_string( 0x8000, LHY(20), TXT_KCONFIG_STRING_1 );
-	#else
-	gr_string( 0x8000, LHY(20), "Enter changes, ctrl-d deletes, ctrl-r resets defaults, ESC exits");
-	#endif
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 	if ( items == kc_keyboard )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
@@ -1044,21 +843,6 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 					kc_drawitem( &items[i], 0 );
 				}
 			} else {
-				#ifdef MACINTOSH
-			  // hack for firebire and mousestick default controls since I made
-			  // them the same control type -- dumb dumb dumb
-				if (joy_have_firebird())
-					for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-						items[i].value = default_firebird_settings[i];
-						kc_drawitem( &items[i], 0 );
-					}
-				else if (joy_have_mousestick())
-					for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-						items[i].value = default_mousestick_settings[i];
-						kc_drawitem( &items[i], 0 );
-					}
-				else
-				#endif	// note link to above else
 					for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
 						items[i].value = default_kconfig_settings[Config_control_type][i];
 						kc_drawitem( &items[i], 0 );
@@ -1475,11 +1259,7 @@ void kc_change_joyaxis( kc_item * item )
 		joystick_read_raw_axis( JOY_ALL_AXIS, axis );
 
 		for (i=0; i<numaxis; i++ )	{
-#if defined (MACINTOSH)
 			if ( abs(axis[i]-old_axis[i])>100 )
-#else
-			if ( abs(axis[i]-old_axis[i])>200 )
-#endif
 			{
 				code = i;
 				con_printf(CON_DEBUG, "Axis Movement detected: Axis %i\n", i);
@@ -1732,7 +1512,7 @@ extern int			VR_sensitivity;
 						
 int VR_sense_range[3] = { 25, 50, 75 };
 
-#if 0 //ndef MACINTOSH
+#if 0 // unused
 read_head_tracker()
 {
 	fix yaw, pitch, roll;
@@ -1816,86 +1596,6 @@ void kconfig_init_external_controls(int intno, int address)
 
 }
 
-#if !defined(MACINTOSH)
-/*void kconfig_read_external_controls()
-{
-	union REGS r;
-
-	if ( !kc_enable_external_control && !CybermouseActive) 
-		return;
-
-	if ( kc_external_version == 0 ) 
-		memset( kc_external_control, 0, sizeof(control_info) );
-	else if ( kc_external_version > 0 ) 	{
-		memset( kc_external_control, 0, sizeof(control_info)+sizeof(vms_angvec) + 64 );
-		if ( kc_external_version > 1 ) {
-			// Write ship pos and angles to external controls...
-			ubyte *temp_ptr = (ubyte *)kc_external_control;
-			vms_vector *ship_pos;
-			vms_matrix *ship_orient;
-			memset( kc_external_control, 0, sizeof(control_info)+sizeof(vms_angvec) + 64 + sizeof(vms_vector)+sizeof(vms_matrix) );
-			temp_ptr += sizeof(control_info)+sizeof(vms_angvec) + 64;
-			ship_pos = (vms_vector *)temp_ptr;
-			temp_ptr += sizeof(vms_vector);
-			ship_orient = (vms_matrix *)temp_ptr;
-			// Fill in ship postion...
-			*ship_pos = Objects[Players[Player_num].objnum].pos;
-			// Fill in ship orientation...
-			*ship_orient = Objects[Players[Player_num].objnum].orient;
-		}
-	}
-
-        if ( Automap_active )                    // (If in automap...)
-		kc_external_control->automap_state = 1;
-	memset(&r,0,sizeof(r));
-
-   if (!CybermouseActive)
-   	int386 ( kc_external_intno, &r, &r);		// Read external info...
-//	else
-  //		ReadOWL (kc_external_control);
-
-	if ( Player_num > -1 )	{
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_LEVELLING);	// Turn off leveling to nearest side.
-		Auto_leveling_on = 0;
-
-		if ( kc_external_version > 0 ) {		
-			vms_matrix tempm, ViewMatrix;
-			vms_angvec * Kconfig_abs_movement;
-			char * oem_message;
-	
-			Kconfig_abs_movement = (vms_angvec *)((uint)kc_external_control + sizeof(control_info));
-	
-			if ( Kconfig_abs_movement->p || Kconfig_abs_movement->b || Kconfig_abs_movement->h )	{
-				vm_angles_2_matrix(&tempm,Kconfig_abs_movement);
-				vm_matrix_x_matrix(&ViewMatrix,&Objects[Players[Player_num].objnum].orient,&tempm);
-				Objects[Players[Player_num].objnum].orient = ViewMatrix;		
-			}
-			oem_message = (char *)((uint)Kconfig_abs_movement + sizeof(vms_angvec));
-			if (oem_message[0] != '\0' )
-				HUD_init_message( oem_message );
-		}
-	}
-
-	Controls.pitch_time += fixmul(kc_external_control->pitch_time,FrameTime);						
-	Controls.vertical_thrust_time += fixmul(kc_external_control->vertical_thrust_time,FrameTime);
-	Controls.heading_time += fixmul(kc_external_control->heading_time,FrameTime);
-	Controls.sideways_thrust_time += fixmul(kc_external_control->sideways_thrust_time ,FrameTime);
-	Controls.bank_time += fixmul(kc_external_control->bank_time ,FrameTime);
-	Controls.forward_thrust_time += fixmul(kc_external_control->forward_thrust_time ,FrameTime);
-	Controls.rear_view_down_count += kc_external_control->rear_view_down_count;	
-	Controls.rear_view_down_state |= kc_external_control->rear_view_down_state;	
-	Controls.fire_primary_down_count += kc_external_control->fire_primary_down_count;
-	Controls.fire_primary_state |= kc_external_control->fire_primary_state;
-	Controls.fire_secondary_state |= kc_external_control->fire_secondary_state;
-	Controls.fire_secondary_down_count += kc_external_control->fire_secondary_down_count;
-	Controls.fire_flare_down_count += kc_external_control->fire_flare_down_count;
-	Controls.drop_bomb_down_count += kc_external_control->drop_bomb_down_count;	
-	Controls.automap_down_count += kc_external_control->automap_down_count;
-	Controls.automap_state |= kc_external_control->automap_state;
-} */
-#endif
-
 
 fix Next_toggle_time[3]={0,0,0};
 
@@ -1944,7 +1644,6 @@ void controls_read_all()
 	ctime = timer_get_fixed_seconds();
 
 	//---------  Read Joystick -----------
-#ifndef MACINTOSH
 	if ( (LastReadTime + JOYSTICK_READ_TIME > ctime) && (Config_control_type!=CONTROL_THRUSTMASTER_FCS) ) {
 # ifndef __MSDOS__
 		if ((ctime < 0) && (LastReadTime >= 0))
@@ -1992,37 +1691,6 @@ void controls_read_all()
 			joy_axis[i] = 0;
 		use_joystick=0;
 	}
-#else   // MACINTOSH
-	//---------  Read Joystick -----------
-	if ((Config_control_type>0) && (Config_control_type<5) ) {
-		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
-		for (i=0; i<4; i++ )	{
-			if (channel_masks&(1<<i))	{
-				int joy_null_value = 10;
-
-				raw_joy_axis[i] = joy_get_scaled_reading( raw_joy_axis[i], i );
-
-				if (kc_joystick[23].value==i)		// If this is the throttle
-					joy_null_value = 20;				// Then use a larger dead-zone
-
-				if (raw_joy_axis[i] > joy_null_value) 
-					raw_joy_axis[i] = ((raw_joy_axis[i]-joy_null_value)*128)/(128-joy_null_value);
-				else if (raw_joy_axis[i] < -joy_null_value)
-					raw_joy_axis[i] = ((raw_joy_axis[i]+joy_null_value)*128)/(128-joy_null_value);
-				else
-					raw_joy_axis[i] = 0;
-				joy_axis[i]	= (raw_joy_axis[i]*FrameTime)/128;	
-			} else {
-				joy_axis[i] = 0;
-			}
-		}	
-		use_joystick=1;
-	} else {
-		for (i=0; i<4; i++ )
-			joy_axis[i] = 0;
-		use_joystick=0;
-	}
-#endif		// ifndef MACINTOSH
 
 	if (Config_control_type==5 && !CybermouseActive) {
 		//---------  Read Mouse -----------
@@ -2434,12 +2102,12 @@ if (!Player_is_dead)
 			Controls.forward_thrust_time = fixmul(Cruise_speed,FrameTime)/100;
 	}
 
-#if !defined(MACINTOSH)
-	//read_head_tracker();
+#if 0
+	read_head_tracker();
 
 	// Read external controls
-	// if (kc_use_external_control || CybermouseActive)
-	//	kconfig_read_external_controls();
+	if (kc_use_external_control || CybermouseActive)
+		kconfig_read_external_controls();
 #endif
 
 //----------- Clamp values between -FrameTime and FrameTime
@@ -2528,7 +2196,7 @@ void kc_set_controls()
 		}
 }
 
-#if 0 //ndef MACINTOSH	// no mac support for vr headset
+#if 0 // no mac support for vr headset
 
 void kconfig_center_headset()
 {
@@ -2541,7 +2209,7 @@ void kconfig_center_headset()
 
 }
 
-#endif	// end of #ifndef MACINTOSH for kconfig_center_headset
+#endif // end of #if for kconfig_center_headset
 
 void CybermouseAdjust ()
  {
@@ -2592,9 +2260,8 @@ char GetKeyValue (char key)
 	return (kc_keyboard[(int)key].value);
   }
 
-#if !defined(MACINTOSH)
 
-
+#if 0 // unused
 extern object *obj_find_first_of_type (int);
 void kconfig_read_external_controls()
 {
