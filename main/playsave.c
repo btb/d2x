@@ -91,7 +91,7 @@ short n_highest_levels;
 
 hli highest_levels[MAX_MISSIONS];
 
-#define PLAYER_FILE_VERSION	24 //increment this every time the player file changes
+#define PLAYER_FILE_VERSION	25 //increment this every time the player file changes
 
 //version 5  ->  6: added new highest level information
 //version 6  ->  7: stripped out the old saved_game array.
@@ -112,6 +112,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
+//version 24 -> 25: removed kconfig data
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -177,9 +178,6 @@ RetrySelection:
 	}
 #endif
 
-	for (i=0;i<CONTROL_MAX_TYPES; i++ )
-		for (j=0;j<MAX_CONTROLS; j++ )
-			kconfig_settings[i][j] = default_kconfig_settings[i][j];
 	kc_set_controls();
 
 	Config_control_type = control_choice;
@@ -376,10 +374,12 @@ int read_player_file()
 	//read kconfig data
 	{
 		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
+		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
 
-		if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
-			goto read_player_file_failed;
-		else if (PHYSFS_read(file, (ubyte *)&control_type_dos, sizeof(ubyte), 1) != 1)
+		if (player_file_version < 25)
+			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
+				goto read_player_file_failed;
+		if (PHYSFS_read(file, (ubyte *)&control_type_dos, sizeof(ubyte), 1) != 1)
 			goto read_player_file_failed;
 		else if (player_file_version >= 21 && PHYSFS_read(file, (ubyte *)&control_type_win, sizeof(ubyte), 1) != 1)
 			goto read_player_file_failed;
@@ -624,9 +624,7 @@ int write_player_file()
 
 		control_type_dos = Config_control_type;
 
-		if (PHYSFS_write(file, kconfig_settings, MAX_CONTROLS*CONTROL_MAX_TYPES, 1) != 1)
-			goto write_player_file_failed;
-		else if (PHYSFS_write(file, &control_type_dos, sizeof(ubyte), 1) != 1)
+		if (PHYSFS_write(file, &control_type_dos, sizeof(ubyte), 1) != 1)
 			goto write_player_file_failed;
 		else if (PHYSFS_write(file, &control_type_win, sizeof(ubyte), 1) != 1)
 			goto write_player_file_failed;

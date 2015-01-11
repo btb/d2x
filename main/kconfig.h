@@ -210,7 +210,6 @@ extern ubyte default_kconfig_d2x_settings[MAX_D2X_CONTROLS];
 #define NUM_OTHER_CONTROLS  31
 #define MAX_CONTROLS        60		// there are actually 48, so this leaves room for more
 
-extern ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
 extern ubyte default_kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
 
 extern char *control_text[CONTROL_MAX_TYPES];

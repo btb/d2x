@@ -726,9 +726,6 @@ int RegisterPlayer()
 		// kc_keyboard, kc_joystick, kc_mouse are statically defined.
 		Config_joystick_sensitivity = 8;
 		Config_control_type =CONTROL_NONE;
-		for (i=0; i<CONTROL_MAX_TYPES; i++ )
-			for (j=0; j<MAX_CONTROLS; j++ )
-				kconfig_settings[i][j] = default_kconfig_settings[i][j];
 		kc_set_controls();
 		//----------------------------------------------------------------
 
