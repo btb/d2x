@@ -44,6 +44,7 @@ fix console_control_down_time(console_control control);
 unsigned int console_control_down_count(console_control control);
 unsigned int console_control_up_count(console_control control);
 unsigned int console_control_state(console_control control);
+void console_control_set_state(console_control control, int state);
 void console_control_init(void);
 
 
