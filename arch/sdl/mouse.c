@@ -37,6 +37,12 @@ cvar_t mouse_axes[3] = {
 	{ "mouse_axisz", "0", 1 },
 };
 
+cvar_t mouse_invert[] = {
+	{ "mouse_invertx", "0", 1 },
+	{ "mouse_inverty", "0", 1 },
+	{ "mouse_invertz", "0", 1 },
+};
+
 
 void d_mouse_init(void)
 {
@@ -44,8 +50,10 @@ void d_mouse_init(void)
 
 	memset(&Mouse,0,sizeof(Mouse));
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 3; i++) {
 		cvar_registervariable(&mouse_axes[i]);
+		cvar_registervariable(&mouse_invert[i]);
+	}
 }
 
 void mouse_button_handler(SDL_MouseButtonEvent *mbe)

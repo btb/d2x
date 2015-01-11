@@ -86,6 +86,15 @@ cvar_t joy_advaxes[] = {
 	{ "joy_advaxisv", "0", 1 },
 };
 
+cvar_t joy_invert[] = {
+	{ "joy_invertx", "0", 1 },
+	{ "joy_inverty", "0", 1 },
+	{ "joy_invertz", "0", 1 },
+	{ "joy_invertr", "0", 1 },
+	{ "joy_invertu", "0", 1 },
+	{ "joy_invertv", "0", 1 },
+};
+
 
 void joy_cmd_joyadvancedupdate(int argc, char **argv)
 {
@@ -143,8 +152,10 @@ int joy_init()
 	memset(&Joystick,0,sizeof(Joystick));
 	memset(joyaxis_text, 0, JOY_MAX_AXES * sizeof(char *));
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 6; i++) {
 		cvar_registervariable(&joy_advaxes[i]);
+		cvar_registervariable(&joy_invert[i]);
+	}
 
 	cmd_addcommand("joyadvancedupdate", joy_cmd_joyadvancedupdate);
 

@@ -55,6 +55,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // 6 = bank left/right
 
 extern cvar_t mouse_axes[];
+extern cvar_t mouse_invert[];
 
 
 //========================================================================

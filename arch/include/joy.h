@@ -75,6 +75,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // 6 = bank left/right
 
 extern cvar_t joy_advaxes[];
+extern cvar_t joy_invert[];
 
 
 //==========================================================================

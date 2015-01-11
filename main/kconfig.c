@@ -1400,18 +1400,24 @@ void kconfig(int n, char * title)
 			cmd_appendf("bind %s \"%s\"", key_text[kc_d2x[i].value], kc_d2x[i].text);
 
 	if ( (Config_control_type>0) && (Config_control_type<5)) { 
-		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
+		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
 			kconfig_settings[Config_control_type][i] = kc_joystick[i].value;
 
-		if (kc_joystick[i].value != 255)
-			cvar_setint(&joy_advaxes[kc_joystick[i].value], kc_other_axismap[i]);
+			if (kc_joystick[i].type == BT_JOY_AXIS && kc_joystick[i].value != 255) {
+				cvar_setint(&joy_advaxes[kc_joystick[i].value], kc_other_axismap[i]);
+				cvar_setint(&joy_invert[kc_joystick[i].value], kc_joystick[i+1].value);
+			}
+		}
 
 	} else if (Config_control_type > 4) {
-		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
+		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
 			kconfig_settings[Config_control_type][i] = kc_mouse[i].value;
 
-		if (kc_mouse[i].value != 255)
-			cvar_setint(&mouse_axes[kc_mouse[i].value], kc_other_axismap[i]);
+			if (kc_mouse[i].type == BT_MOUSE_AXIS && kc_mouse[i].value != 255) {
+				cvar_setint(&mouse_axes[kc_mouse[i].value], kc_other_axismap[i]);
+				cvar_setint(&mouse_invert[kc_mouse[i].value], kc_mouse[i+1].value);
+			}
+		}
 	}
 
 	while (cmd_queue_process())
@@ -2170,14 +2176,15 @@ void kc_set_controls()
 		}
 
 	for (i = 0; i < 3; i++) {
+		int inv = mouse_invert[i].intval;
 		switch (mouse_axes[i].intval) {
-			case AXIS_PITCH:        kc_mouse[13].value = i; break;
-			case AXIS_TURN:         kc_mouse[15].value = i; break;
-			case AXIS_LEFTRIGHT:    kc_mouse[17].value = i; break;
-			case AXIS_UPDOWN:       kc_mouse[19].value = i; break;
-			case AXIS_BANK:         kc_mouse[21].value = i; break;
-			case AXIS_THROTTLE:     kc_mouse[23].value = i; break;
-			case AXIS_NONE:         break;
+			case AXIS_PITCH:     kc_mouse[13].value = i; kc_mouse[14].value = inv; break;
+			case AXIS_TURN:      kc_mouse[15].value = i; kc_mouse[16].value = inv; break;
+			case AXIS_LEFTRIGHT: kc_mouse[17].value = i; kc_mouse[18].value = inv; break;
+			case AXIS_UPDOWN:    kc_mouse[19].value = i; kc_mouse[20].value = inv; break;
+			case AXIS_BANK:      kc_mouse[21].value = i; kc_mouse[22].value = inv; break;
+			case AXIS_THROTTLE:  kc_mouse[23].value = i; kc_mouse[24].value = inv; break;
+			case AXIS_NONE:      break;
 			default:
 				Int3();
 				break;
@@ -2185,14 +2192,15 @@ void kc_set_controls()
 	}
 
 	for (i = 0; i < 6; i++) {
+		int inv = joy_invert[i].intval;
 		switch (joy_advaxes[i].intval) {
-			case AXIS_PITCH:        kc_joystick[13].value = i; break;
-			case AXIS_TURN:         kc_joystick[15].value = i; break;
-			case AXIS_LEFTRIGHT:    kc_joystick[17].value = i; break;
-			case AXIS_UPDOWN:       kc_joystick[19].value = i; break;
-			case AXIS_BANK:         kc_joystick[21].value = i; break;
-			case AXIS_THROTTLE:     kc_joystick[23].value = i; break;
-			case AXIS_NONE:         break;
+			case AXIS_PITCH:     kc_joystick[13].value = i; kc_joystick[14].value = inv; break;
+			case AXIS_TURN:      kc_joystick[15].value = i; kc_joystick[16].value = inv; break;
+			case AXIS_LEFTRIGHT: kc_joystick[17].value = i; kc_joystick[18].value = inv; break;
+			case AXIS_UPDOWN:    kc_joystick[19].value = i; kc_joystick[20].value = inv; break;
+			case AXIS_BANK:      kc_joystick[21].value = i; kc_joystick[22].value = inv; break;
+			case AXIS_THROTTLE:  kc_joystick[23].value = i; kc_joystick[24].value = inv; break;
+			case AXIS_NONE:      break;
 			default:
 				Int3();
 				break;
