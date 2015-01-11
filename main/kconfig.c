@@ -377,6 +377,23 @@ kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 	{ 24,103,182,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
 };
 
+kc_axis_map kc_other_axismap[NUM_OTHER_CONTROLS] = {
+	AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE,
+	AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE,
+	AXIS_PITCH,
+	AXIS_NONE,
+	AXIS_TURN,
+	AXIS_NONE,
+	AXIS_LEFTRIGHT,
+	AXIS_NONE,
+	AXIS_UPDOWN,
+	AXIS_NONE,
+	AXIS_BANK,
+	AXIS_NONE,
+	AXIS_THROTTLE,
+	AXIS_NONE,
+};
+
 kc_item kc_d2x[NUM_D2X_CONTROLS] = {
 //        id,x,y,w1,w2,u,d,l,r,text_num1,type,value
 	{  0, 15, 49, 71, 26, 19,  2, 27,  1, "WEAPON 1", BT_KEY, 255},
@@ -1404,9 +1421,16 @@ void kconfig(int n, char * title)
 	if ( (Config_control_type>0) && (Config_control_type<5)) { 
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
 			kconfig_settings[Config_control_type][i] = kc_joystick[i].value;
+
+		if (kc_joystick[i].value != 255)
+			cvar_setint(&joy_advaxes[kc_joystick[i].value], kc_other_axismap[i]);
+
 	} else if (Config_control_type > 4) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
 			kconfig_settings[Config_control_type][i] = kc_mouse[i].value;
+
+		if (kc_mouse[i].value != 255)
+			cvar_setint(&mouse_axes[kc_mouse[i].value], kc_other_axismap[i]);
 	}
 
 	while (cmd_queue_process())
@@ -2123,24 +2147,23 @@ void kc_set_controls()
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )
 		kc_keyboard[i].value = 255;
 
+	for (i=0; i<NUM_OTHER_CONTROLS; i++ )
+		kc_joystick[i].value = kc_mouse[i].value = 255;
+
 	for (i=0; i<NUM_D2X_CONTROLS; i++ )
 		kc_d2x[i].value = 255;
 
 	if ( (Config_control_type>0) && (Config_control_type<5)) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
-				kc_joystick[i].value = kconfig_settings[Config_control_type][i];
 			if (kc_joystick[i].type == BT_INVERT )	{
-				if (kc_joystick[i].value!=1)
-					kc_joystick[i].value	= 0;
+				kc_joystick[i].value = kconfig_settings[Config_control_type][i] ? 1 : 0;
 				kconfig_settings[Config_control_type][i] = kc_joystick[i].value;
 			}
 		}
 	} else if (Config_control_type > 4) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				kc_mouse[i].value = kconfig_settings[Config_control_type][i];
 			if (kc_mouse[i].type == BT_INVERT )	{
-				if (kc_mouse[i].value!=1)
-					kc_mouse[i].value	= 0;
+				kc_mouse[i].value = kconfig_settings[Config_control_type][i] ? 1 : 0;
 				kconfig_settings[Config_control_type][i] = kc_mouse[i].value;
 			}
 		}
@@ -2164,6 +2187,36 @@ void kc_set_controls()
 					break;
 				}
 		}
+
+	for (i = 0; i < 3; i++) {
+		switch (mouse_axes[i].intval) {
+			case AXIS_PITCH:        kc_mouse[13].value = i; break;
+			case AXIS_TURN:         kc_mouse[15].value = i; break;
+			case AXIS_LEFTRIGHT:    kc_mouse[17].value = i; break;
+			case AXIS_UPDOWN:       kc_mouse[19].value = i; break;
+			case AXIS_BANK:         kc_mouse[21].value = i; break;
+			case AXIS_THROTTLE:     kc_mouse[23].value = i; break;
+			case AXIS_NONE:         break;
+			default:
+				Int3();
+				break;
+		}
+	}
+
+	for (i = 0; i < 6; i++) {
+		switch (joy_advaxes[i].intval) {
+			case AXIS_PITCH:        kc_joystick[13].value = i; break;
+			case AXIS_TURN:         kc_joystick[15].value = i; break;
+			case AXIS_LEFTRIGHT:    kc_joystick[17].value = i; break;
+			case AXIS_UPDOWN:       kc_joystick[19].value = i; break;
+			case AXIS_BANK:         kc_joystick[21].value = i; break;
+			case AXIS_THROTTLE:     kc_joystick[23].value = i; break;
+			case AXIS_NONE:         break;
+			default:
+				Int3();
+				break;
+		}
+	}
 }
 
 #if 0 // no mac support for vr headset

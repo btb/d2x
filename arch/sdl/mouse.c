@@ -30,9 +30,22 @@ static struct mouseinfo {
 	int x,y,z;
 } Mouse;
 
+
+cvar_t mouse_axes[3] = {
+	{ "mouse_axisx", "4", 1 },
+	{ "mouse_axisy", "2", 1 },
+	{ "mouse_axisz", "0", 1 },
+};
+
+
 void d_mouse_init(void)
 {
+	int i;
+
 	memset(&Mouse,0,sizeof(Mouse));
+
+	for (i = 0; i < 3; i++)
+		cvar_registervariable(&mouse_axes[i]);
 }
 
 void mouse_button_handler(SDL_MouseButtonEvent *mbe)

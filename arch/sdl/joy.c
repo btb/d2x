@@ -20,6 +20,8 @@
 #include "text.h"
 #include "u_mem.h"
 #include "key.h"
+#include "kconfig.h"
+
 
 #define MAX_JOYSTICKS 16
 
@@ -65,6 +67,38 @@ static struct {
 	int button_map[MAX_BUTTONS_PER_JOYSTICK];
 } SDL_Joysticks[MAX_JOYSTICKS];
 
+
+// Axis mapping cvars
+// 0 = no action
+// 1 = move forward/back
+// 2 = look up/down
+// 3 = move left/right
+// 4 = look left/right
+// 5 = move up/down
+// 6 = bank left/right
+
+cvar_t joy_advaxes[] = {
+	{ "joy_advaxisx", "4", 1 },
+	{ "joy_advaxisy", "2", 1 },
+	{ "joy_advaxisz", "0", 1 },
+	{ "joy_advaxisr", "0", 1 },
+	{ "joy_advaxisu", "0", 1 },
+	{ "joy_advaxisv", "0", 1 },
+};
+
+
+void joy_cmd_joyadvancedupdate(int argc, char **argv)
+{
+	if (argc > 1) {
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    updates current joystick and mouse axis settings\n");
+		return;
+	}
+
+	kc_set_controls();
+}
+
+
 void joy_button_handler(SDL_JoyButtonEvent *jbe)
 {
 	int button;
@@ -108,6 +142,11 @@ int joy_init()
 
 	memset(&Joystick,0,sizeof(Joystick));
 	memset(joyaxis_text, 0, JOY_MAX_AXES * sizeof(char *));
+
+	for (i = 0; i < 6; i++)
+		cvar_registervariable(&joy_advaxes[i]);
+
+	cmd_addcommand("joyadvancedupdate", joy_cmd_joyadvancedupdate);
 
 	n = SDL_NumJoysticks();
 

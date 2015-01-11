@@ -23,6 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pstypes.h"
 #include "fix.h"
+#include "console.h"
 
 
 #define MOUSE_MAX_BUTTONS   16
@@ -42,6 +43,19 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MOUSE_LBTN 1
 #define MOUSE_RBTN 2
 #define MOUSE_MBTN 4
+
+
+// Axis mapping cvars
+// 0 = no action
+// 1 = move forward/back
+// 2 = look up/down
+// 3 = move left/right
+// 4 = look left/right
+// 5 = move up/down
+// 6 = bank left/right
+
+extern cvar_t mouse_axes[];
+
 
 //========================================================================
 // Check for mouse driver, reset driver if installed. returns number of

@@ -186,6 +186,19 @@ extern control_info Controls;
 extern void controls_read_all();
 extern void kconfig(int n, char *title);
 
+
+typedef enum
+{
+	AXIS_NONE,
+	AXIS_THROTTLE,
+	AXIS_PITCH,
+	AXIS_LEFTRIGHT,
+	AXIS_TURN,
+	AXIS_UPDOWN,
+	AXIS_BANK,
+} kc_axis_map;
+
+
 // added on 2/4/99 by Victor Rachels to add new keys menu
 #define NUM_D2X_CONTROLS    20
 #define MAX_D2X_CONTROLS    40

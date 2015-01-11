@@ -22,6 +22,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pstypes.h"
 #include "fix.h"
+#include "console.h"
+
 
 // added October 24, 2000 20:40  Steven Mueller: more than 4 joysticks now
 #define MAX_JOY_DEVS 8
@@ -61,6 +63,19 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #else
 #define JOY_MAX_BUTTONS 32
 #endif
+
+
+// Axis mapping cvars
+// 0 = no action
+// 1 = move forward/back
+// 2 = look up/down
+// 3 = move left/right
+// 4 = look left/right
+// 5 = move up/down
+// 6 = bank left/right
+
+extern cvar_t joy_advaxes[];
+
 
 //==========================================================================
 // This initializes the joy and does a "quick" calibration which
