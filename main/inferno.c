@@ -223,6 +223,7 @@ void print_commandline_help()
 	printf( "  -nohogdir       %s\n", "don't try to use shared data directory");
 	printf( "  -userdir <dir>  %s\n", "set user dir to <dir> instead of $HOME/.d2x");
 #endif
+	printf( "  -autoexec <file> %s\n", "autoexec file (execute console commands), defaults to autoexec.cfg");
 	printf( "  -ini <file>     %s\n", "option file (alternate to command line), defaults to d2x.ini");
 	printf( "  -autodemo       %s\n", "Start in demo mode");
 	printf( "  -bigpig         %s\n","FIXME: Undocumented");
