@@ -322,59 +322,37 @@ char *kc_key_bind_text[NUM_KEY_CONTROLS] = {
 	"+togglebomb",
 };
 kc_item kc_joystick[NUM_OTHER_CONTROLS] = {
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ 13, 22,154, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
-	{ 14, 22,154, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,162, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
-	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164,154, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
-	{ 18,164,154,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,162, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
-	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,172, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
-	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,180, 58, 40, 21, 18, 22, 24,"throttle", BT_JOY_AXIS, 255 },
-	{ 24,164,180,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
+	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
+	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
+	{ 13, 22, 99, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
+	{ 14, 22, 99, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
+	{ 15, 22,107, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
+	{ 16, 22,107, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
+	{ 17,164, 99, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
+	{ 18,164, 99,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
+	{ 19,164,107, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
+	{ 20,164,107,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
+	{ 21,164,117, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
+	{ 22,164,117,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
+	{ 23,164,125, 58, 40, 21, 18, 22, 24,"throttle", BT_JOY_AXIS, 255 },
+	{ 24,164,125,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
 };
 
 kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ 13,103,138, 58, 26, 24, 15, 24, 14,"Pitch U/D", BT_MOUSE_AXIS, 255 },
-	{ 14,103,138,106,  8, 23, 16, 13, 15,"Pitch U/D", BT_INVERT, 255 },
-	{ 15,103,146, 58, 26, 13, 17, 14, 16,"Turn L/R", BT_MOUSE_AXIS, 255 },
-	{ 16,103,146,106,  8, 14, 18, 15, 17,"Turn L/R", BT_INVERT, 255 },
-	{ 17,103,154, 58, 26, 15, 19, 16, 18,"Slide L/R", BT_MOUSE_AXIS, 255 },
-	{ 18,103,154,106,  8, 16, 20, 17, 19,"Slide L/R", BT_INVERT, 255 },
-	{ 19,103,162, 58, 26, 17, 21, 18, 20,"Slide U/D", BT_MOUSE_AXIS, 255 },
-	{ 20,103,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,103,170, 58, 26, 19, 23, 20, 22,"Bank L/R", BT_MOUSE_AXIS, 255 },
-	{ 22,103,170,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,103,182, 58, 26, 21, 14, 22, 24,"throttle", BT_MOUSE_AXIS, 255 },
-	{ 24,103,182,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
+	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
+	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
+	{ 13, 22,154, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_MOUSE_AXIS, 255 },
+	{ 14, 22,154, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
+	{ 15, 22,162, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_MOUSE_AXIS, 255 },
+	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
+	{ 17,164,154, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_MOUSE_AXIS, 255 },
+	{ 18,164,154,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
+	{ 19,164,162, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_MOUSE_AXIS, 255 },
+	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
+	{ 21,164,172, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_MOUSE_AXIS, 255 },
+	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
+	{ 23,164,180, 58, 40, 21, 18, 22, 24,"throttle", BT_MOUSE_AXIS, 255 },
+	{ 24,164,180,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
 };
 
 kc_axis_map kc_other_axismap[NUM_OTHER_CONTROLS] = {
@@ -737,23 +715,26 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	} if ( items == kc_joystick )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
-		gr_scanline( LHX(18), LHX(144), LHY(119+18) );
+		gr_scanline( LHX(18), LHX(138), LHY(64+18) );
+		gr_scanline( LHX(181), LHX(294), LHY(64+18) );
+		gr_string( 0x8000, LHY(62+18), TXT_CONTROL_JOYSTICK );
+		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
+		gr_string( LHX(81), LHY(82+8), TXT_AXIS );
+		gr_string( LHX(111), LHY(82+8), TXT_INVERT );
+		gr_string( LHX(230), LHY(82+8), TXT_AXIS );
+		gr_string( LHX(260), LHY(82+8), TXT_INVERT );
+
+	} else if ( items == kc_mouse )	{
+		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
+		gr_setcolor( BM_XRGB(31,27,6) );
+		gr_scanline( LHX(18), LHX(143), LHY(119+18) );
 		gr_scanline( LHX(174), LHX(294), LHY(119+18) );
-		gr_string( 0x8000,LHY(117+18), TXT_AXES );
+		gr_string( 0x8000, LHY(117+18), TXT_CONTROL_MOUSE );
 		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 		gr_string( LHX(81), LHY(137+8), TXT_AXIS );
 		gr_string( LHX(111), LHY(137+8), TXT_INVERT );
 		gr_string( LHX(230), LHY(137+8), TXT_AXIS );
 		gr_string( LHX(260), LHY(137+8), TXT_INVERT );
-	} else if ( items == kc_mouse )	{
-		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
-		gr_setcolor( BM_XRGB(31,27,6) );
-		gr_scanline( LHX(18), LHX(144), LHY(119+5) );
-		gr_scanline( LHX(174), LHX(294), LHY(119+5) );
-		gr_string( 0x8000,LHY(117+5), TXT_AXES );
-		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-		gr_string( LHX(169), LHY(129), TXT_AXIS );
-		gr_string( LHX(199), LHY(129), TXT_INVERT );
 	}
 	else if ( items == kc_d2x )
 	{
