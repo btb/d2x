@@ -458,13 +458,6 @@ int read_player_file()
 
 	strcpy(real_guidebot_name,guidebot_name);
 
-	{
-		char buf[128];
-
-		if (player_file_version >= 24)
-			PHYSFSX_readString(file, buf);			// Just read it in fpr DPS.
-	}
-
 	if (!PHYSFS_close(file))
 		goto read_player_file_failed;
 
@@ -647,12 +640,6 @@ int write_player_file()
 
 	//write guidebot name
 	PHYSFSX_writeString(file, real_guidebot_name);
-
-	{
-		char buf[128];
-		strcpy(buf, "DOS joystick");
-		PHYSFSX_writeString(file, buf);		// Write out current joystick for player.
-	}
 
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;
