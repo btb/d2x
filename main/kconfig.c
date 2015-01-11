@@ -420,8 +420,6 @@ ubyte default_kconfig_d2x_settings[MAX_D2X_CONTROLS] = {
 
 void kc_drawitem( kc_item *item, int is_current );
 void kc_change_key( kc_item * item );
-void kc_change_joybutton( kc_item * item );
-void kc_change_mousebutton( kc_item * item );
 void kc_next_joyaxis(kc_item *item);  //added by WraithX on 11/22/00
 void kc_change_joyaxis( kc_item * item );
 void kc_change_mouseaxis( kc_item * item );
