@@ -376,6 +376,16 @@ void key_cmd_bind(int argc, char **argv)
 	int key = -1;
 	int i;
 
+	if (argc == 2 && !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <key> <commands>\n", argv[0]);
+		con_printf(CON_NORMAL, "    bind <commands> to <key>\n");
+		con_printf(CON_NORMAL, "%s <key>\n", argv[0]);
+		con_printf(CON_NORMAL, "    show the current binding for <key>\n");
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    show all key bindings\n");
+		return;
+	}
+
 	if (argc < 2)
 	{
 		con_printf(CON_NORMAL, "key bindings:\n");
@@ -424,8 +434,11 @@ void key_cmd_unbind(int argc, char **argv)
 {
 	unsigned int key;
 
-	if (argc < 2)
+	if (argc != 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <key>\n", argv[0]);
+		con_printf(CON_NORMAL, "    remove binding from <key>\n");
 		return;
+	}
 
 	for (key = 0; key < 256; key++) {
 		if (!stricmp(argv[1], key_text[key])) {

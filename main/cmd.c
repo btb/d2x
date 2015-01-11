@@ -307,9 +307,9 @@ void cmd_alias(int argc, char **argv)
 	int i;
 
 	if (argc == 2 && !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s [name] [commands]\n", argv[0]);
+		con_printf(CON_NORMAL, "%s <name> <commands>\n", argv[0]);
 		con_printf(CON_NORMAL, "    define <name> as an alias for <commands>\n");
-		con_printf(CON_NORMAL, "%s [name]\n", argv[0]);
+		con_printf(CON_NORMAL, "%s <name>\n", argv[0]);
 		con_printf(CON_NORMAL, "    show the current definition of <name>\n");
 		con_printf(CON_NORMAL, "%s\n", argv[0]);
 		con_printf(CON_NORMAL, "    show all defined aliases\n");
@@ -462,8 +462,8 @@ void cmd_help(int argc, char **argv)
 	cmd_t *cmd;
 
 	if (argc > 2 || (argc == 2 && !stricmp(argv[1], "-h"))) {
-		con_printf(CON_NORMAL, "usage: %s [cmd]\n", argv[0]);
-		con_printf(CON_NORMAL, "    get help for <cmd>, or list all commands if not specified.\n");
+		con_printf(CON_NORMAL, "usage: %s [command]\n", argv[0]);
+		con_printf(CON_NORMAL, "    get help for <command>, or list all commands if not specified.\n");
 
 		return;
 	}

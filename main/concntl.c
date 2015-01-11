@@ -83,8 +83,11 @@ void concntl_cmd_weapon(int argc, char **argv)
 {
 	int n;
 
-	if (argc < 2)
+	if (argc < 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <num>\n", argv[0]);
+		con_printf(CON_NORMAL, "    select or toggle weapon <num>\n");
 		return;
+	}
 
 	n = atoi(argv[1]);
 	if (n == 0)

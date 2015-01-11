@@ -37,8 +37,11 @@ void cvar_cmd_set(int argc, char **argv)
 	char buf[CVAR_MAX_LENGTH];
 	int ret, i;
 
-	if (argc < 3)
+	if (argc < 3 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <name> <value>\n", argv[0]);
+		con_printf(CON_NORMAL, "    set variable <name> equal to <value>\n");
 		return;
+	}
 
 	ret = snprintf(buf, CVAR_MAX_LENGTH, "%s", argv[2]);
 	if (ret >= CVAR_MAX_LENGTH) {

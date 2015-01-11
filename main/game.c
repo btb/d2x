@@ -286,8 +286,11 @@ void load_background_bitmap()
 /* load player */
 void game_cmd_player(int argc, char **argv)
 {
-	if (argc < 2)
+	if (argc < 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <name>\n", argv[0]);
+		con_printf(CON_NORMAL, "    use the player/pilot file <name>\n");
 		return;
+	}
 
 	strncpy(Players[Player_num].callsign, argv[1], CALLSIGN_LEN);
 
@@ -305,8 +308,11 @@ void game_cmd_map(int argc, char **argv)
 {
 	int level_num = 1;
 
-	if (argc < 2)
+	if (argc < 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <name> [num]\n", argv[0]);
+		con_printf(CON_NORMAL, "    start level <num> of mission <name> (defaults to level 1)\n");
 		return;
+	}
 
 	if (!strlen(Players[Player_num].callsign)) {
 		con_printf(CON_CRITICAL, "map: no player selected, not starting level\n");
@@ -334,8 +340,11 @@ void game_cmd_say(int argc, char **argv)
 {
 	int ret, i;
 
-	if (argc < 2)
+	if (argc < 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <text>\n", argv[0]);
+		con_printf(CON_NORMAL, "    send the message <text> to the network\n");
 		return;
+	}
 
 	Network_message[0] = 0;
 
@@ -360,6 +369,12 @@ void game_cmd_say(int argc, char **argv)
 /* increase window size */
 void game_cmd_sizeup(int argc, char **argv)
 {
+	if (argc > 1) {
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    increase the game window size\n");
+		return;
+	}
+
 	grow_window();
 }
 
@@ -367,6 +382,12 @@ void game_cmd_sizeup(int argc, char **argv)
 /* decrease window size */
 void game_cmd_sizedown(int argc, char **argv)
 {
+	if (argc > 1) {
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    decrease the game window size\n");
+		return;
+	}
+
 	shrink_window();
 }
 
