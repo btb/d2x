@@ -101,7 +101,7 @@ void cmd_execute(int argc, char **argv)
 	}
 
 	/* Otherwise */
-	if (argc > 1) {  // set value of cvar
+	{  // set value of cvar
 		char *new_argv[argc+1];
 		int i;
 

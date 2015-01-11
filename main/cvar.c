@@ -37,9 +37,31 @@ void cvar_cmd_set(int argc, char **argv)
 	char buf[CVAR_MAX_LENGTH];
 	int ret, i;
 
-	if (argc < 3 || !stricmp(argv[1], "-h")) {
+	if (argc == 2 && !stricmp(argv[1], "-h")) {
 		con_printf(CON_NORMAL, "%s <name> <value>\n", argv[0]);
 		con_printf(CON_NORMAL, "    set variable <name> equal to <value>\n");
+		con_printf(CON_NORMAL, "%s <name>\n", argv[0]);
+		con_printf(CON_NORMAL, "    show value of <name>\n");
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    show value of all variables\n");
+		return;
+	}
+
+	if (argc == 2) {
+		cvar_t *ptr;
+
+		if ((ptr = cvar_find(argv[1])))
+			con_printf(CON_NORMAL, "%s: %s\n", ptr->name, ptr->string);
+		else
+			con_printf(CON_NORMAL, "set: variable %s not found\n", argv[1]);
+		return;
+	}
+
+	if (argc == 1) {
+		cvar_t *ptr;
+
+		for (ptr = cvar_list; ptr != NULL; ptr = ptr->next)
+			con_printf(CON_NORMAL, "%s: %s\n", ptr->name, ptr->string);
 		return;
 	}
 
