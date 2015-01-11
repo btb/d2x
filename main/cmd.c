@@ -356,6 +356,38 @@ void cmd_alias(int argc, char **argv)
 }
 
 
+/* unalias */
+void cmd_unalias(int argc, char **argv)
+{
+	cmd_alias_t *alias, *prev_alias = NULL;
+
+	if (argc != 2 || (argc == 2 && !stricmp(argv[1], "-h"))) {
+		con_printf(CON_NORMAL, "%s <name>\n", argv[0]);
+		con_printf(CON_NORMAL, "    undefine the alias <name>\n");
+		return;
+	}
+
+	for (alias = cmd_alias_list; alias ; alias = alias->next) {
+		if (!stricmp(argv[1], alias->name))
+			break;
+		prev_alias = alias;
+	}
+
+	if (!alias) {
+		con_printf(CON_NORMAL, "alias: %s not found\n", argv[1]);
+		return;
+	}
+
+	if (prev_alias)
+		prev_alias->next = alias->next;
+	else
+		cmd_alias_list = alias->next;
+
+	d_free(alias->value);
+	d_free(alias);
+}
+
+
 /* echo to console */
 void cmd_echo(int argc, char **argv)
 {
@@ -490,6 +522,7 @@ void cmd_free(void)
 void cmd_init(void)
 {
 	cmd_addcommand("alias", cmd_alias);
+	cmd_addcommand("unalias", cmd_unalias);
 	cmd_addcommand("echo", cmd_echo);
 	cmd_addcommand("exec", cmd_exec);
 	cmd_addcommand("help", cmd_help);
