@@ -252,8 +252,6 @@ extern int Guided_in_big_window,Automap_always_hires;
 extern char guidebot_name[];
 extern char real_guidebot_name[];
 
-ubyte control_type_dos,control_type_win;
-
 
 uint32_t legacy_display_mode[] = { SM(320,200), SM(640,480), SM(320,400), SM(640,400), SM(800,600), SM(1024,768), SM(1280,1024) };
 
@@ -374,19 +372,18 @@ int read_player_file()
 	//read kconfig data
 	{
 		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
-		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
+		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS], control_type_win;
 
 		if (player_file_version < 25)
 			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
 				goto read_player_file_failed;
-		if (PHYSFS_read(file, (ubyte *)&control_type_dos, sizeof(ubyte), 1) != 1)
+		if (PHYSFS_read(file, (ubyte *)&Config_control_type, sizeof(ubyte), 1) != 1)
 			goto read_player_file_failed;
-		else if (player_file_version >= 21 && PHYSFS_read(file, (ubyte *)&control_type_win, sizeof(ubyte), 1) != 1)
+		else if (player_file_version >= 21 && player_file_version < 25
+			&& PHYSFS_read(file, (ubyte *)&control_type_win, sizeof(ubyte), 1) != 1)
 			goto read_player_file_failed;
 		else if (PHYSFS_read(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) !=1 )
 			goto read_player_file_failed;
-
-		Config_control_type = control_type_dos;
 		
 		#ifdef MACINTOSH
 		joydefs_set_type(Config_control_type);
@@ -621,12 +618,7 @@ int write_player_file()
 
 	//write kconfig info
 	{
-
-		control_type_dos = Config_control_type;
-
-		if (PHYSFS_write(file, &control_type_dos, sizeof(ubyte), 1) != 1)
-			goto write_player_file_failed;
-		else if (PHYSFS_write(file, &control_type_win, sizeof(ubyte), 1) != 1)
+		if (PHYSFS_write(file, &Config_control_type, sizeof(ubyte), 1) != 1)
 			goto write_player_file_failed;
 		else if (PHYSFS_write(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) != 1)
 			goto write_player_file_failed;
