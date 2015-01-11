@@ -306,11 +306,31 @@ void cmd_alias(int argc, char **argv)
 	char buf[CMD_MAX_LENGTH] = "";
 	int i;
 
-	if (argc < 2)
-	{
+	if (argc == 2 && !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s [name] [commands]\n", argv[0]);
+		con_printf(CON_NORMAL, "    define <name> as an alias for <commands>\n");
+		con_printf(CON_NORMAL, "%s [name]\n", argv[0]);
+		con_printf(CON_NORMAL, "    show the current definition of <name>\n");
+		con_printf(CON_NORMAL, "%s\n", argv[0]);
+		con_printf(CON_NORMAL, "    show all defined aliases\n");
+		return;
+	}
+
+	if (argc < 2) {
 		con_printf(CON_NORMAL, "aliases:\n");
 		for (alias = cmd_alias_list; alias; alias = alias->next)
 			con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
+		return;
+	}
+
+	if (argc == 2) {
+		for (alias = cmd_alias_list; alias; alias = alias->next)
+			if (!stricmp(argv[1], alias->name)) {
+				con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
+				return;
+			}
+
+		con_printf(CON_NORMAL, "alias: %s not found\n", argv[1]);
 		return;
 	}
 
@@ -321,8 +341,7 @@ void cmd_alias(int argc, char **argv)
 	}
 
 	for (alias = cmd_alias_list; alias; alias = alias->next) {
-		if (!stricmp(argv[1], alias->name))
-		{
+		if (!stricmp(argv[1], alias->name)) {
 			d_free(alias->value);
 			alias->value = d_strdup(buf);
 			return;
@@ -353,6 +372,14 @@ void cmd_echo(int argc, char **argv)
 {
 	char buf[CMD_MAX_LENGTH] = "";
 	int i;
+
+	if (argc == 2 && !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "usage: %s [text]\n", argv[0]);
+		con_printf(CON_NORMAL, "    write <text> to the console\n");
+
+		return;
+	}
+
 	for (i = 1; i < argc; i++) {
 		if (i > 1)
 			strncat(buf, " ", CMD_MAX_LENGTH);
@@ -367,8 +394,12 @@ void cmd_exec(int argc, char **argv) {
 	PHYSFS_File *f;
 	char line[CMD_MAX_LENGTH] = "";
 
-	if (argc < 2)
+	if (argc != 2 || (argc == 2 && !stricmp(argv[1], "-h"))) {
+		con_printf(CON_NORMAL, "usage: %s <file>\n", argv[0]);
+		con_printf(CON_NORMAL, "    execute <file>\n");
+
 		return;
+	}
 
 	head = tail = NULL;
 
@@ -404,9 +435,41 @@ void cmd_exec(int argc, char **argv) {
 }
 
 
+/* get help */
+void cmd_help(int argc, char **argv)
+{
+	cmd_t *cmd;
+
+	if (argc > 2 || (argc == 2 && !stricmp(argv[1], "-h"))) {
+		con_printf(CON_NORMAL, "usage: %s [cmd]\n", argv[0]);
+		con_printf(CON_NORMAL, "    get help for <cmd>, or list all commands if not specified.\n");
+
+		return;
+	}
+
+	if (argc < 2) {
+		con_printf(CON_NORMAL, "Available commands:\n");
+		for (cmd = cmd_list; cmd; cmd = cmd->next) {
+			con_printf(CON_NORMAL, "    %s\n", cmd->name);
+		}
+
+		return;
+	}
+
+	cmd_insertf("%s -h", argv[1]);
+}
+
+
 /* execute script */
 void cmd_wait(int argc, char **argv)
 {
+	if (argc > 2 || (argc == 2 && !stricmp(argv[1], "-h"))) {
+		con_printf(CON_NORMAL, "usage: %s [n]\n", argv[0]);
+		con_printf(CON_NORMAL, "    stop processing commands, resume in <n> cycles (default 1)\n");
+
+		return;
+	}
+
 	if (argc < 2)
 		cmd_queue_wait = 1;
 	else
@@ -441,6 +504,7 @@ void cmd_init(void)
 	cmd_addcommand("impulse", cmd_impulse);
 	cmd_addcommand("echo", cmd_echo);
 	cmd_addcommand("exec", cmd_exec);
+	cmd_addcommand("help", cmd_help);
 	cmd_addcommand("wait", cmd_wait);
 
 	atexit(cmd_free);
