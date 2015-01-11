@@ -356,17 +356,6 @@ void cmd_alias(int argc, char **argv)
 }
 
 
-/* weapon select */
-void cmd_impulse(int argc, char**argv)
-{
-	if (argc < 2)
-		return;
-	int n = atoi(argv[1]);
-	if (n >= 1 && n <= 20) {
-		select_weapon((n-1) % 10, (n-1) / 10, 0, 1);
-	}
-}
-
 /* echo to console */
 void cmd_echo(int argc, char **argv)
 {
@@ -501,7 +490,6 @@ void cmd_free(void)
 void cmd_init(void)
 {
 	cmd_addcommand("alias", cmd_alias);
-	cmd_addcommand("impulse", cmd_impulse);
 	cmd_addcommand("echo", cmd_echo);
 	cmd_addcommand("exec", cmd_exec);
 	cmd_addcommand("help", cmd_help);
