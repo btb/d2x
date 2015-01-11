@@ -348,33 +348,6 @@ kc_item kc_joystick[NUM_OTHER_CONTROLS] = {
 	{ 23,164,180, 58, 40, 21, 18, 22, 24,"throttle", BT_JOY_AXIS, 255 },
 	{ 24,164,180,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
 };
-kc_item kc_superjoy[NUM_OTHER_CONTROLS] = {
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ -1 },
-	{ 13, 22,154, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
-	{ 14, 22,154, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,162, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
-	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164,154, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
-	{ 18,164,154,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,162, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
-	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,172, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
-	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,180, 58, 40, 21, 18, 22, 24,"throttle", BT_JOY_AXIS, 255 },
-	{ 24,164,180,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
-};
 
 kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 	{ -1 },
@@ -1389,7 +1362,6 @@ void kconfig(int n, char * title)
 	case 0:kconfig_sub( kc_keyboard, NUM_KEY_CONTROLS, title );break;
 	case 1:kconfig_sub( kc_joystick, NUM_OTHER_CONTROLS, title );break;
 	case 2:kconfig_sub( kc_mouse, NUM_OTHER_CONTROLS, title ); break;
-	case 3:kconfig_sub( kc_superjoy, NUM_OTHER_CONTROLS, title); break;
 	case 4:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
  	default:
 		Int3();
