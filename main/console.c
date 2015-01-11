@@ -51,7 +51,7 @@ int isvga();
 cvar_t con_threshold = {"con_threshold", "0",};
 
 /* Private console stuff */
-#define CON_NUM_LINES 40
+#define CON_NUM_LINES 128
 
 #define FG_COLOR    grd_curcanv->cv_font_fg_color
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
@@ -624,10 +624,12 @@ void CON_InitGFX(int w, int h)
 #endif
 	
 	/* calculate the number of visible characters in the command line */
+#if 0 // doesn't work because proportional font
 	console->VChars = (w - CON_CHAR_BORDER) / console->ConsoleSurface->cv_font->ft_w;
 	if(console->VChars >= CON_CHARS_PER_LINE)
 		console->VChars = CON_CHARS_PER_LINE - 1;
-	
+#endif
+
 	gr_init_bitmap_data(&bmp);
 	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
 	Assert(pcx_error == PCX_ERROR_NONE);
@@ -830,6 +832,33 @@ void DrawCommandLine() {
 #endif
 }
 
+
+static inline int con_get_width(void)
+{
+	if (!console->ConsoleSurface)
+		return 0;
+
+	return console->ConsoleSurface->cv_bitmap.bm_w - CON_CHAR_BORDER;
+}
+
+
+static inline int con_get_string_width(char *string)
+{
+	grs_canvas *canv_save;
+	int w = 0, h, aw;
+
+	if (!console->ConsoleSurface)
+		return 0;
+
+	canv_save = grd_curcanv;
+	gr_set_current_canvas(console->ConsoleSurface);
+	gr_get_string_size(string, &w, &h, &aw);
+	gr_set_current_canvas(canv_save);
+
+	return w;
+}
+
+
 #ifdef _MSC_VER
 # define vsnprintf _vsnprintf
 #endif
@@ -860,7 +889,8 @@ void CON_Out(const char *str, ...) {
 				CON_NewLineConsole();
 				strcat(console->ConsoleLines[0], ptemp);
 				ptemp = p+1;
-			} else if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0])) {
+			} else if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0]) ||
+					   con_get_string_width(ptemp) > con_get_width()) {
 				CON_NewLineConsole();
 				strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
 				console->ConsoleLines[0][console->VChars] = '\0';
