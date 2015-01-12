@@ -179,6 +179,9 @@ extern ubyte Secondary_weapon_to_powerup[MAX_SECONDARY_WEAPONS];
 extern ubyte Primary_last_was_super[MAX_PRIMARY_WEAPONS];
 extern ubyte Secondary_last_was_super[MAX_SECONDARY_WEAPONS];
 
+extern ubyte SecondaryOrder[], PrimaryOrder[];
+extern void InitWeaponOrdering();
+
 extern void auto_select_weapon(int weapon_type);        //parm is primary or secondary
 extern void select_weapon(int weapon_num, int secondary_flag, int print_message,int wait_for_rearm);
 

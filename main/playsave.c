@@ -118,14 +118,10 @@ hli highest_levels[MAX_MISSIONS];
 
 
 int Default_leveling_on=1;
-extern ubyte SecondaryOrder[],PrimaryOrder[];
-extern void InitWeaponOrdering();
 
 
 int new_player_config()
 {
-	InitWeaponOrdering (); // setup default weapon priorities
-
 	Player_default_difficulty = 1;
 	Auto_leveling_on = Default_leveling_on = 1;
 	n_highest_levels = 1;
@@ -269,6 +265,7 @@ int read_player_file()
 		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
 		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS], control_type_win;
 		ubyte Config_control_type, Config_joystick_sensitivity;
+		ubyte SecondaryOrder[11], PrimaryOrder[11];
 
 		if (player_file_version < 25)
 			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)

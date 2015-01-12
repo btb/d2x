@@ -82,6 +82,8 @@ cvar_t config_last_mission      = { "LastMission", "", 1 };
 cvar_t Config_vr_type           = { "VR_type", "0", 1 };
 cvar_t Config_vr_resolution     = { "VR_resolution", "0", 1 };
 cvar_t Config_vr_tracking       = { "VR_tracking", "0", 1 };
+cvar_t Config_primary_order     = { "PrimaryOrder", "", 1 };
+cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
@@ -182,6 +184,8 @@ static void config_init(void)
 	cvar_registervariable(&Config_vr_tracking);
 	cvar_registervariable(&MovieHires);
 	cvar_registervariable(&real_guidebot_name);
+	cvar_registervariable(&Config_primary_order);
+	cvar_registervariable(&Config_secondary_order);
 
 	config_initialized = 1;
 }
@@ -278,6 +282,16 @@ int ReadConfigFile()
 	SaveMovieHires = MovieHires.intval;
 	save_redbook_enabled = Redbook_enabled.intval;
 
+	InitWeaponOrdering(); // setup default weapon priorities
+	cvar_set_cvarf(&Config_primary_order, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		PrimaryOrder[0], PrimaryOrder[1], PrimaryOrder[2], PrimaryOrder[3],
+		PrimaryOrder[4], PrimaryOrder[5], PrimaryOrder[6], PrimaryOrder[7],
+		PrimaryOrder[8], PrimaryOrder[9], PrimaryOrder[10]);
+	cvar_set_cvarf(&Config_secondary_order, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		SecondaryOrder[0], SecondaryOrder[1], SecondaryOrder[2], SecondaryOrder[3],
+		SecondaryOrder[4], SecondaryOrder[5], SecondaryOrder[6], SecondaryOrder[7],
+		SecondaryOrder[8], SecondaryOrder[9], SecondaryOrder[10]);
+
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");
 	else
@@ -333,6 +347,15 @@ int ReadConfigFile()
 
 	strncpy(guidebot_name, real_guidebot_name.string, GUIDEBOT_NAME_LEN);
 	guidebot_name[GUIDEBOT_NAME_LEN] = 0;
+
+	sscanf(Config_primary_order.string, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		(int *)&PrimaryOrder[0], (int *)&PrimaryOrder[1], (int *)&PrimaryOrder[2], (int *)&PrimaryOrder[3],
+		(int *)&PrimaryOrder[4], (int *)&PrimaryOrder[5], (int *)&PrimaryOrder[6], (int *)&PrimaryOrder[7],
+		(int *)&PrimaryOrder[8], (int *)&PrimaryOrder[9], (int *)&PrimaryOrder[10]);
+	sscanf(Config_secondary_order.string, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		(int *)&SecondaryOrder[0], (int *)&SecondaryOrder[1], (int *)&SecondaryOrder[2], (int *)&SecondaryOrder[3],
+		(int *)&SecondaryOrder[4], (int *)&SecondaryOrder[5], (int *)&SecondaryOrder[6], (int *)&SecondaryOrder[7],
+		(int *)&SecondaryOrder[8], (int *)&SecondaryOrder[9], (int *)&SecondaryOrder[10]);
 
 #if 0
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
@@ -419,6 +442,15 @@ int WriteConfigFile()
 	cvar_set_cvar( &config_last_player, Players[Player_num].callsign );
 
 	cvar_setint( &MovieHires, SaveMovieHires );
+
+	cvar_set_cvarf(&Config_primary_order, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		PrimaryOrder[0], PrimaryOrder[1], PrimaryOrder[2], PrimaryOrder[3],
+		PrimaryOrder[4], PrimaryOrder[5], PrimaryOrder[6], PrimaryOrder[7],
+		PrimaryOrder[8], PrimaryOrder[9], PrimaryOrder[10]);
+	cvar_set_cvarf(&Config_secondary_order, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+		SecondaryOrder[0], SecondaryOrder[1], SecondaryOrder[2], SecondaryOrder[3],
+		SecondaryOrder[4], SecondaryOrder[5], SecondaryOrder[6], SecondaryOrder[7],
+		SecondaryOrder[8], SecondaryOrder[9], SecondaryOrder[10]);
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)
