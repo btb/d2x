@@ -161,6 +161,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 	cvar->string = d_strdup(value);
 	cvar->value = strtod(cvar->string, (char **) NULL);
 	cvar->intval = cvar_round(cvar->value);
+	con_printf(CON_VERBOSE, "%s: %s\n", cvar->name, cvar->string);
 }
 
 
@@ -182,7 +183,16 @@ void cvar_set_cvarf(cvar_t *cvar, char *fmt, ...)
 
 void cvar_set (char *cvar_name, char *value)
 {
-	cvar_set_cvar(cvar_find(cvar_name), value);
+	cvar_t *cvar;
+
+	cvar = cvar_find(cvar_name);
+	if (!cvar) {
+		Int3();
+		con_printf(CON_NORMAL, "cvar %s not found\n", cvar_name);
+		return;
+	}
+
+	cvar_set_cvar(cvar, value);
 }
 
 

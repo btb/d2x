@@ -110,7 +110,6 @@ void cmd_execute(int argc, char **argv)
 			new_argv[i+1] = argv[i];
 		cvar_cmd_set(argc + 1, new_argv);
 	}
-	con_printf(CON_VERBOSE, "%s: %f\n", argv[0], cvar(argv[0]));
 }
 
 
