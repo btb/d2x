@@ -13,7 +13,7 @@ extern int Buddy_dude_cheat;
 
 #define GUIDEBOT_NAME_LEN 9
 extern char guidebot_name[];
-extern char real_guidebot_name[];
+extern cvar_t real_guidebot_name;
 
 extern void change_guidebot_name(void);
 

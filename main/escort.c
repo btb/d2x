@@ -110,7 +110,7 @@ int	Last_buddy_key;
 fix	Last_buddy_message_time;
 
 char guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
-char real_guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
+cvar_t real_guidebot_name = { "guidebot_name", "GUIDE-BOT", 1 };
 
 void init_buddy_for_level(void)
 {
@@ -386,8 +386,7 @@ void change_guidebot_name()
 
 	if (item != -1) {
 		strcpy(guidebot_name,text);
-		strcpy(real_guidebot_name,text);
-		write_player_file();
+		cvar_set_cvar(&real_guidebot_name, text);
 	}
 }
 

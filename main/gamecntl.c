@@ -2045,7 +2045,8 @@ void FinalCheats(int key)
 		strcpy(guidebot_name,"Wingnut");
 	 }
 	 else {
-		strcpy(guidebot_name,real_guidebot_name);
+		strncpy(guidebot_name, real_guidebot_name.string, GUIDEBOT_NAME_LEN);
+		guidebot_name[GUIDEBOT_NAME_LEN] = 0;
 		HUD_init_message ("%s calms down",guidebot_name);
 	 }
   }

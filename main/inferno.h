@@ -21,6 +21,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _INFERNO_H
 
 #include "pstypes.h"
+#include "console.h"
+#include "escort.h"
 
 
 // MACRO for single line #ifdef WINDOWS #else DOS

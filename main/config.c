@@ -181,6 +181,7 @@ static void config_init(void)
 	cvar_registervariable(&Config_vr_resolution);
 	cvar_registervariable(&Config_vr_tracking);
 	cvar_registervariable(&MovieHires);
+	cvar_registervariable(&real_guidebot_name);
 
 	config_initialized = 1;
 }
@@ -326,6 +327,9 @@ int ReadConfigFile()
 	if ( Config_redbook_volume.intval > 8 ) cvar_setint( &Config_redbook_volume, 8 );
 
 	digi_set_volume( (Config_digi_volume.intval * 32768) / 8, (Config_midi_volume.intval * 128) / 8 );
+
+	strncpy(guidebot_name, real_guidebot_name.string, GUIDEBOT_NAME_LEN);
+	guidebot_name[GUIDEBOT_NAME_LEN] = 0;
 
 #if 0
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );

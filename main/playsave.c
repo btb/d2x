@@ -112,7 +112,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: removed kconfig data
+//version 24 -> 25: removed kconfig data, joy name, guidebot name
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -246,12 +246,6 @@ RetrySelection:
 }
 
 extern int Guided_in_big_window,Automap_always_hires;
-
-//this length must match the value in escort.c
-#define GUIDEBOT_NAME_LEN 9
-extern char guidebot_name[];
-extern char real_guidebot_name[];
-
 
 uint32_t legacy_display_mode[] = { SM(320,200), SM(640,480), SM(320,400), SM(640,400), SM(800,600), SM(1024,768), SM(1280,1024) };
 
@@ -450,14 +444,6 @@ int read_player_file()
 #endif
 	}
 
-	//read guidebot name
-	if (player_file_version >= 18)
-		PHYSFSX_readString(file, guidebot_name);
-	else
-		strcpy(guidebot_name,"GUIDE-BOT");
-
-	strcpy(real_guidebot_name,guidebot_name);
-
 	if (!PHYSFS_close(file))
 		goto read_player_file_failed;
 
@@ -637,9 +623,6 @@ int write_player_file()
 #endif
 		PHYSFS_writeULE32(file, i);
 	}
-
-	//write guidebot name
-	PHYSFSX_writeString(file, real_guidebot_name);
 
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;
