@@ -722,7 +722,7 @@ int set_screen_mode(int sm)
 				//we probably should do something else here, like select a standard mode
 			}
 			#ifdef MACINTOSH
-			if ( (Config_control_type == 1) && (Function_mode == FMODE_GAME) )
+			if ( (Config_control_type.intval == CONTROL_JOYSTICK) && (Function_mode == FMODE_GAME) )
 				joydefs_calibrate();
 			#endif
 			reset_cockpit();

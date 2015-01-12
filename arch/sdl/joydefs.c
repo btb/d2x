@@ -36,19 +36,21 @@ void joydefs_calibrate()
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	int i;
-	int oc_type = Config_control_type;
+	int oc_type = Config_control_type.intval;
 
 	for (i=0; i<3; i++ )
-		if (items[i].value) Config_control_type = i;
+		if (items[i].value)
+			cvar_setint(&Config_control_type, i);
 
-        if (Config_control_type == 2) Config_control_type = CONTROL_MOUSE;
+	if (Config_control_type.intval == 2)
+		cvar_setint(&Config_control_type, CONTROL_MOUSE);
 
-	if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_THRUSTMASTER_FCS ) ) {
+	if ( (oc_type != Config_control_type.intval) && (Config_control_type.intval == CONTROL_THRUSTMASTER_FCS ) ) {
 		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
 	}
 
-	if (oc_type != Config_control_type) {
-		switch (Config_control_type) {
+	if (oc_type != Config_control_type.intval) {
+		switch (Config_control_type.intval) {
 	//		case	CONTROL_NONE:
 			case	CONTROL_JOYSTICK:
 			case	CONTROL_FLIGHTSTICK_PRO:
@@ -74,27 +76,27 @@ void joydefs_config()
 	m[3].type = NM_TYPE_TEXT;   m[3].text = "";
 	m[4].type = NM_TYPE_MENU;   m[4].text = TXT_CUST_ABOVE;
 	m[5].type = NM_TYPE_TEXT;   m[5].text = "";
-	m[6].type = NM_TYPE_SLIDER; m[6].text = TXT_JOYS_SENSITIVITY; m[6].value = Config_joystick_sensitivity; m[6].min_value = 0; m[6].max_value = 16;
+	m[6].type = NM_TYPE_SLIDER; m[6].text = TXT_JOYS_SENSITIVITY; m[6].value = Config_joystick_sensitivity.intval; m[6].min_value = 0; m[6].max_value = 16;
 	m[7].type = NM_TYPE_TEXT;   m[7].text = "";
 	m[8].type = NM_TYPE_MENU;   m[8].text = TXT_CUST_KEYBOARD;
 	m[9].type = NM_TYPE_MENU;   m[9].text = "CUSTOMIZE D2X KEYS";
 
 	do {
 
-		i = Config_control_type;
+		i = Config_control_type.intval;
 		if (i == CONTROL_MOUSE) i = 2;
 		m[i].value = 1;
 
 		i1 = newmenu_do1(NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1);
 
-		Config_joystick_sensitivity = m[6].value;
+		cvar_setint(&Config_joystick_sensitivity, m[6].value);
 
 		for (j = 0; j <= 2; j++)
 			if (m[j].value)
-				Config_control_type = j;
-		i = Config_control_type;
-		if (Config_control_type == 2)
-			Config_control_type = CONTROL_MOUSE;
+				cvar_setint(&Config_control_type, j);
+		i = Config_control_type.intval;
+		if (Config_control_type.intval == 2)
+			cvar_setint(&Config_control_type, CONTROL_MOUSE);
 
 		switch (i1) {
 		case 4:

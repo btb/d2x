@@ -96,7 +96,10 @@ void joydefs_calibrate()
 
 	joydefs_calibrate_flag = 0;
 
-	if ( (Config_control_type!=CONTROL_JOYSTICK) && (Config_control_type!=CONTROL_FLIGHTSTICK_PRO) && (Config_control_type!=CONTROL_THRUSTMASTER_FCS) && (Config_control_type!=CONTROL_GRAVIS_GAMEPAD) )	
+	if ( (Config_control_type.intval != CONTROL_JOYSTICK) &&
+		 (Config_control_type.intval != CONTROL_FLIGHTSTICK_PRO) &&
+		 (Config_control_type.intval != CONTROL_THRUSTMASTER_FCS) &&
+		 (Config_control_type.intval != CONTROL_GRAVIS_GAMEPAD) )
 		return;
 
 	joy_get_cal_vals(org_axis_min, org_axis_center, org_axis_max);
@@ -165,14 +168,14 @@ void joydefs_calibrate()
 	joy_delay();
 
 	// The fcs uses axes 3 for hat, so don't calibrate it.
-        if (Config_control_type == CONTROL_THRUSTMASTER_FCS)  {
+	if (Config_control_type.intval == CONTROL_THRUSTMASTER_FCS) {
 		axis_min[3] = 0;
 		axis_cen[3] = temp_values[3]/2;
 		axis_max[3] = temp_values[3];
 		joy_delay();
 	}
 
-        if (Joy_is_Sidewinder || Config_control_type != CONTROL_THRUSTMASTER_FCS) {
+	if (Joy_is_Sidewinder || Config_control_type.intval != CONTROL_THRUSTMASTER_FCS) {
             //    masks = joy_get_present_mask();
 
                 if ( nsticks == 2 )     {
@@ -273,7 +276,7 @@ void joydefs_calibrate()
 
 //added 9/1/98 by Victor Rachels to make sidewinder calibratable
 /*         if(Joy_is_Sidewinder)
-          Config_control_type=tempstick; */
+		cvar_setint(&Config_control_type, tempstick); */
 //end this section addition - Victor Rachels
 
 
@@ -286,21 +289,22 @@ void joydefs_calibrate()
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	int i;
-	int oc_type = Config_control_type;
+	int oc_type = Config_control_type.intval;
 
 	nitems = nitems;
 	last_key = last_key;
 	citem = citem;		
 
 	for (i=0; i<CONTROL_MAX_TYPES; i++ )
-		if (items[i].value) Config_control_type = i;
+		if (items[i].value)
+			cvar_setint(&Config_control_type, i);
 
-	if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_THRUSTMASTER_FCS ) )	{
+	if ( (oc_type != Config_control_type.intval) && (Config_control_type.intval == CONTROL_THRUSTMASTER_FCS ) ) {
 		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
 	}
 
-	if (oc_type != Config_control_type) {
-		switch (Config_control_type) {
+	if (oc_type != Config_control_type.intval) {
+		switch (Config_control_type.intval) {
 	//		case	CONTROL_NONE:
 			case	CONTROL_JOYSTICK:
 			case	CONTROL_FLIGHTSTICK_PRO:
@@ -350,7 +354,7 @@ void joydefs_config()
 			nitems = nitems + 1;
 		}
 		
-		m[Config_control_type].value = 1;
+		m[Config_control_type.intval].value = 1;
 	 
 		i1 = newmenu_do1( NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1 );
 
@@ -365,13 +369,13 @@ void joydefs_config()
 					if (kconfig_is_axes_used(i))
 						old_masks |= (1<<i);
 				}
-				if ( Config_control_type==0 )
+				if ( Config_control_type.intval == CONTROL_NONE )
 					// nothing...
-					Config_control_type=0;
-				else if ( Config_control_type<5 ) 
-                                        kconfig(1, CONTROL_TEXT(Config_control_type) );
+					cvar_setint(&Config_control_type, CONTROL_NONE);
+				else if ( Config_control_type.intval < CONTROL_MOUSE )
+					kconfig(1, CONTROL_TEXT(Config_control_type.intval) );
 				else 
-					kconfig(2, CONTROL_TEXT(Config_control_type) ); 
+					kconfig(2, CONTROL_TEXT(Config_control_type.intval) );
 
 				masks = 0;
 				for (i=0; i<4; i++ )		{
@@ -379,7 +383,7 @@ void joydefs_config()
 						masks |= (1<<i);
 				}
 
-				switch (Config_control_type) {
+				switch (Config_control_type.intval) {
 				case	CONTROL_JOYSTICK:
 				case	CONTROL_FLIGHTSTICK_PRO:
 				case	CONTROL_THRUSTMASTER_FCS:	
@@ -409,7 +413,7 @@ void joydefs_config()
 
 	} while(i1>-1);
 
-	switch (Config_control_type) {
+	switch (Config_control_type.intval) {
 	case	CONTROL_JOYSTICK:
 	case	CONTROL_FLIGHTSTICK_PRO:
 	case	CONTROL_THRUSTMASTER_FCS:

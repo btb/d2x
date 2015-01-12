@@ -51,9 +51,9 @@ extern ConfigInfo gConfigInfo;
 extern ubyte Config_master_volume;
 #endif
 extern cvar_t Config_redbook_volume;
-extern ubyte Config_control_type;
+extern cvar_t Config_control_type;
 extern cvar_t Config_channels_reversed;
-extern ubyte Config_joystick_sensitivity;
+extern cvar_t Config_joystick_sensitivity;
 
 //values for Config_control_type
 #define CONTROL_NONE 0

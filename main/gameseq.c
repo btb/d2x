@@ -721,14 +721,6 @@ int RegisterPlayer()
 	int allow_abort_flag = 1;
 
 	if ( Players[Player_num].callsign[0] == 0 )	{
-		//---------------------------------------------------------------------
-		// Set default config options in case there is no config file
-		// kc_keyboard, kc_joystick, kc_mouse are statically defined.
-		Config_joystick_sensitivity = 8;
-		Config_control_type =CONTROL_NONE;
-		kc_set_controls();
-		//----------------------------------------------------------------
-
 		// Read the last player's name from config file, not lastplr.txt
 		strncpy( Players[Player_num].callsign, config_last_player.string, CALLSIGN_LEN );
 

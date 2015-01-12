@@ -652,7 +652,7 @@ int check_button_press()
 {
 	int i;
 
-	switch (Config_control_type) {
+	switch (Config_control_type.intval) {
 	case	CONTROL_JOYSTICK:
 	case	CONTROL_FLIGHTSTICK_PRO:
 	case	CONTROL_THRUSTMASTER_FCS:
@@ -674,7 +674,7 @@ int check_button_press()
 
 		break;
 	default:
-		Error("Bad control type (Config_control_type):%i",Config_control_type);
+		Error("Bad ControlType: %i", Config_control_type.intval);
 	}
 
 	return 0;

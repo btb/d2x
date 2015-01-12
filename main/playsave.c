@@ -112,7 +112,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: removed kconfig data, joy name, guidebot name
+//version 24 -> 25: removed kconfig data, joy name, guidebot name, control type, joy sensitivity
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -121,115 +121,16 @@ int Default_leveling_on=1;
 extern ubyte SecondaryOrder[],PrimaryOrder[];
 extern void InitWeaponOrdering();
 
-#ifdef MACINTOSH
-extern ubyte default_firebird_settings[];
-extern ubyte default_mousestick_settings[];
-#endif
 
 int new_player_config()
 {
-	int nitems;
-	int i,j,control_choice;
-	newmenu_item m[8];
-   int mct=CONTROL_MAX_TYPES;
- 
-   #ifndef WINDOWS
- 	 mct--;
-	#endif
+	InitWeaponOrdering (); // setup default weapon priorities
 
-   InitWeaponOrdering ();		//setup default weapon priorities 
-
-#if defined(MACINTOSH) && defined(USE_ISP)
-	if (!ISpEnabled())
-	{
-#endif
-RetrySelection:
-		#if !defined(MACINTOSH)
-		for (i=0; i<mct; i++ )	{
-			m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
-		}
-		#else
-		for (i = 0; i < 6; i++) {
-			m[i].type = NM_TYPE_MENU; m[i].text = CONTROL_TEXT(i);
-		}
-		m[4].text = "Gravis Firebird/Mousetick II";
-		m[3].text = "Thrustmaster";
-		#endif
-		
-		nitems = i;
-		m[0].text = TXT_CONTROL_KEYBOARD;
-	
-			control_choice = Config_control_type;				// Assume keyboard
-	
-		#ifndef APPLE_DEMO
-			control_choice = newmenu_do1( NULL, TXT_CHOOSE_INPUT, i, m, NULL, control_choice );
-		#else
-			control_choice = 0;
-		#endif
-		
-		if ( control_choice < 0 )
-			return 0;
-
-#if defined(MACINTOSH) && defined(USE_ISP)
-	}
-	else	// !!!!NOTE ... link to above if (!ISpEnabled()), this is a really crappy function
-	{
-		control_choice = 0;
-	}
-#endif
-
-	kc_set_controls();
-
-	Config_control_type = control_choice;
-
-	#ifndef MACINTOSH
-	if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)	{
-		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, TXT_FCS );
-		if (i==0) goto RetrySelection;
-	}
-	
-	if ( (Config_control_type>0) && 	(Config_control_type<5))	{
-		joydefs_calibrate();
-	}
-	#else		// some macintosh only stuff here
-	if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)	{
-		extern char *tm_warning;
-		
-		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, tm_warning );
-		if (i==0) goto RetrySelection;
-	} else 	if ( Config_control_type==CONTROL_FLIGHTSTICK_PRO )	{
-		extern char *ch_warning;
-
-		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, ch_warning );
-		if (i==0) goto RetrySelection;
-	} else 	if ( Config_control_type==CONTROL_GRAVIS_GAMEPAD )	{
-		extern char *ms_warning;
-
-		i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, ms_warning );
-		if (i==0) goto RetrySelection;
-		// stupid me -- get real default setting for either mousestick or firebird
-		joydefs_set_type( Config_control_type );
-		if (joy_have_firebird())
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )
-				kconfig_settings[Config_control_type][i] = default_firebird_settings[i];
-		else
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )
-				kconfig_settings[Config_control_type][i] = default_mousestick_settings[i];
-		kc_set_controls();		// reset the joystick control
-	}
-	if ( (Config_control_type>0) && (Config_control_type<5)  ) {
-		joydefs_set_type( Config_control_type );
-		joydefs_calibrate();
-	}
-
-	#endif
-	
 	Player_default_difficulty = 1;
 	Auto_leveling_on = Default_leveling_on = 1;
 	n_highest_levels = 1;
 	highest_levels[0].shortname[0] = 0;			//no name for mission 0
 	highest_levels[0].level_num = 1;				//was highest level in old struct
-	Config_joystick_sensitivity = 8;
 	Cockpit_3d_view[0]=CV_NONE;
 	Cockpit_3d_view[1]=CV_NONE;
 
@@ -367,6 +268,7 @@ int read_player_file()
 	{
 		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
 		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS], control_type_win;
+		ubyte Config_control_type, Config_joystick_sensitivity;
 
 		if (player_file_version < 25)
 			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
@@ -379,10 +281,6 @@ int read_player_file()
 		else if (PHYSFS_read(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) !=1 )
 			goto read_player_file_failed;
 		
-		#ifdef MACINTOSH
-		joydefs_set_type(Config_control_type);
-		#endif
-
 		for (i=0;i<11;i++)
 		{
 			PrimaryOrder[i] = cfile_read_byte(file);
@@ -597,9 +495,9 @@ int write_player_file()
 
 	//write kconfig info
 	{
-		if (PHYSFS_write(file, &Config_control_type, sizeof(ubyte), 1) != 1)
+		if (PHYSFSX_writeU8(file, Config_control_type.intval) != 1)
 			goto write_player_file_failed;
-		else if (PHYSFS_write(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) != 1)
+		else if (PHYSFSX_writeU8(file, Config_joystick_sensitivity.intval) != 1)
 			goto write_player_file_failed;
 
 		for (i = 0; i < 11; i++)

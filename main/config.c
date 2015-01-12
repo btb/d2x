@@ -56,10 +56,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "physfsx.h"
 
 
-ubyte Config_control_type = 0;
-ubyte Config_joystick_sensitivity = 8;
-
-
 #ifdef __MSDOS__
 cvar_t Config_digi_type         = { "DigiDeviceID8", "0", 1 };
 cvar_t digi_driver_board_16     = { "DigiDeviceID16", "0", 1 };
@@ -75,7 +71,9 @@ cvar_t Config_midi_volume       = { "MidiVolume", "8", 1 };
 cvar_t Config_redbook_volume    = { "RedbookVolume", "8", 1 };
 cvar_t Config_detail_level      = { "DetailLevel", "4", 1 };
 cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
+cvar_t Config_control_type      = { "ControlType", "0", 1 };
 cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
+cvar_t Config_joystick_sensitivity = { "JoystickSensitivity", "8", 1 };
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
 cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
 cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", 1 };
@@ -172,6 +170,8 @@ static void config_init(void)
 	cvar_registervariable(&Config_channels_reversed);
 	cvar_registervariable(&Config_gamma_level);
 	cvar_registervariable(&Config_detail_level);
+	cvar_registervariable(&Config_control_type);
+	cvar_registervariable(&Config_joystick_sensitivity);
 	cvar_registervariable(&Config_joystick_min);
 	cvar_registervariable(&Config_joystick_cen);
 	cvar_registervariable(&Config_joystick_max);
@@ -270,8 +270,9 @@ int ReadConfigFile()
 	cvar_setint( &Config_digi_volume, 8 );
 	cvar_setint( &Config_midi_volume, 8 );
 	cvar_setint( &Config_redbook_volume, 8 );
-	Config_control_type = 0;
+	cvar_setint( &Config_control_type, CONTROL_NONE );
 	cvar_setint( &Config_channels_reversed, 0);
+	cvar_setint( &Config_joystick_sensitivity, 8 );
 
 	//set these here in case no cfg file
 	SaveMovieHires = MovieHires.intval;
@@ -327,6 +328,8 @@ int ReadConfigFile()
 	if ( Config_redbook_volume.intval > 8 ) cvar_setint( &Config_redbook_volume, 8 );
 
 	digi_set_volume( (Config_digi_volume.intval * 32768) / 8, (Config_midi_volume.intval * 128) / 8 );
+
+	kc_set_controls();
 
 	strncpy(guidebot_name, real_guidebot_name.string, GUIDEBOT_NAME_LEN);
 	guidebot_name[GUIDEBOT_NAME_LEN] = 0;

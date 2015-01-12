@@ -141,27 +141,29 @@ void joydefs_calibrate()
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
 {
 	int i;
-	int oc_type = Config_control_type;
+	int oc_type = Config_control_type.intval;
 
 	nitems = nitems;
 	last_key = last_key;
 	citem = citem;		
 
 	for (i=0; i<3; i++ )
-		if (items[i].value) Config_control_type = i;
+		if (items[i].value)
+			cvar_setint(&Config_control_type, i);
 
 //added on 10/17/98 by Hans de Goede for joystick/mouse # fix
        // remap mouse, since "Flightstick Pro", "Thrustmaster FCS"
        //   and "Gravis Gamepad" where removed from the options
-        if (Config_control_type == 2) Config_control_type = CONTROL_MOUSE;
+        if (Config_control_type.intval == 2)
+			cvar_setint(&Config_control_type, CONTROL_MOUSE);
 //end this section addition - Hans
 
-	if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_THRUSTMASTER_FCS ) )	{
+	if ( (oc_type != Config_control_type.intval) && (Config_control_type.intval == CONTROL_THRUSTMASTER_FCS ) )	{
 		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
 	}
 
-	if (oc_type != Config_control_type) {
-		switch (Config_control_type) {
+	if (oc_type != Config_control_type.intval) {
+		switch (Config_control_type.intval) {
 	//		case	CONTROL_NONE:
 			case	CONTROL_JOYSTICK:
 			case	CONTROL_FLIGHTSTICK_PRO:
@@ -205,12 +207,12 @@ void joydefs_config()
 //end this section addition - VR
 
 //added/changed/killed on 10/17/98 by Hans de Goede for joystick/mouse # fix
-//-killed-                m[Config_control_type].value = 1;
+//-killed-                m[Config_control_type.intval].value = 1;
 
             do {
 
 
-              i = Config_control_type;
+              i = Config_control_type.intval;
               if(i==CONTROL_MOUSE) i = 2;
               m[i].value=1;
 //end section - OE
@@ -221,16 +223,16 @@ void joydefs_config()
 //added 6-15-99 Owen Evans
 		for (j = 0; j <= 2; j++)
 			if (m[j].value)
-				Config_control_type = j;
-		i = Config_control_type;
-		if (Config_control_type == 2)
-			Config_control_type = CONTROL_MOUSE;
+				cvar_setint(&Config_control_type, j);
+		i = Config_control_type.intval;
+		if (Config_control_type.intval == 2)
+			cvar_setint(&Config_control_type, CONTROL_MOUSE);
 //end added - OE
 
 		switch(i1)	{
 			case 4: 
 //added/changed on 10/17/98 by Hans de Goede for joystick/mouse # fix
-//-killed-                                kconfig(Config_control_type, m[Config_control_type].text);
+//-killed-                                kconfig(Config_control_type.intval, m[Config_control_type.intval].text);
                                 kconfig (i, m[i].text);
 //end this section change - Hans
                                 break;
