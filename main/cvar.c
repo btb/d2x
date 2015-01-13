@@ -119,8 +119,6 @@ char *cvar_complete(char *text)
 }
 
 
-#define cvar_round(x) ((x)>=0?(int)((x)+0.5):(int)((x)-0.5))
-
 /* Register a cvar */
 void cvar_registervariable (cvar_t *cvar)
 {
@@ -136,7 +134,7 @@ void cvar_registervariable (cvar_t *cvar)
 
 	cvar->string = d_strdup(stringval);
 	cvar->value = strtod(cvar->string, (char **) NULL);
-	cvar->intval = cvar_round(cvar->value);
+	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	cvar->next = NULL;
 
 	if (cvar_list == NULL) {
@@ -160,7 +158,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 	d_free(cvar->string);
 	cvar->string = d_strdup(value);
 	cvar->value = strtod(cvar->string, (char **) NULL);
-	cvar->intval = cvar_round(cvar->value);
+	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	con_printf(CON_VERBOSE, "%s: %s\n", cvar->name, cvar->string);
 }
 
