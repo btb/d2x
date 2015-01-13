@@ -89,8 +89,6 @@ void ui_checkbox_do( UI_GADGET_CHECKBOX * checkbox, int keypress )
 {
 	int OnMe, ButtonLastSelected;
 
-	keypress = keypress;
-
 	OnMe = ui_mouse_on_gadget( (UI_GADGET *)checkbox );
 
 	checkbox->oldposition = checkbox->position;

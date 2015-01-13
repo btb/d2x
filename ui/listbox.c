@@ -359,8 +359,6 @@ void ui_listbox_change(UI_WINDOW *wnd, UI_GADGET_LISTBOX *listbox, short numitem
 	int stop, start;
 	UI_GADGET_SCROLLBAR * scrollbar;
 
-	wnd = wnd;
-
 	listbox->list = list;
 	listbox->num_items = numitems;
 	listbox->first_item = 0;

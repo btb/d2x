@@ -582,7 +582,6 @@ void menubar_do( int keypress )
 {
 	if (menubar_hid) return;
 		
-	keypress = keypress;
 	do_state_0(last_keypress);
 	
 	while (state > 0 )

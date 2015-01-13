@@ -30,7 +30,7 @@ static int bar_width, bar_height, bar_x, bar_y, bar_maxlength;
 
 void ui_barbox_open( char * text, int length )
 {
-	grs_font * temp_font;
+	grs_font *temp_font = NULL;
 	int text_width, text_height, avg;
 	int w,h, width, height, xc, yc, x, y;
 

@@ -106,8 +106,6 @@ int GetKeyCode(char * text)
 	UI_GADGET_BUTTON * DoneButton;
 	char temp_text[100];
 
-	text = text;
-
 	wnd = ui_open_window( 200, 200, 400, 200, WIN_DIALOG );
 
 	DoneButton = ui_add_gadget_button( wnd, 170, 165, 60, 25, "Ok", NULL );

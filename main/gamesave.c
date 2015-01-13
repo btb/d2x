@@ -1551,6 +1551,8 @@ int save_game_data(PHYSFS_file *SaveFile)
 	doors_offset = PHYSFS_tell(SaveFile);
 	for (i = 0; i < Num_open_doors; i++)
 		door_write(&ActiveDoors[i], game_top_fileinfo_version, SaveFile);
+#else
+	doors_offset = 0; // kill warning
 #endif
 
 	//==================== SAVE TRIGGER INFO =============================

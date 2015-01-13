@@ -103,7 +103,6 @@ void ui_scrollbar_do( UI_GADGET_SCROLLBAR * scrollbar, int keypress )
 	int oldpos, op;
 
 	keyfocus = 0;
-	keypress = keypress;
 
 	if (CurWindow->keyboard_focus_gadget==(UI_GADGET *)scrollbar)
 		keyfocus = 1;
