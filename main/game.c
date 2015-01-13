@@ -2140,8 +2140,8 @@ int Missile_view_enabled = 1;
 int Marker_viewer_num[2]={-1,-1};
 int Coop_view_player[2]={-1,-1};
 cvar_t Cockpit_3d_view[2] = {
-	{ "Cockpit_view_left", "0", 1 },
-	{ "Cockpit_view_right", "0", 1 },
+	{ "CockpitViewLeft", "0", 1 },
+	{ "CockpitViewRight", "0", 1 },
 };
 
 //returns ptr to escort robot, or NULL
