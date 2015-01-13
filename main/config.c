@@ -196,10 +196,12 @@ static void config_init(void)
 	cvar_registervariable(&Config_lifetime_kills);
 	cvar_registervariable(&Config_lifetime_killed);
 	cvar_registervariable(&Config_lifetime_checksum);
+#ifdef NETWORK
 	cvar_registervariable(&Network_message_macro[0]);
 	cvar_registervariable(&Network_message_macro[1]);
 	cvar_registervariable(&Network_message_macro[2]);
 	cvar_registervariable(&Network_message_macro[3]);
+#endif
 
 	config_initialized = 1;
 }

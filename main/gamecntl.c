@@ -1135,29 +1135,24 @@ int HandleSystemKey(int key)
 			}
 			break;
 
+#ifdef NETWORK
 		case KEY_COMMAND+KEY_7:
 		case KEY_F7:
-			#ifdef NETWORK
 			Show_kill_list = (Show_kill_list+1) % ((Game_mode & GM_TEAM) ? 4 : 3);
 			if (Game_mode & GM_MULTI)
 				multi_sort_kill_list();
-		#endif
 			break;
 
 		case KEY_COMMAND+KEY_8:
 		case KEY_F8:
-			#ifdef NETWORK
 			multi_send_message_start();
-			#endif
 			break;
 
 		case KEY_F9:
 		case KEY_F10:
 		case KEY_F11:
 		case KEY_F12:
-			#ifdef NETWORK
 			multi_send_macro(key);
-			#endif
 			break;		// send taunt macros
 
 		case KEY_9 + KEY_COMMAND:
@@ -1177,9 +1172,7 @@ int HandleSystemKey(int key)
 		case KEY_SHIFTED + KEY_F10:
 		case KEY_SHIFTED + KEY_F11:
 		case KEY_SHIFTED + KEY_F12:
-			#ifdef NETWORK
 			multi_define_macro(key);
-			#endif
 			break;		// redefine taunt macros
 
 		case KEY_9 + KEY_SHIFTED + KEY_COMMAND:
@@ -1194,6 +1187,7 @@ int HandleSystemKey(int key)
 		case KEY_2 + KEY_SHIFTED + KEY_COMMAND + KEY_CTRLED:
 			multi_define_macro(KEY_F12);
 			break;
+#endif
 
 		case KEY_COMMAND+KEY_S:
 		case KEY_COMMAND+KEY_ALTED+KEY_2:

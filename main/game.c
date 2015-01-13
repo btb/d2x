@@ -338,7 +338,9 @@ void game_cmd_map(int argc, char **argv)
 /* send network message */
 void game_cmd_say(int argc, char **argv)
 {
+#ifdef NETWORK
 	int ret, i;
+#endif
 
 	if (argc < 2 || !stricmp(argv[1], "-h")) {
 		con_printf(CON_NORMAL, "%s <text>\n", argv[0]);
@@ -346,6 +348,7 @@ void game_cmd_say(int argc, char **argv)
 		return;
 	}
 
+#ifdef NETWORK
 	Network_message[0] = 0;
 
 	ret = snprintf(Network_message, MAX_MESSAGE_LEN, "%s", argv[1]);
@@ -363,6 +366,7 @@ void game_cmd_say(int argc, char **argv)
 	}
 
 	multi_send_message_end();
+#endif
 }
 
 
