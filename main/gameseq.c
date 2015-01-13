@@ -716,7 +716,6 @@ try_again:
 //Inputs the player's name, without putting up the background screen
 int RegisterPlayer()
 {
-	int i,j;
 	char filename[14];
 	int allow_abort_flag = 1;
 
