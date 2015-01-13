@@ -111,7 +111,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: removed kconfig data, joy name, guidebot name, joy sensitivity, cockpit views, netstats
+//version 24 -> 25: removed kconfig data, joy name, guidebot name, joy sensitivity, cockpit views, netstats, taunt macros
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -127,14 +127,6 @@ int new_player_config()
 	highest_levels[0].shortname[0] = 0;			//no name for mission 0
 	highest_levels[0].level_num = 1;				//was highest level in old struct
 
-	// Default taunt macros
-	#ifdef NETWORK
-	strcpy(Network_message_macro[0], "Why can't we all just get along?");
-	strcpy(Network_message_macro[1], "Hey, I got a present for ya");
-	strcpy(Network_message_macro[2], "I got a hankerin' for a spankerin'");
-	strcpy(Network_message_macro[3], "This one's headed for Uranus");
-	#endif
-	
 	return 1;
 }
 
@@ -238,23 +230,6 @@ int read_player_file()
 
 	if (PHYSFS_read(file, highest_levels, sizeof(hli), n_highest_levels) != n_highest_levels)
 		goto read_player_file_failed;
-
-	//read taunt macros
-	{
-#ifdef NETWORK
-		int i,len;
-
-		len = MAX_MESSAGE_LEN;
-
-		for (i = 0; i < 4; i++)
-			if (PHYSFS_read(file, Network_message_macro[i], len, 1) != 1)
-				goto read_player_file_failed;
-#else
-		char dummy[4][MAX_MESSAGE_LEN];
-
-		cfread(dummy, MAX_MESSAGE_LEN, 4, file);
-#endif
-	}
 
 	if (!PHYSFS_close(file))
 		goto read_player_file_failed;
@@ -395,17 +370,6 @@ int write_player_file()
 	if ((PHYSFS_write(file, highest_levels, sizeof(hli), n_highest_levels) != n_highest_levels))
 		goto write_player_file_failed;
 
-#ifdef NETWORK
-	if ((PHYSFS_write(file, Network_message_macro, MAX_MESSAGE_LEN, 4) != 4))
-		goto write_player_file_failed;
-#else
-	{
-		char dummy[4][MAX_MESSAGE_LEN];	// Pull the messages from a hat! ;-)
-
-		if ((PHYSFS_write(file, dummy, MAX_MESSAGE_LEN, 4) != 4))
-			goto write_player_file_failed;
-	}
-#endif
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;
 

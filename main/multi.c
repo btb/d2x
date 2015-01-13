@@ -146,7 +146,12 @@ int   Network_laser_flags;      // Special flags for the shot
 int   Network_laser_level;      // What level
 short Network_laser_track;      // Who is it tracking?
 char  Network_message[MAX_MESSAGE_LEN];
-char  Network_message_macro[4][MAX_MESSAGE_LEN];
+cvar_t Network_message_macro[4] = {
+	{ "TauntMacro1", "", 1 },
+	{ "TauntMacro2", "", 1 },
+	{ "TauntMacro3", "", 1 },
+	{ "TauntMacro4", "", 1 },
+};
 int   Network_message_reciever=-1;
 int   sorted_kills[MAX_NUM_NET_PLAYERS];
 short kill_matrix[MAX_NUM_NET_PLAYERS][MAX_NUM_NET_PLAYERS];
@@ -1152,13 +1157,13 @@ multi_send_macro(int key)
 		Int3();
 	}
 
-	if (!Network_message_macro[key][0])
-	{
+	if (!Network_message_macro[key].string[0]) {
 		HUD_init_message(TXT_NO_MACRO);
 		return;
 	}
 
-	strcpy(Network_message, Network_message_macro[key]);
+	strncpy(Network_message, Network_message_macro[key].string, MAX_MESSAGE_LEN);
+	Network_message[MAX_MESSAGE_LEN - 1] = 0;
 	Network_message_reciever = 100;
 
 	HUD_init_message("%s '%s'", TXT_SENDING, Network_message);
@@ -1387,7 +1392,7 @@ void multi_define_macro_end()
 {
 	Assert( multi_defining_message > 0 );
 
-	strcpy( Network_message_macro[multi_defining_message-1], Network_message );
+	cvar_set_cvar( &Network_message_macro[multi_defining_message - 1], Network_message );
 	write_player_file();
 
 	multi_message_index = 0;

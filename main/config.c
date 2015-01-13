@@ -196,6 +196,10 @@ static void config_init(void)
 	cvar_registervariable(&Config_lifetime_kills);
 	cvar_registervariable(&Config_lifetime_killed);
 	cvar_registervariable(&Config_lifetime_checksum);
+	cvar_registervariable(&Network_message_macro[0]);
+	cvar_registervariable(&Network_message_macro[1]);
+	cvar_registervariable(&Network_message_macro[2]);
+	cvar_registervariable(&Network_message_macro[3]);
 
 	config_initialized = 1;
 }
@@ -308,6 +312,14 @@ int ReadConfigFile()
 	cvar_setint( &Config_lifetime_kills, 0 );
 	cvar_setint( &Config_lifetime_killed, 0 );
 	cvar_setint( &Config_lifetime_checksum, 0 );
+
+	// Default taunt macros
+#ifdef NETWORK
+	cvar_set_cvar(&Network_message_macro[0], "Why can't we all just get along?");
+	cvar_set_cvar(&Network_message_macro[1], "Hey, I got a present for ya");
+	cvar_set_cvar(&Network_message_macro[2], "I got a hankerin' for a spankerin'");
+	cvar_set_cvar(&Network_message_macro[3], "This one's headed for Uranus");
+#endif
 
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");
