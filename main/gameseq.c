@@ -141,6 +141,8 @@ int 	Player_num=0;	// The player number who is on the console.
 player	Players[MAX_PLAYERS+4];	// Misc player info
 obj_position	Player_init[MAX_PLAYERS];
 
+cvar_t Player_highest_level = { "HighestLevel", "0", 0 };
+
 // Global variables telling what sort of game we have
 int MaxNumNetPlayers = -1;
 int NumNetPlayerPositions = -1;
@@ -1821,7 +1823,7 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 	turn_cheats_off();
 
 	if (!(Game_mode & GM_MULTI) && !Cheats_enabled)
-		set_highest_level(Current_level_num);
+		mission_write_config();
 	else
 		read_player_file();		//get window sizes
 

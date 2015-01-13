@@ -872,3 +872,40 @@ int select_mission(int anarchy_mode, char *message)
 	free_mission_list(mission_list);
     return (new_mission_num >= 0);
 }
+
+
+//set a new highest level for player for this mission
+int mission_write_config(void)
+{
+	char filename[FILENAME_LEN+15];
+	PHYSFS_file *file;
+
+	PHYSFS_mkdir(MISSION_DIR);
+
+	sprintf(filename, MISSION_DIR "%s.cfg", Current_mission_filename);
+	file = PHYSFSX_openWriteBuffered(filename);
+
+	if (!file)
+	{
+		nm_messagebox(NULL, 1, TXT_OK, "Cannot open mission config file");
+		return -1;
+	}
+
+	PHYSFSX_printf(file, "%s=%d\n", Player_highest_level.name, Current_level_num);
+
+	PHYSFS_close(file);
+
+	return 0;
+}
+
+
+//gets the player's highest level from the file for this mission
+int mission_read_config(void)
+{
+	cvar_setint(&Player_highest_level, 0);
+
+	cmd_appendf("exec " MISSION_DIR "%s.cfg", Current_mission_filename);
+	while (cmd_queue_process()) {}
+
+	return 0;
+}

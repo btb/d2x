@@ -867,19 +867,19 @@ void do_screen_res_menu()
 
 void do_new_game_menu()
 {
-	int new_level_num,player_highest_level;
+	int new_level_num;
 
     if (!select_mission(0, "New Game\n\nSelect mission"))
         return;
     
 	new_level_num = 1;
 
-	player_highest_level = get_highest_level();
+	mission_read_config();
 
-	if (player_highest_level > Last_level)
-		player_highest_level = Last_level;
+	if (Player_highest_level.intval > Last_level)
+		cvar_setint(&Player_highest_level, Last_level);
 
-	if (player_highest_level > 1) {
+	if (Player_highest_level.intval > 1) {
 		newmenu_item m[4];
 		char info_text[80];
 		char num_text[10];
@@ -887,7 +887,7 @@ void do_new_game_menu()
 		int n_items;
 
 try_again:
-		sprintf(info_text,"%s %d",TXT_START_ANY_LEVEL, player_highest_level);
+		sprintf(info_text, "%s %d", TXT_START_ANY_LEVEL, Player_highest_level.intval);
 
 		m[0].type=NM_TYPE_TEXT; m[0].text = info_text;
 		m[1].type=NM_TYPE_INPUT; m[1].text_len = 10; m[1].text = num_text;
@@ -908,7 +908,7 @@ try_again:
 
 		new_level_num = atoi(m[1].text);
 
-		if (!(new_level_num>0 && new_level_num<=player_highest_level)) {
+		if (!(new_level_num > 0 && new_level_num <= Player_highest_level.intval)) {
 			m[0].text = TXT_ENTER_TO_CONT;
 			nm_messagebox( NULL, 1, TXT_OK, TXT_INVALID_LEVEL); 
 			goto try_again;

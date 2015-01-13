@@ -40,7 +40,7 @@ extern obj_position Player_init[MAX_PLAYERS];
 
 
 // This is the highest level the player has ever reached
-extern int Player_highest_level;
+extern cvar_t Player_highest_level;
 
 //
 // New game sequencing functions

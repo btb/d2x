@@ -81,15 +81,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 
-typedef struct hli {
-	char	shortname[9];
-	ubyte	level_num;
-} hli;
-
-short n_highest_levels;
-
-hli highest_levels[MAX_MISSIONS];
-
 #define PLAYER_FILE_VERSION	25 //increment this every time the player file changes
 
 //version 5  ->  6: added new highest level information
@@ -111,7 +102,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: removed kconfig data, joy name, guidebot name, joy sensitivity, cockpit views, netstats, taunt macros
+//version 24 -> 25: removed kconfig data, joy name, guidebot name, joy sensitivity, cockpit views, netstats, taunt macros, highest levels
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -123,9 +114,6 @@ int new_player_config()
 {
 	Player_default_difficulty = 1;
 	Auto_leveling_on = Default_leveling_on = 1;
-	n_highest_levels = 1;
-	highest_levels[0].shortname[0] = 0;			//no name for mission 0
-	highest_levels[0].level_num = 1;				//was highest level in old struct
 
 	return 1;
 }
@@ -221,16 +209,6 @@ int read_player_file()
 
 	Auto_leveling_on = Default_leveling_on;
 
-	//read new highest level info
-
-	n_highest_levels = cfile_read_short(file);
-	if (swap)
-		n_highest_levels = SWAPSHORT(n_highest_levels);
-	Assert(n_highest_levels <= MAX_MISSIONS);
-
-	if (PHYSFS_read(file, highest_levels, sizeof(hli), n_highest_levels) != n_highest_levels)
-		goto read_player_file_failed;
-
 	if (!PHYSFS_close(file))
 		goto read_player_file_failed;
 
@@ -247,66 +225,6 @@ int read_player_file()
 	return -1;
 }
 
-
-//finds entry for this level in table.  if not found, returns ptr to 
-//empty entry.  If no empty entries, takes over last one 
-int find_hli_entry()
-{
-	int i;
-
-	for (i=0;i<n_highest_levels;i++)
-		if (!stricmp(highest_levels[i].shortname, Current_mission_filename))
-			break;
-
-	if (i==n_highest_levels) {		//not found.  create entry
-
-		if (i==MAX_MISSIONS)
-			i--;		//take last entry
-		else
-			n_highest_levels++;
-
-		strcpy(highest_levels[i].shortname, Current_mission_filename);
-		highest_levels[i].level_num			= 0;
-	}
-
-	return i;
-}
-
-//set a new highest level for player for this mission
-void set_highest_level(int levelnum)
-{
-	int ret,i;
-
-	if ((ret=read_player_file()) != EZERO)
-		if (ret != ENOENT)		//if file doesn't exist, that's ok
-			return;
-
-	i			= find_hli_entry();
-
-	if (levelnum > highest_levels[i].level_num)
-		highest_levels[i].level_num			= levelnum;
-
-	write_player_file();
-}
-
-//gets the player's highest level from the file for this mission
-int get_highest_level(void)
-{
-	int i;
-	int highest_saturn_level			= 0;
-	read_player_file();
-#ifndef SATURN
-	if (strlen(Current_mission_filename)==0 )	{
-		for (i=0;i<n_highest_levels;i++)
-			if (!stricmp(highest_levels[i].shortname, "DESTSAT")) 	//	Destination Saturn.
-		 		highest_saturn_level			= highest_levels[i].level_num; 
-	}
-#endif
-   i			= highest_levels[find_hli_entry()].level_num;
-	if ( highest_saturn_level > i )
-   	i			= highest_saturn_level;
-	return i;
-}
 
 extern int Cockpit_mode_save;
 
@@ -364,11 +282,6 @@ int write_player_file()
 	PHYSFSX_writeU8(file, Headlight_active_default);
 	PHYSFSX_writeU8(file, Guided_in_big_window);
 	PHYSFSX_writeU8(file, Automap_always_hires);
-
-	//write higest level info
-	PHYSFS_writeULE16(file, n_highest_levels);
-	if ((PHYSFS_write(file, highest_levels, sizeof(hli), n_highest_levels) != n_highest_levels))
-		goto write_player_file_failed;
 
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;

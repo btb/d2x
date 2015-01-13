@@ -46,10 +46,4 @@ int new_player_config();
 
 int read_player_file();
 
-// set a new highest level for player for this mission
-void set_highest_level(int levelnum);
-
-// gets the player's highest level from the file for this mission
-int get_highest_level(void);
-
 #endif /* _PLAYSAVE_H */

@@ -418,6 +418,7 @@ void init_game()
 	/* Register cvars */
 	cvar_registervariable(&r_framerate);
 	cvar_registervariable(&cg_fov);
+	cvar_registervariable(&Player_highest_level);
 
 	/* Register cmds */
 	cmd_addcommand("player", game_cmd_player);
