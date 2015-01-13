@@ -80,7 +80,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 # define strerror(x) "Unknown Error"
 #endif
 
-int get_lifetime_checksum (int a,int b);
 
 typedef struct hli {
 	char	shortname[9];
@@ -112,7 +111,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 21 -> 22: save lifetime netstats 
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
-//version 24 -> 25: removed kconfig data, joy name, guidebot name, control type, joy sensitivity
+//version 24 -> 25: removed kconfig data, joy name, guidebot name, joy sensitivity, cockpit views, netstats
 
 #define COMPATIBLE_PLAYER_FILE_VERSION          17
 
@@ -134,7 +133,6 @@ int new_player_config()
 	strcpy(Network_message_macro[1], "Hey, I got a present for ya");
 	strcpy(Network_message_macro[2], "I got a hankerin' for a spankerin'");
 	strcpy(Network_message_macro[3], "This one's headed for Uranus");
-	Netlife_kills=0; Netlife_killed=0;	
 	#endif
 	
 	return 1;
@@ -255,81 +253,6 @@ int read_player_file()
 		char dummy[4][MAX_MESSAGE_LEN];
 
 		cfread(dummy, MAX_MESSAGE_LEN, 4, file);
-#endif
-	}
-
-	//read kconfig data
-	{
-		int n_control_types = (player_file_version<20)?7:CONTROL_MAX_TYPES;
-		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS], control_type_win;
-		ubyte Config_control_type, Config_joystick_sensitivity;
-		ubyte SecondaryOrder[11], PrimaryOrder[11];
-		int Cockpit_3d_view[2];
-
-		if (player_file_version < 25)
-			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
-				goto read_player_file_failed;
-		if (PHYSFS_read(file, (ubyte *)&Config_control_type, sizeof(ubyte), 1) != 1)
-			goto read_player_file_failed;
-		else if (player_file_version >= 21 && player_file_version < 25
-			&& PHYSFS_read(file, (ubyte *)&control_type_win, sizeof(ubyte), 1) != 1)
-			goto read_player_file_failed;
-		else if (PHYSFS_read(file, &Config_joystick_sensitivity, sizeof(ubyte), 1) !=1 )
-			goto read_player_file_failed;
-		
-		for (i=0;i<11;i++)
-		{
-			PrimaryOrder[i] = cfile_read_byte(file);
-			SecondaryOrder[i] = cfile_read_byte(file);
-		}
-
-		if (player_file_version>=16)
-		{
-			PHYSFS_readSLE32(file, &Cockpit_3d_view[0]);
-			PHYSFS_readSLE32(file, &Cockpit_3d_view[1]);
-		}
-
-		kc_set_controls();
-
-	}
-
-	if (player_file_version>=22)
-	{
-#ifdef NETWORK
-		PHYSFS_readSLE32(file, &Netlife_kills);
-		PHYSFS_readSLE32(file, &Netlife_killed);
-		if (swap) {
-			Netlife_kills = SWAPINT(Netlife_kills);
-			Netlife_killed = SWAPINT(Netlife_killed);
-		}
-#else
-		{
-			int dummy;
-			PHYSFS_readSLE32(file, &dummy);
-			PHYSFS_readSLE32(file, &dummy);
-		}
-#endif
-	}
-#ifdef NETWORK
-	else
-	{
-		Netlife_kills=0; Netlife_killed=0;
-	}
-#endif
-
-	if (player_file_version>=23)
-	{
-		PHYSFS_readSLE32(file, &i);
-		if (swap)
-			i = SWAPINT(i);
-#ifdef NETWORK
-		mprintf ((0,"Reading: lifetime checksum is %d\n",i));
-		if (i!=get_lifetime_checksum (Netlife_kills,Netlife_killed))
-		{
-			Netlife_kills=0; Netlife_killed=0;
-			nm_messagebox(NULL, 1, "Shame on me", "Trying to cheat eh?");
-			rewrite_it=1;
-		}
 #endif
 	}
 
@@ -483,36 +406,6 @@ int write_player_file()
 			goto write_player_file_failed;
 	}
 #endif
-
-	//write kconfig info
-	{
-		if (PHYSFSX_writeU8(file, Config_control_type.intval) != 1)
-			goto write_player_file_failed;
-		else if (PHYSFSX_writeU8(file, Config_joystick_sensitivity.intval) != 1)
-			goto write_player_file_failed;
-
-		for (i = 0; i < 11; i++)
-		{
-			PHYSFS_write(file, &PrimaryOrder[i], sizeof(ubyte), 1);
-			PHYSFS_write(file, &SecondaryOrder[i], sizeof(ubyte), 1);
-		}
-
-		PHYSFS_writeULE32(file, Cockpit_3d_view[0].intval);
-		PHYSFS_writeULE32(file, Cockpit_3d_view[1].intval);
-
-#ifdef NETWORK
-		PHYSFS_writeULE32(file, Netlife_kills);
-		PHYSFS_writeULE32(file, Netlife_killed);
-		i=get_lifetime_checksum (Netlife_kills,Netlife_killed);
-		mprintf ((0,"Writing: Lifetime checksum is %d\n",i));
-#else
-		PHYSFS_writeULE32(file, 0);
-		PHYSFS_writeULE32(file, 0);
-		i = get_lifetime_checksum (0, 0);
-#endif
-		PHYSFS_writeULE32(file, i);
-	}
-
 	if (!PHYSFS_close(file))
 		goto write_player_file_failed;
 

@@ -54,6 +54,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "physfsx.h"
+#include "multi.h"
 
 
 #ifdef __MSDOS__
@@ -84,6 +85,9 @@ cvar_t Config_vr_resolution     = { "VR_resolution", "0", 1 };
 cvar_t Config_vr_tracking       = { "VR_tracking", "0", 1 };
 cvar_t Config_primary_order     = { "PrimaryOrder", "", 1 };
 cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
+cvar_t Config_lifetime_kills    = { "LifetimeKills", "0", 1 };
+cvar_t Config_lifetime_killed   = { "LifetimeKilled", "0", 1 };
+cvar_t Config_lifetime_checksum = { "LifetimeChecksum", "0", 1 };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
@@ -95,6 +99,7 @@ cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
 extern sbyte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, Debris_amount, SoundChannels;
 
 void set_custom_detail_vars(void);
+int get_lifetime_checksum(int a, int b);
 
 
 #define CL_MC0 0xF8F
@@ -188,6 +193,9 @@ static void config_init(void)
 	cvar_registervariable(&Config_secondary_order);
 	cvar_registervariable(&Cockpit_3d_view[0]);
 	cvar_registervariable(&Cockpit_3d_view[1]);
+	cvar_registervariable(&Config_lifetime_kills);
+	cvar_registervariable(&Config_lifetime_killed);
+	cvar_registervariable(&Config_lifetime_checksum);
 
 	config_initialized = 1;
 }
@@ -297,6 +305,10 @@ int ReadConfigFile()
 	cvar_setint( &Cockpit_3d_view[0], CV_NONE );
 	cvar_setint( &Cockpit_3d_view[1], CV_NONE );
 
+	cvar_setint( &Config_lifetime_kills, 0 );
+	cvar_setint( &Config_lifetime_killed, 0 );
+	cvar_setint( &Config_lifetime_checksum, 0 );
+
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");
 	else
@@ -361,6 +373,17 @@ int ReadConfigFile()
 		(int *)&SecondaryOrder[0], (int *)&SecondaryOrder[1], (int *)&SecondaryOrder[2], (int *)&SecondaryOrder[3],
 		(int *)&SecondaryOrder[4], (int *)&SecondaryOrder[5], (int *)&SecondaryOrder[6], (int *)&SecondaryOrder[7],
 		(int *)&SecondaryOrder[8], (int *)&SecondaryOrder[9], (int *)&SecondaryOrder[10]);
+
+#ifdef NETWORK
+	Netlife_kills = Config_lifetime_kills.intval;
+	Netlife_killed = Config_lifetime_killed.intval;
+
+	con_printf(CON_DEBUG, "Reading: lifetime checksum is %d\n", Config_lifetime_checksum.intval);
+	if (Config_lifetime_checksum.intval != get_lifetime_checksum(Netlife_kills, Netlife_killed)) {
+		Netlife_kills = Netlife_killed = 0;
+		Warning("Shame on me\nTrying to cheat eh?");
+	}
+#endif
 
 #if 0
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
@@ -456,6 +479,13 @@ int WriteConfigFile()
 		SecondaryOrder[0], SecondaryOrder[1], SecondaryOrder[2], SecondaryOrder[3],
 		SecondaryOrder[4], SecondaryOrder[5], SecondaryOrder[6], SecondaryOrder[7],
 		SecondaryOrder[8], SecondaryOrder[9], SecondaryOrder[10]);
+
+#ifdef NETWORK
+	cvar_setint(&Config_lifetime_kills, Netlife_kills);
+	cvar_setint(&Config_lifetime_killed, Netlife_killed);
+	cvar_setint(&Config_lifetime_checksum, get_lifetime_checksum(Netlife_kills, Netlife_killed));
+	con_printf(CON_DEBUG, "Writing: Lifetime checksum is %d\n", Config_lifetime_checksum.intval);
+#endif
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)
