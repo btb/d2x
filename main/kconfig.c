@@ -1386,6 +1386,10 @@ void kconfig(int n, char * title)
 			cmd_appendf("bind %s \"%s\"", key_text[kc_d2x[i].value], kc_d2x[i].text);
 
 	if ( (Config_control_type.intval >= CONTROL_JOYSTICK) && (Config_control_type.intval < CONTROL_MOUSE)) {
+		for (i = 0; i < 6; i++) {
+			cvar_setint(&joy_advaxes[i], AXIS_NONE);
+			cvar_setint(&joy_invert[i], 0);
+		}
 		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
 			if (kc_joystick[i].type == BT_JOY_AXIS && kc_joystick[i].value != 255) {
 				cvar_setint(&joy_advaxes[kc_joystick[i].value], kc_other_axismap[i]);
@@ -1394,6 +1398,10 @@ void kconfig(int n, char * title)
 		}
 
 	} else if (Config_control_type.intval >= CONTROL_MOUSE) {
+		for (i = 0; i < 3; i++) {
+			cvar_setint(&mouse_axes[i], AXIS_NONE);
+			cvar_setint(&mouse_invert[i], 0);
+		}
 		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
 			if (kc_mouse[i].type == BT_MOUSE_AXIS && kc_mouse[i].value != 255) {
 				cvar_setint(&mouse_axes[kc_mouse[i].value], kc_other_axismap[i]);
@@ -2116,8 +2124,16 @@ void kc_set_controls()
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )
 		kc_keyboard[i].value = 255;
 
-	for (i=0; i<NUM_OTHER_CONTROLS; i++ )
-		kc_joystick[i].value = kc_mouse[i].value = 255;
+	for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
+		if (kc_joystick[i].type == BT_INVERT)
+			kc_joystick[i].value = 0;
+		else
+			kc_joystick[i].value = 255;
+		if (kc_mouse[i].type == BT_INVERT)
+			kc_mouse[i].value = 0;
+		else
+			kc_mouse[i].value = 255;
+	}
 
 	for (i=0; i<NUM_D2X_CONTROLS; i++ )
 		kc_d2x[i].value = 255;
