@@ -48,7 +48,7 @@ extern object *Missile_viewer;
 #define CV_COOP     3
 #define CV_MARKER   4
 
-extern int Cockpit_3d_view[2];      // left & right
+extern cvar_t Cockpit_3d_view[2];   // left & right
 extern int Coop_view_player[2];     // left & right
 extern int Marker_viewer_num[2];    // left & right
 

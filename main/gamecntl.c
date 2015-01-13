@@ -860,13 +860,13 @@ int select_next_window_function(int w)
 {
 	Assert(w==0 || w==1);
 
-	switch (Cockpit_3d_view[w]) {
+	switch (Cockpit_3d_view[w].intval) {
 		case CV_NONE:
-			Cockpit_3d_view[w] = CV_REAR;
+			cvar_setint(&Cockpit_3d_view[w], CV_REAR);
 			break;
 		case CV_REAR:
 			if (find_escort()) {
-				Cockpit_3d_view[w] = CV_ESCORT;
+				cvar_setint(&Cockpit_3d_view[w], CV_ESCORT);
 				break;
 			}
 			//if no ecort, fall through
@@ -877,11 +877,11 @@ int select_next_window_function(int w)
 		case CV_COOP:
 			Marker_viewer_num[w] = -1;
 			if ((Game_mode & GM_MULTI_COOP) || (Game_mode & GM_TEAM)) {
-				Cockpit_3d_view[w] = CV_COOP;
+				cvar_setint(&Cockpit_3d_view[w], CV_COOP);
 				while (1) {
 					Coop_view_player[w]++;
 					if (Coop_view_player[w] == N_players) {
-						Cockpit_3d_view[w] = CV_MARKER;
+						cvar_setint(&Cockpit_3d_view[w], CV_MARKER);
 						goto case_marker;
 					}
 					if (Coop_view_player[w]==Player_num)
@@ -898,17 +898,17 @@ int select_next_window_function(int w)
 		case CV_MARKER:
 		case_marker:;
 			if ((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP) && Netgame.Allow_marker_view) {	//anarchy only
-				Cockpit_3d_view[w] = CV_MARKER;
+				cvar_setint(&Cockpit_3d_view[w], CV_MARKER);
 				if (Marker_viewer_num[w] == -1)
 					Marker_viewer_num[w] = Player_num * 2;
 				else if (Marker_viewer_num[w] == Player_num * 2)
 					Marker_viewer_num[w]++;
 				else
-					Cockpit_3d_view[w] = CV_NONE;
+					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 			}
 			else
 #endif
-				Cockpit_3d_view[w] = CV_NONE;
+				cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 			break;
 	}
 	write_player_file();

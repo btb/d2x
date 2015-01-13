@@ -3286,8 +3286,8 @@ void newdemo_start_playback(char * filename)
 	Newdemo_players_cloaked = 0;
 	playback_style = NORMAL_PLAYBACK;
 	Function_mode = FMODE_GAME;
-	Cockpit_3d_view[0] = CV_NONE;       //turn off 3d views on cockpit
-	Cockpit_3d_view[1] = CV_NONE;       //turn off 3d views on cockpit
+	cvar_setint(&Cockpit_3d_view[0], CV_NONE); // turn off 3d views on cockpit
+	cvar_setint(&Cockpit_3d_view[1], CV_NONE); // turn off 3d views on cockpit
 	newdemo_playback_one_frame();       // this one loads new level
 	newdemo_playback_one_frame();       // get all of the objects to renderb game
 }

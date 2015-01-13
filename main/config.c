@@ -186,6 +186,8 @@ static void config_init(void)
 	cvar_registervariable(&real_guidebot_name);
 	cvar_registervariable(&Config_primary_order);
 	cvar_registervariable(&Config_secondary_order);
+	cvar_registervariable(&Cockpit_3d_view[0]);
+	cvar_registervariable(&Cockpit_3d_view[1]);
 
 	config_initialized = 1;
 }
@@ -291,6 +293,9 @@ int ReadConfigFile()
 		SecondaryOrder[0], SecondaryOrder[1], SecondaryOrder[2], SecondaryOrder[3],
 		SecondaryOrder[4], SecondaryOrder[5], SecondaryOrder[6], SecondaryOrder[7],
 		SecondaryOrder[8], SecondaryOrder[9], SecondaryOrder[10]);
+
+	cvar_setint( &Cockpit_3d_view[0], CV_NONE );
+	cvar_setint( &Cockpit_3d_view[1], CV_NONE );
 
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");

@@ -834,7 +834,7 @@ void show_extra_views()
 			continue;		//if showing missile view in right window, can't show anything else
 
 		//show special views if selected
-		switch (Cockpit_3d_view[w]) {
+		switch (Cockpit_3d_view[w].intval) {
 			case CV_NONE:
 				RenderingType=255;
 				do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
@@ -854,7 +854,7 @@ void show_extra_views()
 				buddy = find_escort();
 				if (buddy == NULL) {
 					do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
-					Cockpit_3d_view[w] = CV_NONE;
+					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 				}
 				else {
 					RenderingType=4+(w<<4);
@@ -872,7 +872,7 @@ void show_extra_views()
 					do_cockpit_window_view(w,&Objects[Players[Coop_view_player[w]].objnum],0,WBU_COOP,Players[Coop_view_player[w]].callsign);
 				else {
 					do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
-					Cockpit_3d_view[w] = CV_NONE;
+					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 				}
 				break;
 			}
@@ -881,7 +881,7 @@ void show_extra_views()
 				char label[10];
 				RenderingType=5+(w<<4);
 				if (Marker_viewer_num[w] == -1 || MarkerObject[Marker_viewer_num[w]] == -1) {
-					Cockpit_3d_view[w] = CV_NONE;
+					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 					break;
 				}
 				sprintf(label,"Marker %d",Marker_viewer_num[w]+1);

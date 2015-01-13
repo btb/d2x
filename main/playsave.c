@@ -127,8 +127,6 @@ int new_player_config()
 	n_highest_levels = 1;
 	highest_levels[0].shortname[0] = 0;			//no name for mission 0
 	highest_levels[0].level_num = 1;				//was highest level in old struct
-	Cockpit_3d_view[0]=CV_NONE;
-	Cockpit_3d_view[1]=CV_NONE;
 
 	// Default taunt macros
 	#ifdef NETWORK
@@ -266,6 +264,7 @@ int read_player_file()
 		ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS], control_type_win;
 		ubyte Config_control_type, Config_joystick_sensitivity;
 		ubyte SecondaryOrder[11], PrimaryOrder[11];
+		int Cockpit_3d_view[2];
 
 		if (player_file_version < 25)
 			if (PHYSFS_read(file, kconfig_settings, MAX_CONTROLS*n_control_types, 1) != 1)
@@ -288,11 +287,6 @@ int read_player_file()
 		{
 			PHYSFS_readSLE32(file, &Cockpit_3d_view[0]);
 			PHYSFS_readSLE32(file, &Cockpit_3d_view[1]);
-			if (swap)
-			{
-				Cockpit_3d_view[0] = SWAPINT(Cockpit_3d_view[0]);
-				Cockpit_3d_view[1] = SWAPINT(Cockpit_3d_view[1]);
-			}
 		}
 
 		kc_set_controls();
@@ -503,8 +497,8 @@ int write_player_file()
 			PHYSFS_write(file, &SecondaryOrder[i], sizeof(ubyte), 1);
 		}
 
-		PHYSFS_writeULE32(file, Cockpit_3d_view[0]);
-		PHYSFS_writeULE32(file, Cockpit_3d_view[1]);
+		PHYSFS_writeULE32(file, Cockpit_3d_view[0].intval);
+		PHYSFS_writeULE32(file, Cockpit_3d_view[1].intval);
 
 #ifdef NETWORK
 		PHYSFS_writeULE32(file, Netlife_kills);
