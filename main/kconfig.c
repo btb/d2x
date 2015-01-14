@@ -1581,15 +1581,12 @@ void controls_read_all()
 	int dx, dy, dz;
 	int idx, idy;
 	fix ctime;
-	fix mouse_axis[3] = {0,0,0};
 	int raw_joy_axis[JOY_MAX_AXES];
 	fix kp, kh;
 	ubyte channel_masks;
-	int use_mouse, use_joystick;
 	fix analog_control[7]; // indexed on kc_axis_map
 
 	memset(analog_control, 0, sizeof(analog_control));
-	use_mouse=0;
 
 	{
 		fix temp = Controls.heading_time;
@@ -1611,7 +1608,6 @@ void controls_read_all()
 		if ((ctime < 0) && (LastReadTime > 0))
 # endif
 			LastReadTime = ctime;
-		use_joystick=1;
 	} else if ((Config_control_type.intval >= CONTROL_JOYSTICK) && (Config_control_type.intval < CONTROL_MOUSE) ) {
 		LastReadTime = ctime;
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
@@ -1645,12 +1641,13 @@ void controls_read_all()
 			}
 #endif
 		}	
-		use_joystick=1;
 	} else {
 		for (i = 0; i < joy_num_axes; i++)
 			joy_axis[i] = 0;
-		use_joystick=0;
 	}
+
+	for (i = 0; i < 6; i++)
+		analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1);
 
 	if (Config_control_type.intval == CONTROL_MOUSE && !CybermouseActive) {
 		//---------  Read Mouse -----------
@@ -1660,24 +1657,14 @@ void controls_read_all()
 		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1);
 		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1);
 
-		mouse_axis[0] = (dx*FrameTime)/35;
-		mouse_axis[1] = (dy*FrameTime)/25;
-		mouse_axis[2] = (dz*FrameTime);
-		//mprintf(( 0, "Mouse %d,%d 0x%x\n", mouse_axis[0], mouse_axis[1], FrameTime ));
-		use_mouse=1;
 	} else if (Config_control_type.intval == CONTROL_CYBERMAN && !CybermouseActive) {
 		//---------  Read Cyberman -----------
 		mouse_get_cyberman_pos(&idx,&idy );
-		mouse_axis[0] = (idx*FrameTime)/128;
-		mouse_axis[1] = (idy*FrameTime)/128;
-		use_mouse=1;
+		analog_control[mouse_axes[0].intval] += idx * FrameTime / 128 * (mouse_invert[0].intval ? -1 : 1);
+		analog_control[mouse_axes[1].intval] += idy * FrameTime / 128 * (mouse_invert[1].intval ? -1 : 1);
 	} else if (CybermouseActive) {
 //		ReadOWL (kc_external_control);
 //		CybermouseAdjust();
-	} else {
-		mouse_axis[0] = 0;
-		mouse_axis[1] = 0;
-		use_mouse=0;
 	}
 
 //------------- Read slide_on -------------
@@ -1710,14 +1697,6 @@ void controls_read_all()
 		Controls.pitch_time += kp;
 
 		Controls.pitch_time += analog_control[AXIS_PITCH] * Config_joystick_sensitivity.intval / 8;
-
-		// From joystick...
-		if ( (use_joystick)&&(kc_joystick[13].value < 255 ))	{
-			if ( !kc_joystick[14].value )		// If not inverted...
-				Controls.pitch_time -= (joy_axis[kc_joystick[13].value]*Config_joystick_sensitivity.intval)/8;
-			else
-				Controls.pitch_time += (joy_axis[kc_joystick[13].value]*Config_joystick_sensitivity.intval)/8;
-		}
 	
 	} else {
 		Controls.pitch_time = 0;
@@ -1737,14 +1716,6 @@ if (!Player_is_dead)
 
 		Controls.vertical_thrust_time += analog_control[AXIS_PITCH];
 
-		// From joystick...
-		if ((use_joystick)&&( kc_joystick[13].value < 255 ))	{
-			if ( !kc_joystick[14].value )		// If not inverted...
-				Controls.vertical_thrust_time += joy_axis[kc_joystick[13].value];
-			else
-				Controls.vertical_thrust_time -= joy_axis[kc_joystick[13].value];
-		}
-
 	}
 
 	// From console...
@@ -1752,14 +1723,6 @@ if (!Player_is_dead)
 	Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_MOVEDOWN);
 
 	Controls.vertical_thrust_time += analog_control[AXIS_UPDOWN];
-
-	// From joystick...
-	if ((use_joystick)&&( kc_joystick[19].value < 255 ))	{
-		if ( !kc_joystick[20].value )		// If not inverted...
-			Controls.vertical_thrust_time += joy_axis[kc_joystick[19].value];
-		else
-			Controls.vertical_thrust_time -= joy_axis[kc_joystick[19].value];
-	}
 
 }// end "if" added by WraithX
 
@@ -1785,14 +1748,6 @@ if (!Player_is_dead)
 
 		Controls.heading_time += analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
 
-		// From joystick...
-		if ( (use_joystick)&&(kc_joystick[15].value < 255 ))	{
-			if ( !kc_joystick[16].value )		// If not inverted...
-				Controls.heading_time += (joy_axis[kc_joystick[15].value]*Config_joystick_sensitivity.intval)/8;
-			else
-				Controls.heading_time -= (joy_axis[kc_joystick[15].value]*Config_joystick_sensitivity.intval)/8;
-		}
-
 	} else {
 		Controls.heading_time = 0;
 	}
@@ -1810,14 +1765,6 @@ if (!Player_is_dead)
 
 		Controls.sideways_thrust_time += analog_control[AXIS_TURN];
 
-		// From joystick...
-		if ( (use_joystick)&&(kc_joystick[15].value < 255 ))	{
-			if ( !kc_joystick[16].value )		// If not inverted...
-				Controls.sideways_thrust_time += joy_axis[kc_joystick[15].value];
-			else
-				Controls.sideways_thrust_time -= joy_axis[kc_joystick[15].value];
-		}
-
 	}
 
 	// From console...
@@ -1825,14 +1772,6 @@ if (!Player_is_dead)
 	Controls.sideways_thrust_time += console_control_down_time(CONCNTL_MOVERIGHT);
 
 	Controls.sideways_thrust_time += analog_control[AXIS_LEFTRIGHT];
-
-	// From joystick...
-	if ( (use_joystick)&&(kc_joystick[17].value < 255 ))	{
-		if ( !kc_joystick[18].value )		// If not inverted...
-			Controls.sideways_thrust_time -= joy_axis[kc_joystick[17].value];
-		else
-			Controls.sideways_thrust_time += joy_axis[kc_joystick[17].value];
-	}
 
 }// end "if" added by WraithX
 
@@ -1845,14 +1784,6 @@ if (!Player_is_dead)
 
 		Controls.bank_time -= analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
 
-		// From joystick...
-		if ( (use_joystick)&&(kc_joystick[15].value < 255) )	{
-			if ( !kc_joystick[16].value )		// If not inverted...
-				Controls.bank_time -= (joy_axis[kc_joystick[15].value]*Config_joystick_sensitivity.intval)/8;
-			else
-				Controls.bank_time += (joy_axis[kc_joystick[15].value]*Config_joystick_sensitivity.intval)/8;
-		}
-
 	}
 
 	// From console...
@@ -1860,14 +1791,6 @@ if (!Player_is_dead)
 	Controls.bank_time -= console_control_down_time(CONCNTL_BANKRIGHT);
 
 	Controls.bank_time += analog_control[AXIS_BANK];
-
-	// From joystick...
-	if ( (use_joystick)&&(kc_joystick[21].value < 255) )	{
-		if ( !kc_joystick[22].value )		// If not inverted...
-			Controls.bank_time -= joy_axis[kc_joystick[21].value];
-		else
-			Controls.bank_time += joy_axis[kc_joystick[21].value];
-	}
 
 // the following "if" added by WraithX, 4/14/00
 // done so that dead players can't move
@@ -1880,14 +1803,6 @@ if (!Player_is_dead)
 	Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
 
 	Controls.forward_thrust_time += analog_control[AXIS_THROTTLE];
-
-	// From joystick...
-	if ( (use_joystick)&&(kc_joystick[23].value < 255 ))	{
-		if ( !kc_joystick[24].value )		// If not inverted...
-			Controls.forward_thrust_time -= joy_axis[kc_joystick[23].value];
-		else
-			Controls.forward_thrust_time += joy_axis[kc_joystick[23].value];
-	}
 
 //----------- Read afterburner_state -------------
 
