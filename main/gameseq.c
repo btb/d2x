@@ -85,7 +85,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #  include "netmisc.h"
 #  include "modem.h"
 #endif
-#include "playsave.h"
 #include "ctype.h"
 #include "fireball.h"
 #include "kconfig.h"
@@ -674,10 +673,9 @@ void create_player_appearance_effect(object *player_obj)
 //pairs of chars describing ranges
 char playername_allowed_chars[] = "azAZ09__--";
 
-int MakeNewPlayerFile(int allow_abort)
+int RegisterPlayerSub(int allow_abort)
 {
 	int x;
-	char filename[14];
 	newmenu_item m;
 	char text[CALLSIGN_LEN+1]="";
 
@@ -691,26 +689,16 @@ try_again:
 	Newmenu_allowed_chars = NULL;
 
 	if ( x < 0 ) {
-		if ( allow_abort ) return 0;
+		if ( allow_abort )
+			return 1;
 		goto try_again;
 	}
 
 	if (text[0]==0)	//null string
 		goto try_again;
-	sprintf( filename, "%s.plr", text );
 
-	if (PHYSFS_exists(filename))
-	{
-		nm_messagebox(NULL, 1, TXT_OK, "%s '%s' %s", TXT_PLAYER, text, TXT_ALREADY_EXISTS );
-		goto try_again;
-	}
-
-	if ( !new_player_config() )
-		goto try_again;			// They hit Esc during New player config
-
-	strncpy(Players[Player_num].callsign, text, CALLSIGN_LEN);
-
-	write_player_file();
+	cmd_appendf("player %s", text);
+	while (cmd_queue_process()) {}
 
 	return 1;
 }
@@ -718,7 +706,6 @@ try_again:
 //Inputs the player's name, without putting up the background screen
 int RegisterPlayer()
 {
-	char filename[14];
 	int allow_abort_flag = 1;
 
 	if ( Players[Player_num].callsign[0] == 0 )	{
@@ -730,28 +717,10 @@ int RegisterPlayer()
 	}
 
 do_menu_again:
-	;
 
-#ifndef APPLE_DEMO
-	//if (!newmenu_get_filename(TXT_SELECT_PILOT, PLAYER_DIR "*.plr", filename, allow_abort_flag))
-	if (!newmenu_get_filename(TXT_SELECT_PILOT, /* PLAYER_DIR */ "plr", filename, allow_abort_flag))
-		goto do_menu_again; //return 0;		// They hit Esc in file selector
-#else
-	newmenu_get_filename( "Select Pilot", PLAYER_DIR "*.plr", filename, 0 ); // no abort allowed ever -- and change title of menubox
-#endif
-	if ( filename[0] == '<' )	{
-		// They selected 'create new pilot'
-		if (!MakeNewPlayerFile(allow_abort_flag))
-			//return 0;		// They hit Esc during enter name stage
-			goto do_menu_again;
-	} else {
-		strncpy(Players[Player_num].callsign,filename, CALLSIGN_LEN);
-	}
-
-	if (read_player_file() != EZERO)
+	if (!RegisterPlayerSub(allow_abort_flag))
+		//return 0;		// They hit Esc during enter name stage
 		goto do_menu_again;
-
-	Auto_leveling_on = Default_leveling_on;
 
 	set_display_mode(Default_display_mode);
 
@@ -1824,8 +1793,6 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 
 	if (!(Game_mode & GM_MULTI) && !Cheats_enabled)
 		mission_write_config();
-	else
-		read_player_file();		//get window sizes
 
 	reset_special_effects();
 

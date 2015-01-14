@@ -106,7 +106,6 @@
 		14F0D5561A4CA50D00682BB0 /* physics.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697111A2729870070D41D /* physics.c */; };
 		14F0D5571A4CA50D00682BB0 /* piggy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697131A2729870070D41D /* piggy.c */; };
 		14F0D5581A4CA50D00682BB0 /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697151A2729870070D41D /* player.c */; };
-		14F0D5591A4CA50D00682BB0 /* playsave.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697171A2729870070D41D /* playsave.c */; };
 		14F0D55A1A4CA50D00682BB0 /* polyobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697191A2729870070D41D /* polyobj.c */; };
 		14F0D55B1A4CA50D00682BB0 /* powerup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971B1A2729870070D41D /* powerup.c */; };
 		14F0D55C1A4CA50D00682BB0 /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971D1A2729870070D41D /* render.c */; };
@@ -242,7 +241,6 @@
 		14F0D5E61A4CB34F00682BB0 /* physics.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697111A2729870070D41D /* physics.c */; };
 		14F0D5E71A4CB34F00682BB0 /* piggy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697131A2729870070D41D /* piggy.c */; };
 		14F0D5E81A4CB34F00682BB0 /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697151A2729870070D41D /* player.c */; };
-		14F0D5E91A4CB34F00682BB0 /* playsave.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697171A2729870070D41D /* playsave.c */; };
 		14F0D5EA1A4CB34F00682BB0 /* polyobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697191A2729870070D41D /* polyobj.c */; };
 		14F0D5EB1A4CB34F00682BB0 /* powerup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971B1A2729870070D41D /* powerup.c */; };
 		14F0D5EC1A4CB34F00682BB0 /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971D1A2729870070D41D /* render.c */; };
@@ -821,8 +819,6 @@
 		146697141A2729870070D41D /* piggy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = piggy.h; sourceTree = "<group>"; };
 		146697151A2729870070D41D /* player.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = player.c; sourceTree = "<group>"; };
 		146697161A2729870070D41D /* player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player.h; sourceTree = "<group>"; };
-		146697171A2729870070D41D /* playsave.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = playsave.c; sourceTree = "<group>"; };
-		146697181A2729870070D41D /* playsave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playsave.h; sourceTree = "<group>"; };
 		146697191A2729870070D41D /* polyobj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = polyobj.c; sourceTree = "<group>"; };
 		1466971A1A2729870070D41D /* polyobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polyobj.h; sourceTree = "<group>"; };
 		1466971B1A2729870070D41D /* powerup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = powerup.c; sourceTree = "<group>"; };
@@ -1771,8 +1767,6 @@
 				146697141A2729870070D41D /* piggy.h */,
 				146697151A2729870070D41D /* player.c */,
 				146697161A2729870070D41D /* player.h */,
-				146697171A2729870070D41D /* playsave.c */,
-				146697181A2729870070D41D /* playsave.h */,
 				146697191A2729870070D41D /* polyobj.c */,
 				1466971A1A2729870070D41D /* polyobj.h */,
 				1466971B1A2729870070D41D /* powerup.c */,
@@ -2349,7 +2343,6 @@
 				14F0D5561A4CA50D00682BB0 /* physics.c in Sources */,
 				14F0D5571A4CA50D00682BB0 /* piggy.c in Sources */,
 				14F0D5581A4CA50D00682BB0 /* player.c in Sources */,
-				14F0D5591A4CA50D00682BB0 /* playsave.c in Sources */,
 				14F0D55A1A4CA50D00682BB0 /* polyobj.c in Sources */,
 				14F0D55B1A4CA50D00682BB0 /* powerup.c in Sources */,
 				14F0D55C1A4CA50D00682BB0 /* render.c in Sources */,
@@ -2509,7 +2502,6 @@
 				14F0D5E61A4CB34F00682BB0 /* physics.c in Sources */,
 				14F0D5E71A4CB34F00682BB0 /* piggy.c in Sources */,
 				14F0D5E81A4CB34F00682BB0 /* player.c in Sources */,
-				14F0D5E91A4CB34F00682BB0 /* playsave.c in Sources */,
 				14F0D5EA1A4CB34F00682BB0 /* polyobj.c in Sources */,
 				14F0D5EB1A4CB34F00682BB0 /* powerup.c in Sources */,
 				14F0D5EC1A4CB34F00682BB0 /* render.c in Sources */,

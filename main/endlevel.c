@@ -409,7 +409,7 @@ void start_rendered_endlevel_sequence()
 
 	}
 
-	cockpit_mode_save = Cockpit_mode;
+	cockpit_mode_save = Cockpit_mode.intval;
 
 	#ifdef NETWORK
 	if (Game_mode & GM_MULTI) {

@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdlib.h>
 
-#include "pstypes.h"
+#include "inferno.h"
 #include "console.h"
 #include "inferno.h"
 #include "error.h"
@@ -51,7 +51,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "cntrlcen.h"
 #include "powerup.h"
 #include "laser.h"
-#include "playsave.h"
 #include "automap.h"
 #include "mission.h"
 #include "gameseq.h"
@@ -253,8 +252,6 @@ void draw_window_label()
 
 extern int Game_window_x;
 extern int Game_window_y;
-extern int Game_window_w;
-extern int Game_window_h;
 extern int max_window_w;
 extern int max_window_h;
 
@@ -278,13 +275,13 @@ void render_countdown_gauge()
 		gr_set_curfont( SMALL_FONT );
 		gr_set_fontcolor(gr_getcolor(0,63,0), -1 );
 		y = SMALL_FONT->ft_h*4;
-		if (Cockpit_mode == CM_FULL_SCREEN)
+		if (Cockpit_mode.intval == CM_FULL_SCREEN)
 			y += SMALL_FONT->ft_h*2;
 
 		if (Player_is_dead)
 			y += SMALL_FONT->ft_h*2;
 
-		//if (!((Cockpit_mode == CM_STATUS_BAR) && (Game_window_y >= 19)))
+		//if (!((Cockpit_mode.intval == CM_STATUS_BAR) && (Game_window_y >= 19)))
 		//	y += 5;
 		gr_printf(0x8000, y, "T-%d s", Countdown_seconds_left );
 	}
@@ -335,14 +332,14 @@ void game_draw_hud_stuff()
 		gr_set_fontcolor(gr_getcolor(27,0,0), -1 );
 
 		gr_get_string_size(message, &w, &h, &aw );
-		if (Cockpit_mode == CM_FULL_COCKPIT) {
+		if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
 			if (grd_curcanv->cv_bitmap.bm_h > 240)
 				h += 40;
 			else
 				h += 15;
-		} else if ( Cockpit_mode == CM_LETTERBOX )
+		} else if ( Cockpit_mode.intval == CM_LETTERBOX )
 			h += 7;
-		if (Cockpit_mode != CM_REAR_VIEW && !Saving_movie_frames)
+		if (Cockpit_mode.intval != CM_REAR_VIEW && !Saving_movie_frames)
 			gr_printf((grd_curcanv->cv_bitmap.bm_w-w)/2, grd_curcanv->cv_bitmap.bm_h - h - 2, message );
 	}
 
@@ -359,12 +356,12 @@ void game_draw_hud_stuff()
 
 mprintf((0,"line_spacing=%d ",line_spacing));
 
-			if (Cockpit_mode==CM_FULL_SCREEN) {
+			if (Cockpit_mode.intval == CM_FULL_SCREEN) {
 				if (Game_mode & GM_MULTI)
 					y -= line_spacing * 11;	//64
 				else
 					y -= line_spacing * 6;	//32
-			} else if (Cockpit_mode == CM_STATUS_BAR) {
+			} else if (Cockpit_mode.intval == CM_STATUS_BAR) {
 				if (Game_mode & GM_MULTI)
 					y -= line_spacing * 8;	//48
 				else
@@ -475,7 +472,6 @@ void game_expand_bitmap( grs_bitmap * bmp, uint flags )
 
 extern int SW_drawn[2], SW_x[2], SW_y[2], SW_w[2], SW_h[2];
 
-extern int Guided_in_big_window;
 
 #if 0
 //render a frame for the game in stereo
@@ -515,12 +511,21 @@ void game_render_frame_stereo()
 		actual_eye_offset = VR_eye_offset;
 	}
 
-	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window)
+	if (Guided_missile[Player_num] &&
+		Guided_missile[Player_num]->type == OBJ_WEAPON &&
+		Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+		Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+		Guided_in_big_window.intval)
 		actual_eye_offset = 0;
 
 	gr_set_current_canvas(&RenderCanvas[0]);
 
-	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window) {
+	if (Guided_missile[Player_num] &&
+		Guided_missile[Player_num]->type == OBJ_WEAPON &&
+		Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+		Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+		Guided_in_big_window.intval)
+	{
 		char *msg = "Guided Missile View";
 		object *viewer_save = Viewer;
 		int w,h,aw;
@@ -590,7 +595,11 @@ void game_render_frame_stereo()
 	// Draw the right eye's view
 	gr_set_current_canvas(&RenderCanvas[1]);
 
-	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window)
+	if (Guided_missile[Player_num] &&
+		Guided_missile[Player_num]->type == OBJ_WEAPON &&
+		Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+		Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+		Guided_in_big_window.intval)
 		gr_bitmap(0,0,&RenderCanvas[0].cv_bitmap);
 	else {
 		if (Rear_view)
@@ -789,8 +798,7 @@ void show_extra_views()
     } 
 
 	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num]) {
-		if (Guided_in_big_window)
-		 {
+		if (Guided_in_big_window.intval) {
 			RenderingType=6+(1<<4);
 			do_cockpit_window_view(1,Viewer,0,WBU_MISSILE,"SHIP");
 		 }
@@ -805,7 +813,7 @@ void show_extra_views()
 	else {
 
 		if (Guided_missile[Player_num]) {		//used to be active
-			if (!Guided_in_big_window)
+			if (!Guided_in_big_window.intval)
 				do_cockpit_window_view(1,NULL,0,WBU_STATIC,NULL);
 			Guided_missile[Player_num] = NULL;
 		}
@@ -814,7 +822,7 @@ void show_extra_views()
 			static int mv_sig=-1;
 			if (mv_sig == -1)
 				mv_sig = Missile_viewer->signature;
-			if (Missile_view_enabled && Missile_viewer->type!=OBJ_NONE && Missile_viewer->signature == mv_sig) {
+			if (Missile_view_enabled.intval && Missile_viewer->type != OBJ_NONE && Missile_viewer->signature == mv_sig) {
   				RenderingType=2+(1<<4);
 				do_cockpit_window_view(1,Missile_viewer,0,WBU_MISSILE,"MISSILE");
 				did_missile_view=1;
@@ -921,16 +929,21 @@ void game_render_frame_mono(void)
 	else
 		gr_set_current_canvas(&Screen_3d_window);
 	
-	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window) {
+	if (Guided_missile[Player_num] &&
+		Guided_missile[Player_num]->type == OBJ_WEAPON &&
+		Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+		Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+		Guided_in_big_window.intval)
+	{
 		char *msg = "Guided Missile View";
 		object *viewer_save = Viewer;
 		int w,h,aw;
 
-      if (Cockpit_mode==CM_FULL_COCKPIT)
+      if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 			{
 			 BigWindowSwitch=1;
 			 force_cockpit_redraw=1;
-			 Cockpit_mode=CM_STATUS_BAR;
+			 cvar_set(&Cockpit_mode, CM_STATUS_BAR);
 			 return;
 		   }
   
@@ -961,7 +974,7 @@ void game_render_frame_mono(void)
 		if (BigWindowSwitch)
 		 {
 		   force_cockpit_redraw=1;
-			Cockpit_mode=CM_FULL_COCKPIT;
+			cvar_setint(&Cockpit_mode, CM_FULL_COCKPIT);
 		   BigWindowSwitch=0;
 			return;
 		 }
@@ -1020,7 +1033,7 @@ void game_render_frame_mono(void)
 
 	show_extra_views();		//missile view, buddy bot, etc.
 
-	if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR) {
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT || Cockpit_mode.intval == CM_STATUS_BAR) {
 
 		if ( Newdemo_state == ND_STATE_PLAYBACK )
 			Game_mode = Newdemo_game_mode;
@@ -1043,11 +1056,11 @@ void toggle_cockpit()
 {
 	int new_mode;
 
-	switch (Cockpit_mode) {
+	switch (Cockpit_mode.intval) {
 
 		case CM_FULL_COCKPIT: {
 			int max_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR + (SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
-			if (Game_window_h > max_h)		//too big for statusbar
+			if (Game_window_h.intval > max_h) //too big for statusbar
 				new_mode = CM_FULL_SCREEN;
 			else
 				new_mode = CM_STATUS_BAR;
@@ -1071,7 +1084,7 @@ void toggle_cockpit()
 
 	select_cockpit(new_mode);
 	HUD_clear_messages();
-	write_player_file();
+	WriteConfigFile();
 }
 
 #ifndef MACINTOSH
@@ -1093,42 +1106,42 @@ void toggle_cockpit()
 
 void grow_window()
 {
-	if (Cockpit_mode == CM_FULL_COCKPIT) {
-		Game_window_h = max_window_h;
-		Game_window_w = max_window_w;
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
+		cvar_setint(&Game_window_h, max_window_h);
+		cvar_setint(&Game_window_w, max_window_w);
 		toggle_cockpit();
 		HUD_init_message("Press F3 to return to Cockpit mode");
 		return;
 	}
 
-	if (Cockpit_mode != CM_STATUS_BAR && (VR_screen_flags & VRF_ALLOW_COCKPIT))
+	if (Cockpit_mode.intval != CM_STATUS_BAR && (VR_screen_flags & VRF_ALLOW_COCKPIT))
 		return;
 
-	if (Game_window_h>=max_window_h || Game_window_w>=max_window_w) {
-		//Game_window_w = max_window_w;
-		//Game_window_h = max_window_h;
+	if (Game_window_h.intval >= max_window_h || Game_window_w.intval >= max_window_w) {
+		//cvar_setint(&Game_window_w, max_window_w);
+		//cvar_setint(&Game_window_h, max_window_h);
 		select_cockpit(CM_FULL_SCREEN);
 	} else {
 		//int x,y;
 
-		Game_window_w += WINDOW_W_DELTA;
-		Game_window_h += WINDOW_H_DELTA;
+		cvar_setint(&Game_window_w, Game_window_w.intval + WINDOW_W_DELTA);
+		cvar_setint(&Game_window_h, Game_window_h.intval + WINDOW_H_DELTA);
 
-		if (Game_window_h > max_window_h)
-			Game_window_h = max_window_h;
+		if (Game_window_h.intval > max_window_h)
+			cvar_setint(&Game_window_h, max_window_h);
 
-		if (Game_window_w > max_window_w)
-			Game_window_w = max_window_w;
+		if (Game_window_w.intval > max_window_w)
+			cvar_setint(&Game_window_w, max_window_w);
 
-		Game_window_x = (max_window_w - Game_window_w)/2;
-		Game_window_y = (max_window_h - Game_window_h)/2;
+		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
+		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 
-		game_init_render_sub_buffers( Game_window_x, Game_window_y, Game_window_w, Game_window_h );
+		game_init_render_sub_buffers( Game_window_x, Game_window_y, Game_window_w.intval, Game_window_h.intval );
 	}
 
 	HUD_clear_messages();	//	@mk, 11/11/94
 
-	write_player_file();
+	WriteConfigFile();
 }
 
 // grs_bitmap background_bitmap;	already declared in line 434 (samir 4/10/94)
@@ -1187,8 +1200,8 @@ void fill_background()
 
 	x = Game_window_x;
 	y = Game_window_y;
-	w = Game_window_w;
-	h = Game_window_h;
+	w = Game_window_w.intval;
+	h = Game_window_h.intval;
 
 	dx = x;
 	dy = y;
@@ -1212,57 +1225,56 @@ void shrink_window()
 {
 	mprintf((0,"%d ",FrameCount));
 
-//  mprintf ((0,"W=%d H=%d\n",Game_window_w,Game_window_h));
+//  mprintf((0, "W=%d H=%d\n", Game_window_w.intval, Game_window_h.intval));
  
-	if (Cockpit_mode == CM_FULL_COCKPIT && (VR_screen_flags & VRF_ALLOW_COCKPIT)) {
-		Game_window_h = max_window_h;
-		Game_window_w = max_window_w;
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT && (VR_screen_flags & VRF_ALLOW_COCKPIT)) {
+		cvar_setint(&Game_window_h, max_window_h);
+		cvar_setint(&Game_window_w, max_window_w);
 		//!!toggle_cockpit();
 		select_cockpit(CM_STATUS_BAR);
 //		shrink_window();
 //		shrink_window();
 		HUD_init_message("Press F3 to return to Cockpit mode");
-		write_player_file();
+		WriteConfigFile();
 		return;
 	}
 
-	if (Cockpit_mode == CM_FULL_SCREEN && (VR_screen_flags & VRF_ALLOW_COCKPIT))
+	if (Cockpit_mode.intval == CM_FULL_SCREEN && (VR_screen_flags & VRF_ALLOW_COCKPIT))
 	{
-		//Game_window_w = max_window_w;
-		//Game_window_h = max_window_h;
+		//cvar_setint(&Game_window_w, max_window_w);
+		//cvar_setint(&Game_window_h, max_window_h);
 		select_cockpit(CM_STATUS_BAR);
-		write_player_file();
+		WriteConfigFile();
 		return;
 	}
 
-	if (Cockpit_mode != CM_STATUS_BAR && (VR_screen_flags & VRF_ALLOW_COCKPIT))
+	if (Cockpit_mode.intval != CM_STATUS_BAR && (VR_screen_flags & VRF_ALLOW_COCKPIT))
 		return;
 
-   mprintf ((0,"Cockpit mode=%d\n",Cockpit_mode));
+   mprintf((0, "Cockpit mode=%d\n", Cockpit_mode.intval));
 
-	if (Game_window_w > WINDOW_MIN_W) {
+	if (Game_window_w.intval > WINDOW_MIN_W) {
 		//int x,y;
 
-      Game_window_w -= WINDOW_W_DELTA;
-		Game_window_h -= WINDOW_H_DELTA;
+		cvar_setint(&Game_window_w, Game_window_w.intval - WINDOW_W_DELTA);
+		cvar_setint(&Game_window_h, Game_window_h.intval - WINDOW_H_DELTA);
 
-
-  mprintf ((0,"NewW=%d NewH=%d VW=%d maxH=%d\n",Game_window_w,Game_window_h,max_window_w,max_window_h));
+		mprintf((0, "NewW=%d NewH=%d VW=%d maxH=%d\n", Game_window_w.intval, Game_window_h.intval, max_window_w, max_window_h));
                   
-		if ( Game_window_w < WINDOW_MIN_W )
-			Game_window_w = WINDOW_MIN_W;
+		if ( Game_window_w.intval < WINDOW_MIN_W )
+			cvar_setint(&Game_window_w, WINDOW_MIN_W);
 
-		if ( Game_window_h < WINDOW_MIN_H )
-			Game_window_h = WINDOW_MIN_H;
+		if ( Game_window_h.intval < WINDOW_MIN_H )
+			cvar_setint(&Game_window_h, WINDOW_MIN_H);
 			
-		Game_window_x = (max_window_w - Game_window_w)/2;
-		Game_window_y = (max_window_h - Game_window_h)/2;
+		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
+		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 
 		fill_background();
 
-		game_init_render_sub_buffers( Game_window_x, Game_window_y, Game_window_w, Game_window_h );
+		game_init_render_sub_buffers( Game_window_x, Game_window_y, Game_window_w.intval, Game_window_h.intval );
 		HUD_clear_messages();
-		write_player_file();
+		WriteConfigFile();
 	}
 
 }
@@ -1278,17 +1290,17 @@ void update_cockpits(int force_redraw)
 	//Redraw the on-screen cockpit bitmaps
 	if (VR_render_mode != VR_NONE )	return;
 
-	switch( Cockpit_mode )	{
+	switch( Cockpit_mode.intval ) {
 	case CM_FULL_COCKPIT:
 	case CM_REAR_VIEW:
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0,0, &GameBitmaps[cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)].index]);
+		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)]);
+		gr_ubitmapm(0, 0, &GameBitmaps[cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)].index]);
 		break;
 
 	case CM_FULL_SCREEN:
-		Game_window_x = (max_window_w - Game_window_w)/2;
-		Game_window_y = (max_window_h - Game_window_h)/2;
+		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
+		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 		fill_background();
 		break;
 
@@ -1296,11 +1308,11 @@ void update_cockpits(int force_redraw)
 
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0,max_window_h,&GameBitmaps[cockpit_bitmap[Cockpit_mode + (SM_HIRES?(Num_cockpits/2):0)].index]);
+		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)]);
+		gr_ubitmapm(0, max_window_h, &GameBitmaps[cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)].index]);
 	
-		Game_window_x = (max_window_w - Game_window_w)/2;
-		Game_window_y = (max_window_h - Game_window_h)/2;
+		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
+		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 		fill_background();
 		break;
 
@@ -1326,12 +1338,12 @@ void update_cockpits(int force_redraw)
 
 	gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 
-	if (Cockpit_mode != last_drawn_cockpit[VR_current_page] || force_redraw )
-		last_drawn_cockpit[VR_current_page] = Cockpit_mode;
+	if (Cockpit_mode.intval != last_drawn_cockpit[VR_current_page] || force_redraw )
+		last_drawn_cockpit[VR_current_page] = Cockpit_mode.intval;
 	else
 		return;
 
-	if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR)
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT || Cockpit_mode.intval == CM_STATUS_BAR)
 		init_gauges();
 
 }

@@ -1780,7 +1780,7 @@ void start_player_death_sequence(object *player)
 	}
 
 	if (Cockpit_mode_save == -1)		//if not already saved
-		Cockpit_mode_save = Cockpit_mode;
+		Cockpit_mode_save = Cockpit_mode.intval;
 	select_cockpit(CM_LETTERBOX);
 	if (Newdemo_state == ND_STATE_RECORDING)
 		newdemo_record_letterbox();
@@ -2146,7 +2146,7 @@ void object_move_all()
 
 	obj_delete_all_that_should_be_dead();
 
-	if (Auto_leveling_on)
+	if (Auto_leveling_on.intval)
 		ConsoleObject->mtype.phys_info.flags |= PF_LEVELLING;
 	else
 		ConsoleObject->mtype.phys_info.flags &= ~PF_LEVELLING;

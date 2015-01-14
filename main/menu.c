@@ -24,7 +24,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
-#include "menu.h"
 #include "inferno.h"
 #include "game.h"
 #include "gr.h"
@@ -60,7 +59,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef NETWORK
 #include "modem.h"
 #endif
-#include "playsave.h"
 #include "kconfig.h"
 #include "titles.h"
 #include "credits.h"
@@ -139,9 +137,9 @@ void do_sound_menu();
 void do_toggles_menu();
 
 ubyte do_auto_demo = 1;                 // Flag used to enable auto demo starting in main menu.
-int Player_default_difficulty; // Last difficulty level chosen by the player
-int Auto_leveling_on = 1;
-int Guided_in_big_window = 0;
+cvar_t Player_default_difficulty = { "skill", "1", 1 }; // Last difficulty level chosen by the player
+cvar_t Auto_leveling_on = { "AutoLeveling", "1", 1 };
+cvar_t Guided_in_big_window = { "GuidedBig", "0", 1 };
 int Menu_draw_copyright = 0;
 int EscortHotKeys=1;
 
@@ -516,8 +514,8 @@ int do_difficulty_menu()
 	if (s > -1 )    {
 		if (s != Difficulty_level)
 		{       
-			Player_default_difficulty = s;
-			write_player_file();
+			cvar_setint(&Player_default_difficulty, s);
+			WriteConfigFile();
 		}
 		Difficulty_level = s;
 		mprintf((0, "%s %s %i\n", TXT_DIFFICULTY_LEVEL, TXT_SET_TO, Difficulty_level));
@@ -915,7 +913,7 @@ try_again:
 		}
 	}
 
-	Difficulty_level = Player_default_difficulty;
+	Difficulty_level = Player_default_difficulty.intval;
 
 	if (!do_difficulty_menu())
 		return;
@@ -1069,7 +1067,7 @@ void d2x_options_menu()
 	}
 
 #if 0
-	write_player_file();
+	WriteConfigFile();
 
 #ifdef __MSDOS__
 	Joy_is_Sidewinder=m[(checks+0)].value;
@@ -1138,7 +1136,7 @@ void do_options_menu()
 
 	} while( i>-1 );
 
-	write_player_file();
+	WriteConfigFile();
 }
 
 extern int Redbook_playing;
@@ -1307,8 +1305,6 @@ void do_sound_menu()
 }
 
 
-extern int Automap_always_hires;
-
 #define ADD_CHECK(n,txt,v)  do { m[n].type=NM_TYPE_CHECK; m[n].text=txt; m[n].value=v;} while (0)
 
 void do_toggles_menu()
@@ -1325,31 +1321,31 @@ void do_toggles_menu()
 			}
 			else
 			{
-				ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on);
+				ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on.intval);
 			}
 		#else 
-			ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on);
+			ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on.intval);
 		#endif
-		ADD_CHECK(1, "Show reticle", Reticle_on);
-		ADD_CHECK(2, "Missile view", Missile_view_enabled);
-		ADD_CHECK(3, "Headlight on when picked up", Headlight_active_default );
-		ADD_CHECK(4, "Show guided missile in main display", Guided_in_big_window );
+		ADD_CHECK(1, "Show reticle", Reticle_on.intval);
+		ADD_CHECK(2, "Missile view", Missile_view_enabled.intval);
+		ADD_CHECK(3, "Headlight on when picked up", Headlight_active_default.intval);
+		ADD_CHECK(4, "Show guided missile in main display", Guided_in_big_window.intval);
 		ADD_CHECK(5, "Escort robot hot keys",EscortHotKeys);
-		//ADD_CHECK(6, "Always use 640x480 or greater automap", Automap_always_hires);
+		//ADD_CHECK(6, "Always use 640x480 or greater automap", Automap_always_hires.intval);
 		//when adding more options, change N_TOGGLE_ITEMS above
 
 		i = newmenu_do1( NULL, "Toggles", N_TOGGLE_ITEMS, m, NULL, i );
 			
-		Auto_leveling_on			= m[0].value;
-		Reticle_on					= m[1].value;
-		Missile_view_enabled    	= m[2].value;
-		Headlight_active_default	= m[3].value;
-		Guided_in_big_window		= m[4].value;
+		cvar_setint(&Auto_leveling_on,          m[0].value);
+		cvar_setint(&Reticle_on,                m[1].value);
+		cvar_setint(&Missile_view_enabled,      m[2].value);
+		cvar_setint(&Headlight_active_default,  m[3].value);
+		cvar_setint(&Guided_in_big_window,      m[4].value);
 		EscortHotKeys				= m[5].value;
 
 #if 0
 		if (MenuHiresAvailable)
-			Automap_always_hires = m[6].value;
+			cvar_setint(&Automap_always_hires,  m[6].value);
 		else if (m[6].value)
 			nm_messagebox(TXT_SORRY,1,"OK","High Resolution modes are\nnot available on this video card");
 #endif

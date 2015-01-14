@@ -1715,7 +1715,7 @@ void render_frame(fix eye_offset, int window_num)
 
 	Viewer_eye = Viewer->pos;
 
-//	if (Viewer->type == OBJ_PLAYER && (Cockpit_mode!=CM_REAR_VIEW))
+//	if (Viewer->type == OBJ_PLAYER && (Cockpit_mode.intval != CM_REAR_VIEW))
 //		vm_vec_scale_add2(&Viewer_eye,&Viewer->orient.fvec,(Viewer->size*3)/4);
 
 	if (eye_offset)	{
@@ -1737,7 +1737,7 @@ void render_frame(fix eye_offset, int window_num)
 		vm_angles_2_matrix(&headm,&Player_head_angles);
 		vm_matrix_x_matrix(&viewm,&Viewer->orient,&headm);
 		g3_set_view_matrix(&Viewer_eye,&viewm,Render_zoom);
-	//@@} else if ((Cockpit_mode==CM_REAR_VIEW) && (Viewer==ConsoleObject)) {
+	//@@} else if ((Cockpit_mode.intval == CM_REAR_VIEW) && (Viewer == ConsoleObject)) {
 	} else if (Rear_view && (Viewer==ConsoleObject)) {
 		vms_matrix headm,viewm;
 		Player_head_angles.p = Player_head_angles.b = 0;

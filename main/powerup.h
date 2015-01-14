@@ -93,7 +93,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define POWERUP_NAME_LENGTH 16      // Length of a robot or powerup name.
 extern char Powerup_names[MAX_POWERUP_TYPES][POWERUP_NAME_LENGTH];
 
-extern int Headlight_active_default;    // is headlight on when picked up?
+extern cvar_t Headlight_active_default; // is headlight on when picked up?
 
 typedef struct powerup_type_info {
 	int vclip_num;

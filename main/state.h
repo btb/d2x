@@ -21,6 +21,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _STATE_H
 #define _STATE_H
 
+
+#ifndef MACINTOSH
+#define PLAYER_DIR ""
+#else
+#define PLAYER_DIR ":Players:"
+#endif
+
+
 int state_save_all(int between_levels, int secret_save, char *filename_override, int blind_save);
 int state_restore_all(int in_game, int secret_restore, char *filename_override);
 

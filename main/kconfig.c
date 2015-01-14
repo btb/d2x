@@ -2211,7 +2211,7 @@ void CybermouseAdjust ()
 /*	if ( Player_num > -1 )	{
 		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning
 		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_LEVELLING);	// Turn off leveling to nearest side.
-		Auto_leveling_on = 0;
+		cvar_setint(&Auto_leveling_on, 0);
 
 		if ( kc_external_version > 0 ) {		
 			vms_matrix tempm, ViewMatrix;
@@ -2336,7 +2336,7 @@ void kconfig_read_external_controls()
 	if ( Player_num > -1 )	{
 		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning
 		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_LEVELLING);	// Turn off leveling to nearest side.
-		Auto_leveling_on = 0;
+		cvar_setint(&Auto_leveling_on, 0);
 
 		if ( kc_external_version > 0 ) {		
 			vms_matrix tempm, ViewMatrix;

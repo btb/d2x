@@ -2085,7 +2085,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_LETTERBOX:
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
-				saved_letter_cockpit = Cockpit_mode;
+				saved_letter_cockpit = Cockpit_mode.intval;
 				select_cockpit(CM_LETTERBOX);
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD))
 				select_cockpit(saved_letter_cockpit);
@@ -2101,8 +2101,8 @@ int newdemo_read_frame_information()
 		}
 		case ND_EVENT_REARVIEW:
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
-				saved_rearview_cockpit = Cockpit_mode;
-				if (Cockpit_mode == CM_FULL_COCKPIT)
+				saved_rearview_cockpit = Cockpit_mode.intval;
+				if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 					select_cockpit(CM_REAR_VIEW);
 				Rear_view=1;
 			} else if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
@@ -2115,7 +2115,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_RESTORE_COCKPIT:
 			if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
-				saved_letter_cockpit = Cockpit_mode;
+				saved_letter_cockpit = Cockpit_mode.intval;
 				select_cockpit(CM_LETTERBOX);
 			} else if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD))
 				select_cockpit(saved_letter_cockpit);
@@ -2124,8 +2124,8 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_RESTORE_REARVIEW:
 			if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD)) {
-				saved_rearview_cockpit = Cockpit_mode;
-				if (Cockpit_mode == CM_FULL_COCKPIT)
+				saved_rearview_cockpit = Cockpit_mode.intval;
+				if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 					select_cockpit(CM_REAR_VIEW);
 				Rear_view=1;
 			} else if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
@@ -3278,7 +3278,7 @@ void newdemo_start_playback(char * filename)
 	Game_mode = GM_NORMAL;
 	Newdemo_state = ND_STATE_PLAYBACK;
 	Newdemo_vcr_state = ND_STATE_PLAYBACK;
-	Newdemo_old_cockpit = Cockpit_mode;
+	Newdemo_old_cockpit = Cockpit_mode.intval;
 	Newdemo_size = PHYSFS_fileLength(infile);
 	nd_bad_read = 0;
 	Newdemo_at_eof = 0;
@@ -3300,7 +3300,7 @@ void newdemo_stop_playback()
 	change_playernum_to(0);             //this is reality
 #endif
 	strncpy(Players[Player_num].callsign, nd_save_callsign, CALLSIGN_LEN);
-	Cockpit_mode = Newdemo_old_cockpit;
+	cvar_setint(&Cockpit_mode, Newdemo_old_cockpit);
 	Game_mode = GM_GAME_OVER;
 	Function_mode = FMODE_MENU;
 	longjmp(LeaveGame,0);               // Exit game loop

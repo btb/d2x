@@ -409,7 +409,9 @@ int disable_high_res=0;
 
 void do_register_player(ubyte *title_pal)
 {
-	Players[Player_num].callsign[0] = '\0';
+	strncpy( Players[Player_num].callsign, config_last_player.string, CALLSIGN_LEN );
+	if (strlen(Players[Player_num].callsign))
+		return;
 
 	if (!Auto_demo) 	{
 

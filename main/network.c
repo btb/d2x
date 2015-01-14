@@ -66,7 +66,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "byteswap.h"
 #include "netmisc.h"
 #include "kconfig.h"
-#include "playsave.h"
 #include "cfile.h"
 
 #ifdef MACINTOSH
@@ -2980,7 +2979,7 @@ int network_get_game_params( char * game_name, int *mode, int *game_flags, int *
 	Netgame.KillGoal=0;
 	Netgame.PlayTimeAllowed=0;
 	Netgame.Allow_marker_view=1;
-	netgame_difficulty=Player_default_difficulty;
+	netgame_difficulty = Player_default_difficulty.intval;
 
     ExtGameStatus=GAMESTAT_START_MULTIPLAYER_MISSION;
     if (!select_mission(1, TXT_MULTI_MISSION))
@@ -4698,7 +4697,7 @@ void network_leave_game()
 	network_send_endlevel_packet();
 	change_playernum_to(0);
 	Game_mode = GM_GAME_OVER;
-   write_player_file();
+	WriteConfigFile();
 
 //	WIN(ipx_destroy_read_thread());
 

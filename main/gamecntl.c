@@ -80,7 +80,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "titles.h"
 #include "gr.h"
-#include "playsave.h"
 #include "movie.h"
 #include "scores.h"
 #ifdef MACINTOSH
@@ -136,7 +135,6 @@ int	redbook_volume = 255;
 //	External Variables ---------------------------------------------------------
 
 extern int	Speedtest_on;			 // Speedtest global adapted from game.c
-extern int Guided_in_big_window;
 extern char WaitForRefuseAnswer,RefuseThisPlayer,RefuseTeam;
 
 #ifndef NDEBUG
@@ -521,7 +519,7 @@ int do_game_pause()
 			WIN(set_popup_screen());
 			show_boxed_message(msg);
 			//show_extra_views();
-			if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR)
+			if (Cockpit_mode.intval == CM_FULL_COCKPIT || Cockpit_mode.intval == CM_STATUS_BAR)
 				render_gauges();
 		}
 	}
@@ -748,8 +746,11 @@ void HandleDemoKey(int key)
 	switch (key) {
 
 		case KEY_F3:
-				
-			 if (!(Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window))
+			 if (!(Guided_missile[Player_num] &&
+				   Guided_missile[Player_num]->type == OBJ_WEAPON &&
+				   Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+				   Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+				   Guided_in_big_window.intval))
 				toggle_cockpit();
 			 break;
 
@@ -911,7 +912,7 @@ int select_next_window_function(int w)
 				cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 			break;
 	}
-	write_player_file();
+	WriteConfigFile();
 
 	return 1;	 //screen_changed
 }
@@ -1080,7 +1081,11 @@ int HandleSystemKey(int key)
 
 		case KEY_COMMAND+KEY_3:
 		case KEY_F3:
-			if (!(Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window))
+			if (!(Guided_missile[Player_num] &&
+				  Guided_missile[Player_num]->type == OBJ_WEAPON &&
+				  Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+				  Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+				  Guided_in_big_window.intval))
 			{
 				toggle_cockpit();	screen_changed=1;
 			}

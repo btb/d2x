@@ -35,6 +35,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MAC(x)
 #endif
 
+#define STRINGIFY(x) #x
+
 
 /**
  **	Constants
@@ -72,6 +74,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "menu.h"
 #include "fuelcen.h"
 #include "robot.h"
+#include "gauges.h"
+#include "screens.h"
+#include "powerup.h"
+#include "state.h"
+#include "config.h"
 
 
 /**

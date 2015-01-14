@@ -28,6 +28,7 @@ extern ubyte Automap_visited[MAX_SEGMENTS];
 void DropBuddyMarker(object *objp);
 
 extern int Automap_active;
+extern cvar_t Automap_always_hires;
 
 #define NUM_MARKERS         16
 #define MARKER_MESSAGE_LEN  40

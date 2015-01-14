@@ -64,7 +64,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "newdemo.h"
 #include "kconfig.h"
 #include "strutil.h"
-#include "playsave.h"
 #ifdef MACINTOSH
 #include <Events.h>
 #endif

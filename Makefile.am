@@ -23,7 +23,7 @@ main/gamemine.c main/gamepal.c  main/gamerend.c main/gamesave.c main/gameseg.c  
 main/gauges.c   main/hostage.c  main/hud.c      main/inferno.c  main/kconfig.c  main/kludge.c   \
 main/laser.c    main/lighting.c main/menu.c     main/mglobal.c  main/mission.c  main/morph.c    \
 main/movie.c    main/newdemo.c  main/newmenu.c  main/object.c   main/paging.c   main/physics.c  \
-main/piggy.c    main/player.c   main/playsave.c main/polyobj.c  main/powerup.c  main/render.c   \
+main/piggy.c    main/player.c   main/polyobj.c  main/powerup.c  main/render.c   \
 main/robot.c    main/scores.c   main/segment.c  main/slew.c     main/songs.c    main/state.c    \
 main/switch.c   main/terrain.c  main/texmerge.c main/text.c     main/titles.c   main/vclip.c    \
 main/wall.c     main/weapon.c   \

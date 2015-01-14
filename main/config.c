@@ -87,6 +87,7 @@ cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
 cvar_t Config_lifetime_kills    = { "LifetimeKills", "0", 1 };
 cvar_t Config_lifetime_killed   = { "LifetimeKilled", "0", 1 };
 cvar_t Config_lifetime_checksum = { "LifetimeChecksum", "0", 1 };
+cvar_t Config_display_mode      = { "vid_mode", "0", 1 };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
@@ -98,7 +99,8 @@ cvar_t Config_lifetime_checksum = { "LifetimeChecksum", "0", 1 };
 extern sbyte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, Debris_amount, SoundChannels;
 
 void set_custom_detail_vars(void);
-int get_lifetime_checksum(int a, int b);
+
+uint32_t legacy_display_mode[] = { SM(320,200), SM(640,480), SM(320,400), SM(640,400), SM(800,600), SM(1024,768), SM(1280,1024) };
 
 
 #define CL_MC0 0xF8F
@@ -201,8 +203,32 @@ static void config_init(void)
 	cvar_registervariable(&Network_message_macro[2]);
 	cvar_registervariable(&Network_message_macro[3]);
 #endif
+	cvar_registervariable(&Game_window_w);
+	cvar_registervariable(&Game_window_h);
+	cvar_registervariable(&Player_default_difficulty);
+	cvar_registervariable(&Auto_leveling_on);
+	cvar_registervariable(&Reticle_on);
+	cvar_registervariable(&Cockpit_mode);
+	cvar_registervariable(&Config_display_mode);
+	cvar_registervariable(&Missile_view_enabled);
+	cvar_registervariable(&Headlight_active_default);
+	cvar_registervariable(&Guided_in_big_window);
+	cvar_registervariable(&Automap_always_hires);
 
 	config_initialized = 1;
+}
+
+
+static int get_lifetime_checksum (int a,int b)
+{
+	int num;
+
+	// confusing enough to beat amateur disassemblers? Lets hope so
+
+	num=(a<<8 ^ b);
+	num^=(a | b);
+	num*=num>>2;
+	return (num);
 }
 
 
@@ -322,6 +348,9 @@ int ReadConfigFile()
 	cvar_set_cvar(&Network_message_macro[3], "This one's headed for Uranus");
 #endif
 
+	cvar_setint(&Player_default_difficulty, 1);
+	cvar_setint(&Auto_leveling_on, 1);
+
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");
 	else
@@ -398,6 +427,8 @@ int ReadConfigFile()
 	}
 #endif
 
+	Default_display_mode = legacy_display_mode[Config_display_mode.intval];
+
 #if 0
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
 	printf( "DigiPort: 0x%x\n", digi_driver_port.intval );
@@ -462,6 +493,7 @@ int WriteConfigFile()
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
+	int i;
 	
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 
@@ -499,6 +531,13 @@ int WriteConfigFile()
 	cvar_setint(&Config_lifetime_checksum, get_lifetime_checksum(Netlife_kills, Netlife_killed));
 	con_printf(CON_DEBUG, "Writing: Lifetime checksum is %d\n", Config_lifetime_checksum.intval);
 #endif
+
+	cvar_setint(&Cockpit_mode, (Cockpit_mode_save != -1)?Cockpit_mode_save:Cockpit_mode.intval); //if have saved mode, write it instead of letterbox/rear view
+
+	for (i = 0; i < (sizeof(legacy_display_mode) / sizeof(uint32_t)); i++) {
+		if (legacy_display_mode[i] == Current_display_mode)
+			cvar_setint(&Config_display_mode, i);
+	}
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)

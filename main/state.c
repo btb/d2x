@@ -97,7 +97,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "laser.h"
 #include "multibot.h"
 #include "state.h"
-#include "playsave.h"
 #ifdef OGL
 #include "gr.h"
 #endif

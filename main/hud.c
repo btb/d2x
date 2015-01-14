@@ -76,7 +76,7 @@ int Modex_hud_msg_count;
 // ----------------------------------------------------------------------------
 void clear_background_messages(void)
 {
-	if (((Cockpit_mode == CM_STATUS_BAR) || (Cockpit_mode == CM_FULL_SCREEN)) && (Last_msg_ycrd != -1) && (VR_render_sub_buffer[0].cv_bitmap.bm_y >= 6)) {
+	if (((Cockpit_mode.intval == CM_STATUS_BAR) || (Cockpit_mode.intval == CM_FULL_SCREEN)) && (Last_msg_ycrd != -1) && (VR_render_sub_buffer[0].cv_bitmap.bm_y >= 6)) {
 		grs_canvas	*canv_save = grd_curcanv;
 
 		gr_set_current_canvas(get_current_game_screen());
@@ -104,7 +104,6 @@ void HUD_clear_messages()
 }
 
 
-extern int Guided_in_big_window;
 extern int max_window_h;
 
 extern grs_canvas *print_to_canvas(char *s,grs_font *font, int fc, int bc, int double_flag);
@@ -162,7 +161,7 @@ void HUD_render_message_frame()
 		if (HUD_color == -1)
 			HUD_color = BM_XRGB(0,28,0);
 
-		if ( (VR_render_mode==VR_NONE) && ((Cockpit_mode == CM_STATUS_BAR) || (Cockpit_mode == CM_FULL_SCREEN)) && (VR_render_sub_buffer[0].cv_bitmap.bm_y >= (max_window_h/8))) {
+		if ( (VR_render_mode == VR_NONE) && ((Cockpit_mode.intval == CM_STATUS_BAR) || (Cockpit_mode.intval == CM_FULL_SCREEN)) && (VR_render_sub_buffer[0].cv_bitmap.bm_y >= (max_window_h/8))) {
 			// Only display the most recent message in this mode
 			char	*message = HUD_messages[(hud_first+HUD_nmessages-1) % HUD_MAX_NUM];
 
@@ -207,16 +206,19 @@ void HUD_render_message_frame()
 
 			gr_set_curfont( SMALL_FONT );
 
-			if ( (Cockpit_mode == CM_FULL_SCREEN) || (Cockpit_mode == CM_LETTERBOX) ) {
-				if (Game_window_w == max_window_w)
+			if ( (Cockpit_mode.intval == CM_FULL_SCREEN) || (Cockpit_mode.intval == CM_LETTERBOX) ) {
+				if (Game_window_w.intval == max_window_w)
 					y = SMALL_FONT->ft_h/2;
 				else
 				 	y= SMALL_FONT->ft_h * 2;
 			} else
 				y = SMALL_FONT->ft_h/2;
 
-		  if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID &&
-		      Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window)
+			if (Guided_missile[Player_num] &&
+				Guided_missile[Player_num]->type == OBJ_WEAPON &&
+				Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+				Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num] &&
+				Guided_in_big_window.intval)
 			      y+=SMALL_FONT->ft_h+3;
 
 		  	for (i=0; i<HUD_nmessages; i++ )	{

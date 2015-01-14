@@ -50,7 +50,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "bm.h"
 #include "endlevel.h"
 #include "key.h"
-#include "playsave.h"
 #include "timer.h"
 #include "digi.h"
 #include "sounds.h"
@@ -1390,7 +1389,7 @@ void multi_define_macro_end()
 	Assert( multi_defining_message > 0 );
 
 	cvar_set_cvar( &Network_message_macro[multi_defining_message - 1], Network_message );
-	write_player_file();
+	WriteConfigFile();
 
 	multi_message_index = 0;
 	multi_defining_message = 0;
@@ -4927,7 +4926,7 @@ void multi_add_lifetime_kills ()
 			NetPlayers.players[Player_num].rank=GetMyNetRanking();
 		}
 	}
-	write_player_file();
+	WriteConfigFile();
 }
 
 void multi_add_lifetime_killed ()
@@ -4953,7 +4952,7 @@ void multi_add_lifetime_killed ()
 			HUD_init_message ("You have been demoted to %s!",RankStrings[GetMyNetRanking()]);
 
 	}
-	write_player_file();
+	WriteConfigFile();
 
 }
 

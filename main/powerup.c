@@ -268,7 +268,7 @@ extern char GetKeyValue(char);
 extern void check_to_use_primary(int);
 extern void multi_send_got_flag (char);
 
-int Headlight_active_default=1;	//is headlight on when picked up?
+cvar_t Headlight_active_default = { "HeadlightActive", "1", 1 }; // is headlight on when picked up?
 extern int PlayerMessage;
 
 //	returns true if powerup consumed
@@ -637,9 +637,9 @@ int do_powerup(object *obj)
 				multi_send_play_sound(Powerup_info[obj->id].hit_sound, F1_0);
 #endif
 				digi_play_sample( Powerup_info[obj->id].hit_sound, F1_0 );
-				sprintf(msg,"HEADLIGHT BOOST! (Headlight is %s)",Headlight_active_default?"ON":"OFF");
+				sprintf(msg, "HEADLIGHT BOOST! (Headlight is %s)", Headlight_active_default.intval?"ON":"OFF");
 				powerup_basic(15, 0, 15, 0, msg );
-				if (Headlight_active_default)
+				if (Headlight_active_default.intval)
 					Players[Player_num].flags |= PLAYER_FLAGS_HEADLIGHT_ON;
 				used=1;
 #ifdef NETWORK

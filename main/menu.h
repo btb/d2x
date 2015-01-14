@@ -45,10 +45,10 @@ extern int MenuHires;
 extern void set_detail_level_parameters(int detail_level);
 
 extern char *menu_difficulty_text[];
-extern int Player_default_difficulty;
+extern cvar_t Player_default_difficulty;
 extern int Max_debris_objects;
-extern int Auto_leveling_on;
-extern int Missile_view_enabled;
+extern cvar_t Auto_leveling_on;
+extern cvar_t Guided_in_big_window;
 extern int Escort_view_enabled;
 extern int Cockpit_rear_view;
 

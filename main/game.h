@@ -38,7 +38,7 @@ extern fix Next_missile_fire_time;  // Time at which player can next fire his se
 extern fix Laser_delay_time;        // Delay between laser fires.
 extern int Cheats_enabled;
 
-extern int Missile_view_enabled;
+extern cvar_t Missile_view_enabled;
 
 extern object *Missile_viewer;
 
@@ -170,9 +170,10 @@ extern grs_canvas * get_current_game_screen();
 #define CM_FULL_SCREEN      3   // full screen, no cockpit (w/ reticle)
 #define CM_LETTERBOX        4   // half-height window (for cutscenes)
 
-extern int Cockpit_mode;        // what sort of cockpit or window is up?
-extern int Game_window_w,       // width and height of player's game window
-           Game_window_h;
+extern cvar_t Cockpit_mode;     // what sort of cockpit or window is up?
+extern int Cockpit_mode_save;
+extern cvar_t Game_window_w,    // width and height of player's game window
+              Game_window_h;
 
 extern int Rear_view;           // if true, looking back.
 extern fix Rear_view_leave_time;// how long until we decide key is down

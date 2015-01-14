@@ -77,7 +77,7 @@ grs_canvas *Canv_RightEnergyGauge = NULL;
 grs_canvas *Canv_NumericalGauge = NULL;
 
 //Flags for gauges/hud stuff
-ubyte Reticle_on=1;
+cvar_t Reticle_on = { "crosshair", "1", 1 };
 
 //bitmap numbers for gauges
 
@@ -821,7 +821,7 @@ void copy_gauge_box(gauge_box *box,grs_bitmap *bm)
 //fills in the coords of the hostage video window
 void get_hostage_window_coords(int *x,int *y,int *w,int *h)
 {
-	if (Cockpit_mode == CM_STATUS_BAR) {
+	if (Cockpit_mode.intval == CM_STATUS_BAR) {
 		*x = SB_SECONDARY_W_BOX_LEFT;
 		*y = SB_SECONDARY_W_BOX_TOP;
 		*w = SB_SECONDARY_W_BOX_RIGHT - SB_SECONDARY_W_BOX_LEFT + 1;
@@ -1087,7 +1087,7 @@ int	Last_homing_warning_shown[2]={-1,-1};
 //	-----------------------------------------------------------------------------
 void show_homing_warning(void)
 {
-	if ((Cockpit_mode == CM_STATUS_BAR) || (Endlevel_sequence)) {
+	if ((Cockpit_mode.intval == CM_STATUS_BAR) || (Endlevel_sequence)) {
 		if (Last_homing_warning_shown[VR_current_page] == 1) {
 			PAGE_IN_GAUGE( GAUGE_HOMING_WARNING_OFF );
 
@@ -1180,15 +1180,15 @@ void hud_show_orbs (void)
 
 		x=y=0;
 
-		if (Cockpit_mode == CM_FULL_COCKPIT) {
+		if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
 			y = 2*Line_spacing;
 			x = 4*GAME_FONT->ft_w;
 		}
-		else if (Cockpit_mode == CM_STATUS_BAR) {
+		else if (Cockpit_mode.intval == CM_STATUS_BAR) {
 			y = Line_spacing;
 			x = GAME_FONT->ft_w;
 		}
-		else if (Cockpit_mode == CM_FULL_SCREEN) {
+		else if (Cockpit_mode.intval == CM_FULL_SCREEN) {
 			y = 5*Line_spacing;
 			x = GAME_FONT->ft_w;
 			if (FontHires)
@@ -1213,15 +1213,15 @@ void hud_show_flag(void)
 
 		x=y=0;
 
-		if (Cockpit_mode == CM_FULL_COCKPIT) {
+		if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
 			y = 2*Line_spacing;
 			x = 4*GAME_FONT->ft_w;
 		}
-		else if (Cockpit_mode == CM_STATUS_BAR) {
+		else if (Cockpit_mode.intval == CM_STATUS_BAR) {
 			y = Line_spacing;
 			x = GAME_FONT->ft_w;
 		}
-		else if (Cockpit_mode == CM_FULL_SCREEN) {
+		else if (Cockpit_mode.intval == CM_FULL_SCREEN) {
 			y = 5*Line_spacing;
 			x = GAME_FONT->ft_w;
 			if (FontHires)
@@ -1315,7 +1315,7 @@ void show_bomb_count(int x,int y,int bg_color,int always_show)
 
 // I hate doing this off of hard coded coords!!!!
 
-	if (Cockpit_mode == CM_STATUS_BAR) {		//draw background
+	if (Cockpit_mode.intval == CM_STATUS_BAR) { //draw background
 		gr_setcolor(bg_color);
 		if (!SM_HIRES) {
 			gr_rect(169,189,189,196);
@@ -1346,7 +1346,7 @@ void show_bomb_count(int x,int y,int bg_color,int always_show)
 
 void draw_primary_ammo_info(int ammo_count)
 {
-	if (Cockpit_mode == CM_STATUS_BAR)
+	if (Cockpit_mode.intval == CM_STATUS_BAR)
 		draw_ammo_info(SB_PRIMARY_AMMO_X,SB_PRIMARY_AMMO_Y,ammo_count,1);
 	else
 		draw_ammo_info(PRIMARY_AMMO_X,PRIMARY_AMMO_Y,ammo_count,1);
@@ -2137,7 +2137,7 @@ void draw_weapon_info(int weapon_type,int weapon_num,int laser_level)
 		if (info_index == LASER_ID && laser_level > MAX_LASER_LEVEL)
 			info_index = SUPER_LASER_ID;
 
-		if (Cockpit_mode == CM_STATUS_BAR)
+		if (Cockpit_mode.intval == CM_STATUS_BAR)
 			draw_weapon_info_sub(info_index,
 				&gauge_boxes[SB_PRIMARY_BOX],
 				SB_PRIMARY_W_PIC_X,SB_PRIMARY_W_PIC_Y,
@@ -2154,7 +2154,7 @@ void draw_weapon_info(int weapon_type,int weapon_num,int laser_level)
 	else {
 		info_index = Secondary_weapon_to_weapon_info[weapon_num];
 
-		if (Cockpit_mode == CM_STATUS_BAR)
+		if (Cockpit_mode.intval == CM_STATUS_BAR)
 			draw_weapon_info_sub(info_index,
 				&gauge_boxes[SB_SECONDARY_BOX],
 				SB_SECONDARY_W_PIC_X,SB_SECONDARY_W_PIC_Y,
@@ -2189,7 +2189,7 @@ void draw_ammo_info(int x,int y,int ammo_count,int primary)
 
 void draw_secondary_ammo_info(int ammo_count)
 {
-	if (Cockpit_mode == CM_STATUS_BAR)
+	if (Cockpit_mode.intval == CM_STATUS_BAR)
 		draw_ammo_info(SB_SECONDARY_AMMO_X,SB_SECONDARY_AMMO_Y,ammo_count,0);
 	else
 		draw_ammo_info(SECONDARY_AMMO_X,SECONDARY_AMMO_Y,ammo_count,0);
@@ -2261,7 +2261,7 @@ int draw_weapon_box(int weapon_type,int weapon_num)
 
 	if (weapon_box_states[weapon_type] != WS_SET) {		//fade gauge
 		int fade_value = f2i(weapon_box_fade_values[weapon_type]);
-		int boxofs = (Cockpit_mode==CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
+		int boxofs = (Cockpit_mode.intval == CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
 		
 		Gr_scanline_darkening_level = fade_value;
 		gr_rect(gauge_boxes[boxofs+weapon_type].left,gauge_boxes[boxofs+weapon_type].top,gauge_boxes[boxofs+weapon_type].right,gauge_boxes[boxofs+weapon_type].bot);
@@ -2280,7 +2280,7 @@ void draw_static(int win)
 	vclip *vc = &Vclip[VCLIP_MONITOR_STATIC];
 	grs_bitmap *bmp;
 	int framenum;
-	int boxofs = (Cockpit_mode==CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
+	int boxofs = (Cockpit_mode.intval == CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
 	int x,y;
 
 	static_time[win] += FrameTime;
@@ -2308,7 +2308,7 @@ void draw_static(int win)
 
 void draw_weapon_boxes()
 {
-	int boxofs = (Cockpit_mode==CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
+	int boxofs = (Cockpit_mode.intval == CM_STATUS_BAR)?SB_PRIMARY_BOX:COCKPIT_PRIMARY_BOX;
 	int drew;
 
 	if (weapon_box_user[0] == WBU_WEAPON) {
@@ -2353,7 +2353,7 @@ void draw_weapon_boxes()
 			draw_secondary_ammo_info(Players[Player_num].secondary_ammo[Secondary_weapon]);
 			old_ammo_count[1][VR_current_page] = Players[Player_num].secondary_ammo[Secondary_weapon];
 
-			if (Cockpit_mode == CM_STATUS_BAR)
+			if (Cockpit_mode.intval == CM_STATUS_BAR)
 				show_bomb_count(SB_BOMB_COUNT_X, SB_BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
 			else
 				show_bomb_count(BOMB_COUNT_X, BOMB_COUNT_Y, gr_find_closest_color(0, 0, 0), 0);
@@ -2425,7 +2425,7 @@ void sb_draw_shield_num(int shield)
 	gr_set_fontcolor(gr_getcolor(14,14,23),-1 );
 
 	//erase old one
-//	PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode + (SM_HIRES ? (Num_cockpits/2) : 0)]);
+//	PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES ? (Num_cockpits/2) : 0)]);
 
 //	gr_setcolor(gr_gpixel(&grd_curcanv->cv_bitmap, SB_SHIELD_NUM_X - 1, SB_SHIELD_NUM_Y - 1));
 
@@ -2468,7 +2468,7 @@ void draw_invulnerable_ship()
 
 	if (((Players[Player_num].invulnerable_time + INVULNERABLE_TIME_MAX - GameTime) > F1_0*4) || (GameTime & 0x8000)) {
 
-		if (Cockpit_mode == CM_STATUS_BAR)	{
+		if (Cockpit_mode.intval == CM_STATUS_BAR) {
 			PAGE_IN_GAUGE( GAUGE_INVULNERABLE+invulnerable_frame );
 			gr_ubitmapm( SB_SHIELD_GAUGE_X, SB_SHIELD_GAUGE_Y, &GameBitmaps[GET_GAUGE_INDEX(GAUGE_INVULNERABLE+invulnerable_frame) ] );
 		} else {
@@ -2483,7 +2483,7 @@ void draw_invulnerable_ship()
 			if (++invulnerable_frame == N_INVULNERABLE_FRAMES)
 				invulnerable_frame=0;
 		}
-	} else if (Cockpit_mode == CM_STATUS_BAR)
+	} else if (Cockpit_mode.intval == CM_STATUS_BAR)
 		sb_draw_shield_bar(f2ir(Players[Player_num].shields));
 	else
 		draw_shield_bar(f2ir(Players[Player_num].shields));
@@ -2628,7 +2628,7 @@ void hud_show_kill_list()
 
 	save_y = y = grd_curcanv->cv_h - n_left*(fth+1);
 
-	if (Cockpit_mode == CM_FULL_COCKPIT) {
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
 		save_y = y -= LHX(6);
 		if (Game_mode & GM_MULTI_COOP)
 			x1 = LHX(33);
@@ -2642,7 +2642,7 @@ void hud_show_kill_list()
 		int sw,sh,aw;
 
 		if (i>=n_left) {
-			if (Cockpit_mode == CM_FULL_COCKPIT)
+			if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 				x0 = grd_curcanv->cv_w - LHX(53);
 			else
 				x0 = grd_curcanv->cv_w - LHX(60);
@@ -2871,7 +2871,7 @@ void draw_hud()
 {
 
 #if 0 //def OGL
-        if (Cockpit_mode==CM_STATUS_BAR){
+        if (Cockpit_mode.intval == CM_STATUS_BAR) {
                 //ogl needs to redraw every frame, at least currently.
                 //              init_cockpit();
 			last_drawn_cockpit[0]=-1;
@@ -2886,21 +2886,21 @@ void draw_hud()
 	Line_spacing = GAME_FONT->ft_h + GAME_FONT->ft_h/4;
 
 	//	Show score so long as not in rearview
-	if ( !Rear_view && Cockpit_mode!=CM_REAR_VIEW && Cockpit_mode!=CM_STATUS_BAR && !Saving_movie_frames) {
+	if ( !Rear_view && Cockpit_mode.intval != CM_REAR_VIEW && Cockpit_mode.intval != CM_STATUS_BAR && !Saving_movie_frames) {
 		hud_show_score();
 		if (score_time)
 			hud_show_score_added();
 	}
 
-	if ( !Rear_view && Cockpit_mode!=CM_REAR_VIEW && !Saving_movie_frames) 
+	if ( !Rear_view && Cockpit_mode.intval != CM_REAR_VIEW && !Saving_movie_frames)
 	 hud_show_timer_count();
 
 	//	Show other stuff if not in rearview or letterbox.
-	if (!Rear_view && Cockpit_mode!=CM_REAR_VIEW) { // && Cockpit_mode!=CM_LETTERBOX) {
-		if (Cockpit_mode==CM_STATUS_BAR || Cockpit_mode==CM_FULL_SCREEN)
+	if (!Rear_view && Cockpit_mode.intval != CM_REAR_VIEW) { // && Cockpit_mode.intval!=CM_LETTERBOX) {
+		if (Cockpit_mode.intval == CM_STATUS_BAR || Cockpit_mode.intval == CM_FULL_SCREEN)
 			hud_show_homing_warning();
 
-		if (Cockpit_mode==CM_FULL_SCREEN) {
+		if (Cockpit_mode.intval == CM_FULL_SCREEN) {
 			hud_show_energy();
 			hud_show_shield();
 			hud_show_afterburner();
@@ -2909,7 +2909,7 @@ void draw_hud()
 				hud_show_keys();
 			hud_show_cloak_invuln();
 
-			if ( ( Newdemo_state==ND_STATE_RECORDING ) && ( Players[Player_num].flags != old_flags[VR_current_page] )) {
+			if ( ( Newdemo_state == ND_STATE_RECORDING ) && ( Players[Player_num].flags != old_flags[VR_current_page] )) {
 				newdemo_record_player_flags(old_flags[VR_current_page], Players[Player_num].flags);
 				old_flags[VR_current_page] = Players[Player_num].flags;
 			}
@@ -2921,23 +2921,23 @@ void draw_hud()
 			show_time();
 		#endif
 		#endif
-		if (Reticle_on && Cockpit_mode != CM_LETTERBOX && (!Use_player_head_angles))
+		if (Reticle_on.intval && Cockpit_mode.intval != CM_LETTERBOX && (!Use_player_head_angles))
 			show_reticle(0);
 
 #ifdef NETWORK
 		show_HUD_names();
 
-		if (Cockpit_mode != CM_LETTERBOX && Cockpit_mode != CM_REAR_VIEW)
+		if (Cockpit_mode.intval != CM_LETTERBOX && Cockpit_mode.intval != CM_REAR_VIEW)
 			hud_show_flag();
 
-		if (Cockpit_mode != CM_LETTERBOX && Cockpit_mode != CM_REAR_VIEW)
+		if (Cockpit_mode.intval != CM_LETTERBOX && Cockpit_mode.intval != CM_REAR_VIEW)
 			hud_show_orbs();
 
 #endif
 		if (!Saving_movie_frames)
 			HUD_render_message_frame();
 
-		if (Cockpit_mode!=CM_STATUS_BAR && !Saving_movie_frames)
+		if (Cockpit_mode.intval != CM_STATUS_BAR && !Saving_movie_frames)
 			hud_show_lives();
 
 		#ifdef NETWORK
@@ -2946,7 +2946,7 @@ void draw_hud()
 		#endif
 	}
 
-	if (Rear_view && Cockpit_mode!=CM_REAR_VIEW) {
+	if (Rear_view && Cockpit_mode.intval != CM_REAR_VIEW) {
 		HUD_render_message_frame();
 		gr_set_curfont( GAME_FONT );
 		gr_set_fontcolor(gr_getcolor(0,31,0),-1 );
@@ -2967,7 +2967,7 @@ void render_gauges()
 	int shields = f2ir(Players[Player_num].shields);
 	int cloak = ((Players[Player_num].flags&PLAYER_FLAGS_CLOAKED) != 0);
  
-	Assert(Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR);
+	Assert(Cockpit_mode.intval == CM_FULL_COCKPIT || Cockpit_mode.intval == CM_STATUS_BAR);
 
 // check to see if our display mode has changed since last render time --
 // if so, then we need to make new gauge canvases.
@@ -2991,14 +2991,14 @@ void render_gauges()
 		if (Players[Player_num].homing_object_dist >= 0)
 			newdemo_record_homing_distance(Players[Player_num].homing_object_dist);
 
-	if (Cockpit_mode == CM_FULL_COCKPIT)
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 		draw_player_ship(cloak, old_cloak[VR_current_page], SHIP_GAUGE_X, SHIP_GAUGE_Y);
 	else
 		draw_player_ship(cloak, old_cloak[VR_current_page], SB_SHIP_GAUGE_X, SB_SHIP_GAUGE_Y);
 
 	old_cloak[VR_current_page] = cloak;
 
-	if (Cockpit_mode == CM_FULL_COCKPIT) {
+	if (Cockpit_mode.intval == CM_FULL_COCKPIT) {
 		if (Newdemo_state == ND_STATE_RECORDING && (energy != old_energy[VR_current_page]))
 		{
 			newdemo_record_player_energy(old_energy[VR_current_page], energy);
@@ -3036,7 +3036,7 @@ void render_gauges()
 
 		show_homing_warning();
 
-	} else if (Cockpit_mode == CM_STATUS_BAR) {
+	} else if (Cockpit_mode.intval == CM_STATUS_BAR) {
 
 		if (Newdemo_state == ND_STATE_RECORDING && (energy != old_energy[VR_current_page]))
 		{
@@ -3170,7 +3170,7 @@ void do_cockpit_window_view(int win,object *viewer,int rear_view_flag,int user,c
 	Viewer = viewer;
 	Rear_view = rear_view_flag;
 
-	if (Cockpit_mode == CM_FULL_SCREEN)
+	if (Cockpit_mode.intval == CM_FULL_SCREEN)
 	{
 
 		w = VR_render_buffer[0].cv_bitmap.bm_w/6;			// hmm.  I could probably do the sub_buffer assigment for all macines, but I aint gonna chance it
@@ -3188,9 +3188,9 @@ void do_cockpit_window_view(int win,object *viewer,int rear_view_flag,int user,c
 		gr_init_sub_canvas(&window_canv,&VR_render_buffer[0],window_x,window_y,w,h);
 	}
 	else {
-		if (Cockpit_mode == CM_FULL_COCKPIT)
+		if (Cockpit_mode.intval == CM_FULL_COCKPIT)
 			boxnum = (COCKPIT_PRIMARY_BOX)+win;
-		else if (Cockpit_mode == CM_STATUS_BAR)
+		else if (Cockpit_mode.intval == CM_STATUS_BAR)
 			boxnum = (SB_PRIMARY_BOX)+win;
 		else
 			goto abort;
@@ -3221,7 +3221,7 @@ void do_cockpit_window_view(int win,object *viewer,int rear_view_flag,int user,c
 	if (user == WBU_GUIDED)
 		draw_guided_crosshair();
 
-	if (Cockpit_mode == CM_FULL_SCREEN) {
+	if (Cockpit_mode.intval == CM_FULL_SCREEN) {
 		int small_window_bottom,big_window_bottom,extra_part_h;
 		
 		{
@@ -3232,7 +3232,7 @@ void do_cockpit_window_view(int win,object *viewer,int rear_view_flag,int user,c
 		//if the window only partially overlaps the big 3d window, copy
 		//the extra part to the visible screen
 
-		big_window_bottom = Game_window_y + Game_window_h - 1;
+		big_window_bottom = Game_window_y + Game_window_h.intval - 1;
 
 		if (window_y > big_window_bottom) {
 
@@ -3299,7 +3299,7 @@ abort:;
 		Assert(outBoundsRect);
 		Assert((inSubWindowNum == 0) || (inSubWindowNum == 1));
 		
-		switch (Cockpit_mode)
+		switch (Cockpit_mode.intval)
 		{
 			case CM_FULL_SCREEN:
 				// note: this calculation is taken from do_cockpit_window_view for the full
@@ -3330,7 +3330,7 @@ abort:;
 					boxNumber = SB_SECONDARY_BOX;
 				}
 				
-				//boxNumber = (Current_display_mode * 4) + (Cockpit_mode * 2) + inSubWindowNum;
+				//boxNumber = (Current_display_mode * 4) + (Cockpit_mode.intval * 2) + inSubWindowNum;
 				currentGaugeBox = &gauge_boxes[boxNumber];
 				Assert(currentGaugeBox);
 				
