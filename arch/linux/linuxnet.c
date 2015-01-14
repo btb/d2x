@@ -46,8 +46,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ipx_udp.h"
 #include "ipx_mcast4.h"
 #include "error.h"
-#include "../../main/player.h"	/* for Players */
-#include "../../main/multi.h"	/* for NetPlayers */
+#include "inferno.h"
 //added 05/17/99 Matt Mueller - needed to redefine FD_* so that no asm is used
 //#include "checker.h"
 //end addition -MM

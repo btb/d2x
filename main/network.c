@@ -35,7 +35,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ipx.h"
 #include "newmenu.h"
 #include "key.h"
-#include "gauges.h"
+#include "inferno.h"
 #include "object.h"
 #include "error.h"
 #include "laser.h"

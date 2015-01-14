@@ -40,7 +40,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "songs.h"
 #include "key.h"
 #include "palette.h"
-#include "game.h"
+#include "inferno.h"
 #include "text.h"
 #include "menu.h"
 #include "newmenu.h"

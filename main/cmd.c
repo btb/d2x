@@ -13,7 +13,7 @@
 #include "error.h"
 #include "u_mem.h"
 #include "strutil.h"
-#include "weapon.h"
+#include "inferno.h"
 
 
 typedef struct cmd_s

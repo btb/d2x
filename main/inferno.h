@@ -21,9 +21,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _INFERNO_H
 
 #include "pstypes.h"
-#include "console.h"
-#include "escort.h"
-
 
 // MACRO for single line #ifdef WINDOWS #else DOS
 #ifdef WINDOWS
@@ -60,6 +57,22 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // horrible circular dependencies involving object.h, aistruct.h,
 // polyobj.h, & robot.h
 #define MAX_SUBMODELS	10		// how many animating sub-objects per model
+
+
+#include "console.h"
+#include "escort.h"
+#include "segment.h"
+#include "object.h"
+#include "automap.h"
+#ifdef NETWORK
+#include "multi.h"
+#include "network.h"
+#endif
+#include "fvi.h"
+#include "menu.h"
+#include "fuelcen.h"
+#include "robot.h"
+
 
 /**
  **	Global variables

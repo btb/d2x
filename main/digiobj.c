@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 
 #include "fix.h"
-#include "object.h"
+#include "inferno.h"
 #include "mono.h"
 #include "timer.h"
 #include "joy.h"

@@ -12,7 +12,7 @@
 #include "joydefs.h"
 #include "pstypes.h"
 #include "newmenu.h"
-#include "config.h"
+#include "inferno.h"
 #include "text.h"
 #include "kconfig.h"
 

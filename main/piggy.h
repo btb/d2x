@@ -22,7 +22,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "digi.h"
 #include "sounds.h"
-#include "inferno.h"
 #include "cfile.h"
 
 #define D1_PIGFILE              "descent.pig"

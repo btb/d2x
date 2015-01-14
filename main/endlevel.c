@@ -41,7 +41,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "iff.h"
 #include "mono.h"
 #include "texmap.h"
-#include "fvi.h"
+#include "inferno.h"
 #include "u_mem.h"
 #include "sounds.h"
 

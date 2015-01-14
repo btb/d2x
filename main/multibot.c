@@ -26,7 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "vecmat.h"
-#include "object.h"
+#include "inferno.h"
 #include "multibot.h"
 #include "game.h"
 #include "modem.h"

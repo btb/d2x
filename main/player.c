@@ -9,7 +9,7 @@
 #include <conf.h>
 #endif
 
-#include "player.h"
+#include "inferno.h"
 #include "cfile.h"
 
 /*

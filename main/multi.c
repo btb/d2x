@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "strutil.h"
-#include "game.h"
+#include "inferno.h"
 #include "modem.h"
 #include "network.h"
 #include "multi.h"
@@ -113,9 +113,6 @@ void GameLoop(int, int); // From game.c
 //
 
 extern vms_vector MarkerPoint[];
-extern char MarkerMessage[16][40];
-extern char MarkerOwner[16][40];
-extern int MarkerObject[];
 
 int control_invul_time = 0;
 int who_killed_controlcen = -1;  // -1 = noone

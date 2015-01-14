@@ -26,7 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "gauges.h"
+#include "inferno.h"
 #include "newmenu.h"
 #include "game.h"
 #include "switch.h"

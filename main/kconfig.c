@@ -37,7 +37,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
-#include "game.h"
+#include "inferno.h"
 #include "gamefont.h"
 #include "iff.h"
 #include "u_mem.h"

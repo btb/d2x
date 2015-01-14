@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 #include "3d.h"
-#include "piggy.h"
+#include "inferno.h"
 #include "../../3d/globvars.h"
 #include "error.h"
 #include "texmap.h"

@@ -6,7 +6,7 @@
 
 #include "console.h"
 #include "timer.h"
-#include "weapon.h"
+#include "inferno.h"
 
 
 typedef struct _console_control_info {

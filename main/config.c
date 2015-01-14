@@ -39,8 +39,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <physfs.h>
 
-#include "pstypes.h"
-#include "game.h"
+#include "inferno.h"
 #include "menu.h"
 #include "movie.h"
 #include "digi.h"

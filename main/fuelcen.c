@@ -26,7 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "fuelcen.h"
+#include "inferno.h"
 #include "gameseg.h"
 #include "game.h"		// For FrameTime
 #include "error.h"

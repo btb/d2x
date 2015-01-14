@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
-#include "game.h"
+#include "inferno.h"
 #include "laser.h"
 #include "weapon.h"
 #include "mono.h"

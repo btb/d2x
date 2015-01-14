@@ -28,7 +28,7 @@
 #include <errno.h>
 
 #include "hudmsg.h"
-#include "game.h"
+#include "inferno.h"
 #include "text.h"
 #include "gr.h"
 #include "gamefont.h"

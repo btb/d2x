@@ -21,7 +21,7 @@
 #include "fix.h"
 #include "vecmat.h"
 #include "gr.h" // needed for piggy.h
-#include "piggy.h"
+#include "inferno.h"
 #include "digi.h"
 #include "sounds.h"
 #include "wall.h"

@@ -46,7 +46,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gamefont.h"
 #include "cfile.h"
 #include "error.h"
-#include "polyobj.h"
+#include "inferno.h"
 #include "textures.h"
 #include "screens.h"
 #include "multi.h"

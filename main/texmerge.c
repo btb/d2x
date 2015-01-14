@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "gr.h"
 #include "error.h"
-#include "game.h"
+#include "inferno.h"
 #include "textures.h"
 #include "mono.h"
 #include "rle.h"

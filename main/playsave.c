@@ -40,7 +40,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 
 #include "strutil.h"
-#include "game.h"
+#include "inferno.h"
 #include "gameseq.h"
 #include "player.h"
 #include "playsave.h"
