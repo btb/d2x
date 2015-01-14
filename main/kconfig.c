@@ -1669,12 +1669,10 @@ void controls_read_all()
 
 //------------- Read slide_on -------------
 	
-	// From console...
 	slide_on |= console_control_state(CONCNTL_STRAFE);
 
 //------------- Read bank_on ---------------
 
-	// From console...
 	bank_on |= console_control_state(CONCNTL_BANK);
 
 //------------ Read pitch_time -----------
@@ -1682,7 +1680,6 @@ void controls_read_all()
 		// mprintf((0, "pitch: %7.3f %7.3f: %7.3f\n", f2fl(k4), f2fl(k6), f2fl(Controls.heading_time)));
 		kp = 0;
 
-		// From console...
 		kp += console_control_down_time(CONCNTL_LOOKDOWN) / (PH_SCALE * 2);
 		kp -= console_control_down_time(CONCNTL_LOOKUP) / (PH_SCALE * 2);
 
@@ -1698,10 +1695,8 @@ void controls_read_all()
 
 		Controls.pitch_time += analog_control[AXIS_PITCH] * Config_joystick_sensitivity.intval / 8;
 	
-	} else {
+	} else
 		Controls.pitch_time = 0;
-	}
-
 
 // the following "if" added by WraithX, 4/14/00
 // done so that dead players can't move
@@ -1710,18 +1705,13 @@ if (!Player_is_dead)
 //----------- Read vertical_thrust_time -----------------
 
 	if ( slide_on )	{
-		// From console...
 		Controls.vertical_thrust_time += console_control_down_time(CONCNTL_LOOKDOWN);
 		Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_LOOKUP);
-
 		Controls.vertical_thrust_time += analog_control[AXIS_PITCH];
-
 	}
 
-	// From console...
 	Controls.vertical_thrust_time += console_control_down_time(CONCNTL_MOVEUP);
 	Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_MOVEDOWN);
-
 	Controls.vertical_thrust_time += analog_control[AXIS_UPDOWN];
 
 }// end "if" added by WraithX
@@ -1732,7 +1722,6 @@ if (!Player_is_dead)
 		//mprintf((0, "heading: %7.3f %7.3f: %7.3f\n", f2fl(k4), f2fl(k6), f2fl(Controls.heading_time)));
 		kh = 0;
 
-		// From console...
 		kh -= console_control_down_time(CONCNTL_LEFT) / PH_SCALE;
 		kh += console_control_down_time(CONCNTL_RIGHT) / PH_SCALE;
 
@@ -1748,9 +1737,8 @@ if (!Player_is_dead)
 
 		Controls.heading_time += analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
 
-	} else {
+	} else
 		Controls.heading_time = 0;
-	}
 
 // the following "if" added by WraithX, 4/14/00
 // done so that dead players can't move
@@ -1759,18 +1747,13 @@ if (!Player_is_dead)
 //----------- Read sideways_thrust_time -----------------
 
 	if ( slide_on )	{
-		// From console...
 		Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_LEFT);
 		Controls.sideways_thrust_time += console_control_down_time(CONCNTL_RIGHT);
-
 		Controls.sideways_thrust_time += analog_control[AXIS_TURN];
-
 	}
 
-	// From console...
 	Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_MOVELEFT);
 	Controls.sideways_thrust_time += console_control_down_time(CONCNTL_MOVERIGHT);
-
 	Controls.sideways_thrust_time += analog_control[AXIS_LEFTRIGHT];
 
 }// end "if" added by WraithX
@@ -1778,18 +1761,13 @@ if (!Player_is_dead)
 //----------- Read bank_time -----------------
 
 	if ( bank_on )	{
-		// From console...
 		Controls.bank_time += console_control_down_time(CONCNTL_LEFT);
 		Controls.bank_time -= console_control_down_time(CONCNTL_RIGHT);
-
 		Controls.bank_time -= analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
-
 	}
 
-	// From console...
 	Controls.bank_time += console_control_down_time(CONCNTL_BANKLEFT);
 	Controls.bank_time -= console_control_down_time(CONCNTL_BANKRIGHT);
-
 	Controls.bank_time += analog_control[AXIS_BANK];
 
 // the following "if" added by WraithX, 4/14/00
@@ -1798,134 +1776,109 @@ if (!Player_is_dead)
 {
 //----------- Read forward_thrust_time -------------
 
-	// From console...
 	Controls.forward_thrust_time += console_control_down_time(CONCNTL_FORWARD);
 	Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
-
 	Controls.forward_thrust_time += analog_control[AXIS_THROTTLE];
 
 //----------- Read afterburner_state -------------
 
-	// From console...
 	Controls.afterburner_state |= console_control_state(CONCNTL_AFTERBURN);
 
 //-------Read headlight key--------------------------
 
-	// From console...
 	Controls.headlight_count += console_control_down_count(CONCNTL_HEADLIGHT);
 
 //--------Read Cycle Primary Key------------------
 
-	// From console...
 	Controls.cycle_primary_count += console_control_down_count(CONCNTL_CYCLE);
 
 //--------Read Cycle Secondary Key------------------
 
-	// From console...
 	Controls.cycle_secondary_count += console_control_down_count(CONCNTL_CYCLE2);
 
 //--------Read Toggle Bomb key----------------------
 
-	// From console...
-	if (console_control_down_count(CONCNTL_TOGGLEBOMB))
-         {
-          int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
+	if (console_control_down_count(CONCNTL_TOGGLEBOMB)) {
+		int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
 
-			 if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
-				  !Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
-			   {
-				 digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-				 HUD_init_message ("No bombs available!");
-				}
-			 else
-				{	
-				 if (Players[Player_num].secondary_ammo[bomb]==0)
-					{
-					 digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-					 HUD_init_message ("No %s available!",(bomb==SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
-					}
-				  else
-					{
-			       Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
-					 digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
-					}
-				}
+		if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
+			!Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
+		{
+			digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+			HUD_init_message ("No bombs available!");
+		} else {
+			if (Players[Player_num].secondary_ammo[bomb] == 0) {
+				digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+				HUD_init_message("No %s available!", (bomb == SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
+			} else {
+				Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
+				digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
 			}
-          
+		}
+	}
+
 //---------Read Energy->Shield key----------
 
-	// From console...
 	if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && console_control_state(CONCNTL_NRGSHIELD))
 		transfer_energy_to_shield(console_control_down_time(CONCNTL_NRGSHIELD));
 
 //----------- Read fire_primary_down_count
 
-	// From console...
 	Controls.fire_primary_down_count += console_control_down_count(CONCNTL_ATTACK);
 
 //----------- Read fire_primary_state
 
-	// From console...
 	Controls.fire_primary_state |= console_control_state(CONCNTL_ATTACK);
 
 //----------- Read fire_secondary_down_count
 
-	// From console...
 	Controls.fire_secondary_down_count += console_control_down_count(CONCNTL_ATTACK2);
 
 //----------- Read fire_secondary_state
 
-	// From console...
 	Controls.fire_secondary_state |= console_control_state(CONCNTL_ATTACK2);
 
 //----------- Read fire_flare_down_count
 
-	// From console...
 	Controls.fire_flare_down_count += console_control_down_count(CONCNTL_FLARE);
 
 //----------- Read drop_bomb_down_count
 
-	// From console...
 	Controls.drop_bomb_down_count += console_control_down_count(CONCNTL_BOMB);
 
 //----------- Read rear_view_down_count
 
-	// From console...
 	Controls.rear_view_down_count += console_control_down_count(CONCNTL_REARVIEW);
 
 //----------- Read rear_view_down_state
 
-	// From console...
 	Controls.rear_view_down_state |= console_control_state(CONCNTL_REARVIEW);
 
 }//end "if" added by WraithX
 
 //----------- Read automap_down_count
 
-	// From console...
 	Controls.automap_down_count += console_control_down_count(CONCNTL_AUTOMAP);
 
 //----------- Read automap_state
 
-	// From console...
 	Controls.automap_state |= console_control_state(CONCNTL_AUTOMAP);
 
 //----------- Read stupid-cruise-control-type of throttle.
-	{
-		// From console...
-		Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);
-		Cruise_speed -= console_control_down_time(CONCNTL_CRUISEDOWN);
 
-		// From console...
-		if (console_control_down_count(CONCNTL_CRUISEOFF))
-			Cruise_speed = 0;
+	Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);
+	Cruise_speed -= console_control_down_time(CONCNTL_CRUISEDOWN);
 
-		if (Cruise_speed > i2f(100) ) Cruise_speed = i2f(100);
-		if (Cruise_speed < 0 ) Cruise_speed = 0;
-	
-		if (Controls.forward_thrust_time==0)
-			Controls.forward_thrust_time = fixmul(Cruise_speed,FrameTime)/100;
-	}
+	if (console_control_down_count(CONCNTL_CRUISEOFF))
+		Cruise_speed = 0;
+
+	if (Cruise_speed > i2f(100))
+		Cruise_speed = i2f(100);
+	if (Cruise_speed < 0 )
+		Cruise_speed = 0;
+
+	if (Controls.forward_thrust_time==0)
+		Controls.forward_thrust_time = fixmul(Cruise_speed,FrameTime)/100;
 
 #if 0
 	read_head_tracker();
@@ -1939,29 +1892,29 @@ if (!Player_is_dead)
 	if (FrameTime > F1_0 )
 		mprintf( (1, "Bogus frame time of %.2f seconds\n", f2fl(FrameTime) ));
 
-	if (Controls.pitch_time > FrameTime/2 ) Controls.pitch_time = FrameTime/2;
+	if (Controls.pitch_time         > FrameTime/2 ) Controls.pitch_time         = FrameTime/2;
 	if (Controls.vertical_thrust_time > FrameTime ) Controls.vertical_thrust_time = FrameTime;
-	if (Controls.heading_time > FrameTime ) Controls.heading_time = FrameTime;
+	if (Controls.heading_time         > FrameTime ) Controls.heading_time         = FrameTime;
 	if (Controls.sideways_thrust_time > FrameTime ) Controls.sideways_thrust_time = FrameTime;
-	if (Controls.bank_time > FrameTime ) Controls.bank_time = FrameTime;
-	if (Controls.forward_thrust_time > FrameTime ) Controls.forward_thrust_time = FrameTime;
-//	if (Controls.afterburner_time > FrameTime ) Controls.afterburner_time = FrameTime;
+	if (Controls.bank_time            > FrameTime ) Controls.bank_time            = FrameTime;
+	if (Controls.forward_thrust_time  > FrameTime ) Controls.forward_thrust_time  = FrameTime;
+//	if (Controls.afterburner_time     > FrameTime ) Controls.afterburner_time     = FrameTime;
 
-	if (Controls.pitch_time < -FrameTime/2 ) Controls.pitch_time = -FrameTime/2;
+	if (Controls.pitch_time         < -FrameTime/2 ) Controls.pitch_time         = -FrameTime/2;
 	if (Controls.vertical_thrust_time < -FrameTime ) Controls.vertical_thrust_time = -FrameTime;
-	if (Controls.heading_time < -FrameTime ) Controls.heading_time = -FrameTime;
+	if (Controls.heading_time         < -FrameTime ) Controls.heading_time         = -FrameTime;
 	if (Controls.sideways_thrust_time < -FrameTime ) Controls.sideways_thrust_time = -FrameTime;
-	if (Controls.bank_time < -FrameTime ) Controls.bank_time = -FrameTime;
-	if (Controls.forward_thrust_time < -FrameTime ) Controls.forward_thrust_time = -FrameTime;
-//	if (Controls.afterburner_time < -FrameTime ) Controls.afterburner_time = -FrameTime;
+	if (Controls.bank_time            < -FrameTime ) Controls.bank_time            = -FrameTime;
+	if (Controls.forward_thrust_time  < -FrameTime ) Controls.forward_thrust_time  = -FrameTime;
+//	if (Controls.afterburner_time     < -FrameTime ) Controls.afterburner_time     = -FrameTime;
 
 
 //--------- Don't do anything if in debug mode
-	#ifndef RELEASE
+#ifndef RELEASE
 	if ( keyd_pressed[KEY_DELETE] )	{
 		memset( &Controls, 0, sizeof(control_info) );
 	}
-	#endif
+#endif
 }
 
 
