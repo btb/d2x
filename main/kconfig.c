@@ -320,43 +320,35 @@ char *kc_key_bind_text[NUM_KEY_CONTROLS] = {
 	"+nrgshield",
 	"+togglebomb",
 };
-kc_item kc_joystick[NUM_OTHER_CONTROLS] = {
-	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
-	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
-	{ 13, 22, 99, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_JOY_AXIS, 255 },
-	{ 14, 22, 99, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,107, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_JOY_AXIS, 255 },
-	{ 16, 22,107, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164, 99, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_JOY_AXIS, 255 },
-	{ 18,164, 99,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,107, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_JOY_AXIS, 255 },
-	{ 20,164,107,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,117, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_JOY_AXIS, 255 },
-	{ 22,164,117,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,125, 58, 40, 21, 18, 22, 24,"throttle", BT_JOY_AXIS, 255 },
-	{ 24,164,125,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
-};
 
-kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
-	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
-	{ -1 }, { -1 }, { -1 }, { -1 }, { -1 }, { -1 },
-	{ 13, 22,154, 51, 40, 24, 15, 24, 14,"Pitch U/D", BT_MOUSE_AXIS, 255 },
-	{ 14, 22,154, 99,  8, 15, 16, 13, 17,"Pitch U/D", BT_INVERT, 255 },
-	{ 15, 22,162, 51, 40, 13, 14, 18, 16,"Turn L/R", BT_MOUSE_AXIS, 255 },
-	{ 16, 22,162, 99,  8, 14, 17, 15, 19,"Turn L/R", BT_INVERT, 255 },
-	{ 17,164,154, 58, 40, 16, 19, 14, 18,"Slide L/R", BT_MOUSE_AXIS, 255 },
-	{ 18,164,154,106,  8, 23, 20, 17, 15,"Slide L/R", BT_INVERT, 255 },
-	{ 19,164,162, 58, 40, 17, 21, 16, 20,"Slide U/D", BT_MOUSE_AXIS, 255 },
-	{ 20,164,162,106,  8, 18, 22, 19, 21,"Slide U/D", BT_INVERT, 255 },
-	{ 21,164,172, 58, 40, 19, 23, 20, 22,"Bank L/R", BT_MOUSE_AXIS, 255 },
-	{ 22,164,172,106,  8, 20, 24, 21, 23,"Bank L/R", BT_INVERT, 255 },
-	{ 23,164,180, 58, 40, 21, 18, 22, 24,"throttle", BT_MOUSE_AXIS, 255 },
-	{ 24,164,180,106,  8, 22, 13, 23, 13,"throttle", BT_INVERT, 255 },
+kc_item kc_other[NUM_OTHER_CONTROLS] = {
+	{  0, 22,138, 51, 40, 23,  2, 23,  1,"Pitch U/D", BT_JOY_AXIS, 255 },
+	{  1, 22,138, 99,  8, 10,  3,  0, 12,"Pitch U/D", BT_INVERT, 255 },
+	{  2, 22,146, 51, 40,  0,  4, 13,  3,"Turn L/R", BT_JOY_AXIS, 255 },
+	{  3, 22,146, 99,  8,  1,  5,  2, 14,"Turn L/R", BT_INVERT, 255 },
+	{  4, 22,154, 51, 40,  2,  6, 15,  5,"Slide L/R", BT_JOY_AXIS, 255 },
+	{  5, 22,154, 99,  8,  3,  7,  4, 16,"Slide L/R", BT_INVERT, 255 },
+	{  6, 22,162, 51, 40,  4,  8, 17,  7,"Slide U/D", BT_JOY_AXIS, 255 },
+	{  7, 22,162, 99,  8,  5,  9,  6, 18,"Slide U/D", BT_INVERT, 255 },
+	{  8, 22,170, 51, 40,  6, 10, 19,  9,"Bank L/R", BT_JOY_AXIS, 255 },
+	{  9, 22,170, 99,  8,  7, 11,  8, 20,"Bank L/R", BT_INVERT, 255 },
+	{ 10, 22,182, 51, 40,  8,  1, 21, 11,"throttle", BT_JOY_AXIS, 255 },
+	{ 11, 22,182, 99,  8,  9, 12, 10, 22,"throttle", BT_INVERT, 255 },
+	{ 12,182,138, 51, 40, 11, 14,  1, 13,"Pitch U/D", BT_MOUSE_AXIS, 255 },
+	{ 13,182,138, 99,  8, 22, 15, 12,  2,"Pitch U/D", BT_INVERT, 255 },
+	{ 14,182,146, 51, 40, 12, 16,  3, 15,"Turn L/R", BT_MOUSE_AXIS, 255 },
+	{ 15,182,146, 99,  8, 13, 17, 14,  4,"Turn L/R", BT_INVERT, 255 },
+	{ 16,182,154, 51, 40, 14, 18,  5, 17,"Slide L/R", BT_MOUSE_AXIS, 255 },
+	{ 17,182,154, 99,  8, 15, 19, 16,  6,"Slide L/R", BT_INVERT, 255 },
+	{ 18,182,162, 51, 40, 16, 20,  7, 19,"Slide U/D", BT_MOUSE_AXIS, 255 },
+	{ 19,182,162, 99,  8, 17, 21, 18,  8,"Slide U/D", BT_INVERT, 255 },
+	{ 20,182,170, 51, 40, 18, 22,  9, 21,"Bank L/R", BT_MOUSE_AXIS, 255 },
+	{ 21,182,170, 99,  8, 19, 23, 20, 10,"Bank L/R", BT_INVERT, 255 },
+	{ 22,182,182, 51, 40, 20, 13, 11, 23,"throttle", BT_MOUSE_AXIS, 255 },
+	{ 23,182,182, 99,  8, 21,  0, 22,  0,"throttle", BT_INVERT, 255 },
 };
 
 kc_axis_map kc_other_axismap[NUM_OTHER_CONTROLS] = {
-	AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE,
-	AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE, AXIS_NONE,
 	AXIS_PITCH,
 	AXIS_NONE,
 	AXIS_TURN,
@@ -426,7 +418,7 @@ int kconfig_is_axes_used(int axis)
 {
 	int i;
 	for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-		if (( kc_joystick[i].type == BT_JOY_AXIS ) && (kc_joystick[i].value == axis ))
+		if (( kc_other[i].type == BT_JOY_AXIS ) && (kc_other[i].value == axis ))
 			return 1;
 	}
 	return 0;
@@ -619,10 +611,8 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 
 //	if ( items == kc_keyboard )	{
 //		gr_string( 0x8000, 8, "Keyboard" );
-//	} else if ( items == kc_joystick )	{
-//		gr_string( 0x8000, 8, "Joysticks" );
-//	} else if ( items == kc_mouse )	{
-//		gr_string( 0x8000, 8, "Mouse" );
+//	} else if ( items == kc_other )	{
+//		gr_string( 0x8000, 8, "Others" );
 //	}
 
 #ifdef NEWMENU_MOUSE
@@ -663,29 +653,24 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 
 		gr_string( LHX(264), LHY(40), "OR" );
 
-	} if ( items == kc_joystick )	{
+	} if ( items == kc_other )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
-		gr_scanline( LHX(18), LHX(138), LHY(64+18) );
-		gr_scanline( LHX(181), LHX(294), LHY(64+18) );
-		gr_string( 0x8000, LHY(62+18), TXT_CONTROL_JOYSTICK );
+		gr_scanline( LHX(18), LHX(60), LHY(119+5) );
+		gr_scanline( LHX(102), LHX(144), LHY(119+5) );
+		gr_string( LHX(63), LHY(117+5), TXT_CONTROL_JOYSTICK );
 		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-		gr_string( LHX(81), LHY(82+8), TXT_AXIS );
-		gr_string( LHX(111), LHY(82+8), TXT_INVERT );
-		gr_string( LHX(230), LHY(82+8), TXT_AXIS );
-		gr_string( LHX(260), LHY(82+8), TXT_INVERT );
+		gr_string( LHX(84), LHY(129), TXT_AXIS );
+		gr_string( LHX(110), LHY(129), TXT_INVERT );
 
-	} else if ( items == kc_mouse )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
-		gr_scanline( LHX(18), LHX(143), LHY(119+18) );
-		gr_scanline( LHX(174), LHX(294), LHY(119+18) );
-		gr_string( 0x8000, LHY(117+18), TXT_CONTROL_MOUSE );
+		gr_scanline( LHX(178), LHX(226), LHY(119+5) );
+		gr_scanline( LHX(256), LHX(304), LHY(119+5) );
+		gr_string( LHX(229), LHY(117+5), TXT_CONTROL_MOUSE );
 		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-		gr_string( LHX(81), LHY(137+8), TXT_AXIS );
-		gr_string( LHX(111), LHY(137+8), TXT_INVERT );
-		gr_string( LHX(230), LHY(137+8), TXT_AXIS );
-		gr_string( LHX(260), LHY(137+8), TXT_INVERT );
+		gr_string( LHX(244), LHY(129), TXT_AXIS );
+		gr_string( LHX(270), LHY(129), TXT_INVERT );
 	}
 	else if ( items == kc_d2x )
 	{
@@ -834,6 +819,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 				start_time();
 			return;
 #ifdef TABLE_CREATION
+		case KEY_DEBUGGED+KEY_SHIFTED+KEY_2:
 		case KEY_DEBUGGED+KEY_F12:	{
 			FILE * fp;
 			for (i=0; i<NUM_KEY_CONTROLS; i++ )	{
@@ -843,18 +829,12 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 				kc_keyboard[i].r = find_next_item_right( kc_keyboard,NUM_KEY_CONTROLS, i);
 			}
 			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				kc_joystick[i].u = find_next_item_up( kc_joystick,NUM_OTHER_CONTROLS, i);
-				kc_joystick[i].d = find_next_item_down( kc_joystick,NUM_OTHER_CONTROLS, i);
-				kc_joystick[i].l = find_next_item_left( kc_joystick,NUM_OTHER_CONTROLS, i);
-				kc_joystick[i].r = find_next_item_right( kc_joystick,NUM_OTHER_CONTROLS, i);
+				kc_other[i].u = find_next_item_up( kc_other,NUM_OTHER_CONTROLS, i);
+				kc_other[i].d = find_next_item_down( kc_other,NUM_OTHER_CONTROLS, i);
+				kc_other[i].l = find_next_item_left( kc_other,NUM_OTHER_CONTROLS, i);
+				kc_other[i].r = find_next_item_right( kc_other,NUM_OTHER_CONTROLS, i);
 			}
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				kc_mouse[i].u = find_next_item_up( kc_mouse,NUM_OTHER_CONTROLS, i);
-				kc_mouse[i].d = find_next_item_down( kc_mouse,NUM_OTHER_CONTROLS, i);
-				kc_mouse[i].l = find_next_item_left( kc_mouse,NUM_OTHER_CONTROLS, i);
-				kc_mouse[i].r = find_next_item_right( kc_mouse,NUM_OTHER_CONTROLS, i);
-			}
-			fp = fopen( "kconfig.cod", "wt" );
+			fp = stderr; //fopen( "kconfig.cod", "wt" );
 
 			fprintf( fp, "\nkc_item kc_keyboard[NUM_KEY_CONTROLS] = {\n" );
 			for (i=0; i<NUM_KEY_CONTROLS; i++ )	{
@@ -865,21 +845,12 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 			}
 			fprintf( fp, "};" );
 
-			fprintf( fp, "\nkc_item kc_joystick[NUM_OTHER_CONTROLS] = {\n" );
+			fprintf( fp, "\nkc_item kc_other[NUM_OTHER_CONTROLS] = {\n" );
 			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
 				fprintf( fp, "\t{ %2d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%c%s%c, %s, 255 },\n",
-					kc_joystick[i].id, kc_joystick[i].x, kc_joystick[i].y, kc_joystick[i].w1, kc_joystick[i].w2,
-					kc_joystick[i].u, kc_joystick[i].d, kc_joystick[i].l, kc_joystick[i].r,
-                                        34, kc_joystick[i].text, 34, btype_text[kc_joystick[i].type] );
-			}
-			fprintf( fp, "};" );
-
-			fprintf( fp, "\nkc_item kc_mouse[NUM_OTHER_CONTROLS] = {\n" );
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				fprintf( fp, "\t{ %2d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%c%s%c, %s, 255 },\n", 
-					kc_mouse[i].id, kc_mouse[i].x, kc_mouse[i].y, kc_mouse[i].w1, kc_mouse[i].w2,
-					kc_mouse[i].u, kc_mouse[i].d, kc_mouse[i].l, kc_mouse[i].r,
-                                        34, kc_mouse[i].text, 34, btype_text[kc_mouse[i].type] );
+					kc_other[i].id, kc_other[i].x, kc_other[i].y, kc_other[i].w1, kc_other[i].w2,
+					kc_other[i].u, kc_other[i].d, kc_other[i].l, kc_other[i].r,
+                                        34, kc_other[i].text, 34, btype_text[kc_other[i].type] );
 			}
 			fprintf( fp, "};" );
 
@@ -1288,8 +1259,9 @@ void kconfig(int n, char * title)
 
 	switch(n)	{
 	case 0:kconfig_sub( kc_keyboard, NUM_KEY_CONTROLS, title );break;
-	case 1:kconfig_sub( kc_joystick, NUM_OTHER_CONTROLS, title );break;
-	case 2:kconfig_sub( kc_mouse, NUM_OTHER_CONTROLS, title ); break;
+	case 1:
+	case 2:kconfig_sub( kc_other, NUM_OTHER_CONTROLS, title );break;
+	case 3:
 	case 4:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
  	default:
 		Int3();
@@ -1328,28 +1300,22 @@ void kconfig(int n, char * title)
 		if (kc_d2x[i].value != 255)
 			cmd_appendf("bind %s \"%s\"", key_text[kc_d2x[i].value], kc_d2x[i].text);
 
-	if ( (Config_control_type.intval >= CONTROL_JOYSTICK) && (Config_control_type.intval < CONTROL_MOUSE)) {
-		for (i = 0; i < 6; i++) {
-			cvar_setint(&joy_advaxes[i], AXIS_NONE);
-			cvar_setint(&joy_invert[i], 0);
+	for (i = 0; i < 6; i++) {
+		cvar_setint(&joy_advaxes[i], AXIS_NONE);
+		cvar_setint(&joy_invert[i], 0);
+	}
+	for (i = 0; i < 3; i++) {
+		cvar_setint(&mouse_axes[i], AXIS_NONE);
+		cvar_setint(&mouse_invert[i], 0);
+	}
+	for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
+		if (kc_other[i].type == BT_JOY_AXIS && kc_other[i].value != 255) {
+			cvar_setint(&joy_advaxes[kc_other[i].value], kc_other_axismap[i]);
+			cvar_setint(&joy_invert[kc_other[i].value], kc_other[i+1].value);
 		}
-		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
-			if (kc_joystick[i].type == BT_JOY_AXIS && kc_joystick[i].value != 255) {
-				cvar_setint(&joy_advaxes[kc_joystick[i].value], kc_other_axismap[i]);
-				cvar_setint(&joy_invert[kc_joystick[i].value], kc_joystick[i+1].value);
-			}
-		}
-
-	} else if (Config_control_type.intval >= CONTROL_MOUSE) {
-		for (i = 0; i < 3; i++) {
-			cvar_setint(&mouse_axes[i], AXIS_NONE);
-			cvar_setint(&mouse_invert[i], 0);
-		}
-		for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
-			if (kc_mouse[i].type == BT_MOUSE_AXIS && kc_mouse[i].value != 255) {
-				cvar_setint(&mouse_axes[kc_mouse[i].value], kc_other_axismap[i]);
-				cvar_setint(&mouse_invert[kc_mouse[i].value], kc_mouse[i+1].value);
-			}
+		if (kc_other[i].type == BT_MOUSE_AXIS && kc_other[i].value != 255) {
+			cvar_setint(&mouse_axes[kc_other[i].value], kc_other_axismap[i]);
+			cvar_setint(&mouse_invert[kc_other[i].value], kc_other[i+1].value);
 		}
 	}
 
@@ -1885,14 +1851,10 @@ void kc_set_controls()
 		kc_keyboard[i].value = 255;
 
 	for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
-		if (kc_joystick[i].type == BT_INVERT)
-			kc_joystick[i].value = 0;
+		if (kc_other[i].type == BT_INVERT)
+			kc_other[i].value = 0;
 		else
-			kc_joystick[i].value = 255;
-		if (kc_mouse[i].type == BT_INVERT)
-			kc_mouse[i].value = 0;
-		else
-			kc_mouse[i].value = 255;
+			kc_other[i].value = 255;
 	}
 
 	for (i=0; i<NUM_D2X_CONTROLS; i++ )
@@ -1918,15 +1880,15 @@ void kc_set_controls()
 				}
 		}
 
-	for (i = 0; i < 3; i++) {
-		int inv = mouse_invert[i].intval;
-		switch (mouse_axes[i].intval) {
-			case AXIS_PITCH:     kc_mouse[13].value = i; kc_mouse[14].value = inv; break;
-			case AXIS_TURN:      kc_mouse[15].value = i; kc_mouse[16].value = inv; break;
-			case AXIS_LEFTRIGHT: kc_mouse[17].value = i; kc_mouse[18].value = inv; break;
-			case AXIS_UPDOWN:    kc_mouse[19].value = i; kc_mouse[20].value = inv; break;
-			case AXIS_BANK:      kc_mouse[21].value = i; kc_mouse[22].value = inv; break;
-			case AXIS_THROTTLE:  kc_mouse[23].value = i; kc_mouse[24].value = inv; break;
+	for (i = 0; i < 6; i++) {
+		int inv = joy_invert[i].intval;
+		switch (joy_advaxes[i].intval) {
+			case AXIS_PITCH:     kc_other[ 0].value = i; kc_other[ 1].value = inv; break;
+			case AXIS_TURN:      kc_other[ 2].value = i; kc_other[ 3].value = inv; break;
+			case AXIS_LEFTRIGHT: kc_other[ 4].value = i; kc_other[ 5].value = inv; break;
+			case AXIS_UPDOWN:    kc_other[ 6].value = i; kc_other[ 7].value = inv; break;
+			case AXIS_BANK:      kc_other[ 8].value = i; kc_other[ 9].value = inv; break;
+			case AXIS_THROTTLE:  kc_other[10].value = i; kc_other[11].value = inv; break;
 			case AXIS_NONE:      break;
 			default:
 				Int3();
@@ -1934,15 +1896,15 @@ void kc_set_controls()
 		}
 	}
 
-	for (i = 0; i < 6; i++) {
-		int inv = joy_invert[i].intval;
-		switch (joy_advaxes[i].intval) {
-			case AXIS_PITCH:     kc_joystick[13].value = i; kc_joystick[14].value = inv; break;
-			case AXIS_TURN:      kc_joystick[15].value = i; kc_joystick[16].value = inv; break;
-			case AXIS_LEFTRIGHT: kc_joystick[17].value = i; kc_joystick[18].value = inv; break;
-			case AXIS_UPDOWN:    kc_joystick[19].value = i; kc_joystick[20].value = inv; break;
-			case AXIS_BANK:      kc_joystick[21].value = i; kc_joystick[22].value = inv; break;
-			case AXIS_THROTTLE:  kc_joystick[23].value = i; kc_joystick[24].value = inv; break;
+	for (i = 0; i < 3; i++) {
+		int inv = mouse_invert[i].intval;
+		switch (mouse_axes[i].intval) {
+			case AXIS_PITCH:     kc_other[12].value = i; kc_other[13].value = inv; break;
+			case AXIS_TURN:      kc_other[14].value = i; kc_other[15].value = inv; break;
+			case AXIS_LEFTRIGHT: kc_other[16].value = i; kc_other[17].value = inv; break;
+			case AXIS_UPDOWN:    kc_other[18].value = i; kc_other[19].value = inv; break;
+			case AXIS_BANK:      kc_other[20].value = i; kc_other[21].value = inv; break;
+			case AXIS_THROTTLE:  kc_other[22].value = i; kc_other[23].value = inv; break;
 			case AXIS_NONE:      break;
 			default:
 				Int3();
