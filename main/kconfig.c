@@ -422,54 +422,6 @@ void kconfig_read_fcs( int raw_axis );
 void kconfig_set_fcs_button( int btn, int button );
 void kconfig_read_external_controls( void );
 
-// the following methods added by WraithX, 4/17/00
-int isJoyRotationKey(int test_key)
-{
-	if (test_key == kc_joystick[11].value ||
-	    test_key == kc_joystick[12].value)
-	{
-		return 1;
-	}// end if
-
-	// else...
-	return 0;
-}// method isJoyRotationKey
-
-int isMouseRotationKey(int test_key)
-{
-	if (test_key == kc_mouse[11].value ||
-	    test_key == kc_mouse[12].value)
-	{
-		return 1;
-	}// end if
-
-	// else...
-	return 0;
-}// method isMouseRotationKey
-
-int isKeyboardRotationKey(int test_key)
-{
-	if (test_key == kc_keyboard[0].value ||
-	    test_key == kc_keyboard[1].value ||
-	    test_key == kc_keyboard[2].value ||
-	    test_key == kc_keyboard[3].value ||
-	    test_key == kc_keyboard[4].value ||
-	    test_key == kc_keyboard[5].value ||
-	    test_key == kc_keyboard[6].value ||
-	    test_key == kc_keyboard[7].value ||
-	    test_key == kc_keyboard[20].value ||
-	    test_key == kc_keyboard[21].value ||
-	    test_key == kc_keyboard[22].value ||
-	    test_key == kc_keyboard[23].value)
-	{
-		return 1;
-	}// end if
-
-	// else...
-	return 0;
-}// method isKeyboardRotationKey
-// end addition - WraithX
-
 int kconfig_is_axes_used(int axis)
 {
 	int i;
@@ -1612,6 +1564,7 @@ void controls_read_all()
 		LastReadTime = ctime;
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
 
+		Assert(joy_num_axes <= 6); // don't have cvar mapping above 6 yet
 		for (i = 0; i < joy_num_axes; i++)
 		{
 #ifndef SDL_INPUT
@@ -1624,7 +1577,7 @@ void controls_read_all()
 				} else {
 					raw_joy_axis[i] = joy_get_scaled_reading( raw_joy_axis[i], i );
 	
-					if (kc_joystick[23].value==i)		// If this is the throttle
+					if (joy_advaxes[i].value == AXIS_THROTTLE) // If this is the throttle
 						joy_null_value = 20;		// Then use a larger dead-zone
 	
 					if (raw_joy_axis[i] > joy_null_value) 

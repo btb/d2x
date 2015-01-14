@@ -2414,7 +2414,7 @@ void ReadControls()
 #ifndef MACINTOSH
 			for (i = 0; i < 4; i++)
 				// the following "if" added by WraithX, 4/17/00
-				if (isJoyRotationKey(i) != 1)
+				if (1) //isJoyRotationKey(i) != 1)
 				{
 					if (joy_get_button_down_cnt(i) > 0)
 						Death_sequence_aborted = 1;
@@ -2425,7 +2425,7 @@ void ReadControls()
 #endif
 			for (i = 0; i < 3; i++)
 				// the following "if" added by WraithX, 4/17/00
-				if (isMouseRotationKey(i) != 1)
+				if (1) //isMouseRotationKey(i) != 1)
 				{
 					if (mouse_button_down_count(i) > 0)
 						Death_sequence_aborted = 1;
