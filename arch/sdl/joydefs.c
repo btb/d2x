@@ -70,9 +70,9 @@ void joydefs_config()
 	int i, i1 = 5, j;
 	int nitems = 10;
 
-	m[0].type = NM_TYPE_RADIO;  m[0].text = "KEYBOARD"; m[0].value = 0; m[0].group = 0;
-	m[1].type = NM_TYPE_RADIO;  m[1].text = "JOYSTICK"; m[1].value = 0; m[1].group = 0;
-	m[2].type = NM_TYPE_RADIO;  m[2].text = "MOUSE";    m[2].value = 0; m[2].group = 0;
+	m[0].type = NM_TYPE_RADIO;  m[0].text = TXT_CONTROL_KEYBOARD; m[0].value = 0; m[0].group = 0;
+	m[1].type = NM_TYPE_RADIO;  m[1].text = TXT_CONTROL_JOYSTICK; m[1].value = 0; m[1].group = 0;
+	m[2].type = NM_TYPE_RADIO;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = 0; m[2].group = 0;
 	m[3].type = NM_TYPE_TEXT;   m[3].text = "";
 	m[4].type = NM_TYPE_MENU;   m[4].text = TXT_CUST_ABOVE;
 	m[5].type = NM_TYPE_TEXT;   m[5].text = "";
@@ -103,7 +103,7 @@ void joydefs_config()
 			kconfig(i, m[i].text);
 			break;
 		case 8:
-			kconfig(0, "KEYBOARD");
+			kconfig(0, TXT_KEYBOARD);
 			break;
 		case 9:
 			kconfig(4, "D2X KEYS");
