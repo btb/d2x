@@ -21,7 +21,7 @@
 #include "palette.h"
 #include "u_mem.h"
 #include "error.h"
-#include "menu.h"
+#include "inferno.h"
 #include "timer.h"
 //added 10/05/98 by Matt Mueller - make fullscreen mode optional
 #include "args.h"

@@ -20,7 +20,7 @@
 #include "text.h"
 #include "u_mem.h"
 #include "key.h"
-#include "kconfig.h"
+#include "inferno.h"
 
 
 #define MAX_JOYSTICKS 16
