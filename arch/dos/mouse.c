@@ -465,7 +465,7 @@ void mouse_get_pos( int *x, int *y)
 	*y = (short)outregs.w.dx; 
 }
 
-void mouse_get_delta( int *dx, int *dy )
+void mouse_get_delta( int *dx, int *dy, int *dz )
 {
 	union REGS inregs, outregs;
 
@@ -479,6 +479,7 @@ void mouse_get_delta( int *dx, int *dy )
 	int386(0x33, &inregs, &outregs);
 	*dx = (short)outregs.w.cx; 
 	*dy = (short)outregs.w.dx; 
+	*dz = 0;
 }
 
 int mouse_get_btns()

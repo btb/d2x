@@ -1253,10 +1253,7 @@ void kc_change_mouseaxis( kc_item * item )
 {
 	int i,n,k;
 	ubyte code;
-	int dx,dy;
-#ifdef SDL_INPUT
-	int dz;
-#endif
+	int dx, dy, dz;
 
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 	
@@ -1266,7 +1263,7 @@ void kc_change_mouseaxis( kc_item * item )
 	code=255;
 	k=255;
 
-	mouse_get_delta( &dx, &dy );
+	mouse_get_delta( &dx, &dy, &dz );
 
 	while( (k!=KEY_ESC) && (code==255))	
 	{				
@@ -1284,16 +1281,10 @@ void kc_change_mouseaxis( kc_item * item )
 
 		kc_drawquestion( item );
 
-#ifdef SDL_INPUT
-		mouse_get_delta_z( &dx, &dy, &dz );
-#else
-		mouse_get_delta( &dx, &dy );
-#endif
+		mouse_get_delta( &dx, &dy, &dz );
 		if ( abs(dx)>20 ) code = 0;
 		if ( abs(dy)>20 ) code = 1;
-#ifdef SDL_INPUT
 		if ( abs(dz)>20 ) code = 2;
-#endif
 	}
 	if (code!=255)	{
 		for (i=0; i<Num_items; i++ )	{
@@ -1587,10 +1578,7 @@ void controls_read_all()
 {
 	int i;
 	int slide_on, bank_on;
-	int dx, dy;
-#ifdef SDL_INPUT
-	int dz;
-#endif
+	int dx, dy, dz;
 	int idx, idy;
 	fix ctime;
 	fix mouse_axis[3] = {0,0,0};
@@ -1664,16 +1652,11 @@ void controls_read_all()
 
 	if (Config_control_type.intval == CONTROL_MOUSE && !CybermouseActive) {
 		//---------  Read Mouse -----------
-#ifdef SDL_INPUT
-		mouse_get_delta_z( &dx, &dy, &dz );
-#else
-		mouse_get_delta( &dx, &dy );
-#endif
+		mouse_get_delta( &dx, &dy, &dz );
+
 		mouse_axis[0] = (dx*FrameTime)/35;
 		mouse_axis[1] = (dy*FrameTime)/25;
-#ifdef SDL_INPUT
 		mouse_axis[2] = (dz*FrameTime);
-#endif
 		//mprintf(( 0, "Mouse %d,%d 0x%x\n", mouse_axis[0], mouse_axis[1], FrameTime ));
 		use_mouse=1;
 	} else if (Config_control_type.intval == CONTROL_CYBERMAN && !CybermouseActive) {

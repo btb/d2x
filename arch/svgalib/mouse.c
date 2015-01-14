@@ -135,11 +135,12 @@ void mouse_get_pos( int *x, int *y)
   *y = Mouse.y;
 }
 
-void mouse_get_delta( int *dx, int *dy )
+void mouse_get_delta( int *dx, int *dy, int *dz )
 {
  event_poll();
  *dx = Mouse.delta_x;
  *dy = Mouse.delta_y;
+	*dz = 0;
  Mouse.delta_x = 0;
  Mouse.delta_y = 0;
 }

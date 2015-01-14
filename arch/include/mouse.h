@@ -81,11 +81,7 @@ extern void mouse_close();
 
 //========================================================================
 extern void mouse_get_pos( int *x, int *y );
-extern void mouse_get_delta( int *dx, int *dy );
-#ifdef SDL_INPUT
-extern void mouse_get_pos_z( int *x, int *y, int *z );
-extern void mouse_get_delta_z( int *dx, int *dy, int *dz );
-#endif
+extern void mouse_get_delta( int *dx, int *dy, int *dz );
 extern int mouse_get_btns();
 extern void mouse_set_pos( int x, int y);
 extern void mouse_get_cyberman_pos( int *x, int *y );

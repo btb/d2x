@@ -132,24 +132,7 @@ void mouse_get_pos( int *x, int *y )
 	*y=Mouse.y;
 }
 
-void mouse_get_delta( int *dx, int *dy )
-{
-	event_poll();
-	*dx = Mouse.delta_x;
-	*dy = Mouse.delta_y;
-	Mouse.delta_x = 0;
-	Mouse.delta_y = 0;
-}
-
-void mouse_get_pos_z( int *x, int *y, int *z )
-{
-	event_poll();
-	*x=Mouse.x;
-	*y=Mouse.y;
-	*z=Mouse.z;
-}
-
-void mouse_get_delta_z( int *dx, int *dy, int *dz )
+void mouse_get_delta( int *dx, int *dy, int *dz )
 {
 	event_poll();
 	*dx = Mouse.delta_x;
