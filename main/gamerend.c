@@ -65,7 +65,7 @@ extern cvar_t r_framerate;
 
 
 #ifndef NDEBUG
-extern int Debug_pause;				//John's debugging pause system
+extern int Debug_pause; // John's debugging pause system
 #endif
 
 #ifndef RELEASE
@@ -761,112 +761,108 @@ extern char guidebot_name[];
 
 void show_extra_views()
 {
-	int did_missile_view=0;
+	int did_missile_view = 0;
 	int save_newdemo_state = Newdemo_state;
 	int w;
 
-   if (Newdemo_state==ND_STATE_PLAYBACK)
-    {
-     if (DemoDoLeft)
-      { 
-		 DemoDoingLeft=DemoDoLeft;
+	if (Newdemo_state == ND_STATE_PLAYBACK) {
+		if (DemoDoLeft) {
+			DemoDoingLeft = DemoDoLeft;
 		
-       if (DemoDoLeft==3)
-		 	do_cockpit_window_view(0,ConsoleObject,1,WBU_REAR,"REAR");
-       else
-	      do_cockpit_window_view(0,&DemoLeftExtra,DemoRearCheck[DemoDoLeft],DemoWBUType[DemoDoLeft],DemoExtraMessage[DemoDoLeft]);
-		}
-     else
-		do_cockpit_window_view(0,NULL,0,WBU_WEAPON,NULL);
+			if (DemoDoLeft == 3)
+				do_cockpit_window_view(0, ConsoleObject, 1, WBU_REAR, "REAR");
+			else
+				do_cockpit_window_view(0, &DemoLeftExtra, DemoRearCheck[DemoDoLeft], DemoWBUType[DemoDoLeft], DemoExtraMessage[DemoDoLeft]);
+		} else
+			do_cockpit_window_view(0, NULL, 0, WBU_WEAPON, NULL);
 
-	  if (DemoDoRight)
-		{
-		 DemoDoingRight=DemoDoRight;
-		
-       if (DemoDoRight==3)
-		 	do_cockpit_window_view(1,ConsoleObject,1,WBU_REAR,"REAR");
-       else
-   	   do_cockpit_window_view(1,&DemoRightExtra,DemoRearCheck[DemoDoRight],DemoWBUType[DemoDoRight],DemoExtraMessage[DemoDoRight]);
-		} 
-     else
-    	do_cockpit_window_view(1,NULL,0,WBU_WEAPON,NULL);
-	  
-      DemoDoLeft=DemoDoRight=0;
-		DemoDoingLeft=DemoDoingRight=0;
-    
-   	return;
-    } 
+		if (DemoDoRight) {
+			DemoDoingRight = DemoDoRight;
 
-	if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num]) {
-		if (Guided_in_big_window.intval) {
-			RenderingType=6+(1<<4);
-			do_cockpit_window_view(1,Viewer,0,WBU_MISSILE,"SHIP");
-		 }
-		else
-		 {
-			RenderingType=1+(1<<4);
-			do_cockpit_window_view(1,Guided_missile[Player_num],0,WBU_GUIDED,"GUIDED");
-	    }
-			
-		did_missile_view=1;
+			if (DemoDoRight == 3)
+				do_cockpit_window_view(1, ConsoleObject, 1, WBU_REAR, "REAR");
+			else
+				do_cockpit_window_view(1, &DemoRightExtra, DemoRearCheck[DemoDoRight], DemoWBUType[DemoDoRight], DemoExtraMessage[DemoDoRight]);
+		} else
+			do_cockpit_window_view(1, NULL, 0, WBU_WEAPON, NULL);
+
+		DemoDoLeft = DemoDoRight = 0;
+		DemoDoingLeft = DemoDoingRight = 0;
+
+		return;
 	}
-	else {
 
-		if (Guided_missile[Player_num]) {		//used to be active
+	if (Guided_missile[Player_num] &&
+		Guided_missile[Player_num]->type == OBJ_WEAPON &&
+		Guided_missile[Player_num]->id == GUIDEDMISS_ID &&
+		Guided_missile[Player_num]->signature == Guided_missile_sig[Player_num])
+	{
+		if (Guided_in_big_window.intval) {
+			RenderingType = 6 + (1<<4);
+			do_cockpit_window_view(1, Viewer, 0, WBU_MISSILE, "SHIP");
+		} else {
+			RenderingType = 1 + (1<<4);
+			do_cockpit_window_view(1, Guided_missile[Player_num], 0, WBU_GUIDED, "GUIDED");
+	    }
+
+		did_missile_view = 1;
+	} else {
+
+		if (Guided_missile[Player_num]) { // used to be active
 			if (!Guided_in_big_window.intval)
-				do_cockpit_window_view(1,NULL,0,WBU_STATIC,NULL);
+				do_cockpit_window_view(1, NULL, 0, WBU_STATIC, NULL);
 			Guided_missile[Player_num] = NULL;
 		}
 
-		if (Missile_viewer) {		//do missile view
-			static int mv_sig=-1;
+		if (Missile_viewer) { // do missile view
+			static int mv_sig = -1;
 			if (mv_sig == -1)
 				mv_sig = Missile_viewer->signature;
-			if (Missile_view_enabled.intval && Missile_viewer->type != OBJ_NONE && Missile_viewer->signature == mv_sig) {
-  				RenderingType=2+(1<<4);
-				do_cockpit_window_view(1,Missile_viewer,0,WBU_MISSILE,"MISSILE");
-				did_missile_view=1;
-			}
-			else {
+			if (Missile_view_enabled.intval &&
+				Missile_viewer->type != OBJ_NONE &&
+				Missile_viewer->signature == mv_sig)
+			{
+				RenderingType = 2 + (1<<4);
+				do_cockpit_window_view(1, Missile_viewer, 0, WBU_MISSILE, "MISSILE");
+				did_missile_view = 1;
+			} else {
 				Missile_viewer = NULL;
 				mv_sig = -1;
-				RenderingType=255;
-				do_cockpit_window_view(1,NULL,0,WBU_STATIC,NULL);
+				RenderingType = 255;
+				do_cockpit_window_view(1, NULL, 0, WBU_STATIC, NULL);
 			}
 		}
 	}
 
-	for (w=0;w<2;w++) {
+	for (w = 0; w < 2; w++) {
 
-		if (w==1 && did_missile_view)
-			continue;		//if showing missile view in right window, can't show anything else
+		if (w == 1 && did_missile_view)
+			continue; // if showing missile view in right window, can't show anything else
 
-		//show special views if selected
+		// show special views if selected
 		switch (Cockpit_3d_view[w].intval) {
 			case CV_NONE:
-				RenderingType=255;
-				do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
+				RenderingType = 255;
+				do_cockpit_window_view(w, NULL, 0, WBU_WEAPON, NULL);
 				break;
 			case CV_REAR:
-				if (Rear_view) {		//if big window is rear view, show front here
-					RenderingType=3+(w<<4);				
-					do_cockpit_window_view(w,ConsoleObject,0,WBU_REAR,"FRONT");
-				}
-				else {					//show normal rear view
-					RenderingType=3+(w<<4);				
-					do_cockpit_window_view(w,ConsoleObject,1,WBU_REAR,"REAR");
+				if (Rear_view) { // if big window is rear view, show front here
+					RenderingType = 3 + (w<<4);
+					do_cockpit_window_view(w, ConsoleObject, 0, WBU_REAR, "FRONT");
+				} else { // show normal rear view
+					RenderingType = 3 + (w<<4);
+					do_cockpit_window_view(w, ConsoleObject, 1, WBU_REAR, "REAR");
 				}
 			 	break;
 			case CV_ESCORT: {
 				object *buddy;
 				buddy = find_escort();
 				if (buddy == NULL) {
-					do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
+					do_cockpit_window_view(w, NULL, 0, WBU_WEAPON, NULL);
 					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
-				}
-				else {
-					RenderingType=4+(w<<4);
-					do_cockpit_window_view(w,buddy,0,WBU_ESCORT,guidebot_name);
+				} else {
+					RenderingType = 4 + (w<<4);
+					do_cockpit_window_view(w, buddy, 0, WBU_ESCORT, guidebot_name);
 				}
 				break;
 			}
@@ -874,12 +870,14 @@ void show_extra_views()
 			case CV_COOP: {
 				int player = Coop_view_player[w];
 
-	         RenderingType=255; // don't handle coop stuff			
-				
-				if (player!=-1 && Players[player].connected && ((Game_mode & GM_MULTI_COOP) || ((Game_mode & GM_TEAM) && (get_team(player) == get_team(Player_num)))))
-					do_cockpit_window_view(w,&Objects[Players[Coop_view_player[w]].objnum],0,WBU_COOP,Players[Coop_view_player[w]].callsign);
+				RenderingType = 255; // don't handle coop stuff
+
+				if (player != -1 &&
+					Players[player].connected &&
+					((Game_mode & GM_MULTI_COOP) || ((Game_mode & GM_TEAM) && (get_team(player) == get_team(Player_num)))))
+					do_cockpit_window_view(w, &Objects[Players[Coop_view_player[w]].objnum], 0, WBU_COOP, Players[Coop_view_player[w]].callsign);
 				else {
-					do_cockpit_window_view(w,NULL,0,WBU_WEAPON,NULL);
+					do_cockpit_window_view(w, NULL, 0, WBU_WEAPON, NULL);
 					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 				}
 				break;
@@ -887,24 +885,25 @@ void show_extra_views()
 #endif
 			case CV_MARKER: {
 				char label[10];
-				RenderingType=5+(w<<4);
+
+				RenderingType = 5 + (w<<4);
 				if (Marker_viewer_num[w] == -1 || MarkerObject[Marker_viewer_num[w]] == -1) {
 					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 					break;
 				}
-				sprintf(label,"Marker %d",Marker_viewer_num[w]+1);
-				do_cockpit_window_view(w,&Objects[MarkerObject[Marker_viewer_num[w]]],0,WBU_MARKER,label);
+				sprintf(label, "Marker %d", Marker_viewer_num[w] + 1);
+				do_cockpit_window_view(w, &Objects[MarkerObject[Marker_viewer_num[w]]], 0, WBU_MARKER, label);
 				break;
 			}
 			default:
-				Int3();		//invalid window type
+				Int3(); // invalid window type
 		}
 	}
-	RenderingType=0;
+	RenderingType = 0;
 	Newdemo_state = save_newdemo_state;
 }
 
-int BigWindowSwitch=0;
+int BigWindowSwitch = 0;
 extern int force_cockpit_redraw;
 
 void draw_guided_crosshair(void);
