@@ -1840,8 +1840,8 @@ if (!Player_is_dead)
 
 	if ( bank_on )	{
 		// From console...
-		Controls.bank_time -= console_control_down_time(CONCNTL_LEFT);
-		Controls.bank_time += console_control_down_time(CONCNTL_RIGHT);
+		Controls.bank_time += console_control_down_time(CONCNTL_LEFT);
+		Controls.bank_time -= console_control_down_time(CONCNTL_RIGHT);
 
 		Controls.bank_time -= analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
 
