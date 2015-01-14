@@ -181,10 +181,12 @@ int cmd_queue_process(void)
 		d_free(cmd);
 	}
 
-	if (cmd_queue_wait) {
-		con_printf(CON_DEBUG, "cmd_queue_process: waiting\n");
+	if (cmd_queue_wait > 0) {
 		cmd_queue_wait--;
-		return 1;
+		if (Function_mode == FMODE_GAME) {
+			con_printf(CON_DEBUG, "cmd_queue_process: waiting\n");
+			return 1;
+		}
 	}
 
 	return 0;

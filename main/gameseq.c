@@ -698,7 +698,7 @@ try_again:
 		goto try_again;
 
 	cmd_appendf("player %s", text);
-	while (cmd_queue_process()) {}
+	cmd_queue_process();
 
 	return 1;
 }

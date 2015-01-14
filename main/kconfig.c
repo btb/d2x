@@ -1410,8 +1410,7 @@ void kconfig(int n, char * title)
 		}
 	}
 
-	while (cmd_queue_process())
-		;
+	cmd_queue_process();
 }
 
 

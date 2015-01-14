@@ -905,7 +905,7 @@ int mission_read_config(void)
 	cvar_setint(&Player_highest_level, 0);
 
 	cmd_appendf("exec " MISSION_DIR "%s.cfg", Current_mission_filename);
-	while (cmd_queue_process()) {}
+	cmd_queue_process();
 
 	return 0;
 }
