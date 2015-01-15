@@ -7,6 +7,211 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		142869B51A672E6300A095F6 /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
+		142869B61A672E6300A095F6 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* gr.c */; };
+		142869B71A672E6300A095F6 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
+		142869B81A672E6300A095F6 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957A1A2729860070D41D /* init.c */; };
+		142869B91A672E6300A095F6 /* ipx_kali.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957C1A2729860070D41D /* ipx_kali.c */; };
+		142869BA1A672E6300A095F6 /* ipx_mcast4.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957D1A2729860070D41D /* ipx_mcast4.c */; };
+		142869BB1A672E6300A095F6 /* ipx_udp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957E1A2729860070D41D /* ipx_udp.c */; };
+		142869BC1A672E6300A095F6 /* linuxnet.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695811A2729860070D41D /* linuxnet.c */; };
+		142869BD1A672E6300A095F6 /* ukali.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695871A2729860070D41D /* ukali.c */; };
+		142869BE1A672E6300A095F6 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
+		142869BF1A672E6300A095F6 /* joy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695981A2729860070D41D /* joy.c */; };
+		142869C01A672E6300A095F6 /* joydefs.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695991A2729860070D41D /* joydefs.c */; };
+		142869C11A672E6300A095F6 /* event.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695951A2729860070D41D /* event.c */; };
+		142869C21A672E6300A095F6 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959A1A2729860070D41D /* key.c */; };
+		142869C31A672E6300A095F6 /* mouse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959D1A2729860070D41D /* mouse.c */; };
+		142869C41A672E6300A095F6 /* kmatrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696D91A2729870070D41D /* kmatrix.c */; };
+		142869C51A672E6300A095F6 /* multi.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696EC1A2729870070D41D /* multi.c */; };
+		142869C61A672E6300A095F6 /* multibot.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696EE1A2729870070D41D /* multibot.c */; };
+		142869C71A672E6300A095F6 /* netmisc.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696F01A2729870070D41D /* netmisc.c */; };
+		142869C81A672E6300A095F6 /* network.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696F21A2729870070D41D /* network.c */; };
+		142869C91A672E6300A095F6 /* tmerge.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EB1A2729860070D41D /* tmerge.c */; };
+		142869CA1A672E6300A095F6 /* fixc.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697431A2729870070D41D /* fixc.c */; };
+		142869CB1A672E6300A095F6 /* ntmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697621A2729870070D41D /* ntmap.c */; };
+		142869CC1A672E6300A095F6 /* scanline.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697631A2729870070D41D /* scanline.c */; };
+		142869CD1A672E6300A095F6 /* args.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466974F1A2729870070D41D /* args.c */; };
+		142869CE1A672E6300A095F6 /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697521A2729870070D41D /* error.c */; };
+		142869CF1A672E6300A095F6 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697541A2729870070D41D /* hash.c */; };
+		142869D01A672E6300A095F6 /* ignorecase.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697551A2729870070D41D /* ignorecase.c */; };
+		142869D11A672E6300A095F6 /* physfsrwops.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466975B1A2729870070D41D /* physfsrwops.c */; };
+		142869D21A672E6300A095F6 /* strio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466975D1A2729870070D41D /* strio.c */; };
+		142869D31A672E6300A095F6 /* strutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466975E1A2729870070D41D /* strutil.c */; };
+		142869D41A672E6300A095F6 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466974D1A2729870070D41D /* mem.c */; };
+		142869D51A672E6300A095F6 /* rand.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697461A2729870070D41D /* rand.c */; };
+		142869D61A672E6300A095F6 /* tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697471A2729870070D41D /* tables.c */; };
+		142869D71A672E6300A095F6 /* vecmat.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697481A2729870070D41D /* vecmat.c */; };
+		142869D81A672E6300A095F6 /* ai.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696551A2729870070D41D /* ai.c */; };
+		142869D91A672E6300A095F6 /* ai2.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696571A2729870070D41D /* ai2.c */; };
+		142869DA1A672E6300A095F6 /* aipath.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696581A2729870070D41D /* aipath.c */; };
+		142869DB1A672E6300A095F6 /* automap.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466965A1A2729870070D41D /* automap.c */; };
+		142869DC1A672E6300A095F6 /* bm.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466965C1A2729870070D41D /* bm.c */; };
+		142869DD1A672E6300A095F6 /* cmd.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696601A2729870070D41D /* cmd.c */; };
+		142869DE1A672E6300A095F6 /* cntrlcen.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696611A2729870070D41D /* cntrlcen.c */; };
+		142869DF1A672E6300A095F6 /* collide.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696631A2729870070D41D /* collide.c */; };
+		142869E01A672E6300A095F6 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696651A2729870070D41D /* config.c */; };
+		142869E11A672E6300A095F6 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696671A2729870070D41D /* console.c */; };
+		142869E21A672E6300A095F6 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696681A2729870070D41D /* controls.c */; };
+		142869E31A672E6300A095F6 /* credits.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966A1A2729870070D41D /* credits.c */; };
+		142869E41A672E6300A095F6 /* crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966C1A2729870070D41D /* crypt.c */; };
+		142869E51A672E6300A095F6 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
+		142869E61A672E6300A095F6 /* digiobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696711A2729870070D41D /* digiobj.c */; };
+		142869E71A672E6300A095F6 /* effects.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AD1A2729870070D41D /* effects.c */; };
+		142869E81A672E6300A095F6 /* endlevel.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AF1A2729870070D41D /* endlevel.c */; };
+		142869E91A672E6300A095F6 /* escort.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696B11A2729870070D41D /* escort.c */; };
+		142869EA1A672E6300A095F6 /* fireball.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696B31A2729870070D41D /* fireball.c */; };
+		142869EB1A672E6300A095F6 /* fuelcen.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696B51A2729870070D41D /* fuelcen.c */; };
+		142869EC1A672E6300A095F6 /* fvi.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696B71A2729870070D41D /* fvi.c */; };
+		142869ED1A672E6300A095F6 /* game.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696BA1A2729870070D41D /* game.c */; };
+		142869EE1A672E6300A095F6 /* gamecntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696BC1A2729870070D41D /* gamecntl.c */; };
+		142869EF1A672E6300A095F6 /* gamefont.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696BD1A2729870070D41D /* gamefont.c */; };
+		142869F01A672E6300A095F6 /* gamemine.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696BF1A2729870070D41D /* gamemine.c */; };
+		142869F11A672E6300A095F6 /* gamepal.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696C11A2729870070D41D /* gamepal.c */; };
+		142869F21A672E6300A095F6 /* gamerend.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696C31A2729870070D41D /* gamerend.c */; };
+		142869F31A672E6300A095F6 /* gamesave.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696C41A2729870070D41D /* gamesave.c */; };
+		142869F41A672E6300A095F6 /* gameseg.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696C61A2729870070D41D /* gameseg.c */; };
+		142869F51A672E6300A095F6 /* gameseq.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696C81A2729870070D41D /* gameseq.c */; };
+		142869F61A672E6300A095F6 /* gauges.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696CB1A2729870070D41D /* gauges.c */; };
+		142869F71A672E6300A095F6 /* hostage.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696CD1A2729870070D41D /* hostage.c */; };
+		142869F81A672E6300A095F6 /* hud.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696CF1A2729870070D41D /* hud.c */; };
+		142869F91A672E6300A095F6 /* inferno.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696D11A2729870070D41D /* inferno.c */; };
+		142869FA1A672E6300A095F6 /* kconfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696D61A2729870070D41D /* kconfig.c */; };
+		142869FB1A672E6300A095F6 /* kludge.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696D81A2729870070D41D /* kludge.c */; };
+		142869FC1A672E6300A095F6 /* laser.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696DB1A2729870070D41D /* laser.c */; };
+		142869FD1A672E6300A095F6 /* lighting.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696DD1A2729870070D41D /* lighting.c */; };
+		142869FE1A672E6300A095F6 /* menu.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696E21A2729870070D41D /* menu.c */; };
+		142869FF1A672E6300A095F6 /* mglobal.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696E41A2729870070D41D /* mglobal.c */; };
+		14286A001A672E6300A095F6 /* mission.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696E51A2729870070D41D /* mission.c */; };
+		14286A011A672E6300A095F6 /* morph.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696E81A2729870070D41D /* morph.c */; };
+		14286A021A672E6300A095F6 /* movie.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696EA1A2729870070D41D /* movie.c */; };
+		14286A031A672E6300A095F6 /* newdemo.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696F41A2729870070D41D /* newdemo.c */; };
+		14286A041A672E6300A095F6 /* newmenu.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696F61A2729870070D41D /* newmenu.c */; };
+		14286A051A672E6300A095F6 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696F81A2729870070D41D /* object.c */; };
+		14286A061A672E6300A095F6 /* paging.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466970F1A2729870070D41D /* paging.c */; };
+		14286A071A672E6300A095F6 /* physics.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697111A2729870070D41D /* physics.c */; };
+		14286A081A672E6300A095F6 /* piggy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697131A2729870070D41D /* piggy.c */; };
+		14286A091A672E6300A095F6 /* player.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697151A2729870070D41D /* player.c */; };
+		14286A0A1A672E6300A095F6 /* polyobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697191A2729870070D41D /* polyobj.c */; };
+		14286A0B1A672E6300A095F6 /* powerup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971B1A2729870070D41D /* powerup.c */; };
+		14286A0C1A672E6300A095F6 /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466971D1A2729870070D41D /* render.c */; };
+		14286A0D1A672E6300A095F6 /* robot.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697201A2729870070D41D /* robot.c */; };
+		14286A0E1A672E6300A095F6 /* scores.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697221A2729870070D41D /* scores.c */; };
+		14286A0F1A672E6300A095F6 /* segment.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697251A2729870070D41D /* segment.c */; };
+		14286A101A672E6300A095F6 /* slew.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697281A2729870070D41D /* slew.c */; };
+		14286A111A672E6300A095F6 /* songs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466972A1A2729870070D41D /* songs.c */; };
+		14286A121A672E6300A095F6 /* state.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466972D1A2729870070D41D /* state.c */; };
+		14286A131A672E6300A095F6 /* switch.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466972F1A2729870070D41D /* switch.c */; };
+		14286A141A672E6300A095F6 /* terrain.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697311A2729870070D41D /* terrain.c */; };
+		14286A151A672E6300A095F6 /* texmerge.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697331A2729870070D41D /* texmerge.c */; };
+		14286A161A672E6300A095F6 /* text.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697351A2729870070D41D /* text.c */; };
+		14286A171A672E6300A095F6 /* titles.c in Sources */ = {isa = PBXBuildFile; fileRef = 146697381A2729870070D41D /* titles.c */; };
+		14286A181A672E6300A095F6 /* vclip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466973A1A2729870070D41D /* vclip.c */; };
+		14286A191A672E6300A095F6 /* wall.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466973D1A2729870070D41D /* wall.c */; };
+		14286A1A1A672E6300A095F6 /* weapon.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466973F1A2729870070D41D /* weapon.c */; };
+		14286A1B1A672E6300A095F6 /* decoder16.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696481A2729870070D41D /* decoder16.c */; };
+		14286A1C1A672E6300A095F6 /* decoder8.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696491A2729870070D41D /* decoder8.c */; };
+		14286A1D1A672E6300A095F6 /* mve_audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466964D1A2729870070D41D /* mve_audio.c */; };
+		14286A1E1A672E6300A095F6 /* mvelib.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696501A2729870070D41D /* mvelib.c */; };
+		14286A1F1A672E6300A095F6 /* mveplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696521A2729870070D41D /* mveplay.c */; };
+		14286A201A672E6300A095F6 /* iff.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696111A2729860070D41D /* iff.c */; };
+		14286A211A672E6300A095F6 /* digi.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695941A2729860070D41D /* digi.c */; };
+		14286A221A672E6300A095F6 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695971A2729860070D41D /* init.c */; };
+		14286A231A672E6300A095F6 /* rbaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959E1A2729860070D41D /* rbaudio.c */; };
+		14286A241A672E6300A095F6 /* timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466959F1A2729860070D41D /* timer.c */; };
+		14286A251A672E6300A095F6 /* clipper.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EE1A2729860070D41D /* clipper.c */; };
+		14286A261A672E6300A095F6 /* draw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F01A2729860070D41D /* draw.c */; };
+		14286A271A672E6300A095F6 /* globvars.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F11A2729860070D41D /* globvars.c */; };
+		14286A281A672E6300A095F6 /* instance.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F31A2729860070D41D /* instance.c */; };
+		14286A291A672E6300A095F6 /* interp.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F51A2729860070D41D /* interp.c */; };
+		14286A2A1A672E6300A095F6 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F81A2729860070D41D /* matrix.c */; };
+		14286A2B1A672E6300A095F6 /* points.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694F91A2729860070D41D /* points.c */; };
+		14286A2C1A672E6300A095F6 /* rod.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694FA1A2729860070D41D /* rod.c */; };
+		14286A2D1A672E6300A095F6 /* setup.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694FB1A2729860070D41D /* setup.c */; };
+		14286A2E1A672E6300A095F6 /* 2dsline.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D11A2729860070D41D /* 2dsline.c */; };
+		14286A2F1A672E6300A095F6 /* bitblt.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D21A2729860070D41D /* bitblt.c */; };
+		14286A301A672E6300A095F6 /* bitmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D31A2729860070D41D /* bitmap.c */; };
+		14286A311A672E6300A095F6 /* box.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D51A2729860070D41D /* box.c */; };
+		14286A321A672E6300A095F6 /* canvas.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D61A2729860070D41D /* canvas.c */; };
+		14286A331A672E6300A095F6 /* circle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D71A2729860070D41D /* circle.c */; };
+		14286A341A672E6300A095F6 /* disc.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694D91A2729860070D41D /* disc.c */; };
+		14286A351A672E6300A095F6 /* font.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694DA1A2729860070D41D /* font.c */; };
+		14286A361A672E6300A095F6 /* gpixel.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694DB1A2729860070D41D /* gpixel.c */; };
+		14286A371A672E6300A095F6 /* ibitblt.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694DC1A2729860070D41D /* ibitblt.c */; };
+		14286A381A672E6300A095F6 /* line.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694DD1A2729860070D41D /* line.c */; };
+		14286A391A672E6300A095F6 /* palette.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E11A2729860070D41D /* palette.c */; };
+		14286A3A1A672E6300A095F6 /* pcx.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E21A2729860070D41D /* pcx.c */; };
+		14286A3B1A672E6300A095F6 /* pixel.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E31A2729860070D41D /* pixel.c */; };
+		14286A3C1A672E6300A095F6 /* rect.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E51A2729860070D41D /* rect.c */; };
+		14286A3D1A672E6300A095F6 /* rle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E61A2729860070D41D /* rle.c */; };
+		14286A3E1A672E6300A095F6 /* scalec.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EA1A2729860070D41D /* scalec.c */; };
+		14286A401A672E6300A095F6 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
+		14286A411A672E6300A095F6 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
+		14286A421A672E6300A095F6 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
+		14286A431A672E6300A095F6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
+		14286A491A67312400A095F6 /* bmread.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466965E1A2729870070D41D /* bmread.c */; };
+		14286A4A1A67312D00A095F6 /* dumpmine.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696721A2729870070D41D /* dumpmine.c */; };
+		14286A4B1A67313E00A095F6 /* autosave.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696741A2729870070D41D /* autosave.c */; };
+		14286A4C1A67313E00A095F6 /* centers.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696751A2729870070D41D /* centers.c */; };
+		14286A4D1A67313E00A095F6 /* curves.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696771A2729870070D41D /* curves.c */; };
+		14286A4E1A67313E00A095F6 /* eglobal.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696791A2729870070D41D /* eglobal.c */; };
+		14286A4F1A67313E00A095F6 /* ehostage.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466967A1A2729870070D41D /* ehostage.c */; };
+		14286A501A67313E00A095F6 /* elight.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466967C1A2729870070D41D /* elight.c */; };
+		14286A511A67313E00A095F6 /* eobject.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466967D1A2729870070D41D /* eobject.c */; };
+		14286A521A67313E00A095F6 /* eswitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466967F1A2729870070D41D /* eswitch.c */; };
+		14286A531A67313E00A095F6 /* fixseg.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696811A2729870070D41D /* fixseg.c */; };
+		14286A541A67313E00A095F6 /* func.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696821A2729870070D41D /* func.c */; };
+		14286A551A67313E00A095F6 /* group.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696831A2729870070D41D /* group.c */; };
+		14286A561A67313E00A095F6 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696841A2729870070D41D /* info.c */; };
+		14286A571A67313E00A095F6 /* kbuild.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696861A2729870070D41D /* kbuild.c */; };
+		14286A581A67313E00A095F6 /* kcurve.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696871A2729870070D41D /* kcurve.c */; };
+		14286A591A67313E00A095F6 /* kfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696891A2729870070D41D /* kfuncs.c */; };
+		14286A5A1A67313E00A095F6 /* kgame.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466968B1A2729870070D41D /* kgame.c */; };
+		14286A5B1A67313E00A095F6 /* kgroup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466968C1A2729870070D41D /* kgroup.c */; };
+		14286A5C1A67313E00A095F6 /* khelp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466968D1A2729870070D41D /* khelp.c */; };
+		14286A5D1A67313E00A095F6 /* kmine.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466968E1A2729870070D41D /* kmine.c */; };
+		14286A5E1A67313E00A095F6 /* ksegmove.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466968F1A2729870070D41D /* ksegmove.c */; };
+		14286A5F1A67313E00A095F6 /* ksegsel.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696901A2729870070D41D /* ksegsel.c */; };
+		14286A601A67313E00A095F6 /* ksegsize.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696911A2729870070D41D /* ksegsize.c */; };
+		14286A611A67313E00A095F6 /* ktmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696921A2729870070D41D /* ktmap.c */; };
+		14286A621A67313E00A095F6 /* kview.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696931A2729870070D41D /* kview.c */; };
+		14286A631A67313E00A095F6 /* macro.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696941A2729870070D41D /* macro.c */; };
+		14286A641A67313E00A095F6 /* med.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696981A2729870070D41D /* med.c */; };
+		14286A651A67313E00A095F6 /* meddraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696991A2729870070D41D /* meddraw.c */; };
+		14286A661A67313E00A095F6 /* medmisc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466969C1A2729870070D41D /* medmisc.c */; };
+		14286A671A67313E00A095F6 /* medrobot.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466969E1A2729870070D41D /* medrobot.c */; };
+		14286A681A67313E00A095F6 /* medsel.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A01A2729870070D41D /* medsel.c */; };
+		14286A691A67313E00A095F6 /* medwall.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A21A2729870070D41D /* medwall.c */; };
+		14286A6A1A67313E00A095F6 /* mine.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A41A2729870070D41D /* mine.c */; };
+		14286A6B1A67313E00A095F6 /* objpage.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A51A2729870070D41D /* objpage.c */; };
+		14286A6C1A67313E00A095F6 /* segment.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A71A2729870070D41D /* segment.c */; };
+		14286A6D1A67313E00A095F6 /* seguvs.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696A81A2729870070D41D /* seguvs.c */; };
+		14286A6E1A67313E00A095F6 /* texpage.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AA1A2729870070D41D /* texpage.c */; };
+		14286A6F1A67313E00A095F6 /* texture.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AC1A2729870070D41D /* texture.c */; };
+		14286A701A67330000A095F6 /* barbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699181A2729C60070D41D /* barbox.c */; };
+		14286A711A67330000A095F6 /* button.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699191A2729C60070D41D /* button.c */; };
+		14286A721A67330000A095F6 /* checkbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466991A1A2729C60070D41D /* checkbox.c */; };
+		14286A731A67330000A095F6 /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466991B1A2729C60070D41D /* file.c */; };
+		14286A751A67330000A095F6 /* gadget.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466991D1A2729C60070D41D /* gadget.c */; };
+		14286A761A67330000A095F6 /* harderr.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466991E1A2729C60070D41D /* harderr.c */; };
+		14286A771A67330000A095F6 /* icon.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466991F1A2729C60070D41D /* icon.c */; };
+		14286A781A67330000A095F6 /* inputbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699201A2729C60070D41D /* inputbox.c */; };
+		14286A791A67330000A095F6 /* keypad.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699211A2729C60070D41D /* keypad.c */; };
+		14286A7A1A67330000A095F6 /* keypress.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699221A2729C60070D41D /* keypress.c */; };
+		14286A7B1A67330000A095F6 /* keytrap.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699231A2729C60070D41D /* keytrap.c */; };
+		14286A7C1A67330000A095F6 /* listbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699241A2729C60070D41D /* listbox.c */; };
+		14286A7E1A67330000A095F6 /* menu.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699291A2729C60070D41D /* menu.c */; };
+		14286A7F1A67330000A095F6 /* menubar.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992A1A2729C60070D41D /* menubar.c */; };
+		14286A801A67330000A095F6 /* message.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992B1A2729C60070D41D /* message.c */; };
+		14286A811A67330000A095F6 /* mouse.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992C1A2729C60070D41D /* mouse.c */; };
+		14286A821A67330000A095F6 /* number.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992D1A2729C60070D41D /* number.c */; };
+		14286A831A67330000A095F6 /* popup.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992E1A2729C60070D41D /* popup.c */; };
+		14286A841A67330000A095F6 /* radio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466992F1A2729C60070D41D /* radio.c */; };
+		14286A851A67330000A095F6 /* scroll.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699301A2729C60070D41D /* scroll.c */; };
+		14286A861A67330000A095F6 /* ui.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699311A2729C60070D41D /* ui.c */; };
+		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
+		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
+		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
 		146925A21A58C8B70014A414 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
 		146925A31A58C8B70014A414 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
@@ -303,6 +508,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		14286A441A672E6300A095F6 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		14804D571A4C9E7F001CB0FB /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,6 +550,7 @@
 		141635EB1A4CB5B3005E575E /* d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		14286A481A672E6300A095F6 /* d2x-editor-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-editor-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
 		146694D21A2729860070D41D /* bitblt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitblt.c; sourceTree = "<group>"; };
 		146694D31A2729860070D41D /* bitmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitmap.c; sourceTree = "<group>"; };
@@ -928,6 +1143,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		14286A3F1A672E6300A095F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14286A401A672E6300A095F6 /* libphysfs.a in Frameworks */,
+				14286A411A672E6300A095F6 /* SDL_mixer.framework in Frameworks */,
+				14286A421A672E6300A095F6 /* SDL.framework in Frameworks */,
+				14286A431A672E6300A095F6 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14804D561A4C9E7F001CB0FB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1000,6 +1226,7 @@
 				14D696781A520C81009ABFD2 /* mveplayer */,
 				141635ED1A4CB608005E575E /* Products */,
 				14D696771A520C80009ABFD2 /* mveplayer */,
+				14286A481A672E6300A095F6 /* d2x-editor-soft */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1536,10 +1763,10 @@
 				146696621A2729870070D41D /* cntrlcen.h */,
 				146696631A2729870070D41D /* collide.c */,
 				146696641A2729870070D41D /* collide.h */,
-				146696651A2729870070D41D /* config.c */,
-				146696661A2729870070D41D /* config.h */,
 				146925A01A58C8B70014A414 /* concntl.c */,
 				146925A11A58C8B70014A414 /* concntl.h */,
+				146696651A2729870070D41D /* config.c */,
+				146696661A2729870070D41D /* config.h */,
 				146696671A2729870070D41D /* console.c */,
 				146696681A2729870070D41D /* controls.c */,
 				146696691A2729870070D41D /* controls.h */,
@@ -1564,9 +1791,9 @@
 				146696B41A2729870070D41D /* fireball.h */,
 				146696B51A2729870070D41D /* fuelcen.c */,
 				146696B61A2729870070D41D /* fuelcen.h */,
+				146696B91A2729870070D41D /* fvi_a.h */,
 				146696B71A2729870070D41D /* fvi.c */,
 				146696B81A2729870070D41D /* fvi.h */,
-				146696B91A2729870070D41D /* fvi_a.h */,
 				146696BA1A2729870070D41D /* game.c */,
 				146696BB1A2729870070D41D /* game.h */,
 				146696BC1A2729870070D41D /* gamecntl.c */,
@@ -1685,27 +1912,19 @@
 			children = (
 				146696741A2729870070D41D /* autosave.c */,
 				146696751A2729870070D41D /* centers.c */,
-				146696761A2729870070D41D /* centers.h */,
 				146696771A2729870070D41D /* curves.c */,
-				146696781A2729870070D41D /* editor.h */,
 				146696791A2729870070D41D /* eglobal.c */,
 				1466967A1A2729870070D41D /* ehostage.c */,
-				1466967B1A2729870070D41D /* ehostage.h */,
 				1466967C1A2729870070D41D /* elight.c */,
 				1466967D1A2729870070D41D /* eobject.c */,
-				1466967E1A2729870070D41D /* eobject.h */,
 				1466967F1A2729870070D41D /* eswitch.c */,
-				146696801A2729870070D41D /* eswitch.h */,
 				146696811A2729870070D41D /* fixseg.c */,
 				146696821A2729870070D41D /* func.c */,
 				146696831A2729870070D41D /* group.c */,
 				146696841A2729870070D41D /* info.c */,
-				146696851A2729870070D41D /* info.h */,
 				146696861A2729870070D41D /* kbuild.c */,
 				146696871A2729870070D41D /* kcurve.c */,
-				146696881A2729870070D41D /* kdefs.h */,
 				146696891A2729870070D41D /* kfuncs.c */,
-				1466968A1A2729870070D41D /* kfuncs.h */,
 				1466968B1A2729870070D41D /* kgame.c */,
 				1466968C1A2729870070D41D /* kgroup.c */,
 				1466968D1A2729870070D41D /* khelp.c */,
@@ -1716,28 +1935,36 @@
 				146696921A2729870070D41D /* ktmap.c */,
 				146696931A2729870070D41D /* kview.c */,
 				146696941A2729870070D41D /* macro.c */,
-				146696951A2729870070D41D /* macro.h */,
 				146696981A2729870070D41D /* med.c */,
 				146696991A2729870070D41D /* meddraw.c */,
-				1466969A1A2729870070D41D /* meddraw.h */,
-				1466969B1A2729870070D41D /* medlisp.h */,
 				1466969C1A2729870070D41D /* medmisc.c */,
-				1466969D1A2729870070D41D /* medmisc.h */,
 				1466969E1A2729870070D41D /* medrobot.c */,
-				1466969F1A2729870070D41D /* medrobot.h */,
 				146696A01A2729870070D41D /* medsel.c */,
-				146696A11A2729870070D41D /* medsel.h */,
 				146696A21A2729870070D41D /* medwall.c */,
-				146696A31A2729870070D41D /* medwall.h */,
 				146696A41A2729870070D41D /* mine.c */,
 				146696A51A2729870070D41D /* objpage.c */,
-				146696A61A2729870070D41D /* objpage.h */,
 				146696A71A2729870070D41D /* segment.c */,
 				146696A81A2729870070D41D /* seguvs.c */,
-				146696A91A2729870070D41D /* seguvs.h */,
 				146696AA1A2729870070D41D /* texpage.c */,
-				146696AB1A2729870070D41D /* texpage.h */,
 				146696AC1A2729870070D41D /* texture.c */,
+				146696761A2729870070D41D /* centers.h */,
+				146696781A2729870070D41D /* editor.h */,
+				1466967B1A2729870070D41D /* ehostage.h */,
+				1466967E1A2729870070D41D /* eobject.h */,
+				146696801A2729870070D41D /* eswitch.h */,
+				146696851A2729870070D41D /* info.h */,
+				146696881A2729870070D41D /* kdefs.h */,
+				1466968A1A2729870070D41D /* kfuncs.h */,
+				146696951A2729870070D41D /* macro.h */,
+				1466969A1A2729870070D41D /* meddraw.h */,
+				1466969B1A2729870070D41D /* medlisp.h */,
+				1466969D1A2729870070D41D /* medmisc.h */,
+				1466969F1A2729870070D41D /* medrobot.h */,
+				146696A11A2729870070D41D /* medsel.h */,
+				146696A31A2729870070D41D /* medwall.h */,
+				146696A61A2729870070D41D /* objpage.h */,
+				146696A91A2729870070D41D /* seguvs.h */,
+				146696AB1A2729870070D41D /* texpage.h */,
 			);
 			path = editor;
 			sourceTree = "<group>";
@@ -1866,6 +2093,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		142869B31A672E6300A095F6 /* d2x-editor-soft */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14286A451A672E6300A095F6 /* Build configuration list for PBXNativeTarget "d2x-editor-soft" */;
+			buildPhases = (
+				142869B41A672E6300A095F6 /* Sources */,
+				14286A3F1A672E6300A095F6 /* Frameworks */,
+				14286A441A672E6300A095F6 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "d2x-editor-soft";
+			productName = d2x_n;
+			productReference = 14286A481A672E6300A095F6 /* d2x-editor-soft */;
+			productType = "com.apple.product-type.tool";
+		};
 		14804D581A4C9E7F001CB0FB /* d2x-opengl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14804D5F1A4C9E7F001CB0FB /* Build configuration list for PBXNativeTarget "d2x-opengl" */;
@@ -1947,6 +2191,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				142869B31A672E6300A095F6 /* d2x-editor-soft */,
 				14F0D5921A4CB34F00682BB0 /* d2x-soft */,
 				14804D581A4C9E7F001CB0FB /* d2x-opengl */,
 				14D696761A520C80009ABFD2 /* mveplayer */,
@@ -1955,6 +2200,214 @@
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		142869B41A672E6300A095F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				142869B51A672E6300A095F6 /* tmapflat.c in Sources */,
+				142869B61A672E6300A095F6 /* gr.c in Sources */,
+				14286A671A67313E00A095F6 /* medrobot.c in Sources */,
+				142869B71A672E6300A095F6 /* SDLMain.m in Sources */,
+				142869B81A672E6300A095F6 /* init.c in Sources */,
+				142869B91A672E6300A095F6 /* ipx_kali.c in Sources */,
+				142869BA1A672E6300A095F6 /* ipx_mcast4.c in Sources */,
+				142869BB1A672E6300A095F6 /* ipx_udp.c in Sources */,
+				14286A711A67330000A095F6 /* button.c in Sources */,
+				142869BC1A672E6300A095F6 /* linuxnet.c in Sources */,
+				142869BD1A672E6300A095F6 /* ukali.c in Sources */,
+				14286A5D1A67313E00A095F6 /* kmine.c in Sources */,
+				14286A621A67313E00A095F6 /* kview.c in Sources */,
+				142869BE1A672E6300A095F6 /* concntl.c in Sources */,
+				14286A6C1A67313E00A095F6 /* segment.c in Sources */,
+				14286A811A67330000A095F6 /* mouse.c in Sources */,
+				142869BF1A672E6300A095F6 /* joy.c in Sources */,
+				142869C01A672E6300A095F6 /* joydefs.c in Sources */,
+				142869C11A672E6300A095F6 /* event.c in Sources */,
+				14286A701A67330000A095F6 /* barbox.c in Sources */,
+				14286A4B1A67313E00A095F6 /* autosave.c in Sources */,
+				142869C21A672E6300A095F6 /* key.c in Sources */,
+				142869C31A672E6300A095F6 /* mouse.c in Sources */,
+				142869C41A672E6300A095F6 /* kmatrix.c in Sources */,
+				142869C51A672E6300A095F6 /* multi.c in Sources */,
+				142869C61A672E6300A095F6 /* multibot.c in Sources */,
+				142869C71A672E6300A095F6 /* netmisc.c in Sources */,
+				142869C81A672E6300A095F6 /* network.c in Sources */,
+				142869C91A672E6300A095F6 /* tmerge.c in Sources */,
+				142869CA1A672E6300A095F6 /* fixc.c in Sources */,
+				14286A791A67330000A095F6 /* keypad.c in Sources */,
+				142869CB1A672E6300A095F6 /* ntmap.c in Sources */,
+				142869CC1A672E6300A095F6 /* scanline.c in Sources */,
+				142869CD1A672E6300A095F6 /* args.c in Sources */,
+				142869CE1A672E6300A095F6 /* error.c in Sources */,
+				14286A4A1A67312D00A095F6 /* dumpmine.c in Sources */,
+				14286A6F1A67313E00A095F6 /* texture.c in Sources */,
+				142869CF1A672E6300A095F6 /* hash.c in Sources */,
+				142869D01A672E6300A095F6 /* ignorecase.c in Sources */,
+				142869D11A672E6300A095F6 /* physfsrwops.c in Sources */,
+				142869D21A672E6300A095F6 /* strio.c in Sources */,
+				14286A4E1A67313E00A095F6 /* eglobal.c in Sources */,
+				142869D31A672E6300A095F6 /* strutil.c in Sources */,
+				142869D41A672E6300A095F6 /* mem.c in Sources */,
+				142869D51A672E6300A095F6 /* rand.c in Sources */,
+				142869D61A672E6300A095F6 /* tables.c in Sources */,
+				142869D71A672E6300A095F6 /* vecmat.c in Sources */,
+				14286A501A67313E00A095F6 /* elight.c in Sources */,
+				142869D81A672E6300A095F6 /* ai.c in Sources */,
+				142869D91A672E6300A095F6 /* ai2.c in Sources */,
+				142869DA1A672E6300A095F6 /* aipath.c in Sources */,
+				14286A681A67313E00A095F6 /* medsel.c in Sources */,
+				142869DB1A672E6300A095F6 /* automap.c in Sources */,
+				14286A6D1A67313E00A095F6 /* seguvs.c in Sources */,
+				14286A731A67330000A095F6 /* file.c in Sources */,
+				14286A581A67313E00A095F6 /* kcurve.c in Sources */,
+				142869DC1A672E6300A095F6 /* bm.c in Sources */,
+				142869DD1A672E6300A095F6 /* cmd.c in Sources */,
+				14286A541A67313E00A095F6 /* func.c in Sources */,
+				142869DE1A672E6300A095F6 /* cntrlcen.c in Sources */,
+				142869DF1A672E6300A095F6 /* collide.c in Sources */,
+				142869E01A672E6300A095F6 /* config.c in Sources */,
+				14286A821A67330000A095F6 /* number.c in Sources */,
+				14286A7C1A67330000A095F6 /* listbox.c in Sources */,
+				142869E11A672E6300A095F6 /* console.c in Sources */,
+				142869E21A672E6300A095F6 /* controls.c in Sources */,
+				14286A5B1A67313E00A095F6 /* kgroup.c in Sources */,
+				142869E31A672E6300A095F6 /* credits.c in Sources */,
+				142869E41A672E6300A095F6 /* crypt.c in Sources */,
+				14286A841A67330000A095F6 /* radio.c in Sources */,
+				14286A601A67313E00A095F6 /* ksegsize.c in Sources */,
+				14286A551A67313E00A095F6 /* group.c in Sources */,
+				142869E51A672E6300A095F6 /* cvar.c in Sources */,
+				142869E61A672E6300A095F6 /* digiobj.c in Sources */,
+				142869E71A672E6300A095F6 /* effects.c in Sources */,
+				142869E81A672E6300A095F6 /* endlevel.c in Sources */,
+				142869E91A672E6300A095F6 /* escort.c in Sources */,
+				142869EA1A672E6300A095F6 /* fireball.c in Sources */,
+				14286A4D1A67313E00A095F6 /* curves.c in Sources */,
+				14286A881A67330000A095F6 /* userbox.c in Sources */,
+				142869EB1A672E6300A095F6 /* fuelcen.c in Sources */,
+				14286A611A67313E00A095F6 /* ktmap.c in Sources */,
+				142869EC1A672E6300A095F6 /* fvi.c in Sources */,
+				14286A831A67330000A095F6 /* popup.c in Sources */,
+				142869ED1A672E6300A095F6 /* game.c in Sources */,
+				142869EE1A672E6300A095F6 /* gamecntl.c in Sources */,
+				142869EF1A672E6300A095F6 /* gamefont.c in Sources */,
+				142869F01A672E6300A095F6 /* gamemine.c in Sources */,
+				142869F11A672E6300A095F6 /* gamepal.c in Sources */,
+				14286A751A67330000A095F6 /* gadget.c in Sources */,
+				14286A531A67313E00A095F6 /* fixseg.c in Sources */,
+				142869F21A672E6300A095F6 /* gamerend.c in Sources */,
+				142869F31A672E6300A095F6 /* gamesave.c in Sources */,
+				142869F41A672E6300A095F6 /* gameseg.c in Sources */,
+				14286A7A1A67330000A095F6 /* keypress.c in Sources */,
+				14286A521A67313E00A095F6 /* eswitch.c in Sources */,
+				142869F51A672E6300A095F6 /* gameseq.c in Sources */,
+				142869F61A672E6300A095F6 /* gauges.c in Sources */,
+				14286A561A67313E00A095F6 /* info.c in Sources */,
+				14286A4C1A67313E00A095F6 /* centers.c in Sources */,
+				142869F71A672E6300A095F6 /* hostage.c in Sources */,
+				142869F81A672E6300A095F6 /* hud.c in Sources */,
+				142869F91A672E6300A095F6 /* inferno.c in Sources */,
+				14286A5F1A67313E00A095F6 /* ksegsel.c in Sources */,
+				142869FA1A672E6300A095F6 /* kconfig.c in Sources */,
+				142869FB1A672E6300A095F6 /* kludge.c in Sources */,
+				142869FC1A672E6300A095F6 /* laser.c in Sources */,
+				142869FD1A672E6300A095F6 /* lighting.c in Sources */,
+				142869FE1A672E6300A095F6 /* menu.c in Sources */,
+				142869FF1A672E6300A095F6 /* mglobal.c in Sources */,
+				14286A001A672E6300A095F6 /* mission.c in Sources */,
+				14286A011A672E6300A095F6 /* morph.c in Sources */,
+				14286A591A67313E00A095F6 /* kfuncs.c in Sources */,
+				14286A5E1A67313E00A095F6 /* ksegmove.c in Sources */,
+				14286A021A672E6300A095F6 /* movie.c in Sources */,
+				14286A031A672E6300A095F6 /* newdemo.c in Sources */,
+				14286A041A672E6300A095F6 /* newmenu.c in Sources */,
+				14286A051A672E6300A095F6 /* object.c in Sources */,
+				14286A061A672E6300A095F6 /* paging.c in Sources */,
+				14286A6A1A67313E00A095F6 /* mine.c in Sources */,
+				14286A071A672E6300A095F6 /* physics.c in Sources */,
+				14286A511A67313E00A095F6 /* eobject.c in Sources */,
+				14286A081A672E6300A095F6 /* piggy.c in Sources */,
+				14286A091A672E6300A095F6 /* player.c in Sources */,
+				14286A0A1A672E6300A095F6 /* polyobj.c in Sources */,
+				14286A0B1A672E6300A095F6 /* powerup.c in Sources */,
+				14286A661A67313E00A095F6 /* medmisc.c in Sources */,
+				14286A0C1A672E6300A095F6 /* render.c in Sources */,
+				14286A0D1A672E6300A095F6 /* robot.c in Sources */,
+				14286A761A67330000A095F6 /* harderr.c in Sources */,
+				14286A0E1A672E6300A095F6 /* scores.c in Sources */,
+				14286A0F1A672E6300A095F6 /* segment.c in Sources */,
+				14286A101A672E6300A095F6 /* slew.c in Sources */,
+				14286A111A672E6300A095F6 /* songs.c in Sources */,
+				14286A121A672E6300A095F6 /* state.c in Sources */,
+				14286A131A672E6300A095F6 /* switch.c in Sources */,
+				14286A141A672E6300A095F6 /* terrain.c in Sources */,
+				14286A151A672E6300A095F6 /* texmerge.c in Sources */,
+				14286A861A67330000A095F6 /* ui.c in Sources */,
+				14286A571A67313E00A095F6 /* kbuild.c in Sources */,
+				14286A161A672E6300A095F6 /* text.c in Sources */,
+				14286A891A67330000A095F6 /* window.c in Sources */,
+				14286A171A672E6300A095F6 /* titles.c in Sources */,
+				14286A181A672E6300A095F6 /* vclip.c in Sources */,
+				14286A191A672E6300A095F6 /* wall.c in Sources */,
+				14286A7E1A67330000A095F6 /* menu.c in Sources */,
+				14286A1A1A672E6300A095F6 /* weapon.c in Sources */,
+				14286A1B1A672E6300A095F6 /* decoder16.c in Sources */,
+				14286A1C1A672E6300A095F6 /* decoder8.c in Sources */,
+				14286A1D1A672E6300A095F6 /* mve_audio.c in Sources */,
+				14286A1E1A672E6300A095F6 /* mvelib.c in Sources */,
+				14286A5C1A67313E00A095F6 /* khelp.c in Sources */,
+				14286A1F1A672E6300A095F6 /* mveplay.c in Sources */,
+				14286A201A672E6300A095F6 /* iff.c in Sources */,
+				14286A211A672E6300A095F6 /* digi.c in Sources */,
+				14286A221A672E6300A095F6 /* init.c in Sources */,
+				14286A231A672E6300A095F6 /* rbaudio.c in Sources */,
+				14286A241A672E6300A095F6 /* timer.c in Sources */,
+				14286A251A672E6300A095F6 /* clipper.c in Sources */,
+				14286A491A67312400A095F6 /* bmread.c in Sources */,
+				14286A5A1A67313E00A095F6 /* kgame.c in Sources */,
+				14286A261A672E6300A095F6 /* draw.c in Sources */,
+				14286A271A672E6300A095F6 /* globvars.c in Sources */,
+				14286A281A672E6300A095F6 /* instance.c in Sources */,
+				14286A291A672E6300A095F6 /* interp.c in Sources */,
+				14286A7B1A67330000A095F6 /* keytrap.c in Sources */,
+				14286A2A1A672E6300A095F6 /* matrix.c in Sources */,
+				14286A6B1A67313E00A095F6 /* objpage.c in Sources */,
+				14286A801A67330000A095F6 /* message.c in Sources */,
+				14286A2B1A672E6300A095F6 /* points.c in Sources */,
+				14286A2C1A672E6300A095F6 /* rod.c in Sources */,
+				14286A2D1A672E6300A095F6 /* setup.c in Sources */,
+				14286A2E1A672E6300A095F6 /* 2dsline.c in Sources */,
+				14286A4F1A67313E00A095F6 /* ehostage.c in Sources */,
+				14286A2F1A672E6300A095F6 /* bitblt.c in Sources */,
+				14286A301A672E6300A095F6 /* bitmap.c in Sources */,
+				14286A691A67313E00A095F6 /* medwall.c in Sources */,
+				14286A311A672E6300A095F6 /* box.c in Sources */,
+				14286A321A672E6300A095F6 /* canvas.c in Sources */,
+				14286A331A672E6300A095F6 /* circle.c in Sources */,
+				14286A341A672E6300A095F6 /* disc.c in Sources */,
+				14286A641A67313E00A095F6 /* med.c in Sources */,
+				14286A7F1A67330000A095F6 /* menubar.c in Sources */,
+				14286A351A672E6300A095F6 /* font.c in Sources */,
+				14286A361A672E6300A095F6 /* gpixel.c in Sources */,
+				14286A371A672E6300A095F6 /* ibitblt.c in Sources */,
+				14286A381A672E6300A095F6 /* line.c in Sources */,
+				14286A851A67330000A095F6 /* scroll.c in Sources */,
+				14286A721A67330000A095F6 /* checkbox.c in Sources */,
+				14286A771A67330000A095F6 /* icon.c in Sources */,
+				14286A651A67313E00A095F6 /* meddraw.c in Sources */,
+				14286A6E1A67313E00A095F6 /* texpage.c in Sources */,
+				14286A391A672E6300A095F6 /* palette.c in Sources */,
+				14286A631A67313E00A095F6 /* macro.c in Sources */,
+				14286A781A67330000A095F6 /* inputbox.c in Sources */,
+				14286A3A1A672E6300A095F6 /* pcx.c in Sources */,
+				14286A871A67330000A095F6 /* uidraw.c in Sources */,
+				14286A3B1A672E6300A095F6 /* pixel.c in Sources */,
+				14286A3C1A672E6300A095F6 /* rect.c in Sources */,
+				14286A3D1A672E6300A095F6 /* rle.c in Sources */,
+				14286A3E1A672E6300A095F6 /* scalec.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14804D551A4C9E7F001CB0FB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2263,6 +2716,51 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		14286A461A672E6300A095F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HAVE_CONFIG_H=1",
+					"EDITOR=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					arch/cocoa,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				PRODUCT_NAME = "d2x-editor-soft";
+				USER_HEADER_SEARCH_PATHS = main;
+			};
+			name = Debug;
+		};
+		14286A471A672E6300A095F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					arch/cocoa,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				PRODUCT_NAME = "d2x-editor-soft";
+				USER_HEADER_SEARCH_PATHS = main;
+			};
+			name = Release;
+		};
 		146694C81A27246A0070D41D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2475,6 +2973,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		14286A451A672E6300A095F6 /* Build configuration list for PBXNativeTarget "d2x-editor-soft" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14286A461A672E6300A095F6 /* Debug */,
+				14286A471A672E6300A095F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		146694A01A27246A0070D41D /* Build configuration list for PBXProject "d2x" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
