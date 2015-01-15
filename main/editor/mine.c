@@ -32,8 +32,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "gr.h"
 
-#include "bm.h"			// for MAX_TEXTURES
-
 #include "inferno.h"
 #include "segment.h"
 #include "editor.h"

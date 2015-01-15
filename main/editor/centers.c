@@ -26,7 +26,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "fuelcen.h"
 #include "screens.h"
 #include "inferno.h"
 #include "segment.h"
