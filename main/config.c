@@ -315,7 +315,7 @@ int ReadConfigFile()
 	cvar_setint( &Config_digi_volume, 8 );
 	cvar_setint( &Config_midi_volume, 8 );
 	cvar_setint( &Config_redbook_volume, 8 );
-	cvar_setint( &Config_control_type, CONTROL_NONE );
+	cvar_setint( &Config_control_type, 0 );
 	cvar_setint( &Config_channels_reversed, 0);
 	cvar_setint( &Config_joystick_sensitivity, 8 );
 

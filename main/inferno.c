@@ -846,11 +846,8 @@ void check_joystick_calibration()	{
 	int x1, y1, x2, y2, c;
 	fix t1;
 
-	if ( (Config_control_type.intval != CONTROL_JOYSTICK) &&
-		 (Config_control_type.intval != CONTROL_FLIGHTSTICK_PRO) &&
-		 (Config_control_type.intval != CONTROL_THRUSTMASTER_FCS) &&
-		 (Config_control_type.intval != CONTROL_GRAVIS_GAMEPAD)
-		) return;
+	if ( !(Config_control_type.intval&CONTROL_USING_JOYSTICK) )
+		return;
 
 	joy_get_pos( &x1, &y1 );
 

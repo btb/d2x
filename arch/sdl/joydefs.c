@@ -35,31 +35,13 @@ void joydefs_calibrate()
 
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
 {
-	int i;
 	int oc_type = Config_control_type.intval;
 
-	for (i=0; i<3; i++ )
-		if (items[i].value)
-			cvar_setint(&Config_control_type, i);
-
-	if (Config_control_type.intval == 2)
-		cvar_setint(&Config_control_type, CONTROL_MOUSE);
-
-	if ( (oc_type != Config_control_type.intval) && (Config_control_type.intval == CONTROL_THRUSTMASTER_FCS ) ) {
-		nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, TXT_FCS );
-	}
+	cvar_setint(&Config_control_type, items[1].value * CONTROL_USING_JOYSTICK + items[2].value * CONTROL_USING_MOUSE);
 
 	if (oc_type != Config_control_type.intval) {
-		switch (Config_control_type.intval) {
-	//		case	CONTROL_NONE:
-			case	CONTROL_JOYSTICK:
-			case	CONTROL_FLIGHTSTICK_PRO:
-			case	CONTROL_THRUSTMASTER_FCS:
-			case	CONTROL_GRAVIS_GAMEPAD:
-	//		case	CONTROL_MOUSE:
-	//		case	CONTROL_CYBERMAN:
+		if (Config_control_type.intval&CONTROL_USING_JOYSTICK)
 				joydefs_calibrate_flag = 1;
-		}
 		kc_set_controls();
 	}
 }
@@ -67,12 +49,12 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 void joydefs_config()
 {
 	newmenu_item m[13];
-	int i, i1 = 5, j;
+	int i, i1 = 5;
 	int nitems = 10;
 
-	m[0].type = NM_TYPE_RADIO;  m[0].text = TXT_CONTROL_KEYBOARD; m[0].value = 0; m[0].group = 0;
-	m[1].type = NM_TYPE_RADIO;  m[1].text = TXT_CONTROL_JOYSTICK; m[1].value = 0; m[1].group = 0;
-	m[2].type = NM_TYPE_RADIO;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = 0; m[2].group = 0;
+	m[0].type = NM_TYPE_TEXT;   m[0].text = "";
+	m[1].type = NM_TYPE_CHECK;  m[1].text = TXT_CONTROL_JOYSTICK; m[1].value = Config_control_type.intval&CONTROL_USING_JOYSTICK; m[1].group = 0;
+	m[2].type = NM_TYPE_CHECK;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = Config_control_type.intval&CONTROL_USING_MOUSE; m[2].group = 0;
 	m[3].type = NM_TYPE_TEXT;   m[3].text = "";
 	m[4].type = NM_TYPE_MENU;   m[4].text = "CUSTOMIZE ANALOG CONTROLS";
 	m[5].type = NM_TYPE_TEXT;   m[5].text = "";
@@ -82,21 +64,12 @@ void joydefs_config()
 	m[9].type = NM_TYPE_MENU;   m[9].text = "CUSTOMIZE D2X KEYS";
 
 	do {
-
-		i = Config_control_type.intval;
-		if (i == CONTROL_MOUSE) i = 2;
-		m[i].value = 1;
+		i = 1;
 
 		i1 = newmenu_do1(NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1);
 
+		cvar_setint(&Config_control_type, m[1].value * CONTROL_USING_JOYSTICK + m[2].value * CONTROL_USING_MOUSE);
 		cvar_setint(&Config_joystick_sensitivity, m[6].value);
-
-		for (j = 0; j <= 2; j++)
-			if (m[j].value)
-				cvar_setint(&Config_control_type, j);
-		i = Config_control_type.intval;
-		if (Config_control_type.intval == 2)
-			cvar_setint(&Config_control_type, CONTROL_MOUSE);
 
 		switch (i1) {
 		case 4:

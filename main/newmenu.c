@@ -651,30 +651,15 @@ int check_button_press()
 {
 	int i;
 
-	switch (Config_control_type.intval) {
-	case	CONTROL_JOYSTICK:
-	case	CONTROL_FLIGHTSTICK_PRO:
-	case	CONTROL_THRUSTMASTER_FCS:
-	case	CONTROL_GRAVIS_GAMEPAD:
-		for (i=0; i<4; i++ )	
+	if (Config_control_type.intval&CONTROL_USING_JOYSTICK)
+		for (i=0; i<4; i++ )
 	 		if (joy_get_button_down_cnt(i)>0) return 1;
-		break;
-	case	CONTROL_MOUSE:
-	case	CONTROL_CYBERMAN:
-#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
-		for (i=0; i<3; i++ )	
-			if (mouse_button_down_count(i)>0) return 1;
-		break;
-#endif
-	case	CONTROL_NONE:		//keyboard only
-		#ifdef APPLE_DEMO
-			if (key_checkch())	return 1;			
-		#endif
 
-		break;
-	default:
-		Error("Bad ControlType: %i", Config_control_type.intval);
-	}
+#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
+	if (Config_control_type.intval&CONTROL_USING_MOUSE)
+		for (i=0; i<3; i++ )
+			if (mouse_button_down_count(i)>0) return 1;
+#endif
 
 	return 0;
 }
