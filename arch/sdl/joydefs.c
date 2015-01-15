@@ -74,7 +74,7 @@ void joydefs_config()
 	m[1].type = NM_TYPE_RADIO;  m[1].text = TXT_CONTROL_JOYSTICK; m[1].value = 0; m[1].group = 0;
 	m[2].type = NM_TYPE_RADIO;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = 0; m[2].group = 0;
 	m[3].type = NM_TYPE_TEXT;   m[3].text = "";
-	m[4].type = NM_TYPE_MENU;   m[4].text = TXT_CUST_ABOVE;
+	m[4].type = NM_TYPE_MENU;   m[4].text = "CUSTOMIZE ANALOG CONTROLS";
 	m[5].type = NM_TYPE_TEXT;   m[5].text = "";
 	m[6].type = NM_TYPE_SLIDER; m[6].text = TXT_JOYS_SENSITIVITY; m[6].value = Config_joystick_sensitivity.intval; m[6].min_value = 0; m[6].max_value = 16;
 	m[7].type = NM_TYPE_TEXT;   m[7].text = "";
@@ -100,7 +100,7 @@ void joydefs_config()
 
 		switch (i1) {
 		case 4:
-			kconfig(i, m[i].text);
+			kconfig(1, TXT_AXES);
 			break;
 		case 8:
 			kconfig(0, TXT_KEYBOARD);
