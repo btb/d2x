@@ -134,8 +134,6 @@ ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6,
 //extern void GameLoop(int, int );
 
 extern void transfer_energy_to_shield(fix);
-extern void CyclePrimary(),CycleSecondary(),InitMarkerInput();
-extern ubyte DefiningMarkerMessage;
 extern char CybermouseActive;
 
 control_info Controls;
