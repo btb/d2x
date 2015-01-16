@@ -1232,10 +1232,8 @@ void kconfig(int n, char * title)
 
 	switch(n)	{
 	case 0:kconfig_sub( kc_keyboard, NUM_KEY_CONTROLS, title );break;
-	case 1:
-	case 2:kconfig_sub( kc_other, NUM_OTHER_CONTROLS, title );break;
-	case 3:
-	case 4:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
+	case 1:kconfig_sub( kc_other, NUM_OTHER_CONTROLS, title );break;
+	case 2:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
  	default:
 		Int3();
 		return;
