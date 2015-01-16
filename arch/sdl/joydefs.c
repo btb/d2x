@@ -37,7 +37,7 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 {
 	int oc_type = Config_control_type.intval;
 
-	cvar_setint(&Config_control_type, items[1].value * CONTROL_USING_JOYSTICK + items[2].value * CONTROL_USING_MOUSE);
+	cvar_setint(&Config_control_type, items[1].value | (items[2].value << 1));
 
 	if (oc_type != Config_control_type.intval) {
 		if (Config_control_type.intval&CONTROL_USING_JOYSTICK)
@@ -49,12 +49,12 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 void joydefs_config()
 {
 	newmenu_item m[13];
-	int i, i1 = 5;
+	int i1 = 8;
 	int nitems = 10;
 
 	m[0].type = NM_TYPE_TEXT;   m[0].text = "";
 	m[1].type = NM_TYPE_CHECK;  m[1].text = TXT_CONTROL_JOYSTICK; m[1].value = Config_control_type.intval&CONTROL_USING_JOYSTICK; m[1].group = 0;
-	m[2].type = NM_TYPE_CHECK;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = Config_control_type.intval&CONTROL_USING_MOUSE; m[2].group = 0;
+	m[2].type = NM_TYPE_CHECK;  m[2].text = TXT_CONTROL_MOUSE;    m[2].value = Config_control_type.intval&CONTROL_USING_MOUSE >> 1; m[2].group = 0;
 	m[3].type = NM_TYPE_TEXT;   m[3].text = "";
 	m[4].type = NM_TYPE_MENU;   m[4].text = "CUSTOMIZE ANALOG CONTROLS";
 	m[5].type = NM_TYPE_TEXT;   m[5].text = "";
@@ -64,11 +64,9 @@ void joydefs_config()
 	m[9].type = NM_TYPE_MENU;   m[9].text = "CUSTOMIZE D2X KEYS";
 
 	do {
-		i = 1;
-
 		i1 = newmenu_do1(NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1);
 
-		cvar_setint(&Config_control_type, m[1].value * CONTROL_USING_JOYSTICK + m[2].value * CONTROL_USING_MOUSE);
+		cvar_setint(&Config_control_type, m[1].value | (m[2].value << 1));
 		cvar_setint(&Config_joystick_sensitivity, m[6].value);
 
 		switch (i1) {
