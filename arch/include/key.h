@@ -86,6 +86,9 @@ extern unsigned int key_up_count(int scancode);
 
 extern char * key_text[256];
 
+/* find key bound to text */
+ubyte key_find_binding(char *text);
+
 /* Write key bindings to file */
 void key_write_bindings(CFILE *file);
 

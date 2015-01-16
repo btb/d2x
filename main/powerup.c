@@ -264,7 +264,6 @@ int pick_up_vulcan_ammo(void)
 }
 
 extern void invalidate_escort_goal(void);
-extern char GetKeyValue(char);
 extern void check_to_use_primary(int);
 extern void multi_send_got_flag (char);
 
@@ -552,16 +551,14 @@ int do_powerup(object *obj)
 				if (!(Game_mode & GM_MULTI) )
 					used = pick_up_energy();
 			} else {
-				Players[Player_num].flags |= PLAYER_FLAGS_CONVERTER;
-// DPH: anyone know what the hell this is supposed to do? it's always true =)
-/*				if ((GetKeyValue(54))<255)
-				 {*/
-					sprintf (temp_string,"Energy->Shield converter! (Press %c to use)",key_to_ascii(GetKeyValue(54)));
-			    	powerup_basic(15, 0, 15, 0, temp_string);
-/*				 }
-			   else
-			    	powerup_basic(15, 0, 15, 0, "Energy -> shield converter!"); */
+				ubyte key;
 
+				Players[Player_num].flags |= PLAYER_FLAGS_CONVERTER;
+				if ((key = key_find_binding("+nrgshield"))) {
+					sprintf(temp_string, "Energy->Shield converter! (Press %s to use)", key_text[key]);
+					powerup_basic(15, 0, 15, 0, temp_string);
+				} else
+					powerup_basic(15, 0, 15, 0, "Energy -> shield converter!");
 
 				used=1;
 			}
