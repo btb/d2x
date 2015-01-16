@@ -68,15 +68,15 @@ cvar_t Config_midi_volume       = { "MidiVolume", "8", 1 };
 cvar_t Config_redbook_volume    = { "RedbookVolume", "8", 1 };
 cvar_t Config_detail_level      = { "DetailLevel", "4", 1 };
 cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
-cvar_t Config_control_joystick  = { "Joystick", "0", 1 };
-cvar_t Config_control_mouse     = { "Mouse", "0", 1 };
+cvar_t Config_control_joystick  = { "in_joystick", "0", 1 };
+cvar_t Config_control_mouse     = { "in_mouse", "0", 1 };
 cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
 cvar_t Config_joystick_sensitivity[] = {
 	{ "joy_forwardsensitivity", "8", 1 },
 	{ "joy_pitchsensitivity", "8", 1 },
 	{ "joy_sidesensitivity", "8", 1 },
 	{ "joy_yawsensitivity", "8", 1 },
-	{ "joy_vertsensitivity", "8", 1 },
+	{ "joy_upsensitivity", "8", 1 },
 	{ "joy_banksensitivity", "8", 1 },
 };
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
