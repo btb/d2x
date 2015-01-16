@@ -1411,7 +1411,6 @@ void controls_read_all()
 	int i;
 	int slide_on, bank_on;
 	int dx, dy, dz;
-	int idx, idy;
 	fix ctime;
 	int raw_joy_axis[JOY_MAX_AXES];
 	fix kp, kh;
@@ -1454,7 +1453,7 @@ void controls_read_all()
 
 					raw_joy_axis[i] = joy_get_scaled_reading( raw_joy_axis[i], i );
 
-					if (joy_advaxes[i].value == AXIS_THROTTLE) // If this is the throttle
+					if (joy_advaxes[i].intval == AXIS_THROTTLE) // If this is the throttle
 						joy_null_value = 20;		// Then use a larger dead-zone
 	
 					if (raw_joy_axis[i] > joy_null_value) 
@@ -1515,7 +1514,7 @@ void controls_read_all()
 				Controls.pitch_time = 0;
 		Controls.pitch_time += kp;
 
-		Controls.pitch_time += analog_control[AXIS_PITCH] * Config_joystick_sensitivity.intval / 8;
+		Controls.pitch_time -= analog_control[AXIS_PITCH] * Config_joystick_sensitivity.intval / 8;
 
 	} else
 		Controls.pitch_time = 0;
@@ -1600,7 +1599,7 @@ if (!Player_is_dead)
 
 	Controls.forward_thrust_time += console_control_down_time(CONCNTL_FORWARD);
 	Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
-	Controls.forward_thrust_time += analog_control[AXIS_THROTTLE];
+	Controls.forward_thrust_time -= analog_control[AXIS_THROTTLE];
 
 //----------- Read afterburner_state -------------
 
