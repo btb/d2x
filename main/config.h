@@ -54,6 +54,6 @@ extern cvar_t Config_redbook_volume;
 extern cvar_t Config_control_joystick;
 extern cvar_t Config_control_mouse;
 extern cvar_t Config_channels_reversed;
-extern cvar_t Config_joystick_sensitivity;
+extern cvar_t Config_joystick_sensitivity[];
 
 #endif

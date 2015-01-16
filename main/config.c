@@ -71,7 +71,14 @@ cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
 cvar_t Config_control_joystick  = { "Joystick", "0", 1 };
 cvar_t Config_control_mouse     = { "Mouse", "0", 1 };
 cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
-cvar_t Config_joystick_sensitivity = { "JoystickSensitivity", "8", 1 };
+cvar_t Config_joystick_sensitivity[] = {
+	{ "joy_forwardsensitivity", "8", 1 },
+	{ "joy_pitchsensitivity", "8", 1 },
+	{ "joy_sidesensitivity", "8", 1 },
+	{ "joy_yawsensitivity", "8", 1 },
+	{ "joy_vertsensitivity", "8", 1 },
+	{ "joy_banksensitivity", "8", 1 },
+};
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
 cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
 cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", 1 };
@@ -168,6 +175,8 @@ static int config_initialized;
 
 static void config_init(void)
 {
+	int i;
+
 	/* make sure our cvars are registered */
 	cvar_registervariable(&Config_digi_volume);
 	cvar_registervariable(&Config_midi_volume);
@@ -178,7 +187,8 @@ static void config_init(void)
 	cvar_registervariable(&Config_detail_level);
 	cvar_registervariable(&Config_control_joystick);
 	cvar_registervariable(&Config_control_mouse);
-	cvar_registervariable(&Config_joystick_sensitivity);
+	for (i = 0; i < 6; i++)
+		cvar_registervariable(&Config_joystick_sensitivity[i]);
 	cvar_registervariable(&Config_joystick_min);
 	cvar_registervariable(&Config_joystick_cen);
 	cvar_registervariable(&Config_joystick_max);
@@ -317,7 +327,8 @@ int ReadConfigFile()
 	cvar_setint( &Config_control_joystick, 0 );
 	cvar_setint( &Config_control_mouse, 0 );
 	cvar_setint( &Config_channels_reversed, 0);
-	cvar_setint( &Config_joystick_sensitivity, 8 );
+	for (i = 0; i < 6; i++)
+		cvar_setint( &Config_joystick_sensitivity[i], 8 );
 
 	//set these here in case no cfg file
 	SaveMovieHires = MovieHires.intval;

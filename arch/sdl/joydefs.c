@@ -48,6 +48,33 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 		kc_set_controls();
 }
 
+
+void joydefs_sensitivity(void)
+{
+	newmenu_item m[6];
+	int i1 = 0;
+	int nitems = 6;
+
+	m[0].type = NM_TYPE_SLIDER; m[0].text = TXT_TURN_LR;  m[0].value = Config_joystick_sensitivity[AXIS_TURN-1].intval;      m[0].min_value = 0; m[0].max_value = 16;
+	m[1].type = NM_TYPE_SLIDER; m[1].text = TXT_PITCH_UD; m[1].value = Config_joystick_sensitivity[AXIS_PITCH-1].intval;     m[1].min_value = 0; m[1].max_value = 16;
+	m[2].type = NM_TYPE_SLIDER; m[2].text = TXT_SLIDE_LR; m[2].value = Config_joystick_sensitivity[AXIS_LEFTRIGHT-1].intval; m[2].min_value = 0; m[2].max_value = 16;
+	m[3].type = NM_TYPE_SLIDER; m[3].text = TXT_SLIDE_UD; m[3].value = Config_joystick_sensitivity[AXIS_UPDOWN-1].intval;    m[3].min_value = 0; m[3].max_value = 16;
+	m[4].type = NM_TYPE_SLIDER; m[4].text = TXT_BANK_LR;  m[4].value = Config_joystick_sensitivity[AXIS_BANK-1].intval;      m[4].min_value = 0; m[4].max_value = 16;
+	m[5].type = NM_TYPE_SLIDER; m[5].text = TXT_THROTTLE; m[5].value = Config_joystick_sensitivity[AXIS_THROTTLE-1].intval;  m[5].min_value = 0; m[5].max_value = 16;
+
+	do
+		i1 = newmenu_do1(NULL, TXT_JOYS_SENSITIVITY, nitems, m, NULL, i1);
+	while ( i1 > -1 );
+
+	cvar_setint(&Config_joystick_sensitivity[AXIS_TURN-1],      m[0].value);
+	cvar_setint(&Config_joystick_sensitivity[AXIS_PITCH-1],     m[1].value);
+	cvar_setint(&Config_joystick_sensitivity[AXIS_LEFTRIGHT-1], m[2].value);
+	cvar_setint(&Config_joystick_sensitivity[AXIS_UPDOWN-1],    m[3].value);
+	cvar_setint(&Config_joystick_sensitivity[AXIS_BANK-1],      m[4].value);
+	cvar_setint(&Config_joystick_sensitivity[AXIS_THROTTLE-1],  m[5].value);
+}
+
+
 void joydefs_config()
 {
 	newmenu_item m[13];
@@ -61,7 +88,7 @@ void joydefs_config()
 	m[4].type = NM_TYPE_MENU;   m[4].text = "CUSTOMIZE ANALOG CONTROLS";
 	m[5].type = NM_TYPE_MENU;   m[5].text = "CUSTOMIZE D2X KEYS";
 	m[6].type = NM_TYPE_TEXT;   m[6].text = "";
-	m[7].type = NM_TYPE_SLIDER; m[7].text = TXT_JOYS_SENSITIVITY; m[7].value = Config_joystick_sensitivity.intval; m[7].min_value = 0; m[7].max_value = 16;
+	m[7].type = NM_TYPE_MENU;   m[7].text = TXT_JOYS_SENSITIVITY;
 	m[8].type = NM_TYPE_TEXT;   m[8].text = "";
 
 	do {
@@ -69,12 +96,12 @@ void joydefs_config()
 
 		cvar_setint(&Config_control_joystick, m[0].value);
 		cvar_setint(&Config_control_mouse, m[1].value);
-		cvar_setint(&Config_joystick_sensitivity, m[7].value);
 
 		switch (i1) {
 		case 3: kconfig(0, TXT_KEYBOARD); break;
 		case 4: kconfig(1, TXT_AXES); break;
 		case 5: kconfig(2, "D2X KEYS"); break;
+		case 7: joydefs_sensitivity();
 		}
 
 	} while (i1>-1);

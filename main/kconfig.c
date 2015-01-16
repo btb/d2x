@@ -1472,15 +1472,15 @@ void controls_read_all()
 
 	if (Config_control_joystick.intval)
 		for (i = 0; i < 6; i++)
-			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1);
+			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1) * Config_joystick_sensitivity[joy_advaxes[i].intval-1].intval / 8;
 
 	if (Config_control_mouse.intval) {
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 
-		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1);
-		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1);
-		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1);
+		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[0].intval-1].intval / 8;
+		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[1].intval-1].intval / 8;
+		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[2].intval-1].intval / 8;
 
 	}
 
@@ -1510,7 +1510,7 @@ void controls_read_all()
 				Controls.pitch_time = 0;
 		Controls.pitch_time += kp;
 
-		Controls.pitch_time -= analog_control[AXIS_PITCH] * Config_joystick_sensitivity.intval / 8;
+		Controls.pitch_time -= analog_control[AXIS_PITCH];
 
 	} else
 		Controls.pitch_time = 0;
@@ -1552,7 +1552,7 @@ if (!Player_is_dead)
 				Controls.heading_time = 0;
 		Controls.heading_time += kh;
 
-		Controls.heading_time += analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
+		Controls.heading_time += analog_control[AXIS_TURN];
 
 	} else
 		Controls.heading_time = 0;
@@ -1580,7 +1580,7 @@ if (!Player_is_dead)
 	if ( bank_on )	{
 		Controls.bank_time += console_control_down_time(CONCNTL_LEFT);
 		Controls.bank_time -= console_control_down_time(CONCNTL_RIGHT);
-		Controls.bank_time -= analog_control[AXIS_TURN] * Config_joystick_sensitivity.intval / 8;
+		Controls.bank_time -= analog_control[AXIS_TURN];
 	}
 
 	Controls.bank_time += console_control_down_time(CONCNTL_BANKLEFT);
