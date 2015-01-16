@@ -1437,7 +1437,7 @@ void controls_read_all()
 		if ((ctime < 0) && (LastReadTime > 0))
 # endif
 			LastReadTime = ctime;
-	} else if (Config_control_type.intval&CONTROL_USING_JOYSTICK) {
+	} else if (Config_control_joystick.intval) {
 		LastReadTime = ctime;
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
 
@@ -1472,11 +1472,11 @@ void controls_read_all()
 			joy_axis[i] = 0;
 	}
 
-	if (Config_control_type.intval&CONTROL_USING_JOYSTICK)
+	if (Config_control_joystick.intval)
 		for (i = 0; i < 6; i++)
 			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1);
 
-	if (Config_control_type.intval&CONTROL_USING_MOUSE) {
+	if (Config_control_mouse.intval) {
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 

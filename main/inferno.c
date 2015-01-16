@@ -846,7 +846,7 @@ void check_joystick_calibration()	{
 	int x1, y1, x2, y2, c;
 	fix t1;
 
-	if ( !(Config_control_type.intval&CONTROL_USING_JOYSTICK) )
+	if ( !Config_control_joystick.intval )
 		return;
 
 	joy_get_pos( &x1, &y1 );

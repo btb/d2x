@@ -71,7 +71,8 @@ cvar_t Config_midi_volume       = { "MidiVolume", "8", 1 };
 cvar_t Config_redbook_volume    = { "RedbookVolume", "8", 1 };
 cvar_t Config_detail_level      = { "DetailLevel", "4", 1 };
 cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
-cvar_t Config_control_type      = { "ControlType", "0", 1 };
+cvar_t Config_control_joystick  = { "Joystick", "0", 1 };
+cvar_t Config_control_mouse     = { "Mouse", "0", 1 };
 cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
 cvar_t Config_joystick_sensitivity = { "JoystickSensitivity", "8", 1 };
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
@@ -178,7 +179,8 @@ static void config_init(void)
 	cvar_registervariable(&Config_channels_reversed);
 	cvar_registervariable(&Config_gamma_level);
 	cvar_registervariable(&Config_detail_level);
-	cvar_registervariable(&Config_control_type);
+	cvar_registervariable(&Config_control_joystick);
+	cvar_registervariable(&Config_control_mouse);
 	cvar_registervariable(&Config_joystick_sensitivity);
 	cvar_registervariable(&Config_joystick_min);
 	cvar_registervariable(&Config_joystick_cen);
@@ -315,7 +317,8 @@ int ReadConfigFile()
 	cvar_setint( &Config_digi_volume, 8 );
 	cvar_setint( &Config_midi_volume, 8 );
 	cvar_setint( &Config_redbook_volume, 8 );
-	cvar_setint( &Config_control_type, 0 );
+	cvar_setint( &Config_control_joystick, 0 );
+	cvar_setint( &Config_control_mouse, 0 );
 	cvar_setint( &Config_channels_reversed, 0);
 	cvar_setint( &Config_joystick_sensitivity, 8 );
 

@@ -95,10 +95,7 @@ void joydefs_calibrate()
 
 	joydefs_calibrate_flag = 0;
 
-	if ( (Config_control_type.intval != CONTROL_JOYSTICK) &&
-		 (Config_control_type.intval != CONTROL_FLIGHTSTICK_PRO) &&
-		 (Config_control_type.intval != CONTROL_THRUSTMASTER_FCS) &&
-		 (Config_control_type.intval != CONTROL_GRAVIS_GAMEPAD) )
+	if ( (Config_control_joystick.intval )
 		return;
 
 	joy_get_cal_vals(org_axis_min, org_axis_center, org_axis_max);

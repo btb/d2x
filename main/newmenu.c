@@ -651,12 +651,12 @@ int check_button_press()
 {
 	int i;
 
-	if (Config_control_type.intval&CONTROL_USING_JOYSTICK)
+	if (Config_control_joystick.intval)
 		for (i=0; i<4; i++ )
 	 		if (joy_get_button_down_cnt(i)>0) return 1;
 
 #ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
-	if (Config_control_type.intval&CONTROL_USING_MOUSE)
+	if (Config_control_mouse.intval)
 		for (i=0; i<3; i++ )
 			if (mouse_button_down_count(i)>0) return 1;
 #endif
