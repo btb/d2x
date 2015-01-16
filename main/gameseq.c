@@ -1903,7 +1903,7 @@ void ShowLevelIntro(int level_num)
 			{
 				for (i=0;i<NUM_INTRO_MOVIES;i++)
 				{
-					if (intro_movie[i].level_num == level_num)
+					if (!Skip_briefing_screens && intro_movie[i].level_num == level_num)
 					{
 						Screen_mode = -1;
 						PlayMovie(intro_movie[i].movie_name,MOVIE_REQUIRED);
