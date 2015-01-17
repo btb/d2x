@@ -221,9 +221,6 @@ int gr_set_mode(uint32_t mode)
 	gr_set_current_canvas(NULL);
 	//gr_enable_default_palette_loading();
 
-//added on 9/30/98 by Matt Mueller to hide the mouse if its over the game window
-	SDL_ShowCursor(0);
-//end addition -MM
 //--moved up--added on 9/30/98 by Matt Mueller to set the title bar.  Woohoo!
 //--moved up--	SDL_WM_SetCaption(DESCENT_VERSION " " D1X_DATE, NULL);
 //--moved up--end addition -MM

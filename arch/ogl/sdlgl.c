@@ -92,7 +92,6 @@ int ogl_init_window(int x, int y)
 	{
 		Error("Could not set %dx%dx%d opengl video mode\n", x, y, bpp);
 	}
-	SDL_ShowCursor(0);
 
 	curx=x;cury=y;curfull=ogl_fullscreen;
 	gl_initialized=1;
@@ -103,7 +102,6 @@ int ogl_init_window(int x, int y)
 void ogl_destroy_window(void){
 	if (gl_initialized){
 		ogl_smash_texture_list_internal();
-		SDL_ShowCursor(1);
 		//gl_initialized=0;
 		//well..SDL doesn't really let you kill the window.. so we just need to wait for sdl_quit
 	}

@@ -650,6 +650,8 @@ void game_init_render_buffers(int screen_mode, int render_w, int render_h, int r
 //if we can't have popups over the game screen, switch to menu mode.
 void set_popup_screen(void)
 {
+	mouse_set_mode(0);
+	newmenu_show_cursor();
 	//WIN(LoadCursorWin(MOUSE_DEFAULT_CURSOR));
 
 #ifndef OGL // always have to switch to menu mode
@@ -715,6 +717,9 @@ int set_screen_mode(int sm)
 			FontHires = FontHiresAvailable && MenuHires;
 
 		}
+		mouse_set_mode(0);
+		newmenu_show_cursor();
+
 		break;
 
 	case SCREEN_GAME:
@@ -774,6 +779,9 @@ int set_screen_mode(int sm)
 		}
 
 		CON_InitGFX(grd_curscreen->sc_w, grd_curscreen->sc_h / 2);
+
+		mouse_set_mode(1);
+		newmenu_hide_cursor();
 
 		break;
 	#ifdef EDITOR
@@ -2052,6 +2060,11 @@ void game()
 			if ( (keyd_time_when_last_pressed + (F1_0 * 60)) < timer_get_fixed_seconds() )		// idle in game for 1 minutes means exit
 				longjmp(LeaveGame,0);
 			#endif
+
+			if (VR_screen_flags & VRF_COMPATIBLE_MENUS) {
+				mouse_set_mode(1);
+				newmenu_hide_cursor();
+			}
 		}
 	}
 

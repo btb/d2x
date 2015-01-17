@@ -789,14 +789,7 @@ int main(int argc, char *argv[])
 				keyd_editor_mode = 0;
 			#endif
 
-			/* keep the mouse from wandering */
-			if (Config_control_mouse.intval)
-				mouse_set_mode(1);
-
 			game();
-
-			/* give control back to the WM */
-			mouse_set_mode(0);
 
 			if ( Function_mode == FMODE_MENU )
 				songs_play_song( SONG_TITLE, 1 );

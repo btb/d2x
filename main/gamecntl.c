@@ -494,9 +494,6 @@ int do_game_pause()
 	show_boxed_message(Pause_msg=msg);		  //TXT_PAUSE);
 	gr_update();
 
-	/* give control back to the WM */
-	mouse_set_mode(0);
-
 	while (Game_paused) 
 	{
 		int screen_changed;
@@ -521,12 +518,10 @@ int do_game_pause()
 		}
 	}
 
-	/* keep the mouse from wandering */
-	if (Config_control_mouse.intval)
-		mouse_set_mode(1);
-
 	if (VR_screen_flags & VRF_COMPATIBLE_MENUS) {
 		clear_boxed_message();
+		mouse_set_mode(1);
+		newmenu_hide_cursor();
 	}
 
 	game_flush_inputs();
