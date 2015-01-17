@@ -12,7 +12,7 @@ typedef struct cvar_s
 	char *name;
 	char *string;
 	bool archive;
-	float value;
+	fix value;
 	int intval;
 	struct cvar_s *next;
 } cvar_t;
@@ -25,6 +25,7 @@ void cvar_registervariable (cvar_t *cvar);
 void cvar_set_cvar(cvar_t *cvar, char *value);
 void cvar_set_cvarf(cvar_t *cvar, char *fmt, ...);
 #define cvar_setint(cvar, x) cvar_set_cvarf((cvar), "%d", (x))
+#define cvar_setfl(cvar, x) cvar_set_cvarf((cvar), "%f", (x))
 #define cvar_toggle(cvar) cvar_setint((cvar), !(cvar)->intval)
 
 /* Equivalent to typing <var_name> <value> at the console */
@@ -37,7 +38,7 @@ cvar_t *cvar_find(char *cvar_name);
 char *cvar_complete(char *text);
 
 /* Get a CVar's value */
-float cvar(char *cvar_name);
+fix cvar(char *cvar_name);
 
 /* Write archive cvars to file */
 void cvar_write(CFILE *file);

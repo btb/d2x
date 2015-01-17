@@ -133,7 +133,7 @@ void cvar_registervariable (cvar_t *cvar)
 	stringval = cvar->string;
 
 	cvar->string = d_strdup(stringval);
-	cvar->value = strtod(cvar->string, (char **) NULL);
+	cvar->value = fl2f(strtod(cvar->string, (char **) NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	cvar->next = NULL;
 
@@ -157,7 +157,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 
 	d_free(cvar->string);
 	cvar->string = d_strdup(value);
-	cvar->value = strtod(cvar->string, (char **) NULL);
+	cvar->value = fl2f(strtod(cvar->string, (char **) NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	con_printf(CON_VERBOSE, "%s: %s\n", cvar->name, cvar->string);
 }
@@ -195,7 +195,7 @@ void cvar_set (char *cvar_name, char *value)
 
 
 /* Get a CVar's value */
-float cvar (char *cvar_name)
+fix cvar (char *cvar_name)
 {
 	cvar_t *cvar;
 

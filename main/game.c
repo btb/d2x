@@ -190,7 +190,7 @@ cvar_t Cockpit_mode = { "CockpitMode", "0", 1 }; // CM_FULL_COCKPIT, see game.h 
 int Cockpit_mode_save=-1;					//set while in letterbox or rear view, or -1
 int force_cockpit_redraw=0;
 
-float oldfov;
+fix oldfov;
 cvar_t r_framerate = {"show_fps", "0"};
 cvar_t cg_fov = {"fov", "30"};
 
@@ -1970,12 +1970,12 @@ void game()
 			if (oldfov != cg_fov.value)
 			{
 				oldfov = cg_fov.value;
-				if (cg_fov.value < 1)
-					cvar_set("fov", "1");
-				if (cg_fov.value > 170)
-					cvar_set("fov", "170");
-				Render_zoom = fl2f(cg_fov.value * M_PI / 180); // convert to radians
-				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", cg_fov.value, Render_zoom);
+				if (cg_fov.value < F1_0)
+					cvar_setint(&cg_fov, 1);
+				if (cg_fov.value > 170 * F1_0)
+					cvar_setint(&cg_fov, 170);
+				Render_zoom = cg_fov.value * M_PI / 180; // convert to radians
+				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", f2fl(cg_fov.value), Render_zoom);
 			}
 
 			//if the player is taking damage, give up guided missile control
