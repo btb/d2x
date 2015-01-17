@@ -1445,13 +1445,10 @@ void controls_read_all()
 #ifndef SDL_INPUT
 			if (channel_masks&(1<<i))	{
 #endif
-				int joy_null_value = 10;
+					int joy_null_value = Config_joystick_deadzone[joy_advaxes[i].intval-1].intval;
 
 					raw_joy_axis[i] = joy_get_scaled_reading( raw_joy_axis[i], i );
 
-					if (joy_advaxes[i].intval == AXIS_THROTTLE) // If this is the throttle
-						joy_null_value = 20;		// Then use a larger dead-zone
-	
 					if (raw_joy_axis[i] > joy_null_value) 
 					  raw_joy_axis[i] = ((raw_joy_axis[i]-joy_null_value)*128)/(128-joy_null_value);
 				  	else if (raw_joy_axis[i] < -joy_null_value)
@@ -1478,10 +1475,9 @@ void controls_read_all()
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 
-		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[0].intval-1].intval / 8;
-		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[1].intval-1].intval / 8;
-		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_joystick_sensitivity[mouse_axes[2].intval-1].intval / 8;
-
+		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[0].intval-1].intval / 8;
+		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[1].intval-1].intval / 8;
+		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[2].intval-1].intval / 8;
 	}
 
 //------------- Read slide_on -------------

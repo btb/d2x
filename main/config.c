@@ -79,6 +79,22 @@ cvar_t Config_joystick_sensitivity[] = {
 	{ "joy_upsensitivity", "8", 1 },
 	{ "joy_banksensitivity", "8", 1 },
 };
+cvar_t Config_joystick_deadzone[] = {
+	{ "joy_forwardthreshold", "20", 1 },
+	{ "joy_pitchthreshold", "10", 1 },
+	{ "joy_sidethreshold", "10", 1 },
+	{ "joy_yawthreshold", "10", 1 },
+	{ "joy_upthreshold", "10", 1 },
+	{ "joy_bankthreshold", "10", 1 },
+};
+cvar_t Config_mouse_sensitivity[] = {
+	{ "m_forward", "8", 1 },
+	{ "m_pitch", "8", 1 },
+	{ "m_side", "8", 1 },
+	{ "m_yaw", "8", 1 },
+	{ "m_up", "8", 1 },
+	{ "m_bank", "8", 1 },
+};
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
 cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
 cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", 1 };
@@ -189,6 +205,10 @@ static void config_init(void)
 	cvar_registervariable(&Config_control_mouse);
 	for (i = 0; i < 6; i++)
 		cvar_registervariable(&Config_joystick_sensitivity[i]);
+	for (i = 0; i < 6; i++)
+		cvar_registervariable(&Config_joystick_deadzone[i]);
+	for (i = 0; i < 6; i++)
+		cvar_registervariable(&Config_mouse_sensitivity[i]);
 	cvar_registervariable(&Config_joystick_min);
 	cvar_registervariable(&Config_joystick_cen);
 	cvar_registervariable(&Config_joystick_max);
