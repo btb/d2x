@@ -72,28 +72,28 @@ cvar_t Config_control_joystick  = { "in_joystick", "0", 1 };
 cvar_t Config_control_mouse     = { "in_mouse", "0", 1 };
 cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
 cvar_t Config_joystick_sensitivity[] = {
-	{ "joy_forwardsensitivity", "8", 1 },
-	{ "joy_pitchsensitivity", "8", 1 },
-	{ "joy_sidesensitivity", "8", 1 },
-	{ "joy_yawsensitivity", "8", 1 },
-	{ "joy_upsensitivity", "8", 1 },
-	{ "joy_banksensitivity", "8", 1 },
+	{ "joy_forwardsensitivity", "1.0", 1 },
+	{ "joy_pitchsensitivity", "1.0", 1 },
+	{ "joy_sidesensitivity", "1.0", 1 },
+	{ "joy_yawsensitivity", "1.0", 1 },
+	{ "joy_upsensitivity", "1.0", 1 },
+	{ "joy_banksensitivity", "1.0", 1 },
 };
 cvar_t Config_joystick_deadzone[] = {
-	{ "joy_forwardthreshold", "20", 1 },
-	{ "joy_pitchthreshold", "10", 1 },
-	{ "joy_sidethreshold", "10", 1 },
-	{ "joy_yawthreshold", "10", 1 },
-	{ "joy_upthreshold", "10", 1 },
-	{ "joy_bankthreshold", "10", 1 },
+	{ "joy_forwardthreshold", "0.16", 1 },
+	{ "joy_pitchthreshold", "0.08", 1 },
+	{ "joy_sidethreshold", "0.08", 1 },
+	{ "joy_yawthreshold", "0.08", 1 },
+	{ "joy_upthreshold", "0.08", 1 },
+	{ "joy_bankthreshold", "0.08", 1 },
 };
 cvar_t Config_mouse_sensitivity[] = {
-	{ "m_forward", "8", 1 },
-	{ "m_pitch", "8", 1 },
-	{ "m_side", "8", 1 },
-	{ "m_yaw", "8", 1 },
-	{ "m_up", "8", 1 },
-	{ "m_bank", "8", 1 },
+	{ "m_forward", "1.0", 1 },
+	{ "m_pitch", "1.0", 1 },
+	{ "m_side", "1.0", 1 },
+	{ "m_yaw", "1.0", 1 },
+	{ "m_up", "1.0", 1 },
+	{ "m_bank", "1.0", 1 },
 };
 cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
 cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
@@ -347,8 +347,6 @@ int ReadConfigFile()
 	cvar_setint( &Config_control_joystick, 0 );
 	cvar_setint( &Config_control_mouse, 0 );
 	cvar_setint( &Config_channels_reversed, 0);
-	for (i = 0; i < 6; i++)
-		cvar_setint( &Config_joystick_sensitivity[i], 8 );
 
 	//set these here in case no cfg file
 	SaveMovieHires = MovieHires.intval;

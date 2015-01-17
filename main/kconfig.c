@@ -1445,7 +1445,7 @@ void controls_read_all()
 #ifndef SDL_INPUT
 			if (channel_masks&(1<<i))	{
 #endif
-					int joy_null_value = Config_joystick_deadzone[joy_advaxes[i].intval-1].intval;
+					int joy_null_value = f2i(Config_joystick_deadzone[joy_advaxes[i].intval-1].intval * 128);
 
 					raw_joy_axis[i] = joy_get_scaled_reading( raw_joy_axis[i], i );
 
@@ -1469,15 +1469,15 @@ void controls_read_all()
 
 	if (Config_control_joystick.intval)
 		for (i = 0; i < 6; i++)
-			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1) * Config_joystick_sensitivity[joy_advaxes[i].intval-1].intval / 8;
+			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1) * Config_joystick_sensitivity[joy_advaxes[i].intval-1].value;
 
 	if (Config_control_mouse.intval) {
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 
-		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[0].intval-1].intval / 8;
-		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[1].intval-1].intval / 8;
-		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[2].intval-1].intval / 8;
+		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[0].intval-1].value;
+		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[1].intval-1].value;
+		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[2].intval-1].value;
 	}
 
 //------------- Read slide_on -------------

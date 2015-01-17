@@ -55,23 +55,23 @@ void joydefs_sensitivity(void)
 	int i1 = 0;
 	int nitems = 6;
 
-	m[0].type = NM_TYPE_SLIDER; m[0].text = TXT_TURN_LR;  m[0].value = Config_joystick_sensitivity[AXIS_TURN-1].intval;      m[0].min_value = 0; m[0].max_value = 16;
-	m[1].type = NM_TYPE_SLIDER; m[1].text = TXT_PITCH_UD; m[1].value = Config_joystick_sensitivity[AXIS_PITCH-1].intval;     m[1].min_value = 0; m[1].max_value = 16;
-	m[2].type = NM_TYPE_SLIDER; m[2].text = TXT_SLIDE_LR; m[2].value = Config_joystick_sensitivity[AXIS_LEFTRIGHT-1].intval; m[2].min_value = 0; m[2].max_value = 16;
-	m[3].type = NM_TYPE_SLIDER; m[3].text = TXT_SLIDE_UD; m[3].value = Config_joystick_sensitivity[AXIS_UPDOWN-1].intval;    m[3].min_value = 0; m[3].max_value = 16;
-	m[4].type = NM_TYPE_SLIDER; m[4].text = TXT_BANK_LR;  m[4].value = Config_joystick_sensitivity[AXIS_BANK-1].intval;      m[4].min_value = 0; m[4].max_value = 16;
-	m[5].type = NM_TYPE_SLIDER; m[5].text = TXT_THROTTLE; m[5].value = Config_joystick_sensitivity[AXIS_THROTTLE-1].intval;  m[5].min_value = 0; m[5].max_value = 16;
+	m[0].type = NM_TYPE_SLIDER; m[0].text = TXT_TURN_LR;  m[0].value = f2i(8 * Config_joystick_sensitivity[AXIS_TURN-1].value);      m[0].min_value = 0; m[0].max_value = 16;
+	m[1].type = NM_TYPE_SLIDER; m[1].text = TXT_PITCH_UD; m[1].value = f2i(8 * Config_joystick_sensitivity[AXIS_PITCH-1].value);     m[1].min_value = 0; m[1].max_value = 16;
+	m[2].type = NM_TYPE_SLIDER; m[2].text = TXT_SLIDE_LR; m[2].value = f2i(8 * Config_joystick_sensitivity[AXIS_LEFTRIGHT-1].value); m[2].min_value = 0; m[2].max_value = 16;
+	m[3].type = NM_TYPE_SLIDER; m[3].text = TXT_SLIDE_UD; m[3].value = f2i(8 * Config_joystick_sensitivity[AXIS_UPDOWN-1].value);    m[3].min_value = 0; m[3].max_value = 16;
+	m[4].type = NM_TYPE_SLIDER; m[4].text = TXT_BANK_LR;  m[4].value = f2i(8 * Config_joystick_sensitivity[AXIS_BANK-1].value);      m[4].min_value = 0; m[4].max_value = 16;
+	m[5].type = NM_TYPE_SLIDER; m[5].text = TXT_THROTTLE; m[5].value = f2i(8 * Config_joystick_sensitivity[AXIS_THROTTLE-1].value);  m[5].min_value = 0; m[5].max_value = 16;
 
 	do
 		i1 = newmenu_do1(NULL, TXT_JOYS_SENSITIVITY, nitems, m, NULL, i1);
 	while ( i1 > -1 );
 
-	cvar_setint(&Config_joystick_sensitivity[AXIS_TURN-1],      m[0].value);
-	cvar_setint(&Config_joystick_sensitivity[AXIS_PITCH-1],     m[1].value);
-	cvar_setint(&Config_joystick_sensitivity[AXIS_LEFTRIGHT-1], m[2].value);
-	cvar_setint(&Config_joystick_sensitivity[AXIS_UPDOWN-1],    m[3].value);
-	cvar_setint(&Config_joystick_sensitivity[AXIS_BANK-1],      m[4].value);
-	cvar_setint(&Config_joystick_sensitivity[AXIS_THROTTLE-1],  m[5].value);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_TURN-1],      m[0].value / 8.0);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_PITCH-1],     m[1].value / 8.0);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_LEFTRIGHT-1], m[2].value / 8.0);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_UPDOWN-1],    m[3].value / 8.0);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_BANK-1],      m[4].value / 8.0);
+	cvar_setfl(&Config_joystick_sensitivity[AXIS_THROTTLE-1],  m[5].value / 8.0);
 }
 
 
