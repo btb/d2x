@@ -241,9 +241,6 @@ void print_commandline_help()
 //	printf( "  -disallowreboot %s\n","FIXME: Undocumented");
 //	printf( "  -dynamicsockets %s\n","FIXME: Undocumented");
 //	printf( "  -forcegfx       %s\n","FIXME: Undocumented");
-#ifdef SDL_INPUT
-	printf( "  -grabmouse      %s\n","Keeps the mouse from wandering out of the window");
-#endif
 //	printf( "  -hw_3dacc       %s\n","FIXME: Undocumented");
 #ifndef RELEASE
 	printf( "  -invulnerability %s\n","Make yourself invulnerable");
@@ -792,19 +789,14 @@ int main(int argc, char *argv[])
 				keyd_editor_mode = 0;
 			#endif
 
-#ifdef SDL_INPUT
-			/* keep the mouse from wandering in SDL */
-			if (FindArg("-grabmouse"))
-			    SDL_WM_GrabInput(SDL_GRAB_ON);
-#endif
+			/* keep the mouse from wandering */
+			if (Config_control_mouse.intval)
+				mouse_set_mode(1);
 
 			game();
 
-#ifdef SDL_INPUT
 			/* give control back to the WM */
-			if (FindArg("-grabmouse"))
-			    SDL_WM_GrabInput(SDL_GRAB_OFF);
-#endif
+			mouse_set_mode(0);
 
 			if ( Function_mode == FMODE_MENU )
 				songs_play_song( SONG_TITLE, 1 );

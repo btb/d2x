@@ -494,11 +494,8 @@ int do_game_pause()
 	show_boxed_message(Pause_msg=msg);		  //TXT_PAUSE);
 	gr_update();
 
-#ifdef SDL_INPUT
 	/* give control back to the WM */
-	if (FindArg("-grabmouse"))
-	    SDL_WM_GrabInput(SDL_GRAB_OFF);
-#endif
+	mouse_set_mode(0);
 
 	while (Game_paused) 
 	{
@@ -524,11 +521,9 @@ int do_game_pause()
 		}
 	}
 
-#ifdef SDL_INPUT
-	/* keep the mouse from wandering in SDL */
-	if (FindArg("-grabmouse"))
-	    SDL_WM_GrabInput(SDL_GRAB_ON);
-#endif
+	/* keep the mouse from wandering */
+	if (Config_control_mouse.intval)
+		mouse_set_mode(1);
 
 	if (VR_screen_flags & VRF_COMPATIBLE_MENUS) {
 		clear_boxed_message();

@@ -95,5 +95,7 @@ extern void mouse_get_cyberman_pos( int *x, int *y );
 // Returns 1 if this button is currently down
 extern int mouse_button_state(int button);
 
+// Take mouse control away from the window manager or not
+extern int mouse_set_mode(int i);
 
 #endif

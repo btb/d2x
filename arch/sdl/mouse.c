@@ -171,3 +171,17 @@ int mouse_button_state(int button)
 	event_poll();
 	return keyd_pressed[KEY_MB1 + button];
 }
+
+
+int mouse_set_mode(int i)
+{
+	SDL_GrabMode old;
+
+	old = SDL_WM_GrabInput(SDL_GRAB_QUERY);
+	if (i)
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+	else
+		SDL_WM_GrabInput(SDL_GRAB_OFF);
+
+	return (old == SDL_GRAB_ON);
+}
