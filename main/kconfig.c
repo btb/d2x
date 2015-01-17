@@ -1581,7 +1581,7 @@ if (!Player_is_dead)
 
 	Controls.bank_time += console_control_down_time(CONCNTL_BANKLEFT);
 	Controls.bank_time -= console_control_down_time(CONCNTL_BANKRIGHT);
-	Controls.bank_time += analog_control[AXIS_BANK];
+	Controls.bank_time -= analog_control[AXIS_BANK];
 
 // the following "if" added by WraithX, 4/14/00
 // done so that dead players can't move
