@@ -332,18 +332,8 @@ void arch_init() {
         key_init();
         if (!FindArg( "-nomouse" ))     {
                 con_printf(CON_VERBOSE, "\n%s", TXT_VERBOSE_4);
-                if (FindArg( "-nocyberman" ))
-			// added/edited on 1/13/00 by Victor Rachels to display mouse init errors
-			{
-				if(!mouse_init(0))
-					con_printf(CON_NORMAL, "\nError initializing mouse.\n");
-			}
-			else
-			{
 				if(!mouse_init(1))
 					con_printf(CON_NORMAL, "\nError initializing mouse.\n");
-			}
-			// end this section addition - VR
         } else {
                 con_printf(CON_VERBOSE, "\n%s", TXT_VERBOSE_5);
         }

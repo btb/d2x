@@ -59,14 +59,10 @@ extern cvar_t mouse_invert[];
 
 
 //========================================================================
-// Check for mouse driver, reset driver if installed. returns number of
-// buttons if driver is present.
+// Check for mouse driver, reset driver if installed.
 
-#ifdef SVGALIB_INPUT
-extern int d_mouse_init(int enable_cyberman); /* conflict with <vgamouse.h> */
-#else
-extern int mouse_init(int enable_cyberman);
-#endif
+extern void d_mouse_init(void);
+
 /* changed from int to void */
 extern void mouse_set_limits( int x1, int y1, int x2, int y2 );
 extern void mouse_flush();	// clears all mice events...
@@ -84,7 +80,6 @@ extern void mouse_get_pos( int *x, int *y );
 extern void mouse_get_delta( int *dx, int *dy, int *dz );
 extern int mouse_get_btns();
 extern void mouse_set_pos( int x, int y);
-extern void mouse_get_cyberman_pos( int *x, int *y );
 
 // Returns how long this button has been down since last call.
 #define mouse_button_down_time(button) key_down_time(KEY_MB1 + (button))

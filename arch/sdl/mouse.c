@@ -160,10 +160,6 @@ int mouse_get_btns()
 	return status;
 }
 
-void mouse_get_cyberman_pos( int *x, int *y )
-{
-}
-
 
 // Returns 1 if this button is currently down
 int mouse_button_state(int button)

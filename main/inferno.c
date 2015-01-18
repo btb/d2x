@@ -133,9 +133,6 @@ int Screen_mode=-1;					//game screen or editor screen?
 
 int WVIDEO_running=0;		//debugger can set to 1 if running
 
-//--unused-- int Cyberman_installed=0;			// SWIFT device present
-ubyte CybermouseActive=0;
-
 #ifdef __WATCOMC__
 int __far descent_critical_error_handler( unsigned deverr, unsigned errcode, unsigned __far * devhdr );
 #endif
@@ -259,9 +256,6 @@ void print_commandline_help()
 //	printf( "  -memdbg         %s\n","FIXME: Undocumented");
 //	printf( "  -monodebug      %s\n","FIXME: Undocumented");
 	printf( "  -nocdrom        %s\n","FIXME: Undocumented");
-#ifdef __DJGPP__
-	printf( "  -nocyberman     %s\n","FIXME: Undocumented");
-#endif
 #ifndef NDEBUG
 	printf( "  -nofade         %s\n","Disable fades");
 #endif
@@ -298,9 +292,6 @@ void print_commandline_help()
 //	printf( "  -tsengdebug2    %s\n","FIXME: Undocumented");
 //	printf( "  -tsengdebug3    %s\n","FIXME: Undocumented");
 //	printf( "  -vidram         %s\n","FIXME: Undocumented");
-	printf( "  -xcontrol       %s\n","FIXME: Undocumented");
-	printf( "  -xname          %s\n","FIXME: Undocumented");
-	printf( "  -xver           %s\n","FIXME: Undocumented");
 	printf( "  -tmap <t>       %s\n","select texmapper to use (c,fp,i386,pent,ppro)");
 #ifdef __MSDOS__
 	printf( "  -<X>x<Y>        %s\n", "Change screen resolution. Options:");
@@ -635,11 +626,6 @@ int main(int argc, char *argv[])
 //end addition -MM
 
 	kconfig_init();
-
-	i = FindArg( "-xcontrol" );
-	if ( i > 0 )	{
-		kconfig_init_external_controls( strtol(Args[i+1], NULL, 0), strtol(Args[i+2], NULL, 0) );
-	}
 
 	con_printf(CON_VERBOSE, "\n%s\n\n", TXT_INITIALIZING_GRAPHICS);
 	if (FindArg("-nofade"))

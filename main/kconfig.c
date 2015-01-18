@@ -134,7 +134,6 @@ ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6,
 //extern void GameLoop(int, int );
 
 extern void transfer_energy_to_shield(fix);
-extern char CybermouseActive;
 
 control_info Controls;
 
@@ -358,7 +357,6 @@ void kc_next_joyaxis(kc_item *item);  //added by WraithX on 11/22/00
 void kc_change_joyaxis( kc_item * item );
 void kc_change_mouseaxis( kc_item * item );
 void kc_change_invert( kc_item * item );
-void kconfig_read_external_controls( void );
 
 int kconfig_is_axes_used(int axis)
 {
@@ -1351,40 +1349,7 @@ fix	LastReadTime = 0;
 
 fix	joy_axis[JOY_MAX_AXES];
 
-ubyte 			kc_use_external_control = 0;
-ubyte			kc_enable_external_control = 0;
-ubyte 			kc_external_intno = 0;
-ext_control_info	*kc_external_control = NULL;
-char			*kc_external_name = NULL;
-ubyte			kc_external_version = 0;
 extern int Automap_active;
-
-void kconfig_init_external_controls(int intno, int address)
-{
-	int i;
-	kc_external_intno = intno;
-	kc_external_control	= (ext_control_info *)address;
-	kc_use_external_control = 1;
-	kc_enable_external_control  = 1;
-
-	i = FindArg ( "-xname" );
-	if ( i )	
-		kc_external_name = Args[i+1];
-	else
-		kc_external_name = "External Controller";
-
-   for (i=0;i<strlen (kc_external_name);i++)
-    if (kc_external_name[i]=='_')
-	  kc_external_name[i]=' '; 
-
-	i = FindArg ( "-xver" );
-	if ( i )
-		kc_external_version = atoi(Args[i+1]);
-	
-	printf( "%s int: 0x%x, data: 0x%p, ver:%d\n", kc_external_name, kc_external_intno, kc_external_control, kc_external_version );
-
-}
-
 
 fix Next_toggle_time[3]={0,0,0};
 
@@ -1691,10 +1656,6 @@ if (!Player_is_dead)
 
 #if 0
 	read_head_tracker();
-
-	// Read external controls
-	if (kc_use_external_control || CybermouseActive)
-		kconfig_read_external_controls();
 #endif
 
 //----------- Clamp values between -FrameTime and FrameTime
@@ -1817,201 +1778,3 @@ void kconfig_center_headset()
 }
 
 #endif // end of #if for kconfig_center_headset
-
-void CybermouseAdjust ()
- {
-/*	if ( Player_num > -1 )	{
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_LEVELLING);	// Turn off leveling to nearest side.
-		cvar_setint(&Auto_leveling_on, 0);
-
-		if ( kc_external_version > 0 ) {		
-			vms_matrix tempm, ViewMatrix;
-			vms_angvec * Kconfig_abs_movement;
-			char * oem_message;
-	
-			Kconfig_abs_movement = (vms_angvec *)((uint)kc_external_control + sizeof(control_info));
-	
-			if ( Kconfig_abs_movement->p || Kconfig_abs_movement->b || Kconfig_abs_movement->h )	{
-				vm_angles_2_matrix(&tempm,Kconfig_abs_movement);
-				vm_matrix_x_matrix(&ViewMatrix,&Objects[Players[Player_num].objnum].orient,&tempm);
-				Objects[Players[Player_num].objnum].orient = ViewMatrix;		
-			}
-			oem_message = (char *)((uint)Kconfig_abs_movement + sizeof(vms_angvec));
-			if (oem_message[0] != '\0' )
-				HUD_init_message( oem_message );
-		}
-	}*/
-
-	Controls.pitch_time += fixmul(kc_external_control->pitch_time,FrameTime);						
-	Controls.vertical_thrust_time += fixmul(kc_external_control->vertical_thrust_time,FrameTime);
-	Controls.heading_time += fixmul(kc_external_control->heading_time,FrameTime);
-	Controls.sideways_thrust_time += fixmul(kc_external_control->sideways_thrust_time ,FrameTime);
-	Controls.bank_time += fixmul(kc_external_control->bank_time ,FrameTime);
-	Controls.forward_thrust_time += fixmul(kc_external_control->forward_thrust_time ,FrameTime);
-//	Controls.rear_view_down_count += kc_external_control->rear_view_down_count;	
-//	Controls.rear_view_down_state |= kc_external_control->rear_view_down_state;	
-	Controls.fire_primary_down_count += kc_external_control->fire_primary_down_count;
-	Controls.fire_primary_state |= kc_external_control->fire_primary_state;
-	Controls.fire_secondary_state |= kc_external_control->fire_secondary_state;
-	Controls.fire_secondary_down_count += kc_external_control->fire_secondary_down_count;
-	Controls.fire_flare_down_count += kc_external_control->fire_flare_down_count;
-	Controls.drop_bomb_down_count += kc_external_control->drop_bomb_down_count;	
-//	Controls.automap_down_count += kc_external_control->automap_down_count;
-// 	Controls.automap_state |= kc_external_control->automap_state;
-  } 
-
-
-#if 0 // unused
-extern object *obj_find_first_of_type (int);
-void kconfig_read_external_controls()
-{
-	//union REGS r;
-   int i;
-
-	if ( !kc_enable_external_control ) return;
-
-	if ( kc_external_version == 0 ) 
-		memset( kc_external_control, 0, sizeof(ext_control_info));
-	else if ( kc_external_version > 0 ) 	{
-    	
-		if (kc_external_version>=4)
-			memset( kc_external_control, 0, sizeof(advanced_ext_control_info));
-      else if (kc_external_version>0)     
-			memset( kc_external_control, 0, sizeof(ext_control_info)+sizeof(vms_angvec) + 64 );
-		else if (kc_external_version>2)
-			memset( kc_external_control, 0, sizeof(ext_control_info)+sizeof(vms_angvec) + 64 + sizeof(vms_vector) + sizeof(vms_matrix) +4 );
-
-		if ( kc_external_version > 1 ) {
-			// Write ship pos and angles to external controls...
-			ubyte *temp_ptr = (ubyte *)kc_external_control;
-			vms_vector *ship_pos;
-			vms_matrix *ship_orient;
-			memset( kc_external_control, 0, sizeof(ext_control_info)+sizeof(vms_angvec) + 64 + sizeof(vms_vector)+sizeof(vms_matrix) );
-			temp_ptr += sizeof(ext_control_info) + sizeof(vms_angvec) + 64;
-			ship_pos = (vms_vector *)temp_ptr;
-			temp_ptr += sizeof(vms_vector);
-			ship_orient = (vms_matrix *)temp_ptr;
-			// Fill in ship postion...
-			*ship_pos = Objects[Players[Player_num].objnum].pos;
-			// Fill in ship orientation...
-			*ship_orient = Objects[Players[Player_num].objnum].orient;
-		}
-    if (kc_external_version>=4)
-	  {
-	   advanced_ext_control_info *temp_ptr=(advanced_ext_control_info *)kc_external_control;
- 
-      temp_ptr->headlight_state=(Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT_ON);
-		temp_ptr->primary_weapon_flags=Players[Player_num].primary_weapon_flags;
-		temp_ptr->secondary_weapon_flags=Players[Player_num].secondary_weapon_flags;
-      temp_ptr->current_primary_weapon=Primary_weapon;
-      temp_ptr->current_secondary_weapon=Secondary_weapon;
-
-      temp_ptr->current_guidebot_command=Escort_goal_object;
-
-	   temp_ptr->force_vector=ExtForceVec;
-		temp_ptr->force_matrix=ExtApplyForceMatrix;
-	   for (i=0;i<3;i++)
-       temp_ptr->joltinfo[i]=ExtJoltInfo[i];  
-      for (i=0;i<2;i++)
-		   temp_ptr->x_vibrate_info[i]=ExtXVibrateInfo[i];
-		temp_ptr->x_vibrate_clear=ExtXVibrateClear;
- 	   temp_ptr->game_status=ExtGameStatus;
-   
-      memset ((void *)&ExtForceVec,0,sizeof(vms_vector));
-      memset ((void *)&ExtApplyForceMatrix,0,sizeof(vms_matrix));
-      
-      for (i=0;i<3;i++)
-		 ExtJoltInfo[i]=0;
-      for (i=0;i<2;i++)
-		 ExtXVibrateInfo[i]=0;
-      ExtXVibrateClear=0;
-     }
-	}
-
-	if ( Automap_active )			// (If in automap...)
-		kc_external_control->automap_state = 1;
-	//memset(&r,0,sizeof(r));
-
-  #if 0
- 
-	int386 ( kc_external_intno, &r, &r);		// Read external info...
-
-  #endif 
-
-	if ( Player_num > -1 )	{
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning
-		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_LEVELLING);	// Turn off leveling to nearest side.
-		cvar_setint(&Auto_leveling_on, 0);
-
-		if ( kc_external_version > 0 ) {		
-			vms_matrix tempm, ViewMatrix;
-			vms_angvec * Kconfig_abs_movement;
-			char * oem_message;
-	
-			Kconfig_abs_movement = (vms_angvec *)((uint)kc_external_control + sizeof(ext_control_info));
-	
-			if ( Kconfig_abs_movement->p || Kconfig_abs_movement->b || Kconfig_abs_movement->h )	{
-				vm_angles_2_matrix(&tempm,Kconfig_abs_movement);
-				vm_matrix_x_matrix(&ViewMatrix,&Objects[Players[Player_num].objnum].orient,&tempm);
-				Objects[Players[Player_num].objnum].orient = ViewMatrix;		
-			}
-			oem_message = (char *)((uint)Kconfig_abs_movement + sizeof(vms_angvec));
-			if (oem_message[0] != '\0' )
-				HUD_init_message( oem_message );
-		}
-	}
-
-	Controls.pitch_time += fixmul(kc_external_control->pitch_time,FrameTime);						
-	Controls.vertical_thrust_time += fixmul(kc_external_control->vertical_thrust_time,FrameTime);
-	Controls.heading_time += fixmul(kc_external_control->heading_time,FrameTime);
-	Controls.sideways_thrust_time += fixmul(kc_external_control->sideways_thrust_time ,FrameTime);
-	Controls.bank_time += fixmul(kc_external_control->bank_time ,FrameTime);
-	Controls.forward_thrust_time += fixmul(kc_external_control->forward_thrust_time ,FrameTime);
-	Controls.rear_view_down_count += kc_external_control->rear_view_down_count;	
-	Controls.rear_view_down_state |= kc_external_control->rear_view_down_state;	
-	Controls.fire_primary_down_count += kc_external_control->fire_primary_down_count;
-	Controls.fire_primary_state |= kc_external_control->fire_primary_state;
-	Controls.fire_secondary_state |= kc_external_control->fire_secondary_state;
-	Controls.fire_secondary_down_count += kc_external_control->fire_secondary_down_count;
-	Controls.fire_flare_down_count += kc_external_control->fire_flare_down_count;
-	Controls.drop_bomb_down_count += kc_external_control->drop_bomb_down_count;	
-	Controls.automap_down_count += kc_external_control->automap_down_count;
-	Controls.automap_state |= kc_external_control->automap_state;
-	
-   if (kc_external_version>=3)
-	 {
-		ubyte *temp_ptr = (ubyte *)kc_external_control;
-		temp_ptr += (sizeof(ext_control_info) + sizeof(vms_angvec) + 64 + sizeof(vms_vector) + sizeof (vms_matrix));
-  
-	   if (*(temp_ptr))
-		 Controls.cycle_primary_count=(*(temp_ptr));
-	   if (*(temp_ptr+1))
-		 Controls.cycle_secondary_count=(*(temp_ptr+1));
-
-		if (*(temp_ptr+2))
-		 Controls.afterburner_state=(*(temp_ptr+2));
-		if (*(temp_ptr+3))
-		 Controls.headlight_count=(*(temp_ptr+3));
-  	 }
-   if (kc_external_version>=4)
-	 {
-     int i;
-	  advanced_ext_control_info *temp_ptr=(advanced_ext_control_info *)kc_external_control;
-     
-     for (i=0;i<128;i++)
-	   if (temp_ptr->keyboard[i])
-			key_putkey (i);
-
-     if (temp_ptr->Reactor_blown)
-      {
-       if (Game_mode & GM_MULTI)
-		    net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
-		 else
-			 do_controlcen_destroyed_stuff(obj_find_first_of_type (OBJ_CNTRLCEN));
-	   }
-    }
-  
-}
-#endif
-
