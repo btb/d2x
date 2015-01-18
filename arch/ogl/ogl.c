@@ -1541,11 +1541,11 @@ void ogl_init_shared_palette(void)
 int tex_format_supported(int iformat,int format){
 	switch (iformat){
 		case GL_INTENSITY4:
-			if (!ogl_intensity4_ok) return 0; break;
+			return ogl_intensity4_ok;
 		case GL_LUMINANCE4_ALPHA4:
-			if (!ogl_luminance4_alpha4_ok) return 0; break;
+			return ogl_luminance4_alpha4_ok;
 		case GL_RGBA2:
-			if (!ogl_rgba2_ok) return 0; break;
+			return ogl_rgba2_ok;
 	}
 	if (ogl_gettexlevelparam_ok){
 		GLint internalFormat;
