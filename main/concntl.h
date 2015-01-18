@@ -4,7 +4,7 @@
 #include "fix.h"
 
 
-#define CONCNTL_NUM_CONTROLS 29
+#define CONCNTL_NUM_CONTROLS 18
 
 typedef enum
 {
