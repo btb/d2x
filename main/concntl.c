@@ -14,7 +14,6 @@ typedef struct _console_control_info {
 	fix   time_went_down;
 	fix   time_held_down;
 	uint  down_count;
-	uint  up_count;
 } console_control_info;
 
 console_control_info Console_controls[CONCNTL_NUM_CONTROLS];
@@ -109,16 +108,6 @@ unsigned int console_control_down_count(console_control control)
 	return n;
 }
 
-unsigned int console_control_up_count(console_control control)
-{
-	int n;
-
-	n = Console_controls[control].up_count;
-	Console_controls[control].up_count = 0;
-
-	return n;
-}
-
 
 // Returns 1 if this control is currently down
 unsigned int console_control_state(console_control control)
@@ -136,7 +125,6 @@ void console_control_set_state(console_control control, int state)
 		ctl->state = 1;
 		ctl->time_went_down = timer_get_fixed_seconds();
 	} else {
-		ctl->up_count++;
 		ctl->state = 0;
 		ctl->time_held_down += timer_get_fixed_seconds() - ctl->time_went_down;
 	}
