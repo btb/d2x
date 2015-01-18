@@ -193,6 +193,14 @@ int cmd_queue_process(void)
 }
 
 
+/* execute until there are no commands left */
+void cmd_queue_flush(void)
+{
+	while (cmd_queue_process()) {
+	}
+}
+
+
 /* Add some commands to the queue to be executed */
 void cmd_enqueue(int insert, char *input)
 {

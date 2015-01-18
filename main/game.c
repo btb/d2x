@@ -913,6 +913,7 @@ void game_flush_inputs()
 	if ( (Function_mode != FMODE_MENU) && !joydefs_calibrating )		// only reset mouse when not in menu or not calibrating
 	#endif
 	mouse_get_delta( &dx, &dy, &dz ); // Read mouse
+	cmd_queue_flush();
 	memset(&Controls,0,sizeof(control_info));
 }
 

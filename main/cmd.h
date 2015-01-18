@@ -20,6 +20,9 @@ void cmd_enqueuef(int insert, char *fmt, ...);
 /* Execute pending commands */
 int cmd_queue_process(void);
 
+/* execute until there are no commands left */
+void cmd_queue_flush(void);
+
 /* Attempt to autocomplete an input string */
 char *cmd_complete(char *input);
 
