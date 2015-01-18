@@ -46,9 +46,6 @@ typedef struct _control_info {
 	ubyte automap_down_count;
 	ubyte automap_state;
 
-	//vms_angvec heading;
-	//char oem_message[64];
-
 	ubyte afterburner_state;
 	ubyte cycle_primary_count;
 	ubyte cycle_secondary_count;
