@@ -183,6 +183,7 @@ extern void InitWeaponOrdering();
 
 extern void auto_select_weapon(int weapon_type);        //parm is primary or secondary
 extern void select_weapon(int weapon_num, int secondary_flag, int print_message,int wait_for_rearm);
+extern void weapon_toggle_bomb(void);
 
 extern char *Primary_weapon_names_short[];
 extern char *Secondary_weapon_names_short[];

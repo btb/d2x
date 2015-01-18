@@ -1383,25 +1383,6 @@ void kc_cmd_cycle(int argc, char **argv)         { Controls.cycle_primary_count+
 void kc_cmd_cycle2(int argc, char **argv)        { Controls.cycle_secondary_count++; }
 void kc_cmd_headlight(int argc, char **argv)     { Controls.headlight_count++; }
 
-void kc_cmd_togglebomb(int argc, char **argv)
-{
-	int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
-
-	if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
-		!Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
-	{
-		digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-		HUD_init_message ("No bombs available!");
-	} else {
-		if (Players[Player_num].secondary_ammo[bomb] == 0) {
-			digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-			HUD_init_message("No %s available!", (bomb == SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
-		} else {
-			Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
-			digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
-		}
-	}
-}
 
 
 void kconfig_init(void)
@@ -1421,7 +1402,6 @@ void kconfig_init(void)
 	cmd_addcommand("cycle",        kc_cmd_cycle);
 	cmd_addcommand("cycle2",       kc_cmd_cycle2);
 	cmd_addcommand("headlight",    kc_cmd_headlight);
-	cmd_addcommand("togglebomb",   kc_cmd_togglebomb);
 }
 
 

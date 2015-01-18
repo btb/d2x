@@ -529,6 +529,28 @@ void auto_select_weapon(int weapon_type)
 
 }
 
+
+void weapon_toggle_bomb(void)
+{
+	int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
+
+	if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
+		!Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
+	{
+		digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+		HUD_init_message ("No bombs available!");
+	} else {
+		if (Players[Player_num].secondary_ammo[bomb] == 0) {
+			digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+			HUD_init_message("No %s available!", (bomb == SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
+		} else {
+			Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
+			digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
+		}
+	}
+}
+
+
 #ifndef RELEASE
 
 //	----------------------------------------------------------------------------------------

@@ -76,6 +76,11 @@ void concntl_cmd_weapon(int argc, char **argv)
 	do_weapon_select((n-1) % 5, (n-1) / 5);
 }
 
+void concntl_cmd_togglebomb(int argc, char **argv)
+{
+	weapon_toggle_bomb();
+}
+
 
 // Returns the number of seconds this 'button' has been down since last call.
 fix console_control_down_time(console_control control)
@@ -180,4 +185,5 @@ void console_control_init(void)
 	cmd_addcommand("-nrgshield",    concntl_cmd_nrgshield_off);
 
 	cmd_addcommand("weapon", concntl_cmd_weapon);
+	cmd_addcommand("togglebomb", concntl_cmd_togglebomb);
 }
