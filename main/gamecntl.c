@@ -2370,7 +2370,7 @@ void ReadControls()
 	if (!Endlevel_sequence) // && !Player_is_dead  //this was taken out of the if statement by WraithX
 	{
 
-			if ( (Newdemo_state == ND_STATE_PLAYBACK) || DefiningMarkerMessage || CON_isVisible()
+			if ( (Newdemo_state == ND_STATE_PLAYBACK) || DefiningMarkerMessage
 				#ifdef NETWORK
 				|| multi_sending_message || multi_defining_message
 				#endif
