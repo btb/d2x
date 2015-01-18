@@ -20,23 +20,12 @@ typedef enum
 	CONCNTL_BANK,       // Bank on
 	CONCNTL_BANKLEFT,   // Bank left
 	CONCNTL_BANKRIGHT,  // Bank right
-	CONCNTL_ATTACK,     // Fire primary
-	CONCNTL_ATTACK2,    // Fire secondary
-	CONCNTL_FLARE,      // Fire flare
 	CONCNTL_FORWARD,    // Accelerate
 	CONCNTL_BACK,       // Reverse
-	CONCNTL_BOMB,       // Drop bomb
-	CONCNTL_REARVIEW,   // Rear view
 	CONCNTL_CRUISEUP,   // Cruise faster
 	CONCNTL_CRUISEDOWN, // Cruise slower
 	CONCNTL_CRUISEOFF,  // Cruise off
-	CONCNTL_AUTOMAP,    // Automap
-	CONCNTL_AFTERBURN,  // Afterburner
-	CONCNTL_CYCLE,      // Cycle primary
-	CONCNTL_CYCLE2,     // Cycle secondary
-	CONCNTL_HEADLIGHT,  // Headlight
 	CONCNTL_NRGSHIELD,  // Energy->Shield
-	CONCNTL_TOGGLEBOMB, // Toggle bomb
 } console_control;
 
 

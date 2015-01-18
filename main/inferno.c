@@ -634,6 +634,8 @@ int main(int argc, char *argv[])
 	 }
 //end addition -MM
 
+	kconfig_init();
+
 	i = FindArg( "-xcontrol" );
 	if ( i > 0 )	{
 		kconfig_init_external_controls( strtol(Args[i+1], NULL, 0), strtol(Args[i+2], NULL, 0) );

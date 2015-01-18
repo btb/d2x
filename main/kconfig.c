@@ -254,21 +254,21 @@ char *kc_key_bind_text[NUM_KEY_CONTROLS] = {
 	"+bankright",   "+bankright",
 	"+attack",      "+attack",
 	"+attack2",     "+attack2",
-	"+flare",       "+flare",
+	"flare",        "flare",
 	"+forward",     "+forward",
 	"+back",        "+back",
-	"+bomb",        "+bomb",
+	"bomb",         "bomb",
 	"+rearview",    "+rearview",
 	"+cruiseup",    "+cruiseup",
 	"+cruisedown",  "+cruisedown",
 	"+cruiseoff",   "+cruiseoff",
 	"+automap",     "+automap",
 	"+afterburner", "+afterburner",
-	"+cycle",       "+cycle",
-	"+cycle2",      "+cycle2",
-	"+headlight",   "+headlight",
+	"cycle",        "cycle",
+	"cycle2",       "cycle2",
+	"headlight",    "headlight",
 	"+nrgshield",   "+nrgshield",
-	"+togglebomb",
+	"togglebomb",
 };
 
 ubyte default_kc_keyboard_settings[MAX_CONTROLS] = {0x48,0xc8,0x50,0xd0,0x4b,0xcb,0x4d,0xcd,0x38,0xff,0x4f,0xff,0x51,0xff,0x4a,0xff,0x4e,0xff,0x2a,0xff,0x10,0x47,0x12,0x49,0x1d,0x80,0x39,0x81,0x21,0x24,0x1e,0xff,0x2c,0xff,0x30,0xff,0x13,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xf,0xff,0x1f,0xff,0x33,0xff,0x34,0xff,0x23,0xff,0x14,0xff,0xff,0x80,0x0,0x0};
@@ -1402,6 +1402,83 @@ int allowed_to_toggle(int i)
 }
 
 
+void kc_cmd_attack_on(int argc, char **argv)     { Controls.fire_primary_state = 1; Controls.fire_primary_down_count++; }
+void kc_cmd_attack_off(int argc, char **argv)    { Controls.fire_primary_state = 0; }
+void kc_cmd_attack2_on(int argc, char **argv)    { Controls.fire_secondary_state = 1; Controls.fire_secondary_down_count++; }
+void kc_cmd_attack2_off(int argc, char **argv)   { Controls.fire_secondary_state = 0; }
+void kc_cmd_rearview_on(int argc, char **argv)   { Controls.rear_view_down_state = 1; Controls.rear_view_down_count++; }
+void kc_cmd_rearview_off(int argc, char **argv)  { Controls.rear_view_down_state = 0; }
+void kc_cmd_automap_on(int argc, char **argv)    { Controls.automap_state = 1; Controls.automap_down_count++; }
+void kc_cmd_automap_off(int argc, char **argv)   { Controls.automap_state = 0; }
+void kc_cmd_afterburn_on(int argc, char **argv)  { Controls.afterburner_state = 1; }
+void kc_cmd_afterburn_off(int argc, char **argv) { Controls.afterburner_state = 0; }
+void kc_cmd_flare(int argc, char **argv)         { Controls.fire_flare_down_count++; }
+void kc_cmd_bomb(int argc, char **argv)          { Controls.drop_bomb_down_count++; }
+void kc_cmd_cycle(int argc, char **argv)         { Controls.cycle_primary_count++; }
+void kc_cmd_cycle2(int argc, char **argv)        { Controls.cycle_secondary_count++; }
+void kc_cmd_headlight(int argc, char **argv)     { Controls.headlight_count++; }
+
+void kc_cmd_togglebomb(int argc, char **argv)
+{
+	int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
+
+	if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
+		!Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
+	{
+		digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+		HUD_init_message ("No bombs available!");
+	} else {
+		if (Players[Player_num].secondary_ammo[bomb] == 0) {
+			digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+			HUD_init_message("No %s available!", (bomb == SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
+		} else {
+			Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
+			digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
+		}
+	}
+}
+
+
+void kconfig_init(void)
+{
+	cmd_addcommand("+attack",      kc_cmd_attack_on);
+	cmd_addcommand("-attack",      kc_cmd_attack_off);
+	cmd_addcommand("+attack2",     kc_cmd_attack2_on);
+	cmd_addcommand("-attack2",     kc_cmd_attack2_off);
+	cmd_addcommand("+rearview",    kc_cmd_rearview_on);
+	cmd_addcommand("-rearview",    kc_cmd_rearview_off);
+	cmd_addcommand("+automap",     kc_cmd_automap_on);
+	cmd_addcommand("-automap",     kc_cmd_automap_off);
+	cmd_addcommand("+afterburner", kc_cmd_afterburn_on);
+	cmd_addcommand("-afterburner", kc_cmd_afterburn_off);
+	cmd_addcommand("flare",        kc_cmd_flare);
+	cmd_addcommand("bomb",         kc_cmd_bomb);
+	cmd_addcommand("cycle",        kc_cmd_cycle);
+	cmd_addcommand("cycle2",       kc_cmd_cycle2);
+	cmd_addcommand("headlight",    kc_cmd_headlight);
+	cmd_addcommand("togglebomb",   kc_cmd_togglebomb);
+}
+
+
+/* Preserves pitch, heading, and states */
+void controls_reset(void)
+{
+	Controls.forward_thrust_time = 0;
+	Controls.sideways_thrust_time = 0;
+	Controls.vertical_thrust_time = 0;
+	Controls.bank_time = 0;
+	Controls.rear_view_down_count = 0;
+	Controls.fire_primary_down_count = 0;
+	Controls.fire_secondary_down_count = 0;
+	Controls.fire_flare_down_count = 0;
+	Controls.drop_bomb_down_count = 0;
+	Controls.automap_down_count = 0;
+	Controls.cycle_primary_count = 0;
+	Controls.cycle_secondary_count = 0;
+	Controls.headlight_count = 0;
+}
+
+
 void controls_read_all()
 {
 	int i;
@@ -1415,13 +1492,10 @@ void controls_read_all()
 
 	memset(analog_control, 0, sizeof(analog_control));
 
-	{
-		fix temp = Controls.heading_time;
-		fix temp1 = Controls.pitch_time;
-		memset( &Controls, 0, sizeof(control_info) );
-		Controls.heading_time = temp;
-		Controls.pitch_time = temp1;
-	}
+	controls_reset();
+
+	cmd_queue_process();
+
 	slide_on = 0;
 	bank_on = 0;
 
@@ -1593,90 +1667,12 @@ if (!Player_is_dead)
 	Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
 	Controls.forward_thrust_time -= analog_control[AXIS_THROTTLE];
 
-//----------- Read afterburner_state -------------
-
-	Controls.afterburner_state |= console_control_state(CONCNTL_AFTERBURN);
-
-//-------Read headlight key--------------------------
-
-	Controls.headlight_count += console_control_down_count(CONCNTL_HEADLIGHT);
-
-//--------Read Cycle Primary Key------------------
-
-	Controls.cycle_primary_count += console_control_down_count(CONCNTL_CYCLE);
-
-//--------Read Cycle Secondary Key------------------
-
-	Controls.cycle_secondary_count += console_control_down_count(CONCNTL_CYCLE2);
-
-//--------Read Toggle Bomb key----------------------
-
-	if (console_control_down_count(CONCNTL_TOGGLEBOMB)) {
-		int bomb = Secondary_last_was_super[PROXIMITY_INDEX]?PROXIMITY_INDEX:SMART_MINE_INDEX;
-
-		if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX] &&
-			!Players[Player_num].secondary_ammo[SMART_MINE_INDEX])
-		{
-			digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-			HUD_init_message ("No bombs available!");
-		} else {
-			if (Players[Player_num].secondary_ammo[bomb] == 0) {
-				digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-				HUD_init_message("No %s available!", (bomb == SMART_MINE_INDEX)?"Smart mines":"Proximity bombs");
-			} else {
-				Secondary_last_was_super[PROXIMITY_INDEX]=!Secondary_last_was_super[PROXIMITY_INDEX];
-				digi_play_sample_once( SOUND_GOOD_SELECTION_SECONDARY, F1_0 );
-			}
-		}
-	}
-
 //---------Read Energy->Shield key----------
 
 	if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && console_control_state(CONCNTL_NRGSHIELD))
 		transfer_energy_to_shield(console_control_down_time(CONCNTL_NRGSHIELD));
 
-//----------- Read fire_primary_down_count
-
-	Controls.fire_primary_down_count += console_control_down_count(CONCNTL_ATTACK);
-
-//----------- Read fire_primary_state
-
-	Controls.fire_primary_state |= console_control_state(CONCNTL_ATTACK);
-
-//----------- Read fire_secondary_down_count
-
-	Controls.fire_secondary_down_count += console_control_down_count(CONCNTL_ATTACK2);
-
-//----------- Read fire_secondary_state
-
-	Controls.fire_secondary_state |= console_control_state(CONCNTL_ATTACK2);
-
-//----------- Read fire_flare_down_count
-
-	Controls.fire_flare_down_count += console_control_down_count(CONCNTL_FLARE);
-
-//----------- Read drop_bomb_down_count
-
-	Controls.drop_bomb_down_count += console_control_down_count(CONCNTL_BOMB);
-
-//----------- Read rear_view_down_count
-
-	Controls.rear_view_down_count += console_control_down_count(CONCNTL_REARVIEW);
-
-//----------- Read rear_view_down_state
-
-	Controls.rear_view_down_state |= console_control_state(CONCNTL_REARVIEW);
-
 }//end "if" added by WraithX
-
-//----------- Read automap_down_count
-
-	Controls.automap_down_count += console_control_down_count(CONCNTL_AUTOMAP);
-
-//----------- Read automap_state
-
-	Controls.automap_state |= console_control_state(CONCNTL_AUTOMAP);
-
 //----------- Read stupid-cruise-control-type of throttle.
 
 	Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);

@@ -2337,8 +2337,6 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
 	}
 	#endif
 
-	cmd_queue_process();
-
 		#ifndef RELEASE
 		if (FindArg("-invulnerability"))
 			Players[Player_num].flags |= PLAYER_FLAGS_INVULNERABLE;
