@@ -79,6 +79,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "powerup.h"
 #include "state.h"
 #include "config.h"
+#include "controls.h"
 
 
 /**

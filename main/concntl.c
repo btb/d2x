@@ -26,8 +26,6 @@ void concntl_cmd_left_on(int argc, char **argv)         { console_control_set_st
 void concntl_cmd_left_off(int argc, char **argv)        { console_control_set_state(CONCNTL_LEFT,       0); }
 void concntl_cmd_right_on(int argc, char **argv)        { console_control_set_state(CONCNTL_RIGHT,      1); }
 void concntl_cmd_right_off(int argc, char **argv)       { console_control_set_state(CONCNTL_RIGHT,      0); }
-void concntl_cmd_strafe_on(int argc, char **argv)       { console_control_set_state(CONCNTL_STRAFE,     1); }
-void concntl_cmd_strafe_off(int argc, char **argv)      { console_control_set_state(CONCNTL_STRAFE,     0); }
 void concntl_cmd_moveleft_on(int argc, char **argv)     { console_control_set_state(CONCNTL_MOVELEFT,   1); }
 void concntl_cmd_moveleft_off(int argc, char **argv)    { console_control_set_state(CONCNTL_MOVELEFT,   0); }
 void concntl_cmd_moveright_on(int argc, char **argv)    { console_control_set_state(CONCNTL_MOVERIGHT,  1); }
@@ -36,8 +34,6 @@ void concntl_cmd_moveup_on(int argc, char **argv)       { console_control_set_st
 void concntl_cmd_moveup_off(int argc, char **argv)      { console_control_set_state(CONCNTL_MOVEUP,     0); }
 void concntl_cmd_movedown_on(int argc, char **argv)     { console_control_set_state(CONCNTL_MOVEDOWN,   1); }
 void concntl_cmd_movedown_off(int argc, char **argv)    { console_control_set_state(CONCNTL_MOVEDOWN,   0); }
-void concntl_cmd_bank_on(int argc, char **argv)         { console_control_set_state(CONCNTL_BANK,       1); }
-void concntl_cmd_bank_off(int argc, char **argv)        { console_control_set_state(CONCNTL_BANK,       0); }
 void concntl_cmd_bankleft_on(int argc, char **argv)     { console_control_set_state(CONCNTL_BANKLEFT,   1); }
 void concntl_cmd_bankleft_off(int argc, char **argv)    { console_control_set_state(CONCNTL_BANKLEFT,   0); }
 void concntl_cmd_bankright_on(int argc, char **argv)    { console_control_set_state(CONCNTL_BANKRIGHT,  1); }
@@ -143,8 +139,6 @@ void console_control_init(void)
 	cmd_addcommand("-left",         concntl_cmd_left_off);
 	cmd_addcommand("+right",        concntl_cmd_right_on);
 	cmd_addcommand("-right",        concntl_cmd_right_off);
-	cmd_addcommand("+strafe",       concntl_cmd_strafe_on);
-	cmd_addcommand("-strafe",       concntl_cmd_strafe_off);
 	cmd_addcommand("+moveleft",     concntl_cmd_moveleft_on);
 	cmd_addcommand("-moveleft",     concntl_cmd_moveleft_off);
 	cmd_addcommand("+moveright",    concntl_cmd_moveright_on);
@@ -153,8 +147,6 @@ void console_control_init(void)
 	cmd_addcommand("-moveup",       concntl_cmd_moveup_off);
 	cmd_addcommand("+movedown",     concntl_cmd_movedown_on);
 	cmd_addcommand("-movedown",     concntl_cmd_movedown_off);
-	cmd_addcommand("+bank",         concntl_cmd_bank_on);
-	cmd_addcommand("-bank",         concntl_cmd_bank_off);
 	cmd_addcommand("+bankleft",     concntl_cmd_bankleft_on);
 	cmd_addcommand("-bankleft",     concntl_cmd_bankleft_off);
 	cmd_addcommand("+bankright",    concntl_cmd_bankright_on);

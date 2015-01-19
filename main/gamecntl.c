@@ -298,42 +298,36 @@ void do_weapon_stuff(void)
 {
   int i;
 
-	if (Controls.fire_flare_down_count)
+	if (Controls.count[fire_flare])
 		if (allowed_to_fire_flare())
 			Flare_create(ConsoleObject);
 
 	if (allowed_to_fire_missile())
-		Global_missile_firing_count += Weapon_info[Secondary_weapon_to_weapon_info[Secondary_weapon]].fire_count * (Controls.fire_secondary_state || Controls.fire_secondary_down_count);
+		Global_missile_firing_count += Weapon_info[Secondary_weapon_to_weapon_info[Secondary_weapon]].fire_count * (Controls.state[fire_secondary] || Controls.count[fire_secondary]);
 
 	if (Global_missile_firing_count) {
 		do_missile_firing(1);			//always enable autoselect for normal missile firing
 		Global_missile_firing_count--;
 	}
 
-   if (Controls.cycle_primary_count)
-	 {
-     for (i=0;i<Controls.cycle_primary_count;i++)
-		CyclePrimary ();
-    }
-   if (Controls.cycle_secondary_count)
-	 {
-     for (i=0;i<Controls.cycle_secondary_count;i++)
-		CycleSecondary ();
-    }
-   if (Controls.headlight_count)
-	 {
-     for (i=0;i<Controls.headlight_count;i++)
-		toggle_headlight_active ();
-    }
+	if (Controls.count[cycle_primary])
+		for (i = 0; i < Controls.count[cycle_primary]; i++)
+			CyclePrimary ();
+	if (Controls.count[cycle_secondary])
+		for (i = 0; i < Controls.count[cycle_secondary]; i++)
+			CycleSecondary ();
+	if (Controls.count[headlight])
+		for (i = 0; i < Controls.count[headlight]; i++)
+			toggle_headlight_active ();
 
 	if (Global_missile_firing_count < 0)
 		Global_missile_firing_count = 0;
 
 	//	Drop proximity bombs.
-	if (Controls.drop_bomb_down_count) {
+	if (Controls.count[drop_bomb]) {
 		int ssw_save = Secondary_weapon;
 
-		while (Controls.drop_bomb_down_count--) {
+		while (Controls.count[drop_bomb]--) {
 			int ssw_save2;
 
 			ssw_save2 = Secondary_weapon = which_bomb();
@@ -2382,7 +2376,7 @@ void ReadControls()
 		check_rear_view();
 
 		//	If automap key pressed, enable automap unless you are in network mode, control center destroyed and < 10 seconds left
-		if ( Controls.automap_down_count && !((Game_mode & GM_MULTI) && Control_center_destroyed && (Countdown_seconds_left < 10)))
+		if ( Controls.count[automap] && !((Game_mode & GM_MULTI) && Control_center_destroyed && (Countdown_seconds_left < 10)))
 			Automap_flag = 1;
 
 		do_weapon_stuff();

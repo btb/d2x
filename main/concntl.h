@@ -12,12 +12,10 @@ typedef enum
 	CONCNTL_LOOKUP,     // Pitch backward
 	CONCNTL_LEFT,       // Turn left
 	CONCNTL_RIGHT,      // Turn right
-	CONCNTL_STRAFE,     // Slide on
 	CONCNTL_MOVELEFT,   // Slide left
 	CONCNTL_MOVERIGHT,  // Slide right
 	CONCNTL_MOVEUP,     // Slide up
 	CONCNTL_MOVEDOWN,   // Slide down
-	CONCNTL_BANK,       // Bank on
 	CONCNTL_BANKLEFT,   // Bank left
 	CONCNTL_BANKRIGHT,  // Bank right
 	CONCNTL_FORWARD,    // Accelerate

@@ -22,6 +22,45 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _CONTROLS_H
 
 
+typedef enum {
+	slide_on,
+	bank_on,
+	rear_view,
+	fire_primary,
+	fire_secondary,
+	fire_flare,
+	drop_bomb,
+	automap,
+	afterburner,
+	cycle_primary,
+	cycle_secondary,
+	headlight,
+	CONTROL_NUM_BUTTONS
+} control_button;
+
+
+typedef struct _control_info {
+	fix pitch_time;
+	fix vertical_thrust_time;
+	fix heading_time;
+	fix sideways_thrust_time;
+	fix bank_time;
+	fix forward_thrust_time;
+
+	fix time_held_down[CONTROL_NUM_BUTTONS];
+	fix time_went_down[CONTROL_NUM_BUTTONS];
+	ubyte count[CONTROL_NUM_BUTTONS];
+	ubyte state[CONTROL_NUM_BUTTONS];
+} control_info;
+
+
+extern control_info Controls;
+extern void controls_read_all();
+extern void controls_init(void);
+
+//set the cruise speed to zero
+extern void reset_cruise(void);
+
 void read_flying_controls( object * obj );
 
 extern ubyte Controls_stopped;

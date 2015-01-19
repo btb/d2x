@@ -425,7 +425,7 @@ void init_player_stats_level(int secret_flag)
 
 	Last_laser_fired_time = Next_laser_fire_time = GameTime; // added by RH, solved demo playback bug
 
-	Controls.afterburner_state = 0;
+	Controls.state[afterburner] = 0;
 	Last_afterburner_state = 0;
 
 	digi_kill_sound_linked_to_object(Players[Player_num].objnum);
@@ -496,7 +496,7 @@ void init_player_stats_new_ship()
 
 	Players[Player_num].homing_object_dist = -F1_0; // Added by RH
 
-	Controls.afterburner_state = 0;
+	Controls.state[afterburner] = 0;
 	Last_afterburner_state = 0;
 
 	digi_kill_sound_linked_to_object(Players[Player_num].objnum);

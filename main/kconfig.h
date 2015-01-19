@@ -24,37 +24,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "config.h"
 #include "gamestat.h"
 
-typedef struct _control_info {
-	fix pitch_time;
-	fix vertical_thrust_time;
-	fix heading_time;
-	fix sideways_thrust_time;
-	fix bank_time;
-	fix forward_thrust_time;
-
-	ubyte rear_view_down_count;
-	ubyte rear_view_down_state;
-
-	ubyte fire_primary_down_count;
-	ubyte fire_primary_state;
-	ubyte fire_secondary_state;
-	ubyte fire_secondary_down_count;
-	ubyte fire_flare_down_count;
-
-	ubyte drop_bomb_down_count;
-
-	ubyte automap_down_count;
-	ubyte automap_state;
-
-	ubyte afterburner_state;
-	ubyte cycle_primary_count;
-	ubyte cycle_secondary_count;
-	ubyte headlight_count;
-} control_info;
 
 extern ubyte ExtGameStatus;
-extern control_info Controls;
-extern void controls_read_all();
 extern void kconfig(int n, char *title);
 
 
@@ -84,11 +55,6 @@ extern void kc_set_controls();
 // Tries to use vfx1 head tracking.
 void kconfig_sense_init();
 
-//set the cruise speed to zero
-extern void reset_cruise(void);
-
 extern int kconfig_is_axes_used(int axis);
-
-extern void kconfig_init(void);
 
 #endif /* _KCONFIG_H */

@@ -625,7 +625,7 @@ int main(int argc, char *argv[])
 	 }
 //end addition -MM
 
-	kconfig_init();
+	controls_init();
 
 	con_printf(CON_VERBOSE, "\n%s\n\n", TXT_INITIALIZING_GRAPHICS);
 	if (FindArg("-nofade"))

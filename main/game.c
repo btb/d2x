@@ -1438,9 +1438,9 @@ void do_afterburner_stuff(void)
 #endif
 		}
 
-	if ((Controls.afterburner_state != Last_afterburner_state && Last_afterburner_charge) || (Last_afterburner_state && Last_afterburner_charge && !Afterburner_charge)) {
+	if ((Controls.state[afterburner] != Last_afterburner_state && Last_afterburner_charge) || (Last_afterburner_state && Last_afterburner_charge && !Afterburner_charge)) {
 
-		if (Afterburner_charge && Controls.afterburner_state && (Players[Player_num].flags & PLAYER_FLAGS_AFTERBURNER)) {
+		if (Afterburner_charge && Controls.state[afterburner] && (Players[Player_num].flags & PLAYER_FLAGS_AFTERBURNER)) {
 			digi_link_sound_to_object3( SOUND_AFTERBURNER_IGNITE, Players[Player_num].objnum, 1, F1_0, i2f(256), AFTERBURNER_LOOP_START, AFTERBURNER_LOOP_END );
 #ifdef NETWORK
 			if (Game_mode & GM_MULTI)
@@ -1457,10 +1457,10 @@ void do_afterburner_stuff(void)
 		}
 	}
 
-	//@@if (Controls.afterburner_state && Afterburner_charge)
+	//@@if (Controls.state[afterburner] && Afterburner_charge)
 	//@@	afterburner_shake();
 
-	Last_afterburner_state = Controls.afterburner_state;
+	Last_afterburner_state = Controls.state[afterburner];
 	Last_afterburner_charge = Afterburner_charge;
 }
 
@@ -1749,7 +1749,7 @@ void check_rear_view()
 	static int leave_mode;
 	static fix entry_time;
 
-	if ( Controls.rear_view_down_count )	{		//key/button has gone down
+	if ( Controls.count[rear_view] ) { // key/button has gone down
 
 		if (Rear_view) {
 			Rear_view = 0;
@@ -1780,7 +1780,7 @@ void check_rear_view()
 		}
 	}
 	else
-		if (Controls.rear_view_down_state) {
+		if (Controls.state[rear_view]) {
 
 			if (leave_mode == 0 && (timer_get_fixed_seconds() - entry_time) > Rear_view_leave_time)
 				leave_mode = 1;
@@ -2777,7 +2777,7 @@ int add_flicker(int segnum, int sidenum, fix delay, unsigned long mask)
 void FireLaser()
 {
 
-	Global_laser_firing_count = Weapon_info[Primary_weapon_to_weapon_info[Primary_weapon]].fire_count * (Controls.fire_primary_state || Controls.fire_primary_down_count);
+	Global_laser_firing_count = Weapon_info[Primary_weapon_to_weapon_info[Primary_weapon]].fire_count * (Controls.state[fire_primary] || Controls.count[fire_primary]);
 
 	if ((Primary_weapon == FUSION_INDEX) && (Global_laser_firing_count)) {
 		if ((Players[Player_num].energy < F1_0*2) && (Auto_fire_fusion_cannon_time == 0)) {

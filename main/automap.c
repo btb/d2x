@@ -807,10 +807,10 @@ void do_automap( int key_code )	{
 	adjust_segment_limit(SegmentLimit);
 
 	while(!done)	{
-		if ( leave_mode==0 && Controls.automap_state && (timer_get_fixed_seconds()-entry_time)>LEAVE_TIME)
+		if ( leave_mode == 0 && Controls.state[automap] && (timer_get_fixed_seconds() - entry_time) > LEAVE_TIME)
 			leave_mode = 1;
 
-		if ( !Controls.automap_state && (leave_mode==1) )
+		if ( !Controls.state[automap] && (leave_mode == 1) )
 			done=1;
 
 		if (!pause_game)	{
@@ -830,7 +830,7 @@ void do_automap( int key_code )	{
 
 		controls_read_all();
 
-		if ( Controls.automap_down_count )	{
+		if ( Controls.count[automap] ) {
 			if (leave_mode==0)
 				done = 1;
 			c = 0;
@@ -990,7 +990,7 @@ void do_automap( int key_code )	{
 	      }
 		}
 
-		if ( Controls.fire_primary_down_count )	{
+		if ( Controls.count[fire_primary] ) {
 			// Reset orientation
 			ViewDist = ZOOM_DEFAULT;
 			tangles.p = PITCH_DEFAULT;
