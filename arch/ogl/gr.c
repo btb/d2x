@@ -388,6 +388,40 @@ int ogl_testneedmipmaps(int i){
 	Error("unknown texture filter %x\n",i);
 //	return -1;
 }
+
+
+void gr_cmd_texturemode(int argc, char **argv)
+{
+	if (argc < 2)
+		return;
+
+	if (!stricmp(argv[1], "GL_NEAREST")) {
+		GL_texminfilt = GL_NEAREST;
+		GL_texmagfilt = GL_NEAREST;
+	} else if (!stricmp(argv[1], "GL_LINEAR")) {
+		GL_texminfilt = GL_LINEAR;
+		GL_texmagfilt = GL_LINEAR;
+	} else if (!stricmp(argv[1], "GL_NEAREST_MIPMAP_NEAREST")) {
+		GL_texminfilt = GL_NEAREST_MIPMAP_NEAREST;
+		GL_texmagfilt = GL_NEAREST;
+	} else if (!stricmp(argv[1], "GL_LINEAR_MIPMAP_NEAREST")) {
+		GL_texminfilt = GL_LINEAR_MIPMAP_NEAREST;
+		GL_texmagfilt = GL_LINEAR;
+	} else if (!stricmp(argv[1], "GL_NEAREST_MIPMAP_LINEAR")) {
+		GL_texminfilt = GL_NEAREST_MIPMAP_LINEAR;
+		GL_texmagfilt = GL_NEAREST;
+	} else if (!stricmp(argv[1], "GL_LINEAR_MIPMAP_LINEAR")) {
+		GL_texminfilt = GL_LINEAR_MIPMAP_LINEAR;
+		GL_texmagfilt = GL_LINEAR;
+	} else
+		return;
+
+	GL_needmipmaps=ogl_testneedmipmaps(GL_texminfilt);
+
+	ogl_smash_texture_list_internal();
+}
+
+
 #ifdef OGL_RUNTIME_LOAD
 #ifdef _WIN32
 char *OglLibPath="opengl32.dll";
@@ -514,6 +548,8 @@ int gr_init()
 	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
 	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
 	gr_set_current_canvas( &grd_curscreen->sc_canvas );
+
+	cmd_addcommand("gl_texturemode", gr_cmd_texturemode);
 
 	gr_installed = 1;
 	
