@@ -25,7 +25,6 @@
 
 #include "cmd.h"
 #include "cvar.h"
-#include "concntl.h"
 
 enum {
 	CON_CLOSED,	//! The console is closed (and not shown)

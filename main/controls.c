@@ -256,10 +256,60 @@ static inline void button_up(control_button button)
 }
 
 
+// Returns the number of seconds this 'button' has been down since last call.
+static inline fix button_down_time(control_button button)
+{
+	fix time_down, time;
+
+	if (!Controls.state[button]) {
+		time_down = Controls.time_held_down[button];
+		Controls.time_held_down[button] = 0;
+	} else {
+		time = timer_get_fixed_seconds();
+		time_down = time - Controls.time_went_down[button];
+		Controls.time_went_down[button] = time;
+	}
+
+	return time_down;
+}
+
+
+void controls_cmd_lookdown_on(int argc, char **argv)   { button_down(pitch_forward); }
+void controls_cmd_lookdown_off(int argc, char **argv)  { button_up(pitch_forward); }
+void controls_cmd_lookup_on(int argc, char **argv)     { button_down(pitch_backward); }
+void controls_cmd_lookup_off(int argc, char **argv)    { button_up(pitch_backward); }
+void controls_cmd_left_on(int argc, char **argv)       { button_down(turn_left); }
+void controls_cmd_left_off(int argc, char **argv)      { button_up(turn_left); }
+void controls_cmd_right_on(int argc, char **argv)      { button_down(turn_right); }
+void controls_cmd_right_off(int argc, char **argv)     { button_up(turn_right); }
 void controls_cmd_strafe_on(int argc, char **argv)     { button_down(slide_on); }
 void controls_cmd_strafe_off(int argc, char **argv)    { button_up(slide_on); }
+void controls_cmd_moveleft_on(int argc, char **argv)   { button_down(slide_left); }
+void controls_cmd_moveleft_off(int argc, char **argv)  { button_up(slide_left); }
+void controls_cmd_moveright_on(int argc, char **argv)  { button_down(slide_right); }
+void controls_cmd_moveright_off(int argc, char **argv) { button_up(slide_right); }
+void controls_cmd_moveup_on(int argc, char **argv)     { button_down(slide_up); }
+void controls_cmd_moveup_off(int argc, char **argv)    { button_up(slide_up); }
+void controls_cmd_movedown_on(int argc, char **argv)   { button_down(slide_down); }
+void controls_cmd_movedown_off(int argc, char **argv)  { button_up(slide_down); }
 void controls_cmd_bank_on(int argc, char **argv)       { button_down(bank_on); }
 void controls_cmd_bank_off(int argc, char **argv)      { button_up(bank_on); }
+void controls_cmd_bankleft_on(int argc, char **argv)   { button_down(bank_left); }
+void controls_cmd_bankleft_off(int argc, char **argv)  { button_up(bank_left); }
+void controls_cmd_bankright_on(int argc, char **argv)  { button_down(bank_right); }
+void controls_cmd_bankright_off(int argc, char **argv) { button_up(bank_right); }
+void controls_cmd_forward_on(int argc, char **argv)    { button_down(accelerate); }
+void controls_cmd_forward_off(int argc, char **argv)   { button_up(accelerate); }
+void controls_cmd_back_on(int argc, char **argv)       { button_down(reverse); }
+void controls_cmd_back_off(int argc, char **argv)      { button_up(reverse); }
+void controls_cmd_cruiseup_on(int argc, char **argv)   { button_down(cruise_faster); }
+void controls_cmd_cruiseup_off(int argc, char **argv)  { button_up(cruise_faster); }
+void controls_cmd_cruisedown_on(int argc, char **argv) { button_down(cruise_slower); }
+void controls_cmd_cruisedown_off(int argc, char **argv){ button_up(cruise_slower); }
+void controls_cmd_cruiseoff_on(int argc, char **argv)  { button_down(cruise_off); }
+void controls_cmd_cruiseoff_off(int argc, char **argv) { button_up(cruise_off); }
+void controls_cmd_nrgshield_on(int argc, char **argv)  { button_down(energy_shield); }
+void controls_cmd_nrgshield_off(int argc, char **argv) { button_up(energy_shield); }
 void controls_cmd_attack_on(int argc, char **argv)     { button_down(fire_primary); }
 void controls_cmd_attack_off(int argc, char **argv)    { button_up(fire_primary); }
 void controls_cmd_attack2_on(int argc, char **argv)    { button_down(fire_secondary); }
@@ -276,20 +326,75 @@ void controls_cmd_cycle(int argc, char **argv)         { button_down(cycle_prima
 void controls_cmd_cycle2(int argc, char **argv)        { button_up(cycle_secondary); }
 void controls_cmd_headlight(int argc, char **argv)     { button_down(headlight); }
 
+void controls_cmd_togglebomb(int argc, char **argv)
+{
+	weapon_toggle_bomb();
+}
+
+void controls_cmd_weapon(int argc, char **argv)
+{
+	int n;
+
+	if (argc < 2 || !stricmp(argv[1], "-h")) {
+		con_printf(CON_NORMAL, "%s <num>\n", argv[0]);
+		con_printf(CON_NORMAL, "    select or toggle weapon <num>\n");
+		return;
+	}
+
+	n = atoi(argv[1]);
+	if (n == 0)
+		n = 10;
+	if (n < 1 || n > 10)
+		return;
+
+	do_weapon_select((n-1) % 5, (n-1) / 5);
+}
 
 
 void controls_init(void)
 {
+	cmd_addcommand("+lookdown",    controls_cmd_lookdown_on);
+	cmd_addcommand("-lookdown",    controls_cmd_lookdown_off);
+	cmd_addcommand("+lookup",      controls_cmd_lookup_on);
+	cmd_addcommand("-lookup",      controls_cmd_lookup_off);
+	cmd_addcommand("+left",        controls_cmd_left_on);
+	cmd_addcommand("-left",        controls_cmd_left_off);
+	cmd_addcommand("+right",       controls_cmd_right_on);
+	cmd_addcommand("-right",       controls_cmd_right_off);
 	cmd_addcommand("+strafe",      controls_cmd_strafe_on);
 	cmd_addcommand("-strafe",      controls_cmd_strafe_off);
+	cmd_addcommand("+moveleft",    controls_cmd_moveleft_on);
+	cmd_addcommand("-moveleft",    controls_cmd_moveleft_off);
+	cmd_addcommand("+moveright",   controls_cmd_moveright_on);
+	cmd_addcommand("-moveright",   controls_cmd_moveright_off);
+	cmd_addcommand("+moveup",      controls_cmd_moveup_on);
+	cmd_addcommand("-moveup",      controls_cmd_moveup_off);
+	cmd_addcommand("+movedown",    controls_cmd_movedown_on);
+	cmd_addcommand("-movedown",    controls_cmd_movedown_off);
 	cmd_addcommand("+bank",        controls_cmd_bank_on);
 	cmd_addcommand("-bank",        controls_cmd_bank_off);
+	cmd_addcommand("+bankleft",    controls_cmd_bankleft_on);
+	cmd_addcommand("-bankleft",    controls_cmd_bankleft_off);
+	cmd_addcommand("+bankright",   controls_cmd_bankright_on);
+	cmd_addcommand("-bankright",   controls_cmd_bankright_off);
+	cmd_addcommand("+forward",     controls_cmd_forward_on);
+	cmd_addcommand("-forward",     controls_cmd_forward_off);
+	cmd_addcommand("+back",        controls_cmd_back_on);
+	cmd_addcommand("-back",        controls_cmd_back_off);
+	cmd_addcommand("+cruiseup",    controls_cmd_cruiseup_on);
+	cmd_addcommand("-cruiseup",    controls_cmd_cruiseup_off);
+	cmd_addcommand("+cruisedown",  controls_cmd_cruisedown_on);
+	cmd_addcommand("-cruisedown",  controls_cmd_cruisedown_off);
+	cmd_addcommand("+cruiseoff",   controls_cmd_cruiseoff_on);
+	cmd_addcommand("-cruiseoff",   controls_cmd_cruiseoff_off);
+	cmd_addcommand("+nrgshield",   controls_cmd_nrgshield_on);
+	cmd_addcommand("-nrgshield",   controls_cmd_nrgshield_off);
+	cmd_addcommand("+rearview",    controls_cmd_rearview_on);
+	cmd_addcommand("-rearview",    controls_cmd_rearview_off);
 	cmd_addcommand("+attack",      controls_cmd_attack_on);
 	cmd_addcommand("-attack",      controls_cmd_attack_off);
 	cmd_addcommand("+attack2",     controls_cmd_attack2_on);
 	cmd_addcommand("-attack2",     controls_cmd_attack2_off);
-	cmd_addcommand("+rearview",    controls_cmd_rearview_on);
-	cmd_addcommand("-rearview",    controls_cmd_rearview_off);
 	cmd_addcommand("+automap",     controls_cmd_automap_on);
 	cmd_addcommand("-automap",     controls_cmd_automap_off);
 	cmd_addcommand("+afterburner", controls_cmd_afterburn_on);
@@ -299,6 +404,8 @@ void controls_init(void)
 	cmd_addcommand("cycle",        controls_cmd_cycle);
 	cmd_addcommand("cycle2",       controls_cmd_cycle2);
 	cmd_addcommand("headlight",    controls_cmd_headlight);
+	cmd_addcommand("togglebomb",   controls_cmd_togglebomb);
+	cmd_addcommand("weapon",       controls_cmd_weapon);
 }
 
 
@@ -316,7 +423,6 @@ void controls_reset(void)
 void controls_read_all()
 {
 	int i;
-	int slide_on, bank_on;
 	int dx, dy, dz;
 	fix ctime;
 	int raw_joy_axis[JOY_MAX_AXES];
@@ -329,9 +435,6 @@ void controls_read_all()
 	controls_reset();
 
 	cmd_queue_process();
-
-	slide_on = 0;
-	bank_on = 0;
 
 	ctime = timer_get_fixed_seconds();
 
@@ -387,13 +490,13 @@ void controls_read_all()
 		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[2].intval-1].value;
 	}
 
-	//------------ Read pitch -----------
+	//------------ Read pitch_time -----------
 	if ( !Controls.state[slide_on] ) {
 		// mprintf((0, "pitch: %7.3f %7.3f: %7.3f\n", f2fl(k4), f2fl(k6), f2fl(Controls.heading_time)));
 		kp = 0;
 
-		kp += console_control_down_time(CONCNTL_LOOKDOWN) / (PH_SCALE * 2);
-		kp -= console_control_down_time(CONCNTL_LOOKUP) / (PH_SCALE * 2);
+		kp += button_down_time(pitch_forward) / (PH_SCALE * 2);
+		kp -= button_down_time(pitch_backward) / (PH_SCALE * 2);
 
 		if (kp == 0)
 			Controls.pitch_time = 0;
@@ -412,28 +515,28 @@ void controls_read_all()
 
 	if (!Player_is_dead) {
 
-		//----------- Read vertical_thrust -----------------
+		//----------- Read vertical_thrust_time -----------------
 
 		if ( Controls.state[slide_on] ) {
-			Controls.vertical_thrust_time += console_control_down_time(CONCNTL_LOOKDOWN);
-			Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_LOOKUP);
+			Controls.vertical_thrust_time += button_down_time(pitch_forward);
+			Controls.vertical_thrust_time -= button_down_time(pitch_backward);
 			Controls.vertical_thrust_time += analog_control[AXIS_PITCH];
 		}
 
-		Controls.vertical_thrust_time += console_control_down_time(CONCNTL_MOVEUP);
-		Controls.vertical_thrust_time -= console_control_down_time(CONCNTL_MOVEDOWN);
+		Controls.vertical_thrust_time += button_down_time(slide_up);
+		Controls.vertical_thrust_time -= button_down_time(slide_down);
 		Controls.vertical_thrust_time += analog_control[AXIS_UPDOWN];
 
 	}
 
-	//---------- Read heading -----------
+	//---------- Read heading_time -----------
 
 	if ( !Controls.state[slide_on] && !Controls.state[bank_on] ) {
 		//mprintf((0, "heading: %7.3f %7.3f: %7.3f\n", f2fl(k4), f2fl(k6), f2fl(Controls.heading_time)));
 		kh = 0;
 
-		kh -= console_control_down_time(CONCNTL_LEFT) / PH_SCALE;
-		kh += console_control_down_time(CONCNTL_RIGHT) / PH_SCALE;
+		kh -= button_down_time(turn_left) / PH_SCALE;
+		kh += button_down_time(turn_right) / PH_SCALE;
 
 		if (kh == 0)
 			Controls.heading_time = 0;
@@ -452,55 +555,55 @@ void controls_read_all()
 
 	if (!Player_is_dead) {
 
-		//----------- Read sideways_thrust -----------------
+		//----------- Read sideways_thrust_time -----------------
 
-		if ( slide_on ) {
-			Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_LEFT);
-			Controls.sideways_thrust_time += console_control_down_time(CONCNTL_RIGHT);
+		if ( Controls.state[slide_on] ) {
+			Controls.sideways_thrust_time -= button_down_time(turn_left);
+			Controls.sideways_thrust_time += button_down_time(turn_right);
 			Controls.sideways_thrust_time += analog_control[AXIS_TURN];
 		}
 
-		Controls.sideways_thrust_time -= console_control_down_time(CONCNTL_MOVELEFT);
-		Controls.sideways_thrust_time += console_control_down_time(CONCNTL_MOVERIGHT);
+		Controls.sideways_thrust_time -= button_down_time(slide_left);
+		Controls.sideways_thrust_time += button_down_time(slide_right);
 		Controls.sideways_thrust_time += analog_control[AXIS_LEFTRIGHT];
 
 	}
 
-	//----------- Read bank -----------------
+	//----------- Read bank_time -----------------
 
 	if ( Controls.state[bank_on] ) {
-		Controls.bank_time += console_control_down_time(CONCNTL_LEFT);
-		Controls.bank_time -= console_control_down_time(CONCNTL_RIGHT);
+		Controls.bank_time += button_down_time(turn_left);
+		Controls.bank_time -= button_down_time(turn_right);
 		Controls.bank_time -= analog_control[AXIS_TURN];
 	}
 
-	Controls.bank_time += console_control_down_time(CONCNTL_BANKLEFT);
-	Controls.bank_time -= console_control_down_time(CONCNTL_BANKRIGHT);
+	Controls.bank_time += button_down_time(bank_left);
+	Controls.bank_time -= button_down_time(bank_right);
 	Controls.bank_time -= analog_control[AXIS_BANK];
 
 	// the following "if" added by WraithX, 4/14/00
 	// done so that dead players can't move
 	if (!Player_is_dead) {
 
-		//----------- Read forward_thrust -------------
+		//----------- Read forward_thrust_time -------------
 
-		Controls.forward_thrust_time += console_control_down_time(CONCNTL_FORWARD);
-		Controls.forward_thrust_time -= console_control_down_time(CONCNTL_BACK);
+		Controls.forward_thrust_time += button_down_time(accelerate);
+		Controls.forward_thrust_time -= button_down_time(reverse);
 		Controls.forward_thrust_time -= analog_control[AXIS_THROTTLE];
 
 		//---------Read Energy->Shield key----------
 
-		if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && console_control_state(CONCNTL_NRGSHIELD))
-			transfer_energy_to_shield(console_control_down_time(CONCNTL_NRGSHIELD));
+		if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && Controls.state[energy_shield])
+			transfer_energy_to_shield(button_down_time(energy_shield));
 
 	}
 
 	//----------- Read stupid-cruise-control-type of throttle.
 
-	Cruise_speed += console_control_down_time(CONCNTL_CRUISEUP);
-	Cruise_speed -= console_control_down_time(CONCNTL_CRUISEDOWN);
+	Cruise_speed += button_down_time(cruise_faster);
+	Cruise_speed -= button_down_time(cruise_slower);
 
-	if (console_control_down_count(CONCNTL_CRUISEOFF))
+	if (Controls.count[cruise_off])
 		Cruise_speed = 0;
 
 	if (Cruise_speed > i2f(100))

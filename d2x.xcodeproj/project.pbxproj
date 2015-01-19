@@ -16,7 +16,6 @@
 		142869BB1A672E6300A095F6 /* ipx_udp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957E1A2729860070D41D /* ipx_udp.c */; };
 		142869BC1A672E6300A095F6 /* linuxnet.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695811A2729860070D41D /* linuxnet.c */; };
 		142869BD1A672E6300A095F6 /* ukali.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695871A2729860070D41D /* ukali.c */; };
-		142869BE1A672E6300A095F6 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
 		142869BF1A672E6300A095F6 /* joy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695981A2729860070D41D /* joy.c */; };
 		142869C01A672E6300A095F6 /* joydefs.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695991A2729860070D41D /* joydefs.c */; };
 		142869C11A672E6300A095F6 /* event.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695951A2729860070D41D /* event.c */; };
@@ -212,8 +211,6 @@
 		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
 		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
 		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
-		146925A21A58C8B70014A414 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
-		146925A31A58C8B70014A414 /* concntl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146925A01A58C8B70014A414 /* concntl.c */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
 		14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
@@ -1123,8 +1120,6 @@
 		146699AD1A2729C60070D41D /* txb2tex.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = txb2tex.1; sourceTree = "<group>"; };
 		146699AE1A2729C60070D41D /* txb2tex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
-		146925A01A58C8B70014A414 /* concntl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = concntl.c; sourceTree = "<group>"; };
-		146925A11A58C8B70014A414 /* concntl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = concntl.h; sourceTree = "<group>"; };
 		1478618B1A4410C500DB53B9 /* README.utils */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.utils; sourceTree = "<group>"; };
 		1478618E1A44120900DB53B9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		147861901A44121000DB53B9 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
@@ -1763,8 +1758,6 @@
 				146696621A2729870070D41D /* cntrlcen.h */,
 				146696631A2729870070D41D /* collide.c */,
 				146696641A2729870070D41D /* collide.h */,
-				146925A01A58C8B70014A414 /* concntl.c */,
-				146925A11A58C8B70014A414 /* concntl.h */,
 				146696651A2729870070D41D /* config.c */,
 				146696661A2729870070D41D /* config.h */,
 				146696671A2729870070D41D /* console.c */,
@@ -2217,7 +2210,6 @@
 				142869BD1A672E6300A095F6 /* ukali.c in Sources */,
 				14286A5D1A67313E00A095F6 /* kmine.c in Sources */,
 				14286A621A67313E00A095F6 /* kview.c in Sources */,
-				142869BE1A672E6300A095F6 /* concntl.c in Sources */,
 				14286A6C1A67313E00A095F6 /* segment.c in Sources */,
 				14286A811A67330000A095F6 /* mouse.c in Sources */,
 				142869BF1A672E6300A095F6 /* joy.c in Sources */,
@@ -2463,7 +2455,6 @@
 				14F0D5341A4CA50D00682BB0 /* cvar.c in Sources */,
 				14F0D5351A4CA50D00682BB0 /* digiobj.c in Sources */,
 				14F0D5361A4CA50D00682BB0 /* effects.c in Sources */,
-				146925A31A58C8B70014A414 /* concntl.c in Sources */,
 				14F0D5371A4CA50D00682BB0 /* endlevel.c in Sources */,
 				14F0D5381A4CA50D00682BB0 /* escort.c in Sources */,
 				14F0D5391A4CA50D00682BB0 /* fireball.c in Sources */,
@@ -2581,7 +2572,6 @@
 				14F0D59B1A4CB34F00682BB0 /* ipx_udp.c in Sources */,
 				14F0D59C1A4CB34F00682BB0 /* linuxnet.c in Sources */,
 				14F0D59D1A4CB34F00682BB0 /* ukali.c in Sources */,
-				146925A21A58C8B70014A414 /* concntl.c in Sources */,
 				14F0D59E1A4CB34F00682BB0 /* joy.c in Sources */,
 				14F0D59F1A4CB34F00682BB0 /* joydefs.c in Sources */,
 				14F0D5A01A4CB34F00682BB0 /* event.c in Sources */,
