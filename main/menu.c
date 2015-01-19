@@ -709,11 +709,6 @@ void set_display_mode(uint32_t mode)
 	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) //special VR mode
 		return;								//...don't change
 
-#if 0
-	if (SM_H(mode) > 600 && !FindArg("-superhires"))
-		mode = SM(800,600);
-#endif
-
 	if (!MenuHiresAvailable && (mode != SM(320,400)))
 		mode = SM(320,200);
 
@@ -790,13 +785,8 @@ void do_screen_res_menu()
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 640x400";           modes[i] = SM(640,400);   i++;
 #endif
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 800x600";           modes[i] = SM(800,600);   i++;
-#if 0
-	if ((FindArg("-superhires"))
-#endif
-	{
-		m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1024x768";          modes[i] = SM(1024,768);  i++;
-		m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1280x1024";         modes[i] = SM(1280,1024); i++;
-	}
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1024x768";          modes[i] = SM(1024,768);  i++;
+	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text=" 1280x1024";         modes[i] = SM(1280,1024); i++;
 
 	customc = i;
 	m[i].type=NM_TYPE_RADIO; m[i].value=0; m[i].group=0; m[i].text="Custom:";            modes[i] = 0;             i++;

@@ -268,7 +268,6 @@ void print_commandline_help()
 #endif
 #if !defined(MACINTOSH) && !defined(WINDOWS)
 	printf( "  -nomixer        %s\n","Don't crank music volume");
-//	printf( "  -superhires     %s\n","Allow higher-resolution modes");
 #endif
 //	printf( "  -nomodex        %s\n","FIXME: Undocumented");
 #ifndef RELEASE
