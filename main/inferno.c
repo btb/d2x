@@ -449,7 +449,7 @@ char	Auto_file[128] = "";
 
 int main(int argc, char *argv[])
 {
-	int i, t;
+	int t;
 	ubyte title_pal[768];
 
 	mem_init();
