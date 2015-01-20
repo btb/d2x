@@ -942,7 +942,7 @@ void game_render_frame_mono(void)
 			{
 			 BigWindowSwitch=1;
 			 force_cockpit_redraw=1;
-			 cvar_set(&Cockpit_mode, CM_STATUS_BAR);
+			 cvar_setint(&Cockpit_mode, CM_STATUS_BAR);
 			 return;
 		   }
   
