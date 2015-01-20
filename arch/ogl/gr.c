@@ -304,11 +304,11 @@ int gr_check_mode(uint32_t mode)
 }
 
 
-extern int VGA_current_mode; // DPH: kludge - remove at all costs
+extern uint32_t VGA_current_mode; // DPH: kludge - remove at all costs
 
 int gr_set_mode(uint32_t mode)
 {
-	unsigned int w,h;
+	short w, h;
 	char *gr_bm_data;
 
 #ifdef NOGRAPH

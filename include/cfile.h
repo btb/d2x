@@ -141,7 +141,7 @@ static inline char * cfgets(char *buf, size_t n, PHYSFS_file *const fp)
 			c = '\n';   // and anyway -- 0xod is CR on mac, not 0x0a
 		if (c == '\n')
 			break;
-		*buf++ = c;
+		*buf++ = (char)c;
 	}
 	*buf = 0;
 

@@ -111,7 +111,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "fix.h"
 #include "hudmsg.h"
 
-int VGA_current_mode;
+uint32_t VGA_current_mode;
 
 #ifdef MWPROFILER
 #include <profiler.h>

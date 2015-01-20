@@ -95,8 +95,8 @@ typedef struct _grs_point {
 //@@#define SM_800x600V15   18
 
 #define SM(w,h) ((((uint32_t)w)<<16)+(((uint32_t)h)&0xFFFF))
-#define SM_W(m) (m>>16)
-#define SM_H(m) (m&0xFFFF)
+#define SM_W(m) ((uint16_t)(m>>16))
+#define SM_H(m) ((uint16_t)(m&0xFFFF))
 
 
 #define BM_FLAG_TRANSPARENT         1

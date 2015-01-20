@@ -59,7 +59,7 @@ typedef struct screen_save {
 screen_save gr_saved_screen;
 
 int gr_show_screen_info = 0;
-extern int VGA_current_mode;
+extern uint32_t VGA_current_mode;
 
 void gr_set_cellheight( ubyte height )
 {

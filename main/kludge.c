@@ -17,7 +17,6 @@
 #include "pstypes.h"
 #include "maths.h"
 
-extern int VGA_current_mode;
 
 int Window_clip_left,Window_clip_top,Window_clip_right,Window_clip_bot;
 
