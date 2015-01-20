@@ -10,29 +10,8 @@
 #include <conf.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "gr.h"
 #include "pstypes.h"
-#include "maths.h"
 
-
-int Window_clip_left,Window_clip_top,Window_clip_right,Window_clip_bot;
-
-char CDROM_dir[40] = ".";
-
-#ifndef __DJGPP__
-void joy_set_btn_values( int btn, int state, int time_down, int downcount, int upcount )
-{
-
-}
-#endif
-
-void key_putkey(char i)
-{
-
-}
 
 void g3_remap_interp_colors()
 {
@@ -85,11 +64,6 @@ void com_endlevel()
 }
 
 void serial_leave_game()
-{
-
-}
-
-void network_dump_appletalk_player(ubyte node, ushort net, ubyte socket, int why)
 {
 
 }

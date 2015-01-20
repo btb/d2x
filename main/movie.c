@@ -56,8 +56,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "physfsrwops.h"
 
 extern int MenuHiresAvailable;
-extern char CDROM_dir[];
-
 
 // Subtitle data
 typedef struct {
@@ -635,65 +633,6 @@ void close_movies()
 
 		close_movie(movielib_files[i], is_robots);
 	}
-}
-
-
-//ask user to put the D2 CD in.
-//returns -1 if ESC pressed, 0 if OK chosen
-//CD may not have been inserted
-int request_cd(void)
-{
-#if 0
-	ubyte save_pal[256*3];
-	grs_canvas *save_canv,*tcanv;
-	int ret,was_faded=gr_palette_faded_out;
-
-	gr_palette_clear();
-
-	save_canv = grd_curcanv;
-	tcanv = gr_create_canvas(grd_curcanv->cv_w,grd_curcanv->cv_h);
-
-	gr_set_current_canvas(tcanv);
-	gr_ubitmap(0,0,&save_canv->cv_bitmap);
-	gr_set_current_canvas(save_canv);
-
-	gr_clear_canvas(BM_XRGB(0,0,0));
-
-	memcpy(save_pal,gr_palette,sizeof(save_pal));
-
-	memcpy(gr_palette,last_palette_for_color_fonts,sizeof(gr_palette));
-
- try_again:;
-
-	ret = nm_messagebox( "CD ERROR", 1, "Ok", "Please insert your Descent II CD");
-
-	if (ret == -1) {
-		int ret2;
-
-		ret2 = nm_messagebox( "CD ERROR", 2, "Try Again", "Leave Game", "You must insert your\nDescent II CD to Continue");
-
-		if (ret2 == -1 || ret2 == 0)
-			goto try_again;
-	}
-
-	force_rb_register = 1;  //disc has changed; force register new CD
-
-	gr_palette_clear();
-
-	memcpy(gr_palette,save_pal,sizeof(save_pal));
-
-	gr_ubitmap(0,0,&tcanv->cv_bitmap);
-
-	if (!was_faded)
-		gr_palette_load(gr_palette);
-
-	gr_free_canvas(tcanv);
-
-	return ret;
-#else
-	con_printf(CON_DEBUG, "STUB: movie: request_cd\n");
-	return 0;
-#endif
 }
 
 

@@ -63,7 +63,7 @@ int	Max_perspective_depth;
 int	Max_linear_depth;
 int	Max_flat_depth;
 
-extern int Window_clip_left, Window_clip_bot, Window_clip_right, Window_clip_top;
+int Window_clip_left, Window_clip_bot, Window_clip_right, Window_clip_top;
 
 // These variables are the interface to assembler.  They get set for each texture map, which is a real waste of time.
 //	They should be set only when they change, which is generally when the window bounds change.  And, even still, it's

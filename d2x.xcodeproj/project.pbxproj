@@ -211,6 +211,7 @@
 		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
 		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
 		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
+		147159001A6E3CDA00FDF6AD /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695851A2729860070D41D /* serial.c */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
 		14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
@@ -2540,6 +2541,7 @@
 				14804D731A4CA16A001CB0FB /* pcx.c in Sources */,
 				14804D741A4CA16A001CB0FB /* pixel.c in Sources */,
 				14804D751A4CA16A001CB0FB /* rect.c in Sources */,
+				147159001A6E3CDA00FDF6AD /* serial.c in Sources */,
 				14804D761A4CA16A001CB0FB /* rle.c in Sources */,
 				14804D781A4CA16A001CB0FB /* scalec.c in Sources */,
 			);
