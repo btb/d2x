@@ -56,10 +56,10 @@ static void msg(const char *fmt, ...)
 	putchar('\n');
 }
 #else
-#define msg(m...)
+#define msg(...)
 #endif
 
-#define FAIL(m...) do{ nm_messagebox("Error", 1, "Ok", ##m); return -1; } while (0)
+#define FAIL(...) do{ nm_messagebox("Error", 1, "Ok", __VA_ARGS__); return -1; } while (0)
 
 #ifdef IPX_MCAST4_DEBUG
 /* Dump raw form of IP address/port by fancy output to user
