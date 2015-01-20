@@ -78,8 +78,20 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "screens.h"
 #include "powerup.h"
 #include "state.h"
+#include "ai.h"
+#include "bm.h"
+#include "cntrlcen.h"
 #include "config.h"
 #include "controls.h"
+#include "endlevel.h"
+#include "gamefont.h"
+#include "fireball.h"
+#include "kconfig.h"
+#include "laser.h"
+#include "polyobj.h"
+#include "songs.h"
+#include "text.h"
+#include "wall.h"
 
 
 /**

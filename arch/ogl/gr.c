@@ -835,7 +835,7 @@ void write_bmp(char *savename,int w,int h,unsigned char *buf){
 
 	f = PHYSFSX_openWriteBuffered(savename);
 		
-	if (f>=0){
+	if (f) {
 		GLubyte    targaMagic[12] = { 0, //no identification field
 			 0,//no colormap
 			 2,//RGB image (well, BGR, actually)

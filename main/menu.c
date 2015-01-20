@@ -1132,7 +1132,7 @@ void do_options_menu()
 extern int Redbook_playing;
 void set_redbook_volume(int volume);
 
-WIN(static BOOL windigi_driver_off=FALSE);
+WIN(static BOOL windigi_driver_off=FALSE;)
 
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {

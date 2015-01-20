@@ -444,7 +444,7 @@ void nm_rstring( bkg * b,int w1,int x, int y, char * s )
 //for text items, constantly redraw cursor (to achieve flash)
 void update_cursor( newmenu_item *item)
 {
-	int w,h,aw;
+	int w = 0, h, aw;
 	fix time = timer_get_approx_seconds();
 	int x,y;
 	char * text = item->text;
@@ -472,7 +472,7 @@ void update_cursor( newmenu_item *item)
 
 void nm_string_inputbox( bkg *b, int w, int x, int y, char * text, int current )
 {
-	int w1,h1,aw;
+	int w1 = 0, h1, aw;
 
 	while( *text )	{
 		gr_get_string_size(text, &w1, &h1, &aw  );
@@ -600,7 +600,7 @@ int char_allowed(char c)
 void strip_end_whitespace( char * text )
 {
 	int i,l;
-	l = strlen( text );
+	l = (int)strlen( text );
 	for (i=l-1; i>=0; i-- )	{
 		if ( isspace(text[i]) )
 			text[i] = 0;
@@ -697,7 +697,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 	int  choice,old_choice,i,j,x,y,w,h,aw, tw, th, twidth,fm,right_offset;
 	int k, nmenus, nothers,ScrollOffset=0,LastScrollCheck=-1,MaxDisplayable,sx,sy;
 	grs_font * save_font;
-	int string_width, string_height, average_width;
+	int string_width, string_height = 0, average_width;
 	int ty;
 	bkg bg;
 	int all_text=0;		//set true if all text items
@@ -1577,7 +1577,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 					choice = i + ScrollOffset;
 
 					if ( item[choice].type == NM_TYPE_SLIDER ) {
-						char slider_text[NM_MAX_TEXT_LEN+1], *p, *s1;
+						char slider_text[NM_MAX_TEXT_LEN+1], *p, *s1 = NULL;
 						int slider_width, height, aw, sleft_width, sright_width, smiddle_width;
 						
 						strcpy(slider_text, item[choice].saved_text);
@@ -1678,7 +1678,8 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 			if ( ((item[choice].type==NM_TYPE_INPUT)||((item[choice].type==NM_TYPE_INPUT_MENU)&&(item[choice].group==1)) )&& (old_choice==choice) )	{
 				if ( k==KEY_LEFT || k==KEY_BACKSP || k==KEY_PAD4 )	{
-					if (item[choice].value==-1) item[choice].value = strlen(item[choice].text);
+					if (item[choice].value == -1)
+						item[choice].value = (int)strlen(item[choice].text);
 					if (item[choice].value > 0)
 						item[choice].value--;
 					item[choice].text[item[choice].value] = 0;
@@ -3067,7 +3068,7 @@ void nm_wrap_text(char *dbuf, char *sbuf, int line_length)
 	char *wordptr;
 	char *tbuf;
 
-	tbuf = (char *)d_malloc(strlen(sbuf)+1);
+	tbuf = (char *)d_malloc((unsigned int)strlen(sbuf) + 1);
 	strcpy(tbuf, sbuf);
 
 	wordptr = strtok(tbuf, " ");
@@ -3077,7 +3078,7 @@ void nm_wrap_text(char *dbuf, char *sbuf, int line_length)
 
 	while (wordptr)
 	{
-		col = col+strlen(wordptr)+1;
+		col = col + (int)strlen(wordptr) + 1;
 		if (col >=line_length) {
 			col = 0;
 			sprintf(dbuf, "%s\n%s ", dbuf, wordptr);

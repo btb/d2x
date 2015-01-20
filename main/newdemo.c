@@ -221,10 +221,10 @@ PHYSFS_file *outfile = NULL;
 
 int newdemo_get_percent_done() {
 	if ( Newdemo_state == ND_STATE_PLAYBACK ) {
-		return (PHYSFS_tell(infile) * 100) / Newdemo_size;
+		return ((unsigned int)PHYSFS_tell(infile) * 100) / Newdemo_size;
 	}
 	if ( Newdemo_state == ND_STATE_RECORDING ) {
-		return PHYSFS_tell(outfile);
+		return (int)PHYSFS_tell(outfile);
 	}
 	return 0;
 }
@@ -264,7 +264,7 @@ void my_extract_shortpos(object *objp, shortpos *spp)
 int newdemo_read( void *buffer, int elsize, int nelem )
 {
 	int num_read;
-	num_read = PHYSFS_read(infile, buffer, elsize, nelem);
+	num_read = (int)PHYSFS_read(infile, buffer, elsize, nelem);
 	if (num_read < nelem || PHYSFS_eof(infile))
 		nd_bad_read = -1;
 
@@ -291,7 +291,7 @@ int newdemo_write( void *buffer, int elsize, int nelem )
 	frame_bytes_written += total_size;
 	Newdemo_num_written += total_size;
 	Assert(outfile != NULL);
-	num_written = PHYSFS_write(outfile, buffer, elsize, nelem);
+	num_written = (int)PHYSFS_write(outfile, buffer, elsize, nelem);
 	//if ((Newdemo_num_written > Newdemo_size) && !Newdemo_no_space) {
 	//	Newdemo_no_space=1;
 	//	newdemo_stop_recording();
@@ -331,7 +331,7 @@ static void nd_write_int(int i)
 static void nd_write_string(char *str)
 {
 	nd_write_byte(strlen(str) + 1);
-	newdemo_write(str, strlen(str) + 1, 1);
+	newdemo_write(str, (int)strlen(str) + 1, 1);
 }
 
 static void nd_write_fix(fix f)
@@ -1642,7 +1642,7 @@ int newdemo_read_frame_information()
 {
 	int done, segnum, side, objnum, soundno, angle, volume, i,shot;
 	object *obj;
-	sbyte c,WhichWindow;
+	sbyte c = 0, WhichWindow;
 	static sbyte saved_letter_cockpit;
 	static sbyte saved_rearview_cockpit;
 	object extraobj;
@@ -1945,7 +1945,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_PLAYER_ENERGY: {
 			sbyte energy;
-			sbyte old_energy;
+			sbyte old_energy = 0;
 
 			if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
 				nd_read_byte(&old_energy);
@@ -1978,7 +1978,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_PLAYER_SHIELD: {
 			sbyte shield;
-			sbyte old_shield;
+			sbyte old_shield = 0;
 
 			if (Newdemo_game_type >= DEMO_GAME_TYPE_D1)
 				nd_read_byte(&old_shield);
@@ -2036,7 +2036,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_PLAYER_WEAPON: {
 			sbyte weapon_type, weapon_num;
-			sbyte old_weapon;
+			sbyte old_weapon = 0;
 
 			nd_read_byte(&weapon_type);
 			nd_read_byte(&weapon_num);
@@ -2234,7 +2234,7 @@ int newdemo_read_frame_information()
 
 		case ND_EVENT_MULTI_CONNECT: {
 			sbyte pnum, new_player;
-			int killed_total, kills_total;
+			int killed_total = 0, kills_total = 0;
 			char new_callsign[CALLSIGN_LEN+1], old_callsign[CALLSIGN_LEN+1];
 
 			nd_read_byte(&pnum);
@@ -2570,7 +2570,7 @@ void newdemo_goto_end()
 		PHYSFS_seek(infile, PHYSFS_fileLength(infile) - 12);
 
 	nd_read_short(&frame_length);
-	loc = PHYSFS_tell(infile);
+	loc = (int)PHYSFS_tell(infile);
 	if (Newdemo_game_mode & GM_MULTI)
 		nd_read_byte(&Newdemo_players_cloaked);
 	else
@@ -2999,7 +2999,7 @@ void newdemo_playback_one_frame()
 
 void newdemo_start_recording()
 {
-	Newdemo_size = PHYSFSX_getFreeDiskSpace();
+	Newdemo_size = (int)PHYSFSX_getFreeDiskSpace();
 	con_printf(CON_VERBOSE, "Free space = %d\n", Newdemo_size);
 
 	Newdemo_size -= 100000;
@@ -3112,14 +3112,14 @@ void newdemo_stop_recording()
 	nd_write_byte(Current_level_num);
 	nd_write_byte(ND_EVENT_EOF);
 
-	l = PHYSFS_tell(outfile);
+	l = (int)PHYSFS_tell(outfile);
 	PHYSFS_close(outfile);
 	outfile = NULL;
 	Newdemo_state = ND_STATE_NORMAL;
 	gr_palette_load( gr_palette );
 
 	if (filename[0] != '\0') {
-		int num, i = strlen(filename) - 1;
+		int num, i = (int)strlen(filename) - 1;
 		char newfile[15];
 
 		while (isdigit(filename[i])) {
@@ -3279,7 +3279,7 @@ void newdemo_start_playback(char * filename)
 	Newdemo_state = ND_STATE_PLAYBACK;
 	Newdemo_vcr_state = ND_STATE_PLAYBACK;
 	Newdemo_old_cockpit = Cockpit_mode.intval;
-	Newdemo_size = PHYSFS_fileLength(infile);
+	Newdemo_size = (unsigned int)PHYSFS_fileLength(infile);
 	nd_bad_read = 0;
 	Newdemo_at_eof = 0;
 	NewdemoFrameCount = 0;
@@ -3320,7 +3320,7 @@ void newdemo_strip_frames(char *outname, int bytes_to_strip)
 	short last_frame_length;
 
 	bytes_done = 0;
-	total_size = PHYSFS_fileLength(infile);
+	total_size = (int)PHYSFS_fileLength(infile);
 	outfile = PHYSFSX_openWriteBuffered(outname);
 	if (outfile == NULL) {
 		newmenu_item m[1];
@@ -3341,35 +3341,35 @@ void newdemo_strip_frames(char *outname, int bytes_to_strip)
 		return;
 	}
 	newdemo_goto_end();
-	trailer_start = PHYSFS_tell(infile);
+	trailer_start = (int)PHYSFS_tell(infile);
 	PHYSFS_seek(infile, PHYSFS_tell(infile) + 11);
 	bytes_back = 0;
 	while (bytes_back < bytes_to_strip) {
-		loc1 = PHYSFS_tell(infile);
+		loc1 = (int)PHYSFS_tell(infile);
 		//PHYSFS_seek(infile, PHYSFS_tell(infile) - 10);
 		//nd_read_short(&last_frame_length);
 		//PHYSFS_seek(infile, PHYSFS_tell(infile) + 8 - last_frame_length);
 		newdemo_back_frames(1);
-		loc2 = PHYSFS_tell(infile);
+		loc2 = (int)PHYSFS_tell(infile);
 		bytes_back += (loc1 - loc2);
 	}
 	PHYSFS_seek(infile, PHYSFS_tell(infile) - 10);
 	nd_read_short(&last_frame_length);
 	PHYSFS_seek(infile, PHYSFS_tell(infile) - 3);
-	stop_loc = PHYSFS_tell(infile);
+	stop_loc = (int)PHYSFS_tell(infile);
 	PHYSFS_seek(infile, 0);
 	while (stop_loc > 0) {
 		if (stop_loc < BUF_SIZE)
 			bytes_to_read = stop_loc;
 		else
 			bytes_to_read = BUF_SIZE;
-		read_elems = PHYSFS_read(infile, buf, 1, bytes_to_read);
+		read_elems = (int)PHYSFS_read(infile, buf, 1, bytes_to_read);
 		PHYSFS_write(outfile, buf, 1, read_elems);
 		stop_loc -= read_elems;
 	}
-	stop_loc = PHYSFS_tell(outfile);
+	stop_loc = (int)PHYSFS_tell(outfile);
 	PHYSFS_seek(infile, trailer_start);
-	while ((read_elems = PHYSFS_read(infile, buf, 1, BUF_SIZE)) != 0)
+	while ((read_elems = (int)PHYSFS_read(infile, buf, 1, BUF_SIZE)) != 0)
 		PHYSFS_write(outfile, buf, 1, read_elems);
 	PHYSFS_seek(outfile, stop_loc);
 	PHYSFS_seek(outfile, PHYSFS_tell(infile) + 1);

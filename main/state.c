@@ -372,7 +372,7 @@ int state_get_restore_file(char * fname, int multi)
 //	Imagine if C had a function to copy a file...
 int copy_file(char *old_file, char *new_file)
 {
-	sbyte	*buf;
+	sbyte   *buf = NULL;
 	int		buf_size;
 	PHYSFS_file *in_file, *out_file;
 
@@ -386,7 +386,7 @@ int copy_file(char *old_file, char *new_file)
 	if (in_file == NULL)
 		return -2;
 
-	buf_size = PHYSFS_fileLength(in_file);
+	buf_size = (int)PHYSFS_fileLength(in_file);
 	while (buf_size && !(buf = d_malloc(buf_size)))
 		buf_size /= 2;
 	if (buf_size == 0)
@@ -396,7 +396,7 @@ int copy_file(char *old_file, char *new_file)
 	{
 		int bytes_read;
 
-		bytes_read = PHYSFS_read(in_file, buf, 1, buf_size);
+		bytes_read = (int)PHYSFS_read(in_file, buf, 1, buf_size);
 		if (bytes_read < 0)
 			Error("Cannot read from file <%s>: %s", old_file, PHYSFS_getLastError());
 
@@ -949,7 +949,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	char org_callsign[CALLSIGN_LEN+16];
 #ifdef NETWORK
 	int found;
-	int nplayers;	//,playid[12],mynum;
+	int nplayers = 0; //,playid[12],mynum;
 	player restore_players[MAX_PLAYERS];
 #endif
 	fix	old_gametime = GameTime;
@@ -1132,7 +1132,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	if ( !between_levels )	{
 		Do_appearance_effect = 0;			// Don't do this for middle o' game stuff.
 
-		ObjectStartLocation = PHYSFS_tell(fp);
+		ObjectStartLocation = (int)PHYSFS_tell(fp);
 		//Clear out all the objects from the lvl file
 		for (segnum=0; segnum <= Highest_segment_index; segnum++)
 			Segments[segnum].objects = -1;

@@ -247,7 +247,7 @@ char* piggy_game_bitmap_name(grs_bitmap *bmp)
 {
 	if (bmp >= GameBitmaps && bmp < &GameBitmaps[MAX_BITMAP_FILES])
 	{
-		int i = bmp-GameBitmaps; // i = (bmp - GameBitmaps) / sizeof(grs_bitmap);
+		int i = (int)(bmp - GameBitmaps); // i = (bmp - GameBitmaps) / sizeof(grs_bitmap);
 		Assert (bmp == &GameBitmaps[i] && i >= 0 && i < MAX_BITMAP_FILES);
 		return AllBitmaps[i].name;
 	}
@@ -2061,7 +2061,7 @@ void read_d1_tmap_nums_from_hog(CFILE *d1_pig)
 		if (bitmaps_tbl_is_binary)
 			decode_text_line((inputline));
 		else
-			while (inputline[(i=strlen(inputline))-2]=='\\')
+			while (inputline[(i = (int)strlen(inputline)) - 2] == '\\')
 				cfgets(inputline+i-2,LINEBUF_SIZE-(i-2), bitmaps); // strip comments
 		REMOVE_EOL(inputline);
                 if (strchr(inputline, ';')!=NULL) REMOVE_COMMENTS(inputline);
@@ -2207,7 +2207,7 @@ void load_d1_bitmap_replacements()
 
 			if ( (p = strchr(AllBitmaps[d2_index].name, '#')) /* d2 BM is animated */
 			     && !(bmh.dflags & DBM_FLAG_ABM) ) { /* d1 bitmap is not animated */
-				int i, len = p - AllBitmaps[d2_index].name;
+				int i, len = (int)(p - AllBitmaps[d2_index].name);
 				for (i = 0; i < Num_bitmap_files; i++)
 					if (i != d2_index && ! memcmp(AllBitmaps[d2_index].name, AllBitmaps[i].name, len))
 					{

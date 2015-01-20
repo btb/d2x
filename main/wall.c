@@ -367,7 +367,7 @@ void wall_open_door(segment *seg, int side)
 	Assert(seg->sides[side].wall_num != -1); 	//Opening door on illegal wall
 
 	w = &Walls[seg->sides[side].wall_num];
-	wall_num = w - Walls;
+	wall_num = (int)(w - Walls);
 	//kill_stuck_objects(seg->sides[side].wall_num);
 
 	if ((w->state == WALL_DOOR_OPENING) ||		//already opening
@@ -736,7 +736,7 @@ void wall_close_door(segment *seg, int side)
 	Assert(seg->sides[side].wall_num != -1); 	//Opening door on illegal wall
 
 	w = &Walls[seg->sides[side].wall_num];
-	wall_num = w - Walls;
+	wall_num = (int)(w - Walls);
 	if ((w->state == WALL_DOOR_CLOSING) ||		//already closing
 		 (w->state == WALL_DOOR_WAITING)	||		//open, waiting to close
 		 (w->state == WALL_DOOR_CLOSED))			//closed

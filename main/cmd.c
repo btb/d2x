@@ -88,7 +88,8 @@ void cmd_execute(int argc, char **argv)
 	for (cmd = cmd_list; cmd; cmd = cmd->next) {
 		if (!stricmp(argv[0], cmd->name)) {
 			con_printf(CON_DEBUG, "cmd_execute: executing %s\n", argv[0]);
-			return cmd->function(argc, argv);
+			cmd->function(argc, argv);
+			return;
 		}
 	}
 
