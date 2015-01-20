@@ -59,17 +59,17 @@ typedef struct pal_entry {
 
 //structure of the header in the file
 typedef struct iff_bitmap_header {
-	short w,h;						//width and height of this bitmap
-	short x,y;						//generally unused
-	short type;						//see types above
-	short transparentcolor;		//which color is transparent (if any)
-	short pagewidth,pageheight; //width & height of source screen
+	int16_t w, h;                   // width and height of this bitmap
+	int16_t x, y;                   // generally unused
+	int16_t type;                   // see types above
+	int16_t transparentcolor;       // which color is transparent (if any)
+	int16_t pagewidth, pageheight;  // width & height of source screen
 	sbyte nplanes;              //number of planes (8 for 256 color image)
 	sbyte masking,compression;  //see constants above
 	sbyte xaspect,yaspect;      //aspect ratio (usually 5/6)
 	pal_entry palette[256];		//the palette for this bitmap
-	ubyte *raw_data;				//ptr to array of data
-	short row_size;				//offset to next row
+	ubyte *raw_data;                // ptr to array of data
+	int16_t row_size;               // offset to next row
 } iff_bitmap_header;
 
 ubyte iff_transparent_color;
@@ -158,7 +158,7 @@ int put_byte(unsigned char c,FILE *f)
 	return fputc(c,f);
 }
 
-int get_word(FFILE *f)
+int16_t get_word(FFILE *f)
 {
 	unsigned char c0,c1;
 
@@ -172,11 +172,11 @@ int get_word(FFILE *f)
 
 	if (c0==0xff) return(EOF);
 
-	return(((int)c1<<8) + c0);
+	return(((int16_t)c1<<8) + c0);
 
 }
 
-int put_word(int n,FILE *f)
+int put_word(int16_t n, FILE *f)
 {
 	unsigned char c0,c1;
 
@@ -187,19 +187,19 @@ int put_word(int n,FILE *f)
 	return put_byte(c1,f);
 }
 
-int put_long(long n,FILE *f)
+int put_long(int32_t n, FILE *f)
 {
-	int n0,n1;
+	int16_t n0, n1;
 
-	n0 = (int) ((n & 0xffff0000l) >> 16);
-	n1 = (int) (n & 0xffff);
+	n0 = (int16_t)((n & 0xffff0000l) >> 16);
+	n1 = (int16_t)(n & 0xffff);
 
 	put_word(n0,f);
 	return put_word(n1,f);
 
 }
 
-long get_long(FFILE *f)
+int32_t get_long(FFILE *f)
 {
 	unsigned char c0,c1,c2,c3;
 
@@ -221,11 +221,11 @@ long get_long(FFILE *f)
 
 //  if (c0==0xff) return(EOF);
 
-	return(((long)c3<<24) + ((long)c2<<16) + ((long)c1<<8) + c0);
+	return(((int32_t)c3<<24) + ((int32_t)c2<<16) + ((int32_t)c1<<8) + c0);
 
 }
 
-int parse_bmhd(FFILE *ifile,long len,iff_bitmap_header *bmheader)
+int parse_bmhd(FFILE *ifile, int32_t len, iff_bitmap_header *bmheader)
 {
 	len++;  /* so no "parm not used" warning */
 
@@ -266,7 +266,7 @@ int parse_bmhd(FFILE *ifile,long len,iff_bitmap_header *bmheader)
 
 
 //  the buffer pointed to by raw_data is stuffed with a pointer to decompressed pixel data
-int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
+int parse_body(FFILE *ifile, int32_t len, iff_bitmap_header *bmheader)
 {
 	unsigned char  *p=bmheader->raw_data;
 	int width,depth;
@@ -386,11 +386,11 @@ int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
 }
 
 //modify passed bitmap
-int parse_delta(FFILE *ifile,long len,iff_bitmap_header *bmheader)
+int parse_delta(FFILE *ifile, int32_t len, iff_bitmap_header *bmheader)
 {
 	unsigned char  *p=bmheader->raw_data;
 	int y;
-	long chunk_end = ifile->position + len;
+	int32_t chunk_end = ifile->position + len;
 
 	get_long(ifile);		//longword, seems to be equal to 4.  Don't know what it is
 
@@ -455,7 +455,7 @@ int parse_delta(FFILE *ifile,long len,iff_bitmap_header *bmheader)
 }
 
 //  the buffer pointed to by raw_data is stuffed with a pointer to bitplane pixel data
-void skip_chunk(FFILE *ifile,long len)
+void skip_chunk(FFILE *ifile, int32_t len)
 {
 	//int c,i;
 	int ilen;
@@ -477,11 +477,11 @@ void skip_chunk(FFILE *ifile,long len)
 
 //read an ILBM or PBM file
 // Pass pointer to opened file, and to empty bitmap_header structure, and form length
-int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,int form_len,grs_bitmap *prev_bm)
+int iff_parse_ilbm_pbm(FFILE *ifile, int32_t form_type, iff_bitmap_header *bmheader, int form_len, grs_bitmap *prev_bm)
 {
-	long sig,len;
+	int32_t sig, len;
 	//char ignore=0;
-	long start_pos,end_pos;
+	int32_t start_pos, end_pos;
 
 	start_pos = ifile->position;
 	end_pos = start_pos-4+form_len;
@@ -647,11 +647,11 @@ int convert_ilbm_to_pbm(iff_bitmap_header *bmheader)
 	return IFF_NO_ERROR;
 }
 
-#define INDEX_TO_15BPP(i) ((short)((((palptr[(i)].r/2)&31)<<10)+(((palptr[(i)].g/2)&31)<<5)+((palptr[(i)].b/2 )&31)))
+#define INDEX_TO_15BPP(i) ((int16_t)((((palptr[(i)].r/2)&31)<<10)+(((palptr[(i)].g/2)&31)<<5)+((palptr[(i)].b/2 )&31)))
 
 int convert_rgb15(grs_bitmap *bm,iff_bitmap_header *bmheader)
 {
-	ushort *new_data;
+	uint16_t *new_data;
 	int x,y;
 	int newptr = 0;
 	pal_entry *palptr;
@@ -660,7 +660,7 @@ int convert_rgb15(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 //        if ((new_data = d_malloc(bm->bm_w * bm->bm_h * 2)) == NULL)
 //            {ret=IFF_NO_MEM; goto done;}
-       MALLOC(new_data, ushort, bm->bm_w * bm->bm_h * 2);
+       MALLOC(new_data, uint16_t, bm->bm_w * bm->bm_h * 2);
        if (new_data == NULL)
            return IFF_NO_MEM;
 
@@ -736,8 +736,8 @@ int iff_parse_bitmap(FFILE *ifile, grs_bitmap *bm, int bitmap_type, sbyte *palet
 {
 	int ret;			//return code
 	iff_bitmap_header bmheader;
-	long sig,form_len;
-	long form_type;
+	int32_t sig,form_len;
+	int32_t form_type;
 
 	bmheader.raw_data = bm->bm_data;
 
@@ -857,7 +857,7 @@ int iff_read_into_bitmap(char *ifilename, grs_bitmap *bm, sbyte *palette)
 int write_bmhd(FILE *ofile,iff_bitmap_header *bitmap_header)
 {
 	put_sig(bmhd_sig,ofile);
-	put_long((long) BMHD_SIZE,ofile);
+	put_long((int32_t)BMHD_SIZE, ofile);
 
 	put_word(bitmap_header->w,ofile);
 	put_word(bitmap_header->h,ofile);
@@ -969,7 +969,7 @@ int rle_span(ubyte *dest,ubyte *src,int len)
 	else if (lit_cnt > 1)
 		*cnt_ptr = lit_cnt-1;
 
-	return dptr-dest;
+	return (int)(dptr - dest);
 }
 
 #define EVEN(a) ((a+1)&0xfffffffel)
@@ -979,12 +979,12 @@ int write_body(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 {
 	int w=bitmap_header->w,h=bitmap_header->h;
 	int y,odd=w&1;
-	long len = EVEN(w) * h,newlen,total_len=0;
+	int32_t len = EVEN(w) * h, newlen, total_len = 0;
 	ubyte *p=bitmap_header->raw_data,*new_span;
-	long save_pos;
+	int32_t save_pos;
 
 	put_sig(body_sig,ofile);
-	save_pos = ftell(ofile);
+	save_pos = (int32_t)ftell(ofile);
 	put_long(len,ofile);
 
     //if (! (new_span = d_malloc(bitmap_header->w+(bitmap_header->w/128+2)*2))) return IFF_NO_MEM;
@@ -1026,7 +1026,7 @@ int write_tiny(CFILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 	int x,y,xofs,odd;
 	ubyte *p = bitmap_header->raw_data;
 	ubyte tspan[80],new_span[80*2];
-	long save_pos;
+	int32_t save_pos;
 
 	skip = max((bitmap_header->w+79)/80,(bitmap_header->h+63)/64);
 
@@ -1073,14 +1073,15 @@ int write_tiny(CFILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)
 int write_pbm(FILE *ofile,iff_bitmap_header *bitmap_header,int compression_on)			/* writes a pbm iff file */
 {
 	int ret;
-	long raw_size = EVEN(bitmap_header->w) * bitmap_header->h;
-	long body_size,tiny_size,pbm_size = 4 + BMHD_SIZE + 8 + EVEN(raw_size) + sizeof(pal_entry)*(1<<bitmap_header->nplanes)+8;
-	long save_pos;
+	int32_t raw_size = EVEN(bitmap_header->w) * bitmap_header->h;
+	int32_t body_size, tiny_size;
+	int32_t pbm_size = 4 + BMHD_SIZE + 8 + EVEN(raw_size) + sizeof(pal_entry) * (1<<bitmap_header->nplanes) + 8;
+	int32_t save_pos;
 
 //printf("write_pbm\n");
 
 	put_sig(form_sig,ofile);
-	save_pos = ftell(ofile);
+	save_pos = (int32_t)ftell(ofile);
 	put_long(pbm_size+8,ofile);
 	put_sig(pbm_sig,ofile);
 
@@ -1167,8 +1168,8 @@ int iff_read_animbrush(char *ifilename,grs_bitmap **bm_list,int max_bitmaps,int 
 	int ret;			//return code
 	FFILE ifile;
 	iff_bitmap_header bmheader;
-	long sig,form_len;
-	long form_type;
+	int32_t sig, form_len;
+	int32_t form_type;
 
 	*n_bitmaps=0;
 
