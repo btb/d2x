@@ -96,18 +96,6 @@ cvar_t joy_invert[] = {
 };
 
 
-void joy_cmd_joyadvancedupdate(int argc, char **argv)
-{
-	if (argc > 1) {
-		con_printf(CON_NORMAL, "%s\n", argv[0]);
-		con_printf(CON_NORMAL, "    updates current joystick and mouse axis settings\n");
-		return;
-	}
-
-	kc_set_controls();
-}
-
-
 void joy_button_handler(SDL_JoyButtonEvent *jbe)
 {
 	int button;
@@ -156,8 +144,6 @@ int joy_init()
 		cvar_registervariable(&joy_advaxes[i]);
 		cvar_registervariable(&joy_invert[i]);
 	}
-
-	cmd_addcommand("joyadvancedupdate", joy_cmd_joyadvancedupdate);
 
 	n = SDL_NumJoysticks();
 
