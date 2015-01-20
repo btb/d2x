@@ -864,7 +864,7 @@ void write_bmp(char *savename,int w,int h,unsigned char *buf){
 		x=0;y=w*h*3;
 		while (y > 0)
 		{
-			r = PHYSFS_write(f, buf + x, 1, y);
+			r = (int)PHYSFS_write(f, buf + x, 1, y);
 			if (r<=0){
 				mprintf((0,"screenshot error, couldn't write to %s (err %i)\n",savename,errno));
 				break;

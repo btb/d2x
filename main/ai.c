@@ -1606,7 +1606,7 @@ int ai_save_state(PHYSFS_file *fp)
 
 	{
 		int temp;
-		temp = Point_segs_free_ptr - Point_segs;
+		temp = (int)(Point_segs_free_ptr - Point_segs);
 		PHYSFS_write(fp, &temp, sizeof(int), 1);
 	}
 

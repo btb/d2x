@@ -155,7 +155,7 @@ uint check_point_to_face(vms_vector *checkp, side *s,int facenum,int nv,int *ver
 	//now do 2d check to see if point is in side
 
 	//project polygon onto plane by finding largest component of normal
-	t.x = labs(norm.xyz[0]); t.y = labs(norm.xyz[1]); t.z = labs(norm.xyz[2]);
+	t.x = (fix)labs(norm.xyz[0]); t.y = (fix)labs(norm.xyz[1]); t.z = (fix)labs(norm.xyz[2]);
 
 	if (t.x > t.y) if (t.x > t.z) biggest=0; else biggest=2;
 	else if (t.y > t.z) biggest=1; else biggest=2;

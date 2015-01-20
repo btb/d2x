@@ -30,7 +30,7 @@ quadint;
 
 
 //Convert an int to a fix
-#define i2f(i) ((i)<<16)
+#define i2f(i) ((fix)((i)<<16))
 
 //Get the int part of a fix
 #define f2i(f) ((f)>>16)

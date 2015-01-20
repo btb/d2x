@@ -1006,7 +1006,7 @@ void kc_change_key( kc_item * item )
 
 	if (k!=KEY_ESC)	{
 		for (i=0; i<Num_items; i++ )	{
-			n = item - All_items;
+			n = (int)(item - All_items);
 			if ( (i!=n) && (All_items[i].type==BT_KEY) && (All_items[i].value==keycode) )		{
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );
@@ -1045,7 +1045,7 @@ void kc_next_joyaxis(kc_item *item)
 	{
 		for (i = 0; i < Num_items; i++)
 		{
-			n = item - All_items;
+			n = (int)(item - All_items);
 			if ((i != n) && (All_items[i].type == BT_JOY_AXIS) && (All_items[i].value == code))
 			{
 				if (tries > max)
@@ -1112,7 +1112,7 @@ void kc_change_joyaxis( kc_item * item )
 		}
 		for (i=0; i<Num_items; i++ )	
 		 {
-			n = item - All_items;
+			n = (int)(item - All_items);
 			if ( (i!=n) && (All_items[i].type==BT_JOY_AXIS) && (All_items[i].value==code) )	
 				code = 255;
 		 }
@@ -1120,7 +1120,7 @@ void kc_change_joyaxis( kc_item * item )
 	}
 	if (code!=255)	{
 		for (i=0; i<Num_items; i++ )	{
-			n = item - All_items;
+			n = (int)(item - All_items);
 			if ( (i!=n) && (All_items[i].type==BT_JOY_AXIS) && (All_items[i].value==code) )	{
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );
@@ -1174,7 +1174,7 @@ void kc_change_mouseaxis( kc_item * item )
 	}
 	if (code!=255)	{
 		for (i=0; i<Num_items; i++ )	{
-			n = item - All_items;
+			n = (int)(item - All_items);
 			if ( (i!=n) && (All_items[i].type==BT_MOUSE_AXIS) && (All_items[i].value==code) )		{
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );

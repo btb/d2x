@@ -51,8 +51,7 @@ int knix_newSock(void) {
 int knix_Send(int hand, char *data, int len) {
 	int i = 0, t;
 
-	while ((t = sendto(hand, data, len, 0, (struct sockaddr *)&kalinix_addr, 
-			sizeof(kalinix_addr))) < 0) {
+	while ((t = (int)sendto(hand, data, len, 0, (struct sockaddr *)&kalinix_addr, sizeof(kalinix_addr))) < 0) {
 		i++;
 		if (i > 10)
 			return 0;
@@ -67,8 +66,7 @@ int knix_Recv(int hand, char *data, int len) {
 
 	tlen = sizeof(taddr);
 
-	return recvfrom(hand, data, len, 0, (struct sockaddr *)&taddr, (unsigned int *)&tlen);
-
+	return (int)recvfrom(hand, data, len, 0, (struct sockaddr *)&taddr, (unsigned int *)&tlen);
 }
 
 int knix_WaitforSocket(int hand, int timems) {

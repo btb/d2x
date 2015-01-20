@@ -1442,7 +1442,7 @@ void homing_missile_turn_towards_velocity(object *objp, vms_vector *norm_vel)
 		if (delta_time < HOMER_MIN_DELAY) {
 			return;
 		} else {
-			fps = (1000 + delta_time / 2) / delta_time;
+			fps = (int)((1000 + delta_time / 2) / delta_time);
 			frame_time = fps ? (f1_0 + fps / 2) / fps : f1_0;
 			//                     frame_time /= nFrames;
 			nFrames = 0;

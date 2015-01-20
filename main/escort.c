@@ -411,7 +411,7 @@ void buddy_message(char * format, ... )
 			gb_str[0] = 1;
 			gb_str[1] = BM_XRGB(28, 0, 0);
 			strcpy(&gb_str[2], guidebot_name);
-			t = strlen(gb_str);
+			t = (int)strlen(gb_str);
 			gb_str[t] = ':';
 			gb_str[t+1] = 1;
 			gb_str[t+2] = BM_XRGB(0, 31, 0);

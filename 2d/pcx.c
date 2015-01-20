@@ -322,7 +322,7 @@ int pcx_write_bitmap( char * filename, grs_bitmap * bmp, ubyte * palette )
 	for (i=0; i<768; i++ )
 		palette[i] <<= 2;
 
-	retval = PHYSFS_write(PCXfile, palette, 768, 1);
+	retval = (int)PHYSFS_write(PCXfile, palette, 768, 1);
 
 	for (i=0; i<768; i++ )
 		palette[i] >>= 2;

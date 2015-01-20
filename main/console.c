@@ -746,7 +746,7 @@ void DrawCommandLine() {
 	grs_canvas *canv_save;
 	short orig_color;
 	
-	commandbuffer = console->VChars - strlen(console->Prompt)-1; // -1 to make cursor visible
+	commandbuffer = console->VChars - (int)strlen(console->Prompt) - 1; // -1 to make cursor visible
 	
 #if 0
 	CurrentFont = console->ConsoleSurface->cv_font;
@@ -1029,7 +1029,7 @@ void CON_TabCompletion(void) {
 	if(!command)
 		return;	//no tab completion took place so return silently
 	
-	j = strlen(command);
+	j = (int)strlen(command);
 	if(j > CON_CHARS_PER_LINE - 2)
 		j = CON_CHARS_PER_LINE-1;
 	
@@ -1082,7 +1082,7 @@ void Cursor_Home(void) {
 }
 
 void Cursor_End(void) {
-	console->CursorPos = strlen(console->Command);
+	console->CursorPos = (int)strlen(console->Command);
 	strncat(console->LCommand, console->RCommand, strlen(console->RCommand));
 	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
 }
@@ -1138,7 +1138,7 @@ void Command_Up(void) {
 		memset(console->RCommand, 0, CON_CHARS_PER_LINE);
 		console->Offset = 0;
 		strcpy(console->LCommand, console->CommandLines[console->CommandScrollBack]);
-		console->CursorPos = strlen(console->CommandLines[console->CommandScrollBack]);
+		console->CursorPos = (int)strlen(console->CommandLines[console->CommandScrollBack]);
 		CON_UpdateConsole();
 	}
 }
@@ -1152,7 +1152,7 @@ void Command_Down(void) {
 		console->Offset = 0;
 		if(console->CommandScrollBack > -1)
 			strcpy(console->LCommand, console->CommandLines[console->CommandScrollBack]);
-		console->CursorPos = strlen(console->LCommand);
+		console->CursorPos = (int)strlen(console->LCommand);
 		CON_UpdateConsole();
 	}
 }

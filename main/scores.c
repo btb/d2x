@@ -136,7 +136,7 @@ void scores_read()
 		return;
 	}
 
-	fsize = PHYSFS_fileLength(fp);
+	fsize = (int)PHYSFS_fileLength(fp);
 
 	if ( fsize != sizeof(all_scores) )	{
 		PHYSFS_close(fp);
@@ -177,7 +177,7 @@ void int_to_string( int number, char *dest )
 
 	sprintf( buffer, "%d", number );
 
-	l = strlen(buffer);
+	l = (int)strlen(buffer);
 	if (l<=3) {
 		// Don't bother with less than 3 digits
 		sprintf( dest, "%d", number );

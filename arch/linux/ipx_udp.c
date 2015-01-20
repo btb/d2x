@@ -360,7 +360,7 @@ int ipx_udp_GetMyAddress(void) {
 
 char buf[256];
 int i;
-char *s,*s2,*ns;
+	char *s = NULL, *s2, *ns;
 
 	if (!have_empty_address())
 		return 0;
@@ -517,8 +517,7 @@ static int ipx_udp_SendPacket(ipx_socket_t *mysock, IPXPacket_t *IPXHeader,
 		dumpaddr(dest);
 		puts(").");
 #endif
-		i=sendto(mysock->fd,buf-(compatibility?6:2),(compatibility?8:4)+dataLen,
-			0,(struct sockaddr *)dest,sizeof(*dest));
+		i = (int)sendto(mysock->fd, buf - (compatibility?6:2), (compatibility?8:4) + dataLen, 0, (struct sockaddr *)dest, sizeof(*dest));
 		if (bcast==-1) return (i<8?-1:i-8);
 		}
 	return(dataLen);
@@ -539,7 +538,7 @@ static int ipx_udp_ReceivePacket(ipx_socket_t *s, char *outbuf, int outbufsize,
 	size_t offs;
 	int i;
 
-	if ((size=recvfrom(s->fd,outbuf,outbufsize,0,(struct sockaddr *)&fromaddr,&fromaddrsize))<0)
+	if ((size = (int)recvfrom(s->fd, outbuf, outbufsize, 0, (struct sockaddr *)&fromaddr, &fromaddrsize)) < 0)
 		return -1;
 #ifdef UDPDEBUG
 	printf(MSGHDR "recvfrom((%d-8=%d),",size,size-8);

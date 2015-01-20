@@ -93,7 +93,7 @@ void draw_centered_text( int y, char * s )
 	int i, l;
 	char p;
 
-	l = strlen(s);
+	l = (int)strlen(s);
 
 	if ( string_width( s, l ) < grd_curcanv->cv_bitmap.bm_w )	{
 		gr_string( 0x8000, y, s );

@@ -466,7 +466,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 
 		if (robotcen->Timer > top_time )	{
 			int	count=0;
-			int	i, my_station_num = robotcen-Station;
+			int	i, my_station_num = (int)(robotcen - Station);
 			object *obj;
 
 			//	Make sure this robotmaker hasn't put out its max without having any of them killed.
@@ -560,7 +560,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 #ifndef SHAREWARE
 #ifdef NETWORK
 					if (Game_mode & GM_MULTI)
-						multi_send_create_robot(robotcen-Station, OBJECT_NUMBER(obj), type);
+						multi_send_create_robot((int)(robotcen - Station), OBJECT_NUMBER(obj), type);
 #endif
 #endif
 					obj->matcen_creator = (robotcen-Station) | 0x80;

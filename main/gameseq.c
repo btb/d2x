@@ -1997,7 +1997,7 @@ void InitPlayerPosition(int random_flag)
 		int i, closest = -1, trys=0;
 		fix closest_dist = 0x7ffffff, dist;
 
-		d_srand(clock());
+		d_srand((unsigned int)clock());
 
 #ifndef NDEBUG
 		if (NumNetPlayerPositions != MAX_NUM_NET_PLAYERS)

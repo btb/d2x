@@ -32,7 +32,7 @@ char *jcrypt (char *plainstring)
 	int i, t, len;
 	static char cryptstring[20];
 
-	len=strlen (plainstring);
+	len = (int)strlen(plainstring);
 	if (len > 8)
 		len = 8;
 

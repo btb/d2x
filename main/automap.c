@@ -1325,7 +1325,7 @@ void add_one_edge( short va, short vb, ubyte color, ubyte side, short segnum, in
 		e->segnum[0] = segnum;
 		//Edge_used_list[Num_edges] = e-Edges;
 		if ( (e-Edges) > Highest_edge_index )
-			Highest_edge_index = e - Edges;
+			Highest_edge_index = (int)(e - Edges);
 		Num_edges++;
 	} else {
 		//Assert(e->num_faces < 8 );

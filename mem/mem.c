@@ -382,7 +382,7 @@ char *mem_strdup(char *str, char *var, char *filename, int line)
 {
 	char *newstr;
 
-	newstr = mem_malloc(strlen(str) + 1, var, filename, line, 0);
+	newstr = mem_malloc((int)strlen(str) + 1, var, filename, line, 0);
 	strcpy(newstr, str);
 
 	return newstr;

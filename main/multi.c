@@ -1203,7 +1203,7 @@ void multi_send_message_end()
 	{
 		mytempbuf=&Network_message[9];
 		mprintf ((0,"Networkhandi=%s\n",mytempbuf));
-		StartingShields=atol (mytempbuf);
+		StartingShields = atoi(mytempbuf);
 		if (StartingShields<10)
 			StartingShields=10;
 		if (StartingShields>100)
@@ -1446,7 +1446,7 @@ void multi_message_input_sub( int key )
 							strcpy( pcolon+1, ptext );
 						else
 							strcpy( Network_message, ptext );
-						multi_message_index = strlen( Network_message );
+						multi_message_index = (int)strlen( Network_message );
 					}
 				}
 			}
@@ -1564,7 +1564,7 @@ multi_do_message(char *buf)
 
 	if ((tilde=strchr (buf+loc,'$')))  // do that stupid name stuff
 	{											// why'd I put this in?  Probably for the
-		tloc=tilde-(buf+loc);				// same reason you can name your guidebot
+		tloc = (int)(tilde - (buf + loc));  // same reason you can name your guidebot
 		mprintf ((0,"Tloc=%d\n",tloc));
 
 		if (tloc>0)
@@ -1579,7 +1579,7 @@ multi_do_message(char *buf)
 		mesbuf[0] = 1;
 		mesbuf[1] = BM_XRGB(28, 0, 0);
 		strcpy(&mesbuf[2], Players[(int)buf[1]].callsign);
-		t = strlen(mesbuf);
+		t = (int)strlen(mesbuf);
 		mesbuf[t] = ':';
 		mesbuf[t+1] = 1;
 		mesbuf[t+2] = BM_XRGB(0, 31, 0);
@@ -1596,7 +1596,7 @@ multi_do_message(char *buf)
 			mesbuf[0] = 1;
 			mesbuf[1] = BM_XRGB(0, 32, 32);
 			strcpy(&mesbuf[2], Players[(int)buf[1]].callsign);
-			t = strlen(mesbuf);
+			t = (int)strlen(mesbuf);
 			mesbuf[t] = ':';
 			mesbuf[t+1] = 1;
 			mesbuf[t+2] = BM_XRGB(0, 31, 0);

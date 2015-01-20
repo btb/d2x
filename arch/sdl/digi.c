@@ -183,7 +183,7 @@ static void audio_mixcallback(void *userdata, Uint8 *stream, int len)
 				s = *sp;
 				*(sp++) = mix8[ s + fixmul(v, vr) + 0x80 ];
 			}
-			sl->position = sldata - sl->samples;
+			sl->position = (int)(sldata - sl->samples);
 		}
 	}
 }

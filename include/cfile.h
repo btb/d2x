@@ -32,11 +32,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define CFILE            PHYSFS_file
 #define cfopen(f,m)      PHYSFSX_openReadBuffered(f)
-#define cfread(p,s,n,fp) PHYSFS_read(fp,p,s,n)
+#define cfread(p,s,n,fp) ((int)PHYSFS_read(fp,p,s,n))
 #define cfclose          PHYSFS_close
-#define cftell           PHYSFS_tell
+#define cftell(f)        ((int)PHYSFS_tell(f))
 #define cfexist          PHYSFS_exists
-#define cfilelength      PHYSFS_fileLength
+#define cfilelength(f)   ((int)PHYSFS_fileLength(f))
 
 //Specify the name of the hogfile.  Returns 1 if hogfile found & had files
 static inline int cfile_init(char *hogname)
@@ -68,7 +68,7 @@ static inline int cfile_size(char *hogname)
 	fp = PHYSFS_openRead(hogname);
 	if (fp == NULL)
 		return -1;
-	size = PHYSFS_fileLength(fp);
+	size = (int)PHYSFS_fileLength(fp);
 	cfclose(fp);
 
 	return size;
@@ -84,7 +84,7 @@ static inline int cfgetc(PHYSFS_file *const fp)
 	return c;
 }
 
-static inline int cfseek(PHYSFS_file *fp, long int offset, int where)
+static inline int cfseek(PHYSFS_file *fp, int offset, int where)
 {
 	int c, goal_position;
 
@@ -94,10 +94,10 @@ static inline int cfseek(PHYSFS_file *fp, long int offset, int where)
 		goal_position = offset;
 		break;
 	case SEEK_CUR:
-		goal_position = PHYSFS_tell(fp) + offset;
+		goal_position = (int)PHYSFS_tell(fp) + offset;
 		break;
 	case SEEK_END:
-		goal_position = PHYSFS_fileLength(fp) + offset;
+		goal_position = (int)PHYSFS_fileLength(fp) + offset;
 		break;
 	default:
 		return 1;

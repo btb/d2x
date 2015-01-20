@@ -58,7 +58,7 @@ void fixmulaccum(quadint *q,fix a,fix b)
 
 	neg = ((a^b) < 0);
 
-	aa = labs(a); bb = labs(b);
+	aa = (uint32_t)labs(a); bb = (uint32_t)labs(b);
 
 	ah = aa>>16;  al = aa&0xffff;
 	bh = bb>>16;  bl = bb&0xffff;
@@ -280,7 +280,7 @@ unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
 unsigned int fixdivquadlongu(uint nl, uint nh, uint d)
 {
   uint64_t n = (uint64_t)nl | (((uint64_t)nh) << 32 );
-  return n / ((uint64_t)d);
+  return (unsigned int)(n / ((uint64_t)d));
 }
 
 #else //of ifdef NO_FIX_INLINE
@@ -453,7 +453,7 @@ fixang fix_asin(fix v)
 	fix vv;
 	int i,f,aa;
 
-	vv = labs(v);
+	vv = (fix)labs(v);
 
 	if (vv >= f1_0)		//check for out of range
 		return 0x4000;
@@ -476,7 +476,7 @@ fixang fix_acos(fix v)
 	fix vv;
 	int i,f,aa;
 
-	vv = labs(v);
+	vv = (fix)labs(v);
 
 	if (vv >= f1_0)		//check for out of range
 		return 0;

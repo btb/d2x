@@ -2896,7 +2896,7 @@ int mark_player_path_to_segment(int segnum)
 		return 0;
 	}
 
-	player_hide_index = Point_segs_free_ptr - Point_segs;
+	player_hide_index = (int)(Point_segs_free_ptr - Point_segs);
 	Point_segs_free_ptr += player_path_length;
 
 	if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
@@ -2996,7 +2996,7 @@ void flickering_light_write(flickering_light *fl, PHYSFS_file *fp)
 {
 	PHYSFS_writeSLE16(fp, fl->segnum);
 	PHYSFS_writeSLE16(fp, fl->sidenum);
-	PHYSFS_writeULE32(fp, fl->mask);
+	PHYSFS_writeULE32(fp, (uint32_t)fl->mask);
 	PHYSFSX_writeFix(fp, fl->timer);
 	PHYSFSX_writeFix(fp, fl->delay);
 }

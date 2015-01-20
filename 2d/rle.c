@@ -416,7 +416,7 @@ int gr_rle_encode( int org_size, ubyte *src, ubyte *dest )
 	}
 	*dest++ = RLE_CODE;
 
-	return dest-dest_start;
+	return (int)(dest - dest_start);
 }
 
 
@@ -954,7 +954,7 @@ void rle_swap_0_255(grs_bitmap *bmp)
 			temp[4 + i] = ptr2 - start;
 		ptr += line_size;           // go to next line
 	}
-	len = ptr2 - temp;
+	len = (int)(ptr2 - temp);
 	*((int *)temp) = len;           // set total size
 	memcpy(bmp->bm_data, temp, len);
 	d_free(temp);
@@ -1005,7 +1005,7 @@ void rle_remap(grs_bitmap *bmp, ubyte *colormap)
 			temp[4 + i] = ptr2 - start;
 		ptr += line_size;           // go to next line
 	}
-	len = ptr2 - temp;
+	len = (int)(ptr2 - temp);
 	*((int *)temp) = len;           // set total size
 	memcpy(bmp->bm_data, temp, len);
 	d_free(temp);

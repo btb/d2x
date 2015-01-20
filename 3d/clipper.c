@@ -200,7 +200,7 @@ int clip_plane(int plane_flag,g3s_point **src,g3s_point **dest,int *nv,g3s_codes
 		}
 	}
 
-	return (dest-save_dest);
+	return (int)(dest - save_dest);
 }
 
 

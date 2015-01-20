@@ -224,9 +224,9 @@ fix vm_vec_mag_quick(vms_vector *v)
 {
 	fix a,b,c,bc;
 
-	a = labs(v->x);
-	b = labs(v->y);
-	c = labs(v->z);
+	a = (fix)labs(v->x);
+	b = (fix)labs(v->y);
+	c = (fix)labs(v->z);
 
 	if (a < b) {
 		fix t=a; a=b; b=t;
@@ -379,7 +379,7 @@ void check_vec(vms_vector *v)
 	fix check;
 	int cnt = 0;
 
-	check = labs(v->x) | labs(v->y) | labs(v->z);
+	check = (fix)labs(v->x) | (fix)labs(v->y) | (fix)labs(v->z);
 	
 	if (check == 0)
 		return;

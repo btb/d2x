@@ -391,7 +391,7 @@ int ReadConfigFile()
 
 	gr_palette_set_gamma( Config_gamma_level.intval );
 
-	Detail_level = strtol(Config_detail_level.string, NULL, 10);
+	Detail_level = (int)strtol(Config_detail_level.string, NULL, 10);
 	if (Detail_level == NUM_DETAIL_LEVELS - 1) {
 		int count,dummy,oc,od,wd,wrd,da,sc;
 

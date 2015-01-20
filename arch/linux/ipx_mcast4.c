@@ -180,7 +180,7 @@ static int ipx_mcast4_SendPacket(ipx_socket_t *sk, IPXPacket_t *IPXHeader, u_cha
 	puts(").");
 #endif
 
-	i = sendto(sk->fd, data, dataLen, 0, (struct sockaddr *)&toaddr, sizeof(toaddr));
+	i = (int)sendto(sk->fd, data, dataLen, 0, (struct sockaddr *)&toaddr, sizeof(toaddr));
 	return i;
 }
 
@@ -190,7 +190,7 @@ static int ipx_mcast4_ReceivePacket(ipx_socket_t *sk, char *outbuf, int outbufsi
 	struct sockaddr_in fromaddr;
 	uint fromaddrsize = sizeof(fromaddr);
 
-	if((size = recvfrom(sk->fd, outbuf, outbufsize, 0, (struct sockaddr*)&fromaddr, &fromaddrsize)) < 0)
+	if ((size = (int)recvfrom(sk->fd, outbuf, outbufsize, 0, (struct sockaddr*)&fromaddr, &fromaddrsize)) < 0)
 		return -1;
 
 #ifdef IPX_MCAST4_DEBUG
@@ -308,7 +308,7 @@ static int ipx_mcast4_SendGamePacket(ipx_socket_t *sk, ubyte *data, int dataLen)
 
 	msg("ipx_mcast4_SendGamePacket");
 
-	i = sendto(sk->fd, data, dataLen, 0, (struct sockaddr *)&toaddr, sizeof(toaddr));
+	i = (int)sendto(sk->fd, data, dataLen, 0, (struct sockaddr *)&toaddr, sizeof(toaddr));
 
 	return i;
 }
