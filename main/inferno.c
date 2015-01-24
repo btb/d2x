@@ -590,6 +590,9 @@ int main(int argc, char *argv[])
 
 	do_joystick_init();
 
+	if ((t = gr_init()) != 0) // doesn't do much
+		Error(TXT_CANT_INIT_GFX, t);
+
 	con_printf (CON_VERBOSE, "%s", TXT_VERBOSE_1);
 	ReadConfigFile();
 
@@ -639,9 +642,6 @@ int main(int argc, char *argv[])
 
 	if (FindArg( "-lowresmovies" ))
 		cvar_setint( &MovieHires, 0 );
-
-	if ((t=gr_init())!=0)				//doesn't do much
-		Error(TXT_CANT_INIT_GFX,t);
 
 	con_printf(CON_VERBOSE, "Going into graphics mode...\n");
 	gr_set_mode(MovieHires.intval?SM(640,480):SM(320,200));

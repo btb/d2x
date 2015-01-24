@@ -551,6 +551,8 @@ int gr_init()
 
 	cmd_addcommand("gl_texturemode", gr_cmd_texturemode);
 
+	cvar_registervariable(&gr_palette_gamma);
+
 	gr_installed = 1;
 	
 	atexit(gr_close);
@@ -685,9 +687,9 @@ void gr_palette_step_up(int r, int g, int b)
 	old_b_g = ogl_brightness_g;
 	old_b_b = ogl_brightness_b;
 
-	ogl_brightness_r = max(r + gr_palette_gamma, 0);
-	ogl_brightness_g = max(g + gr_palette_gamma, 0);
-	ogl_brightness_b = max(b + gr_palette_gamma, 0);
+	ogl_brightness_r = max(r + gr_palette_gamma.intval, 0);
+	ogl_brightness_g = max(g + gr_palette_gamma.intval, 0);
+	ogl_brightness_b = max(b + gr_palette_gamma.intval, 0);
 
 	if (ogl_setgammaramp_ok &&
 	    (old_b_r != ogl_brightness_r ||
@@ -701,7 +703,7 @@ void gr_palette_step_up(int r, int g, int b)
 		last_g = ogl_brightness_g / 63.0;
 		last_b = ogl_brightness_b / 63.0;
 
-		do_pal_step = (r || g || b || gr_palette_gamma);
+		do_pal_step = (r || g || b || gr_palette_gamma.intval);
 	}
 	else
 	{

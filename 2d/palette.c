@@ -56,7 +56,7 @@ ubyte gr_palette[256*3];
 ubyte gr_current_pal[256*3];
 ubyte gr_fade_table[256*34];
 
-ubyte gr_palette_gamma = 0;
+cvar_t gr_palette_gamma = { "gamma", "0", 0 };
 int gr_palette_gamma_param = 0;
 ubyte gr_palette_faded_out = 1;
 
@@ -71,7 +71,7 @@ void gr_palette_set_gamma( int gamma )
 
 	if (gr_palette_gamma_param != gamma )	{
 		gr_palette_gamma_param = gamma;
-		gr_palette_gamma = gamma;
+		cvar_setint(&gr_palette_gamma, gamma);
 		if (!gr_palette_faded_out)
 			gr_palette_load( gr_palette );
 	}

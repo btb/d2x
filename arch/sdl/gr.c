@@ -268,6 +268,8 @@ int gr_init(void)
 	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
 	gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
+	cvar_registervariable(&gr_palette_gamma);
+
 	gr_installed = 1;
 	// added on 980913 by adb to add cleanup
 	atexit(gr_close);
@@ -334,15 +336,15 @@ void gr_palette_step_up( int r, int g, int b )
  }
 
  for (i=0; i<256; i++) {
-   temp = (int)(*p++) + r + gr_palette_gamma;
+   temp = (int)(*p++) + r + gr_palette_gamma.intval;
    if (temp<0) temp=0;
    else if (temp>63) temp=63;
    colors[i].r = temp * 4;
-   temp = (int)(*p++) + g + gr_palette_gamma;
+   temp = (int)(*p++) + g + gr_palette_gamma.intval;
    if (temp<0) temp=0;
    else if (temp>63) temp=63;
    colors[i].g = temp * 4;
-   temp = (int)(*p++) + b + gr_palette_gamma;
+   temp = (int)(*p++) + b + gr_palette_gamma.intval;
    if (temp<0) temp=0;
    else if (temp>63) temp=63;
    colors[i].b = temp * 4;
@@ -376,9 +378,9 @@ void gr_palette_load( ubyte *pal )
 
  for (i = 0, j = 0; j < 256; j++) {
      //changed on 980913 by adb to fix palette problems
-     colors[j].r = (min(gr_current_pal[i++] + gr_palette_gamma, 63)) * 4;
-     colors[j].g = (min(gr_current_pal[i++] + gr_palette_gamma, 63)) * 4;
-     colors[j].b = (min(gr_current_pal[i++] + gr_palette_gamma, 63)) * 4;
+     colors[j].r = min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
+     colors[j].g = min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
+     colors[j].b = min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
      //end changes by adb
  }
  SDL_SetColors(screen, colors, 0, 256);
@@ -423,24 +425,24 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
  for (j=0; j<nsteps; j++ )	{
      for (i=0, k = 0; k<256; k++ )	{
          fade_palette[i] -= fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].r = c * 4;
          i++;
 
          fade_palette[i] -= fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].g = c * 4;
          i++;
 
          fade_palette[i] -= fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].b = c * 4;
@@ -492,24 +494,24 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
  for (j=0; j<nsteps; j++ )	{
      for (i=0, k = 0; k<256; k++ )	{
          fade_palette[i] += fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].r = c * 4;
          i++;
 
          fade_palette[i] += fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].g = c * 4;
          i++;
 
          fade_palette[i] += fade_palette_delta[i];
-         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 	 c = f2i(fade_palette[i]);
          if (c > 63) c = 63;
          fade_colors[k].b = c * 4;

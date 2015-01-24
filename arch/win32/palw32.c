@@ -38,15 +38,15 @@ void gr_palette_step_up( int r, int g, int b )
 		temp = (int)(*p++) + r;
 		if (temp<0) temp=0;
 			else if (temp>63) temp=63;
-		pe[i].peRed = min(temp + gr_palette_gamma, 63) * 4;
+		pe[i].peRed = min(temp + gr_palette_gamma.intval, 63) * 4;
 		temp = (int)(*p++) + g;
 		if (temp<0) temp=0;
 			else if (temp>63) temp=63;
-		pe[i].peGreen = min(temp + gr_palette_gamma, 63) * 4 ;
+		pe[i].peGreen = min(temp + gr_palette_gamma.intval, 63) * 4 ;
 		temp = (int)(*p++) + b;
 		if (temp<0) temp=0;
 			else if (temp>63) temp=63;
-		pe[i].peBlue = min(temp + gr_palette_gamma, 63) * 4;
+		pe[i].peBlue = min(temp + gr_palette_gamma.intval, 63) * 4;
 		pe[i].peFlags = 0;
 	}
 	Win32_DoSetPalette (pe);
@@ -73,15 +73,15 @@ void gr_palette_load( ubyte *pal )
 	PALETTEENTRY pe[256];
 
 	for (i=0; i<768; i++ ) {
-		//gr_current_pal[i] = pal[i] + gr_palette_gamma;
+		//gr_current_pal[i] = pal[i] + gr_palette_gamma.intval;
 		//if (gr_current_pal[i] > 63) gr_current_pal[i] = 63;
 		gr_current_pal[i] = pal[i];
 	}
 	for (i=0,j=0;j<256;j++)
 	{
-		pe[j].peRed = min(gr_current_pal[i++] + gr_palette_gamma, 63) * 4;
-		pe[j].peGreen= min(gr_current_pal[i++] + gr_palette_gamma, 63) * 4;
-		pe[j].peBlue = min(gr_current_pal[i++] + gr_palette_gamma, 63) * 4;
+		pe[j].peRed = min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
+		pe[j].peGreen= min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
+		pe[j].peBlue = min(gr_current_pal[i++] + gr_palette_gamma.intval, 63) * 4;
 		pe[j].peFlags = 0;
 	}
 	Win32_DoSetPalette (pe);
@@ -117,24 +117,24 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
 			fade_palette[i] -= fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peRed = min(f2i(fade_palette[i]), 63) * 4;
  			i++;
 			fade_palette[i] -= fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peGreen = min(f2i(fade_palette[i]), 63) * 4;
  			i++;
 			fade_palette[i] -= fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peBlue = min(f2i(fade_palette[i]), 63) * 4;
 			pe[k].peFlags = 0;
@@ -176,24 +176,24 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 			fade_palette[i] += fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peRed = min(f2i(fade_palette[i]), 63) * 4;
  			i++;
 			fade_palette[i] += fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peGreen = min(f2i(fade_palette[i]), 63) * 4;
  			i++;
 			fade_palette[i] += fade_palette_delta[i];
 			if (fade_palette[i] < 0 )
 				fade_palette[i] = 0;
-			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 
 			pe[k].peBlue = min(f2i(fade_palette[i]), 63) * 4;
 			pe[k].peFlags = 0;

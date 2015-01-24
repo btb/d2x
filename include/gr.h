@@ -170,6 +170,9 @@ typedef struct _grs_screen {    // This is a video screen
 } grs_screen;
 
 
+#include "console.h"
+
+
 //=========================================================================
 // System functions:
 // setup and set mode. this creates a grs_screen structure and sets

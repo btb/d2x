@@ -61,9 +61,9 @@ void ogl_swap_buffers_internal(void);
 extern unsigned char *ogl_pal;
 
 //whee
-//#define PAL2Tr(c) ((gr_palette[c*3]+gr_palette_gamma)/63.0)
-//#define PAL2Tg(c) ((gr_palette[c*3+1]+gr_palette_gamma)/63.0)
-//#define PAL2Tb(c) ((gr_palette[c*3+2]+gr_palette_gamma)/63.0)
+//#define PAL2Tr(c) ((gr_palette[c*3]+gr_palette_gamma.intval)/63.0)
+//#define PAL2Tg(c) ((gr_palette[c*3+1]+gr_palette_gamma.intval)/63.0)
+//#define PAL2Tb(c) ((gr_palette[c*3+2]+gr_palette_gamma.intval)/63.0)
 //#define PAL2Tr(c) ((gr_palette[c*3])/63.0)
 //#define PAL2Tg(c) ((gr_palette[c*3+1])/63.0)
 //#define PAL2Tb(c) ((gr_palette[c*3+2])/63.0)

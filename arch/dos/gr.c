@@ -605,15 +605,15 @@ void gr_palette_step_up( int r, int g, int b )
 	p=gr_palette;
 
 	for (i=0; i<256; i++ )	{
-		temp = (int)(*p++) + r + gr_palette_gamma;
+		temp = (int)(*p++) + r + gr_palette_gamma.intval;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
 		outp( 0x3c9, temp );
-		temp = (int)(*p++) + g + gr_palette_gamma;
+		temp = (int)(*p++) + g + gr_palette_gamma.intval;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
 		outp( 0x3c9, temp );
-		temp = (int)(*p++) + b + gr_palette_gamma;
+		temp = (int)(*p++) + b + gr_palette_gamma.intval;
 		if (temp<0) temp=0;
 		else if (temp>63) temp=63;
 		outp( 0x3c9, temp );
@@ -639,7 +639,7 @@ void gr_palette_load( ubyte * pal )
 	outp( 0x3c6, 0xff );
 	outp( 0x3c8, 0 );
 	for (i=0; i<768; i++ )	{
-		c = pal[i] + gr_palette_gamma;
+		c = pal[i] + gr_palette_gamma.intval;
 		if ( c > 63 ) c = 63;
 		outp( 0x3c9,c);
  		gr_current_pal[i] = pal[i];
@@ -663,7 +663,7 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
 		pal = gr_current_pal;
 
 	for (i=0; i<768; i++ )	{
-		fade_palette[i] = i2f(pal[i]+gr_palette_gamma);
+		fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 		fade_palette_delta[i] = fade_palette[i] / nsteps;
 	}
 
@@ -697,7 +697,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 	for (i=0; i<768; i++ )	{
 		gr_current_pal[i] = pal[i];
 		fade_palette[i] = 0;
-		fade_palette_delta[i] = i2f(pal[i]+gr_palette_gamma) / nsteps;
+		fade_palette_delta[i] = i2f(pal[i] + gr_palette_gamma.intval) / nsteps;
 	}
 
 	for (j=0; j<nsteps; j++ )	{
@@ -706,8 +706,8 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 		outp( 0x3c8, 0 );
 		for (i=0; i<768; i++ )	{
 			fade_palette[i] += fade_palette_delta[i];
-			if (fade_palette[i] > i2f(pal[i]+gr_palette_gamma) )
-				fade_palette[i] = i2f(pal[i]+gr_palette_gamma);
+			if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma.intval))
+				fade_palette[i] = i2f(pal[i] + gr_palette_gamma.intval);
 			c = f2i(fade_palette[i]);
                         if ( c > 63 ) c = 63;
 			outp( 0x3c9, c );

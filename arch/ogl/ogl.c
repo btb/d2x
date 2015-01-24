@@ -745,7 +745,7 @@ bool g3_draw_poly(int nv,g3s_point **pointlist)
 	int c;
 	r_polyc++;
 	c=grd_curcanv->cv_color;
-//	glColor3f((gr_palette[c*3]+gr_palette_gamma)/63.0,(gr_palette[c*3+1]+gr_palette_gamma)/63.0,(gr_palette[c*3+2]+gr_palette_gamma)/63.0);
+//	glColor3f((gr_palette[c*3] + gr_palette_gamma.intval) / 63.0, (gr_palette[c*3+1] + gr_palette_gamma.intval) / 63.0, (gr_palette[c*3+2] + gr_palette_gamma.intval) / 63.0);
 	OGL_DISABLE(TEXTURE_2D);
 	if (Gr_scanline_darkening_level >= GR_FADE_LEVELS)
 		glColor3f(PAL2Tr(c), PAL2Tg(c), PAL2Tb(c));
@@ -799,7 +799,7 @@ bool g3_draw_tmap(int nv,g3s_point **pointlist,g3s_uvl *uvl_list,grs_bitmap *bm)
 			if (bm->bm_flags&BM_FLAG_NO_LIGHTING){
 				l=1.0;
 			}else{
-				//l=f2fl(uvl_list[c].l)+gr_palette_gamma/63.0;
+				//l = f2fl(uvl_list[c].l) + gr_palette_gamma.intval / 63.0;
 				l=f2fl(uvl_list[c].l);
 			}
 			glColor3f(l,l,l);
@@ -1086,7 +1086,7 @@ bool g3_draw_tmap_2(int nv, g3s_point **pointlist, g3s_uvl *uvl_list, grs_bitmap
 			if (bm->bm_flags&BM_FLAG_NO_LIGHTING){
 				l=1.0;
 			}else{
-				//l=f2fl(uvl_list[c].l)+gr_palette_gamma/63.0;
+				//l = f2fl(uvl_list[c].l) + gr_palette_gamma.intval / 63.0;
 				l=f2fl(uvl_list[c].l);
 			}
 			glColor3f(l,l,l);
