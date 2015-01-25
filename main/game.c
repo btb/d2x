@@ -389,6 +389,29 @@ void game_cmd_sizedown(int argc, char **argv)
 }
 
 
+/* start recording demo */
+void game_cmd_recorddemo(int argc, char **argv)
+{
+	if ( Newdemo_state != ND_STATE_NORMAL )
+		return;
+
+	if (Game_paused) // can't start demo while paused
+		return;
+
+	newdemo_start_recording();
+}
+
+
+/* stop recording demo */
+void game_cmd_stoprecording(int argc, char **argv)
+{
+	if ( Newdemo_state != ND_STATE_RECORDING )
+		return;
+
+	newdemo_stop_recording();
+}
+
+
 //this is called once per game
 void init_game()
 {
@@ -419,6 +442,8 @@ void init_game()
 	cmd_addcommand("say", game_cmd_say);
 	cmd_addcommand("sizeup", game_cmd_sizeup);
 	cmd_addcommand("sizedown", game_cmd_sizedown);
+	cmd_addcommand("recorddemo", game_cmd_recorddemo);
+	cmd_addcommand("stoprecording", game_cmd_stoprecording);
 }
 
 
