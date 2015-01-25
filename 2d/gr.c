@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -75,14 +75,13 @@ int gr_init_screen(int bitmap_type, int w, int h, int x, int y, int rowsize, uby
 	grd_curscreen->sc_w = w;
 	grd_curscreen->sc_h = h;
 	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w * 3, grd_curscreen->sc_h * 4);
-
 	grd_curscreen->sc_canvas.cv_bitmap.bm_x = x;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_y = y;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = rowsize;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_type = bitmap_type;
-    grd_curscreen->sc_canvas.cv_bitmap.bm_data = (bitmap_type == BM_LINEAR) ? screen_addr : NULL;
+	grd_curscreen->sc_canvas.cv_bitmap.bm_data = (bitmap_type == BM_LINEAR) ? screen_addr : NULL;
 
 	grd_curscreen->sc_canvas.cv_color = 0;
 	grd_curscreen->sc_canvas.cv_drawmode = 0;
