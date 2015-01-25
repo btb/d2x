@@ -377,7 +377,7 @@ void key_write_bindings(CFILE *file)
 
 	for (i = 0; i < 256; i++)
 		if (key_binding_list[i])
-			PHYSFSX_printf(file, "bind %s \"%s\"\n", key_text[i], key_binding_list[i]);
+			PHYSFSX_printf(file, "bind \"%s\" \"%s\"\n", key_text[i], key_binding_list[i]);
 }
 
 

@@ -311,6 +311,9 @@ void LoadConfigDefaults(void)
 	cmd_append("bind 8 weapon 8");
 	cmd_append("bind 9 weapon 9");
 	cmd_append("bind 0 weapon 0");
+
+	cmd_append("bind - sizedown");
+	cmd_append("bind \"=\" sizeup");
 }
 
 

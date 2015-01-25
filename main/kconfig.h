@@ -40,16 +40,6 @@ typedef enum
 	AXIS_BANK,
 } kc_axis_map;
 
-
-// added on 2/4/99 by Victor Rachels to add new keys menu
-#define NUM_D2X_CONTROLS    20
-#define MAX_D2X_CONTROLS    40
-// end this section addition - VR
-
-#define NUM_KEY_CONTROLS    57
-#define NUM_OTHER_CONTROLS  31
-#define MAX_CONTROLS        60		// there are actually 48, so this leaves room for more
-
 extern void kc_set_controls();
 
 // Tries to use vfx1 head tracking.

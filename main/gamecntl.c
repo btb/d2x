@@ -174,8 +174,6 @@ extern void CyclePrimary();
 extern void CycleSecondary();
 extern void InitMarkerInput();
 extern void MarkerInputMessage (int);
-extern void grow_window(void);
-extern void shrink_window(void);
 extern int	allowed_to_fire_missile(void);
 extern int	allowed_to_fire_flare(void);
 extern void	check_rear_view(void);
@@ -738,12 +736,6 @@ void HandleDemoKey(int key)
 				toggle_cockpit();
 			 break;
 
-		case KEY_SHIFTED+KEY_MINUS:
-		case KEY_MINUS:		shrink_window(); break;
-
-		case KEY_SHIFTED+KEY_EQUAL:
-		case KEY_EQUAL:		grow_window(); break;
-
 		case KEY_COMMAND+KEY_2:
 		case KEY_F2:		Config_menu_flag = 1; break;
 
@@ -1077,18 +1069,6 @@ int HandleSystemKey(int key)
 
 		case KEY_COMMAND+KEY_SHIFTED+KEY_7:
 		case KEY_F7+KEY_SHIFTED: palette_save(); joydefs_calibrate(); palette_restore(); break;
-
-		case KEY_SHIFTED+KEY_MINUS:
-		case KEY_MINUS:	
-			shrink_window(); 
-			screen_changed=1; 
-			break;
-
-		case KEY_SHIFTED+KEY_EQUAL:
-		case KEY_EQUAL:			
-			grow_window();  
-			screen_changed=1; 
-			break;
 
 		case KEY_COMMAND+KEY_5:
 		case KEY_F5:
