@@ -1002,7 +1002,7 @@ void d2x_options_menu()
 			{
 				switch(i)
 				{
-				case 0: kconfig(4, "D2X Keys"); break;
+				case 0: kconfig(2, "D2X Keys"); break;
 				}
 			}
 
