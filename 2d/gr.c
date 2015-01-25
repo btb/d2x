@@ -21,9 +21,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int gr_installed = 0;
 
+cvar_t gr_aspectratio = { "r_aspectratio", "0", 0 };
+
 //	Functions for GR.C
 
 int gr_close_screen(void);
+
+void gr_cmd_pixelaspect(int argc, char **argv);
 
 
 void gr_close(void)
@@ -40,6 +44,9 @@ int gr_init(void)
 		return 1;
 
 	cvar_registervariable(&gr_palette_gamma);
+	cvar_registervariable(&gr_aspectratio);
+
+	cmd_addcommand("pixelaspect", gr_cmd_pixelaspect);
 
 	// Set flags indicating that this is installed.
 	gr_installed = 1;
@@ -74,7 +81,18 @@ int gr_init_screen(int bitmap_type, int w, int h, int x, int y, int rowsize, uby
 	grd_curscreen->sc_mode = bitmap_type;
 	grd_curscreen->sc_w = w;
 	grd_curscreen->sc_h = h;
-	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w * 3, grd_curscreen->sc_h * 4);
+	switch (gr_aspectratio.intval) {
+	default:
+	case 0:
+		grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w * 3, grd_curscreen->sc_h * 4);
+		break;
+	case 1:
+		grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w * 9, grd_curscreen->sc_h * 16);
+		break;
+	case 2:
+		grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w * 10, grd_curscreen->sc_h * 16);
+		break;
+	}
 	grd_curscreen->sc_canvas.cv_bitmap.bm_x = x;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_y = y;
 	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
@@ -92,4 +110,10 @@ int gr_init_screen(int bitmap_type, int w, int h, int x, int y, int rowsize, uby
 	gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
 	return 0;
+}
+
+
+void gr_cmd_pixelaspect(int argc, char **argv)
+{
+	grd_curscreen->sc_aspect = fl2f(strtof(argv[1], NULL));
 }
