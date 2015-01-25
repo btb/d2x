@@ -33,6 +33,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "modex.h"
 #include "vesa.h"
 #endif
+#ifdef OGL
+#include "ogl_init.h"
+#endif
+
 
 int Gr_scanline_darkening_level = GR_FADE_LEVELS;
 
@@ -132,10 +136,12 @@ void gr_uscanline( int x1, int x2, int y )
 	if (Gr_scanline_darkening_level >= GR_FADE_LEVELS ) {
 		switch(TYPE)
 		{
-		case BM_LINEAR:
 #ifdef OGL
 		case BM_OGL:
+			ogl_ulinec(x1, y, x2, y, COLOR);
+			break;
 #endif
+		case BM_LINEAR:
 			gr_linear_stosd( DATA + ROWSIZE*y + x1, (unsigned char)COLOR, x2-x1+1);
 			break;
 #ifdef __MSDOS__
@@ -205,10 +211,12 @@ void gr_scanline( int x1, int x2, int y )
 	if (Gr_scanline_darkening_level >= GR_FADE_LEVELS ) {
 		switch(TYPE)
 		{
-		case BM_LINEAR:
 #ifdef OGL
 		case BM_OGL:
+			ogl_ulinec(x1, y, x2, y, COLOR);
+			break;
 #endif
+		case BM_LINEAR:
 			gr_linear_stosd( DATA + ROWSIZE*y + x1, (unsigned char)COLOR, x2-x1+1);
 			break;
 #ifdef __MSDOS__
