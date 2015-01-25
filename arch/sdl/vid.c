@@ -17,6 +17,7 @@
 #endif
 
 #include "gr.h"
+#include "vid.h"
 #include "grdef.h"
 #include "palette.h"
 #include "u_mem.h"
@@ -38,7 +39,7 @@ SDL_Surface *screen;
 static SDL_Surface *real_screen, *screen2;
 #endif
 
-int gr_installed = 0;
+int vid_installed = 0;
 
 //added 05/19/99 Matt Mueller - locking stuff
 #ifdef GR_LOCK
@@ -123,7 +124,7 @@ void BlitRotatedSurface(SDL_Surface *from, SDL_Surface *to)
 void gr_palette_clear(); // Function prototype for gr_init;
 
 
-void gr_update()
+void vid_update()
 {
 	//added 05/19/99 Matt Mueller - locking stuff
 //	gr_testunlock();
@@ -140,7 +141,7 @@ void gr_update()
 }
 
 
-int gr_check_mode(uint32_t mode)
+int vid_check_mode(uint32_t mode)
 {
 	int w, h;
 
@@ -151,9 +152,10 @@ int gr_check_mode(uint32_t mode)
 }
 
 
-extern uint32_t VGA_current_mode; // DPH: kludge - remove at all costs
+uint32_t Vid_current_mode;
 
-int gr_set_mode(uint32_t mode)
+
+int vid_set_mode(uint32_t mode)
 {
 	int w,h;
 
@@ -164,12 +166,12 @@ int gr_set_mode(uint32_t mode)
 	if (mode<=0)
 		return 0;
 
-	if (mode == VGA_current_mode)
+	if (mode == Vid_current_mode)
 		return 0;
 
 	w=SM_W(mode);
 	h=SM_H(mode);
-	VGA_current_mode = mode;
+	Vid_current_mode = mode;
 	
 	if (screen != NULL) gr_palette_clear();
 
@@ -206,51 +208,35 @@ int gr_set_mode(uint32_t mode)
         if (screen == NULL) {
            Error("Could not set %dx%dx8 video mode\n",w,h);
         }
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_mode = mode;
-	grd_curscreen->sc_w = w;
-	grd_curscreen->sc_h = h;
-	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-	grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = screen->pitch;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_type = BM_LINEAR;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = (unsigned char *)screen->pixels;
-	gr_set_current_canvas(NULL);
-	//gr_enable_default_palette_loading();
 
-//--moved up--added on 9/30/98 by Matt Mueller to set the title bar.  Woohoo!
-//--moved up--	SDL_WM_SetCaption(DESCENT_VERSION " " D1X_DATE, NULL);
-//--moved up--end addition -MM
-
-//	gamefont_choose_game_font(w,h);
-	return 0;
+	return gr_init_screen(BM_LINEAR, w, h, 0, 0, screen->pitch, (unsigned char *)screen->pixels);
 }
 
-int gr_check_fullscreen(void){
+
+int vid_check_fullscreen(void)
+{
 	return (sdl_video_flags & SDL_FULLSCREEN)?1:0;
 }
 
-int gr_toggle_fullscreen(void){
+
+int vid_toggle_fullscreen(void)
+{
 	sdl_video_flags^=SDL_FULLSCREEN;
 	SDL_WM_ToggleFullScreen(screen);
 	return (sdl_video_flags & SDL_FULLSCREEN)?1:0;
 }
 
-int gr_init(void)
+
+int vid_init(void)
 {
  	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
 		return -1;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		Error("SDL library video initialisation failed: %s.",SDL_GetError());
 	}
-	MALLOC( grd_curscreen,grs_screen,1 );
-	memset( grd_curscreen, 0, sizeof(grs_screen));
 
 //added 10/05/98 by Matt Mueller - make fullscreen mode optional
 	if (FindArg("-fullscreen"))
@@ -261,30 +247,19 @@ int gr_init(void)
 	     sdl_video_flags|=SDL_HWSURFACE;
 	//end addition -MM
 
-	grd_curscreen->sc_canvas.cv_color = 0;
-	grd_curscreen->sc_canvas.cv_drawmode = 0;
-	grd_curscreen->sc_canvas.cv_font = NULL;
-	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
-	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
-
-	cvar_registervariable(&gr_palette_gamma);
-
-	gr_installed = 1;
+	vid_installed = 1;
 	// added on 980913 by adb to add cleanup
-	atexit(gr_close);
+	atexit(vid_close);
 	// end changes by adb
 
 	return 0;
 }
 
-void gr_close()
+
+void vid_close(void)
 {
-	if (gr_installed==1)
-	{
-		gr_installed = 0;
-		d_free(grd_curscreen);
-	}
+	if (vid_installed == 1)
+		vid_installed = 0;
 }
 
 // Palette functions follow.

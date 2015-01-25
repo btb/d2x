@@ -27,6 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "game.h"
 #include "gr.h"
+#include "vid.h"
 #include "key.h"
 #include "iff.h"
 #include "u_mem.h"
@@ -712,7 +713,7 @@ void set_display_mode(uint32_t mode)
 	if (!MenuHiresAvailable && (mode != SM(320,400)))
 		mode = SM(320,200);
 
-	if (gr_check_mode(mode) != 0) //can't do mode
+	if (vid_check_mode(mode) != 0) // can't do mode
 		mode = Default_display_mode;
 
 	Current_display_mode = mode;
@@ -756,7 +757,7 @@ void set_display_mode(uint32_t mode)
 void do_screen_res_menu()
 {
 #define N_SCREENRES_ITEMS 12
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	int fullscreenc;
 #endif
 	newmenu_item m[N_SCREENRES_ITEMS];
@@ -793,9 +794,9 @@ void do_screen_res_menu()
 	sprintf(customres, "%ix%i", SM_W(Current_display_mode), SM_H(Current_display_mode));
 	m[i].type = NM_TYPE_INPUT; m[i].text = customres; m[i].text_len = 11; modes[i] = 0; i++;
 
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	m[i].type = NM_TYPE_CHECK; m[i].text = "Fullscreen";
-	m[i].value = gr_check_fullscreen();
+	m[i].value = vid_check_fullscreen();
 	fullscreenc = i++;
 #endif
 
@@ -813,9 +814,9 @@ void do_screen_res_menu()
 
 	newmenu_do1( NULL, "Select screen mode", n_items, m, NULL, citem);
 
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
-	if (m[fullscreenc].value != gr_check_fullscreen()){
-		gr_toggle_fullscreen();
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
+	if (m[fullscreenc].value != vid_check_fullscreen()) {
+		vid_toggle_fullscreen();
 		Game_screen_mode = -1;
 	}
 #endif
@@ -836,7 +837,7 @@ void do_screen_res_menu()
 		screen_mode = modes[i];
 	}
 	
-	if (((SM_H(screen_mode) > 320) && !MenuHiresAvailable) || gr_check_mode(screen_mode)) {
+	if (((SM_H(screen_mode) > 320) && !MenuHiresAvailable) || vid_check_mode(screen_mode)) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"Cannot set requested\n"
 				"mode on this video card.");

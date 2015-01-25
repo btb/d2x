@@ -113,7 +113,7 @@ int MenuX( int x, int y, int NumButtons, char * text[] )
 			break;
 		}
 
-		gr_update();
+		vid_update();
 	}
 
 	ui_close_window(wnd);

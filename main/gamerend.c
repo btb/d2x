@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "mono.h"
 #include "gr.h"
-#include "palette.h"
+#include "vid.h"
 #include "ibitblt.h"
 #include "bm.h"
 #include "player.h"
@@ -1045,7 +1045,7 @@ void game_render_frame_mono(void)
 
 	CON_DrawConsole();
 
-	gr_update();
+	vid_update();
 #ifdef OGL
 	ogl_swap_buffers();
 #endif

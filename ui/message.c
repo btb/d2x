@@ -161,7 +161,7 @@ int MessageBoxN( short xc, short yc, int NumButtons, char * text, char * Button[
 			}
 		}
 
-		gr_update();
+		vid_update();
 	}
 
 	ui_close_window(wnd);

@@ -72,6 +72,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "switch.h"
 #include "automap.h"
 #include "cntrlcen.h"
+#include "vid.h"
+
 
 #ifdef OGL
 #define AUTOMAP_DIRECT_RENDER
@@ -530,7 +532,7 @@ void draw_automap()
 		//gr_bm_ubitblt( Page.cv_bitmap.bm_w, Page.cv_bitmap.bm_h, Page.cv_bitmap.bm_x, Page.cv_bitmap.bm_y, 0, 0, &Page.cv_bitmap, &VR_screen_pages[0].cv_bitmap );
 		gr_bm_ubitblt( Page.cv_bitmap.bm_w, Page.cv_bitmap.bm_h, Page.cv_bitmap.bm_x, Page.cv_bitmap.bm_y, 0, 0, &Page.cv_bitmap, &grd_curscreen->sc_canvas.cv_bitmap );
 	}
-	gr_update();
+	vid_update();
 #endif
 #endif
 }
@@ -694,7 +696,7 @@ void do_automap( int key_code )	{
 	if (SM_HIRES2 || (Automap_always_hires.intval && MenuHiresAvailable)) {
 		//edit 4/23/99 Matt Mueller - don't switch res unless we need to
 		if (grd_curscreen->sc_mode != AUTOMAP_MODE)
-			gr_set_mode( AUTOMAP_MODE );
+			vid_set_mode( AUTOMAP_MODE );
 		else
 			gr_set_current_canvas(NULL);
 		//end edit -MM
@@ -703,7 +705,7 @@ void do_automap( int key_code )	{
 		AutomapHires = 1;
 	}
 	else {
-		gr_set_mode( SM(320, 400));
+		vid_set_mode(SM(320, 400));
 		AutomapHires = 0;
 	}
 
@@ -1018,7 +1020,7 @@ void do_automap( int key_code )	{
 			case KEY_COMMAND+KEY_SHIFTED+KEY_F:
 			case KEY_ALTED+KEY_ENTER:
 			case KEY_ALTED+KEY_PADENTER:
-				gr_toggle_fullscreen_game();
+				game_toggle_fullscreen();
 				break;
 //end addition -MM
 

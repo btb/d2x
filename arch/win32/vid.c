@@ -31,7 +31,7 @@
 
 char *backbuffer = NULL;
 
-int gr_installed = 0;
+int vid_installed = 0;
 
 // Min without sideeffects.
 #ifdef _MSC_VER
@@ -54,7 +54,7 @@ PALETTEENTRY pe[256];
 //(needs a 256 color mode to be useful)
 //#define DD_NOT_EXCL
 
-void gr_palette_clear(); // Function prototype for gr_init;
+void gr_palette_clear(); // Function prototype for vid_init;
 
 
 static char *DDerror(int code)
@@ -168,7 +168,7 @@ static char *DDerror(int code)
 }
 
 
-void gr_update()
+void vid_update()
 {
   DDSURFACEDESC       ddsd;
   HRESULT             ddrval;
@@ -225,8 +225,7 @@ void gr_update()
 }
 
 
-
-int gr_set_mode(uint32_t mode)
+int vid_set_mode(uint32_t mode)
 {
         DDSURFACEDESC       ddsd;
 //        DDSURFACEDESC       DDSDesc;
@@ -297,20 +296,9 @@ int gr_set_mode(uint32_t mode)
 
        gr_palette_clear();
 
-       memset( grd_curscreen, 0, sizeof(grs_screen));
-       grd_curscreen->sc_mode = mode;
-       grd_curscreen->sc_w = w;
-       grd_curscreen->sc_h = h;
-       grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-       grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-       grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-       grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-       grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-       grd_curscreen->sc_canvas.cv_bitmap.bm_type = BM_LINEAR;
-
        backbuffer = malloc(w*h);
        memset(backbuffer, 0, w*h);
-       grd_curscreen->sc_canvas.cv_bitmap.bm_data = (unsigned char *)backbuffer;
+       gr_init_screen(BM_LINEAR, w, h, 0 0, w, (unsigned char *)backbuffer);
 
        ddsd.dwSize=sizeof(ddsd);
        ddrval=IDirectDrawSurface_Lock(lpDDSPrimary,NULL,&ddsd,0,NULL);
@@ -319,15 +307,9 @@ int gr_set_mode(uint32_t mode)
         return -6;
        }
        
-       // bm_rowsize is for backbuffer, so always w -- adb
-       grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = w;
-       //grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = (short)ddsd.lPitch;
-
        memset(ddsd.lpSurface,0,w*h); // Black the canvas out to stop nasty kludgy display
        IDirectDrawSurface_Unlock(lpDDSPrimary,NULL);
 
-       gr_set_current_canvas(NULL);
-	
 	   gamefont_choose_game_font(w,h);
 
        printf("Successfully completed set_mode\n");
@@ -353,42 +335,36 @@ void Win32_MakePalVisible(void)
 }
 //end additions - adb
 
-void gr_close(void);
 
-int gr_init(int mode)
+void vid_close(void);
+
+
+int vid_init(int mode)
 {
  int retcode;
  	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
 		return -1;
-	MALLOC( grd_curscreen,grs_screen,1 );
-	memset( grd_curscreen, 0, sizeof(grs_screen));
 
 	// Set the mode.
-	if ((retcode=gr_set_mode(mode)))
-	{
+	if ((retcode = vid_set_mode(mode))) {
 		return retcode;
 	}
-	grd_curscreen->sc_canvas.cv_color = 0;
-	grd_curscreen->sc_canvas.cv_drawmode = 0;
-	grd_curscreen->sc_canvas.cv_font = NULL;
-	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
-	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
-	gr_installed = 1;
+	vid_installed = 1;
 	// added on 980913 by adb to add cleanup
-	atexit(gr_close);
+	atexit(vid_close);
 	// end changes by adb
 
 	return 0;
 }
 
-void gr_close(void)
+
+void vid_close(void)
 {
-	if (gr_installed==1)
+	if (vid_installed == 1)
 	{
-		gr_installed = 0;
+		vid_installed = 0;
 		free(grd_curscreen);
 		free(backbuffer);
 	}

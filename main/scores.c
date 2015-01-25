@@ -30,6 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "pstypes.h"
 #include "gr.h"
+#include "vid.h"
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
@@ -398,7 +399,7 @@ ReshowScores:
 	gr_palette_fade_in( gr_palette,32, 0);
 
 #ifdef OGL
-	gr_update();
+	vid_update();
 #endif
 
 	game_flush_inputs();
@@ -420,7 +421,7 @@ ReshowScores:
 				scores_draw_item( MAX_HIGH_SCORES, &Last_game );
 			else
 				scores_draw_item( citem, &Scores.stats[citem] );
-			gr_update();
+			vid_update();
 		}
 
 		for (i=0; i<4; i++ )	

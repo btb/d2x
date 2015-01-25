@@ -25,20 +25,26 @@
 
 #include "gamefont.h"
 
-int gr_installed = 0;
+
+int vid_installed = 0;
 int usebuffer;
 
 extern void mouse_handler (int button, int dx, int dy, int dz, int drx, int dry, int drz);
 
 GraphicsContext *physicalscreen, *screenbuffer;
 
-void gr_update()
+
+void vid_update()
 {
 	if (usebuffer)
 		gl_copyscreen(physicalscreen);
 }
 
-int gr_set_mode(uint32_t mode)
+
+uint32_t Vid_current_mode;
+
+
+int vid_set_mode(uint32_t mode)
 {
 	unsigned int w, h;
 	char vgamode[16];
@@ -54,6 +60,7 @@ int gr_set_mode(uint32_t mode)
 
 	w=SM_W(mode);
 	h=SM_H(mode);
+	Vid_current_mode = mode;
 
 	gr_palette_clear();
 
@@ -98,58 +105,36 @@ int gr_set_mode(uint32_t mode)
 		rowsize = screenbuffer->bytewidth;
 	}
 
-	memset(grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_mode = mode;
-	grd_curscreen->sc_w = w;
-	grd_curscreen->sc_h = h;
-	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-	grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = rowsize;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_type = BM_LINEAR;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = framebuffer;
-	gr_set_current_canvas(NULL);
-	
 	//gamefont_choose_game_font(w,h);
-	
-	return 0;
+
+	return gr_init_screen(BM_LINEAR, w, h, 0, 0, rowsize, framebuffer);
 }
 
-int gr_init(void)
+
+int vid_init(void)
 {
 	int retcode;
 	int mode = SM(320,200);
 
  	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
 		return -1;
-	MALLOC(grd_curscreen,grs_screen, 1);
-	memset(grd_curscreen, 0, sizeof(grs_screen));
 	
 	vga_init();
 
-	if ((retcode=gr_set_mode(mode)))
+	if ((retcode = gr_set_mode(mode)))
 		return retcode;
-	
-	grd_curscreen->sc_canvas.cv_color = 0;
-	grd_curscreen->sc_canvas.cv_drawmode = 0;
-	grd_curscreen->sc_canvas.cv_font = NULL;
-	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
-	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
-	gr_installed = 1;
-	atexit(gr_close);
+	vid_installed = 1;
+	atexit(vid_close);
 	return 0;
 }
 
-void gr_close ()
+
+void vid_close(void)
 {
-	if (gr_installed==1)
-	{
-		gr_installed = 0;
+	if (vid_installed == 1) {
+		vid_installed = 0;
 		free(grd_curscreen);
 		gl_freecontext(screenbuffer);
 		gl_freecontext(physicalscreen);

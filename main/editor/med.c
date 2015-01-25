@@ -633,7 +633,7 @@ int DosShell()
 	save_bitmap = gr_create_bitmap( w, h );
 	gr_bm_ubitblt(w, h, 0, 0, 0, 0, &(grd_curscreen->sc_canvas.cv_bitmap), save_bitmap );
 
-	// gr_set_mode( SM_ORIGINAL );
+	//vid_set_mode( SM_ORIGINAL );
 
 	printf( "\n\nType EXIT to return to Inferno" );
 	fflush(stdout);
@@ -646,7 +646,7 @@ int DosShell()
 #endif
 	key_init();
 
-	gr_set_mode(grd_curscreen->sc_mode);
+	vid_set_mode(grd_curscreen->sc_mode);
 	gr_bm_ubitblt(w, h, 0, 0, 0, 0, save_bitmap, &(grd_curscreen->sc_canvas.cv_bitmap));
 	gr_free_bitmap( save_bitmap );
 	//gr_pal_setblock( 0, 256, grd_curscreen->pal );
@@ -1372,8 +1372,7 @@ void editor(void)
 			ui_mouse_show();
 		}
 
-		gr_update();
-		
+		vid_update();
 	}
 
 //	_MARK_("end of editor");//Nuked to compile -KRB

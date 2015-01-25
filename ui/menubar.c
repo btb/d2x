@@ -603,7 +603,7 @@ void menubar_do( int keypress )
 		}
 		last_keypress  = 0;
 
-		gr_update();
+		vid_update();
 	}
 }
 

@@ -36,6 +36,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "pstypes.h"
 #include "gr.h"
+#include "vid.h"
 #include "mono.h"
 #include "songs.h"
 #include "key.h"
@@ -1047,7 +1048,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 	done = 0;
    TopChoice=choice;
 
-	gr_update();
+	vid_update();
 	// Clear mouse, joystick to clear button presses.
 	game_flush_inputs();
 
@@ -1788,7 +1789,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
          if (i==choice && (item[i].type==NM_TYPE_INPUT || (item[i].type==NM_TYPE_INPUT_MENU && item[i].group)))
 				update_cursor( &item[i]);
 		}
-	gr_update();
+	vid_update();
 
       if (IsScrollBox)
      	{
@@ -2166,7 +2167,7 @@ ReadFileNames:
 	while(!done)	{
 		ocitem = citem;
 		ofirst_item = first_item;
-		gr_update();
+		vid_update();
 
 #ifdef NEWMENU_MOUSE
 		omouse_state = mouse_state;
@@ -2919,7 +2920,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 
 
 			newmenu_show_cursor();
-			gr_update();
+			vid_update();
 		} else if ( citem != ocitem )	{
 			int w, h, aw, y;
 
@@ -2950,7 +2951,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 			}
 
 			newmenu_show_cursor();
-			gr_update();
+			vid_update();
 		}
 	}
 	newmenu_hide_cursor();

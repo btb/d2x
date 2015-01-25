@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		142869B51A672E6300A095F6 /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
-		142869B61A672E6300A095F6 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* gr.c */; };
+		142869B61A672E6300A095F6 /* vid.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* vid.c */; };
 		142869B71A672E6300A095F6 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
 		142869B81A672E6300A095F6 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957A1A2729860070D41D /* init.c */; };
 		142869B91A672E6300A095F6 /* ipx_kali.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957C1A2729860070D41D /* ipx_kali.c */; };
@@ -211,6 +211,9 @@
 		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
 		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
 		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
+		144BC0321A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
+		144BC0331A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
+		144BC0341A74C612001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
 		14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
@@ -356,7 +359,7 @@
 		14F0D5871A4CA77300682BB0 /* ukali.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695871A2729860070D41D /* ukali.c */; };
 		14F0D5881A4CA77300682BB0 /* joy.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695981A2729860070D41D /* joy.c */; };
 		14F0D5891A4CA77300682BB0 /* joydefs.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695991A2729860070D41D /* joydefs.c */; };
-		14F0D58A1A4CA79400682BB0 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466958C1A2729860070D41D /* gr.c */; };
+		14F0D58A1A4CA79400682BB0 /* vid.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466958C1A2729860070D41D /* vid.c */; };
 		14F0D58B1A4CA79400682BB0 /* ogl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695901A2729860070D41D /* ogl.c */; };
 		14F0D58C1A4CA79400682BB0 /* sdlgl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695911A2729860070D41D /* sdlgl.c */; };
 		14F0D58F1A4CABD400682BB0 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
@@ -500,7 +503,7 @@
 		14F0D6211A4CB34F00682BB0 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
 		14F0D6221A4CB34F00682BB0 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14F0D6231A4CB34F00682BB0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
-		14F0D6291A4CB3B100682BB0 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* gr.c */; };
+		14F0D6291A4CB3B100682BB0 /* vid.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* vid.c */; };
 		14F0D62A1A4CB3CB00682BB0 /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
 /* End PBXBuildFile section */
 
@@ -548,6 +551,8 @@
 		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		14286A481A672E6300A095F6 /* d2x-editor-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-editor-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
+		144BC0311A74C40E001A6048 /* gr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		144BC0351A74D0D0001A6048 /* vid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vid.h; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
 		146694D21A2729860070D41D /* bitblt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitblt.c; sourceTree = "<group>"; };
 		146694D31A2729860070D41D /* bitmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitmap.c; sourceTree = "<group>"; };
@@ -633,7 +638,7 @@
 		146695321A2729860070D41D /* disk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = disk.c; sourceTree = "<group>"; };
 		146695331A2729860070D41D /* dpmi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dpmi.c; sourceTree = "<group>"; };
 		146695341A2729860070D41D /* findfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findfile.c; sourceTree = "<group>"; };
-		146695351A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		146695351A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
 		146695371A2729860070D41D /* commlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commlib.h; sourceTree = "<group>"; };
 		146695381A2729860070D41D /* disk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disk.h; sourceTree = "<group>"; };
 		146695391A2729860070D41D /* dzcomm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dzcomm.h; sourceTree = "<group>"; };
@@ -697,14 +702,14 @@
 		146695861A2729860070D41D /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
 		146695871A2729860070D41D /* ukali.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ukali.c; sourceTree = "<group>"; };
 		1466958B1A2729860070D41D /* glx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glx.c; sourceTree = "<group>"; };
-		1466958C1A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		1466958C1A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
 		1466958D1A2729860070D41D /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
 		146695901A2729860070D41D /* ogl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogl.c; sourceTree = "<group>"; };
 		146695911A2729860070D41D /* sdlgl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sdlgl.c; sourceTree = "<group>"; };
 		146695921A2729860070D41D /* wgl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = wgl.c; sourceTree = "<group>"; };
 		146695941A2729860070D41D /* digi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = digi.c; sourceTree = "<group>"; };
 		146695951A2729860070D41D /* event.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = event.c; sourceTree = "<group>"; };
-		146695961A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		146695961A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
 		146695971A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
 		146695981A2729860070D41D /* joy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joy.c; sourceTree = "<group>"; };
 		146695991A2729860070D41D /* joydefs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joydefs.c; sourceTree = "<group>"; };
@@ -713,7 +718,7 @@
 		1466959E1A2729860070D41D /* rbaudio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rbaudio.c; sourceTree = "<group>"; };
 		1466959F1A2729860070D41D /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
 		146695A11A2729860070D41D /* event.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = event.c; sourceTree = "<group>"; };
-		146695A21A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		146695A21A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
 		146695A31A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
 		146695A41A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		146695A71A2729860070D41D /* mouse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mouse.c; sourceTree = "<group>"; };
@@ -742,7 +747,7 @@
 		146695C01A2729860070D41D /* descent.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = descent.ico; sourceTree = "<group>"; };
 		146695C11A2729860070D41D /* digi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = digi.c; sourceTree = "<group>"; };
 		146695C21A2729860070D41D /* glinit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glinit.c; sourceTree = "<group>"; };
-		146695C31A2729860070D41D /* gr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
+		146695C31A2729860070D41D /* vid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vid.c; sourceTree = "<group>"; };
 		146695C41A2729860070D41D /* hmpfile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmpfile.c; sourceTree = "<group>"; };
 		146695C61A2729860070D41D /* d3dhelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = d3dhelp.h; sourceTree = "<group>"; };
 		146695C71A2729860070D41D /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
@@ -1239,6 +1244,7 @@
 				146694D91A2729860070D41D /* disc.c */,
 				146694DA1A2729860070D41D /* font.c */,
 				146694DB1A2729860070D41D /* gpixel.c */,
+				144BC0311A74C40E001A6048 /* gr.c */,
 				146694DC1A2729860070D41D /* ibitblt.c */,
 				146694DD1A2729860070D41D /* line.c */,
 				146694DE1A2729860070D41D /* linear.asm */,
@@ -1329,7 +1335,7 @@
 				146695321A2729860070D41D /* disk.c */,
 				146695331A2729860070D41D /* dpmi.c */,
 				146695341A2729860070D41D /* findfile.c */,
-				146695351A2729860070D41D /* gr.c */,
+				146695351A2729860070D41D /* vid.c */,
 				146695361A2729860070D41D /* include */,
 				1466953C1A2729860070D41D /* init.c */,
 				1466953D1A2729860070D41D /* ipx.c */,
@@ -1475,6 +1481,7 @@
 				146695671A2729860070D41D /* joy.h */,
 				146695681A2729860070D41D /* key.h */,
 				146695691A2729860070D41D /* mouse.h */,
+				144BC0351A74D0D0001A6048 /* vid.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -1524,7 +1531,7 @@
 			isa = PBXGroup;
 			children = (
 				1466958B1A2729860070D41D /* glx.c */,
-				1466958C1A2729860070D41D /* gr.c */,
+				1466958C1A2729860070D41D /* vid.c */,
 				1466958D1A2729860070D41D /* internal.h */,
 				146695901A2729860070D41D /* ogl.c */,
 				146695911A2729860070D41D /* sdlgl.c */,
@@ -1538,7 +1545,7 @@
 			children = (
 				146695941A2729860070D41D /* digi.c */,
 				146695951A2729860070D41D /* event.c */,
-				146695961A2729860070D41D /* gr.c */,
+				146695961A2729860070D41D /* vid.c */,
 				146695971A2729860070D41D /* init.c */,
 				146695981A2729860070D41D /* joy.c */,
 				146695991A2729860070D41D /* joydefs.c */,
@@ -1554,7 +1561,7 @@
 			isa = PBXGroup;
 			children = (
 				146695A11A2729860070D41D /* event.c */,
-				146695A21A2729860070D41D /* gr.c */,
+				146695A21A2729860070D41D /* vid.c */,
 				146695A31A2729860070D41D /* init.c */,
 				146695A41A2729860070D41D /* key.c */,
 				146695A71A2729860070D41D /* mouse.c */,
@@ -1573,7 +1580,7 @@
 				146695C01A2729860070D41D /* descent.ico */,
 				146695C11A2729860070D41D /* digi.c */,
 				146695C21A2729860070D41D /* glinit.c */,
-				146695C31A2729860070D41D /* gr.c */,
+				146695C31A2729860070D41D /* vid.c */,
 				146695C41A2729860070D41D /* hmpfile.c */,
 				146695C51A2729860070D41D /* include */,
 				146695D51A2729860070D41D /* init.c */,
@@ -2198,7 +2205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				142869B51A672E6300A095F6 /* tmapflat.c in Sources */,
-				142869B61A672E6300A095F6 /* gr.c in Sources */,
+				142869B61A672E6300A095F6 /* vid.c in Sources */,
 				14286A671A67313E00A095F6 /* medrobot.c in Sources */,
 				142869B71A672E6300A095F6 /* SDLMain.m in Sources */,
 				142869B81A672E6300A095F6 /* init.c in Sources */,
@@ -2394,6 +2401,7 @@
 				14286A3A1A672E6300A095F6 /* pcx.c in Sources */,
 				14286A871A67330000A095F6 /* uidraw.c in Sources */,
 				14286A3B1A672E6300A095F6 /* pixel.c in Sources */,
+				144BC0321A74C611001A6048 /* gr.c in Sources */,
 				14286A3C1A672E6300A095F6 /* rect.c in Sources */,
 				14286A3D1A672E6300A095F6 /* rle.c in Sources */,
 				14286A3E1A672E6300A095F6 /* scalec.c in Sources */,
@@ -2405,7 +2413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14F0D58F1A4CABD400682BB0 /* SDLMain.m in Sources */,
-				14F0D58A1A4CA79400682BB0 /* gr.c in Sources */,
+				14F0D58A1A4CA79400682BB0 /* vid.c in Sources */,
 				14F0D58B1A4CA79400682BB0 /* ogl.c in Sources */,
 				14F0D58C1A4CA79400682BB0 /* sdlgl.c in Sources */,
 				14F0D5821A4CA77300682BB0 /* init.c in Sources */,
@@ -2454,6 +2462,7 @@
 				14F0D5331A4CA50D00682BB0 /* crypt.c in Sources */,
 				14F0D5341A4CA50D00682BB0 /* cvar.c in Sources */,
 				14F0D5351A4CA50D00682BB0 /* digiobj.c in Sources */,
+				144BC0341A74C612001A6048 /* gr.c in Sources */,
 				14F0D5361A4CA50D00682BB0 /* effects.c in Sources */,
 				14F0D5371A4CA50D00682BB0 /* endlevel.c in Sources */,
 				14F0D5381A4CA50D00682BB0 /* escort.c in Sources */,
@@ -2564,7 +2573,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				14F0D62A1A4CB3CB00682BB0 /* tmapflat.c in Sources */,
-				14F0D6291A4CB3B100682BB0 /* gr.c in Sources */,
+				14F0D6291A4CB3B100682BB0 /* vid.c in Sources */,
+				144BC0331A74C611001A6048 /* gr.c in Sources */,
 				14F0D5941A4CB34F00682BB0 /* SDLMain.m in Sources */,
 				14F0D5981A4CB34F00682BB0 /* init.c in Sources */,
 				14F0D5991A4CB34F00682BB0 /* ipx_kali.c in Sources */,

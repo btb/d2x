@@ -35,7 +35,7 @@ unsigned char * gr_video_memory = (unsigned char *)0xa0000;
 
 char gr_pal_default[768];
 
-int gr_installed = 0;
+int vid_installed = 0;
 
 volatile ubyte * pVideoMode =  (volatile ubyte *)0x449;
 volatile ushort * pNumColumns = (volatile ushort *)0x44a;
@@ -59,7 +59,8 @@ typedef struct screen_save {
 screen_save gr_saved_screen;
 
 int gr_show_screen_info = 0;
-extern uint32_t VGA_current_mode;
+uint32_t Vid_current_mode;
+
 
 void gr_set_cellheight( ubyte height )
 {
@@ -291,11 +292,11 @@ void gr_restore_mode()
 
 }
 
-void gr_close()
+
+void vid_close(void)
 {
-	if (gr_installed==1)
-	{
-		gr_installed = 0;
+	if (vid_installed == 1) {
+		vid_installed = 0;
 		gr_restore_mode();
 		free(grd_curscreen);
   		if( gr_saved_screen.video_memory ) {
@@ -318,7 +319,7 @@ int gr_vesa_setmode( int mode )
 #endif
 
 
-int gr_set_mode(uint32_t mode)
+int vid_set_mode(uint32_t mode)
 {
 	int retcode;
 	unsigned int w,h,t,data, r;
@@ -418,35 +419,20 @@ return 0;
 	}
 	gr_palette_clear();
 
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_mode = mode;
-	grd_curscreen->sc_w = w;
-	grd_curscreen->sc_h = h;
-        grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-	grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = r;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_type = t;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = (unsigned char *)data;
-        VGA_current_mode = mode;
-	gr_set_current_canvas(NULL);
+	Vid_current_mode = mode;
 
-	//gr_enable_default_palette_loading();
-//        gamefont_choose_game_font(w,h);
-
-	return 0;
+	return gr_init_screen(BM_LINEAR, w, h, 0, 0, r, (unsigned char *)data);
 }
 
-int gr_init(void)
+
+int vid_init(void)
 {
 	int org_gamma;
 	int retcode;
         int mode = SM(320,200);
 
 	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
                 return 3;
 
 #ifdef __DJGPP__
@@ -499,15 +485,14 @@ int gr_init(void)
 	memset( grd_curscreen, 0, sizeof(grs_screen));
 
 	// Set the mode.
-	if ((retcode=gr_set_mode(mode)))
-	{
+	if ((retcode = vid_set_mode(mode))) {
 		gr_restore_mode();
 		return retcode;
 	}
 	//JOHNgr_disable_default_palette_loading();
 
 	// Set all the screen, canvas, and bitmap variables that
-	// aren't set by the gr_set_mode call:
+	// aren't set by the vid_set_mode call:
 	grd_curscreen->sc_canvas.cv_color = 0;
 	grd_curscreen->sc_canvas.cv_drawmode = 0;
 	grd_curscreen->sc_canvas.cv_font = NULL;
@@ -528,12 +513,12 @@ int gr_init(void)
 
 
 	// Set flags indicating that this is installed.
-	gr_installed = 1;
+	vid_installed = 1;
 #ifdef __GNUC__
 
-	atexit((void (*)) gr_close);
+	atexit((void (*)) vid_close);
 #else
-	atexit(gr_close);
+	atexit(vid_close);
 #endif
 	return 0;
 }
@@ -559,7 +544,7 @@ int gr_mode13_checkmode()
 // 10=Error allocating selector for A0000h
 // 11=Not a valid mode support by gr.lib
 
-int gr_check_mode(uint32_t mode)
+int vid_check_mode(uint32_t mode)
 {
 	switch(mode)
 	{
@@ -727,5 +712,6 @@ void gr_palette_read(ubyte * palette)
 	}
 }
 
-void gr_update(void)
+
+void vid_update(void)
 { }

@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vecmat.h"
 #include "gr.h"
 #include "3d.h"
-#include "palette.h"
+#include "vid.h"
 
 #include "object.h"
 #include "error.h"
@@ -1960,7 +1960,7 @@ void show_escort_menu(char *msg)
    nm_draw_background(x-15,y-15,x+w+15-1,y+h+15-1);
 
   	gr_ustring( x, y, msg );
-	gr_update();
+	vid_update();
 
 	reset_cockpit();
 }

@@ -37,7 +37,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "key.h"
 #include "gr.h"
-#include "palette.h"
+#include "vid.h"
 #include "iff.h"
 #include "pcx.h"
 #include "u_mem.h"
@@ -260,7 +260,7 @@ void show_titles(void)
 		{
 			char filename[FILENAME_LEN];
 
-			gr_set_mode(MenuHires?SM(640,480):SM(320,200));
+			vid_set_mode(MenuHires?SM(640,480):SM(320,200));
 #ifdef OGL
 			set_screen_mode(SCREEN_MENU);
 #endif
@@ -333,7 +333,7 @@ void show_loading_screen(ubyte *title_pal)
 	if (! cfexist(filename))
 		strcpy(filename, "descentb.pcx"); // MAC SHAREWARE
 	
-	gr_set_mode(MenuHires?SM(640,480):SM(320,200));
+	vid_set_mode(MenuHires?SM(640,480):SM(320,200));
 #ifdef OGL
 	set_screen_mode(SCREEN_MENU);
 #endif
@@ -344,7 +344,7 @@ void show_loading_screen(ubyte *title_pal)
 		//vfx_set_palette_sub( title_pal );
 		gr_palette_clear();
 		gr_palette_fade_in( title_pal, 32, 0 );
-		gr_update();
+		vid_update();
 	} else
 		Error( "Couldn't load pcx file '%s', PCX load error: %s\n",filename, pcx_errormsg(pcx_error));
 }
@@ -646,7 +646,7 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 	if (cursor_flag && delay) {
 		gr_set_fontcolor(Briefing_foreground_colors[Current_color], -1);
 		gr_printf(Briefing_text_x+1, Briefing_text_y, "_" );
-		gr_update();
+		vid_update();
 	}
 
 	if ((Bitmap_name[0] != 0) && (delay != 0))
@@ -659,7 +659,7 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 		show_spinning_robot_frame(robot_num);
 
 	while (timer_get_fixed_seconds() < (start_time + delay)) {
-		gr_update();
+		vid_update();
 
 		if (RobotPlaying && delay != 0)
 			RotateRobot();
@@ -688,7 +688,7 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 	gr_set_fontcolor(Briefing_foreground_colors[Current_color], -1);
 	gr_printf(Briefing_text_x+1, Briefing_text_y, message );
 
-	if (delay) gr_update();
+	if (delay) vid_update();
 
 //	if (the_char != ' ')
 //		if (!digi_is_sound_playing(SOUND_MARKER_HIT))
@@ -784,7 +784,7 @@ void flash_cursor(int cursor_flag)
 		gr_set_fontcolor(Erase_color, -1);
 
 	gr_printf(Briefing_text_x+1, Briefing_text_y, "_" );
-	gr_update();
+	vid_update();
 }
 
 extern int InitMovieBriefing();
@@ -1048,7 +1048,7 @@ int show_briefing_message(int screen_num, char *message)
 					digi_stop_sound( printing_channel );
 				printing_channel=-1;
 
-				gr_update();
+				vid_update();
 
 				while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
 					start_time = timer_get_fixed_seconds();
@@ -1088,7 +1088,7 @@ int show_briefing_message(int screen_num, char *message)
 				}
 				message++;
 				prev_ch = 10;
-				gr_update();
+				vid_update();
 			}
 		} else if (ch == '\t') {		//	Tab
 			if (Briefing_text_x - bsp->text_ulx < tab_stop)
@@ -1160,11 +1160,11 @@ int show_briefing_message(int screen_num, char *message)
 		if ((key_check == KEY_SPACEBAR) || (key_check == KEY_ENTER))
 			delay_count = 0;
 
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 		if ((key_check == KEY_COMMAND+KEY_SHIFTED+KEY_F) ||
 			(key_check == KEY_ALTED+KEY_ENTER) ||
 			(key_check == KEY_ALTED+KEY_PADENTER))
-			gr_toggle_fullscreen();
+			vid_toggle_fullscreen();
 #endif
 
 		if (Briefing_text_x > bsp->text_ulx + bsp->text_width) {
@@ -1186,7 +1186,7 @@ int show_briefing_message(int screen_num, char *message)
 
 			start_time = timer_get_fixed_seconds();
 			while ( (keypress = local_key_inkey()) == 0 ) {		//	Wait for a key
-				gr_update();
+				vid_update();
 				flash_cursor(flashing_cursor);
 				if (RobotPlaying)
 					RotateRobot();
@@ -1568,7 +1568,7 @@ void show_order_form()
 	if ((pcx_error=pcx_read_fullscr( exit_screen, title_pal ))==PCX_ERROR_NONE) {
 		//vfx_set_palette_sub( title_pal );
 		gr_palette_fade_in( title_pal, 32, 0 );
-		gr_update();
+		vid_update();
 		while (!key_inkey() && !mouse_button_state(0)) {} //key_getch();
 		gr_palette_fade_out( title_pal, 32, 0 );
 	}

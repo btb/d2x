@@ -46,6 +46,7 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "strutil.h"
 #include "console.h"
 #include "gr.h"
+#include "vid.h"
 #include "fix.h"
 #include "vecmat.h"
 #include "mono.h"
@@ -311,7 +312,7 @@ void print_commandline_help()
 	printf("  -ihaveabrokenmouse %s\n", "try to make mouse work if it is not currently");
 	printf( "  -joy209         %s\n", "Use alternate port 209 for joystick");
 #endif
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	printf( "  -fullscreen     %s\n", "Use fullscreen mode if available");
 #endif
 #ifdef OGL
@@ -323,7 +324,7 @@ void print_commandline_help()
 	printf("  -gl_anisotropy <f> %s\n", "set maximum degree of anisotropy to <f>");
 	printf( "  -gl_alttexmerge %s\n","use new texmerge, usually uses less ram (default)");
 	printf( "  -gl_stdtexmerge %s\n","use old texmerge, uses more ram, but _might_ be a bit faster");
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	printf( "  -gl_voodoo      %s\n","force fullscreen mode only");
 #endif
 	printf( "  -gl_16bittextures %s\n","attempt to use 16bit textures");
@@ -575,11 +576,11 @@ int main(int argc, char *argv[])
 
 	Lighting_on = 1;
 
-//	if (init_graphics()) return 1;
+	if (vid_init())
+		return 1;
 
 	#ifdef EDITOR
-	if (gr_check_mode(SM(800, 600)) != 0)
-	{
+	if (vid_check_mode(SM(800, 600)) != 0) {
 		con_printf(CON_NORMAL, "The editor will not be available, press any key to start game...\n" );
 		Function_mode = FMODE_MENU;
 	}
@@ -634,7 +635,7 @@ int main(int argc, char *argv[])
 		grd_fades_disabled=1;
 
 	//determine whether we're using high-res menus & movies
-	if (FindArg("-nohires") || FindArg("-nohighres") || (gr_check_mode(MENU_HIRES_MODE) != 0) || disable_high_res)
+	if (FindArg("-nohires") || FindArg("-nohighres") || (vid_check_mode(MENU_HIRES_MODE) != 0) || disable_high_res)
 		cvar_setint( &MovieHires, MenuHires = MenuHiresAvailable = 0 );
 	else
 		//NOTE LINK TO ABOVE!
@@ -644,7 +645,7 @@ int main(int argc, char *argv[])
 		cvar_setint( &MovieHires, 0 );
 
 	con_printf(CON_VERBOSE, "Going into graphics mode...\n");
-	gr_set_mode(MovieHires.intval?SM(640,480):SM(320,200));
+	vid_set_mode(MovieHires.intval?SM(640,480):SM(320,200));
 
 	// Load the palette stuff. Returns non-zero if error.
 	con_printf(CON_DEBUG, "Initializing palette system...\n" );

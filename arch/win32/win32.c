@@ -69,11 +69,10 @@ void arch_init()
 }
 
 
+int vid_installed = 0;
 
 
-int gr_installed = 0;
-
-int gr_check_mode(uint32_t mode)
+int vid_check_mode(uint32_t mode)
 {
 	if (mode == SM(320, 200))
 		return 0;
@@ -81,7 +80,8 @@ int gr_check_mode(uint32_t mode)
 	return 11;
 }
 
-int gr_set_mode(uint32_t mode)
+
+int vid_set_mode(uint32_t mode)
 {
 	unsigned int w,h,t,r;
 
@@ -99,61 +99,33 @@ int gr_set_mode(uint32_t mode)
 
 	gr_palette_clear();
 
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_mode = mode;
-	grd_curscreen->sc_w = w;
-	grd_curscreen->sc_h = h;
-	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-	gr_init_canvas(&grd_curscreen->sc_canvas, (unsigned char *)BM_D3D_DISPLAY, t, w, h);
-	gr_set_current_canvas(NULL);
-
-
 	if (!(backbuffer = createdib()))
 		return 1;
 
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = backbuffer;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_type = BM_LINEAR;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = w;
-	
+	gr_init_screen(BM_LINEAR, w, h, 0, 0, w, backbuffer);
+
 	gamefont_choose_game_font(w,h);
 	
 	return 0;
 }
 
-int gr_init(int mode)
+
+int vid_init(int mode)
 {
 	//int org_gamma;
 	int retcode;
 	//HRESULT hr;
 
 	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
 		return -1;
 
-	MALLOC( grd_curscreen,grs_screen,1 );
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-
 	// Set the mode.
-	if ((retcode=gr_set_mode(mode)))
-	{
+	if ((retcode = vid_set_mode(mode)))
 		return retcode;
-	}
-
-	// Set all the screen, canvas, and bitmap variables that
-	// aren't set by the gr_set_mode call:
-	grd_curscreen->sc_canvas.cv_color = 0;
-	grd_curscreen->sc_canvas.cv_drawmode = 0;
-	grd_curscreen->sc_canvas.cv_font = NULL;
-	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
-	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
 	// Set flags indicating that this is installed.
-	gr_installed = 1;
+	vid_installed = 1;
 
 	return 0;
 }
@@ -198,7 +170,8 @@ void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color )
 
 RGBQUAD w32lastrgb[256];
 
-void gr_update ()
+
+void vid_update()
 {
 	HDC hdc;
 	unsigned char *p;
@@ -325,7 +298,7 @@ void Win32_BlitLinearToDirectX_bm(grs_bitmap *bm, int sx, int sy,
 }
 
 void Win32_MakePalVisible(void) {
-	gr_update();	
+	vid_update();
 }
 
 void Win32_InvalidatePages(void) {

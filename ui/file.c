@@ -314,7 +314,7 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
 
 		}
 
-		gr_update();
+		vid_update();
 	}
 
 	//key_flush();

@@ -102,7 +102,7 @@ double ui_input_number( short xc, short yc, char * text, double OrgNumber )
 
 		if (InputBox->pressed) break;
 
-		gr_update();
+		vid_update();
 	}
 
 	ui_close_window(wnd);

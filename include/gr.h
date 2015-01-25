@@ -171,6 +171,7 @@ typedef struct _grs_screen {    // This is a video screen
 
 
 #include "console.h"
+#include "palette.h"
 
 
 //=========================================================================
@@ -184,10 +185,6 @@ int gr_init(void);
 // This function sets up the main screen.  It should be called whenever
 // the video mode changes.
 int gr_init_screen(int mode, int w, int h, int x, int y, int rowsize, ubyte *data);
-
-int gr_check_mode(uint32_t mode);
-int gr_set_mode(uint32_t mode);
-
 
 // These 4 functions actuall change screen colors.
 
@@ -460,36 +457,5 @@ extern void gr_merge_textures_1( ubyte * lower, ubyte * upper, ubyte * dest );
 extern void gr_merge_textures_2( ubyte * lower, ubyte * upper, ubyte * dest );
 extern void gr_merge_textures_3( ubyte * lower, ubyte * upper, ubyte * dest );
 
-extern void gr_update(void);
-
-/*
- * currently SDL and OGL are the only things that supports toggling
- * fullscreen.  otherwise add other checks to the #if -MPM
- */
-#if (defined(SDL_VIDEO) || defined(OGL))
-#define GR_SUPPORTS_FULLSCREEN_TOGGLE
-
-/*
- * must return 0 if windowed, 1 if fullscreen
- */
-int gr_check_fullscreen(void);
-
-/*
- * returns state after toggling (ie, same as if you had called
- * check_fullscreen immediatly after)
- */
-int gr_toggle_fullscreen(void);
-
-#endif /* defined(SDL_VIDEO) || defined(OGL)) */
-
-/* currently only OGL can toggle in the menus, because its screen data
- * is not used (and stays in the same place).  whereas software modes,
- * toggling fullscreen would very likely make the data buffer point to
- * a different location, and all the subbitmaps of it would have
- * invalid addresses in them. */
-#ifdef OGL
-#define GR_SUPPORTS_FULLSCREEN_MENU_TOGGLE
-#endif
-int gr_toggle_fullscreen_menu(void);//returns state after toggling (ie, same as if you had called check_fullscreen immediatly after)
 
 #endif /* def _GR_H */

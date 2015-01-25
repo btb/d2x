@@ -34,6 +34,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "pstypes.h"
 #include "gr.h"
+#include "vid.h"
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
@@ -642,7 +643,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 
 	while(1)		{
 	//	Windows addendum to allow for kconfig input.
-		gr_update();
+		vid_update();
 
 		//see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
@@ -964,7 +965,7 @@ void kc_drawquestion( kc_item *item )
 	x = LHX(item->w1+item->x)+((LHX(item->w2)-w)/2);
    
 	gr_string( x, LHY(item->y), "?" );
-gr_update();
+	vid_update();
 }
 
 void kc_change_key( kc_item * item )

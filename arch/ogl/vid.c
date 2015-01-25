@@ -31,6 +31,7 @@
 #include "inferno.h"
 #include "text.h"
 #include "gr.h"
+#include "vid.h"
 #include "gamefont.h"
 #include "grdef.h"
 #include "palette.h"
@@ -57,7 +58,7 @@
 
 int ogl_voodoohack=0;
 
-int gr_installed = 0;
+int vid_installed = 0;
 
 
 void gr_palette_clear(); // Function prototype for gr_init;
@@ -66,11 +67,15 @@ int gl_reticle = 0;
 
 int ogl_fullscreen=0;
 
-int gr_check_fullscreen(void){
+
+int vid_check_fullscreen(void)
+{
 	return ogl_fullscreen;
 }
 
-void gr_do_fullscreen(int f){
+
+static void do_fullscreen(int f)
+{
 	if (ogl_voodoohack)
 		ogl_fullscreen=1;//force fullscreen mode on voodoos.
 	else
@@ -80,13 +85,17 @@ void gr_do_fullscreen(int f){
 	}
 }
 
-int gr_toggle_fullscreen(void){
-	gr_do_fullscreen(!ogl_fullscreen);
+
+int vid_toggle_fullscreen(void)
+{
+	do_fullscreen(!ogl_fullscreen);
 	//	grd_curscreen->sc_mode=0;//hack to get it to reset screen mode
 	return ogl_fullscreen;
 }
 
-int arch_toggle_fullscreen_menu(void){
+
+int vid_toggle_fullscreen_menu(void)
+{
 	unsigned char *buf=NULL;
 
 	if (ogl_readpixels_ok){
@@ -95,7 +104,7 @@ int arch_toggle_fullscreen_menu(void){
 		glReadPixels(0,0,grd_curscreen->sc_w,grd_curscreen->sc_h,GL_RGB,GL_UNSIGNED_BYTE,buf);
 	}
 
-	gr_do_fullscreen(!ogl_fullscreen);
+	do_fullscreen(!ogl_fullscreen);
 
 	if (ogl_readpixels_ok){
 //		glWritePixels(0,0,grd_curscreen->sc_w,grd_curscreen->sc_h,GL_RGB,GL_UNSIGNED_BYTE,buf);
@@ -146,7 +155,7 @@ void ogl_set_screen_mode(void){
 	last_screen_mode=Screen_mode;
 }
 
-void gr_update()
+void vid_update()
 {
 	if (gl_initialized){
 
@@ -294,7 +303,7 @@ void ogl_get_verinfo(void)
 }
 
 
-int gr_check_mode(uint32_t mode)
+int vid_check_mode(uint32_t mode)
 {
 	int w, h;
 
@@ -304,12 +313,12 @@ int gr_check_mode(uint32_t mode)
 }
 
 
-extern uint32_t VGA_current_mode; // DPH: kludge - remove at all costs
+uint32_t Vid_current_mode;
 
-int gr_set_mode(uint32_t mode)
+
+int vid_set_mode(uint32_t mode)
 {
 	short w, h;
-	char *gr_bm_data;
 
 #ifdef NOGRAPH
 return 0;
@@ -318,34 +327,19 @@ return 0;
 	if (mode<=0)
 		return 0;
 
-	if (mode == VGA_current_mode)
+	if (mode == Vid_current_mode)
 		return 0;
 
 	w=SM_W(mode);
 	h=SM_H(mode);
-	VGA_current_mode = mode;
+	Vid_current_mode = mode;
 
 	//if (screen != NULL) gr_palette_clear();
 
 //	ogl_init_state();
-	
-	gr_bm_data=(char *)grd_curscreen->sc_canvas.cv_bitmap.bm_data;//since we use realloc, we want to keep this pointer around.
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_mode = mode;
-	grd_curscreen->sc_w = w;
-	grd_curscreen->sc_h = h;
-	grd_curscreen->sc_aspect = fixdiv(grd_curscreen->sc_w*3,grd_curscreen->sc_h*4);
-	grd_curscreen->sc_canvas.cv_bitmap.bm_x = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_y = 0;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_w = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_h = h;
-	//grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = screen->pitch;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_rowsize = w;
-	grd_curscreen->sc_canvas.cv_bitmap.bm_type = BM_OGL;
-	//grd_curscreen->sc_canvas.cv_bitmap.bm_data = (unsigned char *)screen->pixels;
-//	mprintf((0,"ogl/gr.c: reallocing %p to %i\n",grd_curscreen->sc_canvas.cv_bitmap.bm_data,w*h));
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = d_realloc(gr_bm_data,w*h);
-	gr_set_current_canvas(NULL);
+
+	gr_init_screen(BM_OGL, w, h, 0, 0, w, NULL);
+
 	//gr_enable_default_palette_loading();
 	
 	ogl_init_window(w,h);//platform specific code
@@ -390,7 +384,7 @@ int ogl_testneedmipmaps(int i){
 }
 
 
-void gr_cmd_texturemode(int argc, char **argv)
+void ogl_cmd_texturemode(int argc, char **argv)
 {
 	if (argc < 2)
 		return;
@@ -460,12 +454,13 @@ int ogl_init_load_library(void)
 }
 #endif
 
-int gr_init()
+
+int vid_init(void)
 {
 	int t, glt = 0;
 
  	// Only do this function once!
-	if (gr_installed==1)
+	if (vid_installed == 1)
 		return -1;
 
 
@@ -473,13 +468,13 @@ int gr_init()
 	ogl_init_load_library();
 #endif
 
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	if (FindArg("-gl_voodoo")){
 		ogl_voodoohack=1;
-		gr_toggle_fullscreen();
+		vid_toggle_fullscreen();
 	}
 	if (FindArg("-fullscreen"))
-		gr_toggle_fullscreen();
+		vid_toggle_fullscreen();
 #endif
 	if ((glt=FindArg("-gl_alttexmerge")))
 		ogl_alttexmerge=1;
@@ -539,39 +534,24 @@ int gr_init()
 
 	ogl_init_texture_list_internal();
 		
-	MALLOC( grd_curscreen,grs_screen,1 );
-	memset( grd_curscreen, 0, sizeof(grs_screen));
-	grd_curscreen->sc_canvas.cv_bitmap.bm_data = NULL;
-	grd_curscreen->sc_canvas.cv_color = 0;
-	grd_curscreen->sc_canvas.cv_drawmode = 0;
-	grd_curscreen->sc_canvas.cv_font = NULL;
-	grd_curscreen->sc_canvas.cv_font_fg_color = 0;
-	grd_curscreen->sc_canvas.cv_font_bg_color = 0;
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
+	cmd_addcommand("gl_texturemode", ogl_cmd_texturemode);
 
-	cmd_addcommand("gl_texturemode", gr_cmd_texturemode);
-
-	cvar_registervariable(&gr_palette_gamma);
-
-	gr_installed = 1;
+	vid_installed = 1;
 	
-	atexit(gr_close);
+	atexit(vid_close);
 
 	return 0;
 }
 
-void gr_close()
+
+void vid_close(void)
 {
 //	mprintf((0,"ogl init: %s %s %s - %s\n",glGetString(GL_VENDOR),glGetString(GL_RENDERER),glGetString(GL_VERSION),glGetString,(GL_EXTENSIONS)));
 	ogl_brightness_r = ogl_brightness_g = ogl_brightness_b = 0;
 	ogl_setbrightness_internal();
 
 	ogl_close();//platform specific code
-	if (grd_curscreen){
-		if (grd_curscreen->sc_canvas.cv_bitmap.bm_data)
-			d_free(grd_curscreen->sc_canvas.cv_bitmap.bm_data);
-		d_free(grd_curscreen);
-	}
+
 #ifdef OGL_RUNTIME_LOAD
 	if (ogl_rt_loaded)
 		OpenGL_LoadLibrary(false);

@@ -37,6 +37,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "game.h"
 #include "player.h"
+#include "vid.h"
 #include "key.h"
 #include "object.h"
 #include "physics.h"
@@ -762,7 +763,7 @@ void LoadLevel(int level_num,int page_in_textures)
 #if 1 //def OGL
     gr_palette_load(gr_palette);
     show_boxed_message(TXT_LOADING);
-	gr_update();
+	vid_update();
 #else
 	show_boxed_message(TXT_LOADING);
 	gr_palette_load(gr_palette);

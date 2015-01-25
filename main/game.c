@@ -110,8 +110,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "robot.h"
 #include "fix.h"
 #include "hudmsg.h"
-
-uint32_t VGA_current_mode;
+#include "vid.h"
 
 #ifdef MWPROFILER
 #include <profiler.h>
@@ -675,7 +674,7 @@ int set_screen_mode(int sm)
 	}
 #endif
 
-	if ( Screen_mode == sm && VGA_current_mode == VR_screen_mode) {
+	if ( Screen_mode == sm && Vid_current_mode == VR_screen_mode) {
 		gr_set_current_canvas( &VR_screen_pages[VR_current_page] );
 		return 1;
 	}
@@ -704,8 +703,8 @@ int set_screen_mode(int sm)
 
             menu_mode = MenuHires?SM(640,480):SM(320,200);
 
-			if (VGA_current_mode != menu_mode) {
-				if (gr_set_mode(menu_mode))
+			if (Vid_current_mode != menu_mode) {
+				if (vid_set_mode(menu_mode))
 					Error("Cannot set screen mode for menu");
 				if (!gr_palette_faded_out)
 					gr_palette_load(gr_palette);
@@ -723,8 +722,8 @@ int set_screen_mode(int sm)
 		break;
 
 	case SCREEN_GAME:
-		if (VGA_current_mode != VR_screen_mode) {
-			if (gr_set_mode(VR_screen_mode))	{
+		if (Vid_current_mode != VR_screen_mode) {
+			if (vid_set_mode(VR_screen_mode)) {
 				Error("Cannot set desired screen mode for game!");
 				//we probably should do something else here, like select a standard mode
 			}
@@ -788,7 +787,7 @@ int set_screen_mode(int sm)
 	case SCREEN_EDITOR:
 		if (grd_curscreen->sc_mode != SM(800,600))	{
 			int gr_error;
-			if ((gr_error=gr_set_mode(SM(800,600)))!=0) { //force into game scrren
+			if ((gr_error = vid_set_mode(SM(800,600))) != 0) { // force into game scrren
 				Warning("Cannot init editor screen (error=%d)",gr_error);
 				return 0;
 			}
@@ -820,10 +819,12 @@ int set_screen_mode(int sm)
 	return 1;
 }
 
-int gr_toggle_fullscreen_game(void){
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+
+int game_toggle_fullscreen(void)
+{
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	int i;
-	hud_message(MSGC_GAME_FEEDBACK, "toggling fullscreen mode %s",(i=gr_toggle_fullscreen())?"on":"off" );
+	hud_message(MSGC_GAME_FEEDBACK, "toggling fullscreen mode %s", (i = vid_toggle_fullscreen())?"on":"off" );
 	//added 2000/06/19 Matthew Mueller - hack to fix "infinite toggle" problem
 	//it seems to be that the screen mode change takes long enough that the key has already sent repeat codes, or that its unpress event gets dropped, etc.  This is a somewhat ugly fix, but it works.
 //	generic_key_handler(KEY_PADENTER,0);
@@ -837,12 +838,12 @@ int gr_toggle_fullscreen_game(void){
 #endif
 }
 
-int arch_toggle_fullscreen_menu(void);
 
-int gr_toggle_fullscreen_menu(void){
-#ifdef GR_SUPPORTS_FULLSCREEN_MENU_TOGGLE
+int game_toggle_fullscreen_menu(void){
+#ifdef VID_SUPPORTS_FULLSCREEN_MENU_TOGGLE
 	int i;
-	i=arch_toggle_fullscreen_menu();
+
+	i = vid_toggle_fullscreen_menu();
 
 //	generic_key_handler(KEY_PADENTER,0);
 //	generic_key_handler(KEY_ENTER, 0);

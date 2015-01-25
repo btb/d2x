@@ -47,6 +47,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "byteswap.h"
 #include "gr.h"
+#include "vid.h"
 #include "gamefont.h"
 #include "cfile.h"
 #include "menu.h"
@@ -253,7 +254,7 @@ void show_pause_message(char *msg)
 
 	gr_ustring( 0x8000, y, msg );
 
-	gr_update();
+	vid_update();
 }
 
 void clear_pause_message()
@@ -298,9 +299,9 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	MVE_palCallbacks(MovieSetPalette);
 
 	if (hires_flag) {
-		gr_set_mode(SM(640,480));
+		vid_set_mode(SM(640,480));
 	} else {
-		gr_set_mode(SM(320,200));
+		vid_set_mode(SM(320,200));
 	}
 #ifdef OGL
 	set_screen_mode(SCREEN_MENU);
@@ -319,7 +320,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 		draw_subtitles(frame_num);
 
-		gr_update();
+		vid_update();
 
 		key = key_inkey();
 
@@ -337,11 +338,11 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 			clear_pause_message();
 		}
 
-#ifdef GR_SUPPORTS_FULLSCREEN_TOGGLE
+#ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 		if ((key == KEY_COMMAND+KEY_SHIFTED+KEY_F) ||
 			(key == KEY_ALTED+KEY_ENTER) ||
 		    (key == KEY_ALTED+KEY_PADENTER))
-			gr_toggle_fullscreen();
+			vid_toggle_fullscreen();
 #endif
 
 		frame_num++;
@@ -365,9 +366,9 @@ int InitMovieBriefing()
 {
 #if 0
 	if (MenuHires)
-		gr_set_mode(SM(640,480));
+		vid_set_mode(SM(640,480));
 	else
-		gr_set_mode(SM(320,200));
+		vid_set_mode(SM(320,200));
 
 	gr_init_sub_canvas( &VR_screen_pages[0], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );
 	gr_init_sub_canvas( &VR_screen_pages[1], &grd_curscreen->sc_canvas, 0, 0, grd_curscreen->sc_w, grd_curscreen->sc_h );

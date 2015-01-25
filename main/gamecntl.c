@@ -58,7 +58,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "digi.h"
 #include "ibitblt.h"
 #include "u_mem.h"
-#include "palette.h"
 #include "morph.h"
 #include "lighting.h"
 #include "newdemo.h"
@@ -80,6 +79,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "titles.h"
 #include "gr.h"
+#include "vid.h"
 #include "movie.h"
 #include "scores.h"
 #ifdef MACINTOSH
@@ -486,7 +486,7 @@ int do_game_pause()
 	  	sprintf(msg,"PAUSE\n\nSkill level:  %s\nHostages on board:  %d\n",(*(&TXT_DIFFICULTY_1 + (Difficulty_level))),Players[Player_num].hostages_on_board);
 
 	show_boxed_message(Pause_msg=msg);		  //TXT_PAUSE);
-	gr_update();
+	vid_update();
 
 	while (Game_paused) 
 	{
@@ -1293,7 +1293,7 @@ int HandleSystemKey(int key)
 		case KEY_COMMAND+KEY_SHIFTED+KEY_F:
 		case KEY_ALTED+KEY_ENTER:
 		case KEY_ALTED+KEY_PADENTER:
-			gr_toggle_fullscreen_game();
+			game_toggle_fullscreen();
 			break;
 //end addition -MM
 			

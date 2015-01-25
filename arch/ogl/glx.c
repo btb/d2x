@@ -216,7 +216,7 @@ int ogl_init_window(int x, int y){
 		
 		if (ogl_fullscreen)
 			ogl_do_fullscreen_internal();
-//			gr_do_fullscreen(ogl_fullscreen);
+//			do_fullscreen(ogl_fullscreen);
 	}
 	return 0;
 }

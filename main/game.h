@@ -236,7 +236,7 @@ void enable_flicker(int segnum, int sidenum);
 // returns 1 if ok, 0 if error
 int add_flicker(int segnum, int sidenum, fix delay, unsigned long mask);
 
-int gr_toggle_fullscreen_game(void);
+int game_toggle_fullscreen(void);
 
 /*
  * reads a flickering_light structure from a CFILE

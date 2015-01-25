@@ -30,9 +30,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "pstypes.h"
 #include "gr.h"
+#include "vid.h"
 #include "mono.h"
 #include "key.h"
-#include "palette.h"
 #include "inferno.h"
 #include "gamepal.h"
 #include "timer.h"
@@ -191,7 +191,7 @@ void credits_show(char *credits_filename)
 
 	gr_set_current_canvas(NULL);
 	gr_bitmap(0,0,&backdrop);
-	gr_update();
+	vid_update();
 	gr_palette_fade_in( gr_palette, 32, 0 );
 
 //	Create a new offscreen buffer for the credits screen
@@ -351,8 +351,7 @@ get_line:;
 				}
 				
 #endif
-			gr_update();
-				
+				vid_update();
 			}
 
 //		Wacky Fast Credits thing doesn't need this (it's done above)
