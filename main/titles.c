@@ -716,6 +716,10 @@ int load_new_briefing_screen( char *fname )
 	mprintf ((0,"Loading new briefing <%s>\n",fname));
 	strcpy (CurBriefScreenName,fname);
 
+#ifndef __MSDOS__
+	memcpy(New_pal, gr_palette, sizeof(gr_palette)); // attempt to get fades after briefing screens done correctly.
+#endif
+
 	if (gr_palette_fade_out( New_pal, 32, 0 ))
 		return 0;
 
@@ -1409,10 +1413,9 @@ int show_briefing_screen( int screen_num, int allow_keys)
 	key_init();
 	#endif
 
-	#if defined (MACINTOSH) || defined(WINDOWS)
-	memcpy(New_pal,gr_palette,sizeof(gr_palette));		// attempt to get fades after briefing screens done correctly.
-	#endif
-
+#ifndef __MSDOS__
+	memcpy(New_pal, gr_palette, sizeof(gr_palette)); // attempt to get fades after briefing screens done correctly.
+#endif
 
 	if (gr_palette_fade_out( New_pal, 32, allow_keys ))
 		return 1;
