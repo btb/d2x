@@ -408,6 +408,8 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 
 	gr_palette_faded_out = 1;
 
+	SDL_FillRect(screen, NULL, 0);
+
 	return 0;
 }
 
