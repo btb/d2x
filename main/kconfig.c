@@ -178,7 +178,7 @@ kc_item *All_items;
 //-------------------------------------------------------------------------
 
 kc_item kc_keyboard[NUM_KEY_CONTROLS] = {
-	{  0, 15, 49, 71, 26, 55,  2, 55,  1,"Pitch forward", BT_KEY, 255 },
+	{  0, 15, 49, 71, 26, 55,  2, 56,  1,"Pitch forward", BT_KEY, 255 },
 	{  1, 15, 49,100, 26, 50,  3,  0, 24,"Pitch forward", BT_KEY, 255 },
 	{  2, 15, 57, 71, 26,  0,  4, 25,  3,"Pitch backward", BT_KEY, 255 },
 	{  3, 15, 57,100, 26,  1,  5,  2, 26,"Pitch backward", BT_KEY, 255 },
@@ -203,7 +203,7 @@ kc_item kc_keyboard[NUM_KEY_CONTROLS] = {
 	{ 22, 15,145, 71, 26, 20, 48, 41, 23,"Bank right", BT_KEY, 255 },
 	{ 23, 15,145,100, 26, 21, 49, 22, 42,"Bank right", BT_KEY, 255 },
 	{ 24,158, 49, 83, 26, 51, 26,  1, 25,"Fire primary", BT_KEY, 255 },
-	{ 25,158, 49,112, 26, 54, 27, 24,  2,"Fire primary", BT_KEY, 255 },
+	{ 25,158, 49,112, 26, 56, 27, 24,  2,"Fire primary", BT_KEY, 255 },
 	{ 26,158, 57, 83, 26, 24, 28,  3, 27,"Fire secondary", BT_KEY, 255 },
 	{ 27,158, 57,112, 26, 25, 29, 26,  4,"Fire secondary", BT_KEY, 255 },
 	{ 28,158, 65, 83, 26, 26, 34,  5, 29,"Fire flare", BT_KEY, 255 },
@@ -233,8 +233,8 @@ kc_item kc_keyboard[NUM_KEY_CONTROLS] = {
 	{ 52,158,163, 83, 26, 42, 54, 49, 53,"Headlight", BT_KEY, 255 },
 	{ 53,158,163,112, 26, 43, 55, 52, 50,"Headlight", BT_KEY, 255 },
 	{ 54,158,171, 83, 26, 52, 56, 51, 55,"Energy->Shield", BT_KEY, 255 },
-	{ 55,158,171,112, 26, 53,  0, 54,  0,"Energy->Shield", BT_KEY, 255 },
-	{ 56,158,179, 83, 26, 54,  0,  0,  0,"Toggle Bomb", BT_KEY, 255 },
+	{ 55,158,171,112, 26, 53,  0, 54, 56,"Energy->Shield", BT_KEY, 255 },
+	{ 56,158,179, 83, 26, 54, 25, 55,  0,"Toggle Bomb", BT_KEY, 255 },
 };
 
 char *kc_key_bind_text[NUM_KEY_CONTROLS] = {
