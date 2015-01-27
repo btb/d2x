@@ -108,11 +108,19 @@ void joy_button_handler(SDL_JoyButtonEvent *jbe)
 void joy_hat_handler(SDL_JoyHatEvent *jhe)
 {
 	int hat = SDL_Joysticks[jhe->which].hat_map[jhe->hat];
+	int state_up    = (jhe->value & SDL_HAT_UP   ) != 0;
+	int state_right = (jhe->value & SDL_HAT_RIGHT) != 0;
+	int state_down  = (jhe->value & SDL_HAT_DOWN ) != 0;
+	int state_left  = (jhe->value & SDL_HAT_LEFT ) != 0;
+	int old_state_up    = keyd_pressed[KEY_JB1 + hat + 0];
+	int old_state_right = keyd_pressed[KEY_JB1 + hat + 1];
+	int old_state_down  = keyd_pressed[KEY_JB1 + hat + 2];
+	int old_state_left  = keyd_pressed[KEY_JB1 + hat + 3];
 
-	vkey_handler(KEY_JB1 + hat + 0, (jhe->value & SDL_HAT_UP   ) > 0);
-	vkey_handler(KEY_JB1 + hat + 1, (jhe->value & SDL_HAT_RIGHT) > 0);
-	vkey_handler(KEY_JB1 + hat + 2, (jhe->value & SDL_HAT_DOWN ) > 0);
-	vkey_handler(KEY_JB1 + hat + 3, (jhe->value & SDL_HAT_LEFT ) > 0);
+	if (state_up    != old_state_up   ) vkey_handler(KEY_JB1 + hat + 0, state_up   );
+	if (state_right != old_state_right) vkey_handler(KEY_JB1 + hat + 1, state_right);
+	if (state_down  != old_state_down ) vkey_handler(KEY_JB1 + hat + 2, state_down );
+	if (state_left  != old_state_left ) vkey_handler(KEY_JB1 + hat + 3, state_left );
 }
 
 void joy_axis_handler(SDL_JoyAxisEvent *jae)
