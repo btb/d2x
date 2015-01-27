@@ -303,6 +303,10 @@ void gr_remap_bitmap_good( grs_bitmap * bmp, ubyte * palette, int transparent_co
 {
 	ubyte colormap[256];
 	int freq[256];
+
+	if (bmp->bm_type != BM_LINEAR)
+		return; // can't do it
+
 	build_colormap_good( palette, colormap, freq );
 
 	if ( (super_transparent_color>=0) && (super_transparent_color<=255))
