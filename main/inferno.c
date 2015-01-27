@@ -601,16 +601,15 @@ int main(int argc, char *argv[])
 		set_display_mode(Default_display_mode); //..then set default display mode
 
 	{
-		int screen_width = 640;
-		int screen_height = 480;
+		int screen_width = 0;
+		int screen_height = 0;
 
 		FindResArg("", &screen_width, &screen_height);
 
-		// added 3/24/99 by Owen Evans for screen res changing
-		Game_screen_mode = SM(screen_width, screen_height);
-		// end added -OE
-		set_display_mode(Game_screen_mode);
-
+		if (screen_width && screen_height) {
+			Game_screen_mode = SM(screen_width, screen_height);
+			set_display_mode(Game_screen_mode);
+		}
 	}
 	{
 // added/edited on 12/14/98 by Matt Mueller - override res in d1x.ini with command line args
