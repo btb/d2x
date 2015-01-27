@@ -513,16 +513,24 @@ void vkey_handler(int keycode, int state)
 	Key_info *key;
 
 	key = &(key_data.keys[keycode]);
-	key_handle_binding(keycode, state);
 
 	if (state) {
+		// Key going down
 		keyd_last_pressed = keycode;
-		keyd_pressed[keycode] = 1;
-		key->downcount += state;
-		key->state = 1;
-		key->timewentdown = keyd_time_when_last_pressed = timer_get_fixed_seconds();
-		key->counter++;
+		keyd_time_when_last_pressed = timer_get_fixed_seconds();
+
+		if (!keyd_pressed[keycode]) {
+			// First time down
+			key_handle_binding(keycode, 1);
+			keyd_pressed[keycode] = 1;
+			key->downcount += state;
+			key->state = 1;
+			key->timewentdown = keyd_time_when_last_pressed;
+			key->counter++;
+		}
 	} else {
+		// Key going up
+		key_handle_binding(keycode, 0);
 		keyd_pressed[keycode] = 0;
 		keyd_last_released = keycode;
 		key->upcount += key->state;
@@ -531,7 +539,7 @@ void vkey_handler(int keycode, int state)
 		key->timehelddown += timer_get_fixed_seconds() - key->timewentdown;
 	}
 
-	if ( (state && !key->last_state) || (state && key->last_state && (key->counter > 30) && (key->counter & 0x01)) ) {
+	if ( (state && !key->last_state) || (keyd_repeat && state && key->last_state) ) {
 		if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
 			keycode |= KEY_SHIFTED;
 		if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT])
@@ -581,7 +589,9 @@ void key_init()
 	keyd_time_when_last_pressed = timer_get_fixed_seconds();
 	keyd_buffer_type = 1;
 	keyd_repeat = 1;
-  
+
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
 	for(i=0; i<256; i++)
 		key_text[i] = key_properties[i].key_text;
 
