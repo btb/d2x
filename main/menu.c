@@ -1091,7 +1091,7 @@ void do_options_menu()
 		#else
 		m[ 2].type = NM_TYPE_MENU;   m[ 2].text=TXT_CONTROLS_;
 		#endif
-		m[ 3].type = NM_TYPE_MENU;   m[ 3].text=TXT_CAL_JOYSTICK;
+		m[ 3].type = NM_TYPE_TEXT;   m[ 3].text="";
 		m[ 4].type = NM_TYPE_TEXT;   m[ 4].text="";
 
 		m[5].type = NM_TYPE_SLIDER;
@@ -1116,7 +1116,6 @@ void do_options_menu()
 		switch(i)       {
 			case  0: do_sound_menu();			break;
 			case  2: joydefs_config();			break;
-			case  3: joydefs_calibrate();		break;
 			case  6: do_detail_level_menu(); 	break;
 			case  7: do_screen_res_menu();		break;
 			case  9: ReorderPrimary();			break;

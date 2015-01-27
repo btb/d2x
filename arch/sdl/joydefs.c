@@ -124,7 +124,7 @@ void joydefs_config()
 	m[5].type = NM_TYPE_MENU;   m[5].text = "CUSTOMIZE D2X KEYS";
 	m[6].type = NM_TYPE_TEXT;   m[6].text = "";
 	m[7].type = NM_TYPE_MENU;   m[7].text = TXT_JOYS_SENSITIVITY;
-	m[8].type = NM_TYPE_TEXT;   m[8].text = "";
+	m[8].type = NM_TYPE_MENU;   m[8].text = TXT_CAL_JOYSTICK;
 
 	do {
 		i1 = newmenu_do1(NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1);
@@ -136,7 +136,8 @@ void joydefs_config()
 		case 3: kconfig(0, TXT_KEYBOARD); break;
 		case 4: kconfig(1, TXT_AXES); break;
 		case 5: kconfig(2, "D2X KEYS"); break;
-		case 7: joydefs_sensitivity();
+		case 7: joydefs_sensitivity();      break;
+		case 8: joydefs_calibrate();        break;
 		}
 
 	} while (i1>-1);
