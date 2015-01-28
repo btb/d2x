@@ -1135,7 +1135,33 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 //			done=1;
 
 		old_choice = choice;
-	
+
+		// More versatile menu navigation
+		switch (k) {
+		case KEY_RIGHT:
+			switch (item[choice].type) {
+			case NM_TYPE_MENU:
+			case NM_TYPE_INPUT_MENU:
+				k = KEY_ENTER;
+				break;
+			case NM_TYPE_CHECK:
+			case NM_TYPE_RADIO:
+				k = KEY_SPACEBAR;
+				break;
+			}
+			break;
+		case KEY_LEFT:
+			switch (item[choice].type) {
+			case NM_TYPE_MENU:
+			case NM_TYPE_CHECK:
+			case NM_TYPE_RADIO:
+			case NM_TYPE_INPUT_MENU:
+				k = KEY_ESC;
+				break;
+			}
+			break;
+		}
+
 		switch( k )	{
 
 #ifdef NETWORK
