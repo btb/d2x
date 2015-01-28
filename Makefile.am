@@ -7,8 +7,8 @@ d2x_CPPFLAGS = -DFL1_WITH_FLAT -I$(top_srcdir)/include -I$(top_srcdir)/main -I$(
 
 d2x_SOURCES = \
 2d/2dsline.c  2d/box.c      2d/disc.c     2d/ibitblt.c  2d/pcx.c      2d/rect.c     2d/scalec.c   \
-2d/bitblt.c   2d/canvas.c   2d/font.c     2d/line.c     2d/pixel.c    2d/rle.c      2d/bitmap.c   \
-2d/circle.c   2d/gpixel.c   2d/palette.c  \
+2d/bitblt.c   2d/canvas.c   2d/font.c     2d/gr.c       2d/line.c     2d/pixel.c    2d/rle.c      \
+2d/bitmap.c   2d/circle.c   2d/gpixel.c   2d/palette.c  \
 3d/clipper.c  3d/globvars.c 3d/interp.c   3d/points.c   3d/setup.c    3d/draw.c     3d/instance.c \
 3d/matrix.c   3d/rod.c      \
 arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
@@ -44,7 +44,7 @@ endif
 
 SUFFIXES = .asm
 .asm.o:
-$(NASM) -dTRANSPARENCY_COLOR=${TRANSPARENCY_COLOR} $(NASMFLAGS) $< -o $@
+	$(NASM) -dTRANSPARENCY_COLOR=${TRANSPARENCY_COLOR} $(NASMFLAGS) $< -o $@
 
 if USE_ASM
 d2x_LDADD += 2d/linear.o 2d/tmerge_a.o maths/vecmata.o maths/fix.o
@@ -83,7 +83,7 @@ endif
 
 if MSDOS
 d2x_CPPFLAGS += -I$(top_srcdir)/arch/dos/include
-d2x_SOURCES += arch/dos/digi.c arch/dos/dpmi.c arch/dos/findfile.c arch/dos/gr.c arch/dos/init.c arch/dos/ipx.c arch/dos/joyc.c arch/dos/joydefs.c arch/dos/key.c arch/dos/mouse.c arch/dos/rbaudio.c arch/dos/vesa.c
+d2x_SOURCES += arch/dos/digi.c arch/dos/dpmi.c arch/dos/findfile.c arch/dos/vid.c arch/dos/init.c arch/dos/ipx.c arch/dos/joyc.c arch/dos/joydefs.c arch/dos/key.c arch/dos/mouse.c arch/dos/rbaudio.c arch/dos/vesa.c
 d2x_LDADD += arch/dos/timer.o arch/dos/modex.o
 endif
 
@@ -91,14 +91,14 @@ endif
 # Remaining targets are based on d2x_*
 
 d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA
-d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/gr.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
+d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
 
 
 d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS)
 _d2x_sdl_SOURCES = $(d2x_SOURCES) arch/sdl/event.c arch/sdl/key.c arch/sdl/mouse.c
-d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/gr.c texmap/tmapflat.c
+d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/vid.c texmap/tmapflat.c
 d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
 d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS)
 
@@ -147,7 +147,7 @@ endif
 # GL target is based on d2x_sdl_*, other than renderer
 
 d2x_gl_CPPFLAGS = $(d2x_sdl_CPPFLAGS) -DOGL
-d2x_gl_SOURCES = $(_d2x_sdl_SOURCES) arch/ogl/gr.c arch/ogl/ogl.c arch/ogl/sdlgl.c
+d2x_gl_SOURCES = $(_d2x_sdl_SOURCES) arch/ogl/vid.c arch/ogl/ogl.c arch/ogl/sdlgl.c
 d2x_gl_LDFLAGS = $(d2x_sdl_LDFLAGS)
 d2x_gl_LDADD = $(d2x_sdl_LDADD)
 
