@@ -46,7 +46,7 @@ void Int3(void);
 #if defined(__clang__)
 #define Int3() __builtin_debugtrap()
 #elif defined(__GNUC__) && (defined(__i386__) || defined(__amd64__))
-#define Int3() ({ asm volatile ("int $3") })
+#define Int3() ({ asm volatile ("int $3"); })
 #elif defined __WATCOMC__
 #pragma aux Int3 = "int 3h";
 #elif defined _MSC_VER

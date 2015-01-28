@@ -2918,7 +2918,7 @@ void network_game_param_poll( int nitems, newmenu_item * menus, int * key, int c
 		}
 		#endif
 
-	     if (!Netgame.game_flags & NETGAME_FLAG_SHOW_MAP) 
+		if ( !(Netgame.game_flags & NETGAME_FLAG_SHOW_MAP) )
 			Netgame.game_flags |= NETGAME_FLAG_SHOW_MAP;
 
 		if (Netgame.PlayTimeAllowed || Netgame.KillGoal)
