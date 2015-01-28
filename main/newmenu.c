@@ -2324,6 +2324,7 @@ ReadFileNames:
 			citem -= NumFiles_displayed;
 			break;
 		case KEY_ESC:
+		case KEY_LEFT:
 			if (allow_abort_flag) {
 				citem = -1;
 				done = 1;
@@ -2331,6 +2332,7 @@ ReadFileNames:
 			break;
 		case KEY_ENTER:
 		case KEY_PADENTER:
+		case KEY_RIGHT:
 			done = 1;
 			break;
 			
@@ -2781,6 +2783,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 			citem -= LB_ITEMS_ON_SCREEN;
 			break;
 		case KEY_ESC:
+		case KEY_LEFT:
 			if (allow_abort_flag) {
 				citem = -1;
 				done = 1;
@@ -2788,6 +2791,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 			break;
 		case KEY_ENTER:
 		case KEY_PADENTER:
+		case KEY_RIGHT:
 			done = 1;
 			break;
 
