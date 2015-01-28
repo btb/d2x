@@ -364,7 +364,7 @@ get_line:;
 			//see if redbook song needs to be restarted
 			songs_check_redbook_repeat();
 
-			k = key_inkey();
+			k = newmenu_inkey();
 
 			#ifndef NDEBUG
 			if (k == KEY_BACKSP) {

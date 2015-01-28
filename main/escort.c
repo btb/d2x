@@ -1861,7 +1861,7 @@ void do_escort_menu(void)
 	show_escort_menu(msg);		//TXT_PAUSE);
 
 	while (paused) {
-		key = key_getch();
+		key = newmenu_getch();
 
 		switch (key) {
 			case KEY_0:

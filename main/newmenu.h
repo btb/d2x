@@ -142,6 +142,9 @@ int nm_messagebox_fixedfont(char *title, int nchoices, ...);
 //should be called whenever the palette changes
 extern void nm_remap_background(void);
 
+extern int newmenu_inkey(void);
+extern int newmenu_getch(void);
+
 #if defined(MACINTOSH) || defined(WINDOWS) || defined(SDL_INPUT)
 # define NEWMENU_MOUSE
 #endif

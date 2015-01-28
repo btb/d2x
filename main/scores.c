@@ -432,7 +432,7 @@ ReshowScores:
 		//see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
 
-		k = key_inkey();
+		k = newmenu_inkey();
 		switch( k )	{
 		case KEY_CTRLED+KEY_R:		
 			if ( citem < 0 )		{

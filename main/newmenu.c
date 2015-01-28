@@ -647,20 +647,6 @@ int newmenu_do_fixedfont( char * title, char * subtitle, int nitems, newmenu_ite
 	return newmenu_do4( title, subtitle, nitems, item, subfunction, citem, filename, width,height, 0);
 }
 
-//returns 1 if a control device button has been pressed
-int check_button_press()
-{
-#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
-	int i;
-
-	if (Config_control_mouse.intval)
-		for (i=0; i<3; i++ )
-			if (mouse_button_down_count(i)>0) return 1;
-#endif
-
-	return 0;
-}
-
 
 // use menu with joystick
 int newmenu_inkey(void)
@@ -686,6 +672,15 @@ int newmenu_inkey(void)
 			case '3': key = KEY_ESC; break;
 		}
 	return key;
+}
+
+
+int newmenu_getch()
+{
+	while (!key_checkch())
+		timer_delay(1);
+
+	return newmenu_inkey();
 }
 
 
@@ -1128,8 +1123,13 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 			k = -1;
 			done = 1;
 		}
-		if (check_button_press())
-			done = 1;
+
+#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
+		if (Config_control_mouse.intval)
+			for ( i = 0; i < 3; i++ )
+				if (mouse_button_down_count(i) > 0)
+					done = 1;
+#endif
 
 //		if ( (nmenus<2) && (k>0) && (nothers==0) )
 //			done=1;

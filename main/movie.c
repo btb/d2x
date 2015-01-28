@@ -133,7 +133,7 @@ int PlayMovie(const char *filename, int must_have)
 		strcat(name,".mve");
 
 	//check for escape already pressed & abort if so
-	while ((c=key_inkey()) != 0)
+	while ((c = newmenu_inkey()) != 0)
 		if (c == KEY_ESC)
 			return MOVIE_ABORTED;
 
@@ -322,7 +322,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 		vid_update();
 
-		key = key_inkey();
+		key = newmenu_inkey();
 
 		// If ESCAPE pressed, then quit movie.
 		if (key == KEY_ESC) {
@@ -334,7 +334,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		if (key == KEY_PAUSE) {
 			MVE_rmHoldMovie();
 			show_pause_message(TXT_PAUSE);
-			while (!key_inkey()) ;
+			while (!newmenu_inkey()) ;
 			clear_pause_message();
 		}
 

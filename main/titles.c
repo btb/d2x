@@ -88,8 +88,6 @@ int	Briefing_foreground_colors[MAX_BRIEFING_COLORS], Briefing_background_colors[
 int	Current_color = 0;
 int	Erase_color;
 
-extern int check_button_press();
-
 
 // added by Jan Bobrowski for variable-size menu screen
 static int rescale_x(int x)
@@ -102,21 +100,19 @@ static int rescale_y(int y)
 	return y * GHEIGHT / 200;
 }
 
-#ifndef MACINTOSH
+
 int local_key_inkey(void)
 {
 	int	rval;
 
-	rval = key_inkey();
+	rval = newmenu_inkey();
 
 	if (rval == KEY_PRINT_SCREEN) {
 		save_screen_shot(0);
 		return 0;				//say no key pressed
 	}
 
-	if (check_button_press())		//joystick or mouse button pressed?
-		rval = KEY_SPACEBAR;
-	else if (mouse_button_state(0))
+	if (mouse_button_state(0)) // mouse button pressed?
 		rval = KEY_SPACEBAR;
 
 	if ( rval == KEY_Q+KEY_COMMAND )
@@ -124,34 +120,6 @@ int local_key_inkey(void)
 
 	return rval;
 }
-#else
-int local_key_inkey(void)
-{
-	EventRecord event;
-	int	rval;
-
-	if (!GetOSEvent(everyEvent, &event))
-		return 0;
-
-	if (event.what != keyDown)
-		return 0;
-
-	rval = (int)((event.message & keyCodeMask) >> 8);
-
-	if (rval == KEY_PRINT_SCREEN) {
-		save_screen_shot(0);
-		return 0;				//say no key pressed
-	}
-
-	if (check_button_press())		//joystick or mouse button pressed?
-		rval = KEY_SPACEBAR;
-
-	if ( rval == KEY_Q+KEY_COMMAND )
-		quit_request();
-
-	return rval;
-}
-#endif
 
 
 void delay_until(fix time)
@@ -1572,7 +1540,7 @@ void show_order_form()
 		//vfx_set_palette_sub( title_pal );
 		gr_palette_fade_in( title_pal, 32, 0 );
 		vid_update();
-		while (!key_inkey() && !mouse_button_state(0)) {} //key_getch();
+		while (!key_inkey() && !mouse_button_state(0)) {} //newmenu_getch();
 		gr_palette_fade_out( title_pal, 32, 0 );
 	}
 	else

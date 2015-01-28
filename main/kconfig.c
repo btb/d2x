@@ -652,7 +652,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 		//see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
 
-		k = key_inkey();
+		k = newmenu_inkey();
 
 #ifdef NEWMENU_MOUSE
 		omouse_state = mouse_state;
@@ -1103,7 +1103,7 @@ void kc_change_joyaxis( kc_item * item )
 		#endif
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
-		k = key_inkey();
+		k = newmenu_inkey();
 		timer_delay(f0_1/10);
 
 		if (k == KEY_PRINT_SCREEN)
@@ -1170,7 +1170,7 @@ void kc_change_mouseaxis( kc_item * item )
 		#endif
 //		if ( Game_mode & GM_MULTI )
 //			GameLoop( 0, 0 );				// Continue
-		k = key_inkey();
+		k = newmenu_inkey();
 		timer_delay(f0_1/10);
 
 		if (k == KEY_PRINT_SCREEN)

@@ -490,7 +490,7 @@ int do_game_pause()
 	{
 		int screen_changed;
 
-		key = key_getch();
+		key = newmenu_getch();
 
 		#ifndef RELEASE
 		HandleTestKey(key);
