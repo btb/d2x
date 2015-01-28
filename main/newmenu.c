@@ -650,13 +650,9 @@ int newmenu_do_fixedfont( char * title, char * subtitle, int nitems, newmenu_ite
 //returns 1 if a control device button has been pressed
 int check_button_press()
 {
+#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
 	int i;
 
-	if (Config_control_joystick.intval)
-		for (i=0; i<4; i++ )
-	 		if (joy_get_button_down_cnt(i)>0) return 1;
-
-#ifndef NEWMENU_MOUSE   // don't allow mouse to continue from menu
 	if (Config_control_mouse.intval)
 		for (i=0; i<3; i++ )
 			if (mouse_button_down_count(i)>0) return 1;
@@ -664,6 +660,34 @@ int check_button_press()
 
 	return 0;
 }
+
+
+// use menu with joystick
+int newmenu_inkey(void)
+{
+	int	key;
+
+	key = key_inkey();
+
+	if ( !Config_control_joystick.intval || key < KEY_JB1 || key > 255 ) // not using joystick, not a joystick button, or modifier pressed
+		return key;
+
+	if ( strlen(key_text[key]) > 5 && key_text[key][0] == 'J' && key_text[key][2] == 'H' ) // joystick hat
+		switch (key_text[key][4]) {
+			case 'U': key = KEY_UP; break;
+			case 'R': key = KEY_RIGHT; break;
+			case 'D': key = KEY_DOWN; break;
+			case 'L': key = KEY_LEFT; break;
+		}
+	else if ( strlen(key_text[key]) > 3 && key_text[key][0] == 'J' && key_text[key][2] == 'B' ) // joystick button
+		switch (key_text[key][3]) {
+			case '1': key = KEY_SPACEBAR; break;
+			case '2': key = KEY_ENTER; break;
+			case '3': key = KEY_ESC; break;
+		}
+	return key;
+}
+
 
 extern int network_request_player_names(int);
 extern int RestoringMenu;
@@ -1085,7 +1109,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
 
 		//network_listen();
 
-		k = key_inkey();
+		k = newmenu_inkey();
 
     	if (subfunction)
       	(*subfunction)(nitems,item,&k,choice);
@@ -2179,7 +2203,7 @@ ReadFileNames:
 		//see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
 
-		key = key_inkey();
+		key = newmenu_inkey();
 
 		switch(key)	{
 		case KEY_COMMAND+KEY_SHIFTED+KEY_3:
@@ -2675,7 +2699,7 @@ int newmenu_listbox1( char * title, int nitems, char * items[], int allow_abort_
 		//see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
 
-		key = key_inkey();
+		key = newmenu_inkey();
 
 		if ( listbox_callback )
 			redraw = (*listbox_callback)(&citem, &nitems, items, &key );

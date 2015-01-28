@@ -23,7 +23,7 @@
 #include "inferno.h"
 
 
-#define MAX_JOYSTICKS 16
+#define MAX_JOYSTICKS 9 // don't want text descriptions going into double digits
 
 #define MAX_AXES_PER_JOYSTICK 8
 #define MAX_BUTTONS_PER_JOYSTICK 16
