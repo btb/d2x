@@ -38,15 +38,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 
 #include "inferno.h"
-#include "fvi.h"
-#include "segment.h"
-#include "object.h"
-#include "wall.h"
-#include "laser.h"
 #include "rle.h"
-#include "robot.h"
-#include "piggy.h"
-#include "player.h"
+
 
 extern int Physics_cheat_flag;
 

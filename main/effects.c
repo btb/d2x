@@ -29,14 +29,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "gr.h"
 #include "inferno.h"
-#include "game.h"
 #include "vclip.h"
-#include "effects.h"
-#include "bm.h"
 #include "mono.h"
 #include "u_mem.h"
-#include "textures.h"
-#include "cntrlcen.h"
 #include "error.h"
 
 int Num_effects;

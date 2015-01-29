@@ -20,6 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "ui.h"
 #include "mouse.h"
+#include "vid.h"
 
 
 #define MENU_BORDER 2

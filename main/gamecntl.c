@@ -28,79 +28,30 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdarg.h>
 
-#include "pstypes.h"
-#include "console.h"
 #include "inferno.h"
-#include "game.h"
-#include "player.h"
 #include "key.h"
-#include "object.h"
-#include "menu.h"
-#include "physics.h"
 #include "error.h"
 #include "joy.h"
 #include "mono.h"
 #include "iff.h"
 #include "pcx.h"
 #include "timer.h"
-#include "render.h"
-#include "laser.h"
-#include "screens.h"
-#include "textures.h"
-#include "slew.h"
-#include "gauges.h"
 #include "texmap.h"
-#include "3d.h"
-#include "effects.h"
-#include "gameseg.h"
-#include "wall.h"
-#include "ai.h"
 #include "digi.h"
 #include "ibitblt.h"
 #include "u_mem.h"
-#include "morph.h"
-#include "lighting.h"
-#include "newdemo.h"
-#include "weapon.h"
-#include "sounds.h"
 #include "args.h"
-#include "gameseq.h"
-#include "automap.h"
-#include "text.h"
-#include "powerup.h"
-#include "newmenu.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "gamefont.h"
-#include "endlevel.h"
-#include "joydefs.h"
-#include "kconfig.h"
 #include "mouse.h"
-#include "titles.h"
 #include "gr.h"
 #include "vid.h"
-#include "movie.h"
-#include "scores.h"
-#ifdef MACINTOSH
-#include "songs.h"
-#endif
 
 #if defined (TACTILE)
 #include "tactile.h"
 #endif
 
-#include "multi.h"
-#include "desc_id.h"
-#include "cntrlcen.h"
 #include "pcx.h"
-#include "state.h"
-#include "piggy.h"
-#include "multibot.h"
-#include "ai.h"
 #include "rbaudio.h"
-#include "switch.h"
-#include "escort.h"
+
 
 //#define TEST_TIMER    1		//if this is set, do checking on timer
 

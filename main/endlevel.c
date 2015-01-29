@@ -45,30 +45,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "sounds.h"
 
-#include "inferno.h"
-#include "endlevel.h"
-#include "object.h"
-#include "game.h"
-#include "screens.h"
-#include "gauges.h"
-#include "wall.h"
-#include "terrain.h"
-#include "polyobj.h"
-#include "bm.h"
-#include "gameseq.h"
-#include "newdemo.h"
-#include "multi.h"
-#include "vclip.h"
-#include "fireball.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "text.h"
 #include "digi.h"
 #include "cfile.h"
-#include "songs.h"
-#include "movie.h"
-#include "render.h"
+
 
 typedef struct flythrough_data {
 	object		*obj;

@@ -28,7 +28,7 @@ extern int	Skip_briefing_screens;
 
 extern void show_titles(void);
 extern void show_loading_screen(ubyte *title_pal);
-extern int show_briefing_screen( char * filename, int allow_keys );
+extern int show_briefing_screen( int screen_num, int allow_keys );
 extern void show_title_flick(char *name, int allow_keys );
 extern void do_briefing_screens(char *filename,int level_num);
 extern char * get_briefing_screen( int level_num );

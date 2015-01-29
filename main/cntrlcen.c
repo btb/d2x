@@ -27,25 +27,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <unistd.h>
 #endif
 
-#include "pstypes.h"
 #include "error.h"
 #include "mono.h"
 
 #include "inferno.h"
-#include "cntrlcen.h"
-#include "game.h"
-#include "laser.h"
-#include "gameseq.h"
-#include "ai.h"
-#ifdef NETWORK
-#include "multi.h"
-#endif
-#include "wall.h"
-#include "object.h"
-#include "robot.h"
-#include "vclip.h"
-#include "fireball.h"
-#include "endlevel.h"
+
 
 //@@vms_vector controlcen_gun_points[MAX_CONTROLCEN_GUNS];
 //@@vms_vector controlcen_gun_dirs[MAX_CONTROLCEN_GUNS];

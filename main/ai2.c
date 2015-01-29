@@ -26,42 +26,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <time.h>
 
 #include "inferno.h"
-#include "game.h"
 #include "mono.h"
 #include "3d.h"
 
 #include "u_mem.h"
-#include "object.h"
-#include "render.h"
 #include "error.h"
 #include "ai.h"
-#include "laser.h"
-#include "fvi.h"
-#include "polyobj.h"
-#include "bm.h"
-#include "weapon.h"
-#include "physics.h"
-#include "collide.h"
-#include "player.h"
-#include "wall.h"
-#include "vclip.h"
 #include "digi.h"
-#include "fireball.h"
-#include "morph.h"
-#include "effects.h"
 #include "timer.h"
-#include "sounds.h"
-#include "cntrlcen.h"
-#include "multibot.h"
-#ifdef NETWORK
-#include "multi.h"
-#include "network.h"
-#endif
-#include "gameseq.h"
 #include "key.h"
-#include "powerup.h"
-#include "gauges.h"
-#include "text.h"
 
 #ifdef EDITOR
 #include "editor/editor.h"

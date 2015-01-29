@@ -24,31 +24,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pstypes.h"
 #include "mono.h"
 #include "key.h"
 #include "joy.h"
 #include "timer.h"
 #include "error.h"
-
 #include "inferno.h"
-#include "game.h"
-#include "object.h"
-#include "player.h"
-
-#include "controls.h"
 #include "joydefs.h"
-#include "render.h"
 #include "args.h"
 #include "palette.h"
 #include "mouse.h"
-#include "kconfig.h"
-#include "laser.h"
-#ifdef NETWORK
-#include "multi.h"
-#endif
-#include "vclip.h"
-#include "fireball.h"
+
 
 //look at keyboard, mouse, joystick, CyberMan, whatever, and set 
 //physics vars rotvel, velocity

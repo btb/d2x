@@ -32,38 +32,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 
 #include "inferno.h"
-#include "object.h"
-#include "vclip.h"
-#include "game.h"
 #include "mono.h"
-#include "polyobj.h"
-#include "sounds.h"
-#include "player.h"
-#include "gauges.h"
-#include "powerup.h"
-#include "bm.h"
-#include "ai.h"
-#include "weapon.h"
-#include "fireball.h"
-#include "collide.h"
-#include "newmenu.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "gameseq.h"
-#include "physics.h"
-#include "scores.h"
-#include "laser.h"
-#include "wall.h"
-#ifdef NETWORK
-#include "multi.h"
-#endif
-#include "endlevel.h"
 #include "timer.h"
-#include "fuelcen.h"
-#include "cntrlcen.h"
-#include "gameseg.h"
-#include "automap.h"
+
 
 #define EXPLOSION_SCALE (F1_0*5/2)		//explosion is the obj size times this 
 

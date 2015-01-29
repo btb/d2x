@@ -24,8 +24,7 @@
 #include <ctype.h>
 #include <unistd.h>
 
-#include "console.h"
-
+#include "inferno.h"
 #include "u_mem.h"
 #include "gr.h"
 #include "key.h"
@@ -33,7 +32,6 @@
 #include "pstypes.h"
 #include "error.h"
 #include "cvar.h"
-#include "gamefont.h"
 #include "pcx.h"
 #include "cfile.h"
 

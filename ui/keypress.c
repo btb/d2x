@@ -24,6 +24,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
+#include "vid.h"
+
 
 char * KeyDesc[256] = {         \
 "","{Esc}","{1}","{2}","{3}","{4}","{5}","{6}","{7}","{8}","{9}","{0}","{-}",           \

@@ -25,35 +25,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>
 
-#include "pstypes.h"
 #include "inferno.h"
 #include "gr.h"
-#include "bm.h"
 #include "u_mem.h"
 #include "mono.h"
 #include "error.h"
-#include "object.h"
-#include "vclip.h"
-#include "effects.h"
-#include "polyobj.h"
-#include "wall.h"
-#include "textures.h"
-#include "game.h"
-#ifdef NETWORK
-#include "multi.h"
-#endif
 #include "iff.h"
 #include "cfile.h"
-#include "powerup.h"
-#include "sounds.h"
-#include "piggy.h"
-#include "aistruct.h"
-#include "robot.h"
-#include "weapon.h"
-#include "gauges.h"
-#include "player.h"
-#include "endlevel.h"
-#include "cntrlcen.h"
 #include "makesig.h"
 #include "interp.h"
 

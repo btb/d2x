@@ -37,20 +37,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <physfs.h>
 
 #include "inferno.h"
-#include "menu.h"
-#include "movie.h"
 #include "digi.h"
-#include "kconfig.h"
 #include "palette.h"
 #include "joy.h"
-#include "songs.h"
 #include "args.h"
-#include "player.h"
-#include "mission.h"
 #include "mono.h"
 #include "key.h"
 #include "physfsx.h"
-#include "multi.h"
 
 
 #ifdef __MSDOS__

@@ -28,32 +28,21 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 
 #include "error.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
 #include "inferno.h"
-#include "gamepal.h"
 #include "timer.h"
-
-#include "newmenu.h"
-#include "gamefont.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
 #include "iff.h"
 #include "pcx.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
-#include "screens.h"
 #include "digi.h"
 
 #include "cfile.h"
-#include "text.h"
-#include "songs.h"
-#include "menu.h"  // for MenuHires
+
 
 #define ROW_SPACING (MenuHires?26:11)
 #define NUM_LINES_HIRES 21

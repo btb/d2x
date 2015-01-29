@@ -19,6 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "gr.h"
 #include "key.h"
+#include "vid.h"
 #include "strutil.h"
 
 #include "ui.h"

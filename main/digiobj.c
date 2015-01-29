@@ -36,20 +36,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "joy.h"
 #include "digi.h"
-#include "sounds.h"
 #include "args.h"
 #include "key.h"
-#include "newdemo.h"
-#include "game.h"
 #ifdef __MSDOS__
 #include "dpmi.h"
 #endif
 #include "error.h"
-#include "wall.h"
 #include "cfile.h"
-#include "piggy.h"
-#include "text.h"
-#include "kconfig.h"
+
 
 #define SOF_USED				1 		// Set if this sample is used
 #define SOF_PLAYING			2		// Set if this sample is playing on a channel

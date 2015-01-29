@@ -25,6 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
+#include "vid.h"
 #include "cfile.h"
 
 #include "mono.h"
