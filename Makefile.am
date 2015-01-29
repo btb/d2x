@@ -15,8 +15,7 @@ arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
 iff/iff.c     \
 libmve/decoder16.c libmve/decoder8.c  libmve/mve_audio.c libmve/mvelib.c    libmve/mveplay.c   \
 main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cmd.c      \
-main/cntrlcen.c main/collide.c  main/concntl.c  main/config.c   main/console.c  main/controls.c \
-main/credits.c  \
+main/cntrlcen.c main/collide.c  main/config.c   main/console.c  main/controls.c main/credits.c  \
 main/crypt.c    main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c main/escort.c   \
 main/fireball.c main/fuelcen.c  main/fvi.c      main/game.c     main/gamecntl.c main/gamefont.c \
 main/gamemine.c main/gamepal.c  main/gamerend.c main/gamesave.c main/gameseg.c  main/gameseq.c  \
@@ -44,10 +43,12 @@ endif
 
 SUFFIXES = .asm
 .asm.o:
-	$(NASM) -dTRANSPARENCY_COLOR=${TRANSPARENCY_COLOR} $(NASMFLAGS) $< -o $@
+	$(NASM) -dTRANSPARENCY_COLOR=${TRANSPARENCY_COLOR} $(NASMFLAGS) -Itexmap/ $< -o $@
 
 if USE_ASM
-d2x_LDADD += 2d/linear.o 2d/tmerge_a.o maths/vecmata.o maths/fix.o
+d2x_SOURCES += texmap/tmappent.S texmap/tmapppro.S
+d2x_LDADD += 2d/linear.o 2d/tmerge_a.o maths/vecmata.o maths/fix.o \
+texmap/tmap_flt.o texmap/tmap_lin.o texmap/tmap_ll.o  texmap/tmap_per.o texmap/tmapfade.o
 else
 d2x_SOURCES += 2d/tmerge.c maths/fixc.c
 endif
