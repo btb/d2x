@@ -4,8 +4,10 @@ define([D2X_MAJOR],0)
 define([D2X_MINOR],2)
 define([D2X_MICRO],6)
 
-AC_INIT(d2x,[D2X_MAJOR.D2X_MINOR.D2X_MICRO],[descent-source@warpcore.org])
+AC_INIT(d2x,[D2X_MAJOR.D2X_MINOR.D2X_MICRO],[https://github.com/btb/d2x/issues])
 AC_PREREQ(2.52)
+
+m4_include([m4/ax_check_compile_flag.m4])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -81,7 +83,9 @@ test "x$exec_prefix" = "xNONE" && exec_prefix="${prefix}"
 dnl Set default locations to find data files.
 default_sharepath="$datadir/games/$PACKAGE"
 
-CFLAGS="-Wall -Werror -Wno-deprecated-declarations -Wno-int-to-pointer-cast -Wno-unused-value -Wno-unused-but-set-variable -Wno-address $CFLAGS"
+CFLAGS="-Wall -Werror -Wno-deprecated-declarations -Wno-int-to-pointer-cast -Wno-unused-value -Wno-address $CFLAGS"
+AX_CHECK_COMPILE_FLAG([-Wno-ignored-attributes], [CFLAGS="$CFLAGS -Wno-ignored-attributes"])
+AX_CHECK_COMPILE_FLAG([-Wno-unused-but-set-variable], [CFLAGS="$CFLAGS -Wno-unused-but-set-variable"])
 
 dnl Enable editor build?
 AC_ARG_ENABLE(editor,
