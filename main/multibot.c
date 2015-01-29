@@ -27,31 +27,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "vecmat.h"
 #include "inferno.h"
-#include "multibot.h"
-#include "game.h"
-#include "modem.h"
-#include "network.h"
-#include "multi.h"
-#include "laser.h"
 #include "error.h"
 #include "mono.h"
 #include "timer.h"
-#include "text.h"
-#include "ai.h"
-#include "fireball.h"
-#include "aistruct.h"
-#include "robot.h"
-#include "powerup.h"
-#include "scores.h"
-#include "gauges.h"
-#include "fuelcen.h"
-#include "morph.h"
-#include "digi.h"
-#include "sounds.h"
-#include "effects.h"
-#include "physics.h" 
 #include "byteswap.h"
-
 
 
 int multi_add_controlled_robot(int objnum, int agitation);

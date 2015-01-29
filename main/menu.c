@@ -25,56 +25,23 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "game.h"
 #include "gr.h"
 #include "vid.h"
 #include "key.h"
 #include "iff.h"
 #include "u_mem.h"
 #include "error.h"
-#include "bm.h"
-#include "screens.h"
 #include "mono.h"
 #include "joy.h"
 #include "vecmat.h"
-#include "effects.h"
-#include "slew.h"
-#include "gamemine.h"
-#include "gamesave.h"
 #include "palette.h"
 #include "args.h"
-#include "newdemo.h"
 #include "timer.h"
-#include "sounds.h"
-#include "gameseq.h"
-#include "text.h"
-#include "gamefont.h"
-#include "newmenu.h"
 #ifdef NETWORK
-#  include "network.h"
 #  include "ipx.h"
-#  include "multi.h"
 #endif
-#include "scores.h"
-#include "joydefs.h"
-#ifdef NETWORK
-#include "modem.h"
-#endif
-#include "kconfig.h"
-#include "titles.h"
-#include "credits.h"
 #include "texmap.h"
-#include "polyobj.h"
-#include "state.h"
-#include "mission.h"
-#include "songs.h"
-#include "config.h"
-#include "movie.h"
-#include "gamepal.h"
-#include "gauges.h"
-#include "powerup.h"
 #include "strutil.h"
-#include "reorder.h"
 
 #ifdef MACINTOSH
 	#include "resource.h"
@@ -85,6 +52,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 //char *menu_difficulty_text[] = { "Trainee", "Rookie", "Fighter", "Hotshot", "Insane" };
 //char *menu_detail_text[] = { "Lowest", "Low", "Medium", "High", "Highest", "", "Custom..." };

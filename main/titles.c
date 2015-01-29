@@ -33,7 +33,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Events.h>
 #endif
 
-#include "pstypes.h"
 #include "timer.h"
 #include "key.h"
 #include "gr.h"
@@ -43,23 +42,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "joy.h"
 #include "mono.h"
-#include "gamefont.h"
 #include "cfile.h"
 #include "error.h"
 #include "inferno.h"
-#include "textures.h"
-#include "screens.h"
-#include "multi.h"
-#include "player.h"
-#include "digi.h"
-#include "text.h"
-#include "kmatrix.h"
-#include "piggy.h"
-#include "songs.h"
-#include "newmenu.h"
-#include "state.h"
-#include "movie.h"
-#include "menu.h"
 #include "mouse.h"
 
 

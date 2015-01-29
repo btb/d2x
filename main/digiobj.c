@@ -35,7 +35,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "timer.h"
 #include "joy.h"
-#include "digi.h"
 #include "args.h"
 #include "key.h"
 #ifdef __MSDOS__

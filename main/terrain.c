@@ -33,13 +33,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "iff.h"
 #include "u_mem.h"
 #include "mono.h"
-
 #include "inferno.h"
-#include "textures.h"
-#include "object.h"
-#include "endlevel.h"
-#include "fireball.h"
-#include "render.h"
+
 
 #define GRID_MAX_SIZE   64
 #define GRID_SCALE      i2f(2*20)

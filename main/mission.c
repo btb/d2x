@@ -27,22 +27,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #include <limits.h>
 
-#include "pstypes.h"
 #include "cfile.h"
-
 #include "strutil.h"
 #include "inferno.h"
-#include "mission.h"
-#include "gameseq.h"
-#include "titles.h"
-#include "songs.h"
 #include "mono.h"
 #include "error.h"
-#include "config.h"
-#include "newmenu.h"
-#include "text.h"
 #include "u_mem.h"
 #include "ignorecase.h"
+
 
 //values for d1 built-in mission
 #define BIM_LAST_LEVEL          27

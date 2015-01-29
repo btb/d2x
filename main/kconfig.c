@@ -32,46 +32,27 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 
 #include "error.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
 #include "inferno.h"
-#include "gamefont.h"
 #include "iff.h"
 #include "u_mem.h"
 #include "joy.h"
 #include "mouse.h"
-#include "kconfig.h"
-#include "gauges.h"
-#include "joydefs.h"
-#include "songs.h"
-#include "render.h"
-#include "digi.h"
-#include "newmenu.h"
-#include "endlevel.h"
-#include "multi.h"
 #include "timer.h"
-#include "text.h"
-#include "player.h"
-#include "menu.h"
-#include "automap.h"
 #include "args.h"
-#include "lighting.h"
-#include "ai.h"
-#include "cntrlcen.h"
+
 #if defined (TACTILE)
  #include "tactile.h"
 #endif
 
-#include "collide.h"
-
 #ifdef USE_LINUX_JOY
 #include "joystick.h"
 #endif
-#include "console.h"
+
 
 ubyte ExtGameStatus=1;
 

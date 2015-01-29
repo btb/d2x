@@ -26,35 +26,19 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "pstypes.h"
 #include "mono.h"
-
 #include "inferno.h"
-#include "segment.h"
-#include "textures.h"
-#include "wall.h"
-#include "object.h"
-#include "gamemine.h"
 #include "error.h"
-#include "gameseg.h"
-#include "switch.h"
-
-#include "game.h"
-#include "newmenu.h"
 
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
 
 #include "cfile.h"
-#include "fuelcen.h"
-
 #include "hash.h"
 #include "key.h"
-#include "piggy.h"
-
 #include "byteswap.h"
-#include "gamesave.h"
+
 
 #define REMOVE_EXT(s)  (*(strchr( (s), '.' ))='\0')
 

@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "gr.h"
-#include "gamefont.h"
+
 
 // if 1, use high-res versions of fonts
 int FontHires = 0;

@@ -24,47 +24,20 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
-#include "pstypes.h"
 #include "strutil.h"
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
 #include "palette.h"
-#include "newmenu.h"
-
 #include "inferno.h"
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
 #include "error.h"
-#include "object.h"
-#include "game.h"
-#include "screens.h"
-#include "wall.h"
-#include "gamemine.h"
-#include "robot.h"
-
-
 #include "cfile.h"
-#include "bm.h"
-#include "menu.h"
-#include "switch.h"
-#include "fuelcen.h"
-#include "cntrlcen.h"
-#include "powerup.h"
-#include "weapon.h"
-#include "newdemo.h"
-#include "gameseq.h"
-#include "automap.h"
-#include "polyobj.h"
-#include "text.h"
-#include "gamefont.h"
-#include "gamesave.h"
-#include "gamepal.h"
-#include "laser.h"
 #include "byteswap.h"
-#include "multi.h"
 #include "makesig.h"
+
 
 char Gamesave_current_filename[PATH_MAX];
 

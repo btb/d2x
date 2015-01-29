@@ -27,16 +27,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "inferno.h"
-#include "game.h"
 #include "error.h"
 #include "mono.h"
 #include "vecmat.h"
-#include "gameseg.h"
-#include "wall.h"
-#include "fuelcen.h"
-#include "bm.h"
-#include "fvi.h"
 #include "byteswap.h"
+
 
 // How far a point can be from a plane, and still be "in" the plane
 #define PLANE_DIST_TOLERANCE	250

@@ -34,37 +34,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <physfs.h>
 
 #include "error.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"
-#include "songs.h"
 #include "key.h"
 #include "palette.h"
 #include "inferno.h"
-#include "text.h"
-#include "menu.h"
-#include "newmenu.h"
-#include "gamefont.h"
-#include "gamepal.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
 #include "iff.h"
 #include "pcx.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
-#include "digi.h"
-
-#include "multi.h"
-#include "endlevel.h"
-#include "screens.h"
-#include "config.h"
-#include "player.h"
-#include "newdemo.h"
-#include "kconfig.h"
-#include "strutil.h"
 #ifdef MACINTOSH
 #include <Events.h>
 #endif
@@ -72,6 +52,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #if defined (TACTILE)
  #include "tactile.h"
 #endif
+
 
 #define MAXDISPLAYABLEITEMS 15
 

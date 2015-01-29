@@ -26,14 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>
 
-// -- I hate this warning in make depend! -- #ifdef DRIVE
-// -- I hate this warning in make depend! -- #include "drive.h"
-// -- I hate this warning in make depend! -- #else
 #include "inferno.h"
-// -- I hate this warning in make depend! -- #endif
-
-#include "polyobj.h"
-
 #include "vecmat.h"
 #include "interp.h"
 #include "error.h"
@@ -42,19 +35,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "args.h"
 #include "byteswap.h"
 
-#ifndef DRIVE
-#include "texmap.h"
-#include "bm.h"
-#include "textures.h"
-#include "object.h"
-#include "lighting.h"
-#include "cfile.h"
-#include "piggy.h"
-#endif
-
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 polymodel Polygon_models[MAX_POLYGON_MODELS];	// = {&bot11,&bot17,&robot_s2,&robot_b2,&bot11,&bot17,&robot_s2,&robot_b2};
 

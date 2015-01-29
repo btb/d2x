@@ -31,14 +31,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "palette.h"
 #include "rle.h"
-
 #include "inferno.h"
-#include "gamepal.h"
-#include "mission.h"
-#include "newmenu.h"
-#include "texmerge.h"
-#include "piggy.h"
 #include "strutil.h"
+
 
 extern void g3_remap_interp_colors();
 

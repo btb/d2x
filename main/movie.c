@@ -34,12 +34,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif // ! macintosh
 #include <ctype.h>
 
-#include "movie.h"
-#include "console.h"
 #include "args.h"
 #include "key.h"
-#include "digi.h"
-#include "songs.h"
 #include "inferno.h"
 #include "palette.h"
 #include "strutil.h"
@@ -48,13 +44,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "byteswap.h"
 #include "gr.h"
 #include "vid.h"
-#include "gamefont.h"
 #include "cfile.h"
-#include "menu.h"
 #include "libmve.h"
-#include "text.h"
-#include "screens.h"
 #include "physfsrwops.h"
+
 
 extern int MenuHiresAvailable;
 

@@ -28,11 +28,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "mono.h"
 #include "3d.h"
-
 #include "u_mem.h"
 #include "error.h"
-#include "ai.h"
-#include "digi.h"
 #include "timer.h"
 #include "key.h"
 
@@ -45,6 +42,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "string.h"
 #include <time.h>
 #endif
+
 
 void teleport_boss(object *objp);
 int boss_fits_in_seg(object *boss_objp, int segnum);

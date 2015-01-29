@@ -32,36 +32,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "mono.h"
 #include "error.h"
-
 #include "inferno.h"
-#include "object.h"
-#include "game.h"
 #include "key.h"
-
-#include "fireball.h"
-#include "powerup.h"
-#include "gauges.h"
-
-#include "sounds.h"
-#include "player.h"
-
-#include "wall.h"
-#include "text.h"
-#include "weapon.h"
-#include "laser.h"
-#include "scores.h"
-#include "multi.h"
-#include "lighting.h"
-#include "controls.h"
-#include "kconfig.h"
-
-#include "newdemo.h"
-#include "escort.h"
 
 #ifdef EDITOR
 #include "gr.h"	//	for powerup outline drawing
 #include "editor/editor.h"
 #endif
+
 
 int N_powerup_types = 0;
 powerup_type_info Powerup_info[MAX_POWERUP_TYPES];

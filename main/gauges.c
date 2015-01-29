@@ -26,42 +26,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include "hudmsg.h"
-
 #include "inferno.h"
-#include "game.h"
-#include "screens.h"
-#include "gauges.h"
-#include "physics.h"
 #include "error.h"
-
-#include "menu.h"			// For the font.
 #include "mono.h"
-#include "collide.h"
-#include "newdemo.h"
-#include "player.h"
-#include "gamefont.h"
-#include "bm.h"
-#include "text.h"
-#include "powerup.h"
-#include "sounds.h"
-#ifdef NETWORK
-#include "multi.h"
-#include "network.h"
-#endif
-#include "endlevel.h"
-#include "cntrlcen.h"
-#include "controls.h"
-
-#include "wall.h"
-#include "text.h"
-#include "render.h"
-#include "piggy.h"
-#include "laser.h"
 
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 void draw_ammo_info(int x,int y,int ammo_count,int primary);
 extern void draw_guided_crosshair(void);

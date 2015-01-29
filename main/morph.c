@@ -30,18 +30,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "texmap.h"
 #include "error.h"
-
 #include "inferno.h"
-#include "morph.h"
-#include "polyobj.h"
-#include "game.h"
-#include "lighting.h"
-#include "newdemo.h"
-#include "piggy.h"
-
 #include "mono.h"
-#include "bm.h"
 #include "interp.h"
+
 
 morph_data morph_objects[MAX_MORPH_OBJECTS];
 

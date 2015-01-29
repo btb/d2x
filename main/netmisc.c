@@ -25,14 +25,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "pstypes.h"
 #include "mono.h"
 
 #ifdef WORDS_BIGENDIAN
 
 #include "byteswap.h"
-#include "segment.h"
-#include "gameseg.h"
+#include "ipx.h"
+#include "error.h"
+
 
 // routine to calculate the checksum of the segments.  We add these specialized routines
 // since the current way is byte order dependent.
@@ -110,15 +110,6 @@ ushort netmisc_calc_checksum(void * vptr, int len)
 // following are routine for macintosh only that will swap the elements of
 // structures send through the networking code.  The structures and
 // this code must be kept in total sync
-
-#include "ipx.h"
-#include "multi.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "object.h"
-#include "powerup.h"
-#include "error.h"
 
 sbyte out_buffer[IPX_MAX_DATA_SIZE];    // used for tmp netgame packets as well as sending object data
 

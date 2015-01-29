@@ -40,66 +40,23 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "inferno.h"
-#include "game.h"
 #include "gr.h"
 #include "stdlib.h"
-#include "bm.h"
 //#include "error.h"
 #include "mono.h"
 #include "3d.h"
-#include "segment.h"
 #include "texmap.h"
-#include "laser.h"
 #include "key.h"
-#include "gameseg.h"
-
-#include "object.h"
-#include "physics.h"
-#include "slew.h"
-#include "render.h"
-#include "wall.h"
-#include "vclip.h"
-#include "polyobj.h"
-#include "fireball.h"
-#include "laser.h"
 #include "error.h"
-#include "ai.h"
-#include "hostage.h"
-#include "morph.h"
-
-#include "powerup.h"
-#include "fuelcen.h"
-
-#include "sounds.h"
-#include "collide.h"
-
-#include "lighting.h"
-#include "newdemo.h"
-#include "gameseq.h"
-#include "gamesave.h"
-#include "gamemine.h"
-#include "switch.h"
-#include "gauges.h"
-#include "player.h"
 #include "vecmat.h"
-#include "newmenu.h"
 #include "args.h"
 #include "palette.h"
-#include "multi.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "text.h"
-#include "cntrlcen.h"
-#include "aistruct.h"
-#include "mission.h"
-#include "piggy.h"
-#include "controls.h"
 #include "timer.h"
 #include "physfsx.h"
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 #ifdef MACINTOSH
 #pragma global_optimizer off        // pretty much sucks...need to look into this

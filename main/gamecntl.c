@@ -37,7 +37,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pcx.h"
 #include "timer.h"
 #include "texmap.h"
-#include "digi.h"
 #include "ibitblt.h"
 #include "u_mem.h"
 #include "args.h"

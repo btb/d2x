@@ -41,7 +41,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "mono.h"
 #include "inferno.h"
-#include "digi.h"
 #include "error.h"
 #include "cfile.h"
 #include "hash.h"
@@ -53,6 +52,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 #define STATE_VERSION 22
 #define STATE_COMPATIBLE_VERSION 20

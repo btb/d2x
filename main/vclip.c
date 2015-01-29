@@ -25,11 +25,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "error.h"
-
 #include "inferno.h"
-#include "vclip.h"
-#include "weapon.h"
-#include "laser.h"
+
 
 //----------------- Variables for video clips -------------------
 int 					Num_vclips = 0;

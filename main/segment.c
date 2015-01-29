@@ -10,8 +10,9 @@
 #include <conf.h>
 #endif
 
-#include "segment.h"
+#include "inferno.h"
 #include "cfile.h"
+
 
 #ifndef FAST_FILE_IO
 /*

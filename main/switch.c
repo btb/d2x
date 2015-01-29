@@ -27,33 +27,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "newmenu.h"
-#include "game.h"
-#include "switch.h"
-#include "inferno.h"
-#include "segment.h"
 #include "error.h"
-#include "gameseg.h"
 #include "mono.h"
 #include "wall.h"
 #include "texmap.h"
-#include "fuelcen.h"
-#include "cntrlcen.h"
-#include "newdemo.h"
-#include "player.h"
-#include "endlevel.h"
-#include "gameseq.h"
-#include "multi.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
 #include "palette.h"
-#include "robot.h"
-#include "bm.h"
 
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 trigger Triggers[MAX_TRIGGERS];
 int Num_triggers;

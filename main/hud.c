@@ -26,31 +26,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdlib.h>
 
-#include "hudmsg.h"
-
-#include "pstypes.h"
 #include "u_mem.h"
 #include "strutil.h"
-#include "console.h"
 #include "inferno.h"
-#include "game.h"
-#include "screens.h"
-#include "gauges.h"
-#include "physics.h"
 #include "error.h"
-
-#include "menu.h"           // For the font.
 #include "mono.h"
-#include "collide.h"
-#include "newdemo.h"
-#include "player.h"
-#include "gamefont.h"
-
-#include "wall.h"
-#include "screens.h"
-#include "text.h"
-#include "laser.h"
 #include "args.h"
+
 
 int hud_first = 0;
 int hud_last = 0;

@@ -10,7 +10,7 @@
 #include <conf.h>
 #endif
 
-#include "pstypes.h"
+#include "inferno.h"
 
 
 void g3_remap_interp_colors()
@@ -38,9 +38,9 @@ int com_init(void)
 	return 0;
 }
 
-void com_level_sync(void)
+int com_level_sync(void)
 {
-
+	return 0;
 }
 
 void com_main_menu()

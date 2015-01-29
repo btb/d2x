@@ -26,38 +26,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "inferno.h"
-#include "console.h"
-#include "inferno.h"
 #include "error.h"
 #include "mono.h"
 #include "gr.h"
 #include "vid.h"
 #include "ibitblt.h"
-#include "bm.h"
-#include "player.h"
-#include "render.h"
-#include "menu.h"
-#include "newmenu.h"
-#include "screens.h"
 #include "fix.h"
-#include "robot.h"
-#include "game.h"
-#include "gauges.h"
-#include "gamefont.h"
-#include "newdemo.h"
-#include "text.h"
-#include "multi.h"
-#include "endlevel.h"
-#include "cntrlcen.h"
-#include "powerup.h"
-#include "laser.h"
-#include "automap.h"
-#include "mission.h"
-#include "gameseq.h"
 
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 extern fix Cruise_speed;
 extern int LinearSVGABuffer;

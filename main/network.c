@@ -27,45 +27,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdlib.h>
 
-#include "pstypes.h"
 #include "strutil.h"
 #include "args.h"
 #include "timer.h"
 #include "mono.h"
 #include "ipx.h"
-#include "newmenu.h"
 #include "key.h"
 #include "inferno.h"
-#include "object.h"
 #include "error.h"
-#include "laser.h"
-#include "gamesave.h"
-#include "gamemine.h"
-#include "player.h"
-#include "gameseq.h"
-#include "fireball.h"
-#include "network.h"
-#include "game.h"
-#include "multi.h"
-#include "endlevel.h"
-#include "palette.h"
-#include "cntrlcen.h"
-#include "powerup.h"
-#include "menu.h"
-#include "sounds.h"
-#include "text.h"
-#include "kmatrix.h"
-#include "newdemo.h"
-#include "multibot.h"
-#include "wall.h"
-#include "bm.h"
-#include "effects.h"
-#include "physics.h"
-#include "switch.h"
-#include "automap.h"
 #include "byteswap.h"
-#include "netmisc.h"
-#include "kconfig.h"
 #include "cfile.h"
 
 #ifdef MACINTOSH
@@ -73,6 +43,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Errors.h>     // for appletalk networking errors
 #include "appltalk.h"
 #endif
+
 
 #define LHX(x)          ((x)*(MenuHires?2:1))
 #define LHY(y)          ((y)*(MenuHires?2.4:1))

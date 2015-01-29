@@ -28,32 +28,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "pstypes.h"
 #include "mono.h"
 #include "inferno.h"
-#include "segment.h"
-#include "textures.h"
-#include "wall.h"
-#include "object.h"
-#include "gamemine.h"
 #include "error.h"
-#include "gameseg.h"
-#include "game.h"
-#include "piggy.h"
-#include "texmerge.h"
-#include "polyobj.h"
-#include "vclip.h"
-#include "effects.h"
-#include "fireball.h"
-#include "weapon.h"
 #include "palette.h"
 #include "timer.h"
-#include "text.h"
-#include "cntrlcen.h"
-#include "gauges.h"
-#include "powerup.h"
-#include "fuelcen.h"
-#include "mission.h"
 
 
 void paging_touch_vclip( vclip * vc )

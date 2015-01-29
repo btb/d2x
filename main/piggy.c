@@ -26,7 +26,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
-#include "pstypes.h"
 #include "strutil.h"
 #include "inferno.h"
 #include "gr.h"
@@ -35,25 +34,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "iff.h"
 #include "mono.h"
 #include "error.h"
-#include "sounds.h"
-#include "songs.h"
-#include "bm.h"
-#include "bmread.h"
 #include "hash.h"
 #include "args.h"
 #include "palette.h"
-#include "gamefont.h"
 #include "rle.h"
-#include "screens.h"
-#include "piggy.h"
-#include "gamemine.h"
-#include "textures.h"
-#include "texmerge.h"
-#include "paging.h"
-#include "game.h"
-#include "text.h"
 #include "cfile.h"
-#include "newmenu.h"
 #include "byteswap.h"
 #include "makesig.h"
 
@@ -64,6 +49,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 	#include <Files.h>
 	#include <unistd.h>
 #endif
+
 
 //#define NO_DUMP_SOUNDS        1   //if set, dump bitmaps but not sounds
 

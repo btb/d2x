@@ -28,22 +28,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vecmat.h"
 #include "gr.h"
 #include "inferno.h"
-#include "segment.h"
 #include "error.h"
 #include "mono.h"
-#include "render.h"
-#include "game.h"
-#include "vclip.h"
-#include "lighting.h"
 #include "3d.h"
-#include "laser.h"
 #include "timer.h"
-#include "player.h"
-#include "weapon.h"
-#include "powerup.h"
-#include "fvi.h"
-#include "robot.h"
-#include "multi.h"
+
 
 int	Do_dynamic_light=1;
 //int	Use_fvi_lighting = 0;

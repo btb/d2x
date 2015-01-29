@@ -32,15 +32,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "error.h"
-#include "pstypes.h"
 #include "args.h"
-#include "songs.h"
 #include "mono.h"
 #include "cfile.h"
-#include "digi.h"
 #include "rbaudio.h"
-#include "kconfig.h"
 #include "timer.h"
+
 
 song_info Songs[MAX_NUM_SONGS];
 int Songs_initialized = 0;

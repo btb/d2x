@@ -28,26 +28,19 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "scores.h"
 #include "error.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
 #include "inferno.h"
-#include "gamefont.h"
 #include "u_mem.h"
-#include "songs.h"
-#include "newmenu.h"
-#include "menu.h"
-#include "player.h"
-#include "screens.h"
-#include "gamefont.h"
 #include "mouse.h"
 #include "joy.h"
 #include "timer.h"
 #include "text.h"
 #include "strutil.h"
+
 
 #define VERSION_NUMBER 		1
 #define SCORES_FILENAME 	"descent.hi"

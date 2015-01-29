@@ -28,10 +28,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "cfile.h"
 #include "u_mem.h"
 #include "error.h"
-
 #include "inferno.h"
-#include "text.h"
 #include "args.h"
+
 
 #define SHAREWARE_TEXTSIZE  14677
 

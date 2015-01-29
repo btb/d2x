@@ -26,44 +26,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <time.h>
 
 #include "inferno.h"
-#include "game.h"
-#include "bm.h"
-#include "object.h"
-#include "laser.h"
 #include "args.h"
-#include "segment.h"
-#include "fvi.h"
-#include "segpoint.h"
 #include "error.h"
 #include "mono.h"
 #include "key.h"
 #include "texmap.h"
-#include "textures.h"
-#include "render.h"
-#include "vclip.h"
-#include "fireball.h"
-#include "polyobj.h"
-#include "robot.h"
-#include "weapon.h"
-#include "newdemo.h"
 #include "timer.h"
-#include "player.h"
-#include "sounds.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "ai.h"
-#ifdef NETWORK
-#include "modem.h"
-#endif
-#include "powerup.h"
-#include "multi.h"
-#include "physics.h"
-#include "multi.h"
 
 #ifdef TACTILE
 #include "tactile.h"
 #endif
+
 
 int Laser_rapid_fire = 0;
 

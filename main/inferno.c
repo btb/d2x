@@ -42,9 +42,7 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 
 #include <physfs.h>
 
-#include "pstypes.h"
 #include "strutil.h"
-#include "console.h"
 #include "gr.h"
 #include "vid.h"
 #include "fix.h"
@@ -54,53 +52,15 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "timer.h"
 #include "3d.h"
 #include "inferno.h"
-#include "inferno.h"
 #include "error.h"
-#include "game.h"
-#include "segment.h"		//for Side_to_verts
 #include "u_mem.h"
-#include "segpoint.h"
-#include "screens.h"
 #include "texmap.h"
-#include "texmerge.h"
-#include "menu.h"
-#include "wall.h"
-#include "polyobj.h"
-#include "effects.h"
-#include "digi.h"
 #include "palette.h"
 #include "args.h"
-#include "sounds.h"
-#include "titles.h"
-#include "player.h"
-#include "text.h"
-#include "newdemo.h"
-#ifdef NETWORK
-#include "network.h"
-#include "modem.h"
-#endif
-#include "gamefont.h"
-#include "kconfig.h"
 #include "mouse.h"
 #include "joy.h"
-#include "newmenu.h"
-#include "desc_id.h"
-#include "config.h"
-#include "joydefs.h"
-#include "multi.h"
-#include "songs.h"
 #include "cfile.h"
-#include "gameseq.h"
-#include "gamepal.h"
-#include "mission.h"
-#include "movie.h"
-
 // #  include "3dfx_des.h"
-
-//added on 9/30/98 by Matt Mueller for selectable automap modes
-#include "automap.h"
-//end addition -MM
-
 #include "../texmap/scanline.h" //for select_tmap -MM
 
 #ifdef EDITOR
@@ -114,6 +74,7 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #endif
 
 #include "vers_id.h"
+
 
 void mem_init(void);
 void arch_init(void);

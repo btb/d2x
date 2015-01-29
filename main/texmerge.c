@@ -26,10 +26,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "error.h"
 #include "inferno.h"
-#include "textures.h"
 #include "mono.h"
 #include "rle.h"
-#include "piggy.h"
 
 #ifdef OGL
 #include "ogl_init.h"

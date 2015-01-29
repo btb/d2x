@@ -39,8 +39,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
-#include "digi.h"
-
 #include "cfile.h"
 
 

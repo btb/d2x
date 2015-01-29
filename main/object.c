@@ -25,57 +25,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 
 #include "inferno.h"
-#include "game.h"
 #include "gr.h"
 #include "stdlib.h"
-#include "bm.h"
-//#include "error.h"
 #include "mono.h"
 #include "3d.h"
-#include "segment.h"
 #include "texmap.h"
-#include "laser.h"
 #include "key.h"
-#include "gameseg.h"
-#include "textures.h"
-
-#include "object.h"
-#include "physics.h"
-#include "slew.h"		
-#include "render.h"
-#include "wall.h"
-#include "vclip.h"
-#include "polyobj.h"
-#include "fireball.h"
-#include "laser.h"
 #include "error.h"
-#include "ai.h"
-#include "hostage.h"
-#include "morph.h"
-#include "cntrlcen.h"
-#include "powerup.h"
-#include "fuelcen.h"
-#include "endlevel.h"
-
-#include "sounds.h"
-#include "collide.h"
-
-#include "lighting.h"
-#include "newdemo.h"
-#include "player.h"
-#include "weapon.h"
-#ifdef NETWORK
-#include "network.h"
-#endif
-#include "newmenu.h"
-#include "gauges.h"
-#include "multi.h"
-#include "menu.h"
 #include "args.h"
-#include "text.h"
-#include "piggy.h"
-#include "switch.h"
-#include "gameseq.h"
 
 #ifdef TACTILE
 #include "tactile.h"
@@ -84,6 +41,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 void obj_detach_all(object *parent);
 void obj_detach_one(object *sub);

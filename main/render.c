@@ -26,33 +26,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "segment.h"
 #include "error.h"
-#include "bm.h"
 #include "texmap.h"
 #include "mono.h"
-#include "render.h"
-#include "game.h"
-#include "object.h"
-#include "laser.h"
-#include "textures.h"
-#include "screens.h"
-#include "segpoint.h"
-#include "wall.h"
-#include "texmerge.h"
-#include "physics.h"
 #include "3d.h"
-#include "gameseg.h"
-#include "vclip.h"
-#include "lighting.h"
-#include "cntrlcen.h"
-#include "newdemo.h"
-#include "automap.h"
-#include "endlevel.h"
 #include "key.h"
-#include "newmenu.h"
 #include "u_mem.h"
-#include "piggy.h"
 
 #ifdef OGL
 #include "ogl_init.h"
@@ -63,6 +42,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 //used for checking if points have been rotated
 int	Clear_window_color=-1;
