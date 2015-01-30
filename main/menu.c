@@ -255,7 +255,7 @@ void create_main_menu(newmenu_item *m, int *menu_choice, int *callers_num_option
 		#endif
 	}
 
-	//ADD_ITEM( "  Play song", MENU_PLAY_SONG, -1 );
+	ADD_ITEM( "  Play song", MENU_PLAY_SONG, -1 );
 	#endif
 
 	*callers_num_options = num_options;
