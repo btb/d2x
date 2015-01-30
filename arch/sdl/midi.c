@@ -69,10 +69,12 @@ void digi_play_midi_song( char *filename, char *melodic_bank, char *drum_bank, i
 		return; // Don't play song if volume == 0;
 
 	// initialize the song
-	mprintf((0, "Loading %s\n", filename));
-	hmp2mid(filename, &SongData, &SongSize);
-	rw = SDL_RWFromConstMem(SongData, SongSize);
-	SongHandle = Mix_LoadMUS_RW(rw);
+	if (cfexist(filename)) {
+		mprintf((0, "Loading %s\n", filename));
+		hmp2mid(filename, &SongData, &SongSize);
+		rw = SDL_RWFromConstMem(SongData, SongSize);
+		SongHandle = Mix_LoadMUS_RW(rw);
+	}
 
 	if (!SongHandle) {
 		char fname[128];
@@ -86,28 +88,30 @@ void digi_play_midi_song( char *filename, char *melodic_bank, char *drum_bank, i
 		fname[sl-2] = 'i';
 		fname[sl-1] = 'd';
 
-		mprintf((0, "Loading %s\n", fname));
-		fp = cfopen( fname, "rb" );
+		if (cfexist(fname)) {
+			mprintf((0, "Loading %s\n", fname));
+			fp = cfopen( fname, "rb" );
 
-		SongSize = cfilelength( fp );
-		SongData = d_calloc(SongSize, 1);
-		if (SongData == NULL) {
+			SongSize = cfilelength( fp );
+			SongData = d_calloc(SongSize, 1);
+			if (SongData == NULL) {
+				cfclose(fp);
+				mprintf( (1, "Error allocating %d bytes for '%s'", SongSize, filename ));
+				return;
+			}
+
+			if ( cfread ( SongData, SongSize, 1, fp ) != 1 ) {
+				mprintf( (1, "Error reading midi file, '%s'", filename ));
+				cfclose(fp);
+				d_free(SongData);
+				return;
+			}
+
 			cfclose(fp);
-			mprintf( (1, "Error allocating %d bytes for '%s'", SongSize, filename ));
-			return;
+
+			rw = SDL_RWFromConstMem(SongData, SongSize);
+			SongHandle = Mix_LoadMUS_RW(rw);
 		}
-
-		if ( cfread ( SongData, SongSize, 1, fp ) != 1 ) {
-			mprintf( (1, "Error reading midi file, '%s'", filename ));
-			cfclose(fp);
-			d_free(SongData);
-			return;
-		}
-
-		cfclose(fp);
-
-		rw = SDL_RWFromConstMem(SongData, SongSize);
-		SongHandle = Mix_LoadMUS_RW(rw);
 	}
 
 	if (!SongHandle) {
