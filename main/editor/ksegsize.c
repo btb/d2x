@@ -27,8 +27,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "editor.h"
 #include "mono.h"
 #include "error.h"
-#include "segment.h"
-#include "gameseg.h"
+
 
 #define XDIM	0
 #define YDIM	1

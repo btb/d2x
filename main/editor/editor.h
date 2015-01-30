@@ -20,8 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _EDITOR_H
 #define _EDITOR_H
 
-#include "vecmat.h"
-#include "segment.h"
+#include "maths.h"
 #include "inferno.h"
 #include "gr.h"
 #include "ui.h"
@@ -146,6 +145,28 @@ typedef struct editor_view {
 	vms_matrix ev_matrix;	//the view matrix
 	fix ev_zoom;				//zoom for this window
 } editor_view;
+
+
+#include "centers.h"
+#include "ehostage.h"
+#include "eobject.h"
+#include "eswitch.h"
+#include "info.h"
+#include "kdefs.h"
+#include "kfuncs.h"
+#include "macro.h"
+#include "meddraw.h"
+#ifdef INCLUDE_XLISP
+#include "medlisp.h"
+#endif
+#include "medmisc.h"
+#include "medrobot.h"
+#include "medsel.h"
+#include "medwall.h"
+#include "objpage.h"
+#include "seguvs.h"
+#include "texpage.h"
+
 
 /*
  * Global variables

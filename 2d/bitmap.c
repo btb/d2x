@@ -25,16 +25,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 
 #include "u_mem.h"
-
-
 #include "gr.h"
-#include "grdef.h"
 #include "u_dpmi.h"
 #include "error.h"
 
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 void gr_set_bitmap_data (grs_bitmap *bm, unsigned char *data)
 {

@@ -28,7 +28,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef OGL
 #include "ogl_init.h"
 #endif
-
 #include "error.h"
 #include "3d.h"
 #include "inferno.h"
@@ -39,8 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "joy.h"
 #include "iff.h"
-#include "pcx.h"
-#include "palette.h"
+#include "gr.h"
 #include "vid.h"
 
 

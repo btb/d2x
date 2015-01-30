@@ -65,6 +65,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "aistruct.h"
 #include "automap.h"
 #include "bm.h"
+#ifdef EDITOR
+#include "bmread.h"
+#endif
 #include "cntrlcen.h"
 #include "collide.h"
 #include "config.h"
@@ -81,6 +84,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gamemine.h"
 #include "gamepal.h"
 #include "gamesave.h"
+#include "gameseq.h"
 #include "gauges.h"
 #include "hostage.h"
 #include "hudmsg.h"
@@ -101,6 +105,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "network.h"
 #endif
 #include "newdemo.h"
+#include "newmenu.h"
 #include "object.h"
 #include "paging.h"
 #include "physics.h"
@@ -122,6 +127,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "texmerge.h"
 #include "textures.h"
 #include "titles.h"
+#include "vers_id.h"
 #include "wall.h"
 
 

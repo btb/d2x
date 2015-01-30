@@ -25,7 +25,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "editor.h"
-#include "kdefs.h"
+
 
 static fix         r1scale, r4scale;
 static int         curve;

@@ -12,6 +12,7 @@
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #include <string.h>
+
 #include "internal.h"
 #include "vers_id.h"
 #include "error.h"

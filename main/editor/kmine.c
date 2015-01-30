@@ -27,21 +27,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "error.h"
 #include "strutil.h"
-
 #include "nocfile.h"
-
 #include "inferno.h"
 #include "editor.h"
 #include "ui.h"
-#include "texpage.h"		// For texpage_goto_first
-#include "segment.h"
 #include "mono.h"
-#include "kdefs.h"
-#include "info.h"
-#include "game.h"
-#include "gameseq.h"
 
-#include "object.h"
 
 #define MINESAVE_CRIPPLED	0
 

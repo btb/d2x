@@ -28,21 +28,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#include <string.h>
 
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
-#include "seguvs.h"
-
-#include "wall.h"
-
-#include "textures.h"
-
-#include "fix.h"
+#include "maths.h"
 #include "mono.h"
 #include "error.h"
-#include "kdefs.h"
-#include "gameseg.h"
-
 #include "texmap.h"
+
 
 // -----------------------------------------------------------------------------
 //	Return light intensity at an instance of a vertex on a side in a segment.

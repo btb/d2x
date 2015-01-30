@@ -20,6 +20,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _PALETTE_H
 #define _PALETTE_H
 
+
+#include "cvar.h"
+
+
 #define DEFAULT_LEVEL_PALETTE "groupa.256" //don't confuse with DEFAULT_PALETTE
 
 extern void gr_palette_set_gamma( int gamma );

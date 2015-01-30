@@ -21,8 +21,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "inferno.h"
 #include "3d.h"
 

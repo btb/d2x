@@ -24,10 +24,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "editor/editor.h"
-#include "gameseg.h"
-#include "gamesave.h"
+#include "editor.h"
 #include "mono.h"
+
 
 //  ---------- Create a bridge segment between current segment/side and marked segment/side ----------
 int CreateBridge()

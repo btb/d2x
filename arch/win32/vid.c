@@ -9,13 +9,11 @@
 #ifdef __GCC__
 #include <Windows32/Errors.h>
 #endif
+
 #include "gr.h"
-#include "grdef.h"
-#include "palette.h"
 #include "u_mem.h"
 #include "error.h"
 #include "vers_id.h"
-
 #include "gamefont.h"
 
 //added 10/05/98 by Matt Mueller - make fullscreen mode optional

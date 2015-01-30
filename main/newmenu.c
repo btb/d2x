@@ -30,6 +30,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <unistd.h>
 #endif
 #include <limits.h>
+#ifdef MACINTOSH
+#include <Events.h>
+#endif
 
 #include <physfs.h>
 
@@ -38,17 +41,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
-#include "palette.h"
 #include "inferno.h"
 #include "iff.h"
-#include "pcx.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
-#ifdef MACINTOSH
-#include <Events.h>
-#endif
-
 #if defined (TACTILE)
  #include "tactile.h"
 #endif

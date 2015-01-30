@@ -26,27 +26,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "editor/medwall.h"
 #include "inferno.h"
-#include "editor/editor.h"
-#include "segment.h"
+#include "editor.h"
 #include "error.h"
-#include "gameseg.h"
-
-#include "textures.h"
-#include "screens.h"
-#include "switch.h"
-#include "editor/eswitch.h"
-
-#include "texmerge.h"
-#include "medrobot.h"
 #include "timer.h"
 #include "mono.h"
-#include "cntrlcen.h"
 #include "key.h"
-#include "ehostage.h"
-#include "centers.h"
-#include "piggy.h"
+
 
 int wall_add_door_flag(sbyte flag);
 int wall_add_to_side(segment *segp, int side, sbyte type);

@@ -30,7 +30,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "inferno.h"
 #include "error.h"
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif

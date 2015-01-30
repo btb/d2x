@@ -22,22 +22,21 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#ifdef WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include "winapp.h"
-#else
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
+#ifdef WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include "winapp.h"
+#endif
+
 #include <physfs.h>
 
 #include "inferno.h"
-#include "palette.h"
+#include "gr.h"
 #include "joy.h"
 #include "args.h"
 #include "mono.h"
@@ -240,6 +239,7 @@ static void config_init(void)
 }
 
 
+#ifdef NETWORK
 static int get_lifetime_checksum (int a,int b)
 {
 	int num;
@@ -251,6 +251,7 @@ static int get_lifetime_checksum (int a,int b)
 	num*=num>>2;
 	return (num);
 }
+#endif
 
 
 void LoadConfigDefaults(void)

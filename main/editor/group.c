@@ -28,20 +28,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "nocfile.h"
 #include "ui.h"
-
 #include "inferno.h"
-#include "segment.h"
-#include "editor/editor.h"
+#include "editor.h"
 #include "error.h"
-#include "gamemine.h"
-#include "gameseg.h"
-
-#include "bm.h"				// For MAX_TEXTURES.
-#include "textures.h"
 #include "hash.h"
-#include "fuelcen.h"
 
-#include "medwall.h"
 
 void validate_selected_segments(void);
 
@@ -1647,7 +1638,7 @@ int Degroup( void )
 	return 1;
 }
 
-void NextGroup( void ) 
+int NextGroup( void )
 {
 
 	if (num_groups > 0)
@@ -1659,9 +1650,11 @@ void NextGroup( void )
 		mine_changed = 1;
 		}
 	else editor_status("No Next Group\n");
+
+	return 1;
 }
 
-void PrevGroup( void ) 
+int PrevGroup( void )
 {
 	if (num_groups > 0)
 		{
@@ -1672,6 +1665,8 @@ void PrevGroup( void )
 		mine_changed = 1;
 		}
 	else editor_status("No Previous Group\n");
+
+	return 1;
 }
 
 // Returns:

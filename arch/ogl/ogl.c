@@ -32,24 +32,14 @@
 #include "../../3d/globvars.h"
 #include "error.h"
 #include "texmap.h"
-#include "palette.h"
-#include "rle.h"
+#include "gr.h"
 #include "mono.h"
 #ifdef HAVE_LIBPNG
 #include "pngfile.h"
 #endif
 
-#include "segment.h"
-#include "textures.h"
-#include "texmerge.h"
-#include "effects.h"
-#include "weapon.h"
-#include "powerup.h"
-#include "laser.h"
-#include "player.h"
-#include "polyobj.h"
-#include "gamefont.h"
 #include "byteswap.h"
+
 
 //change to 1 for lots of spew.
 #if 0

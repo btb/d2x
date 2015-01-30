@@ -16,13 +16,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "u_mem.h"
-
 #include "gr.h"
-#include "grdef.h"
 #ifdef __DJGPP__
 #include "modex.h"
 #include "vesa.h"
 #endif
+
 
 unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
 {

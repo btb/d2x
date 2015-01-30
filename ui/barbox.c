@@ -18,8 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "fix.h"
-#include "pstypes.h"
+#include "maths.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

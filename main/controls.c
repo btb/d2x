@@ -30,9 +30,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "error.h"
 #include "inferno.h"
-#include "joydefs.h"
 #include "args.h"
-#include "palette.h"
+#include "gr.h"
 #include "mouse.h"
 
 

@@ -32,13 +32,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
-#include "palette.h"
 #include "inferno.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
 #include "timer.h"
-#include "text.h"
 #include "strutil.h"
 
 

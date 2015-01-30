@@ -28,7 +28,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #include <time.h>
 #include <math.h>
-
 #ifdef MACINTOSH
 #include <Files.h>
 #include <StandardFile.h>
@@ -40,7 +39,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef OGL
 #include "ogl_init.h"
 #endif
-
 #include "gr.h"
 #include "inferno.h"
 #include "key.h"
@@ -48,18 +46,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "joy.h"
 #include "mono.h"
 #include "iff.h"
-#include "pcx.h"
 #include "timer.h"
 #include "texmap.h"
 #include "3d.h"
-#include "ibitblt.h"
 #include "u_mem.h"
-#include "palette.h"
 #include "args.h"
 #include "mouse.h"
-#include "pcx.h"
-#include "fix.h"
+#include "maths.h"
 #include "vid.h"
+#ifdef EDITOR
+#include "editor/editor.h"
+#endif
 
 #ifdef MWPROFILER
 #include <profiler.h>
@@ -68,10 +65,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#define TEST_TIMER	1		//if this is set, do checking on timer
 
 #define	SHOW_EXIT_PATH	1
-
-#ifdef EDITOR
-#include "editor/editor.h"
-#endif
 
 //#define _MARK_ON 1
 #ifdef __WATCOMC__

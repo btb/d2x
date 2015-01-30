@@ -33,32 +33,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <math.h>
 
-#include "screens.h"
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
-
 #include "timer.h"
-#include "objpage.h"
-#include "fix.h"
+#include "maths.h"
 #include "mono.h"
 #include "error.h"
-#include "kdefs.h"
-#include	"object.h"
-#include "polyobj.h"
-#include "game.h"
-#include "powerup.h"
-#include "ai.h"
-#include "hostage.h"
-#include "eobject.h"
-#include "medwall.h"
-#include "eswitch.h"
-#include "medrobot.h"
 #include "key.h"
-#include "bm.h"
-#include "sounds.h"
-#include "centers.h"
-#include "piggy.h"
+
 
 //-------------------------------------------------------------------------
 // Variables for this module...

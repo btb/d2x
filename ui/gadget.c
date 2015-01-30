@@ -20,11 +20,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "fix.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
-
 #include "key.h"
+
 
 UI_GADGET * selected_gadget;
 

@@ -14,9 +14,8 @@
 #include <io.h>
 #include <dos.h>
 #include <dpmi.h>
+
 #include "gr.h"
-#include "grdef.h"
-#include "palette.h"
 #include "maths.h"
 #include "u_mem.h"
 #include "u_dpmi.h"
@@ -27,6 +26,7 @@
 #ifdef __DJGPP__
 #include <sys/nearptr.h>
 #endif
+
 
 static int last_r=0, last_g=0, last_b=0;
 

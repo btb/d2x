@@ -31,30 +31,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-#include "screens.h"
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
-
 #include "timer.h"
-#include "objpage.h"
-#include "fix.h"
+#include "maths.h"
 #include "mono.h"
 #include "error.h"
-#include "kdefs.h"
-#include	"object.h"
-#include "polyobj.h"
-#include "game.h"
-#include "powerup.h"
-#include "ai.h"
-#include "hostage.h"
-#include "eobject.h"
-#include "medwall.h"
-#include "eswitch.h"
-#include "ehostage.h"
 #include "key.h"
-#include "centers.h"
-#include "bm.h"
+
 
 #define	NUM_BOXES		6			//	Number of boxes, AI modes
 

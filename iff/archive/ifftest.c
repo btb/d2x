@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "iff.h"
 #include "vga.h"
-#include "palette.h"
+#include "gr.h"
 #include "mem.h"
 
 //#define ANIM_TEST 1		//if defined, read in anim brush

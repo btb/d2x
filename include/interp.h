@@ -12,7 +12,7 @@
 //#include "vecmat.h" //the vector/matrix library
 #include "gr.h"
 #include "cfile.h"
-#include "3d.h"
+
 
 //Object functions:
 

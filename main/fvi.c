@@ -27,7 +27,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #ifdef MACINTOSH
 #include <Memory.h>
 #endif
@@ -36,9 +35,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "error.h"
 #include "mono.h"
-
 #include "inferno.h"
-#include "rle.h"
+#include "gr.h"
 
 
 extern int Physics_cheat_flag;

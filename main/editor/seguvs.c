@@ -28,20 +28,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "segment.h"
-#include "editor/editor.h"
-
-#include "gameseg.h"
-
-#include "fix.h"
+#include "editor.h"
+#include "maths.h"
 #include "mono.h"
 #include "error.h"
 
-#include "wall.h"
-#include "editor/kdefs.h"
-#include "bm.h"		//	Needed for TmapInfo
-#include	"effects.h"     //      Needed for effects_bm_num
-#include "fvi.h"
 
 void cast_all_light_in_mine(int quick_flag);
 //--rotate_uvs-- vms_vector Rightvec;

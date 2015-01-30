@@ -40,13 +40,15 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include <sys/types.h>
 #endif
 
+#ifndef __MSDOS__
+#include <SDL.h>
+#endif
 #include <physfs.h>
 
 #include "strutil.h"
 #include "gr.h"
 #include "vid.h"
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "mono.h"
 #include "key.h"
 #include "timer.h"
@@ -55,25 +57,16 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "error.h"
 #include "u_mem.h"
 #include "texmap.h"
-#include "palette.h"
 #include "args.h"
 #include "mouse.h"
 #include "joy.h"
 #include "cfile.h"
 // #  include "3dfx_des.h"
 #include "../texmap/scanline.h" //for select_tmap -MM
-
 #ifdef EDITOR
 #include "editor/editor.h"
-#include "editor/kdefs.h"
 #include "ui.h"
 #endif
-
-#ifndef __MSDOS__
-#include <SDL.h>
-#endif
-
-#include "vers_id.h"
 
 
 void mem_init(void);

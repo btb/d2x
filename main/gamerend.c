@@ -30,9 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "gr.h"
 #include "vid.h"
-#include "ibitblt.h"
-#include "fix.h"
-
+#include "maths.h"
 #ifdef OGL
 #include "ogl_init.h"
 #endif

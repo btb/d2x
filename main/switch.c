@@ -29,10 +29,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "error.h"
 #include "mono.h"
-#include "wall.h"
 #include "texmap.h"
-#include "palette.h"
-
+#include "gr.h"
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif

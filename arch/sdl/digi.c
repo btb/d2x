@@ -15,18 +15,12 @@
 
 #include <SDL.h>
 
-#include "pstypes.h"
 #include "error.h"
 #include "mono.h"
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h" // needed for piggy.h
 #include "inferno.h"
-#include "digi.h"
-#include "sounds.h"
-#include "wall.h"
-#include "newdemo.h"
-#include "kconfig.h"
+
 
 int digi_sample_rate = SAMPLE_RATE_11K;
 

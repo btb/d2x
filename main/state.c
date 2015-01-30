@@ -21,10 +21,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#ifdef WINDOWS
-#include "desw.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -39,13 +35,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Files.h>
 #endif
 
+#ifdef WINDOWS
+#include "desw.h"
+#endif
 #include "mono.h"
 #include "inferno.h"
 #include "error.h"
 #include "cfile.h"
 #include "hash.h"
 #include "key.h"
-#include "pcx.h"
+#include "gr.h"
 #include "u_mem.h"
 #include "args.h"
 #include "physfsx.h"
@@ -105,6 +104,7 @@ int state_default_item = 0;
 
 uint state_game_id;
 
+#ifdef NETWORK
 extern int robot_controlled[MAX_ROBOTS_CONTROLLED];
 extern int robot_agitation[MAX_ROBOTS_CONTROLLED];
 extern fix robot_controlled_time[MAX_ROBOTS_CONTROLLED];
@@ -113,7 +113,7 @@ extern fix robot_last_message_time[MAX_ROBOTS_CONTROLLED];
 extern int robot_send_pending[MAX_ROBOTS_CONTROLLED];
 extern int robot_fired[MAX_ROBOTS_CONTROLLED];
 extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
-
+#endif
 
 #ifdef NEWMENU_MOUSE
 extern ubyte Hack_DblClick_MenuMode;

@@ -30,19 +30,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #include "inferno.h"
-#include "screens.h"			// For GAME_SCREEN?????
 #include "editor.h"			// For TMAP_CURBOX??????
 #include "gr.h"				// For canves, font stuff
 #include "ui.h"				// For UI_GADGET stuff
-#include "object.h"			// For robot_bms
 #include "mono.h"				// For debugging
 #include "error.h"
 
-#include "objpage.h"
-#include "bm.h"
-#include "player.h"
-#include "piggy.h"
-#include "cntrlcen.h"
 
 #define OBJS_PER_PAGE 8
 
@@ -77,13 +70,11 @@ static int ObjectPage = 0;
 //		
 //}
 
-#include "vecmat.h"
+#include "maths.h"
 #include "3d.h"
-#include "polyobj.h"
+#include "inferno.h"
 #include "texmap.h"
 
-#include "hostage.h"
-#include "powerup.h"
 
 vms_angvec objpage_view_orient;
 fix objpage_view_dist;

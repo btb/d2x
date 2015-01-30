@@ -19,7 +19,8 @@
 #ifndef _VECMAT_H
 #define _VECMAT_H
 
-#include "maths.h"
+#include "fix.h"
+
 
 //#define INLINE 1              //are some of these functions inline?
 

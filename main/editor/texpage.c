@@ -27,20 +27,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 
 #include "inferno.h"
-#include "gameseg.h"
-#include "screens.h"			// For GAME_SCREEN?????
 #include "editor.h"			// For TMAP_CURBOX??????
 #include "gr.h"				// For canves, font stuff
 #include "ui.h"				// For UI_GADGET stuff
-#include "textures.h"		// For NumTextures
 #include "error.h"
 #include "key.h"
 #include "mono.h"
-#include "gamesave.h"
-#include "mission.h"
 
-#include "texpage.h"
-#include "piggy.h"
 
 #define TMAPS_PER_PAGE 12
 

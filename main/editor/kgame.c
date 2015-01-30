@@ -27,9 +27,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "editor.h"
 #include "ui.h"
-#include "game.h"
-#include "gamesave.h"
-#include "gameseq.h"
+
 
 char game_filename[PATH_MAX] = "*.RL2";
 

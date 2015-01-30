@@ -14,9 +14,8 @@
 #include <string.h>
 #include <vga.h>
 #include <vgagl.h>
+
 #include "gr.h"
-#include "grdef.h"
-#include "palette.h"
 #include "u_mem.h"
 #include "error.h"
 #ifdef SVGALIB_INPUT

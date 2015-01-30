@@ -28,13 +28,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdarg.h>
 
+#ifdef SDL_INPUT
+#include <SDL.h>
+#endif
+
 #include "inferno.h"
 #include "key.h"
 #include "error.h"
 #include "joy.h"
 #include "mono.h"
 #include "iff.h"
-#include "pcx.h"
 #include "timer.h"
 #include "texmap.h"
 #include "ibitblt.h"
@@ -43,25 +46,19 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "gr.h"
 #include "vid.h"
-
 #if defined (TACTILE)
 #include "tactile.h"
 #endif
-
-#include "pcx.h"
 #include "rbaudio.h"
-
+#ifdef EDITOR
+#include "editor/editor.h"
+#endif
 
 //#define TEST_TIMER    1		//if this is set, do checking on timer
 
 #define SHOW_EXIT_PATH  1
 
 #define Arcade_mode 0
-
-
-#ifdef EDITOR
-#include "editor/editor.h"
-#endif
 
 //#define _MARK_ON 1
 #ifdef __WATCOMC__
@@ -70,9 +67,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #endif
 
-#ifdef SDL_INPUT
-#include <SDL.h>
-#endif
 
 extern void full_palette_save(void);
 extern void object_goto_prev_viewer(void);

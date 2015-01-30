@@ -7,9 +7,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "pstypes.h"
-#include "cmd.h"
-#include "console.h"
 #include "error.h"
 #include "u_mem.h"
 #include "strutil.h"

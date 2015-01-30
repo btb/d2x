@@ -22,33 +22,29 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-
 #include <stdio.h>
 #include <string.h>
+
+#ifndef MACINTOSH
+//	#include "unarj.h"
+#else
+#include <Strings.h>		// MacOS Toolbox header
+#include <Files.h>
+#include <unistd.h>
+#endif
 
 #include "strutil.h"
 #include "inferno.h"
 #include "gr.h"
-#include "grdef.h"
 #include "u_mem.h"
 #include "iff.h"
 #include "mono.h"
 #include "error.h"
 #include "hash.h"
 #include "args.h"
-#include "palette.h"
-#include "rle.h"
 #include "cfile.h"
 #include "byteswap.h"
 #include "makesig.h"
-
-#ifndef MACINTOSH
-//	#include "unarj.h"
-#else
-	#include <Strings.h>		// MacOS Toolbox header
-	#include <Files.h>
-	#include <unistd.h>
-#endif
 
 
 //#define NO_DUMP_SOUNDS        1   //if set, dump bitmaps but not sounds

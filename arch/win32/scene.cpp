@@ -242,13 +242,10 @@ HRESULT App_ConfirmDevice( DDCAPS* pddDriverCaps,
 extern "C"
 {
 #include "types.h"
-#include "grdef.h"
-#include "..\main\segment.h"
-#include "..\main\segpoint.h"
-#include "..\main\object.h"
+#include "gr.h"
+#include "..\main\inferno.h"
 #include "..\3d\globvars.h"
 #include "3d.h"
-#include "palette.h"
 }
 
 #undef __BOGUS1

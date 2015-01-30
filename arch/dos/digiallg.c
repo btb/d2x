@@ -18,25 +18,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 
 #include "fix.h"
-#include "object.h"
+#include "inferno.h"
 #include "mono.h"
 #include "timer.h"
 #include "joy.h"
-#include "digi.h"
-#include "sounds.h"
 #include "args.h"
 #include "key.h"
-#include "newdemo.h"
-#include "game.h"
 #include "u_dpmi.h"
 #include "error.h"
-#include "wall.h"
 #include "cfile.h"
-#include "piggy.h"
-#include "text.h"
 #include "midiallg.h"
 
-#include "kconfig.h"
 
 #define _DIGI_MAX_VOLUME 128 // set lower to have difference with > F1_0 sounds
 

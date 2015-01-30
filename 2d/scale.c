@@ -26,18 +26,18 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "mono.h"
-#include "fix.h"
+#include "maths.h"
 #include "gr.h"
 #include "error.h"
-#include "rle.h"
 
 #if 0
 #define TRANSPARENCY_COLOR 255;
 #endif
 
-static int Transparency_color = TRANSPARENCY_COLOR;
-
 #include "scalea.h"
+
+
+static int Transparency_color = TRANSPARENCY_COLOR;
 
 void rls_stretch_scanline( char * source, char * dest, int XDelta, int YDelta );
 void rls_stretch_scanline_setup( int XDelta, int YDelta );

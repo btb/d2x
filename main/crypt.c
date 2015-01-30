@@ -27,6 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //#include "inferno.h"
 
+
 char *jcrypt (char *plainstring)
 {
 	int i, t, len;

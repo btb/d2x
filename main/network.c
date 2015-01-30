@@ -26,6 +26,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#ifdef MACINTOSH
+#include <Events.h>
+#include <Errors.h>     // for appletalk networking errors
+#include "appltalk.h"
+#endif
 
 #include "strutil.h"
 #include "args.h"
@@ -37,12 +42,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "byteswap.h"
 #include "cfile.h"
-
-#ifdef MACINTOSH
-#include <Events.h>
-#include <Errors.h>     // for appletalk networking errors
-#include "appltalk.h"
-#endif
 
 
 #define LHX(x)          ((x)*(MenuHires?2:1))

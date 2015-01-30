@@ -31,7 +31,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "key.h"
 #include "timer.h"
-
 #ifdef TACTILE
 #include "tactile.h"
 #endif

@@ -31,8 +31,6 @@
 #include "timer.h"
 #include "pstypes.h"
 #include "error.h"
-#include "cvar.h"
-#include "pcx.h"
 #include "cfile.h"
 
 

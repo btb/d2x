@@ -16,16 +16,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <physfs.h>
 
 #include "fix.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "key.h"
 #include "vid.h"
 #include "strutil.h"
-
 #include "ui.h"
 #include "mono.h"
-
 #include "u_mem.h"
+
 
 int file_sort_func(char **e0, char **e1)
 {

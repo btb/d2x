@@ -23,12 +23,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 #include "error.h"
-
-#include "interp.h"
+#include "3d.h"
 #include "globvars.h"
 #include "gr.h"
 #include "byteswap.h"
 #include "u_mem.h"
+
 
 #define OP_EOF          0   //eof
 #define OP_DEFPOINTS    1   //defpoints

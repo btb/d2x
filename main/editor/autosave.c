@@ -33,12 +33,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <time.h>
 
 #include "error.h"
-
 #include "inferno.h"
 #include "editor.h"
 #include "mono.h"
 #include "u_mem.h"
 #include "ui.h"
+
 
 #define AUTOSAVE_PERIOD 5			// Number of minutes for timed autosave
 

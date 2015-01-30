@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "error.h"
 #include "mono.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "byteswap.h"
 
 

@@ -19,10 +19,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "fix.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
+
 
 void ui_draw_userbox( UI_GADGET_USERBOX * userbox )
 {

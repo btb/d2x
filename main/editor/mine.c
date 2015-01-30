@@ -31,25 +31,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
-
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
 #include "error.h"
-#include "textures.h"
-#include "object.h"
-
-#include "gamemine.h"
-#include "gamesave.h"
-#include "gameseg.h"
-
 #include "ui.h"			// Because texpage.h need UI_WINDOW type
-#include "texpage.h"		// For texpage_goto_first
-			 
-#include "medwall.h"
-#include "switch.h"
 
-#include "fuelcen.h"
 
 #define REMOVE_EXT(s)  (*(strchr( (s), '.' ))='\0')
 

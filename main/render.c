@@ -32,17 +32,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "key.h"
 #include "u_mem.h"
-
 #ifdef OGL
 #include "ogl_init.h"
 #endif
-
-#define INITIAL_LOCAL_LIGHT (F1_0/4)    // local light value in segment of occurence (of light emission)
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
 
+
+#define INITIAL_LOCAL_LIGHT (F1_0/4)    // local light value in segment of occurence (of light emission)
 
 //used for checking if points have been rotated
 int	Clear_window_color=-1;

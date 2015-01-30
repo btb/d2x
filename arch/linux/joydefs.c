@@ -31,23 +31,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "joy.h"
 #include "timer.h"
 #include "error.h"
-
 #include "inferno.h"
-#include "game.h"
-#include "object.h"
-#include "player.h"
-
-#include "controls.h"
-#include "joydefs.h"
 //#include "victor.h"
-#include "render.h"
-#include "palette.h"
-#include "newmenu.h"
+#include "gr.h"
 #include "args.h"
-#include "text.h"
-#include "kconfig.h"
-#include "digi.h"
 #include "joystick.h"
+
 
 int joydefs_calibrate_flag = 0;
 

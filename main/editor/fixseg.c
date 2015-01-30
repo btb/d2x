@@ -29,13 +29,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
-
 #include "inferno.h"
-#include "segment.h"
-//#include "segment2.h"
-#include	"editor.h"
+#include "editor.h"
 #include "error.h"
-#include "gameseg.h"
+
 
 #define SWAP(a,b) {temp = (a); (a) = (b); (b) = temp;}
 

@@ -24,7 +24,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "rle.h"
 #include "inferno.h"
 #include "gr.h"
 #include "stdlib.h"
@@ -32,11 +31,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "key.h"
 #include "error.h"
-
 #ifdef TACTILE
 #include "tactile.h"
 #endif 
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif

@@ -16,9 +16,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "u_mem.h"
-
 #include "gr.h"
-#include "grdef.h"
+
 
 int gr_disk(fix xc1,fix yc1,fix r1)
 {

@@ -10,10 +10,11 @@
 #endif
 
 #include <string.h>
+
 #include "gr.h"
-#include "grdef.h"
 #include "u_dpmi.h"
 #include "vesa.h"
+
 
 #define SC_INDEX   0x3c4
 #define CRTC_INDEX 0x3d4

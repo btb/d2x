@@ -17,14 +17,9 @@
 #include "error.h"
 #include "mono.h"
 #include "fix.h"
-#include "vecmat.h"
 #include "gr.h" // needed for piggy.h
-#include "piggy.h"
-#include "digi.h"
-#include "sounds.h"
-#include "wall.h"
-#include "newdemo.h"
-#include "kconfig.h"
+#include "inferno.h"
+
 
 int digi_sample_rate = SAMPLE_RATE_11K;
 int digi_timer_rate                                     = 9943;                 // rate for the timer to go off to handle the driver system (120 Hz)

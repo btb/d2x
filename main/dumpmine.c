@@ -28,33 +28,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 #include <errno.h>
 
-#include "pstypes.h"
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
-#include "palette.h"
-
 #include "inferno.h"
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
 #include "error.h"
-#include "object.h"
-#include "wall.h"
-#include "gamemine.h"
-#include "robot.h"
-#include "player.h"
-#include "newmenu.h"
-#include "textures.h"
-
-#include "bm.h"
-#include "menu.h"
-#include "switch.h"
-#include "fuelcen.h"
-#include "powerup.h"
-#include "gameseq.h"
-#include "polyobj.h"
-#include "gamesave.h"
 
 
 #ifdef EDITOR

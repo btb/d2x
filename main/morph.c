@@ -25,14 +25,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>
 
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
 #include "texmap.h"
 #include "error.h"
 #include "inferno.h"
 #include "mono.h"
-#include "interp.h"
+#include "3d.h"
 
 
 morph_data morph_objects[MAX_MORPH_OBJECTS];

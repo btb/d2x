@@ -21,23 +21,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-//#define SLEW_ON 1
-
 //#define _MARK_ON
 
 #include <stdlib.h>
-
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h> // for isspace
 
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
 #include "3d.h"
 #include "error.h"
-#include "palette.h"
 #include "iff.h"
 #include "mono.h"
 #include "texmap.h"
@@ -45,6 +39,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "u_mem.h"
 #include "cfile.h"
 
+
+//#define SLEW_ON 1
 
 typedef struct flythrough_data {
 	object		*obj;

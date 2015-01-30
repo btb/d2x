@@ -28,7 +28,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
-#include "palette.h"
 #include "inferno.h"
 #ifdef EDITOR
 #include "editor/editor.h"

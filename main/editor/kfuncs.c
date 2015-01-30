@@ -25,15 +25,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "func.h"
-#include "editor/kdefs.h"
-#include "segment.h"
-#include "editor/editor.h"
+#include "editor.h"
 #include "error.h"
-#include "slew.h"
 #include "mono.h"
-#include "gamesave.h"
-#include "editor/eobject.h"
-#include "editor/medwall.h"
+
 
 // Test function prototypes (replace Test1, 2 and 3 with whatever function 
 //										you wish to test.)

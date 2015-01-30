@@ -31,22 +31,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "inferno.h"
-#include "segment.h"
 #include "gr.h"
 #include "ui.h"
 #include "editor.h"
-
 #include "mono.h"
 #include "error.h"
-#include "textures.h"
-#include "object.h"
-#include "ai.h"
 
-#include "texpage.h"		// Textue selection paging stuff
-#include "objpage.h"		// Object selection paging stuff
-
-#include "wall.h"
-#include "switch.h"
 
 int init_info;
 

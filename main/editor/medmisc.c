@@ -32,24 +32,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "ui.h"
 #include "3d.h"
-
 #include "u_mem.h"
 #include "error.h"
 #include "mono.h"
 #include "key.h"
 #include "func.h"
-
 #include "inferno.h"
-#include "editor/editor.h"
-#include "segment.h"
+#include "editor.h"
 
-#include "render.h"
-#include "screens.h"
-#include "object.h"
-
-#include "texpage.h"		// For texpage_goto_first
-#include "meddraw.h"		// For draw_World
-#include "game.h"
 
 //return 2d distance, i.e, sqrt(x*x + y*y)
 #ifdef __WATCOMC__

@@ -14,6 +14,7 @@
 
 #include <windows.h>
 #include <mmsystem.h>
+#include <stdio.h>
 
 #include "internal.h"
 #include "vers_id.h"
@@ -25,7 +26,7 @@
 #include "args.h"
 #include "resource.h"
 /*#include "event.h"*/
-#include <stdio.h>
+
 
 //not defined in cygwin, needed to keep windows from resizing everything to fit the fullscreen res.
 #ifndef CDS_FULLSCREEN

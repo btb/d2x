@@ -19,21 +19,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
-
 #include "fix.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "key.h"
 #include "cfile.h"
-
 #include "mono.h"
-
 #include "ui.h"
-
 #include "u_mem.h"
 //#include "cflib.h"
 #include "func.h"
 #include "error.h"
+
 
 #define MAX_NUM_PADS 20
 

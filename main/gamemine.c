@@ -29,11 +29,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "inferno.h"
 #include "error.h"
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
-
 #include "cfile.h"
 #include "hash.h"
 #include "key.h"

@@ -24,8 +24,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>	// for memset()
 
-#include "fix.h"
-#include "vecmat.h"
+#include "math.h"
 #include "gr.h"
 #include "inferno.h"
 #include "error.h"

@@ -41,8 +41,7 @@ int ogl_init_load_library(void);
 #endif
 
 #include "gr.h"
-#include "palette.h"
-#include "pstypes.h"
+
 
 /* we need to export ogl_texture for 2d/font.c */
 typedef struct _ogl_texture {

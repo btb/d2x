@@ -25,7 +25,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vecmat.h"
+#include "maths.h"
 #include "inferno.h"
 #include "error.h"
 #include "mono.h"

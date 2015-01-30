@@ -23,8 +23,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "u_mem.h"
 #include "gr.h"
-#include "grdef.h"
-#include "rle.h"
 #include "mono.h"
 #include "byteswap.h"       // because of rle code that has short for row offsets
 #include "error.h"
@@ -32,6 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef OGL
 #include "ogl_init.h"
 #endif
+
 
 int gr_bitblt_dest_step_shift = 0;
 int gr_bitblt_double = 0;

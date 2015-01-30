@@ -27,14 +27,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "vecmat.h"
-#include "interp.h"
+#include "maths.h"
+#include "3d.h"
 #include "error.h"
 #include "mono.h"
 #include "u_mem.h"
 #include "args.h"
 #include "byteswap.h"
-
 #ifdef OGL
 #include "ogl_init.h"
 #endif

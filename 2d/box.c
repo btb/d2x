@@ -16,10 +16,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "u_mem.h"
-
-
 #include "gr.h"
-#include "grdef.h"
+
 
 void gr_ubox0(int left,int top,int right,int bot)
 {

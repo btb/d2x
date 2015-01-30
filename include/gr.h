@@ -170,8 +170,12 @@ typedef struct _grs_screen {    // This is a video screen
 } grs_screen;
 
 
-#include "console.h"
+#include "../2d/bitmap.h"
+#include "grdef.h"
+#include "ibitblt.h"
 #include "palette.h"
+#include "pcx.h"
+#include "rle.h"
 
 
 //=========================================================================

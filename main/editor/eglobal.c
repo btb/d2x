@@ -22,9 +22,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include <stdlib.h>
+
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
+
 
 // Global pointer to current vertices, right now always Vertices.  Set in create_new_mine.
 // segment New_segment;  // segment which can be added to the mine. // replaced by a macro

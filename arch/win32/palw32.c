@@ -1,6 +1,4 @@
 #include "gr.h"
-#include "grdef.h"
-#include "palette.h"
 
 #include <ddraw.h>
 

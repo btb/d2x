@@ -28,23 +28,17 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "segment.h"
 #include "editor.h"
-
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
-#include "fix.h"
+#include "maths.h"
 #include "mono.h"
 #include "3d.h"
 #include "mouse.h"
-#include "bm.h"
 #include "error.h"
-#include "medlisp.h"
-
-#include "kdefs.h"
-
 #include "u_mem.h"
+
 
 #define MAX_NUM_EVENTS 10000
 

@@ -25,16 +25,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "gr.h"
-#include "grdef.h"
 #include "u_mem.h"
-#include "pcx.h"
 #include "cfile.h"
-
-#ifdef OGL
-#include "palette.h"
-#endif
-
 #include "physfsx.h"
+
 
 int pcx_encode_byte(ubyte byt, ubyte cnt, PHYSFS_file *fid);
 int pcx_encode_line(ubyte *inBuff, int inLen, PHYSFS_file *fp);

@@ -28,14 +28,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "inferno.h"
-#include "segment.h"
-#include "seguvs.h"
 #include "editor.h"
-
-#include "fix.h"
+#include "maths.h"
 #include "mono.h"
 #include "error.h"
-#include "kdefs.h"
+
 
 void compute_uv_side_center(uvl *uvcenter, segment *segp, int sidenum);
 void rotate_uv_points_on_side(segment *segp, int sidenum, fix *rotmat, uvl *uvcenter);

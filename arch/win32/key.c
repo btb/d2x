@@ -2,10 +2,12 @@
 #include <windows.h>
 #include <stdio.h>
 #include <dinput.h>
+
 //#include "inferno.h"
 #include "fix.h"
 #include "timer.h"
 #include "key.h"
+
 
 extern void PumpMessages(void);
 

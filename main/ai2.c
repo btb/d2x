@@ -32,15 +32,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "timer.h"
 #include "key.h"
-
 #ifdef EDITOR
 #include "editor/editor.h"
-#include "editor/kdefs.h"
-#endif
-
-#ifndef NDEBUG
-#include "string.h"
-#include <time.h>
 #endif
 
 

@@ -12,6 +12,7 @@
 #include "inferno.h"
 #include "cfile.h"
 
+
 /*
  * reads a player_ship structure from a CFILE
  */

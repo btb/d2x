@@ -14,17 +14,12 @@
 #include "error.h"
 #include "mono.h"
 #include "fix.h"
-#include "vecmat.h"
 #include "gr.h" // needed for piggy.h
-#include "piggy.h"
-#include "digi.h"
-#include "sounds.h"
-#include "wall.h"
-#include "newdemo.h"
-#include "kconfig.h"
+#include "inferno.h"
 #include "hmpfile.h"
 
 #include "altsound.h"
+
 
 hmp_file *hmp = NULL;
 

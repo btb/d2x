@@ -21,8 +21,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-//#define PSX_BUILD_TOOLS
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -31,9 +29,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "inferno.h"
 #include "error.h"
-#include "palette.h"
+#include "gr.h"
 #include "timer.h"
 
+
+//#define PSX_BUILD_TOOLS
 
 void paging_touch_vclip( vclip * vc )
 {

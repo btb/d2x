@@ -20,9 +20,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _MEDWALL_H
 #define _MEDWALL_H
 
-#include "wall.h"
 #include "inferno.h"
-#include "segment.h"
+
 
 extern int wall_add_removable(); 
 
@@ -30,7 +29,7 @@ extern int wall_add_removable();
 extern int wall_restore_all();
 
 // Reset a wall.
-extern void wall_reset(segment *seg, short side);
+extern void wall_reset(segment *seg, int side);
 
 // Adds a removable wall (medwall.c)
 extern int wall_add_removable();

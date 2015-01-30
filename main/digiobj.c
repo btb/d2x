@@ -19,18 +19,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h> 
-
 #ifdef __MSDOS__
 # include <dos.h>
 # include <bios.h>
 # include <io.h>
 # include <conio.h> 
 #endif
-
 #include <string.h>
 #include <ctype.h>
 
-#include "fix.h"
+#include "maths.h"
 #include "inferno.h"
 #include "mono.h"
 #include "timer.h"

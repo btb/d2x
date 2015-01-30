@@ -32,16 +32,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "timer.h"
 #include "key.h"
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
 
-#include "string.h"
-
-#ifndef NDEBUG
-#include <time.h>
-#endif
 
 // ---------- John: These variables must be saved as part of gamesave. --------
 int             Ai_initialized = 0;

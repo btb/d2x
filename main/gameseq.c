@@ -33,7 +33,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef OGL
 #include "ogl_init.h"
 #endif
-
 #include "inferno.h"
 #include "vid.h"
 #include "key.h"
@@ -41,27 +40,21 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "joy.h"
 #include "mono.h"
 #include "iff.h"
-#include "pcx.h"
 #include "timer.h"
 #include "texmap.h"
 #include "3d.h"
-#include "ibitblt.h"
+#include "gr.h"
 #include "u_mem.h"
-#include "palette.h"
 #include "args.h"
 #include "ctype.h"
 #include "cfile.h"
-
 #if defined (TACTILE)
  #include "tactile.h"
 #endif
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
-
 #include "strutil.h"
-#include "rle.h"
 
 
 void StartNewLevelSecret(int level_num, int page_in_textures);

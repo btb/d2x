@@ -30,31 +30,16 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "inferno.h"
-#include "segment.h"
-#include "segpoint.h"
-#include "gameseg.h"
 #include "gr.h"
 #include "ui.h"
-#include "editor/editor.h"
-
-#include "wall.h"
-#include "switch.h"
-
+#include "editor.h"
 #include "key.h"
 #include "mono.h"
 #include "error.h"
-#include "medlisp.h"
 #include "u_mem.h"
-#include "render.h"
-#include "game.h"
-//#include "slew.h"
-#include "kdefs.h"
 #include "func.h"
-#include "textures.h"
-#include "screens.h"
 #include "texmap.h"
-#include "object.h"
-#include "fuelcen.h"
+
 
 //	Colors used in editor for indicating various kinds of segments.
 #define	SELECT_COLOR		BM_XRGB( 63/2 , 41/2 ,  0/2)

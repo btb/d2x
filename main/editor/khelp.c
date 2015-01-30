@@ -23,8 +23,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "editor.h"
-
 #include "ui.h"
+
 
 static char MainHelpText[] = "\nMED General Functions\n\n" \
 "SPACEBAR         Full Redraw\n" \

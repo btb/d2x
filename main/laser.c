@@ -32,7 +32,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "texmap.h"
 #include "timer.h"
-
 #ifdef TACTILE
 #include "tactile.h"
 #endif

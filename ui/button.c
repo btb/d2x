@@ -19,12 +19,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 
 #include "u_mem.h"
-#include "fix.h"
-#include "pstypes.h"
+#include "maths.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
 #include "mono.h"
+
 
 #define Middle(x) ((2*(x)+1)/4)
 

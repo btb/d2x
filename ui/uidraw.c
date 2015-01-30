@@ -16,9 +16,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "fix.h"
-#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
+
 
 void Hline(short x1, short x2, short y )
 {

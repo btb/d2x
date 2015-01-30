@@ -35,7 +35,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "timer.h"
 #include "iff.h"
-#include "pcx.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"

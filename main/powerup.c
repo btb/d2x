@@ -26,17 +26,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
 #include "3d.h"
 #include "mono.h"
 #include "error.h"
 #include "inferno.h"
 #include "key.h"
-
 #ifdef EDITOR
-#include "gr.h"	//	for powerup outline drawing
 #include "editor/editor.h"
 #endif
 

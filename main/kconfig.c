@@ -21,22 +21,20 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#ifdef WINDOWS
-#include "desw.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
 
+#ifdef WINDOWS
+#include "desw.h"
+#endif
 #include "error.h"
 #include "gr.h"
 #include "vid.h"
 #include "mono.h"
 #include "key.h"
-#include "palette.h"
 #include "inferno.h"
 #include "iff.h"
 #include "u_mem.h"
@@ -44,11 +42,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "timer.h"
 #include "args.h"
-
 #if defined (TACTILE)
  #include "tactile.h"
 #endif
-
 #ifdef USE_LINUX_JOY
 #include "joystick.h"
 #endif

@@ -27,19 +27,11 @@
 
 #include <errno.h>
 
-#include "hudmsg.h"
 #include "inferno.h"
-#include "text.h"
 #include "gr.h"
 #include "vid.h"
-#include "gamefont.h"
-#include "grdef.h"
-#include "palette.h"
 #include "u_mem.h"
 #include "error.h"
-
-#include "inferno.h"
-#include "screens.h"
 #include "timer.h"
 #include "strutil.h"
 #include "mono.h"
@@ -55,6 +47,7 @@
 #else
 #include <GL/glu.h>
 #endif
+
 
 int ogl_voodoohack=0;
 

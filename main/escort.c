@@ -27,17 +27,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "mono.h"
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
 #include "3d.h"
 #include "vid.h"
 #include "error.h"
 #include "key.h"
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif
+
 
 extern void multi_send_stolen_items();
 void say_escort_goal(int goal_num);

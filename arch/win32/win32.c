@@ -1,21 +1,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
+
 #include "gr.h"
-#include "grdef.h"
 #include "u_mem.h"
 #include "timer.h"
 #include "error.h"
-
-#include "gr.h"
-#include "grdef.h"
-#include "palette.h"
-#include "rle.h"
 #include "d3dhelp.h"
 #include "game.h"
 #include "gauges.h"
 #include "args.h"
-
 #include "gamefont.h"
 
 #ifndef NDEBUG
@@ -23,6 +17,7 @@
 #include <crtdbg.h>
 #endif
 #endif
+
 
 void gr_linear_rep_movsdm(ubyte *src, ubyte *dest, int num_pixels);
 void InitMain();

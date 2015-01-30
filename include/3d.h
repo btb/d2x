@@ -21,9 +21,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _3D_H
 #define _3D_H
 
-#include "fix.h"
-#include "vecmat.h" //the vector/matrix library
+#include "maths.h"
 #include "gr.h"
+
 
 extern int g3d_interp_outline;      //if on, polygon models outlined in white
 
@@ -83,6 +83,10 @@ typedef struct g3s_object {
 	//this will be filled in later
 
 } g3s_object;
+
+
+#include "interp.h"
+
 
 //Functions in library
 

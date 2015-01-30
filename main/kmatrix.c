@@ -31,13 +31,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "mono.h"
 #include "key.h"
-#include "palette.h"
 #include "inferno.h"
 #include "u_mem.h"
 #include "mouse.h"
 #include "joy.h"
 #include "timer.h"
-#include "pcx.h"
 
 
 #define CENTERING_OFFSET(x) ((300 - (70 + (x)*25 ))/2)

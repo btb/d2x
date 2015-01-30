@@ -37,7 +37,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "args.h"
 #include "key.h"
 #include "inferno.h"
-#include "palette.h"
 #include "strutil.h"
 #include "error.h"
 #include "u_mem.h"

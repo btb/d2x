@@ -12,15 +12,10 @@
 
 #include "error.h"
 #include "mono.h"
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h" // needed for piggy.h
-#include "piggy.h"
-#include "digi.h"
-#include "sounds.h"
-#include "wall.h"
-#include "newdemo.h"
-#include "kconfig.h"
+#include "inferno.h"
+
 
 //edited 05/17/99 Matt Mueller - added ifndef NO_ASM
 //added on 980905 by adb to add inline fixmul for mixer on i386

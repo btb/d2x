@@ -27,7 +27,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "inferno.h"
 #include "mono.h"
-#include "rle.h"
 
 #ifdef OGL
 #include "ogl_init.h"
@@ -35,6 +34,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #else
 #define MAX_NUM_CACHE_BITMAPS 50
 #endif
+
 
 //static grs_bitmap * cache_bitmaps[MAX_NUM_CACHE_BITMAPS];                     
 

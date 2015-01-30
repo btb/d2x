@@ -28,7 +28,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
 #ifdef MACINTOSH
 #include <Events.h>
 #endif
@@ -38,7 +37,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "vid.h"
 #include "iff.h"
-#include "pcx.h"
 #include "u_mem.h"
 #include "joy.h"
 #include "mono.h"
@@ -67,8 +65,10 @@ char RobotPlaying=0;
 
 #define	SHAREWARE_ENDING_FILENAME	"ending.tex"
 
+#ifndef RELEASE
 //	Can be set by -noscreens command line option.  Causes bypassing of all briefing screens.
 int	Skip_briefing_screens=0;
+#endif
 int	Briefing_foreground_colors[MAX_BRIEFING_COLORS], Briefing_background_colors[MAX_BRIEFING_COLORS];
 int	Current_color = 0;
 int	Erase_color;

@@ -37,10 +37,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "iff.h"
 #include "cfile.h"
 #include "args.h"
-#include "interp.h"
+#include "3d.h"
 #include "strutil.h"
-
 #include "editor/texpage.h"
+
 
 #define BM_NONE			-1
 #define BM_COCKPIT		 0

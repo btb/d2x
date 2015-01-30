@@ -24,6 +24,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
+#ifdef MACINTOSH
+#include "resource.h"
+#include "isp.h"
+#include <Dialogs.h>
+#endif
+
 #include "inferno.h"
 #include "gr.h"
 #include "vid.h"
@@ -33,8 +39,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "mono.h"
 #include "joy.h"
-#include "vecmat.h"
-#include "palette.h"
+#include "maths.h"
 #include "args.h"
 #include "timer.h"
 #ifdef NETWORK
@@ -42,13 +47,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #include "texmap.h"
 #include "strutil.h"
-
-#ifdef MACINTOSH
-	#include "resource.h"
-	#include "isp.h"
-	#include <Dialogs.h>
-#endif
-
 #ifdef EDITOR
 #include "editor/editor.h"
 #endif

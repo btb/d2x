@@ -29,17 +29,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIREFRAME 0
 #define PERSPECTIVE 1
 
-#include "pstypes.h"
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
 #include "3d.h"
 #include "error.h"
-
 #include "texmap.h"
 #include "texmapl.h"
-#include "rle.h"
 #include "scanline.h"
+
 
 #ifdef EDITOR
 #define EDITOR_TMAP 1       //if in, include extra stuff

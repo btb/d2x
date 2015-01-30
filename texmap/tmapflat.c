@@ -21,15 +21,14 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conf.h>
 #endif
 
-#include "fix.h"
-#include "vecmat.h"
+#include "maths.h"
 #include "gr.h"
-#include "grdef.h"
 #include "texmap.h"
 #include "texmapl.h"
 #include "scanline.h"
 
 //#include "tmapext.h"
+
 
 #ifndef OGL
 

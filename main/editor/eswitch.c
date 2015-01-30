@@ -28,24 +28,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "inferno.h"
 #include "editor.h"
-#include "eswitch.h"
-#include "segment.h"
 #include "error.h"
-#include "gameseg.h"
 #include "mono.h"
-#include "wall.h"
-#include "medwall.h"
-
-#include "screens.h"
-
-#include "textures.h"
-#include "texmerge.h"
-#include "medrobot.h"
 #include "timer.h"
 #include "key.h"
-#include "ehostage.h"
-#include "centers.h"
-#include "piggy.h"
+
 
 //-------------------------------------------------------------------------
 // Variables for this module...

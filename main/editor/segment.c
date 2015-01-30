@@ -29,27 +29,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "gr.h"
-
 #include "inferno.h"
-#include "segment.h"
-// #include "segment2.h"
 #include "editor.h"
 #include "error.h"
-#include "object.h"
 
-#include "gameseg.h"
-#include "render.h"
-#include "game.h"
-
-#include "wall.h"
-#include "switch.h"
-#include "fuelcen.h"
-#include "cntrlcen.h"
-#include "seguvs.h"
-#include "gameseq.h"
-
-#include "medwall.h"
-#include "hostage.h"
 
 int	Do_duplicate_vertex_check = 0;		// Gets set to 1 in med_create_duplicate_vertex, means to check for duplicate vertices in compress_mine
 

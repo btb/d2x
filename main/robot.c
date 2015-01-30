@@ -28,6 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "mono.h"
 
+
 int	N_robot_types = 0;
 int	N_robot_joints = 0;
 

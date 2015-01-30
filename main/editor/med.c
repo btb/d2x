@@ -36,57 +36,19 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <process.h>
 #endif
 
-
 //#define INCLUDE_XLISP
 
 #include "inferno.h"
-#include "segment.h"
-#include "gr.h"
+#include "vid.h"
 #include "ui.h"
 #include "editor.h"
-//#include "gamemine.h"
-#include "gamesave.h"
-#include "gameseg.h"
-
 #include "key.h"
 #include "mono.h"
 #include "error.h"
-#include "kfuncs.h"
-#include "macro.h"
-
-#ifdef INCLUDE_XLISP
-#include "medlisp.h"
-#endif
 #include "u_mem.h"
-#include "render.h"
-#include "game.h"
-#include "slew.h"
-#include "kdefs.h"
 #include "func.h"
-#include "textures.h"
-#include "screens.h"
 #include "texmap.h"
-#include "object.h"
-#include "effects.h"
-#include "wall.h"
-#include "info.h"
-#include "ai.h"
 
-#include "texpage.h"		// Textue selection paging stuff
-#include "objpage.h"		// Object selection paging stuff
-
-#include "medmisc.h"
-#include "meddraw.h"
-#include "medsel.h"
-#include "medrobot.h"
-#include "medwall.h"
-#include "eswitch.h"
-#include "ehostage.h"
-#include "centers.h"
-
-#include "fuelcen.h"
-#include "gameseq.h"
-#include "newmenu.h"
 
 //#define _MARK_ON 1
 //#include <wsample.h>		//should come after inferno.h to get mark setting //Not included here.

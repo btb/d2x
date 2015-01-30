@@ -29,10 +29,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "gr.h"
 #include "inferno.h"
-#include "vclip.h"
 #include "mono.h"
 #include "u_mem.h"
 #include "error.h"
+
 
 int Num_effects;
 eclip Effects[MAX_EFFECTS];
