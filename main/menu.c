@@ -355,11 +355,15 @@ void do_option ( int select)
 		case MENU_PLAY_SONG:    {
 				int i;
 				char * m[MAX_NUM_SONGS];
+				int cur = 0;
+				extern char digi_last_midi_song[16];
 
 				for (i=0;i<Num_songs;i++) {
 					m[i] = Songs[i].filename;
+					if (!strnicmp(Songs[i].filename, digi_last_midi_song, 16))
+						cur = i;
 				}
-				i = newmenu_listbox( "Select Song", Num_songs, m, 1, NULL );
+				i = newmenu_listbox1( "Select Song", Num_songs, m, 1, cur, NULL );
 
 				if ( i > -1 )   {
 					songs_play_song( i, 0 );
