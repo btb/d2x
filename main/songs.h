@@ -31,24 +31,14 @@ typedef struct song_info {
 extern song_info Songs[];
 
 #define SONG_TITLE              0
-#ifdef MACINTOSH
-#define SONG_BRIEFING           3       // endgame and briefing the same
-#else
 #define SONG_BRIEFING           1
-#endif
 #define SONG_ENDLEVEL           2
 #define SONG_ENDGAME            3
 #define SONG_CREDITS            4
 #define SONG_FIRST_LEVEL_SONG   5
 
-
-#ifdef MACINTOSH
-#define MAX_NUM_SONGS           9
-#define Num_songs               9
-#else
 #define MAX_NUM_SONGS           30
 extern int Num_songs;   //how many MIDI songs
-#endif
 
 //whether or not redbook audio should be played
 extern cvar_t Redbook_enabled;
