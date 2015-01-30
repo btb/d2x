@@ -187,6 +187,11 @@ else
         AC_DEFINE(SDL_IMAGE,,[Define if you have the SDL_image library]))
     AC_SUBST(SDLIMAGE_LIBS)
 
+  # Check for SDL_mixer
+    PKG_CHECK_MODULES(SDLMIXER, SDL_mixer)
+    AC_SUBST(SDLIMAGE_CFLAGS)
+    AC_SUBST(SDLIMAGE_LIBS)
+
   # Check for libpng
     have_libpng=no
     #PKG_CHECK_MODULES(LIBPNG, libpng,

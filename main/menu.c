@@ -1249,15 +1249,8 @@ void do_sound_menu()
 	}
 #endif
 
-
-	if ( Config_midi_volume.intval < 1 )   {
-		#ifndef MACINTOSH
-			digi_play_midi_song( NULL, NULL, NULL, 0 );
-		#else
-			digi_play_midi_song(-1, 0);
-		#endif
-	}
-
+	if ( Config_midi_volume.intval < 1 )
+		digi_play_midi_song( NULL, NULL, NULL, 0 );
 }
 
 

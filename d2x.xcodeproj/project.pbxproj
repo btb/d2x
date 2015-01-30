@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		140D3B411A7DB909005D0E95 /* midi.c in Sources */ = {isa = PBXBuildFile; fileRef = 140D3B401A7DB909005D0E95 /* midi.c */; };
+		140D3B421A7DB909005D0E95 /* midi.c in Sources */ = {isa = PBXBuildFile; fileRef = 140D3B401A7DB909005D0E95 /* midi.c */; };
+		140D3B431A7DB909005D0E95 /* midi.c in Sources */ = {isa = PBXBuildFile; fileRef = 140D3B401A7DB909005D0E95 /* midi.c */; };
+		140D3B451A7DB977005D0E95 /* hmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695C41A2729860070D41D /* hmp.c */; };
+		140D3B461A7DB978005D0E95 /* hmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695C41A2729860070D41D /* hmp.c */; };
+		140D3B471A7DB979005D0E95 /* hmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695C41A2729860070D41D /* hmp.c */; };
 		142869B51A672E6300A095F6 /* tmapflat.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466976C1A2729870070D41D /* tmapflat.c */; };
 		142869B61A672E6300A095F6 /* vid.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695961A2729860070D41D /* vid.c */; };
 		142869B71A672E6300A095F6 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
@@ -547,6 +553,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		140D3B401A7DB909005D0E95 /* midi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = midi.c; sourceTree = "<group>"; };
+		140D3B441A7DB940005D0E95 /* SDL_mixer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDL_mixer.h; sourceTree = "<group>"; };
 		141635EB1A4CB5B3005E575E /* d2x-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -1318,6 +1326,7 @@
 				146695041A2729860070D41D /* SDLMain.h */,
 				146695051A2729860070D41D /* SDLMain.m */,
 				14804D661A4C9FE0001CB0FB /* SDL.h */,
+				140D3B441A7DB940005D0E95 /* SDL_mixer.h */,
 			);
 			path = cocoa;
 			sourceTree = "<group>";
@@ -1550,6 +1559,7 @@
 				146695981A2729860070D41D /* joy.c */,
 				146695991A2729860070D41D /* joydefs.c */,
 				1466959A1A2729860070D41D /* key.c */,
+				140D3B401A7DB909005D0E95 /* midi.c */,
 				1466959D1A2729860070D41D /* mouse.c */,
 				1466959E1A2729860070D41D /* rbaudio.c */,
 				1466959F1A2729860070D41D /* timer.c */,
@@ -2246,6 +2256,7 @@
 				142869D21A672E6300A095F6 /* strio.c in Sources */,
 				14286A4E1A67313E00A095F6 /* eglobal.c in Sources */,
 				142869D31A672E6300A095F6 /* strutil.c in Sources */,
+				140D3B451A7DB977005D0E95 /* hmp.c in Sources */,
 				142869D41A672E6300A095F6 /* mem.c in Sources */,
 				142869D51A672E6300A095F6 /* rand.c in Sources */,
 				142869D61A672E6300A095F6 /* tables.c in Sources */,
@@ -2386,6 +2397,7 @@
 				14286A341A672E6300A095F6 /* disc.c in Sources */,
 				14286A641A67313E00A095F6 /* med.c in Sources */,
 				14286A7F1A67330000A095F6 /* menubar.c in Sources */,
+				140D3B411A7DB909005D0E95 /* midi.c in Sources */,
 				14286A351A672E6300A095F6 /* font.c in Sources */,
 				14286A361A672E6300A095F6 /* gpixel.c in Sources */,
 				14286A371A672E6300A095F6 /* ibitblt.c in Sources */,
@@ -2462,6 +2474,7 @@
 				14F0D5331A4CA50D00682BB0 /* crypt.c in Sources */,
 				14F0D5341A4CA50D00682BB0 /* cvar.c in Sources */,
 				14F0D5351A4CA50D00682BB0 /* digiobj.c in Sources */,
+				140D3B431A7DB909005D0E95 /* midi.c in Sources */,
 				144BC0341A74C612001A6048 /* gr.c in Sources */,
 				14F0D5361A4CA50D00682BB0 /* effects.c in Sources */,
 				14F0D5371A4CA50D00682BB0 /* endlevel.c in Sources */,
@@ -2507,6 +2520,7 @@
 				14F0D5601A4CA50D00682BB0 /* slew.c in Sources */,
 				14F0D5611A4CA50D00682BB0 /* songs.c in Sources */,
 				14F0D5621A4CA50D00682BB0 /* state.c in Sources */,
+				140D3B471A7DB979005D0E95 /* hmp.c in Sources */,
 				14F0D5631A4CA50D00682BB0 /* switch.c in Sources */,
 				14F0D5641A4CA50D00682BB0 /* terrain.c in Sources */,
 				14F0D5651A4CA50D00682BB0 /* texmerge.c in Sources */,
@@ -2607,6 +2621,7 @@
 				14F0D5B41A4CB34F00682BB0 /* rand.c in Sources */,
 				14F0D5B51A4CB34F00682BB0 /* tables.c in Sources */,
 				14F0D5B61A4CB34F00682BB0 /* vecmat.c in Sources */,
+				140D3B461A7DB978005D0E95 /* hmp.c in Sources */,
 				14F0D5B71A4CB34F00682BB0 /* ai.c in Sources */,
 				14F0D5B81A4CB34F00682BB0 /* ai2.c in Sources */,
 				14F0D5B91A4CB34F00682BB0 /* aipath.c in Sources */,
@@ -2661,6 +2676,7 @@
 				14F0D5EB1A4CB34F00682BB0 /* powerup.c in Sources */,
 				14F0D5EC1A4CB34F00682BB0 /* render.c in Sources */,
 				14F0D5ED1A4CB34F00682BB0 /* robot.c in Sources */,
+				140D3B421A7DB909005D0E95 /* midi.c in Sources */,
 				14F0D5EE1A4CB34F00682BB0 /* scores.c in Sources */,
 				14F0D5EF1A4CB34F00682BB0 /* segment.c in Sources */,
 				14F0D5F01A4CB34F00682BB0 /* slew.c in Sources */,

@@ -13,7 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <SDL.h>
+#include "SDL.h"
+#include "SDL_mixer.h"
 
 #include "error.h"
 #include "mono.h"
@@ -111,7 +112,7 @@ static const Uint8 mix8[] =
 int digi_volume = SOUND_MAX_VOLUME;
 //end edit by adb
 
-static int Digi_initialized = 0;
+int Digi_initialized = 0;
 
 struct sound_slot {
 	int soundno;
@@ -127,8 +128,6 @@ struct sound_slot {
 	int soundobj;   // Which soundobject is on this channel
 	int persistent; // This can't be pre-empted
 } SoundSlots[MAX_SOUND_SLOTS];
-
-static SDL_AudioSpec WaveSpec;
 
 static int digi_max_channels = 16;
 
@@ -189,23 +188,18 @@ int digi_init()
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO)<0) {
 		Error("SDL audio initialisation failed: %s.",SDL_GetError());
 	}
-	
-	WaveSpec.freq = digi_sample_rate;
-	//added/changed by Sam Lantinga on 12/01/98 for new SDL version
-	WaveSpec.format = AUDIO_U8;
-	WaveSpec.channels = 2;
-	//end this section addition/change - SL
-	WaveSpec.samples = SOUND_BUFFER_SIZE;
-	WaveSpec.callback = audio_mixcallback;
-	
-	if ( SDL_OpenAudio(&WaveSpec, NULL) < 0 ) {
+
+	if ( Mix_OpenAudio(digi_sample_rate, AUDIO_U8, 2, SOUND_BUFFER_SIZE) < 0 ) {
 		//edited on 10/05/98 by Matt Mueller - should keep running, just with no sound.
 		Warning("\nError: Couldn't open audio: %s\n", SDL_GetError());
 		//killed  exit(2);
 		return 1;
 		//end edit -MM
 	}
-	SDL_PauseAudio(0);
+
+	Mix_SetPostMix(audio_mixcallback, NULL);
+
+	Mix_Resume(-1);
 	
 	atexit(digi_close);
 	Digi_initialized = 1;
@@ -219,11 +213,15 @@ void digi_reset() { }
 void digi_close()
 {
 	if (!Digi_initialized) return;
+
+	digi_stop_current_song();
+
 	Digi_initialized = 0;
+
 #ifdef __MINGW32__
 	SDL_Delay(500); // CloseAudio hangs if it's called too soon after opening?
 #endif
-	SDL_CloseAudio();
+	Mix_CloseAudio();
 }
 
 void digi_stop_all_channels()
@@ -434,23 +432,6 @@ void digi_end_sound(int channel)
 	SoundSlots[channel].persistent = 0;
 }
 
-
-#ifndef _WIN32
-// MIDI stuff follows.
-void digi_set_midi_volume( int mvolume ) { }
-void digi_play_midi_song( char * filename, char * melodic_bank, char * drum_bank, int loop ) {}
-void digi_stop_current_song()
-{
-#ifdef HMIPLAY
-        char buf[10];
-    
-        sprintf(buf,"s");
-        send_ipc(buf);
-#endif
-}
-void digi_pause_midi() {}
-void digi_resume_midi() {}
-#endif
 
 #ifndef NDEBUG
 void digi_debug()

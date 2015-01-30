@@ -470,14 +470,8 @@ void songs_play_song( int songnum, int repeat )
 	else if (songnum == SONG_CREDITS)
 		play_redbook_track(REDBOOK_CREDITS_TRACK,0);
 
-	if (!Redbook_playing) {		//not playing redbook, so play midi
-
-		#ifndef MACINTOSH
-			digi_play_midi_song( Songs[songnum].filename, Songs[songnum].melodic_bank_file, Songs[songnum].drum_bank_file, repeat );
-		#else
-			digi_play_midi_song(songnum, repeat);
-		#endif
-	}
+	if (!Redbook_playing) // not playing redbook, so play midi
+		digi_play_midi_song( Songs[songnum].filename, Songs[songnum].melodic_bank_file, Songs[songnum].drum_bank_file, repeat );
 }
 
 int current_song_level;
@@ -519,11 +513,7 @@ void songs_play_level_song( int levelnum )
 
 		songnum = SONG_FIRST_LEVEL_SONG + (songnum % NumLevelSongs);
 
-		#ifndef MACINTOSH
-			digi_play_midi_song( Songs[songnum].filename, Songs[songnum].melodic_bank_file, Songs[songnum].drum_bank_file, 1 );
-		#else
-			digi_play_midi_song( songnum, 1 );
-		#endif
+		digi_play_midi_song( Songs[songnum].filename, Songs[songnum].melodic_bank_file, Songs[songnum].drum_bank_file, 1 );
 
 	}
 }

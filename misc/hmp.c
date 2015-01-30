@@ -5,13 +5,21 @@
  * - Convert HMP to MIDI for further use
  * Based on work of Arne de Bruijn and the JFFEE project
  */
+
+#ifdef HAVE_CONFIG_H
+#include <conf.h>
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <physfs.h>
+
 #include "hmp.h"
 #include "u_mem.h"
 #include "cfile.h"
+#include "byteswap.h"
+
 
 #ifdef WORDS_BIGENDIAN
 #define MIDIINT(x) (x)
@@ -35,12 +43,10 @@ void hmp_close(hmp_file *hmp)
 }
 
 hmp_file *hmp_open(const char *filename) {
-	int i;
+	int i, data, num_tracks, tempo;
 	char buf[256];
-	long data;
 	CFILE *fp;
 	hmp_file *hmp;
-	int num_tracks;
 	unsigned char *p;
 
 	if (!(fp = cfopen((char *)filename, "rb")))
@@ -234,7 +240,7 @@ ubyte tempo [19] = {'M','T','r','k',0,0,0,11,0,0xFF,0x51,0x03,0x18,0x80,0x00,0,0
 void hmp2mid(char *hmp_name, unsigned char **midbuf, unsigned int *midlen)
 {
 	int mi, i;
-	short ms;
+	short ms, time_div = 0xC0;
 	hmp_file *hmp=NULL;
 
 	hmp = hmp_open(hmp_name);

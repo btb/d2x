@@ -27,6 +27,7 @@
 
 #if defined(AUDIO)
 #include <SDL.h>
+#include "SDL_mixer.h"
 #endif
 
 #include "mvelib.h"
@@ -253,7 +254,7 @@ static int mve_audio_playing=0;
 static int mve_audio_canplay=0;
 static int mve_audio_compressed=0;
 static int mve_audio_enabled = 1;
-static SDL_AudioSpec *mve_audio_spec=NULL;
+
 
 static void mve_audio_callback(void *userdata, unsigned char *stream, int len)
 {
@@ -364,23 +365,19 @@ static int create_audiobuf_handler(unsigned char major, unsigned char minor, uns
 	fprintf(stderr, "sample rate = %d, stereo = %d, bitsize = %d, compressed = %d\n",
 			sample_rate, stereo, bitsize ? 16 : 8, compressed);
 
-	mve_audio_spec = (SDL_AudioSpec *)mve_alloc(sizeof(SDL_AudioSpec));
-	mve_audio_spec->freq = sample_rate;
-	mve_audio_spec->format = format;
-	mve_audio_spec->channels = (stereo) ? 2 : 1;
-	mve_audio_spec->samples = 4096;
-	mve_audio_spec->callback = mve_audio_callback;
-	mve_audio_spec->userdata = NULL;
-	if (SDL_OpenAudio(mve_audio_spec, NULL) >= 0)
+	if (!Mix_OpenAudio(sample_rate, format, stereo ? 2 : 1, 4096) >= 0)
 	{
 		fprintf(stderr, "   success\n");
 		mve_audio_canplay = 1;
 	}
 	else
 	{
-		fprintf(stderr, "   failure : %s\n", SDL_GetError());
+		fprintf(stderr, "   failure : %s\n", Mix_GetError());
 		mve_audio_canplay = 0;
 	}
+
+	Mix_SetPostMix(mve_audio_callback, NULL);
+	mve_audio_canplay = 1;
 
 	memset(mve_audio_buffers, 0, sizeof(mve_audio_buffers));
 	memset(mve_audio_buflens, 0, sizeof(mve_audio_buflens));
@@ -394,7 +391,7 @@ static int play_audio_handler(unsigned char major, unsigned char minor, unsigned
 #ifdef AUDIO
 	if (mve_audio_canplay  &&  !mve_audio_playing  &&  mve_audio_bufhead != mve_audio_buftail)
 	{
-		SDL_PauseAudio(0);
+		Mix_Resume(-1);
 		mve_audio_playing = 1;
 	}
 #endif
@@ -409,9 +406,6 @@ static int audio_data_handler(unsigned char major, unsigned char minor, unsigned
 	int nsamp;
 	if (mve_audio_canplay)
 	{
-		if (mve_audio_playing)
-			SDL_LockAudio();
-
 		chan = get_ushort(data + 2);
 		nsamp = get_ushort(data + 4);
 		if (chan & selected_chan)
@@ -445,9 +439,6 @@ static int audio_data_handler(unsigned char major, unsigned char minor, unsigned
 			if (mve_audio_buftail == mve_audio_bufhead)
 				fprintf(stderr, "d'oh!  buffer ring overrun (%d)\n", mve_audio_bufhead);
 		}
-
-		if (mve_audio_playing)
-			SDL_UnlockAudio();
 	}
 #endif
 
@@ -729,7 +720,7 @@ void MVE_rmEndMovie()
 #ifdef AUDIO
 	if (mve_audio_canplay) {
 		// only close audio if we opened it
-		SDL_CloseAudio();
+		Mix_CloseAudio();
 		mve_audio_canplay = 0;
 	}
 	for (i = 0; i < TOTAL_AUDIO_BUFFERS; i++)
@@ -743,9 +734,6 @@ void MVE_rmEndMovie()
 	mve_audio_playing=0;
 	mve_audio_canplay=0;
 	mve_audio_compressed=0;
-	if (mve_audio_spec)
-		mve_free(mve_audio_spec);
-	mve_audio_spec=NULL;
 	audiobuf_created = 0;
 #endif
 

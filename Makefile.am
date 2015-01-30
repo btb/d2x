@@ -11,7 +11,7 @@ d2x_SOURCES = \
 2d/bitmap.c   2d/circle.c   2d/gpixel.c   2d/palette.c  \
 3d/clipper.c  3d/globvars.c 3d/interp.c   3d/points.c   3d/setup.c    3d/draw.c     3d/instance.c \
 3d/matrix.c   3d/rod.c      \
-arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
+arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/midi.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
 iff/iff.c     \
 libmve/decoder16.c libmve/decoder8.c  libmve/mve_audio.c libmve/mvelib.c    libmve/mveplay.c   \
 main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cmd.c      \
@@ -29,7 +29,7 @@ main/wall.c     main/weapon.c   \
 maths/vecmat.c  maths/rand.c    maths/tables.c  \
 mem/mem.c \
 misc/args.c        misc/error.c       misc/strio.c       misc/ignorecase.c  misc/physfsrwops.c \
-misc/hash.c        misc/strutil.c     \
+misc/hash.c        misc/hmp.c         misc/strutil.c     \
 texmap/ntmap.c     texmap/scanline.c
 
 d2x_LDFLAGS =
@@ -97,11 +97,11 @@ d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
 
 
-d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS)
+d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS)
 _d2x_sdl_SOURCES = $(d2x_SOURCES) arch/sdl/event.c arch/sdl/key.c arch/sdl/mouse.c
 d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/vid.c texmap/tmapflat.c
 d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
-d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS)
+d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
 
 if MINGW32
 d2x_sdl_CPPFLAGS += -I$(top_srcdir)/arch/win32/include
