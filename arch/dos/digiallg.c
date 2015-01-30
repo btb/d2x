@@ -326,7 +326,7 @@ CHANNEL digi_start_sound(int soundnum, int volume, int pan) {
 // -1 if none.
 int digi_find_channel(int soundno)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return -1;
 
 	if (soundno < 0 )
@@ -402,7 +402,7 @@ int digi_is_channel_playing(int channel)
 {
 	int i;
 
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return 0;
 
 	//FIXME: not implemented
@@ -411,7 +411,7 @@ int digi_is_channel_playing(int channel)
 
 void digi_set_channel_volume(int channel, int volume)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	//FIXME: not implemented
@@ -419,7 +419,7 @@ void digi_set_channel_volume(int channel, int volume)
 
 void digi_set_channel_pan(int channel, int pan)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	//FIXME: not implemented
@@ -432,7 +432,7 @@ void digi_stop_sound(int channel)
 
 void digi_end_sound(int channel)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	//FIXME: not implemented
@@ -496,7 +496,7 @@ void digi_debug()
 	int i;
 	int n_voices = 0;
 
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	for (i = 0; i < digi_max_channels; i++)

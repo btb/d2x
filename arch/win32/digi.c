@@ -59,7 +59,7 @@ int digi_midi_song_playing = 0;
 int digi_last_midi_song = 0;
 int digi_last_midi_song_loop = 0;
 
-static int digi_initialised = 0;
+static int Digi_initialized = 0;
 static int digi_atexit_initialised=0;
 
 //added on 980905 by adb to add rotating/volume based sound kill system
@@ -75,12 +75,12 @@ void digi_reset() { }
 
 void digi_close(void)
 {
-	if(digi_initialised)
+	if(Digi_initialized)
 	{
 		digi_reset_digi_sounds();
 		IDirectSound_Release(lpds);
 	}
-	digi_initialised = 0;
+	Digi_initialized = 0;
 }
 
 /* Initialise audio devices. */
@@ -88,7 +88,7 @@ int digi_init()
 {
  HRESULT hr;
  
- if (!digi_initialised && g_hWnd){
+ if (!Digi_initialized && g_hWnd){
 
 	 memset(&waveformat, 0, sizeof(waveformat));
 	 waveformat.wFormatTag=WAVE_FORMAT_PCM;
@@ -115,7 +115,7 @@ int digi_init()
 	 dsbd.dwReserved=0;
 	 dsbd.lpwfxFormat = &waveformat;
 
-	 digi_initialised = 1;
+	 Digi_initialized = 1;
 }
 
 	if (!digi_atexit_initialised){
@@ -187,7 +187,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
  int slot;
  HRESULT hr;
 
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return -1;
 
 	// added on 980905 by adb from original source to add sound kill system
@@ -275,7 +275,7 @@ TryNextChannel:
 // -1 if none.
 int digi_find_channel(int soundno)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return -1;
 
 	if (soundno < 0 )
@@ -313,7 +313,7 @@ void digi_set_digi_volume( int dvolume )
 	else
 		digi_volume = dvolume;
 
-	if ( !digi_initialised ) return;
+	if ( !Digi_initialized ) return;
 
 	digi_sync_sounds();
 }
@@ -349,7 +349,7 @@ void digi_set_max_channels(int n) {
 	if (digi_max_channels > MAX_SOUND_SLOTS)
 		digi_max_channels = MAX_SOUND_SLOTS;
 
-	if ( !digi_initialised ) return;
+	if ( !Digi_initialized ) return;
 
 	digi_reset_digi_sounds();
 }
@@ -374,7 +374,7 @@ void digi_reset_digi_sounds() {
 
 int digi_is_channel_playing(int channel)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return 0;
 
 	return SoundSlots[channel].playing;
@@ -382,7 +382,7 @@ int digi_is_channel_playing(int channel)
 
 void digi_set_channel_volume(int channel, int volume)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -393,7 +393,7 @@ void digi_set_channel_volume(int channel, int volume)
 
 void digi_set_channel_pan(int channel, int pan)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -411,7 +411,7 @@ void digi_stop_sound(int channel)
 
 void digi_end_sound(int channel)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -423,11 +423,11 @@ void digi_end_sound(int channel)
 
 #else
 int digi_midi_song_playing = 0;
-static int digi_initialised = 0;
+static int Digi_initialized = 0;
 int midi_volume = 255;
 
 int digi_get_settings() { return 0; }
-int digi_init() { digi_initialised = 1; return 0; }
+int digi_init() { Digi_initialized = 1; return 0; }
 void digi_reset() {}
 void digi_close() {}
 
@@ -474,7 +474,7 @@ void digi_set_midi_volume( int n )
 
 void digi_play_midi_song( char * filename, char * melodic_bank, char * drum_bank, int loop )
 {       
-	if (!digi_initialised) return;
+	if (!Digi_initialized) return;
 
         digi_stop_current_song();
 
@@ -508,7 +508,7 @@ void digi_debug()
 	int i;
 	int n_voices = 0;
 
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	for (i = 0; i < digi_max_channels; i++)

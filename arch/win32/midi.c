@@ -43,7 +43,7 @@ void digi_set_midi_volume(int n)
 void digi_play_midi_song(char *filename, char *melodic_bank, char *drum_bank, int loop)
 {
 #if 0
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 #endif
 
@@ -73,7 +73,7 @@ int sound_paused = 0;
 void digi_pause_midi()
 {
 #if 0
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 #endif
 
@@ -87,7 +87,7 @@ void digi_pause_midi()
 void digi_resume_midi()
 {
 #if 0
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 #endif
 

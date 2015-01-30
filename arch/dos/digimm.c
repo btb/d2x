@@ -122,7 +122,7 @@ static const unsigned char mix8[] =
 int digi_volume = SOUND_MAX_VOLUME;
 //end edit by adb
 
-static int digi_initialised = 0;
+static int Digi_initialized = 0;
 static int timer_system_initialized = 0;
 
 struct sound_slot {
@@ -268,7 +268,7 @@ int digi_init()
  #endif
 
  atexit(digi_close);
- digi_initialised = 1;
+ Digi_initialized = 1;
  return 0;
 }
 
@@ -278,8 +278,8 @@ void digi_reset() { }
 /* Shut down audio */
 void digi_close()
 {
- if (!digi_initialised) return;
- digi_initialised = 0;
+ if (!Digi_initialized) return;
+ Digi_initialized = 0;
  drv->PlayStop();
  drv->Exit();
  if (timer_system_initialized)
@@ -315,7 +315,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
 {
 	int i, starting_channel;
 
-	if (!digi_initialised) return -1;
+	if (!Digi_initialized) return -1;
 
 	if (soundnum < 0) return -1;
 
@@ -380,7 +380,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
 // -1 if none.
 int digi_find_channel(int soundno)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return -1;
 
 	if (soundno < 0 )
@@ -408,7 +408,7 @@ void digi_set_digi_volume( int dvolume )
 	else
 		digi_volume = dvolume;
 
-	if ( !digi_initialised ) return;
+	if ( !Digi_initialized ) return;
 
 	digi_sync_sounds();
 }
@@ -445,7 +445,7 @@ void digi_set_max_channels(int n) {
 	if (digi_max_channels > MAX_SOUND_SLOTS)
 		digi_max_channels = MAX_SOUND_SLOTS;
 
-	if ( !digi_initialised ) return;
+	if ( !Digi_initialized ) return;
 
 	digi_stop_all_channels();
 }
@@ -457,7 +457,7 @@ int digi_get_max_channels() {
 
 int digi_is_channel_playing(int channel)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return 0;
 
 	return SoundSlots[channel].playing;
@@ -465,7 +465,7 @@ int digi_is_channel_playing(int channel)
 
 void digi_set_channel_volume(int channel, int volume)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -476,7 +476,7 @@ void digi_set_channel_volume(int channel, int volume)
 
 void digi_set_channel_pan(int channel, int pan)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -494,7 +494,7 @@ void digi_stop_sound(int channel)
 
 void digi_end_sound(int channel)
 {
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	if (!SoundSlots[channel].playing)
@@ -510,7 +510,7 @@ void digi_debug()
 	int i;
 	int n_voices = 0;
 
-	if (!digi_initialised)
+	if (!Digi_initialized)
 		return;
 
 	for (i = 0; i < digi_max_channels; i++)
