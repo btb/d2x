@@ -53,7 +53,7 @@ void com_do_frame()
 
 }
 
-void com_send_data()
+void com_send_data(char *buf, int len, int repeat)
 {
 
 }
