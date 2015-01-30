@@ -46,7 +46,7 @@ static inline int cfile_init(char *hogname)
 	if (!PHYSFSX_getRealPath(hogname, pathname))
 		return 0;
 
-	return PHYSFS_addToSearchPath(pathname, 1);
+	return PHYSFS_addToSearchPath(pathname, 0);
 }
 
 static inline int cfile_close(char *hogname)

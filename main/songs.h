@@ -56,4 +56,7 @@ void songs_stop_all(void);
 // this should be called regularly to check for redbook restart
 void songs_check_redbook_repeat(void);
 
+// require songs to be reinitialized, i.e. when changing missions
+void songs_close(void);
+
 #endif /* _SONGS_H */

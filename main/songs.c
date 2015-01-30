@@ -66,6 +66,12 @@ void set_redbook_volume(int volume)
 }
 
 
+void songs_close(void)
+{
+	Songs_initialized = 0;
+}
+
+
 void songs_init()
 {
 	int i;

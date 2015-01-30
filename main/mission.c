@@ -609,13 +609,16 @@ int load_mission(mle *mission)
     *(mle *) Current_mission = *mission;
 	Current_mission->filename = d_strdup(mission->filename); // don't want to lose it
 
+	songs_close();
+
     // for Descent 1 missions, load descent.hog
     if (EMULATING_D1) {
         if (!cfile_init("descent.hog"))
             Warning("descent.hog not available, this mission may be missing some files required for briefings and exit sequence\n");
         if (!stricmp(Current_mission_filename, D1_MISSION_FILENAME))
             return load_mission_d1();
-    }
+	} else
+		cfile_close("descent.hog");
 
     if (PLAYING_BUILTIN_MISSION) {
 		switch (Current_mission->builtin_hogsize) {
