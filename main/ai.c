@@ -74,7 +74,7 @@ ubyte Boss_invulnerable_spot[NUM_D2_BOSSES]   = {0,0,0,0,0,1, 0,1}; // Set byte 
 
 int ai_evaded=0;
 
-// -- sbyte Super_boss_gate_list[MAX_GATE_INDEX] = {0, 1, 8, 9, 10, 11, 12, 15, 16, 18, 19, 20, 22, 0, 8, 11, 19, 20, 8, 20, 8};
+sbyte Super_boss_gate_list[MAX_GATE_INDEX] = {0, 1, 8, 9, 10, 11, 12, 15, 16, 18, 19, 20, 22, 0, 8, 11, 19, 20, 8, 20, 8};
 
 int Robot_firing_enabled = 1;
 int Animation_enabled = 1;
@@ -612,17 +612,7 @@ _exit_cheat:
 		object_animates = 0;        // If we're not doing the animation, then should pretend it doesn't animate.
 	}
 
-	switch (Robot_info[obj->id].boss_flag) {
-	case 0:
-		break;
-
-	case 1:
-	case 2:
-		mprintf((1, "Warning: D1 boss detected.  Not supported!\n"));
-		break;
-
-	default:
-		{
+	if (Robot_info[obj->id].boss_flag) {
 			int	pv;
 			fix	dtp = dist_to_player/4;
 
@@ -641,9 +631,10 @@ _exit_cheat:
 				dtp = vm_vec_dist_quick(&ConsoleObject->pos, &obj->pos)/4;
 			}
 
-			do_boss_stuff(obj, pv);
-		}
-		break;
+			if (Robot_info[obj->id].boss_flag == 2)
+				do_super_boss_stuff(obj, dtp, pv);
+			else
+				do_boss_stuff(obj, pv);
 	}
 
 	// - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -

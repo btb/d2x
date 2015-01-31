@@ -2269,9 +2269,9 @@ void do_boss_stuff(object *objp, int player_visibility)
 
 	boss_id = Robot_info[objp->id].boss_flag;
 
-	Assert((boss_id >= BOSS_D2) && (boss_id < BOSS_D2 + NUM_D2_BOSSES));
+	Assert(boss_id < BOSS_D2 + NUM_D2_BOSSES);
 
-	boss_index = boss_id - BOSS_D2;
+	boss_index = boss_id - BOSS_D2; // Negative means this is a D1 boss
 
 #ifndef NDEBUG
 	if (objp->shields != Prev_boss_shields) {
@@ -2293,7 +2293,7 @@ void do_boss_stuff(object *objp, int player_visibility)
 	if (!player_visibility && (GameTime - Boss_hit_time > F1_0*2))
 		return;
 
-	if (!Boss_dying && Boss_teleports[boss_index]) {
+	if (!Boss_dying && (boss_index < 0 || Boss_teleports[boss_index])) {
 		if (objp->ctype.ai_info.CLOAKED == 1) {
 			Boss_hit_time = GameTime;	//	Keep the cloak:teleport process going.
 			if ((GameTime - Boss_cloak_start_time > BOSS_CLOAK_DURATION/3) && (Boss_cloak_end_time - GameTime > BOSS_CLOAK_DURATION/3) && (GameTime - Last_teleport_time > Boss_teleport_interval)) {
@@ -2322,52 +2322,53 @@ void do_boss_stuff(object *objp, int player_visibility)
 
 #define	BOSS_TO_PLAYER_GATE_DISTANCE	(F1_0*200)
 
-// -- Obsolete D1 code -- // --------------------------------------------------------------------------------------------------------------------
-// -- Obsolete D1 code -- //	Do special stuff for a boss.
-// -- Obsolete D1 code -- void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility)
-// -- Obsolete D1 code -- {
-// -- Obsolete D1 code -- 	static int eclip_state = 0;
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 	do_boss_stuff(objp, player_visibility);
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 	// Only master player can cause gating to occur.
-// -- Obsolete D1 code -- 	if ((Game_mode & GM_MULTI) && !network_i_am_master())
-// -- Obsolete D1 code -- 		return; 
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 	if ((dist_to_player < BOSS_TO_PLAYER_GATE_DISTANCE) || player_visibility || (Game_mode & GM_MULTI)) {
-// -- Obsolete D1 code -- 		if (GameTime - Last_gate_time > Gate_interval/2) {
-// -- Obsolete D1 code -- 			restart_effect(BOSS_ECLIP_NUM);
-// -- Obsolete D1 code -- 			if (eclip_state == 0) {
-// -- Obsolete D1 code -- 				multi_send_boss_actions(OBJECT_NUMBER(objp), 4, 0, 0);
-// -- Obsolete D1 code -- 				eclip_state = 1;
-// -- Obsolete D1 code -- 			}
-// -- Obsolete D1 code -- 		}
-// -- Obsolete D1 code -- 		else {
-// -- Obsolete D1 code -- 			stop_effect(BOSS_ECLIP_NUM);
-// -- Obsolete D1 code -- 			if (eclip_state == 1) {
-// -- Obsolete D1 code -- 				multi_send_boss_actions(OBJECT_NUMBER(objp), 5, 0, 0);
-// -- Obsolete D1 code -- 				eclip_state = 0;
-// -- Obsolete D1 code -- 			}
-// -- Obsolete D1 code -- 		}
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 		if (GameTime - Last_gate_time > Gate_interval)
-// -- Obsolete D1 code -- 			if (ai_multiplayer_awareness(objp, 99)) {
-// -- Obsolete D1 code -- 				int	rtval;
-// -- Obsolete D1 code -- 				int	randtype = (d_rand() * MAX_GATE_INDEX) >> 15;
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 				Assert(randtype < MAX_GATE_INDEX);
-// -- Obsolete D1 code -- 				randtype = Super_boss_gate_list[randtype];
-// -- Obsolete D1 code -- 				Assert(randtype < N_robot_types);
-// -- Obsolete D1 code -- 
-// -- Obsolete D1 code -- 				rtval = gate_in_robot(randtype, -1);
-// -- Obsolete D1 code -- 				if ((rtval != -1) && (Game_mode & GM_MULTI))
-// -- Obsolete D1 code -- 				{
-// -- Obsolete D1 code -- 					multi_send_boss_actions(OBJECT_NUMBER(objp), 3, randtype, Net_create_objnums[0]);
-// -- Obsolete D1 code -- 					map_objnum_local_to_local(Net_create_objnums[0]);
-// -- Obsolete D1 code -- 				}
-// -- Obsolete D1 code -- 			}	
-// -- Obsolete D1 code -- 	}
-// -- Obsolete D1 code -- }
+
+// --------------------------------------------------------------------------------------------------------------------
+//	Do special stuff for a boss.
+void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility)
+{
+	static int eclip_state = 0;
+
+	do_boss_stuff(objp, player_visibility);
+
+	// Only master player can cause gating to occur.
+	if ((Game_mode & GM_MULTI) && !network_i_am_master())
+		return;
+
+	if ((dist_to_player < BOSS_TO_PLAYER_GATE_DISTANCE) || player_visibility || (Game_mode & GM_MULTI)) {
+		if (GameTime - Last_gate_time > Gate_interval/2) {
+			restart_effect(BOSS_ECLIP_NUM);
+			if (eclip_state == 0) {
+				multi_send_boss_actions(OBJECT_NUMBER(objp), 4, 0, 0);
+				eclip_state = 1;
+			}
+		} else {
+			stop_effect(BOSS_ECLIP_NUM);
+			if (eclip_state == 1) {
+				multi_send_boss_actions(OBJECT_NUMBER(objp), 5, 0, 0);
+				eclip_state = 0;
+			}
+		}
+
+		if (GameTime - Last_gate_time > Gate_interval)
+			if (ai_multiplayer_awareness(objp, 99)) {
+				int	rtval;
+				int	randtype = (d_rand() * MAX_GATE_INDEX) >> 15;
+
+				Assert(randtype < MAX_GATE_INDEX);
+				randtype = Super_boss_gate_list[randtype];
+				Assert(randtype < N_robot_types);
+
+				rtval = gate_in_robot(randtype, -1);
+				if ((rtval != -1) && (Game_mode & GM_MULTI))
+				{
+					multi_send_boss_actions(OBJECT_NUMBER(objp), 3, randtype, Net_create_objnums[0]);
+					map_objnum_local_to_local(Net_create_objnums[0]);
+				}
+			}
+	}
+}
+
 
 //int multi_can_move_robot(object *objp, int awareness_level)
 //{
