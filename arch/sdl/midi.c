@@ -61,9 +61,11 @@ void digi_play_midi_song( char *filename, char *melodic_bank, char *drum_bank, i
 
 	if ( filename == NULL )	return;
 
-	strcpy( digi_last_midi_song, filename );
-	strcpy( digi_last_melodic_bank, melodic_bank );
-	strcpy( digi_last_drum_bank, drum_bank );
+	if (digi_last_midi_song != filename) {
+		strcpy( digi_last_midi_song, filename );
+		strcpy( digi_last_melodic_bank, melodic_bank );
+		strcpy( digi_last_drum_bank, drum_bank );
+	}
 
 	if ( midi_volume < 1 )
 		return; // Don't play song if volume == 0;
