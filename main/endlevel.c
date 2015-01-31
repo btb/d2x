@@ -605,8 +605,8 @@ void do_endlevel_frame()
 			static int sound_count;
 
 			vm_vec_scale_add(&tpnt,&ConsoleObject->pos,&ConsoleObject->orient.fvec,-ConsoleObject->size*5);
-			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.rvec,(d_rand()-RAND_MAX/2)*15);
-			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.uvec,(d_rand()-RAND_MAX/2)*15);
+			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.rvec,(d_rand()-D_RAND_MAX/2)*15);
+			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.uvec,(d_rand()-D_RAND_MAX/2)*15);
 
 			segnum = find_point_seg(&tpnt,ConsoleObject->segnum);
 
@@ -632,8 +632,8 @@ void do_endlevel_frame()
 
 			//create little explosion on wall
 
-			vm_vec_copy_scale(&tpnt,&ConsoleObject->orient.rvec,(d_rand()-RAND_MAX/2)*100);
-			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.uvec,(d_rand()-RAND_MAX/2)*100);
+			vm_vec_copy_scale(&tpnt,&ConsoleObject->orient.rvec,(d_rand()-D_RAND_MAX/2)*100);
+			vm_vec_scale_add2(&tpnt,&ConsoleObject->orient.uvec,(d_rand()-D_RAND_MAX/2)*100);
 			vm_vec_add2(&tpnt,&ConsoleObject->pos);
 
 			if (Endlevel_sequence == EL_FLYTHROUGH)
@@ -1025,8 +1025,8 @@ void generate_starfield()
 
 	for (i=0;i<MAX_STARS;i++) {
 
-		stars[i].x = (d_rand() - RAND_MAX/2) << 14;
-		stars[i].z = (d_rand() - RAND_MAX/2) << 14;
+		stars[i].x = (d_rand() - D_RAND_MAX/2) << 14;
+		stars[i].z = (d_rand() - D_RAND_MAX/2) << 14;
 		stars[i].y = (d_rand()/2) << 14;
 
 	}

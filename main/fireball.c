@@ -336,11 +336,11 @@ object *object_create_debris(object *parent, int subobj_num)
 
 	po = &Polygon_models[obj->rtype.pobj_info.model_num];
 
-	obj->mtype.phys_info.velocity.x = RAND_MAX/2 - d_rand();
-	obj->mtype.phys_info.velocity.y = RAND_MAX/2 - d_rand();
-	obj->mtype.phys_info.velocity.z = RAND_MAX/2 - d_rand();
+	obj->mtype.phys_info.velocity.x = D_RAND_MAX/2 - d_rand();
+	obj->mtype.phys_info.velocity.y = D_RAND_MAX/2 - d_rand();
+	obj->mtype.phys_info.velocity.z = D_RAND_MAX/2 - d_rand();
 	vm_vec_normalize_quick(&obj->mtype.phys_info.velocity);
-	vm_vec_scale(&obj->mtype.phys_info.velocity,i2f(10 + (30 * d_rand() / RAND_MAX)));
+	vm_vec_scale(&obj->mtype.phys_info.velocity,i2f(10 + (30 * d_rand() / D_RAND_MAX)));
 
 	vm_vec_add2(&obj->mtype.phys_info.velocity,&parent->mtype.phys_info.velocity);
 
