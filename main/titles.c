@@ -815,9 +815,8 @@ int show_briefing_message(int screen_num, char *message)
 
 	InitMovieBriefing();
 
-	#ifndef SHAREWARE
-	hum_channel  = digi_start_sound( digi_xlat_sound(SOUND_BRIEFING_HUM), F1_0/2, 0xFFFF/2, 1, -1, -1, -1 );
-	#endif
+	if (!(EMULATING_D1 || is_SHAREWARE || is_MAC_SHARE))
+		hum_channel = digi_start_sound( digi_xlat_sound(SOUND_BRIEFING_HUM), F1_0/2, 0xFFFF/2, 1, -1, -1, -1 );
 
 	// mprintf((0, "Going to print message [%s] at x=%i, y=%i\n", message, x, y));
 	gr_set_curfont( GAME_FONT );
@@ -1087,7 +1086,7 @@ int show_briefing_message(int screen_num, char *message)
 
 			prev_ch = ch;
 
-			if (!chattering) {
+			if (!EMULATING_D1 && !chattering) {
 		 		printing_channel  = digi_start_sound( digi_xlat_sound(SOUND_BRIEFING_PRINTING), F1_0, 0xFFFF/2, 1, -1, -1, -1 );
 				chattering=1;
 			}
@@ -1405,11 +1404,10 @@ void do_briefing_screens(char *filename,int level_num)
 	if (!load_screen_text(filename, &Briefing_text))
 		return;
 
-	#ifdef SHAREWARE
-	songs_play_song( SONG_BRIEFING, 1 );
-	#else
-	songs_stop_all();
-	#endif
+	if (EMULATING_D1 || is_SHAREWARE || is_MAC_SHARE)
+		songs_play_song( SONG_BRIEFING, 1 );
+	else
+		songs_stop_all();
 
 	set_screen_mode( SCREEN_MENU );
 
