@@ -1494,6 +1494,10 @@ void show_order_form()
 	if (! cfexist(exit_screen))
 		strcpy(exit_screen, MenuHires?"warningb.pcx":"warning.pcx"); // D1
 	if (! cfexist(exit_screen))
+		strcpy(exit_screen, MenuHires?"warning.pcx":"warningb.pcx"); // D1, have to rescale
+	if (! cfexist(exit_screen))
+		strcpy(exit_screen, "order01.pcx"); // D1 SHAREWARE
+	if (! cfexist(exit_screen))
 		return; // D2 registered
 	
 	if ((pcx_error=pcx_read_fullscr( exit_screen, title_pal ))==PCX_ERROR_NONE) {
