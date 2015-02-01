@@ -406,8 +406,7 @@ sbyte   Door_dir=1, Door_div_count=0, Animating_bitmap_type=0;
 //-----------------------------------------------------------------------------
 void show_bitmap_frame(void)
 {
-	grs_canvas *curcanv_save, *bitmap_canv=0;
-
+	grs_canvas *bitmap_canv = 0;
 	grs_bitmap *bitmap_ptr;
 
 	//	Only plot every nth frame.
@@ -443,8 +442,6 @@ void show_bitmap_frame(void)
 			default:
 				Int3(); // Impossible, illegal value for Animating_bitmap_type
 		}
-
-		curcanv_save = grd_curcanv; grd_curcanv = bitmap_canv;
 
 		pound_signp = strchr(Bitmap_name, '#');
 		Assert(pound_signp != NULL);
@@ -493,7 +490,6 @@ void show_bitmap_frame(void)
 
 		gr_bitmap_scale_to(bitmap_ptr, &bitmap_canv->cv_bitmap);
 
-		grd_curcanv = curcanv_save;
 		gr_remap_bitmap_good(&bitmap_canv->cv_bitmap, Bitmap_palette, 255, 254);
 		gr_bitmapm(rescale_x(220), rescale_y(45), &bitmap_canv->cv_bitmap);
 		d_free(bitmap_canv);
