@@ -313,15 +313,6 @@ typedef struct {
 #define BRIEFING_SECRET_NUM 31          //  This must correspond to the first secret level which must come at the end of the list.
 #define BRIEFING_OFFSET_NUM 4           // This must correspond to the first level screen (ie, past the bald guy briefing screens)
 
-#define	SHAREWARE_ENDING_LEVEL_NUM  0x7f
-#define	REGISTERED_ENDING_LEVEL_NUM 0x7e
-
-#ifdef SHAREWARE
-#define ENDING_LEVEL_NUM 	SHAREWARE_ENDING_LEVEL_NUM
-#else
-#define ENDING_LEVEL_NUM 	REGISTERED_ENDING_LEVEL_NUM
-#endif
-
 #define MAX_BRIEFING_SCREENS 60
 
 briefing_screen Briefing_screens[MAX_BRIEFING_SCREENS]=
@@ -527,14 +518,11 @@ void show_bitmap_frame(void)
 //-----------------------------------------------------------------------------
 void show_briefing_bitmap(grs_bitmap *bmp)
 {
-	grs_canvas	*curcanv_save, *bitmap_canv;
+	grs_canvas *bitmap_canv;
 
-	bitmap_canv = gr_create_sub_canvas(grd_curcanv, 220, 45, bmp->bm_w, bmp->bm_h);
-	curcanv_save = grd_curcanv;
-	gr_set_current_canvas(bitmap_canv);
-	gr_bitmapm(0, 0, bmp);
-	gr_set_current_canvas(curcanv_save);
-
+	bitmap_canv = gr_create_canvas(rescale_x(bmp->bm_w), rescale_y(bmp->bm_h));
+	gr_bitmap_scale_to(bmp, &bitmap_canv->cv_bitmap);
+	gr_bitmapm(rescale_x(220), rescale_y(45), &bitmap_canv->cv_bitmap);
 	d_free(bitmap_canv);
 }
 
@@ -978,6 +966,7 @@ int show_briefing_message(int screen_num, char *message)
 				guy_bitmap.bm_data = NULL;
 				iff_error = iff_read_bitmap(bitmap_name, &guy_bitmap, BM_LINEAR, temp_palette);
 				Assert(iff_error == IFF_NO_ERROR);
+				gr_copy_palette(gr_palette, New_pal, sizeof(New_pal));
 				gr_remap_bitmap_good( &guy_bitmap, temp_palette, -1, -1 );
 
 				show_briefing_bitmap(&guy_bitmap);
@@ -1404,9 +1393,7 @@ void do_briefing_screens(char *filename,int level_num)
 	if (!load_screen_text(filename, &Briefing_text))
 		return;
 
-	if (EMULATING_D1 || is_SHAREWARE || is_MAC_SHARE)
-		songs_play_song( SONG_BRIEFING, 1 );
-	else
+	if ( !(EMULATING_D1 || is_SHAREWARE || is_MAC_SHARE) )
 		songs_stop_all();
 
 	set_screen_mode( SCREEN_MENU );

@@ -1302,6 +1302,17 @@ void DoEndGame(void)
 				mprintf((0,"briefing done\n"));
 			}
 		}
+	} else if (EMULATING_D1 && !(Game_mode & GM_MULTI)) {
+		songs_play_song( SONG_ENDGAME, 0 );
+#ifdef SHAREWARE
+		do_briefing_screens(Ending_text_filename, SHAREWARE_ENDING_LEVEL_NUM);
+#else
+#ifdef DEST_SAT
+		do_briefing_screens(Ending_text_filename, SHAREWARE_ENDING_LEVEL_NUM);
+#else
+		do_briefing_screens(Ending_text_filename, REGISTERED_ENDING_LEVEL_NUM);
+#endif
+#endif
    } else if (!(Game_mode & GM_MULTI)) {    //not multi
 		char tname[FILENAME_LEN];
 		sprintf(tname,"%s.tex",Current_mission_filename);
@@ -1830,8 +1841,10 @@ void ShowLevelIntro(int level_num)
 
 			if (is_SHAREWARE || is_MAC_SHARE)
 			{
-				if (level_num==1)
+				if (level_num == 1) {
+					songs_play_song( SONG_BRIEFING, 1 );
 					do_briefing_screens ("brief2.tex", 1);
+				}
 			}
 			else if (is_D2_OEM)
 			{
@@ -1874,9 +1887,10 @@ void ShowLevelIntro(int level_num)
 			}
 		}
 		else {	//not the built-in mission.  check for add-on briefing
-			if (EMULATING_D1)
+			if (EMULATING_D1) {
+				songs_play_song( SONG_BRIEFING, 1 );
 				do_briefing_screens(Briefing_text_filename, level_num);
-			else {
+			} else {
 				char tname[FILENAME_LEN];
 				sprintf(tname, "%s.tex", Current_mission_filename);
 				do_briefing_screens(tname, level_num);
