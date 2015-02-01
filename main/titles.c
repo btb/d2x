@@ -333,7 +333,6 @@ briefing_screen D1_Briefing_screens[] = {
 	{ "merc01.pcx",    6, 11,  10, 15, 300, 200 },  // level 6
 	{ "merc01.pcx",    7, 12,  10, 15, 300, 200 },  // level 7
 
-#ifndef SHAREWARE
 	{ "brief03.pcx",   8, 13,  20,  22, 257, 177 },
 	{ "mars01.pcx",    8, 14,  10, 100, 300,  200 }, // level 8
 	{ "mars01.pcx",    9, 15,  10, 100, 300,  200 }, // level 9
@@ -368,14 +367,11 @@ briefing_screen D1_Briefing_screens[] = {
 	{ "aster01.pcx",  -1, 38,  10, 90, 300,  200 }, // secret level -1
 	{ "aster01.pcx",  -2, 39,  10, 90, 300,  200 }, // secret level -2
 	{ "aster01.pcx",  -3, 40,  10, 90, 300,  200 }, // secret level -3
-#endif
 
 	{ "end01.pcx",   SHAREWARE_ENDING_LEVEL_NUM,  1,  23, 40, 320, 200 },   // shareware end
-#ifndef SHAREWARE
 	{ "end02.pcx",   REGISTERED_ENDING_LEVEL_NUM,  1,  5, 5, 300, 200 },    // registered end
 	{ "end01.pcx",   REGISTERED_ENDING_LEVEL_NUM,  2,  23, 40, 320, 200 },  // registered end
 	{ "end03.pcx",   REGISTERED_ENDING_LEVEL_NUM,  3,  5, 5, 300, 200 },    // registered end
-#endif
 
 };
 

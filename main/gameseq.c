@@ -1303,16 +1303,9 @@ void DoEndGame(void)
 			}
 		}
 	} else if (EMULATING_D1 && !(Game_mode & GM_MULTI)) {
+		// D1-style endgame briefing, & not multi
 		songs_play_song( SONG_ENDGAME, 0 );
-#ifdef SHAREWARE
-		do_briefing_screens(Ending_text_filename, SHAREWARE_ENDING_LEVEL_NUM);
-#else
-#ifdef DEST_SAT
-		do_briefing_screens(Ending_text_filename, SHAREWARE_ENDING_LEVEL_NUM);
-#else
-		do_briefing_screens(Ending_text_filename, REGISTERED_ENDING_LEVEL_NUM);
-#endif
-#endif
+		do_briefing_screens( Ending_text_filename, cfexist("end02.pcx") ? REGISTERED_ENDING_LEVEL_NUM : SHAREWARE_ENDING_LEVEL_NUM );
    } else if (!(Game_mode & GM_MULTI)) {    //not multi
 		char tname[FILENAME_LEN];
 		sprintf(tname,"%s.tex",Current_mission_filename);
@@ -1325,9 +1318,7 @@ void DoEndGame(void)
 
 	key_flush();
 
-#ifdef SHAREWARE
-		show_order_form();
-#endif
+	show_order_form();
 
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)

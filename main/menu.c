@@ -330,11 +330,9 @@ void do_option ( int select)
 			gr_palette_fade_out( gr_palette,32,0 );
 			scores_view(-1);
 			break;
-#if 1 //def SHAREWARE
 		case MENU_ORDER_INFO:
 			show_order_form();
 			break;
-#endif
 		case MENU_QUIT:
 			#ifdef EDITOR
 			if (! SafetyCheck()) break;
