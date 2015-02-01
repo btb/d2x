@@ -63,8 +63,6 @@ char RobotPlaying=0;
 #define MAX_BRIEFING_COLORS     7
 //End D1X modification
 
-#define	SHAREWARE_ENDING_FILENAME	"ending.tex"
-
 #ifndef RELEASE
 //	Can be set by -noscreens command line option.  Causes bypassing of all briefing screens.
 int	Skip_briefing_screens=0;

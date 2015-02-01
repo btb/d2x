@@ -42,6 +42,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define BIM_BRIEFING_FILE       "briefing.tex"
 #define BIM_ENDING_FILE         "endreg.tex"
 
+#define OEM_LAST_LEVEL          15
+#define OEM_LAST_SECRET_LEVEL   -1
+#define OEM_BRIEFING_FILE       "briefsat.tex"
+#define OEM_ENDING_FILE         "endsat.tex"
+
+#define SHAREWARE_LAST_LEVEL    7
+#define SHAREWARE_ENDING_FILE   "ending.tex"
+
+#define MAC_SHARE_LAST_LEVEL    3
+
+
 //mission list entry
 typedef struct mle {
 	char    *filename;          // filename without extension
@@ -74,8 +85,10 @@ int load_mission_d1(void)
 	case D1_SHAREWARE_10_MISSION_HOGSIZE:
 		N_secret_levels = 0;
 
-		Last_level = 7;
+		Last_level = SHAREWARE_LAST_LEVEL;
 		Last_secret_level = 0;
+		strcpy(Briefing_text_filename, BIM_BRIEFING_FILE);
+		strcpy(Ending_text_filename, SHAREWARE_ENDING_FILE);
 
 		//build level names
 		for (i=0;i<Last_level;i++)
@@ -85,8 +98,10 @@ int load_mission_d1(void)
 	case D1_MAC_SHARE_MISSION_HOGSIZE:
 		N_secret_levels = 0;
 
-		Last_level = 3;
+		Last_level = MAC_SHARE_LAST_LEVEL;
 		Last_secret_level = 0;
+		strcpy(Briefing_text_filename, BIM_BRIEFING_FILE);
+		strcpy(Ending_text_filename, SHAREWARE_ENDING_FILE);
 
 		//build level names
 		for (i=0;i<Last_level;i++)
@@ -97,8 +112,10 @@ int load_mission_d1(void)
 	case D1_OEM_10_MISSION_HOGSIZE:
 		N_secret_levels = 1;
 
-		Last_level = 15;
-		Last_secret_level = -1;
+		Last_level = OEM_LAST_LEVEL;
+		Last_secret_level = OEM_LAST_SECRET_LEVEL;
+		strcpy(Briefing_text_filename, OEM_BRIEFING_FILE);
+		strcpy(Ending_text_filename, OEM_ENDING_FILE);
 
 		//build level names
 		for (i=0; i < Last_level - 1; i++)
@@ -119,6 +136,8 @@ int load_mission_d1(void)
 
 		Last_level = BIM_LAST_LEVEL;
 		Last_secret_level = BIM_LAST_SECRET_LEVEL;
+		strcpy(Briefing_text_filename, BIM_BRIEFING_FILE);
+		strcpy(Ending_text_filename, BIM_ENDING_FILE);
 
 		//build level names
 		for (i=0;i<Last_level;i++)
@@ -132,8 +151,6 @@ int load_mission_d1(void)
 
 		break;
 	}
-	strcpy(Briefing_text_filename,BIM_BRIEFING_FILE);
-	strcpy(Ending_text_filename,BIM_ENDING_FILE);
 
 	return 1;
 }
