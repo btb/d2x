@@ -631,7 +631,7 @@ _exit_cheat:
 				dtp = vm_vec_dist_quick(&ConsoleObject->pos, &obj->pos)/4;
 			}
 
-			if (Robot_info[obj->id].boss_flag == 2)
+			if (Robot_info[obj->id].boss_flag == BOSS_SUPER)
 				do_super_boss_stuff(obj, dtp, pv);
 			else
 				do_boss_stuff(obj, pv);

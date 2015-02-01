@@ -38,6 +38,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define ROBOT_FIRE_AGITATION 94
 
+#define BOSS_D1      1
+#define BOSS_SUPER   2
 #define BOSS_D2     21 // Minimum D2 boss value.
 #define BOSS_COOL   21
 #define BOSS_WATER  22

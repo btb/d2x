@@ -152,7 +152,7 @@ void paging_touch_robot( int robot_index )
 	paging_touch_weapon( Robot_info[robot_index].weapon_type );
 
 	// A super-boss can gate in robots...
-	if ( Robot_info[robot_index].boss_flag==2 )	{
+	if ( Robot_info[robot_index].boss_flag == BOSS_SUPER ) {
 		for (i=0; i<13; i++ )
 			paging_touch_robot(super_boss_gate_type_list[i]);
 
