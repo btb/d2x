@@ -299,7 +299,6 @@ int DoMenu()
 	return main_menu_choice;
 }
 
-extern void show_order_form(void);      // John didn't want this in inferno.h so I just externed it.
 
 //returns flag, true means quit menu
 void do_option ( int select) 

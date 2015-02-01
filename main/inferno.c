@@ -94,8 +94,6 @@ int __far descent_critical_error_handler( unsigned deverr, unsigned errcode, uns
 
 void check_joystick_calibration(void);
 
-void show_order_form(void);
-
 //--------------------------------------------------------------------------
 
 extern int piggy_low_memory;

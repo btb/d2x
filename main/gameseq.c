@@ -1263,7 +1263,6 @@ void PlayerFinishedLevel(int secret_flag)
 #define ENDMOVIE "end"
 #endif
 
-void show_order_form();
 extern void com_hangup(void);
 
 //called when the player has finished the last level
