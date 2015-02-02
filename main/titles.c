@@ -209,7 +209,7 @@ void show_titles(void)
 		if (played == MOVIE_NOT_PLAYED) {
 			char filename[FILENAME_LEN];
 
-			vid_set_mode(MenuHires?SM(640,480):SM(320,200));
+			vid_set_mode(MENU_SCREEN_MODE);
 #ifdef OGL
 			set_screen_mode(SCREEN_MENU);
 #endif
@@ -280,7 +280,7 @@ void show_loading_screen(ubyte *title_pal)
 	if (! cfexist(filename))
 		strcpy(filename, "descentb.pcx"); // MAC SHAREWARE
 	
-	vid_set_mode(MenuHires?SM(640,480):SM(320,200));
+	vid_set_mode(MENU_SCREEN_MODE);
 #ifdef OGL
 	set_screen_mode(SCREEN_MENU);
 #endif

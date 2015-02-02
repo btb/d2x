@@ -255,7 +255,7 @@ void print_commandline_help()
 	printf( "  -automap<X>x<Y> %s\n","Set automap resolution to <X> by <Y>");
 	printf( "  -automap_gameres %s\n","Set automap to use the same resolution as in game");
 //	printf( "  -menu<X>x<Y>    %s\n","Set menu resolution to <X> by <Y>");
-//	printf( "  -menu_gameres   %s\n","Set menus to use the same resolution as in game");
+	printf( "  -menu_gameres   %s\n","Set menus to use the same resolution as in game");
 	printf("  -rearviewtime t %s\n", "time holding rearview key to use toggle mode (default 0.0625 seconds)");
 	printf( "\n");
 
@@ -576,7 +576,9 @@ int main(int argc, char *argv[])
 
 		S_MODE(automap,automap_mode,automap_use_game_res);
 //		S_MODE(menu,menu_screen_mode,menu_use_game_res);
-	 }
+		cvar_registervariable(&menu_use_game_res);
+		if ((i = FindArg("-menu_gameres"))) { if (i < argnum) cvar_setint(&menu_use_game_res, 1); }
+	}
 //end addition -MM
 
 	controls_init();

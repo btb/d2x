@@ -63,6 +63,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-menu_gameres"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-automap_gameres"
             isEnabled = "NO">
          </CommandLineArgument>
