@@ -76,6 +76,7 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 cvar_t MovieHires = { "MovieHires", "1", 1 }; //default is highres
 
 SDL_RWops *RoboFile;
+MVE_videoSpec MVESpec;
 
 // Function Prototypes
 int RunMovie(char *filename, int highres_flag, int allow_abort,int dx,int dy);
@@ -158,6 +159,7 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 					uint w, uint h, uint dstx, uint dsty)
 {
 	grs_bitmap source_bm;
+	grs_canvas *dest_canv, *save_canv;
 
 	//mprintf((0,"MovieShowFrame %d,%d  %d,%d  %d,%d  %d,%d\n",bufw,bufh,sx,sy,w,h,dstx,dsty));
 
@@ -170,7 +172,14 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 	source_bm.bm_flags = 0;
 	source_bm.bm_data = buf;
 
-	gr_bm_ubitblt(bufw,bufh,dstx,dsty,sx,sy,&source_bm,&grd_curcanv->cv_bitmap);
+	if (menu_use_game_res.intval) {
+		dest_canv = gr_create_sub_canvas(grd_curcanv, dstx * GWIDTH / MVESpec.screenWidth, dsty * GHEIGHT / MVESpec.screenHeight, w * GWIDTH / MVESpec.screenWidth, h * GHEIGHT / MVESpec.screenHeight);
+		save_canv = grd_curcanv;
+		gr_set_current_canvas(dest_canv);
+		show_fullscr(&source_bm);
+		gr_set_current_canvas(save_canv);
+	} else
+		gr_bm_ubitblt(bufw,bufh,dstx,dsty,sx,sy,&source_bm,&grd_curcanv->cv_bitmap);
 }
 
 //our routine to set the pallete, called from the movie code
@@ -299,6 +308,8 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		Int3();
 		return MOVIE_NOT_PLAYED;
 	}
+
+	MVE_getVideoSpec(&MVESpec);
 
 	frame_num = 0;
 
