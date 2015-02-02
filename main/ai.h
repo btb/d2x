@@ -165,8 +165,6 @@ typedef struct awareness_event {
 #define AIE_MAX 4
 
 #define ESCORT_GOAL_UNSPECIFIED -1
-
-#define ESCORT_GOAL_UNSPECIFIED -1
 #define ESCORT_GOAL_BLUE_KEY    1
 #define ESCORT_GOAL_GOLD_KEY    2
 #define ESCORT_GOAL_RED_KEY     3
