@@ -340,6 +340,7 @@ void scores_draw_item( int  i, stats_info * stats )
 
 void scores_view(int citem)
 {
+	grs_canvas *center_canv;
 	fix t1;
 	int i,done,looper;
 	int k;
@@ -352,7 +353,10 @@ ReshowScores:
  
 	gr_set_current_canvas(NULL);
 	
-	nm_draw_background(0,0,grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h );
+	nm_draw_background(0, 0, GWIDTH-1, GHEIGHT-1); // args are x,y,x2,y2 NOT x,y,w,h
+
+	center_canv = gr_create_sub_canvas(grd_curcanv, GWIDTH/2-LHX(160), 0, LHX(320), GHEIGHT);
+	gr_set_current_canvas(center_canv);
 
 	grd_curcanv->cv_font = MEDIUM3_FONT;
 
@@ -450,6 +454,7 @@ ReshowScores:
 	gr_palette_fade_out( gr_palette, 32, 0 );
 
 	gr_set_current_canvas(NULL);
+	gr_free_sub_canvas(center_canv);
 
 	game_flush_inputs();
 	
