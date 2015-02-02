@@ -57,7 +57,7 @@ extern void 		VR_reset_params();
 extern int			VR_use_reg_code;
 
 
-extern int			VR_screen_mode;
+extern uint32_t     VR_screen_mode;
 extern int			VR_render_mode;
 extern int			VR_low_res;
 extern int 			VR_show_hud;
@@ -82,7 +82,7 @@ extern grs_canvas	VR_screen_sub_pages[2];		// Two sub pages of VRAM if paging is
 #define VR_AREA_DET		1	// viewing with the stereo area determined method
 #define VR_INTERLACED	2	// viewing with the stereo interlaced method
 
-void game_init_render_buffers(int screen_mode, int render_max_w, int render_max_h, int render_method, int flags);
+void game_init_render_buffers(uint32_t screen_mode, int render_max_w, int render_max_h, int render_method, int flags);
 void game_init_render_sub_buffers(int x, int y, int w, int h);
 
 void set_display_mode(uint32_t mode);

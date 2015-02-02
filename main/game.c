@@ -97,7 +97,7 @@ int stop_count,start_count;
 int time_stopped,time_started;
 #endif
 
-int			VR_screen_mode			= 0;
+uint32_t    VR_screen_mode      = 0;
 
 ubyte			VR_screen_flags	= 0;		//see values in screens.h
 ubyte			VR_current_page	= 0;
@@ -560,7 +560,7 @@ void game_init_render_sub_buffers( int x, int y, int w, int h )
 
 
 // Sets up the canvases we will be rendering to (NORMAL VERSION)
-void game_init_render_buffers(int screen_mode, int render_w, int render_h, int render_method, int flags )
+void game_init_render_buffers(uint32_t screen_mode, int render_w, int render_h, int render_method, int flags )
 {
 //	if (vga_check_mode(screen_mode) != 0)
 //		Error("Cannot set requested video mode");
