@@ -784,7 +784,7 @@ void do_screen_res_menu()
 #ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	if (m[fullscreenc].value != vid_check_fullscreen()) {
 		vid_toggle_fullscreen();
-		Game_screen_mode = -1;
+		Current_display_mode = -1;
 	}
 #endif
 

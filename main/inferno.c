@@ -558,10 +558,8 @@ int main(int argc, char *argv[])
 
 		FindResArg("", &screen_width, &screen_height);
 
-		if (screen_width && screen_height) {
-			Game_screen_mode = SM(screen_width, screen_height);
-			set_display_mode(Game_screen_mode);
-		}
+		if (screen_width && screen_height)
+			set_display_mode(SM(screen_width, screen_height));
 	}
 	{
 // added/edited on 12/14/98 by Matt Mueller - override res in d1x.ini with command line args

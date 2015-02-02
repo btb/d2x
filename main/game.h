@@ -89,10 +89,6 @@ extern int ft_preference;
 #define NUM_DETAIL_LEVELS   6
 
 extern int Game_mode;
-//added 3/24/99 by Owen Evans
-extern uint32_t Game_screen_mode;
-//end added - OE
-
 extern int Game_paused;
 extern int gauge_message_on;
 

@@ -416,9 +416,6 @@ void game_show_warning(char *s)
 #define cv_w  cv_bitmap.bm_w
 #define cv_h  cv_bitmap.bm_h
 
-//added 3/24/99 by Owen Evans for screen res changing
-uint32_t Game_screen_mode = 0;
-//end added - OE
 int Game_window_x = 0;
 int Game_window_y = 0;
 cvar_t Game_window_w = { "GameWidth", "0", 1 };
