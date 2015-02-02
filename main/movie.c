@@ -290,11 +290,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 	MVE_sfCallbacks(MovieShowFrame);
 	MVE_palCallbacks(MovieSetPalette);
 
-	if (hires_flag) {
-		vid_set_mode(SM(640,480));
-	} else {
-		vid_set_mode(SM(320,200));
-	}
+	vid_set_mode(MOVIE_SCREEN_MODE);
 #ifdef OGL
 	set_screen_mode(SCREEN_MENU);
 #endif

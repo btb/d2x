@@ -39,6 +39,7 @@ extern int set_screen_mode(int sm);		// True = editor screen
 
 extern cvar_t menu_use_game_res;
 #define MENU_SCREEN_MODE (menu_use_game_res.intval?Current_display_mode:(MenuHires?SM(640,480):SM(320,200)))
+#define MOVIE_SCREEN_MODE (menu_use_game_res.intval?Current_display_mode:(MovieHires.intval?SM(640,480):SM(320,200)))
 
 //About the screen
 extern ubyte		VR_screen_flags;

@@ -596,7 +596,7 @@ int main(int argc, char *argv[])
 		cvar_setint( &MovieHires, 0 );
 
 	con_printf(CON_VERBOSE, "Going into graphics mode...\n");
-	vid_set_mode(MovieHires.intval?SM(640,480):SM(320,200));
+	vid_set_mode(MOVIE_SCREEN_MODE);
 
 	// Load the palette stuff. Returns non-zero if error.
 	con_printf(CON_DEBUG, "Initializing palette system...\n" );
