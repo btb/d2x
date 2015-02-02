@@ -222,24 +222,24 @@ void nm_draw_background(int x1, int y1, int x2, int y2 )
 	x2 = x1 + w - 1;
 	y2 = y1 + h - 1;
 
-#if 0
-	{
-		grs_bitmap *tmp = gr_create_bitmap(w, h);
-
-		gr_bitmap_scale_to(&nm_background, tmp);
-
-		if (No_darkening)
-			gr_bm_bitblt(w, h, x1, y1, LHX(10), LHY(10), tmp, &(grd_curcanv->cv_bitmap) );
-		else
-			gr_bm_bitblt(w, h, x1, y1, 0, 0, tmp, &(grd_curcanv->cv_bitmap) );
-		gr_free_bitmap(tmp);
-	}
-#else
 	if (No_darkening)
 		gr_bm_bitblt(w, h, x1, y1, LHX(10), LHY(10), &nm_background, &(grd_curcanv->cv_bitmap) );
 	else
-		gr_bm_bitblt(w, h, x1, y1, 0, 0, &nm_background, &(grd_curcanv->cv_bitmap) );
-#endif
+		if ( GWIDTH > nm_background.bm_w || GHEIGHT > nm_background.bm_h ) {
+			// Resize background to fit. Resize so that the original aspect is preserved. -MPM
+			grs_canvas *tmp, *old;
+			grs_bitmap bg;
+
+			old = grd_curcanv;
+			tmp = gr_create_sub_canvas(old, x1, y1, w, h);
+			gr_init_sub_bitmap(&bg, &nm_background, 0, 0, w*(LHX(320.0)/GWIDTH), h*(LHX(240.0)/GHEIGHT)); // note that we haven't replaced current_canvas yet, so these macros are still ok.
+			gr_set_current_canvas(tmp);
+			show_fullscr( &bg );
+			gr_set_current_canvas(old);
+			gr_free_sub_canvas(tmp);
+		} else {
+			gr_bm_bitblt(w, h, x1, y1, 0, 0, &nm_background, &(grd_curcanv->cv_bitmap) );
+		}
 
 	if (!No_darkening) {
 		Gr_scanline_darkening_level = 2*7;
