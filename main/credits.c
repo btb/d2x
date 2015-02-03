@@ -42,8 +42,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #define ROW_SPACING (MenuHires?26:11)
-#define NUM_LINES_HIRES 21
-#define NUM_LINES (MenuHires?NUM_LINES_HIRES:20)
+#define NUM_LINES (menu_use_game_res.intval?(SHEIGHT / ROW_SPACING + 2):(MenuHires?21:20))
 
 ubyte fade_values[200] = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,9,9,10,10,
 11,11,12,12,12,13,13,14,14,15,15,15,16,16,17,17,17,18,18,19,19,19,20,20,
@@ -101,7 +100,7 @@ void credits_show(char *credits_filename)
 {
 	int i, j, l, done;
 	CFILE * file;
-	char buffer[NUM_LINES_HIRES][80];
+	char buffer[NUM_LINES][80];
 	grs_bitmap backdrop;
 	ubyte backdrop_palette[768];
 	int pcx_error;
@@ -114,8 +113,8 @@ void credits_show(char *credits_filename)
 	int have_bin_file = 0;
 	char * tempp;
 	char filename[32];
-
-	box_t dirty_box[NUM_LINES_HIRES];
+	ubyte *fade_values_scaled = NULL;
+	box_t dirty_box[NUM_LINES];
 	grs_canvas *CreditsOffscreenBuf=NULL;
 	grs_canvas *save_canv;
 
@@ -176,7 +175,7 @@ void credits_show(char *credits_filename)
 	gr_remap_bitmap_good( &backdrop,backdrop_palette, -1, -1 );
 
 	gr_set_current_canvas(NULL);
-	gr_bitmap(0,0,&backdrop);
+	gr_bitmap_fullscr(&backdrop);
 	vid_update();
 	gr_palette_fade_in( gr_palette, 32, 0 );
 
@@ -184,19 +183,19 @@ void credits_show(char *credits_filename)
 //MWA  Let's be a little smarter about this and check the VR_offscreen buffer
 //MWA  for size to determine if we can use that buffer.  If the game size
 //MWA  matches what we need, then lets save memory.
-
-	if (MenuHires && VR_offscreen_buffer->cv_w == 640)	{
+	if (MenuHires && VR_offscreen_buffer->cv_w == SWIDTH && VR_offscreen_buffer->cv_h == SHEIGHT &&
+	    VR_offscreen_buffer->cv_bitmap.bm_type == BM_LINEAR) // fade not supported when printing to OGL canvas
 		CreditsOffscreenBuf = VR_offscreen_buffer;
-	}
-	else if (MenuHires)	{
-		CreditsOffscreenBuf = gr_create_canvas(640,480);
-	}
-	else {
-		CreditsOffscreenBuf = gr_create_canvas(320,200);
-	}
+	else
+		CreditsOffscreenBuf = gr_create_canvas(SWIDTH, SHEIGHT);
 
 	if (!CreditsOffscreenBuf)
 		Error("Not enough memory to allocate Credits Buffer.");
+
+	if (menu_use_game_res.intval) {
+		fade_values_scaled = d_malloc(SHEIGHT);
+		gr_bitmap_scale_line(fade_values_hires, fade_values_scaled, 480, SHEIGHT); // hey, why not?  Its just a one dimensional bitmap :) -MPM
+	}
 
 	//gr_clear_canvas(BM_XRGB(0,0,0));
 	key_flush();
@@ -244,7 +243,7 @@ get_line:;
 
 			gr_set_current_canvas(CreditsOffscreenBuf);
 		
-			gr_bitmap(0,0,&backdrop);
+			gr_bitmap_fullscr(&backdrop);
 
 			for (j=0; j<NUM_LINES; j++ )	{
 				char *s;
@@ -263,7 +262,7 @@ get_line:;
 				} else
 					grd_curcanv->cv_font = names_font;
 
-				gr_bitblt_fade_table = (MenuHires?fade_values_hires:fade_values);
+				gr_bitblt_fade_table = menu_use_game_res.intval?fade_values_scaled:(MenuHires?fade_values_hires:fade_values);
 
 				tempp = strchr( s, '\t' );
 				if ( tempp )	{
@@ -293,7 +292,7 @@ get_line:;
 					dirty_box[j].width = w;
         			dirty_box[j].height = h;
         			dirty_box[j].top = y;
-        			dirty_box[j].left = ((MenuHires?640:320) - w) / 2;
+					dirty_box[j].left = (SWIDTH - w) / 2;
 
 					gr_printf( 0x8000, y, s );
 				}
@@ -385,6 +384,7 @@ get_line:;
 
 					if (CreditsOffscreenBuf != VR_offscreen_buffer)
 						gr_free_canvas(CreditsOffscreenBuf);
+				d_free(fade_values_scaled);
 
 				return;
 			}
