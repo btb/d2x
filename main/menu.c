@@ -732,7 +732,7 @@ void do_screen_res_menu()
 	int i = 0, customc;
 	int n_items;
 	uint32_t modes[N_SCREENRES_ITEMS];
-	uint32_t screen_mode = 0;
+	uint32_t new_mode = 0;
 	char customres[16];
 
 	if ((Current_display_mode == 0xffffffff) || (VR_render_mode != VR_NONE)) { //special VR mode
@@ -797,22 +797,22 @@ void do_screen_res_menu()
 		char *h = strchr(customres, 'x');
 		if (!h)
 			return;
-		screen_mode = SM(atoi(customres), atoi(h+1));
+		new_mode = SM(atoi(customres), atoi(h+1));
 	}
 	else
 	{
-		screen_mode = modes[i];
+		new_mode = modes[i];
 	}
 	
-	if (((SM_W(screen_mode) > 320) && !MenuHiresAvailable) || vid_check_mode(screen_mode)) {
+	if (((SM_W(new_mode) > 320) && !MenuHiresAvailable) || vid_check_mode(new_mode)) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"Cannot set requested\n"
 				"mode on this video card.");
 		return;
 	}
 
-	if (screen_mode != Current_display_mode)
-		set_display_mode(screen_mode);
+	if (new_mode != Current_display_mode)
+		set_display_mode(new_mode);
 
 #ifdef MACINTOSH
 	reset_cockpit();
