@@ -142,7 +142,7 @@ int show_title_screen( char * filename, int allow_keys, int from_hog_only )
 	gr_palette_clear();
 
 	gr_set_current_canvas( NULL );
-	show_fullscr(&title_bm);
+	gr_bitmap_fullscr(&title_bm);
 
 	if (gr_palette_fade_in( New_pal, 32, allow_keys ))
 		return 1;

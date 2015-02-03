@@ -432,7 +432,7 @@ int pcx_read_fullscr(char * filename, ubyte * palette)
 #ifdef OGL
 		gr_palette_load(palette);
 #endif
-		show_fullscr(&bm);
+		gr_bitmap_fullscr(&bm);
 	}
 	gr_free_bitmap_data(&bm);
 	return pcx_error;

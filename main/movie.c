@@ -183,7 +183,7 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 		dest_canv = gr_create_sub_canvas(grd_curcanv, dstx, dsty, w, h);
 		save_canv = grd_curcanv;
 		gr_set_current_canvas(dest_canv);
-		show_fullscr(&source_bm);
+		gr_bitmap_fullscr(&source_bm);
 		gr_set_current_canvas(save_canv);
 		gr_free_sub_canvas(dest_canv);
 	} else

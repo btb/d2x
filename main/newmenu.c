@@ -165,7 +165,7 @@ void nm_draw_background1(char * filename)
 
 	}
 
-	show_fullscr(bmp);
+	gr_bitmap_fullscr(bmp);
 
 	gr_free_bitmap(bmp);
 
@@ -234,7 +234,7 @@ void nm_draw_background(int x1, int y1, int x2, int y2 )
 			tmp = gr_create_sub_canvas(old, x1, y1, w, h);
 			gr_init_sub_bitmap(&bg, &nm_background, 0, 0, w*(LHX(320.0)/GWIDTH), h*(LHX(240.0)/GHEIGHT)); // note that we haven't replaced current_canvas yet, so these macros are still ok.
 			gr_set_current_canvas(tmp);
-			show_fullscr( &bg );
+			gr_bitmap_fullscr( &bg );
 			gr_set_current_canvas(old);
 			gr_free_sub_canvas(tmp);
 		} else {

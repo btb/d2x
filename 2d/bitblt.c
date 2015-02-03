@@ -1707,8 +1707,7 @@ void gr_bm_ubitbltm(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * s
 
 
 // rescalling bitmaps, 10/14/99 Jan Bobrowski jb@wizard.ae.krakow.pl
-
-static inline void scale_line(unsigned char *in, unsigned char *out, int ilen, int olen)
+void gr_bitmap_scale_line(unsigned char *in, unsigned char *out, int ilen, int olen)
 {
 	int a = olen/ilen, b = olen%ilen;
 	int c = 0, i;
@@ -1749,14 +1748,15 @@ void gr_bitmap_scale_to(grs_bitmap *src, grs_bitmap *dst)
 		}
 		while(--i>=0) {
 		inside:
-			scale_line(s, d, src->bm_w, dst->bm_w);
+			gr_bitmap_scale_line(s, d, src->bm_w, dst->bm_w);
 			d += dst->bm_rowsize;
 		}
 		s += src->bm_rowsize;
 	}
 }
 
-void show_fullscr(grs_bitmap *bm)
+
+void gr_bitmap_fullscr(grs_bitmap *bm)
 {
 	grs_bitmap * const scr = &grd_curcanv->cv_bitmap;
 
