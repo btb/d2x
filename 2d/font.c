@@ -1107,7 +1107,7 @@ int ogl_internal_string(int x, int y, char *s )
 //			ogl_ubitblt(FONT->ft_bitmaps[letter].bm_w,FONT->ft_bitmaps[letter].bm_h,xx,yy,0,0,&FONT->ft_bitmaps[letter],NULL);
 //			if (*text_ptr>='0' && *text_ptr<='9'){
 			if (FFLAGS&FT_COLOR)
-				gr_ubitmapm(xx,yy,&FONT->ft_bitmaps[letter]);
+				gr_bitmapm(xx, yy, &FONT->ft_bitmaps[letter]);
 			else{
 				if (grd_curcanv->cv_bitmap.bm_type==BM_OGL)
 					ogl_ubitmapm_c(xx,yy,&FONT->ft_bitmaps[letter],FG_COLOR);
