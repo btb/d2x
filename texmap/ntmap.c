@@ -33,6 +33,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "3d.h"
 #include "error.h"
+#include "console.h"
 #include "texmap.h"
 #include "texmapl.h"
 #include "scanline.h"
@@ -1017,4 +1018,37 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 
 	Lighting_on = lighting_on_save;
 
+}
+
+
+void texmap_cmd_tmap(int argc, char **argv)
+{
+	if (argc != 2 || (!stricmp(argv[1], "-h"))) {
+		con_printf(CON_NORMAL, "usage: %s [x]\n", argv[0]);
+		con_printf(CON_NORMAL, "    use texture mapper <x>. Avilable mappers:\n");
+#if !defined(NO_ASM) && !defined(OGL)
+		con_printf(CON_NORMAL, "        i386\n");
+		con_printf(CON_NORMAL, "        pent\n");
+		con_printf(CON_NORMAL, "        ppro\n");
+#endif
+		con_printf(CON_NORMAL, "        fp\n");
+		con_printf(CON_NORMAL, "        c\n");
+
+		return;
+	}
+
+	select_tmap(argv[1]);
+}
+
+
+void texmap_init(void)
+{
+	int t;
+
+	cmd_addcommand("tmap", texmap_cmd_tmap);
+
+	if ((t = FindArg("-tmap")))
+		select_tmap(Args[t+1]);
+	else
+		select_tmap(NULL);
 }

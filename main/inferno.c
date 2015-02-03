@@ -62,7 +62,6 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "joy.h"
 #include "cfile.h"
 // #  include "3dfx_des.h"
-#include "../texmap/scanline.h" //for select_tmap -MM
 #ifdef EDITOR
 #include "editor/editor.h"
 #include "ui.h"
@@ -521,10 +520,7 @@ int main(int argc, char *argv[])
 		Skip_briefing_screens = 1;
 #endif
 
-	if ((t=FindArg("-tmap"))){
-		select_tmap(Args[t+1]);
-	}else
-		select_tmap(NULL);
+	texmap_init();
 
 	Lighting_on = 1;
 

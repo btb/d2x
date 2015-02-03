@@ -109,5 +109,7 @@ extern int Window_clip_left, Window_clip_bot, Window_clip_right, Window_clip_top
 
 extern void init_interface_vars_to_assembler(void);
 
+void texmap_init(void);
+
 #endif
 
