@@ -804,7 +804,7 @@ void do_screen_res_menu()
 		screen_mode = modes[i];
 	}
 	
-	if (((SM_H(screen_mode) > 320) && !MenuHiresAvailable) || vid_check_mode(screen_mode)) {
+	if (((SM_W(screen_mode) > 320) && !MenuHiresAvailable) || vid_check_mode(screen_mode)) {
 		nm_messagebox(TXT_SORRY, 1, TXT_OK, 
 				"Cannot set requested\n"
 				"mode on this video card.");
