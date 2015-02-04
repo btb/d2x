@@ -375,9 +375,6 @@ void do_register_player(ubyte *title_pal)
 
 extern char Language[];
 
-//can we do highres menus?
-extern int MenuHiresAvailable;
-
 int Inferno_verbose = 0;
 
 //added on 11/18/98 by Victor Rachels to add -mission and -startgame
@@ -583,10 +580,9 @@ int main(int argc, char *argv[])
 
 	//determine whether we're using high-res menus & movies
 	if (FindArg("-nohires") || FindArg("-nohighres") || (vid_check_mode(MENU_HIRES_MODE) != 0) || disable_high_res)
-		cvar_setint( &MovieHires, MenuHires = MenuHiresAvailable = 0 );
+		cvar_setint( &MovieHires, MenuHiresAvailable = 0 );
 	else
-		//NOTE LINK TO ABOVE!
-		MenuHires = MenuHiresAvailable = 1;
+		MenuHiresAvailable = 1;
 
 	if (FindArg( "-lowresmovies" ))
 		cvar_setint( &MovieHires, 0 );

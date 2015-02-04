@@ -1813,7 +1813,6 @@ struct {
 
 #define NUM_INTRO_MOVIES (sizeof(intro_movie) / sizeof(*intro_movie))
 
-extern int MenuHiresAvailable;
 extern int robot_movies; // 0 means none, 1 means lowres, 2 means hires
 extern int intro_played; // true if big intro movie played
 

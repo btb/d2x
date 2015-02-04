@@ -610,7 +610,6 @@ int Automap_active = 0;
 #endif
 
 cvar_t Automap_always_hires = { "AutomapHires", "0", 1 };
-extern int MenuHiresAvailable;
 
 uint32_t automap_mode = SM(640,480);
 int automap_width = 640;

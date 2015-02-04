@@ -25,7 +25,10 @@ extern int DoMenu();
 extern void do_options_menu();
 extern void d2x_options_menu();
 
-extern int MenuHires;
+// can we do highres menus?
+extern int MenuHiresAvailable;
+// are we currently in highres menus?
+#define MenuHires (menu_use_game_res.intval?SM_HIRES2:MenuHiresAvailable)
 
 #ifdef RELEASE  // read only from hog file
 #define MENU_PCX_MAC_SHARE ("\x01menub.pcx")

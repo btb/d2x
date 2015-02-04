@@ -669,8 +669,6 @@ uint32_t Default_display_mode = SM(640,480);
 uint32_t Current_display_mode = SM(640,480);
 #endif
 
-extern int MenuHiresAvailable;
-
 
 void set_display_mode(uint32_t mode)
 {

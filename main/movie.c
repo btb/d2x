@@ -48,8 +48,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "physfsrwops.h"
 
 
-extern int MenuHiresAvailable;
-
 // Subtitle data
 typedef struct {
 	short first_frame,last_frame;

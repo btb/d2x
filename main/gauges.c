@@ -2694,10 +2694,6 @@ void hud_show_kill_list()
 		y += fth+1;
 
 	}
-
-#ifdef MACINTOSH
-	MenuHires = 1;
-#endif
 }
 #endif
 
