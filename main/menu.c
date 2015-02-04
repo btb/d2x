@@ -162,8 +162,11 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 
 		//say this is vertigo version
 		if (cfexist(MISSION_DIR "d2x.hog")) {
-			gr_set_curfont(MEDIUM2_FONT);
-			gr_printf(MenuHires?495:248, MenuHires?88:37, "Vertigo");
+			int w, h, aw;
+
+			gr_set_curfont(GWIDTH > 800?HUGE_FONT:MEDIUM2_FONT);
+			gr_get_string_size("Vertigo", &w, &h, &aw);
+			gr_printf(GWIDTH * 0.78, GHEIGHT * 0.19, "Vertigo");
 		}
 	}
 	
