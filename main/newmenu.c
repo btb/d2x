@@ -273,13 +273,25 @@ void nm_restore_background( int x, int y, int w, int h )
 	if ( x1 < 0 ) x1 = 0;
 	if ( y1 < 0 ) y1 = 0;
 
-	if ( x2 >= nm_background.bm_w ) x2=nm_background.bm_w-1;
-	if ( y2 >= nm_background.bm_h ) y2=nm_background.bm_h-1;
+	if ( x2 >= GWIDTH ) x2 = GWIDTH - 1;
+	if ( y2 >= GHEIGHT ) y2 = GHEIGHT - 1;
 
 	w = x2 - x1 + 1;
 	h = y2 - y1 + 1;
 
-	gr_bm_bitblt(w, h, x1, y1, x1, y1, &nm_background, &(grd_curcanv->cv_bitmap) );
+	if (GWIDTH > nm_background.bm_w || GHEIGHT > nm_background.bm_h) {
+		grs_bitmap sbg;
+		grs_canvas *tmp, *old;
+
+		old = grd_curcanv;
+		tmp = gr_create_sub_canvas(old, x1, y1, w, h);
+		gr_init_sub_bitmap(&sbg, &nm_background, x1*(LHX(320.0)/GWIDTH), y1*(LHY(200.0)/GHEIGHT), w*(LHX(320.0)/GWIDTH), h*(LHY(200.0)/GHEIGHT)); // use the correctly resized portion of the background. -MPM
+		gr_set_current_canvas(tmp);
+		gr_bitmap_fullscr( &sbg );
+		gr_set_current_canvas(old);
+		gr_free_sub_canvas(tmp);
+	} else
+		gr_bm_bitblt(w, h, x1, y1, x1, y1, &nm_background, &(grd_curcanv->cv_bitmap));
 }
 
 // Draw a left justfied string
