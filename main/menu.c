@@ -811,9 +811,12 @@ void do_screen_res_menu()
 		return;
 	}
 
-	if (new_mode != Current_display_mode)
+	if (new_mode != Current_display_mode) {
 		set_display_mode(new_mode);
-
+		if (menu_use_game_res.intval)
+			set_screen_mode(SCREEN_GAME);
+		set_screen_mode(SCREEN_MENU);
+	}
 #ifdef MACINTOSH
 	reset_cockpit();
 #endif
