@@ -483,7 +483,7 @@ int get_item_height(kc_item *item)
 
 void kconfig_sub(kc_item * items,int nitems, char * title)
 {
-	grs_canvas * save_canvas;
+	grs_canvas *save_canvas, *center_canv;
 	grs_font * save_font;
 	int old_keyd_repeat;
 #ifdef NEWMENU_MOUSE
@@ -546,6 +546,8 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	*/
 #endif
 
+	center_canv = gr_create_sub_canvas(grd_curcanv, GWIDTH/2-LHX(160), 0, LHX(320), GHEIGHT);
+	gr_set_current_canvas(center_canv);
 	grd_curcanv->cv_font = GAME_FONT;
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 
@@ -731,6 +733,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 			grd_curcanv->cv_font	= save_font;
 
 			gr_set_current_canvas( save_canvas );
+			gr_free_sub_canvas(center_canv);
 			keyd_repeat = old_keyd_repeat;
 			game_flush_inputs();
 			newmenu_hide_cursor();
@@ -855,6 +858,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 				if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
 					grd_curcanv->cv_font	= save_font;
 					gr_set_current_canvas( save_canvas );
+					gr_free_sub_canvas(center_canv);
 					keyd_repeat = old_keyd_repeat;
 					game_flush_inputs();
 					newmenu_hide_cursor();
@@ -955,6 +959,18 @@ void kc_drawquestion( kc_item *item )
 	vid_update();
 }
 
+
+void kc_restore_background( int x, int y, int w, int h )
+{
+	grs_canvas *save_canv = grd_curcanv;
+
+	gr_set_current_canvas(NULL);
+	x += GWIDTH/2 - LHX(160);
+	nm_restore_background(x, y, w, h);
+	gr_set_current_canvas(save_canv);
+}
+
+
 void kc_change_key( kc_item * item )
 {
 	int i,n,f,k;
@@ -1006,7 +1022,7 @@ void kc_change_key( kc_item * item )
 
 	gr_set_fontcolor( BM_XRGB(28,28,28), BM_XRGB(0,0,0) );
 
-	nm_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
+	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 
 	game_flush_inputs();
 
@@ -1047,7 +1063,7 @@ void kc_next_joyaxis(kc_item *item)
 	}//end if
 
 	kc_drawitem(item, 1);
-	nm_restore_background(0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h);
+	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
 
 }//method kc_next_joyaxis
@@ -1118,7 +1134,7 @@ void kc_change_joyaxis( kc_item * item )
 		item->value = code;					 
 	}
 	kc_drawitem( item, 1 );
-	nm_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
+	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
 
 }
@@ -1171,7 +1187,7 @@ void kc_change_mouseaxis( kc_item * item )
 		item->value = code;
 	}
 	kc_drawitem( item, 1 );
-	nm_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
+	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
 
 }
