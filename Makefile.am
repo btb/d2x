@@ -170,7 +170,7 @@ endif
 mveplayer_SOURCES = libmve/decoder16.c libmve/decoder8.c libmve/mve_audio.c libmve/mve_main.c libmve/mvelib.c libmve/mveplay.c
 mveplayer_MANS = libmve/mveplayer.1
 mveplayer_CFLAGS = -I$(top_srcdir)/include $(SDL_CFLAGS)
-mveplayer_LDADD = $(SDL_LIBS)
+mveplayer_LDADD = $(SDL_LIBS) $(SDLMIXER_LIBS)
 
 hogcreate_SOURCES = utilities/hogcreate.c
 hogcreate_MANS = utilities/hogcreate.1

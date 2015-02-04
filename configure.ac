@@ -189,8 +189,8 @@ else
 
   # Check for SDL_mixer
     PKG_CHECK_MODULES(SDLMIXER, SDL_mixer)
-    AC_SUBST(SDLIMAGE_CFLAGS)
-    AC_SUBST(SDLIMAGE_LIBS)
+    AC_SUBST(SDLMIXER_CFLAGS)
+    AC_SUBST(SDLMIXER_LIBS)
 
   # Check for libpng
     have_libpng=no
