@@ -324,7 +324,7 @@ int play_redbook_track(int tracknum,int keep_playing)
 #define D2_X_RB_FIRST_LEVEL_SONG    2
 
 
-int songs_redbook_track(int songnum)
+static inline int REDBOOK(int songnum)
 {
 	uint32_t discid;
 
@@ -391,17 +391,8 @@ int songs_redbook_track(int songnum)
 }
 
 
-#define REDBOOK_TITLE_TRACK         (songs_redbook_track(SONG_TITLE))
-#define REDBOOK_CREDITS_TRACK       (songs_redbook_track(SONG_CREDITS))
-#define REDBOOK_FIRST_LEVEL_TRACK   (songs_redbook_track(SONG_FIRST_LEVEL_SONG))
-
-
 void songs_play_song( int songnum, int repeat )
 {
-#ifndef SHAREWARE
-	//Assert(songnum != SONG_ENDLEVEL && songnum != SONG_ENDGAME);// not in full version
-#endif
-
 	if ( !Songs_initialized )
 		songs_init();
 
@@ -414,10 +405,7 @@ void songs_play_song( int songnum, int repeat )
 		force_rb_register = 0;
 	}
 
-	if (songnum == SONG_TITLE)
-		play_redbook_track(REDBOOK_TITLE_TRACK, 0);
-	else if (songnum == SONG_CREDITS)
-		play_redbook_track(REDBOOK_CREDITS_TRACK, 0);
+	play_redbook_track(REDBOOK(songnum), 0);
 
 	if (!Redbook_playing)           // not playing redbook, so play midi
 		digi_play_midi_song( Songs[songnum].filename, Songs[songnum].melodic_bank_file, Songs[songnum].drum_bank_file, repeat );
@@ -456,7 +444,7 @@ void songs_play_level_song( int levelnum )
 
 		mprintf((0,"n_tracks = %d\n",n_tracks));
 
-		play_redbook_track(REDBOOK_FIRST_LEVEL_TRACK + (songnum % (n_tracks-REDBOOK_FIRST_LEVEL_TRACK+1)), 1);
+		play_redbook_track(REDBOOK(SONG_FIRST_LEVEL_SONG) + (songnum % (n_tracks - REDBOOK(SONG_FIRST_LEVEL_SONG) + 1)), 1);
 	}
 
 	if (! Redbook_playing) {        // not playing redbook, so play midi
@@ -483,8 +471,8 @@ void songs_check_redbook_repeat()
 			stop_time();
 			// if title ends, start credit music
 			// if credits music ends, restart it
-			if (Redbook_playing == REDBOOK_TITLE_TRACK || Redbook_playing == REDBOOK_CREDITS_TRACK)
-				play_redbook_track(REDBOOK_CREDITS_TRACK,0);
+			if (Redbook_playing == REDBOOK(SONG_TITLE) || Redbook_playing == REDBOOK(SONG_CREDITS))
+				play_redbook_track(REDBOOK(SONG_CREDITS), 0);
 			else {
 				//songs_goto_next_song();
 
@@ -504,7 +492,7 @@ void songs_check_redbook_repeat()
 void songs_goto_next_song()
 {
 	if (Redbook_playing)            // get correct track
-		current_song_level = RBAGetTrackNum() - REDBOOK_FIRST_LEVEL_TRACK + 1;
+		current_song_level = RBAGetTrackNum() - REDBOOK(SONG_FIRST_LEVEL_SONG) + 1;
 
 	songs_play_level_song(current_song_level + 1);
 }
@@ -514,7 +502,7 @@ void songs_goto_next_song()
 void songs_goto_prev_song()
 {
 	if (Redbook_playing)            // get correct track
-		current_song_level = RBAGetTrackNum() - REDBOOK_FIRST_LEVEL_TRACK + 1;
+		current_song_level = RBAGetTrackNum() - REDBOOK(SONG_FIRST_LEVEL_SONG) + 1;
 
 	if (current_song_level > 1)
 		songs_play_level_song(current_song_level - 1);
