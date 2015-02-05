@@ -384,7 +384,8 @@ get_line:;
 
 					if (CreditsOffscreenBuf != VR_offscreen_buffer)
 						gr_free_canvas(CreditsOffscreenBuf);
-				d_free(fade_values_scaled);
+				if (fade_values_scaled)
+					d_free(fade_values_scaled);
 
 				return;
 			}
