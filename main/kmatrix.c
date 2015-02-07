@@ -36,10 +36,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "joy.h"
 #include "timer.h"
+#include "vid.h"
 
 
 #define CENTERING_OFFSET(x) ((300 - (70 + (x)*25 ))/2)
-#define CENTERSCREEN (MenuHires?320:160)
+#define CENTERSCREEN (SWIDTH/2)
+#define MARGIN (CENTERSCREEN - LHX(160))
 
 int kmatrix_kills_changed = 0;
 char ConditionLetters[]={' ','P','E','D','E','E','V','W'};
@@ -65,14 +67,14 @@ void kmatrix_draw_item( int  i, int *sorted )
 
 	// Print player name.
 
-	gr_printf( LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
+	gr_printf( MARGIN + LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
 
    if (!((Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL)))
-	   gr_printf (LHX(CENTERING_OFFSET(N_players)-15),y,"%c",ConditionLetters[Players[sorted[i]].connected]);
+		gr_printf( MARGIN + LHX(CENTERING_OFFSET(N_players)-15), y, "%c", ConditionLetters[Players[sorted[i]].connected] );
    
 	for (j=0; j<N_players; j++) {
 
-		x = LHX(70 + CENTERING_OFFSET(N_players) + j*25);
+		x = MARGIN + LHX(70 + CENTERING_OFFSET(N_players) + j*25);
 
 		if (sorted[i]==sorted[j]) {
 			if (kill_matrix[sorted[i]][sorted[j]] == 0) {
@@ -99,7 +101,7 @@ void kmatrix_draw_item( int  i, int *sorted )
   else
    sprintf (temp,"%d%%",(int)((float)((float)Players[sorted[i]].net_kills_total/((float)Players[sorted[i]].net_killed_total+(float)Players[sorted[i]].net_kills_total))*100.0));		
 		
-	x = LHX(60 + CENTERING_OFFSET(N_players) + N_players*25);
+	x = MARGIN + LHX(60 + CENTERING_OFFSET(N_players) + N_players*25);
 	gr_set_fontcolor( BM_XRGB(25,25,25),-1 );
 	gr_printf( x ,y,"%4d/%s",Players[sorted[i]].net_kills_total,temp);
 }
@@ -112,8 +114,8 @@ void kmatrix_draw_coop_item( int  i, int *sorted )
 
 	// Print player name.
 
-	gr_printf( LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
-   gr_printf (LHX(CENTERING_OFFSET(N_players)-15),y,"%c",ConditionLetters[Players[sorted[i]].connected]);
+	gr_printf( MARGIN + LHX(CENTERING_OFFSET(N_players)), y, "%s", Players[sorted[i]].callsign );
+	gr_printf( MARGIN + LHX(CENTERING_OFFSET(N_players)-15), y, "%c", ConditionLetters[Players[sorted[i]].connected] );
    
 
 	x = CENTERSCREEN;
@@ -146,7 +148,7 @@ void kmatrix_draw_names(int *sorted)
 		else
 			color = sorted[j];
 
-		x = LHX (70 + CENTERING_OFFSET(N_players) + j*25);
+		x = MARGIN + LHX(70 + CENTERING_OFFSET(N_players) + j*25);
 
       if (Players[sorted[j]].connected==0)
         gr_set_fontcolor(gr_find_closest_color(31,31,31),-1);
@@ -157,7 +159,7 @@ void kmatrix_draw_names(int *sorted)
 
 	}
 
-	x = LHX(72 + CENTERING_OFFSET(N_players) + N_players*25);
+	x = MARGIN + LHX(72 + CENTERING_OFFSET(N_players) + N_players*25);
 	gr_set_fontcolor( BM_XRGB(31,31,31),-1 );
 	gr_printf( x, LHY(40), "K/E");
 		
@@ -697,6 +699,7 @@ void kmatrix_view(int network)
 	   		}
 
 		}
+		vid_update();
 	}
 
   Players[Player_num].connected=7;
