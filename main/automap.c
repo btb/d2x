@@ -614,7 +614,7 @@ cvar_t Automap_always_hires = { "AutomapHires", "0", 1 };
 uint32_t automap_mode = SM(640,480);
 int automap_width = 640;
 int automap_height = 480;
-int automap_use_game_res=0;
+cvar_t automap_use_game_res = { "AutomapGameres", "0", 0 };
 int nice_automap = 0;
 
 #define RESCALE_X(x) ((x) * automap_width / 640)

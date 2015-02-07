@@ -558,17 +558,18 @@ int main(int argc, char *argv[])
 // added/edited on 12/14/98 by Matt Mueller - override res in d1x.ini with command line args
 		int i, argnum = INT_MAX, w, h;
 // added on 9/30/98 by Matt Mueller for selectable automap modes - edited 11/21/99 whee, more fun with defines. - edited 03/31/02 to use new FindResArg.
-#define SMODE(V,VV,VG) if ((i=FindResArg(#V, &w, &h)) && (i < argnum)) { argnum = i; VV = SM(w, h); VG = 0; }
-#define SMODE_GR(V,VG) if ((i=FindArg("-" #V "_gameres"))){if (i<argnum) VG=1;}
-#define SMODE_PRINT(V,VV,VG) if (VG) con_printf(CON_VERBOSE, #V " using game resolution ...\n"); else con_printf(CON_VERBOSE, #V " using %ix%i ...\n",SM_W(VV),SM_H(VV) );
+#define SMODE(V,VV,VG) if ((i = FindResArg(#V, &w, &h)) && (i < argnum)) { argnum = i; VV = SM(w, h); cvar_setint(&VG, 0); }
+#define SMODE_GR(V,VG) if ((i = FindArg("-" #V "_gameres"))) { if (i < argnum) cvar_setint(&VG, 1); }
+#define SMODE_PRINT(V,VV,VG) if (VG.intval) con_printf(CON_VERBOSE, #V " using game resolution ...\n"); else con_printf(CON_VERBOSE, #V " using %ix%i ...\n",SM_W(VV),SM_H(VV) );
 // aren't #defines great? :)
 // end addition/edit -MM
 #define S_MODE(V,VV,VG) argnum = INT_MAX; SMODE(V, VV, VG); SMODE_GR(V, VG); SMODE_PRINT(V, VV, VG);
 
+		cvar_registervariable(&automap_use_game_res);
 		S_MODE(automap,automap_mode,automap_use_game_res);
-//		S_MODE(menu,menu_screen_mode,menu_use_game_res);
 		cvar_registervariable(&menu_use_game_res);
-		if ((i = FindArg("-menu_gameres"))) { if (i < argnum) cvar_setint(&menu_use_game_res, 1); }
+		SMODE_GR(menu, menu_use_game_res);
+		SMODE_PRINT(menu, MENU_SCREEN_MODE, menu_use_game_res);
 	}
 //end addition -MM
 
