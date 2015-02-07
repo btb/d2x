@@ -424,6 +424,9 @@ int InitRobotMovie(char *filename)
 
 	MVE_sndInit(-1);        //tell movies to play no sound for robots
 
+	MVE_memCallbacks(MPlayAlloc, MPlayFree);
+	MVE_ioCallbacks(FileRead);
+
 	RoboFile = PHYSFSRWOPS_openRead(filename);
 
 	if (!RoboFile)
@@ -432,10 +435,15 @@ int InitRobotMovie(char *filename)
 		return MOVIE_NOT_PLAYED;
 	}
 
+	MVE_palCallbacks(MovieSetPalette);
+	MVE_sfCallbacks(MovieShowFrame);
+
 	if (MVE_rmPrepMovie((void *)RoboFile, MenuHires?280:140, MenuHires?200:80, 0)) {
 		Int3();
 		return 0;
 	}
+
+	MVE_getVideoSpec(&MVESpec);
 
 	return 1;
 }
