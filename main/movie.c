@@ -73,7 +73,7 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 
 cvar_t MovieHires = { "MovieHires", "1", 1 }; //default is highres
 
-SDL_RWops *RoboFile;
+SDL_RWops *RoboFile = NULL;
 MVE_videoSpec MVESpec;
 
 // Function Prototypes
@@ -173,11 +173,17 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 	if (menu_use_game_res.intval) {
 		float aspect = (float)w / (float)h;
 
-		w = w * GWIDTH / MVESpec.screenWidth;
-		h = w / aspect;
-		dstx = dstx * GWIDTH / MVESpec.screenWidth;
-		dsty = GHEIGHT / 2 - h / 2;
-
+		if (RoboFile) {
+			h = h * GHEIGHT / MVESpec.screenHeight;
+			w = h * aspect;
+			dstx = dstx * GWIDTH / MVESpec.screenWidth;
+			dsty = dsty * GHEIGHT / MVESpec.screenHeight;
+		} else {
+			w = w * GWIDTH / MVESpec.screenWidth;
+			h = w / aspect;
+			dstx = dstx * GWIDTH / MVESpec.screenWidth;
+			dsty = GHEIGHT / 2 - h / 2;
+		}
 		dest_canv = gr_create_sub_canvas(grd_curcanv, dstx, dsty, w, h);
 		save_canv = grd_curcanv;
 		gr_set_current_canvas(dest_canv);
@@ -412,6 +418,7 @@ void DeInitRobotMovie(void)
 {
 	MVE_rmEndMovie();
 	SDL_RWclose(RoboFile); // Close Movie File
+	RoboFile = NULL;
 }
 
 
