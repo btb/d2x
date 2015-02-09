@@ -233,7 +233,7 @@ void nm_draw_background(int x1, int y1, int x2, int y2 )
 
 			old = grd_curcanv;
 			tmp = gr_create_sub_canvas(old, x1, y1, w, h);
-			gr_init_sub_bitmap(&bg, &nm_background, 0, 0, w*(LHX(320.0)/GWIDTH), h*(LHX(240.0)/GHEIGHT)); // note that we haven't replaced current_canvas yet, so these macros are still ok.
+			gr_init_sub_bitmap(&bg, &nm_background, 0, 0, w*(nm_background.bm_w)/GWIDTH, h*(nm_background.bm_h)/GHEIGHT); // note that we haven't replaced current_canvas yet, so these macros are still ok.
 			gr_set_current_canvas(tmp);
 			gr_bitmap_fullscr( &bg );
 			gr_set_current_canvas(old);
@@ -287,7 +287,7 @@ void nm_restore_background( int x, int y, int w, int h )
 
 		old = grd_curcanv;
 		tmp = gr_create_sub_canvas(old, x1, y1, w, h);
-		gr_init_sub_bitmap(&sbg, &nm_background, x1*(LHX(320.0)/GWIDTH), y1*(LHY(200.0)/GHEIGHT), w*(LHX(320.0)/GWIDTH), h*(LHY(200.0)/GHEIGHT)); // use the correctly resized portion of the background. -MPM
+		gr_init_sub_bitmap(&sbg, &nm_background, x1*(nm_background.bm_w)/GWIDTH, y1*(nm_background.bm_h)/GHEIGHT, w*(nm_background.bm_w)/GWIDTH, h*(nm_background.bm_h)/GHEIGHT); // use the correctly resized portion of the background. -MPM
 		gr_set_current_canvas(tmp);
 		gr_bitmap_fullscr( &sbg );
 		gr_set_current_canvas(old);
