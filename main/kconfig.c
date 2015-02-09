@@ -43,32 +43,32 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "args.h"
 #if defined (TACTILE)
- #include "tactile.h"
+#include "tactile.h"
 #endif
 #ifdef USE_LINUX_JOY
 #include "joystick.h"
 #endif
 
 
-ubyte ExtGameStatus=1;
+ubyte ExtGameStatus = 1;
 
 vms_vector ExtForceVec;
 vms_matrix ExtApplyForceMatrix;
 
-int ExtJoltInfo[3]={0,0,0};
-int ExtXVibrateInfo[2]={0,0};
-int ExtYVibrateInfo[2]={0,0};
-ubyte ExtXVibrateClear=0;
-ubyte ExtYVibrateClear=0;
+int ExtJoltInfo[3] = { 0, 0, 0 };
+int ExtXVibrateInfo[2] = { 0, 0 };
+int ExtYVibrateInfo[2] = { 0, 0 };
+ubyte ExtXVibrateClear = 0;
+ubyte ExtYVibrateClear = 0;
 
 #define TABLE_CREATION 1
 
 // Array used to 'blink' the cursor while waiting for a keypress.
 sbyte fades[64] = { 1,1,1,2,2,3,4,4,5,6,8,9,10,12,13,15,16,17,19,20,22,23,24,26,27,28,28,29,30,30,31,31,31,31,31,30,30,29,28,28,27,26,24,23,22,20,19,17,16,15,13,12,10,9,8,6,5,4,4,3,2,2,1,1 };
 
-//char * invert_text[2] = { "N", "Y" };
-//char * joyaxis_text[4] = { "X1", "Y1", "X2", "Y2" };
-//char * mouseaxis_text[2] = { "L/R", "F/B" };
+//char *invert_text[2] = { "N", "Y" };
+//char *joyaxis_text[4] = { "X1", "Y1", "X2", "Y2" };
+//char *mouseaxis_text[2] = { "L/R", "F/B" };
 
 int invert_text[2] = { TNUM_N, TNUM_Y };
 
@@ -76,73 +76,72 @@ int invert_text[2] = { TNUM_N, TNUM_Y };
 #if defined(SDL_INPUT)
 char *joyaxis_text[JOY_MAX_AXES];
 #else
-	int joyaxis_text[7] = { TNUM_X1, TNUM_Y1, TNUM_Z1, TNUM_UN, TNUM_P1,TNUM_R1,TNUM_YA1 };
-//	int joyaxis_text[4] = { TNUM_X1, TNUM_Y1, TNUM_X2, TNUM_Y2 };
+int joyaxis_text[7] = { TNUM_X1, TNUM_Y1, TNUM_Z1, TNUM_UN, TNUM_P1,TNUM_R1,TNUM_YA1 };
+//int joyaxis_text[4] = { TNUM_X1, TNUM_Y1, TNUM_X2, TNUM_Y2 };
 #endif
 #endif
 
 int mouseaxis_text[3] = { TNUM_L_R, TNUM_F_B, TNUM_Z1 };
 
 #if !defined OGL && !defined SDL_INPUT
-char * key_text[256] = {         \
-"","ESC","1","2","3","4","5","6","7","8","9","0","-", 			\
-"=","BSPC","TAB","Q","W","E","R","T","Y","U","I","O",				\
-"P","[","]","\x83","LCTRL","A","S","D","F",        \
-"G","H","J","K","L",";","'","`",        \
-"LSHFT","\\","Z","X","C","V","B","N","M",",",      \
-".","/","RSHFT","PAD*","LALT","SPC",      \
-"CPSLK","F1","F2","F3","F4","F5","F6","F7","F8","F9",        \
-"F10","NMLCK","SCLK","PAD7","PAD8","PAD9","PAD-",   \
-"PAD4","PAD5","PAD6","PAD+","PAD1","PAD2","PAD3","PAD0", \
-"PAD.","","","","F11","F12","","","","","","","","","",         \
-"","","","","","","","","","","","","","","","","","","","",     \
-"","","","","","","","","","","","","","","","","","","","",     \
-"","","","","","","","","","","","","","","","","","",           \
-"PAD\x83","RCTRL","","","","","","","","","","","","","", \
-"","","","","","","","","","","PAD/","","","RALT","",      \
-"","","","","","","","","","","","","","HOME","\x82","PGUP",     \
-"","\x81","","\x7f","","END","\x80","PGDN","INS",       \
-"DEL","","","","","","","","","","","","","","","","","",     \
-"","","","","","","","","","","","","","","","","","","","",     \
-"","","","","","","" };
+char * key_text[256] = {
+	"","ESC","1","2","3","4","5","6","7","8","9","0","-",
+	"=","BSPC","TAB","Q","W","E","R","T","Y","U","I","O",
+	"P","[","]","\x83","LCTRL","A","S","D","F",
+	"G","H","J","K","L",";","'","`",
+	"LSHFT","\\","Z","X","C","V","B","N","M",",",
+	".","/","RSHFT","PAD*","LALT","SPC",
+	"CPSLK","F1","F2","F3","F4","F5","F6","F7","F8","F9",
+	"F10","NMLCK","SCLK","PAD7","PAD8","PAD9","PAD-",
+	"PAD4","PAD5","PAD6","PAD+","PAD1","PAD2","PAD3","PAD0",
+	"PAD.","","","","F11","F12","","","","","","","","","",
+	"","","","","","","","","","","","","","","","","","","","",
+	"","","","","","","","","","","","","","","","","","","","",
+	"","","","","","","","","","","","","","","","","","",
+	"PAD\x83","RCTRL","","","","","","","","","","","","","",
+	"","","","","","","","","","","PAD/","","","RALT","",
+	"","","","","","","","","","","","","","HOME","\x82","PGUP",
+	"","\x81","","\x7f","","END","\x80","PGDN","INS",
+	"DEL","","","","","","","","","","","","","","","","","",
+	"","","","","","","","","","","","","","","","","","","","",
+	"","","","","","",""
+};
 #endif /* OGL */
 
 ubyte system_keys[] = { KEY_ESC, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12, KEY_PRINT_SCREEN };
 
-//extern void GameLoop(int, int );
+//extern void GameLoop(int, int);
 
 // macros for drawing lo/hi res kconfig screens (see scores.c as well)
 
-#define LHX(x)		((x)*(MenuHires?2:1))
-#define LHY(y)		((y)*(MenuHires?2.4:1))
+#define LHX(x) ((x)*(MenuHires?2:1))
+#define LHY(y) ((y)*(MenuHires?2.4:1))
 
-
-#define BT_KEY 				0
-//#define BT_MOUSE_BUTTON 	1
-#define BT_MOUSE_AXIS		2
-//#define BT_JOY_BUTTON 		3
-#define BT_JOY_AXIS			4
-#define BT_INVERT				5
+#define BT_KEY              0
+//#define BT_MOUSE_BUTTON     1
+#define BT_MOUSE_AXIS       2
+//#define BT_JOY_BUTTON       3
+#define BT_JOY_AXIS         4
+#define BT_INVERT           5
 
 char *btype_text[] = { "BT_KEY", "BT_MOUSE_BUTTON", "BT_MOUSE_AXIS", "BT_JOY_BUTTON", "BT_JOY_AXIS", "BT_INVERT" };
 
 #define INFO_Y 28
 
 typedef struct kc_item {
-	short id;				// The id of this item
-	short x, y;				
+	short id;       // The id of this item
+	short x, y;
 	short w1;
 	short w2;
-	short u,d,l,r;
-        //short text_num1;
-        char *text;
+	short u, d, l, r;
+	//short text_num1;
+	char *text;
 	ubyte type;
-	ubyte value;		// what key,button,etc
+	ubyte value;    // what key,button,etc
 } kc_item;
 
-int Num_items=28;
+int Num_items = 28;
 kc_item *All_items;
-
 
 #define NUM_KEY_CONTROLS    57
 #define NUM_OTHER_CONTROLS  24
@@ -328,41 +327,45 @@ ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = {0x2,0xff,0x3,0xff,0x4,0xff,0x
 
 
 void kc_drawitem( kc_item *item, int is_current );
-void kc_change_key( kc_item * item );
-void kc_next_joyaxis(kc_item *item);  //added by WraithX on 11/22/00
-void kc_change_joyaxis( kc_item * item );
-void kc_change_mouseaxis( kc_item * item );
-void kc_change_invert( kc_item * item );
+void kc_change_key( kc_item *item );
+void kc_next_joyaxis( kc_item *item ); // added by WraithX on 11/22/00
+void kc_change_joyaxis( kc_item *item );
+void kc_change_mouseaxis( kc_item *item );
+void kc_change_invert( kc_item *item );
+
 
 int kconfig_is_axes_used(int axis)
 {
 	int i;
-	for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
+	for ( i = 0; i < NUM_OTHER_CONTROLS; i++ ) {
 		if (( kc_other[i].type == BT_JOY_AXIS ) && (kc_other[i].value == axis ))
 			return 1;
 	}
 	return 0;
 }
 
+
 #ifdef TABLE_CREATION
-int find_item_at( kc_item * items, int nitems, int x, int y )
+int find_item_at( kc_item *items, int nitems, int x, int y )
 {
 	int i;
-	
-	for (i=0; i<nitems; i++ )	{
-		if ( ((items[i].x+items[i].w1)==x) && (items[i].y==y))
+
+	for (i = 0; i < nitems; i++ ) {
+		if ( ((items[i].x+items[i].w1) == x) && (items[i].y == y) )
 			return i;
 	}
+
 	return -1;
 }
 
-int find_next_item_up( kc_item * items, int nitems, int citem )
+
+int find_next_item_up( kc_item *items, int nitems, int citem )
 {
 	int x, y, i;
 
 	y = items[citem].y;
 	x = items[citem].x+items[citem].w1;
-	
+
 	do {	
 		y--;
 		if ( y < 0 ) {
@@ -374,17 +377,18 @@ int find_next_item_up( kc_item * items, int nitems, int citem )
 		}
 		i = find_item_at( items, nitems, x, y );
 	} while ( i < 0 );
-	
+
 	return i;
 }
 
-int find_next_item_down( kc_item * items, int nitems, int citem )
+
+int find_next_item_down( kc_item *items, int nitems, int citem )
 {
 	int x, y, i;
 
 	y = items[citem].y;
 	x = items[citem].x+items[citem].w1;
-	
+
 	do {	
 		y++;
 		if ( y > grd_curcanv->cv_bitmap.bm_h-1 ) {
@@ -396,17 +400,18 @@ int find_next_item_down( kc_item * items, int nitems, int citem )
 		}
 		i = find_item_at( items, nitems, x, y );
 	} while ( i < 0 );
-	
+
 	return i;
 }
 
-int find_next_item_right( kc_item * items, int nitems, int citem )
+
+int find_next_item_right( kc_item *items, int nitems, int citem )
 {
 	int x, y, i;
 
 	y = items[citem].y;
 	x = items[citem].x+items[citem].w1;
-	
+
 	do {	
 		x++;
 		if ( x > grd_curcanv->cv_bitmap.bm_w-1 ) {
@@ -418,17 +423,18 @@ int find_next_item_right( kc_item * items, int nitems, int citem )
 		}
 		i = find_item_at( items, nitems, x, y );
 	} while ( i < 0 );
-	
+
 	return i;
 }
 
-int find_next_item_left( kc_item * items, int nitems, int citem )
+
+int find_next_item_left( kc_item *items, int nitems, int citem )
 {
 	int x, y, i;
 
 	y = items[citem].y;
 	x = items[citem].x+items[citem].w1;
-	
+
 	do {	
 		x--;
 		if ( x < 0 ) {
@@ -440,10 +446,11 @@ int find_next_item_left( kc_item * items, int nitems, int citem )
 		}
 		i = find_item_at( items, nitems, x, y );
 	} while ( i < 0 );
-	
+
 	return i;
 }
 #endif
+
 
 #ifdef NEWMENU_MOUSE
 int get_item_height(kc_item *item)
@@ -451,14 +458,16 @@ int get_item_height(kc_item *item)
 	int w, h, aw;
 	char btext[10];
 
-	if (item->value==255) {
+	if (item->value == 255) {
 		strcpy(btext, "");
 	} else {
-		switch( item->type )	{
+		switch( item->type ) {
 			case BT_KEY:
-				strncpy( btext, key_text[item->value], 10 ); break;
+				strncpy( btext, key_text[item->value], 10 );
+				break;
 			case BT_MOUSE_AXIS:
-				strncpy( btext, Text_string[mouseaxis_text[item->value]], 10 ); break;
+				strncpy( btext, Text_string[mouseaxis_text[item->value]], 10 );
+				break;
 			case BT_JOY_AXIS:
 #ifdef USE_LINUX_JOY
 				sprintf( btext, "J%d A%d", j_axis[item->value].joydev, j_Get_joydev_axis_number (item->value) );
@@ -472,39 +481,38 @@ int get_item_height(kc_item *item)
 #endif
 				break;
 			case BT_INVERT:
-				strncpy( btext, Text_string[invert_text[item->value]], 10 ); break;
+				strncpy( btext, Text_string[invert_text[item->value]], 10 );
+				break;
 		}
 	}
-	gr_get_string_size(btext, &w, &h, &aw  );
+	gr_get_string_size( btext, &w, &h, &aw );
 
 	return h;
 }
 #endif
 
+
 void kconfig_sub(kc_item * items,int nitems, char * title)
 {
 	grs_canvas *save_canvas, *center_canv;
-	grs_font * save_font;
+	grs_font *save_font;
 	int old_keyd_repeat;
 #ifdef NEWMENU_MOUSE
 	int mouse_state, omouse_state, mx, my, x1, x2, y1, y2;
 	int close_x, close_y, close_size;
 #endif
-
-	int i,k,ocitem,citem;
+	int i, k, ocitem, citem;
 	int time_stopped = 0;
 
 	All_items = items;
 	Num_items = nitems;
 
-	if (!((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence)) )
-	{
+	if ( !((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence)) ) {
 		time_stopped = 1;
 		stop_time();
 	}
 
 	save_canvas = grd_curcanv;
-
 
 	gr_set_current_canvas(NULL);
 	save_font = grd_curcanv->cv_font;
@@ -516,7 +524,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	//gr_clear_canvas( BM_XRGB(0,0,0) );
 
 	nm_draw_background(0, 0, grd_curcanv->cv_bitmap.bm_w - 1, grd_curcanv->cv_bitmap.bm_h - 1);
-   gr_palette_load (gr_palette);
+	gr_palette_load(gr_palette);
 
 	grd_curcanv->cv_font = MEDIUM3_FONT;
 
@@ -527,7 +535,6 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 		gr_string( 0x8000, LHY(8), title );
 		if ( p ) *p = '\n';
 	}
-
 
 //	if ( items == kc_keyboard )	{
 //		gr_string( 0x8000, 8, "Keyboard" );
@@ -575,7 +582,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 
 		gr_string( LHX(264), LHY(40), "OR" );
 
-	} if ( items == kc_other )	{
+	} else if ( items == kc_other )	{
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
 		gr_scanline( LHX(18), LHX(60), LHY(119+5) );
@@ -593,9 +600,8 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 		gr_string( LHX(244), LHY(129), TXT_AXIS );
 		gr_string( LHX(270), LHY(129), TXT_INVERT );
-	}
-	else if ( items == kc_d2x )
-	{
+
+	} else if ( items == kc_d2x ) {
 		gr_set_fontcolor( BM_XRGB(31,27,6), -1 );
 		gr_setcolor( BM_XRGB(31,27,6) );
 
@@ -609,7 +615,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 		gr_string(LHX(109), LHY(40), "OR");
 	}
 
-	for (i=0; i<nitems; i++ )	{
+	for (i=0; i<nitems; i++ ) {
 		kc_drawitem( &items[i], 0 );
 	}
 
@@ -624,11 +630,11 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 	mouse_state = omouse_state = 0;
 #endif
 
-	while(1)		{
-	//	Windows addendum to allow for kconfig input.
+	while (1) {
+	// Windows addendum to allow for kconfig input.
 		vid_update();
 
-		//see if redbook song needs to be restarted
+		// see if redbook song needs to be restarted
 		songs_check_redbook_repeat();
 
 		k = newmenu_inkey();
@@ -639,13 +645,13 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 #endif
 
 		if ( !time_stopped ) {
-			#ifdef NETWORK
+#ifdef NETWORK
 			if (multi_menu_poll() == -1)
 				k = -2;
-			#endif
+#endif
 		}
 		ocitem = citem;
-		switch( k )	{
+		switch ( k ) {
 		case KEY_BACKSP:
 			Int3();
 			break;
@@ -654,10 +660,11 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 			save_screen_shot(0);
 			break;							
 		case KEY_CTRLED+KEY_D:
+		case KEY_DELETE:
 			items[citem].value = 255;
 			kc_drawitem( &items[citem], 1 );
 			break;
-		case KEY_CTRLED+KEY_R:	
+		case KEY_CTRLED+KEY_R:
 			if ( items == kc_keyboard )
 				for (i = 0; i < NUM_KEY_CONTROLS; i++) {
 					items[i].value = default_kc_keyboard_settings[i];
@@ -676,61 +683,55 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 				}
 			kc_drawitem( &items[citem], 1 );
 			break;
-		case KEY_DELETE:
-			items[citem].value=255;
-			kc_drawitem( &items[citem], 1 );
-			break;
-		case KEY_UP: 		
+		case KEY_UP:
 		case KEY_PAD8:
 #ifdef TABLE_CREATION
-			if (items[citem].u==-1) items[citem].u=find_next_item_up( items,nitems, citem);
+			if (items[citem].u == -1) items[citem].u = find_next_item_up( items, nitems, citem );
 #endif
 			citem = items[citem].u; 
 			break;
-		
-		case KEY_DOWN: 	
+		case KEY_DOWN:
 		case KEY_PAD2:
 #ifdef TABLE_CREATION
-			if (items[citem].d==-1) items[citem].d=find_next_item_down( items,nitems, citem);
+			if (items[citem].d == -1) items[citem].d = find_next_item_down( items, nitems, citem );
 #endif
 			citem = items[citem].d; 
 			break;
-		case KEY_LEFT: 	
+		case KEY_LEFT:
 		case KEY_PAD4:
 #ifdef TABLE_CREATION
-			if (items[citem].l==-1) items[citem].l=find_next_item_left( items,nitems, citem);
+			if (items[citem].l == -1) items[citem].l = find_next_item_left( items, nitems, citem );
 #endif
 			citem = items[citem].l; 
 			break;
-		case KEY_RIGHT: 	
+		case KEY_RIGHT:
 		case KEY_PAD6:
 #ifdef TABLE_CREATION
-			if (items[citem].r==-1) items[citem].r=find_next_item_right( items,nitems, citem);
+			if (items[citem].r == -1) items[citem].r = find_next_item_right( items, nitems, citem );
 #endif
 			citem = items[citem].r; 
 			break;
-		case KEY_ENTER:	
-		case KEY_PADENTER:	
+		case KEY_ENTER:
+		case KEY_PADENTER:
 			switch( items[citem].type )	{
-			case BT_KEY:		kc_change_key( &items[citem] ); break;
-			case BT_MOUSE_AXIS: 	kc_change_mouseaxis( &items[citem] ); break;
-			case BT_JOY_AXIS: 	kc_change_joyaxis( &items[citem] ); break;
-			case BT_INVERT: 	kc_change_invert( &items[citem] ); break;
+			case BT_KEY:        kc_change_key( &items[citem] ); break;
+			case BT_MOUSE_AXIS: kc_change_mouseaxis( &items[citem] ); break;
+			case BT_JOY_AXIS:   kc_change_joyaxis( &items[citem] ); break;
+			case BT_INVERT:     kc_change_invert( &items[citem] ); break;
 			}
 			break;
-		//the following case added by WraithX on 11/22/00 to work around the weird joystick bug...
+		// the following case added by WraithX on 11/22/00 to work around the weird joystick bug...
 		case KEY_SPACEBAR:
-			switch(items[citem].type)
-			{
+			switch(items[citem].type) {
 			case BT_JOY_AXIS:
 				kc_next_joyaxis(&items[citem]);
 				break;
 			}
 			break;
-		//end addition by WraithX
+		// end addition by WraithX
 		case -2:	
 		case KEY_ESC:
-			grd_curcanv->cv_font	= save_font;
+			grd_curcanv->cv_font = save_font;
 
 			gr_set_current_canvas( save_canvas );
 			gr_free_sub_canvas(center_canv);
@@ -742,71 +743,71 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 			return;
 #ifdef TABLE_CREATION
 		case KEY_DEBUGGED+KEY_SHIFTED+KEY_2:
-		case KEY_DEBUGGED+KEY_F12:	{
+		case KEY_DEBUGGED+KEY_F12: {
 			FILE * fp;
 			int j;
 
-			for (i=0; i<NUM_KEY_CONTROLS; i++ )	{
-				kc_keyboard[i].u = find_next_item_up( kc_keyboard,NUM_KEY_CONTROLS, i);
-				kc_keyboard[i].d = find_next_item_down( kc_keyboard,NUM_KEY_CONTROLS, i);
-				kc_keyboard[i].l = find_next_item_left( kc_keyboard,NUM_KEY_CONTROLS, i);
-				kc_keyboard[i].r = find_next_item_right( kc_keyboard,NUM_KEY_CONTROLS, i);
+			for ( i = 0; i < NUM_KEY_CONTROLS; i++ ) {
+				kc_keyboard[i].u = find_next_item_up( kc_keyboard, NUM_KEY_CONTROLS, i );
+				kc_keyboard[i].d = find_next_item_down( kc_keyboard, NUM_KEY_CONTROLS, i );
+				kc_keyboard[i].l = find_next_item_left( kc_keyboard, NUM_KEY_CONTROLS, i );
+				kc_keyboard[i].r = find_next_item_right( kc_keyboard, NUM_KEY_CONTROLS, i );
 			}
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				kc_other[i].u = find_next_item_up( kc_other,NUM_OTHER_CONTROLS, i);
-				kc_other[i].d = find_next_item_down( kc_other,NUM_OTHER_CONTROLS, i);
-				kc_other[i].l = find_next_item_left( kc_other,NUM_OTHER_CONTROLS, i);
-				kc_other[i].r = find_next_item_right( kc_other,NUM_OTHER_CONTROLS, i);
+			for ( i = 0; i < NUM_OTHER_CONTROLS; i++ ) {
+				kc_other[i].u = find_next_item_up( kc_other, NUM_OTHER_CONTROLS, i );
+				kc_other[i].d = find_next_item_down( kc_other, NUM_OTHER_CONTROLS, i );
+				kc_other[i].l = find_next_item_left( kc_other, NUM_OTHER_CONTROLS, i );
+				kc_other[i].r = find_next_item_right( kc_other, NUM_OTHER_CONTROLS, i );
 			}
-			for (i = 0; i < NUM_D2X_CONTROLS; i++ ) {
-				kc_d2x[i].u = find_next_item_up( kc_d2x, NUM_D2X_CONTROLS, i);
-				kc_d2x[i].d = find_next_item_down( kc_d2x, NUM_D2X_CONTROLS, i);
-				kc_d2x[i].l = find_next_item_left( kc_d2x, NUM_D2X_CONTROLS, i);
-				kc_d2x[i].r = find_next_item_right( kc_d2x, NUM_D2X_CONTROLS, i);
+			for ( i = 0; i < NUM_D2X_CONTROLS; i++ ) {
+				kc_d2x[i].u = find_next_item_up( kc_d2x, NUM_D2X_CONTROLS, i );
+				kc_d2x[i].d = find_next_item_down( kc_d2x, NUM_D2X_CONTROLS, i );
+				kc_d2x[i].l = find_next_item_left( kc_d2x, NUM_D2X_CONTROLS, i );
+				kc_d2x[i].r = find_next_item_right( kc_d2x, NUM_D2X_CONTROLS, i );
 			}
 			fp = stderr; //fopen( "kconfig.cod", "wt" );
 
 			fprintf( fp, "kc_item kc_keyboard[NUM_KEY_CONTROLS] = {\n" );
-			for (i=0; i<NUM_KEY_CONTROLS; i++ )	{
-				fprintf( fp, "\t{ %2d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%c%s%c, %s, 255 },\n", 
+			for ( i = 0; i < NUM_KEY_CONTROLS; i++ ) {
+				fprintf( fp, "\t{ %2d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %c%s%c, %s, 255 },\n",
 					kc_keyboard[i].id, kc_keyboard[i].x, kc_keyboard[i].y, kc_keyboard[i].w1, kc_keyboard[i].w2,
 					kc_keyboard[i].u, kc_keyboard[i].d, kc_keyboard[i].l, kc_keyboard[i].r,
-                                        34, kc_keyboard[i].text, 34, btype_text[kc_keyboard[i].type] );
+					34, kc_keyboard[i].text, 34, btype_text[kc_keyboard[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
 			fprintf( fp, "ubyte default_kc_keyboard_settings[NUM_KEY_CONTROLS] = " );
-			fprintf( fp, "{0x%x", kc_keyboard[0].value );
-			for (j = 1; j < NUM_KEY_CONTROLS; j++)
-				fprintf( fp, ",0x%x", kc_keyboard[j].value );
-			fprintf( fp, "};\n\n" );
+			fprintf( fp, "{ 0x%x", kc_keyboard[0].value );
+			for ( j = 1; j < NUM_KEY_CONTROLS; j++ )
+				fprintf( fp, ", 0x%x", kc_keyboard[j].value );
+			fprintf( fp, " };\n\n" );
 
 			fprintf( fp, "kc_item kc_other[NUM_OTHER_CONTROLS] = {\n" );
-			for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
-				fprintf( fp, "\t{ %2d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%c%s%c, %s, 255 },\n",
+			for ( i = 0; i < NUM_OTHER_CONTROLS; i++ ) {
+				fprintf( fp, "\t{ %2d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %c%s%c, %s, 255 },\n",
 					kc_other[i].id, kc_other[i].x, kc_other[i].y, kc_other[i].w1, kc_other[i].w2,
 					kc_other[i].u, kc_other[i].d, kc_other[i].l, kc_other[i].r,
 					34, kc_other[i].text, 34, btype_text[kc_other[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
 			fprintf( fp, "ubyte default_kc_other_settings[NUM_OTHER_CONTROLS] = " );
-			fprintf( fp, "{0x%x", kc_other[0].value );
-			for (j = 1; j < NUM_OTHER_CONTROLS; j++)
-				fprintf( fp, ",0x%x", kc_other[j].value );
-			fprintf( fp, "};\n" );
+			fprintf( fp, "{ 0x%x", kc_other[0].value );
+			for ( j = 1; j < NUM_OTHER_CONTROLS; j++ )
+				fprintf( fp, ", 0x%x", kc_other[j].value );
+			fprintf( fp, " };\n" );
 
 			fprintf( fp, "kc_item kc_d2x[NUM_D2X_CONTROLS] = {\n" );
-			for (i=0; i<NUM_D2X_CONTROLS; i++ )	{
-				fprintf( fp, "\t{ %2d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%3d,%c%s%c, %s, 255 },\n",
-						kc_d2x[i].id, kc_d2x[i].x, kc_d2x[i].y, kc_d2x[i].w1, kc_d2x[i].w2,
-						kc_d2x[i].u, kc_d2x[i].d, kc_d2x[i].l, kc_d2x[i].r,
-						34, kc_d2x[i].text, 34, btype_text[kc_d2x[i].type] );
+			for ( i = 0; i < NUM_D2X_CONTROLS; i++ ) {
+				fprintf( fp, "\t{ %2d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %3d, %c%s%c, %s, 255 },\n",
+					kc_d2x[i].id, kc_d2x[i].x, kc_d2x[i].y, kc_d2x[i].w1, kc_d2x[i].w2,
+					kc_d2x[i].u, kc_d2x[i].d, kc_d2x[i].l, kc_d2x[i].r,
+					34, kc_d2x[i].text, 34, btype_text[kc_d2x[i].type] );
 			}
 			fprintf( fp, "};\n\n" );
 			fprintf( fp, "ubyte default_kc_d2x_settings[NUM_D2X_CONTROLS] = " );
-			fprintf( fp, "{0x%x", kc_d2x[0].value );
-			for (j = 1; j < NUM_D2X_CONTROLS; j++)
-				fprintf( fp, ",0x%x", kc_d2x[j].value );
-			fprintf( fp, "};\n" );
+			fprintf( fp, "{ 0x%x", kc_d2x[0].value );
+			for ( j = 1; j < NUM_D2X_CONTROLS; j++ )
+				fprintf( fp, ", 0x%x", kc_d2x[j].value );
+			fprintf( fp, " };\n" );
 
 			fclose(fp);
 
@@ -818,9 +819,9 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 #ifdef NEWMENU_MOUSE
 		if ( (mouse_state && !omouse_state) || (mouse_state && omouse_state) ) {
 			int item_height;
-			
+
 			mouse_get_pos(&mx, &my);
-			for (i=0; i<nitems; i++ )	{
+			for ( i = 0; i < nitems; i++ ) {
 				item_height = get_item_height( &items[i] );
 				x1 = grd_curcanv->cv_bitmap.bm_x + LHX(items[i].x) + LHX(items[i].w1);
 				x2 = x1 + LHX(items[i].w2);
@@ -834,7 +835,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 		}
 		else if ( !mouse_state && omouse_state ) {
 			int item_height;
-			
+
 			mouse_get_pos(&mx, &my);
 			item_height = get_item_height( &items[citem] );
 			x1 = grd_curcanv->cv_bitmap.bm_x + LHX(items[citem].x) + LHX(items[citem].w1);
@@ -844,10 +845,10 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 			if (((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2))) {
 				newmenu_hide_cursor();
 				switch( items[citem].type )	{
-				case BT_KEY:				kc_change_key( &items[citem] ); break;
-				case BT_MOUSE_AXIS: 		kc_change_mouseaxis( &items[citem] ); break;
-				case BT_JOY_AXIS: 		kc_change_joyaxis( &items[citem] ); break;
-				case BT_INVERT: 			kc_change_invert( &items[citem] ); break;
+				case BT_KEY:        kc_change_key( &items[citem] ); break;
+				case BT_MOUSE_AXIS: kc_change_mouseaxis( &items[citem] ); break;
+				case BT_JOY_AXIS:   kc_change_joyaxis( &items[citem] ); break;
+				case BT_INVERT:     kc_change_invert( &items[citem] ); break;
 				}
 				newmenu_show_cursor();
 			} else {
@@ -856,7 +857,7 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 				y1 = grd_curcanv->cv_bitmap.bm_y + close_y + LHX(1);
 				y2 = y1 + close_size - LHX(1);
 				if ( ((mx > x1) && (mx < x2)) && ((my > y1) && (my < y2)) ) {
-					grd_curcanv->cv_font	= save_font;
+					grd_curcanv->cv_font = save_font;
 					gr_set_current_canvas( save_canvas );
 					gr_free_sub_canvas(center_canv);
 					keyd_repeat = old_keyd_repeat;
@@ -867,11 +868,10 @@ void kconfig_sub(kc_item * items,int nitems, char * title)
 					return;
 				}
 			}
-
 		}
 #endif // NEWMENU_MOUSE
 
-		if (ocitem!=citem)	{
+		if (ocitem != citem) {
 			newmenu_hide_cursor();
 			kc_drawitem( &items[ocitem], 0 );
 			kc_drawitem( &items[citem], 1 );
@@ -892,14 +892,16 @@ void kc_drawitem( kc_item *item, int is_current )
 		gr_set_fontcolor( BM_XRGB(15,15,24), -1 );
    gr_string( LHX(item->x), LHY(item->y), item->text );
 
-	if (item->value==255) {
+	if (item->value == 255) {
 		strcpy( btext, "" );
 	} else {
-		switch( item->type )	{
+		switch( item->type ) {
 			case BT_KEY:
-				strncpy( btext, key_text[item->value], 10 ); break;
+				strncpy( btext, key_text[item->value], 10 );
+				break;
 			case BT_MOUSE_AXIS:
-				strncpy( btext, Text_string[mouseaxis_text[item->value]], 10 ); break;
+				strncpy( btext, Text_string[mouseaxis_text[item->value]], 10 );
+				break;
 			case BT_JOY_AXIS:
 #ifdef USE_LINUX_JOY
 				sprintf(btext, "J%d A%d", j_axis[item->value].joydev, j_Get_joydev_axis_number(item->value));
@@ -913,7 +915,8 @@ void kc_drawitem( kc_item *item, int is_current )
 #endif
 				break;
 			case BT_INVERT:
-				strncpy( btext, Text_string[invert_text[item->value]], 10 ); break;
+				strncpy( btext, Text_string[invert_text[item->value]], 10 );
+				break;
 		}
 	}
 	if (item->w1) {
@@ -924,7 +927,7 @@ void kc_drawitem( kc_item *item, int is_current )
 		else
 			gr_setcolor( BM_XRGB(16,0,19) );
 		gr_urect( LHX(item->w1+item->x), LHY(item->y-1), LHX(item->w1+item->x+item->w2), LHY(item->y)+h );
-		
+
 		gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 
 		x = LHX(item->w1+item->x)+((LHX(item->w2)-w)/2);
@@ -934,27 +937,28 @@ void kc_drawitem( kc_item *item, int is_current )
 }
 
 
-static int looper=0;
+static int looper = 0;
+
 
 void kc_drawquestion( kc_item *item )
 {
 	int c, x, w, h, aw;
 
-	gr_get_string_size("?", &w, &h, &aw  );
+	gr_get_string_size( "?", &w, &h, &aw );
 
 	c = BM_XRGB(21,0,24);
 
 	//@@gr_setcolor( gr_fade_table[fades[looper]*256+c] );
 	gr_setcolor(BM_XRGB(21*fades[looper]/31,0,24*fades[looper]/31));
 	looper++;
-	if (looper>63) looper=0;
+	if (looper > 63) looper=0;
 
 	gr_urect( LHX(item->w1+item->x), LHY(item->y-1), LHX(item->w1+item->x+item->w2), LHY(item->y)+h );
-	
+
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 
 	x = LHX(item->w1+item->x)+((LHX(item->w2)-w)/2);
-   
+
 	gr_string( x, LHY(item->y), "?" );
 	vid_update();
 }
@@ -971,47 +975,46 @@ void kc_restore_background( int x, int y, int w, int h )
 }
 
 
-void kc_change_key( kc_item * item )
+void kc_change_key( kc_item *item )
 {
-	int i,n,f,k;
+	int i, n, f, k;
 	ubyte keycode;
 
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-	
+
 	gr_string( 0x8000, LHY(INFO_Y), TXT_PRESS_NEW_KEY );
 
 	game_flush_inputs();
-	keycode=255;
-	k=255;
-	
-	while( (k!=KEY_ESC) && (keycode==255) )	
-	{				
-		#ifdef NETWORK
+	keycode = 255;
+	k = 255;
+
+	while( (k != KEY_ESC) && (keycode == 255) ) {
+#ifdef NETWORK
 		if ((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence))
 			multi_menu_poll();
-		#endif
+#endif
 //		if ( Game_mode & GM_MULTI )
-//			GameLoop( 0, 0 );				// Continue
+//			GameLoop( 0, 0 ); // Continue
 		k = key_inkey();
 		timer_delay(f0_1/10);
 		kc_drawquestion( item );
-	
-		for (i=0; i<256; i++ )	{
-			if (keyd_pressed[i] && (strlen(key_text[i])>0))	{
+
+		for ( i = 0; i < 256; i++ ) {
+			if (keyd_pressed[i] && (strlen(key_text[i]) > 0)) {
 				f = 0;
-				for (n=0; n<sizeof(system_keys); n++ )
+				for ( n = 0; n < sizeof(system_keys); n++ )
 					if ( system_keys[n] == i )
-						f=1;
+						f = 1;
 				if (!f)	
-					keycode=i;
+					keycode = i;
 			}
 		}
 	}
 
-	if (k!=KEY_ESC)	{
-		for (i=0; i<Num_items; i++ )	{
+	if (k != KEY_ESC) {
+		for ( i = 0; i < Num_items; i++ ) {
 			n = (int)(item - All_items);
-			if ( (i!=n) && (All_items[i].type==BT_KEY) && (All_items[i].value==keycode) )		{
+			if ( (i != n) && (All_items[i].type == BT_KEY) && (All_items[i].value == keycode) ) {
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );
 			}
@@ -1045,57 +1048,53 @@ void kc_next_joyaxis(kc_item *item)
 	tries = 1;
 	code = (item->value + 1) % max;
 
-	if (code != 255)
-	{
-		for (i = 0; i < Num_items; i++)
-		{
+	if (code != 255) {
+		for (i = 0; i < Num_items; i++) {
 			n = (int)(item - All_items);
-			if ((i != n) && (All_items[i].type == BT_JOY_AXIS) && (All_items[i].value == code))
-			{
+			if ((i != n) && (All_items[i].type == BT_JOY_AXIS) && (All_items[i].value == code)) {
 				if (tries > max)
 					return; // all axes allocated already
 				i = -1; // -1 so the i++ will push back to 0
 				code = (item->value + ++tries) % max; // try next axis
-			}//end if
-		}//end for
+			}
+		}
 
 		item->value = code;
-	}//end if
+	}
 
 	kc_drawitem(item, 1);
 	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
 
-}//method kc_next_joyaxis
-//end addition by WraithX
+}
+// end addition by WraithX
 
 
-void kc_change_joyaxis( kc_item * item )
+void kc_change_joyaxis( kc_item *item )
 {
 	int axis[JOY_MAX_AXES];
 	int old_axis[JOY_MAX_AXES];
 	int numaxis = joy_num_axes;
-	int n,i,k;
+	int n, i, k;
 	ubyte code;
 
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-	
+
 	gr_string( 0x8000, LHY(INFO_Y), TXT_MOVE_NEW_JOY_AXIS );
 
 	game_flush_inputs();
-	code=255;
-	k=255;
+	code = 255;
+	k = 255;
 
 	joystick_read_raw_axis( JOY_ALL_AXIS, old_axis );
 
-	while( (k!=KEY_ESC) && (code==255))	
-	{				
-		#ifdef NETWORK
+	while( (k!=KEY_ESC) && (code == 255)) {
+#ifdef NETWORK
 		if ((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence))
 			multi_menu_poll();
-		#endif
+#endif
 //		if ( Game_mode & GM_MULTI )
-//			GameLoop( 0, 0 );				// Continue
+//			GameLoop( 0, 0 ); // Continue
 		k = newmenu_inkey();
 		timer_delay(f0_1/10);
 
@@ -1106,26 +1105,24 @@ void kc_change_joyaxis( kc_item * item )
 
 		joystick_read_raw_axis( JOY_ALL_AXIS, axis );
 
-		for (i=0; i<numaxis; i++ )	{
-			if ( abs(axis[i]-old_axis[i])>100 )
-			{
+		for ( i = 0; i < numaxis; i++ ) {
+			if ( abs(axis[i]-old_axis[i]) > 100 ) {
 				code = i;
 				con_printf(CON_DEBUG, "Axis Movement detected: Axis %i\n", i);
 			}
 			//old_axis[i] = axis[i];
 		}
-		for (i=0; i<Num_items; i++ )	
-		 {
+		for ( i = 0; i < Num_items; i++ ) {
 			n = (int)(item - All_items);
-			if ( (i!=n) && (All_items[i].type==BT_JOY_AXIS) && (All_items[i].value==code) )	
+			if ( (i != n) && (All_items[i].type == BT_JOY_AXIS) && (All_items[i].value == code) )
 				code = 255;
 		 }
-	
+
 	}
-	if (code!=255)	{
-		for (i=0; i<Num_items; i++ )	{
+	if (code != 255) {
+		for ( i = 0; i < Num_items; i++ ) {
 			n = (int)(item - All_items);
-			if ( (i!=n) && (All_items[i].type==BT_JOY_AXIS) && (All_items[i].value==code) )	{
+			if ( (i != n) && (All_items[i].type == BT_JOY_AXIS) && (All_items[i].value == code) ) {
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );
 			}
@@ -1136,33 +1133,32 @@ void kc_change_joyaxis( kc_item * item )
 	kc_drawitem( item, 1 );
 	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
-
 }
 
-void kc_change_mouseaxis( kc_item * item )
+
+void kc_change_mouseaxis( kc_item *item )
 {
-	int i,n,k;
+	int i, n, k;
 	ubyte code;
 	int dx, dy, dz;
 
 	gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
-	
+
 	gr_string( 0x8000, LHY(INFO_Y), TXT_MOVE_NEW_MSE_AXIS );
 
 	game_flush_inputs();
-	code=255;
-	k=255;
+	code = 255;
+	k = 255;
 
 	mouse_get_delta( &dx, &dy, &dz );
 
-	while( (k!=KEY_ESC) && (code==255))	
-	{				
-		#ifdef NETWORK
+	while( (k != KEY_ESC) && (code == 255)) {
+#ifdef NETWORK
 		if ((Game_mode & GM_MULTI) && (Function_mode == FMODE_GAME) && (!Endlevel_sequence))
 			multi_menu_poll();
-		#endif
+#endif
 //		if ( Game_mode & GM_MULTI )
-//			GameLoop( 0, 0 );				// Continue
+//			GameLoop( 0, 0 ); // Continue
 		k = newmenu_inkey();
 		timer_delay(f0_1/10);
 
@@ -1172,14 +1168,14 @@ void kc_change_mouseaxis( kc_item * item )
 		kc_drawquestion( item );
 
 		mouse_get_delta( &dx, &dy, &dz );
-		if ( abs(dx)>20 ) code = 0;
-		if ( abs(dy)>20 ) code = 1;
-		if ( abs(dz)>20 ) code = 2;
+		if ( abs(dx) > 20 ) code = 0;
+		if ( abs(dy) > 20 ) code = 1;
+		if ( abs(dz) > 20 ) code = 2;
 	}
-	if (code!=255)	{
-		for (i=0; i<Num_items; i++ )	{
+	if (code != 255) {
+		for ( i = 0; i < Num_items; i++ ) {
 			n = (int)(item - All_items);
-			if ( (i!=n) && (All_items[i].type==BT_MOUSE_AXIS) && (All_items[i].value==code) )		{
+			if ( (i != n) && (All_items[i].type == BT_MOUSE_AXIS) && (All_items[i].value == code) ) {
 				All_items[i].value = 255;
 				kc_drawitem( &All_items[i], 0 );
 			}
@@ -1189,11 +1185,10 @@ void kc_change_mouseaxis( kc_item * item )
 	kc_drawitem( item, 1 );
 	kc_restore_background( 0, LHY(INFO_Y), LHX(310), grd_curcanv->cv_font->ft_h );
 	game_flush_inputs();
-
 }
 
 
-void kc_change_invert( kc_item * item )
+void kc_change_invert( kc_item *item )
 {
 	game_flush_inputs();
 
@@ -1203,10 +1198,8 @@ void kc_change_invert( kc_item * item )
 		item->value = 1;
 
 	kc_drawitem( item, 1 );
-
 }
 
-#include "screens.h"
 
 void kconfig(int n, char * title)
 {
@@ -1217,23 +1210,22 @@ void kconfig(int n, char * title)
 
 	kc_set_controls();
 
-	//save screen
+	// save screen
 	save_bm = gr_create_bitmap( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h );
 	Assert( save_bm != NULL );
-	
-	gr_bm_bitblt(grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_w, 
-					0, 0, 0, 0, &grd_curcanv->cv_bitmap, save_bm );
 
-	switch(n)	{
-	case 0:kconfig_sub( kc_keyboard, NUM_KEY_CONTROLS, title );break;
-	case 1:kconfig_sub( kc_other, NUM_OTHER_CONTROLS, title );break;
-	case 2:kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
+	gr_bm_bitblt( grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_w, 0, 0, 0, 0, &grd_curcanv->cv_bitmap, save_bm );
+
+	switch(n) {
+	case 0: kconfig_sub( kc_keyboard, NUM_KEY_CONTROLS, title ); break;
+	case 1: kconfig_sub( kc_other, NUM_OTHER_CONTROLS, title ); break;
+	case 2: kconfig_sub( kc_d2x, NUM_D2X_CONTROLS, title ); break;
  	default:
 		Int3();
 		return;
 	}
 
-	//restore screen
+	// restore screen
 	gr_bitmap(0, 0, save_bm);
 	gr_free_bitmap(save_bm);
 
@@ -1242,38 +1234,37 @@ void kconfig(int n, char * title)
 #endif
 
 	// Update save values...
-	
-	for (j=0; j<256; j++)
+	for ( j = 0; j < 256; j++ )
 		if (key_binding(j)) {
-			for (i = 0; i < NUM_KEY_CONTROLS; i++)
+			for ( i = 0; i < NUM_KEY_CONTROLS; i++ )
 				if (strlen(key_text[j]) && !stricmp(key_binding(j), kc_key_bind_text[i])) {
 					cmd_appendf("unbind %s", key_text[j]);
 					break;
 				}
-			for (i = 0; i < NUM_D2X_CONTROLS; i++)
+			for ( i = 0; i < NUM_D2X_CONTROLS; i++ )
 				if (kc_d2x[i].type == BT_KEY && strlen(key_text[j]) && !stricmp(key_binding(j), kc_d2x[i].text)) {
 					cmd_appendf("unbind %s", key_text[j]);
 					break;
 				}
 		}
 
-	for (i=0; i<NUM_KEY_CONTROLS; i++ )
+	for ( i = 0; i < NUM_KEY_CONTROLS; i++ )
 		if (kc_keyboard[i].value != 255 && key_text[kc_keyboard[i].value])
 			cmd_appendf("bind \"%s\" \"%s\"", key_text[kc_keyboard[i].value], kc_key_bind_text[i]);
 
-	for (i = 0; i < NUM_D2X_CONTROLS; i++)
+	for ( i = 0; i < NUM_D2X_CONTROLS; i++ )
 		if (kc_d2x[i].value != 255 && strlen(key_text[kc_d2x[i].value]))
 			cmd_appendf("bind \"%s\" \"%s\"", key_text[kc_d2x[i].value], kc_d2x[i].text);
 
-	for (i = 0; i < 6; i++) {
+	for ( i = 0; i < 6; i++ ) {
 		cvar_setint(&joy_advaxes[i], AXIS_NONE);
 		cvar_setint(&joy_invert[i], 0);
 	}
-	for (i = 0; i < 3; i++) {
+	for ( i = 0; i < 3; i++ ) {
 		cvar_setint(&mouse_axes[i], AXIS_NONE);
 		cvar_setint(&mouse_invert[i], 0);
 	}
-	for (i = 0; i < NUM_OTHER_CONTROLS; i++) {
+	for ( i = 0; i < NUM_OTHER_CONTROLS; i++ ) {
 		if (kc_other[i].type == BT_JOY_AXIS && kc_other[i].value != 255) {
 			cvar_setint(&joy_advaxes[kc_other[i].value], kc_other_axismap[i]);
 			cvar_setint(&joy_invert[kc_other[i].value], kc_other[i+1].value);
@@ -1293,12 +1284,13 @@ fix Last_angles_b = 0;
 fix Last_angles_h = 0;
 ubyte Last_angles_read = 0;
 
-extern int			VR_sensitivity;
-						
+extern int VR_sensitivity;
+
 int VR_sense_range[3] = { 25, 50, 75 };
 
+
 #if 0 // unused
-read_head_tracker()
+void read_head_tracker(void)
 {
 	fix yaw, pitch, roll;
 	int buttons;
@@ -1306,27 +1298,27 @@ read_head_tracker()
 //------ read vfx1 helmet --------
 	if (vfx1_installed) {
 		vfx_get_data(&yaw,&pitch,&roll,&buttons);
-	} else if (iglasses_headset_installed)	{
+	} else if (iglasses_headset_installed) {
 		iglasses_read_headset( &yaw, &pitch, &roll );
-	} else if (Victor_headset_installed)   {
+	} else if (Victor_headset_installed) {
 		victor_read_headset_filtered( &yaw, &pitch, &roll );
 	} else {
 		return;
 	}
 
 	Use_player_head_angles = 0;
-	if ( Last_angles_read )	{
+	if ( Last_angles_read ) {
 		fix yaw1 = yaw;
-		
+
 		yaw1 = yaw;
 		if ( (Last_angles_h < (F1_0/4) ) && (yaw > ((F1_0*3)/4) ) )	
 			yaw1 -= F1_0;
 		else if ( (yaw < (F1_0/4) ) && (Last_angles_h > ((F1_0*3)/4) ) )	
 			yaw1 += F1_0;
-	
-		Controls.pitch_time	+= fixmul((pitch- Last_angles_p)*VR_sense_range[VR_sensitivity],FrameTime);
-		Controls.heading_time+= fixmul((yaw1 -  Last_angles_h)*VR_sense_range[VR_sensitivity],FrameTime);
-		Controls.bank_time	+= fixmul((roll - Last_angles_b)*VR_sense_range[VR_sensitivity],FrameTime);
+
+		Controls.pitch_time   += fixmul((pitch- Last_angles_p)*VR_sense_range[VR_sensitivity], FrameTime);
+		Controls.heading_time += fixmul((yaw1 - Last_angles_h)*VR_sense_range[VR_sensitivity], FrameTime);
+		Controls.bank_time    += fixmul((roll - Last_angles_b)*VR_sense_range[VR_sensitivity], FrameTime);
 	}
 	Last_angles_read = 1;
 	Last_angles_p = pitch;
@@ -1336,45 +1328,44 @@ read_head_tracker()
 #endif
 
 
-void kc_set_controls()
+void kc_set_controls(void)
 {
 	int i, j;
 
-	for (i=0; i<NUM_KEY_CONTROLS; i++ )
+	for ( i = 0; i < NUM_KEY_CONTROLS; i++ )
 		kc_keyboard[i].value = 255;
 
-	for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
+	for ( i = 0; i < NUM_OTHER_CONTROLS; i++ ) {
 		if (kc_other[i].type == BT_INVERT)
 			kc_other[i].value = 0;
 		else
 			kc_other[i].value = 255;
 	}
 
-	for (i=0; i<NUM_D2X_CONTROLS; i++ )
+	for ( i = 0; i < NUM_D2X_CONTROLS; i++ )
 		kc_d2x[i].value = 255;
 
-	for (j = 0; j < 256; j++)
+	for ( j = 0; j < 256; j++ )
 		if (key_binding(j) && strlen(key_text[j])) {
-			for (i = 0; i < NUM_KEY_CONTROLS; i++)
-				if (kc_keyboard[i].value == 255
-					&& !stricmp(key_binding(j), kc_key_bind_text[i])) {
+			for ( i = 0; i < NUM_KEY_CONTROLS; i++ )
+				if (kc_keyboard[i].value == 255 && !stricmp(key_binding(j), kc_key_bind_text[i])) {
 					kc_keyboard[i].value = j;
 					break;
 				}
 		}
 
-	for(j = 0; j < 256; j++)
+	for( j = 0; j < 256; j++ )
 		if (key_binding(j) && strlen(key_text[j])) {
-			for (i = 0; i < NUM_D2X_CONTROLS; i++)
-				if (kc_d2x[i].value == 255
-					&& !stricmp(key_binding(j), kc_d2x[i].text)) {
+			for ( i = 0; i < NUM_D2X_CONTROLS; i++ )
+				if (kc_d2x[i].value == 255 && !stricmp(key_binding(j), kc_d2x[i].text)) {
 					kc_d2x[i].value = j;
 					break;
 				}
 		}
 
-	for (i = 0; i < 6; i++) {
+	for ( i = 0; i < 6; i++ ) {
 		int inv = joy_invert[i].intval;
+
 		switch (joy_advaxes[i].intval) {
 			case AXIS_PITCH:     kc_other[ 0].value = i; kc_other[ 1].value = inv; break;
 			case AXIS_TURN:      kc_other[ 2].value = i; kc_other[ 3].value = inv; break;
@@ -1389,8 +1380,9 @@ void kc_set_controls()
 		}
 	}
 
-	for (i = 0; i < 3; i++) {
+	for ( i = 0; i < 3; i++ ) {
 		int inv = mouse_invert[i].intval;
+
 		switch (mouse_axes[i].intval) {
 			case AXIS_PITCH:     kc_other[12].value = i; kc_other[13].value = inv; break;
 			case AXIS_TURN:      kc_other[14].value = i; kc_other[15].value = inv; break;
@@ -1406,17 +1398,15 @@ void kc_set_controls()
 	}
 }
 
-#if 0 // no mac support for vr headset
 
+#if 0 // no mac support for vr headset
 void kconfig_center_headset()
 {
 	if (vfx1_installed)
 		vfx_center_headset();
-//	} else if (iglasses_headset_installed)	{
-//	} else if (Victor_headset_installed)   {
+//	} else if (iglasses_headset_installed) {
+//	} else if (Victor_headset_installed) {
 //	} else {
 //	}
-
 }
-
 #endif // end of #if for kconfig_center_headset
