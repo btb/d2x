@@ -24,7 +24,6 @@
 #include "strutil.h"
 
 
-#define FG_COLOR    grd_curcanv->cv_font_fg_color
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
 #define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")

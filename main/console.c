@@ -45,7 +45,6 @@ int isvga();
 /* How discriminating we are about which messages are displayed */
 cvar_t con_threshold = {"con_threshold", "0",};
 
-#define FG_COLOR    grd_curcanv->cv_font_fg_color
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
 #define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
@@ -81,9 +80,6 @@ static int VChars;              // The number of visible characters in one conso
 static grs_canvas *ConsoleSurface;  // Canvas of the console
 static grs_bitmap *BackgroundImage; // Background image for the console
 static grs_bitmap *InputBackground; // Dirty rectangle to draw over behind the users background
-#if 0
-static unsigned char ConsoleAlpha;  // The consoles alpha level
-#endif
 
 /* console is ready to be written to */
 static int con_initialized;
@@ -93,15 +89,6 @@ static int con_initialized;
 void CON_UpdateOffset(void);
 /* Frees all the memory loaded by the console */
 static void CON_Free(void);
-#if 0
-/* Sets the alpha channel of an SDL_Surface to the specified value (0 - transparent,
- 255 - opaque). Use this function also for OpenGL. */
-void CON_Alpha(unsigned char alpha);
-/* Sets the alpha channel of an SDL_Surface to the specified value.
- Preconditions: the surface in question is RGBA. 0 <= a <= 255, where 0 is transparent and 255 opaque */
-void CON_AlphaGL(SDL_Surface *s, int alpha);
-/* Sets a background image for the console */
-#endif
 int CON_Background(grs_bitmap *image);
 /* Sets font info for the console */
 void CON_Font(grs_font *font, int fg, int bg);
@@ -244,91 +231,6 @@ int CON_Events(int event)
 }
 
 
-#if 0
-/* CON_AlphaGL() -- sets the alpha channel of an SDL_Surface to the
- * specified value.  Preconditions: the surface in question is RGBA.
- * 0 <= a <= 255, where 0 is transparent and 255 is opaque. */
-void CON_AlphaGL(SDL_Surface *s, int alpha)
-{
-	Uint8 val;
-	int x, y, w, h;
-	Uint32 pixel;
-	Uint8 r, g, b, a;
-	SDL_PixelFormat *format;
-	static char errorPrinted = 0;
-
-	/* debugging assertions -- these slow you down, but hey, crashing sucks */
-	if (!s) {
-		PRINT_ERROR("NULL Surface passed to CON_AlphaGL\n");
-		return;
-	}
-
-	/* clamp alpha value to 0...255 */
-	if (alpha < SDL_ALPHA_TRANSPARENT)
-		val = SDL_ALPHA_TRANSPARENT;
-	else if(alpha > SDL_ALPHA_OPAQUE)
-		val = SDL_ALPHA_OPAQUE;
-	else
-		val = alpha;
-
-	/* loop over alpha channels of each pixel, setting them appropriately. */
-	w = s->w;
-	h = s->h;
-	format = s->format;
-	switch (format->BytesPerPixel) {
-		case 2:
-			/* 16-bit surfaces don't seem to support alpha channels. */
-			if (!errorPrinted) {
-				errorPrinted = 1;
-				PRINT_ERROR("16-bit SDL surfaces do not support alpha-blending under OpenGL.\n");
-			}
-			break;
-		case 4: {
-			/* we can do this very quickly in 32-bit mode.  24-bit is more
-			 * difficult.  And since 24-bit mode is reall the same as 32-bit,
-			 * so it usually ends up taking this route too.  Win!  Unroll loop
-			 * and use pointer arithmetic for extra speed. */
-			int numpixels = h * (w << 2);
-			Uint8 *pix = (Uint8 *) (s->pixels);
-			Uint8 *last = pix + numpixels;
-			Uint8 *pixel;
-			if((numpixels & 0x7) == 0)
-				for(pixel = pix + 3; pixel < last; pixel += 32)
-					*pixel = *(pixel + 4) = *(pixel + 8) = *(pixel + 12) = *(pixel + 16) = *(pixel + 20) = *(pixel + 24) = *(pixel + 28) = val;
-			else
-				for(pixel = pix + 3; pixel < last; pixel += 4)
-					*pixel = val;
-			break;
-		}
-		default:
-			/* we have no choice but to do this slowly.  <sigh> */
-			for(y = 0; y < h; ++y)
-				for(x = 0; x < w; ++x) {
-					char print = 0;
-					/* Lock the surface for direct access to the pixels */
-					if(SDL_MUSTLOCK(s) && SDL_LockSurface(s) < 0) {
-						PRINT_ERROR("Can't lock surface: ");
-						fprintf(stderr, "%s\n", SDL_GetError());
-						return;
-					}
-					pixel = DT_GetPixel(s, x, y);
-					if(x == 0 && y == 0)
-						print = 1;
-					SDL_GetRGBA(pixel, format, &r, &g, &b, &a);
-					pixel = SDL_MapRGBA(format, r, g, b, val);
-					SDL_GetRGBA(pixel, format, &r, &g, &b, &a);
-					DT_PutPixel(s, x, y, pixel);
-
-					/* unlock surface again */
-					if(SDL_MUSTLOCK(s))
-						SDL_UnlockSurface(s);
-				}
-			break;
-	}
-}
-#endif
-
-
 /* Updates the console buffer */
 void CON_UpdateConsole(void)
 {
@@ -336,7 +238,6 @@ void CON_UpdateConsole(void)
 	int loop2;
 	int Screenlines;
 	grs_canvas *canv_save;
-	short orig_color;
 
 	/* Due to the Blits, the update is not very fast: So only update if it's worth it */
 	if (!CON_isVisible())
@@ -347,55 +248,24 @@ void CON_UpdateConsole(void)
 	canv_save = grd_curcanv;
 	gr_set_current_canvas(ConsoleSurface);
 
-#if 0
-	SDL_FillRect(ConsoleSurface, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, ConsoleAlpha));
-#else
-	//gr_rect(0,0,
-#endif
-
-#if 0
-	if (grd_curscreen->flags & SDL_OPENGLBLIT)
-		SDL_SetAlpha(ConsoleSurface, 0, SDL_ALPHA_OPAQUE);
-#endif
-
 	/* draw the background image if there is one */
 	if (BackgroundImage)
 		gr_bitmap(0, 0, BackgroundImage);
-
-	/* Draw the text from the back buffers, calculate in the scrollback from the user
-	 * this is a normal SDL software-mode blit, so we need to temporarily set the ColorKey
-	 * for the font, and then clear it when we're done.
-	 */
-#if 0
-	if ((grd_curscreen->flags & SDL_OPENGLBLIT) && (grd_curscreen->format->BytesPerPixel > 2)) {
-		Uint32 *pix = (Uint32 *) (CurrentFont->FontSurface->pixels);
-		SDL_SetColorKey(CurrentFont->FontSurface, SDL_SRCCOLORKEY, *pix);
-	}
-#endif
 
 	// now draw text from last but second line to top
 	for (loop = 0; loop < Screenlines-1 && loop < LineBuffer - ConsoleScrollBack; loop++) {
 		if (ConsoleScrollBack != 0 && loop == 0)
 			for (loop2 = 0; loop2 < (VChars / 5) + 1; loop2++)
 			{
-				orig_color = FG_COLOR;
 				gr_string(CON_CHAR_BORDER + (loop2*5*ConsoleSurface->cv_font->ft_w), (Screenlines - loop - 2) * (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h), CON_SCROLL_INDICATOR);
-				FG_COLOR = orig_color;
 			}
 		else
 		{
-			orig_color = FG_COLOR;
 			gr_string(CON_CHAR_BORDER, (Screenlines - loop - 2) * (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h), ConsoleLines[ConsoleScrollBack + loop]);
-			FG_COLOR = orig_color;
 		}
 	}
 
 	gr_set_current_canvas(canv_save);
-
-#if 0
-	if(grd_curscreen->flags & SDL_OPENGLBLIT)
-		SDL_SetColorKey(CurrentFont->FontSurface, 0, 0);
-#endif
 }
 
 
@@ -446,24 +316,12 @@ void CON_DrawConsole(void)
 
 	DrawCommandLine(ConsoleSurface->cv_h);
 
-#if 0
-	/* before drawing, make sure the alpha channel of the console surface is set
-	 * properly.  (sigh) I wish we didn't have to do this every frame... */
-	if (grd_curscreen->flags & SDL_OPENGLBLIT)
-		CON_AlphaGL(ConsoleSurface, ConsoleAlpha);
-#endif
-
 	gr_set_current_canvas(&grd_curscreen->sc_canvas);
 
 	clip = gr_create_sub_bitmap(&ConsoleSurface->cv_bitmap, 0, ConsoleSurface->cv_h - RaiseOffset, ConsoleSurface->cv_w, RaiseOffset);
 
 	gr_bitmap(0, 0, clip);
 	gr_free_sub_bitmap(clip);
-
-#if 0
-	if (grd_curscreen->flags & SDL_OPENGLBLIT)
-		SDL_UpdateRects(grd_curscreen, 1, &DestRect);
-#endif
 
 	gr_set_current_canvas(canv_save);
 }
@@ -480,9 +338,6 @@ void CON_Init()
 	TotalConsoleLines = 0;
 	ConsoleScrollBack = 0;
 	BackgroundImage = NULL;
-#if 0
-	ConsoleAlpha = SDL_ALPHA_OPAQUE;
-#endif
 	InsMode = 1;
 	HideKey = CON_DEFAULT_HIDEKEY;
 
@@ -541,9 +396,6 @@ void CON_InitGFX(int w, int h)
 	if (InputBackground)
 		gr_free_bitmap(InputBackground);
 	InputBackground = gr_create_bitmap(w, ConsoleSurface->cv_font->ft_h);
-#if 0
-	SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-#endif
 
 	/* calculate the number of visible characters in the command line */
 #if 0 // doesn't work because proportional font
@@ -714,25 +566,6 @@ void CON_Out(const char *str, ...)
 }
 
 
-#if 0
-/* Sets the alpha level of the console, 0 turns off alpha blending */
-void CON_Alpha(unsigned char alpha)
-{
-	/* store alpha as state! */
-	ConsoleAlpha = alpha;
-
-	if ((grd_curscreen->flags & SDL_OPENGLBLIT) == 0) {
-		if (alpha == 0)
-			SDL_SetAlpha(ConsoleSurface, 0, alpha);
-		else
-			SDL_SetAlpha(ConsoleSurface, SDL_SRCALPHA, alpha);
-	}
-
-	//CON_UpdateConsole();
-}
-#endif
-
-
 /* Adds background image to the console, scaled to size of console*/
 int CON_Background(grs_bitmap *image)
 {
@@ -741,9 +574,6 @@ int CON_Background(grs_bitmap *image)
 		if (BackgroundImage)
 			gr_free_bitmap(BackgroundImage);
 		BackgroundImage = NULL;
-#if 0
-		SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-#endif
 		return 0;
 	}
 
@@ -753,9 +583,6 @@ int CON_Background(grs_bitmap *image)
 	BackgroundImage = gr_create_bitmap(ConsoleSurface->cv_w, ConsoleSurface->cv_h);
 	gr_bitmap_scale_to(image, BackgroundImage);
 
-#if 0
-	SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-#endif
 	gr_bm_bitblt(BackgroundImage->bm_w, InputBackground->bm_h, 0, 0, 0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, BackgroundImage, InputBackground);
 
 	return 0;
@@ -798,16 +625,8 @@ void CON_Resize(int w, int h)
 
 	/* Reload the background image (for the input text area) in the console */
 	if (BackgroundImage) {
-#if 0
-		SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
-#endif
 		gr_bm_bitblt(BackgroundImage->bm_w, InputBackground->bm_h, 0, 0, 0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, BackgroundImage, InputBackground);
 	}
-
-#if 0
-	/* restore the alpha level */
-	CON_Alpha(ConsoleAlpha);
-#endif
 }
 
 
