@@ -80,37 +80,32 @@ cvar_t con_threshold = {"con_threshold", "0",};
 #define CON_OPENCLOSE_SPEED 50
 
 
-/*! This is a struct for the console's data */
-typedef struct console_information_td {
-	int Visible;			//! enum that tells which visible state we are in CON_HIDE, CON_SHOW, CON_RAISE, CON_LOWER
-	int RaiseOffset;			//! Offset used when scrolling in the console
-	int HideKey;			//! the key that can hide the console
-	char **ConsoleLines;		//! List of all the past lines
-	char **CommandLines;		//! List of all the past commands
-	int TotalConsoleLines;		//! Total number of lines in the console
-	int ConsoleScrollBack;		//! How much the user scrolled back in the console
-	int TotalCommands;		//! Number of commands in the Back Commands
-	int LineBuffer;			//! The number of visible lines in the console (autocalculated)
-	int VChars;			//! The number of visible characters in one console line (autocalculated)
-	char* Prompt;			//! Prompt displayed in command line
-	char Command[CON_CHARS_PER_LINE];	//! current command in command line = lcommand + rcommand
-	char RCommand[CON_CHARS_PER_LINE];	//! left hand side of cursor
-	char LCommand[CON_CHARS_PER_LINE];	//! right hand side of cursor
-	char VCommand[CON_CHARS_PER_LINE];	//! current visible command line
-	int CursorPos;			//! Current cursor position in CurrentCommand
-	int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
-	int InsMode;			//! Insert or Overwrite characters?
-	grs_canvas *ConsoleSurface;	//! Canvas of the console
-	grs_bitmap *BackgroundImage;	//! Background image for the console
-	grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
+/*! The console's data */
+static int Visible;			//! enum that tells which visible state we are in CON_HIDE, CON_SHOW, CON_RAISE, CON_LOWER
+static int RaiseOffset;			//! Offset used when scrolling in the console
+static int HideKey;			//! the key that can hide the console
+static char **ConsoleLines;		//! List of all the past lines
+static char **CommandLines;		//! List of all the past commands
+static int TotalConsoleLines;		//! Total number of lines in the console
+static int ConsoleScrollBack;		//! How much the user scrolled back in the console
+static int TotalCommands;		//! Number of commands in the Back Commands
+static int LineBuffer;			//! The number of visible lines in the console (autocalculated)
+static int VChars;			//! The number of visible characters in one console line (autocalculated)
+static char* Prompt;			//! Prompt displayed in command line
+static char Command[CON_CHARS_PER_LINE];	//! current command in command line = lcommand + rcommand
+static char RCommand[CON_CHARS_PER_LINE];	//! left hand side of cursor
+static char LCommand[CON_CHARS_PER_LINE];	//! right hand side of cursor
+static char VCommand[CON_CHARS_PER_LINE];	//! current visible command line
+static int CursorPos;			//! Current cursor position in CurrentCommand
+static int Offset;			//! CommandOffset (first visible char of command) - if command is too long to fit into console
+static int InsMode;			//! Insert or Overwrite characters?
+static grs_canvas *ConsoleSurface;	//! Canvas of the console
+static grs_bitmap *BackgroundImage;	//! Background image for the console
+static grs_bitmap *InputBackground;	//! Dirty rectangle to draw over behind the users background
 #if 0
-	unsigned char ConsoleAlpha;	//! The consoles alpha level
+static unsigned char ConsoleAlpha;	//! The consoles alpha level
 #endif
-	int CommandScrollBack;		//! How much the users scrolled back in the command lines
-}
-ConsoleInformation;
-static ConsoleInformation Console;
-#define console (&Console)
+static int CommandScrollBack;		//! How much the users scrolled back in the command lines
 
 /* console is ready to be written to */
 static int con_initialized;
@@ -217,7 +212,7 @@ int CON_Events(int event)
 	else
 	{
 		//first of all, check if the console hide key was pressed
-		if(event == console->HideKey)
+		if(event == HideKey)
 		{
 			CON_Hide();
 			return 0;
@@ -230,7 +225,7 @@ int CON_Events(int event)
 			case KEY_HOME:
 				if(event & KEY_SHIFTED)
 				{
-					console->ConsoleScrollBack = console->LineBuffer-1;
+					ConsoleScrollBack = LineBuffer-1;
 					CON_UpdateConsole();
 				} else {
 					Cursor_Home();
@@ -239,23 +234,23 @@ int CON_Events(int event)
 			case KEY_END:
 				if(event & KEY_SHIFTED)
 				{
-					console->ConsoleScrollBack = 0;
+					ConsoleScrollBack = 0;
 					CON_UpdateConsole();
 				} else {
 					Cursor_End();
 				}
 				break;
 			case KEY_PAGEUP:
-				console->ConsoleScrollBack += CON_LINE_SCROLL;
-				if(console->ConsoleScrollBack > console->LineBuffer-1)
-					console->ConsoleScrollBack = console->LineBuffer-1;
+				ConsoleScrollBack += CON_LINE_SCROLL;
+				if(ConsoleScrollBack > LineBuffer-1)
+					ConsoleScrollBack = LineBuffer-1;
 				
 				CON_UpdateConsole();
 				break;
 			case KEY_PAGEDOWN:
-				console->ConsoleScrollBack -= CON_LINE_SCROLL;
-				if(console->ConsoleScrollBack < 0)
-					console->ConsoleScrollBack = 0;
+				ConsoleScrollBack -= CON_LINE_SCROLL;
+				if(ConsoleScrollBack < 0)
+					ConsoleScrollBack = 0;
 				CON_UpdateConsole();
 				break;
 			case KEY_UP:
@@ -277,26 +272,26 @@ int CON_Events(int event)
 				Cursor_Del();
 				break;
 			case KEY_INSERT:
-				console->InsMode = 1-console->InsMode;
+				InsMode = 1-InsMode;
 				break;
 			case KEY_TAB:
 				CON_TabCompletion();
 				break;
 			case KEY_ENTER:
-				if(strlen(console->Command) > 0) {
+				if(strlen(Command) > 0) {
 					CON_NewLineCommand();
 					
 					// copy the input into the past commands strings
-					strcpy(console->CommandLines[0], console->Command);
+					strcpy(CommandLines[0], Command);
 					
 					// display the command including the prompt
-					CON_Out("%s%s\n", console->Prompt, console->Command);
+					CON_Out("%s%s\n", Prompt, Command);
 					CON_UpdateConsole();
 					
-					CON_Execute(console->Command);
+					CON_Execute(Command);
 					
 					Clear_Command();
-					console->CommandScrollBack = -1;
+					CommandScrollBack = -1;
 				}
 				break;
 			case KEY_LAPOSTRO:
@@ -306,7 +301,7 @@ int CON_Events(int event)
 			default:
 				if (key_to_ascii(event) == 255)
 					break;
-				if(console->InsMode)
+				if(InsMode)
 					Cursor_Add(event);
 				else {
 					Cursor_Add(event);
@@ -414,25 +409,25 @@ void CON_UpdateConsole(void) {
 	if(!CON_isVisible())
 		return;
 	
-	Screenlines = console->ConsoleSurface->cv_h / (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h);
+	Screenlines = ConsoleSurface->cv_h / (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h);
 	
 	canv_save = grd_curcanv;
-	gr_set_current_canvas(console->ConsoleSurface);
+	gr_set_current_canvas(ConsoleSurface);
 	
 #if 0
-	SDL_FillRect(console->ConsoleSurface, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, console->ConsoleAlpha));
+	SDL_FillRect(ConsoleSurface, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, ConsoleAlpha));
 #else
 	//gr_rect(0,0,
 #endif
 	
 #if 0
 	if(grd_curscreen->flags & SDL_OPENGLBLIT)
-		SDL_SetAlpha(console->ConsoleSurface, 0, SDL_ALPHA_OPAQUE);
+		SDL_SetAlpha(ConsoleSurface, 0, SDL_ALPHA_OPAQUE);
 #endif
 	
 	/* draw the background image if there is one */
-	if(console->BackgroundImage)
-		gr_bitmap(0, 0, console->BackgroundImage);
+	if(BackgroundImage)
+		gr_bitmap(0, 0, BackgroundImage);
 	
 	/* Draw the text from the back buffers, calculate in the scrollback from the user
 	 * this is a normal SDL software-mode blit, so we need to temporarily set the ColorKey
@@ -446,18 +441,18 @@ void CON_UpdateConsole(void) {
 #endif
 	
 	//now draw text from last but second line to top
-	for(loop = 0; loop < Screenlines-1 && loop < console->LineBuffer - console->ConsoleScrollBack; loop++) {
-		if(console->ConsoleScrollBack != 0 && loop == 0)
-			for(loop2 = 0; loop2 < (console->VChars / 5) + 1; loop2++)
+	for(loop = 0; loop < Screenlines-1 && loop < LineBuffer - ConsoleScrollBack; loop++) {
+		if(ConsoleScrollBack != 0 && loop == 0)
+			for(loop2 = 0; loop2 < (VChars / 5) + 1; loop2++)
 			{
 				orig_color = FG_COLOR;
-				gr_string(CON_CHAR_BORDER + (loop2*5*console->ConsoleSurface->cv_font->ft_w), (Screenlines - loop - 2) * (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h), CON_SCROLL_INDICATOR);
+				gr_string(CON_CHAR_BORDER + (loop2*5*ConsoleSurface->cv_font->ft_w), (Screenlines - loop - 2) * (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h), CON_SCROLL_INDICATOR);
 				FG_COLOR = orig_color;
 			}
 		else
 		{
 			orig_color = FG_COLOR;
-			gr_string(CON_CHAR_BORDER, (Screenlines - loop - 2) * (CON_LINE_SPACE + console->ConsoleSurface->cv_font->ft_h), console->ConsoleLines[console->ConsoleScrollBack + loop]);
+			gr_string(CON_CHAR_BORDER, (Screenlines - loop - 2) * (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h), ConsoleLines[ConsoleScrollBack + loop]);
 			FG_COLOR = orig_color;
 		}
 	}
@@ -471,19 +466,19 @@ void CON_UpdateConsole(void) {
 }
 
 void CON_UpdateOffset(void) {
-	switch(console->Visible) {
+	switch(Visible) {
 		case CON_CLOSING:
-			console->RaiseOffset -= CON_OPENCLOSE_SPEED;
-			if(console->RaiseOffset <= 0) {
-				console->RaiseOffset = 0;
-				console->Visible = CON_CLOSED;
+			RaiseOffset -= CON_OPENCLOSE_SPEED;
+			if(RaiseOffset <= 0) {
+				RaiseOffset = 0;
+				Visible = CON_CLOSED;
 			}
 			break;
 		case CON_OPENING:
-			console->RaiseOffset += CON_OPENCLOSE_SPEED;
-			if(console->RaiseOffset >= console->ConsoleSurface->cv_h) {
-				console->RaiseOffset = console->ConsoleSurface->cv_h;
-				console->Visible = CON_OPEN;
+			RaiseOffset += CON_OPENCLOSE_SPEED;
+			if(RaiseOffset >= ConsoleSurface->cv_h) {
+				RaiseOffset = ConsoleSurface->cv_h;
+				Visible = CON_OPEN;
 			}
 			break;
 		case CON_OPEN:
@@ -498,7 +493,7 @@ void CON_DrawConsole(void) {
 	grs_bitmap *clip;
 	
 	/* only draw if console is visible: here this means, that the console is not CON_CLOSED */
-	if(console->Visible == CON_CLOSED)
+	if(Visible == CON_CLOSED)
 		return;
 	
 	/* Update the scrolling offset */
@@ -511,13 +506,13 @@ void CON_DrawConsole(void) {
 	/* before drawing, make sure the alpha channel of the console surface is set
 	 * properly.  (sigh) I wish we didn't have to do this every frame... */
 	if(grd_curscreen->flags & SDL_OPENGLBLIT)
-		CON_AlphaGL(console->ConsoleSurface, console->ConsoleAlpha);
+		CON_AlphaGL(ConsoleSurface, ConsoleAlpha);
 #endif
 	
 	canv_save = grd_curcanv;
 	gr_set_current_canvas(&grd_curscreen->sc_canvas);
 	
-	clip = gr_create_sub_bitmap(&console->ConsoleSurface->cv_bitmap, 0, console->ConsoleSurface->cv_h - console->RaiseOffset, console->ConsoleSurface->cv_w, console->RaiseOffset);
+	clip = gr_create_sub_bitmap(&ConsoleSurface->cv_bitmap, 0, ConsoleSurface->cv_h - RaiseOffset, ConsoleSurface->cv_w, RaiseOffset);
 	
 	gr_bitmap(0, 0, clip);
 	gr_free_sub_bitmap(clip);
@@ -536,43 +531,43 @@ void CON_Init()
 {
 	int loop;
 
-	console->Visible = CON_CLOSED;
-	console->RaiseOffset = 0;
-	console->ConsoleLines = NULL;
-	console->CommandLines = NULL;
-	console->TotalConsoleLines = 0;
-	console->ConsoleScrollBack = 0;
-	console->TotalCommands = 0;
-	console->BackgroundImage = NULL;
+	Visible = CON_CLOSED;
+	RaiseOffset = 0;
+	ConsoleLines = NULL;
+	CommandLines = NULL;
+	TotalConsoleLines = 0;
+	ConsoleScrollBack = 0;
+	TotalCommands = 0;
+	BackgroundImage = NULL;
 #if 0
-	console->ConsoleAlpha = SDL_ALPHA_OPAQUE;
+	ConsoleAlpha = SDL_ALPHA_OPAQUE;
 #endif
-	console->Offset = 0;
-	console->InsMode = 1;
-	console->CursorPos = 0;
-	console->CommandScrollBack = 0;
-	console->Prompt = d_strdup(CON_DEFAULT_PROMPT);
-	console->HideKey = CON_DEFAULT_HIDEKEY;
+	Offset = 0;
+	InsMode = 1;
+	CursorPos = 0;
+	CommandScrollBack = 0;
+	Prompt = d_strdup(CON_DEFAULT_PROMPT);
+	HideKey = CON_DEFAULT_HIDEKEY;
 
 	/* load the console surface */
-	console->ConsoleSurface = NULL;
+	ConsoleSurface = NULL;
 
 	/* Load the dirty rectangle for user input */
-	console->InputBackground = NULL;
+	InputBackground = NULL;
 
-	console->VChars = CON_CHARS_PER_LINE - 1;
-	console->LineBuffer = CON_NUM_LINES;
+	VChars = CON_CHARS_PER_LINE - 1;
+	LineBuffer = CON_NUM_LINES;
 
-	console->ConsoleLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
-	console->CommandLines = (char **)d_malloc(sizeof(char *) * console->LineBuffer);
-	for(loop = 0; loop <= console->LineBuffer - 1; loop++) {
-		console->ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
-		console->CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+	ConsoleLines = (char **)d_malloc(sizeof(char *) * LineBuffer);
+	CommandLines = (char **)d_malloc(sizeof(char *) * LineBuffer);
+	for(loop = 0; loop <= LineBuffer - 1; loop++) {
+		ConsoleLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
+		CommandLines[loop] = (char *)d_calloc(CON_CHARS_PER_LINE, sizeof(char));
 	}
-	memset(console->Command, 0, CON_CHARS_PER_LINE);
-	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
+	memset(Command, 0, CON_CHARS_PER_LINE);
+	memset(LCommand, 0, CON_CHARS_PER_LINE);
+	memset(RCommand, 0, CON_CHARS_PER_LINE);
+	memset(VCommand, 0, CON_CHARS_PER_LINE);
 
 	cmd_init();
 
@@ -592,37 +587,37 @@ void CON_InitGFX(int w, int h)
 	grs_bitmap bmp;
 	ubyte pal[256*3];
 
-	if (console->ConsoleSurface) {
+	if (ConsoleSurface) {
 		/* resize console surface */
-		gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);
-		gr_init_bitmap_alloc(&console->ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
+		gr_free_bitmap_data(&ConsoleSurface->cv_bitmap);
+		gr_init_bitmap_alloc(&ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
 	} else {
 		/* load the console surface */
-		console->ConsoleSurface = gr_create_canvas(w, h);
+		ConsoleSurface = gr_create_canvas(w, h);
 	}
 
 	/* Load the consoles font */
 	CON_Font(SMALL_FONT, gr_find_closest_color(29,29,47), -1);
 
 	/* make sure that the size of the console is valid */
-	if(w > grd_curscreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
+	if(w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
 		w = grd_curscreen->sc_w;
-	if(h > grd_curscreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
+	if(h > grd_curscreen->sc_h || h < ConsoleSurface->cv_font->ft_h)
 		h = grd_curscreen->sc_h;
 
 	/* Load the dirty rectangle for user input */
-	if (console->InputBackground)
-		gr_free_bitmap(console->InputBackground);
-	console->InputBackground = gr_create_bitmap(w, console->ConsoleSurface->cv_font->ft_h);
+	if (InputBackground)
+		gr_free_bitmap(InputBackground);
+	InputBackground = gr_create_bitmap(w, ConsoleSurface->cv_font->ft_h);
 #if 0
-	SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+	SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
 #endif
 	
 	/* calculate the number of visible characters in the command line */
 #if 0 // doesn't work because proportional font
-	console->VChars = (w - CON_CHAR_BORDER) / console->ConsoleSurface->cv_font->ft_w;
-	if(console->VChars >= CON_CHARS_PER_LINE)
-		console->VChars = CON_CHARS_PER_LINE - 1;
+	VChars = (w - CON_CHAR_BORDER) / ConsoleSurface->cv_font->ft_w;
+	if(VChars >= CON_CHARS_PER_LINE)
+		VChars = CON_CHARS_PER_LINE - 1;
 #endif
 
 	gr_init_bitmap_data(&bmp);
@@ -636,48 +631,48 @@ void CON_InitGFX(int w, int h)
 
 /* Makes the console visible */
 void CON_Show(void) {
-	console->Visible = CON_OPENING;
+	Visible = CON_OPENING;
 	CON_UpdateConsole();
 }
 
 /* Hides the console (make it invisible) */
 void CON_Hide(void) {
-	console->Visible = CON_CLOSING;
+	Visible = CON_CLOSING;
 	key_flush();
 }
 
 /* tells wether the console is visible or not */
 int CON_isVisible(void) {
-	return((console->Visible == CON_OPEN) || (console->Visible == CON_OPENING));
+	return((Visible == CON_OPEN) || (Visible == CON_OPENING));
 }
 
 /* Frees all the memory loaded by the console */
 void CON_Free(void) {
 	int i;
 	
-	for(i = 0; i <= console->LineBuffer - 1; i++) {
-		d_free(console->ConsoleLines[i]);
-		d_free(console->CommandLines[i]);
+	for(i = 0; i <= LineBuffer - 1; i++) {
+		d_free(ConsoleLines[i]);
+		d_free(CommandLines[i]);
 	}
-	d_free(console->ConsoleLines);
-	d_free(console->CommandLines);
+	d_free(ConsoleLines);
+	d_free(CommandLines);
 	
-	console->ConsoleLines = NULL;
-	console->CommandLines = NULL;
+	ConsoleLines = NULL;
+	CommandLines = NULL;
 	
-	if (console->ConsoleSurface)
-		gr_free_canvas(console->ConsoleSurface);
-	console->ConsoleSurface = NULL;
+	if (ConsoleSurface)
+		gr_free_canvas(ConsoleSurface);
+	ConsoleSurface = NULL;
 	
-	if (console->BackgroundImage)
-		gr_free_bitmap(console->BackgroundImage);
-	console->BackgroundImage = NULL;
+	if (BackgroundImage)
+		gr_free_bitmap(BackgroundImage);
+	BackgroundImage = NULL;
 	
-	if (console->InputBackground)
-		gr_free_bitmap(console->InputBackground);
-	console->InputBackground = NULL;
+	if (InputBackground)
+		gr_free_bitmap(InputBackground);
+	InputBackground = NULL;
 
-	d_free(console->Prompt);
+	d_free(Prompt);
 
 	con_initialized = 0;
 }
@@ -688,24 +683,24 @@ void CON_NewLineConsole(void) {
 	int loop;
 	char* temp;
 	
-	temp = console->ConsoleLines[console->LineBuffer - 1];
+	temp = ConsoleLines[LineBuffer - 1];
 	
-	for(loop = console->LineBuffer - 1; loop > 0; loop--)
-		console->ConsoleLines[loop] = console->ConsoleLines[loop - 1];
+	for(loop = LineBuffer - 1; loop > 0; loop--)
+		ConsoleLines[loop] = ConsoleLines[loop - 1];
 	
-	console->ConsoleLines[0] = temp;
+	ConsoleLines[0] = temp;
 	
-	memset(console->ConsoleLines[0], 0, CON_CHARS_PER_LINE);
-	if(console->TotalConsoleLines < console->LineBuffer - 1)
-		console->TotalConsoleLines++;
+	memset(ConsoleLines[0], 0, CON_CHARS_PER_LINE);
+	if(TotalConsoleLines < LineBuffer - 1)
+		TotalConsoleLines++;
 	
 	//Now adjust the ConsoleScrollBack
 	//dont scroll if not at bottom
-	if(console->ConsoleScrollBack != 0)
-		console->ConsoleScrollBack++;
+	if(ConsoleScrollBack != 0)
+		ConsoleScrollBack++;
 	//boundaries
-	if(console->ConsoleScrollBack > console->LineBuffer-1)
-		console->ConsoleScrollBack = console->LineBuffer-1;
+	if(ConsoleScrollBack > LineBuffer-1)
+		ConsoleScrollBack = LineBuffer-1;
 	
 }
 
@@ -715,17 +710,17 @@ void CON_NewLineCommand(void) {
 	int loop;
 	char *temp;
 	
-	temp  = console->CommandLines[console->LineBuffer - 1];
+	temp  = CommandLines[LineBuffer - 1];
 	
 	
-	for(loop = console->LineBuffer - 1; loop > 0; loop--)
-		console->CommandLines[loop] = console->CommandLines[loop - 1];
+	for(loop = LineBuffer - 1; loop > 0; loop--)
+		CommandLines[loop] = CommandLines[loop - 1];
 	
-	console->CommandLines[0] = temp;
+	CommandLines[0] = temp;
 	
-	memset(console->CommandLines[0], 0, CON_CHARS_PER_LINE);
-	if(console->TotalCommands < console->LineBuffer - 1)
-		console->TotalCommands++;
+	memset(CommandLines[0], 0, CON_CHARS_PER_LINE);
+	if(TotalCommands < LineBuffer - 1)
+		TotalCommands++;
 }
 
 /* Draws the command line the user is typing in to the screen */
@@ -742,27 +737,27 @@ void DrawCommandLine() {
 	grs_canvas *canv_save;
 	short orig_color;
 	
-	commandbuffer = console->VChars - (int)strlen(console->Prompt) - 1; // -1 to make cursor visible
+	commandbuffer = VChars - (int)strlen(Prompt) - 1; // -1 to make cursor visible
 	
 #if 0
-	CurrentFont = console->ConsoleSurface->cv_font;
+	CurrentFont = ConsoleSurface->cv_font;
 #endif
 	
 	//Concatenate the left and right side to command
-	strcpy(console->Command, console->LCommand);
-	strncat(console->Command, console->RCommand, strlen(console->RCommand));
+	strcpy(Command, LCommand);
+	strncat(Command, RCommand, strlen(RCommand));
 	
 	//calculate display offset from current cursor position
-	if(console->Offset < console->CursorPos - commandbuffer)
-		console->Offset = console->CursorPos - commandbuffer;
-	if(console->Offset > console->CursorPos)
-		console->Offset = console->CursorPos;
+	if(Offset < CursorPos - commandbuffer)
+		Offset = CursorPos - commandbuffer;
+	if(Offset > CursorPos)
+		Offset = CursorPos;
 	
 	//first add prompt to visible part
-	strcpy(console->VCommand, console->Prompt);
+	strcpy(VCommand, Prompt);
 	
 	//then add the visible part of the command
-	strncat(console->VCommand, &console->Command[console->Offset], strlen(&console->Command[console->Offset]));
+	strncat(VCommand, &Command[Offset], strlen(&Command[Offset]));
 	
 	//now display the result
 	
@@ -776,14 +771,14 @@ void DrawCommandLine() {
 #endif
 	
 	canv_save = grd_curcanv;
-	gr_set_current_canvas(console->ConsoleSurface);
+	gr_set_current_canvas(ConsoleSurface);
 	
 	//first of all restore InputBackground
-	gr_bitmap(0, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, console->InputBackground);
+	gr_bitmap(0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, InputBackground);
 	
 	//now add the text
 	orig_color = FG_COLOR;
-	gr_string(CON_CHAR_BORDER, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, console->VCommand);
+	gr_string(CON_CHAR_BORDER, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, VCommand);
 	FG_COLOR = orig_color;
 	
 	//at last add the cursor
@@ -797,8 +792,8 @@ void DrawCommandLine() {
 	}
 	
 	//check if cursor has moved - if yes display cursor anyway
-	if(console->CursorPos != LastCursorPos) {
-		LastCursorPos = console->CursorPos;
+	if(CursorPos != LastCursorPos) {
+		LastCursorPos = CursorPos;
 		LastBlinkTime = get_msecs() + CON_BLINK_RATE;
 		Blink = 1;
 	}
@@ -806,14 +801,14 @@ void DrawCommandLine() {
 	if(Blink) {
 		int prompt_width, cmd_width, h, w;
 		
-		gr_get_string_size(console->Prompt, &prompt_width, &h, &w);
-		gr_get_string_size(console->LCommand + console->Offset, &cmd_width, &h, &w);
+		gr_get_string_size(Prompt, &prompt_width, &h, &w);
+		gr_get_string_size(LCommand + Offset, &cmd_width, &h, &w);
 		x = CON_CHAR_BORDER + prompt_width + cmd_width;
 		orig_color = FG_COLOR;
-		if(console->InsMode)
-			gr_string(x, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, CON_INS_CURSOR);
+		if(InsMode)
+			gr_string(x, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, CON_INS_CURSOR);
 		else
-			gr_string(x, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, CON_OVR_CURSOR);
+			gr_string(x, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, CON_OVR_CURSOR);
 		FG_COLOR = orig_color;
 	}
 	
@@ -830,10 +825,10 @@ void DrawCommandLine() {
 
 static inline int con_get_width(void)
 {
-	if (!console->ConsoleSurface)
+	if (!ConsoleSurface)
 		return 0;
 
-	return console->ConsoleSurface->cv_bitmap.bm_w - CON_CHAR_BORDER;
+	return ConsoleSurface->cv_bitmap.bm_w - CON_CHAR_BORDER;
 }
 
 
@@ -842,11 +837,11 @@ static inline int con_get_string_width(char *string)
 	grs_canvas *canv_save;
 	int w = 0, h, aw;
 
-	if (!console->ConsoleSurface)
+	if (!ConsoleSurface)
 		return 0;
 
 	canv_save = grd_curcanv;
-	gr_set_current_canvas(console->ConsoleSurface);
+	gr_set_current_canvas(ConsoleSurface);
 	gr_get_string_size(string, &w, &h, &aw);
 	gr_set_current_canvas(canv_save);
 
@@ -861,7 +856,7 @@ static inline int con_get_string_width(char *string)
 /* Outputs text to the console (in game), up to CON_CHARS_PER_LINE chars can be entered */
 void CON_Out(const char *str, ...) {
 	va_list marker;
-	//keep some space free for stuff like CON_Out("blablabla %s", console->Command);
+	//keep some space free for stuff like CON_Out("blablabla %s", Command);
 	char temp[CON_CHARS_PER_LINE + 128];
 	char* ptemp;
 	
@@ -875,27 +870,27 @@ void CON_Out(const char *str, ...) {
 	// the only problem is that temp is maybe longer than the console
 	// width so we have to cut it into several pieces
 	
-	if(console->ConsoleLines) {
+	if(ConsoleLines) {
 		char *p = ptemp;
 
 		while (*p) {
 			if (*p == '\n') {
 				*p = '\0';
 				CON_NewLineConsole();
-				strcat(console->ConsoleLines[0], ptemp);
+				strcat(ConsoleLines[0], ptemp);
 				ptemp = p+1;
-			} else if (p - ptemp > console->VChars - strlen(console->ConsoleLines[0]) ||
+			} else if (p - ptemp > VChars - strlen(ConsoleLines[0]) ||
 					   con_get_string_width(ptemp) > con_get_width()) {
 				CON_NewLineConsole();
-				strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
-				console->ConsoleLines[0][console->VChars] = '\0';
+				strncat(ConsoleLines[0], ptemp, VChars - strlen(ConsoleLines[0]));
+				ConsoleLines[0][VChars] = '\0';
 				ptemp = p;
 			}
 			p++;
 		}
 		if (strlen(ptemp)) {
-			strncat(console->ConsoleLines[0], ptemp, console->VChars - strlen(console->ConsoleLines[0]));
-			console->ConsoleLines[0][console->VChars] = '\0';
+			strncat(ConsoleLines[0], ptemp, VChars - strlen(ConsoleLines[0]));
+			ConsoleLines[0][VChars] = '\0';
 		}
 		CON_UpdateConsole();
 	}
@@ -906,13 +901,13 @@ void CON_Out(const char *str, ...) {
 /* Sets the alpha level of the console, 0 turns off alpha blending */
 void CON_Alpha(unsigned char alpha) {
 	/* store alpha as state! */
-	console->ConsoleAlpha = alpha;
+	ConsoleAlpha = alpha;
 	
 	if((grd_curscreen->flags & SDL_OPENGLBLIT) == 0) {
 		if(alpha == 0)
-			SDL_SetAlpha(console->ConsoleSurface, 0, alpha);
+			SDL_SetAlpha(ConsoleSurface, 0, alpha);
 		else
-			SDL_SetAlpha(console->ConsoleSurface, SDL_SRCALPHA, alpha);
+			SDL_SetAlpha(ConsoleSurface, SDL_SRCALPHA, alpha);
 	}
 	
 	//	CON_UpdateConsole();
@@ -925,25 +920,25 @@ int CON_Background(grs_bitmap *image)
 {
 	/* Free the background from the console */
 	if (image == NULL) {
-		if (console->BackgroundImage)
-			gr_free_bitmap(console->BackgroundImage);
-		console->BackgroundImage = NULL;
+		if (BackgroundImage)
+			gr_free_bitmap(BackgroundImage);
+		BackgroundImage = NULL;
 #if 0
-		SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+		SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
 #endif
 		return 0;
 	}
 	
 	/* Load a new background */
-	if (console->BackgroundImage)
-		gr_free_bitmap(console->BackgroundImage);
-	console->BackgroundImage = gr_create_bitmap(console->ConsoleSurface->cv_w, console->ConsoleSurface->cv_h);
-	gr_bitmap_scale_to(image, console->BackgroundImage);
+	if (BackgroundImage)
+		gr_free_bitmap(BackgroundImage);
+	BackgroundImage = gr_create_bitmap(ConsoleSurface->cv_w, ConsoleSurface->cv_h);
+	gr_bitmap_scale_to(image, BackgroundImage);
 	
 #if 0
-	SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+	SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
 #endif
-	gr_bm_bitblt(console->BackgroundImage->bm_w, console->InputBackground->bm_h, 0, 0, 0, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, console->BackgroundImage, console->InputBackground);
+	gr_bm_bitblt(BackgroundImage->bm_w, InputBackground->bm_h, 0, 0, 0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, BackgroundImage, InputBackground);
 	
 	return 0;
 }
@@ -954,7 +949,7 @@ void CON_Font(grs_font *font, int fg, int bg)
 	grs_canvas *canv_save;
 	
 	canv_save = grd_curcanv;
-	gr_set_current_canvas(console->ConsoleSurface);
+	gr_set_current_canvas(ConsoleSurface);
 	gr_set_curfont(font);
 	gr_set_fontcolor(fg, bg);
 	gr_set_current_canvas(canv_save);
@@ -966,49 +961,49 @@ void CON_Font(grs_font *font, int fg, int bg)
 void CON_Resize(int w, int h)
 {
 	/* make sure that the size of the console is valid */
-	if(w > grd_curscreen->sc_w || w < console->ConsoleSurface->cv_font->ft_w * 32)
+	if(w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
 		w = grd_curscreen->sc_w;
-	if(h > grd_curscreen->sc_h || h < console->ConsoleSurface->cv_font->ft_h)
+	if(h > grd_curscreen->sc_h || h < ConsoleSurface->cv_font->ft_h)
 		h = grd_curscreen->sc_h;
 	
 	/* resize console surface */
-	gr_free_bitmap_data(&console->ConsoleSurface->cv_bitmap);
-	gr_init_bitmap_alloc(&console->ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
+	gr_free_bitmap_data(&ConsoleSurface->cv_bitmap);
+	gr_init_bitmap_alloc(&ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
 	
 	/* Load the dirty rectangle for user input */
-	gr_free_bitmap(console->InputBackground);
-	console->InputBackground = gr_create_bitmap(w, console->ConsoleSurface->cv_font->ft_h);
+	gr_free_bitmap(InputBackground);
+	InputBackground = gr_create_bitmap(w, ConsoleSurface->cv_font->ft_h);
 	
 	/* Now reset some stuff dependent on the previous size */
-	console->ConsoleScrollBack = 0;
+	ConsoleScrollBack = 0;
 	
 	/* Reload the background image (for the input text area) in the console */
-	if(console->BackgroundImage) {
+	if(BackgroundImage) {
 #if 0
-		SDL_FillRect(console->InputBackground, NULL, SDL_MapRGBA(console->ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
+		SDL_FillRect(InputBackground, NULL, SDL_MapRGBA(ConsoleSurface->format, 0, 0, 0, SDL_ALPHA_OPAQUE));
 #endif
-		gr_bm_bitblt(console->BackgroundImage->bm_w, console->InputBackground->bm_h, 0, 0, 0, console->ConsoleSurface->cv_h - console->ConsoleSurface->cv_font->ft_h, console->BackgroundImage, console->InputBackground);
+		gr_bm_bitblt(BackgroundImage->bm_w, InputBackground->bm_h, 0, 0, 0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, BackgroundImage, InputBackground);
 	}
 	
 #if 0
 	/* restore the alpha level */
-	CON_Alpha(console->ConsoleAlpha);
+	CON_Alpha(ConsoleAlpha);
 #endif
 }
 
 /* Sets the Prompt for console */
 void CON_SetPrompt(char* newprompt) {
 	//check length so we can still see at least 1 char :-)
-	if(strlen(newprompt) < console->VChars) {
-		d_free(console->Prompt);
-		console->Prompt = d_strdup(newprompt);
+	if(strlen(newprompt) < VChars) {
+		d_free(Prompt);
+		Prompt = d_strdup(newprompt);
 	} else
-		CON_Out("prompt too long. (max. %i chars)\n", console->VChars - 1);
+		CON_Out("prompt too long. (max. %i chars)\n", VChars - 1);
 }
 
 /* Sets the key that deactivates (hides) the console. */
 void CON_SetHideKey(int key) {
-	console->HideKey = key;
+	HideKey = key;
 }
 
 /* Executes the command entered */
@@ -1020,7 +1015,7 @@ void CON_TabCompletion(void) {
 	int i,j;
 	char* command;
 	
-	command = cmd_complete(console->LCommand);
+	command = cmd_complete(LCommand);
 	
 	if(!command)
 		return;	//no tab completion took place so return silently
@@ -1029,126 +1024,126 @@ void CON_TabCompletion(void) {
 	if(j > CON_CHARS_PER_LINE - 2)
 		j = CON_CHARS_PER_LINE-1;
 	
-	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
-	console->CursorPos = 0;
+	memset(LCommand, 0, CON_CHARS_PER_LINE);
+	CursorPos = 0;
 	
 	for(i = 0; i < j; i++) {
-		console->CursorPos++;
-		console->LCommand[i] = command[i];
+		CursorPos++;
+		LCommand[i] = command[i];
 	}
 	//add a trailing space
-	console->CursorPos++;
-	console->LCommand[j] = ' ';
-	console->LCommand[j+1] = '\0';
+	CursorPos++;
+	LCommand[j] = ' ';
+	LCommand[j+1] = '\0';
 }
 
 void Cursor_Left(void) {
 	char temp[CON_CHARS_PER_LINE];
 	
-	if(console->CursorPos > 0) {
-		console->CursorPos--;
-		strcpy(temp, console->RCommand);
-		strcpy(console->RCommand, &console->LCommand[strlen(console->LCommand)-1]);
-		strcat(console->RCommand, temp);
-		console->LCommand[strlen(console->LCommand)-1] = '\0';
-		//CON_Out("L:%s, R:%s\n", console->LCommand, console->RCommand);
+	if(CursorPos > 0) {
+		CursorPos--;
+		strcpy(temp, RCommand);
+		strcpy(RCommand, &LCommand[strlen(LCommand)-1]);
+		strcat(RCommand, temp);
+		LCommand[strlen(LCommand)-1] = '\0';
+		//CON_Out("L:%s, R:%s\n", LCommand, RCommand);
 	}
 }
 
 void Cursor_Right(void) {
 	char temp[CON_CHARS_PER_LINE];
 	
-	if(console->CursorPos < strlen(console->Command)) {
-		console->CursorPos++;
-		strncat(console->LCommand, console->RCommand, 1);
-		strcpy(temp, console->RCommand);
-		strcpy(console->RCommand, &temp[1]);
-		//CON_Out("L:%s, R:%s\n", console->LCommand, console->RCommand);
+	if(CursorPos < strlen(Command)) {
+		CursorPos++;
+		strncat(LCommand, RCommand, 1);
+		strcpy(temp, RCommand);
+		strcpy(RCommand, &temp[1]);
+		//CON_Out("L:%s, R:%s\n", LCommand, RCommand);
 	}
 }
 
 void Cursor_Home(void) {
 	char temp[CON_CHARS_PER_LINE];
 	
-	console->CursorPos = 0;
-	strcpy(temp, console->RCommand);
-	strcpy(console->RCommand, console->LCommand);
-	strncat(console->RCommand, temp, strlen(temp));
-	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
+	CursorPos = 0;
+	strcpy(temp, RCommand);
+	strcpy(RCommand, LCommand);
+	strncat(RCommand, temp, strlen(temp));
+	memset(LCommand, 0, CON_CHARS_PER_LINE);
 }
 
 void Cursor_End(void) {
-	console->CursorPos = (int)strlen(console->Command);
-	strncat(console->LCommand, console->RCommand, strlen(console->RCommand));
-	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
+	CursorPos = (int)strlen(Command);
+	strncat(LCommand, RCommand, strlen(RCommand));
+	memset(RCommand, 0, CON_CHARS_PER_LINE);
 }
 
 void Cursor_Del(void) {
 	char temp[CON_CHARS_PER_LINE];
 	
-	if(strlen(console->RCommand) > 0) {
-		strcpy(temp, console->RCommand);
-		strcpy(console->RCommand, &temp[1]);
+	if(strlen(RCommand) > 0) {
+		strcpy(temp, RCommand);
+		strcpy(RCommand, &temp[1]);
 	}
 }
 
 void Cursor_BSpace(void) {
-	if(console->CursorPos > 0) {
-		console->CursorPos--;
-		console->Offset--;
-		if(console->Offset < 0)
-			console->Offset = 0;
-		console->LCommand[strlen(console->LCommand)-1] = '\0';
+	if(CursorPos > 0) {
+		CursorPos--;
+		Offset--;
+		if(Offset < 0)
+			Offset = 0;
+		LCommand[strlen(LCommand)-1] = '\0';
 	}
 }
 
 void Cursor_Add(int event)
 {
-	if(strlen(console->Command) < CON_CHARS_PER_LINE - 1)
+	if(strlen(Command) < CON_CHARS_PER_LINE - 1)
 	{
-		console->CursorPos++;
-		console->LCommand[strlen(console->LCommand)] = key_to_ascii(event);
-		console->LCommand[strlen(console->LCommand)] = '\0';
+		CursorPos++;
+		LCommand[strlen(LCommand)] = key_to_ascii(event);
+		LCommand[strlen(LCommand)] = '\0';
 	}
 }
 
 void Clear_Command(void) {
-	console->CursorPos = 0;
-	memset(console->VCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->Command, 0, CON_CHARS_PER_LINE);
-	memset(console->LCommand, 0, CON_CHARS_PER_LINE);
-	memset(console->RCommand, 0, CON_CHARS_PER_LINE);
+	CursorPos = 0;
+	memset(VCommand, 0, CON_CHARS_PER_LINE);
+	memset(Command, 0, CON_CHARS_PER_LINE);
+	memset(LCommand, 0, CON_CHARS_PER_LINE);
+	memset(RCommand, 0, CON_CHARS_PER_LINE);
 }
 
 void Clear_History(void) {
 	int loop;
 	
-	for(loop = 0; loop <= console->LineBuffer - 1; loop++)
-		memset(console->ConsoleLines[loop], 0, CON_CHARS_PER_LINE);
+	for(loop = 0; loop <= LineBuffer - 1; loop++)
+		memset(ConsoleLines[loop], 0, CON_CHARS_PER_LINE);
 }
 
 void Command_Up(void) {
-	if(console->CommandScrollBack < console->TotalCommands - 1) {
+	if(CommandScrollBack < TotalCommands - 1) {
 		/* move back a line in the command strings and copy the command to the current input string */
-		console->CommandScrollBack++;
-		memset(console->RCommand, 0, CON_CHARS_PER_LINE);
-		console->Offset = 0;
-		strcpy(console->LCommand, console->CommandLines[console->CommandScrollBack]);
-		console->CursorPos = (int)strlen(console->CommandLines[console->CommandScrollBack]);
+		CommandScrollBack++;
+		memset(RCommand, 0, CON_CHARS_PER_LINE);
+		Offset = 0;
+		strcpy(LCommand, CommandLines[CommandScrollBack]);
+		CursorPos = (int)strlen(CommandLines[CommandScrollBack]);
 		CON_UpdateConsole();
 	}
 }
 
 void Command_Down(void) {
-	if(console->CommandScrollBack > -1) {
+	if(CommandScrollBack > -1) {
 		/* move forward a line in the command strings and copy the command to the current input string */
-		console->CommandScrollBack--;
-		memset(console->RCommand, 0, CON_CHARS_PER_LINE);
-		memset(console->LCommand, 0, CON_CHARS_PER_LINE);
-		console->Offset = 0;
-		if(console->CommandScrollBack > -1)
-			strcpy(console->LCommand, console->CommandLines[console->CommandScrollBack]);
-		console->CursorPos = (int)strlen(console->LCommand);
+		CommandScrollBack--;
+		memset(RCommand, 0, CON_CHARS_PER_LINE);
+		memset(LCommand, 0, CON_CHARS_PER_LINE);
+		Offset = 0;
+		if(CommandScrollBack > -1)
+			strcpy(LCommand, CommandLines[CommandScrollBack]);
+		CursorPos = (int)strlen(LCommand);
 		CON_UpdateConsole();
 	}
 }
