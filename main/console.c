@@ -90,9 +90,6 @@ static void con_free(void);
 static int con_background(grs_bitmap *image);
 /* Sets font info for the console */
 static void con_font(grs_font *font, int fg, int bg);
-/* Set the key, that invokes a CON_Hide() after press. default is ESCAPE and you can always hide using
- ESCAPE and the HideKey. compared against event->key.keysym.sym !! */
-static void con_set_hide_key(int key);
 /* makes newline (same as printf("\n") or CON_Out("\n") ) */
 static void con_newline(void);
 /* updates console after resize etc. */
@@ -539,41 +536,6 @@ static void con_font(grs_font *font, int fg, int bg)
 	gr_set_curfont(font);
 	gr_set_fontcolor(fg, bg);
 	gr_set_current_canvas(canv_save);
-}
-
-
-/* resizes the console, has to reset alot of stuff
- * returns 1 on error */
-static void con_resize(int w, int h)
-{
-	/* make sure that the size of the console is valid */
-	if(w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
-		w = grd_curscreen->sc_w;
-	if(h > grd_curscreen->sc_h || h < ConsoleSurface->cv_font->ft_h)
-		h = grd_curscreen->sc_h;
-
-	/* resize console surface */
-	gr_free_bitmap_data(&ConsoleSurface->cv_bitmap);
-	gr_init_bitmap_alloc(&ConsoleSurface->cv_bitmap, BM_LINEAR, 0, 0, w, h, w);
-
-	/* Load the dirty rectangle for user input */
-	gr_free_bitmap(InputBackground);
-	InputBackground = gr_create_bitmap(w, ConsoleSurface->cv_font->ft_h);
-
-	/* Now reset some stuff dependent on the previous size */
-	ConsoleScrollBack = 0;
-
-	/* Reload the background image (for the input text area) in the console */
-	if (BackgroundImage) {
-		gr_bm_bitblt(BackgroundImage->bm_w, InputBackground->bm_h, 0, 0, 0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, BackgroundImage, InputBackground);
-	}
-}
-
-
-/* Sets the key that deactivates (hides) the console. */
-static void con_set_hide_key(int key)
-{
-	HideKey = key;
 }
 
 

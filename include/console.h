@@ -40,8 +40,6 @@ void con_draw(void);
 void con_init(void);
 /* Initializes the graphical console */
 void con_init_gfx(int w, int h);
-/* Changes the size of the console */
-void con_resize(int w, int h);
 
 
 /* Priority levels */
