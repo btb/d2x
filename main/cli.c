@@ -45,7 +45,6 @@
 static char **CommandLines;     // List of all the past commands
 static int TotalCommands;       // Number of commands in the Back Commands
 static int LineBuffer;          // The number of visible lines in the console (autocalculated)
-static int VChars;              // The number of visible characters in one console line (autocalculated)
 static char *Prompt;            // Prompt displayed in command line
 static char  Command[CON_CHARS_PER_LINE];   // current command in command line = lcommand + rcommand
 static char LCommand[CON_CHARS_PER_LINE];   // right hand side of cursor
@@ -74,8 +73,6 @@ void cli_init()
 	CursorPos = 0;
 	CommandScrollBack = 0;
 	Prompt = d_strdup(CON_DEFAULT_PROMPT);
-
-	VChars = CON_CHARS_PER_LINE - 1;
 	LineBuffer = CON_NUM_LINES;
 
 	CommandLines = (char **)d_malloc(sizeof(char *) * LineBuffer);
@@ -130,17 +127,23 @@ static void CON_NewLineCommand(void)
 /* completely rewritten by C.Wacha */
 void DrawCommandLine(int y)
 {
-	int x;
+	int x, w, h, aw;
+	float real_aw;
 	int commandbuffer;
 	static unsigned int LastBlinkTime = 0;  // Last time the consoles cursor blinked
 	static int LastCursorPos = 0;           // Last Cursor Position
 	static int Blink = 0;                   // Is the cursor currently blinking
 
-	commandbuffer = VChars - (int)strlen(Prompt) - 1; // -1 to make cursor visible
-
 	// Concatenate the left and right side to command
 	strcpy(Command, LCommand);
 	strncat(Command, RCommand, strlen(RCommand));
+
+	gr_get_string_size(Command, &w, &h, &aw);
+	if (w > 0 && strlen(Command))
+		real_aw = (float)w/(float)strlen(Command);
+	else
+		real_aw = (float)aw;
+	commandbuffer = (GWIDTH - 2*CON_CHAR_BORDER)/real_aw - (int)strlen(Prompt) - 1; // -1 to make cursor visible
 
 	//calculate display offset from current cursor position
 	if (Offset < CursorPos - commandbuffer)
@@ -155,7 +158,7 @@ void DrawCommandLine(int y)
 	strncat(VCommand, &Command[Offset], strlen(&Command[Offset]));
 
 	// now display the result
-	gr_string(CON_CHAR_BORDER, y - grd_curfont->ft_h, VCommand);
+	gr_string(CON_CHAR_BORDER, y-h, VCommand);
 
 	// at last add the cursor
 	// check if the blink period is over
@@ -181,21 +184,10 @@ void DrawCommandLine(int y)
 		gr_get_string_size(LCommand + Offset, &cmd_width, &h, &w);
 		x = CON_CHAR_BORDER + prompt_width + cmd_width;
 		if (InsMode)
-			gr_string(x, y - grd_curfont->ft_h, CON_INS_CURSOR);
+			gr_string(x, y-h, CON_INS_CURSOR);
 		else
-			gr_string(x, y - grd_curfont->ft_h, CON_OVR_CURSOR);
+			gr_string(x, y-h, CON_OVR_CURSOR);
 	}
-}
-
-
-/* Sets the Prompt for console */
-void CON_SetPrompt(char* newprompt) {
-	// check length so we can still see at least 1 char :-)
-	if (strlen(newprompt) < VChars) {
-		d_free(Prompt);
-		Prompt = d_strdup(newprompt);
-	} else
-		CON_Out("prompt too long. (max. %i chars)\n", VChars - 1);
 }
 
 

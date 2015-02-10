@@ -17,8 +17,6 @@
 extern int InsMode;
 
 void cli_init(void);
-/* Modify the prompt of the console */
-void CON_SetPrompt(char *newprompt);
 /* executes the command typed in at the console (called if you press ENTER)*/
 void CON_Execute();
 /* Gets called when TAB was pressed */
