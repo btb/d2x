@@ -216,12 +216,7 @@ int con_key_handler(int key)
 
 				if (character == 255)
 					break;
-				if (CLI_insert_mode)
-					cli_add_character(character);
-				else {
-					cli_add_character(character);
-					cli_cursor_del();
-				}
+				cli_add_character(character);
 			}
 		}
 	}

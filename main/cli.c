@@ -315,6 +315,8 @@ void cli_add_character(char character)
 		LCommand[strlen(LCommand)] = character;
 		LCommand[strlen(LCommand)] = '\0';
 	}
+	if (!CLI_insert_mode)
+		cli_cursor_del();
 }
 
 
