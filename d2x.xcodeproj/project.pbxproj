@@ -217,6 +217,9 @@
 		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
 		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
 		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
+		143980CD1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
+		143980CE1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
+		143980CF1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
 		144BC0321A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0331A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0341A74C612001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
@@ -559,6 +562,8 @@
 		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		14286A481A672E6300A095F6 /* d2x-editor-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-editor-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
+		143980CC1A89EE290082C110 /* cli.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cli.c; sourceTree = "<group>"; };
+		143980D01A89EF6F0082C110 /* cli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
 		144BC0311A74C40E001A6048 /* gr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
 		144BC0351A74D0D0001A6048 /* vid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vid.h; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
@@ -1768,6 +1773,8 @@
 				1466965D1A2729870070D41D /* bm.h */,
 				1466965E1A2729870070D41D /* bmread.c */,
 				1466965F1A2729870070D41D /* bmread.h */,
+				143980CC1A89EE290082C110 /* cli.c */,
+				143980D01A89EF6F0082C110 /* cli.h */,
 				146696601A2729870070D41D /* cmd.c */,
 				1466961A1A2729860070D41D /* cmd.h */,
 				146696611A2729870070D41D /* cntrlcen.c */,
@@ -2388,6 +2395,7 @@
 				14286A2D1A672E6300A095F6 /* setup.c in Sources */,
 				14286A2E1A672E6300A095F6 /* 2dsline.c in Sources */,
 				14286A4F1A67313E00A095F6 /* ehostage.c in Sources */,
+				143980CD1A89EE290082C110 /* cli.c in Sources */,
 				14286A2F1A672E6300A095F6 /* bitblt.c in Sources */,
 				14286A301A672E6300A095F6 /* bitmap.c in Sources */,
 				14286A691A67313E00A095F6 /* medwall.c in Sources */,
@@ -2436,6 +2444,7 @@
 				14F0D5871A4CA77300682BB0 /* ukali.c in Sources */,
 				14F0D5881A4CA77300682BB0 /* joy.c in Sources */,
 				14F0D5891A4CA77300682BB0 /* joydefs.c in Sources */,
+				143980CF1A89EE290082C110 /* cli.c in Sources */,
 				14F0D57F1A4CA6E200682BB0 /* event.c in Sources */,
 				14F0D5801A4CA6E200682BB0 /* key.c in Sources */,
 				14F0D5811A4CA6E200682BB0 /* mouse.c in Sources */,
@@ -2628,6 +2637,7 @@
 				14F0D5BA1A4CB34F00682BB0 /* automap.c in Sources */,
 				14F0D5BB1A4CB34F00682BB0 /* bm.c in Sources */,
 				14F0D5BC1A4CB34F00682BB0 /* cmd.c in Sources */,
+				143980CE1A89EE290082C110 /* cli.c in Sources */,
 				14F0D5BD1A4CB34F00682BB0 /* cntrlcen.c in Sources */,
 				14F0D5BE1A4CB34F00682BB0 /* collide.c in Sources */,
 				14F0D5BF1A4CB34F00682BB0 /* config.c in Sources */,

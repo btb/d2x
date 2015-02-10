@@ -68,6 +68,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef EDITOR
 #include "bmread.h"
 #endif
+#include "cli.h"
+#include "cmd.h"
 #include "cntrlcen.h"
 #include "collide.h"
 #include "config.h"

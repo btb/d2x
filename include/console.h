@@ -13,6 +13,7 @@
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_ 1
 
+#include "cli.h"
 #include "cmd.h"
 #include "cvar.h"
 

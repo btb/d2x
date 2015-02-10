@@ -14,7 +14,7 @@ d2x_SOURCES = \
 arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/midi.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
 iff/iff.c     \
 libmve/decoder16.c libmve/decoder8.c  libmve/mve_audio.c libmve/mvelib.c    libmve/mveplay.c   \
-main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cmd.c      \
+main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cli.c      main/cmd.c      \
 main/cntrlcen.c main/collide.c  main/config.c   main/console.c  main/controls.c main/credits.c  \
 main/crypt.c    main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c main/escort.c   \
 main/fireball.c main/fuelcen.c  main/fvi.c      main/game.c     main/gamecntl.c main/gamefont.c \
