@@ -26,10 +26,6 @@
 
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
-#define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
-#define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
-#define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
-
 #define CON_NUM_LINES           128
 // Cut the buffer line if it becomes longer than this
 #define CON_CHARS_PER_LINE      128
