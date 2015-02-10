@@ -200,7 +200,7 @@ void cli_execute(void)
 		strcpy(CommandLines[0], Command);
 
 		// display the command including the prompt
-		con_out("%s%s\n", Prompt, Command);
+		con_printf(CON_NORMAL, "%s%s\n", Prompt, Command);
 
 		cmd_append(Command);
 

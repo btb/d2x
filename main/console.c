@@ -173,7 +173,7 @@ int con_key_handler(int key)
 
 
 /* Updates the console buffer */
-void con_update(void)
+static void con_update(void)
 {
 	int loop;
 	int loop2;
@@ -210,7 +210,7 @@ void con_update(void)
 }
 
 
-void con_update_offset(void)
+static void con_update_offset(void)
 {
 	switch (Visible) {
 		case CON_CLOSING:
@@ -405,7 +405,7 @@ static void con_free(void)
 
 
 /* Increments the console lines */
-void con_newline(void)
+static void con_newline(void)
 {
 	int loop;
 	char *temp;
@@ -462,7 +462,7 @@ static inline int con_get_string_width(char *string)
 #endif
 
 /* Outputs text to the console (in game), up to CON_CHARS_PER_LINE chars can be entered */
-void con_out(const char *str, ...)
+static void con_out(const char *str, ...)
 {
 	va_list marker;
 	//keep some space free for stuff like CON_Out("blablabla %s", Command);
@@ -507,7 +507,7 @@ void con_out(const char *str, ...)
 
 
 /* Adds background image to the console, scaled to size of console*/
-int con_background(grs_bitmap *image)
+static int con_background(grs_bitmap *image)
 {
 	/* Free the background from the console */
 	if (image == NULL) {
@@ -530,7 +530,7 @@ int con_background(grs_bitmap *image)
 
 
 /* Sets font info for the console */
-void con_font(grs_font *font, int fg, int bg)
+static void con_font(grs_font *font, int fg, int bg)
 {
 	grs_canvas *canv_save;
 
@@ -544,7 +544,7 @@ void con_font(grs_font *font, int fg, int bg)
 
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
-void con_resize(int w, int h)
+static void con_resize(int w, int h)
 {
 	/* make sure that the size of the console is valid */
 	if(w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
@@ -571,13 +571,13 @@ void con_resize(int w, int h)
 
 
 /* Sets the key that deactivates (hides) the console. */
-void con_set_hide_key(int key)
+static void con_set_hide_key(int key)
 {
 	HideKey = key;
 }
 
 
-void con_clear(void)
+static void con_clear(void)
 {
 	int loop;
 	
