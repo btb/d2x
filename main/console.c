@@ -84,143 +84,143 @@ static int con_initialized;
 
 
 /* Internals */
-void CON_UpdateOffset(void);
+static void con_update_offset(void);
 /* Frees all the memory loaded by the console */
-static void CON_Free(void);
-int CON_Background(grs_bitmap *image);
+static void con_free(void);
+static int con_background(grs_bitmap *image);
 /* Sets font info for the console */
-void CON_Font(grs_font *font, int fg, int bg);
+static void con_font(grs_font *font, int fg, int bg);
 /* Set the key, that invokes a CON_Hide() after press. default is ESCAPE and you can always hide using
  ESCAPE and the HideKey. compared against event->key.keysym.sym !! */
-void CON_SetHideKey(int key);
+static void con_set_hide_key(int key);
 /* makes newline (same as printf("\n") or CON_Out("\n") ) */
-void CON_NewLineConsole(void);
+static void con_newline(void);
 /* updates console after resize etc. */
-void CON_UpdateConsole(void);
+static void con_update(void);
 /* Called if you press Ctrl-L (deletes the History) */
-void Clear_History(void);
+static void con_clear(void);
 
 
 /* Takes keys from the keyboard and inputs them to the console
  * If the event was not handled (i.e. WM events or unknown ctrl-shift
  * sequences) the function returns the event for further processing. */
-int CON_Events(int event)
+int con_key_handler(int key)
 {
-	if (!CON_isVisible())
-		return event;
+	if (!con_is_visible())
+		return key;
 
-	if (event & KEY_CTRLED)
+	if (key & KEY_CTRLED)
 	{
 		// CTRL pressed
-		switch (event & ~KEY_CTRLED)
+		switch (key & ~KEY_CTRLED)
 		{
 			case KEY_A:
-				Cursor_Home();
+				cli_cursor_home();
 				break;
 			case KEY_E:
-				Cursor_End();
+				cli_cursor_end();
 				break;
 			case KEY_C:
-				Clear_Command();
+				cli_clear();
 				break;
 			case KEY_L:
-				Clear_History();
-				CON_UpdateConsole();
+				con_clear();
+				con_update();
 				break;
 			default:
-				return event;
+				return key;
 		}
 	}
-	else if (event & KEY_ALTED)
+	else if (key & KEY_ALTED)
 	{
 		// the console does not handle ALT combinations!
-		return event;
+		return key;
 	}
 	else
 	{
 		// first of all, check if the console hide key was pressed
-		if (event == HideKey)
+		if (key == HideKey)
 		{
-			CON_Hide();
+			con_hide();
 			return 0;
 		}
-		switch (event & 0xff)
+		switch (key & 0xff)
 		{
 			case KEY_LSHIFT:
 			case KEY_RSHIFT:
-				return event;
+				return key;
 			case KEY_HOME:
-				if(event & KEY_SHIFTED)
+				if(key & KEY_SHIFTED)
 				{
 					ConsoleScrollBack = LineBuffer-1;
-					CON_UpdateConsole();
+					con_update();
 				} else {
-					Cursor_Home();
+					cli_cursor_home();
 				}
 				break;
 			case KEY_END:
-				if(event & KEY_SHIFTED)
+				if(key & KEY_SHIFTED)
 				{
 					ConsoleScrollBack = 0;
-					CON_UpdateConsole();
+					con_update();
 				} else {
-					Cursor_End();
+					cli_cursor_end();
 				}
 				break;
 			case KEY_PAGEUP:
 				ConsoleScrollBack += CON_LINE_SCROLL;
 				if(ConsoleScrollBack > LineBuffer-1)
 					ConsoleScrollBack = LineBuffer-1;
-				CON_UpdateConsole();
+				con_update();
 				break;
 			case KEY_PAGEDOWN:
 				ConsoleScrollBack -= CON_LINE_SCROLL;
 				if(ConsoleScrollBack < 0)
 					ConsoleScrollBack = 0;
-				CON_UpdateConsole();
+				con_update();
 				break;
 			case KEY_UP:
-				Command_Up();
+				cli_history_prev();
 				break;
 			case KEY_DOWN:
-				Command_Down();
+				cli_history_next();
 				break;
 			case KEY_LEFT:
-				Cursor_Left();
+				cli_cursor_left();
 				break;
 			case KEY_RIGHT:
-				Cursor_Right();
+				cli_cursor_right();
 				break;
 			case KEY_BACKSP:
-				Cursor_BSpace();
+				cli_cursor_backspace();
 				break;
 			case KEY_DELETE:
-				Cursor_Del();
+				cli_cursor_del();
 				break;
 			case KEY_INSERT:
-				InsMode = 1-InsMode;
+				CLI_insert_mode = !CLI_insert_mode;
 				break;
 			case KEY_TAB:
-				CON_TabCompletion();
+				cli_autocomplete();
 				break;
 			case KEY_ENTER:
-				CON_Execute();
+				cli_execute();
 				break;
 			case KEY_LAPOSTRO:
 				// deactivate Console
-				CON_Hide();
+				con_hide();
 				return 0;
 			default:
 			{
-				unsigned char character = key_to_ascii(event);
+				unsigned char character = key_to_ascii(key);
 
 				if (character == 255)
 					break;
-				if (InsMode)
-					Cursor_Add(character);
+				if (CLI_insert_mode)
+					cli_add_character(character);
 				else {
-					Cursor_Add(character);
-					Cursor_Del();
+					cli_add_character(character);
+					cli_cursor_del();
 				}
 			}
 		}
@@ -230,7 +230,7 @@ int CON_Events(int event)
 
 
 /* Updates the console buffer */
-void CON_UpdateConsole(void)
+void con_update(void)
 {
 	int loop;
 	int loop2;
@@ -238,7 +238,7 @@ void CON_UpdateConsole(void)
 	grs_canvas *canv_save;
 
 	/* Due to the Blits, the update is not very fast: So only update if it's worth it */
-	if (!CON_isVisible())
+	if (!con_is_visible())
 		return;
 
 	Screenlines = ConsoleSurface->cv_h / (CON_LINE_SPACE + ConsoleSurface->cv_font->ft_h);
@@ -267,7 +267,7 @@ void CON_UpdateConsole(void)
 }
 
 
-void CON_UpdateOffset(void)
+void con_update_offset(void)
 {
 	switch (Visible) {
 		case CON_CLOSING:
@@ -292,7 +292,7 @@ void CON_UpdateOffset(void)
 
 
 /* Draws the console buffer to the screen if the console is "visible" */
-void CON_DrawConsole(void)
+void con_draw(void)
 {
 	grs_canvas *canv_save;
 	grs_bitmap *clip;
@@ -302,7 +302,7 @@ void CON_DrawConsole(void)
 		return;
 
 	/* Update the scrolling offset */
-	CON_UpdateOffset();
+	con_update_offset();
 
 	canv_save = grd_curcanv;
 
@@ -312,7 +312,7 @@ void CON_DrawConsole(void)
 	// restore InputBackground
 	gr_bitmap(0, ConsoleSurface->cv_h - ConsoleSurface->cv_font->ft_h, InputBackground);
 
-	DrawCommandLine(ConsoleSurface->cv_h);
+	cli_draw(ConsoleSurface->cv_h);
 
 	gr_set_current_canvas(&grd_curscreen->sc_canvas);
 
@@ -326,7 +326,7 @@ void CON_DrawConsole(void)
 
 
 /* Initializes the console */
-void CON_Init()
+void con_init()
 {
 	int loop;
 
@@ -336,7 +336,6 @@ void CON_Init()
 	TotalConsoleLines = 0;
 	ConsoleScrollBack = 0;
 	BackgroundImage = NULL;
-	InsMode = 1;
 	HideKey = CON_DEFAULT_HIDEKEY;
 
 	/* load the console surface */
@@ -361,12 +360,12 @@ void CON_Init()
 
 	con_initialized = 1;
 
-	atexit(CON_Free);
+	atexit(con_free);
 }
 
 
 void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline);
-void CON_InitGFX(int w, int h)
+void con_init_gfx(int w, int h)
 {
 	int pcx_error;
 	grs_bitmap bmp;
@@ -382,7 +381,7 @@ void CON_InitGFX(int w, int h)
 	}
 
 	/* Load the consoles font */
-	CON_Font(SMALL_FONT, gr_find_closest_color(29,29,47), -1);
+	con_font(SMALL_FONT, gr_find_closest_color(29,29,47), -1);
 
 	/* make sure that the size of the console is valid */
 	if (w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
@@ -406,21 +405,21 @@ void CON_InitGFX(int w, int h)
 	pcx_error = pcx_read_bitmap(CON_BG, &bmp, BM_LINEAR, pal);
 	Assert(pcx_error == PCX_ERROR_NONE);
 	gr_remap_bitmap_good(&bmp, pal, -1, -1);
-	CON_Background(&bmp);
+	con_background(&bmp);
 	gr_free_bitmap_data(&bmp);
 }
 
 
 /* Makes the console visible */
-void CON_Show(void)
+void con_show(void)
 {
 	Visible = CON_OPENING;
-	CON_UpdateConsole();
+	con_update();
 }
 
 
 /* Hides the console (make it invisible) */
-void CON_Hide(void)
+void con_hide(void)
 {
 	Visible = CON_CLOSING;
 	key_flush();
@@ -428,14 +427,14 @@ void CON_Hide(void)
 
 
 /* tells wether the console is visible or not */
-int CON_isVisible(void)
+int con_is_visible(void)
 {
 	return((Visible == CON_OPEN) || (Visible == CON_OPENING));
 }
 
 
 /* Frees all the memory loaded by the console */
-static void CON_Free(void)
+static void con_free(void)
 {
 	int i;
 
@@ -463,7 +462,7 @@ static void CON_Free(void)
 
 
 /* Increments the console lines */
-void CON_NewLineConsole(void)
+void con_newline(void)
 {
 	int loop;
 	char *temp;
@@ -520,7 +519,7 @@ static inline int con_get_string_width(char *string)
 #endif
 
 /* Outputs text to the console (in game), up to CON_CHARS_PER_LINE chars can be entered */
-void CON_Out(const char *str, ...)
+void con_out(const char *str, ...)
 {
 	va_list marker;
 	//keep some space free for stuff like CON_Out("blablabla %s", Command);
@@ -543,12 +542,12 @@ void CON_Out(const char *str, ...)
 		while (*p) {
 			if (*p == '\n') {
 				*p = '\0';
-				CON_NewLineConsole();
+				con_newline();
 				strcat(ConsoleLines[0], ptemp);
 				ptemp = p+1;
 			} else if (p - ptemp > VChars - strlen(ConsoleLines[0]) ||
 					   con_get_string_width(ptemp) > con_get_width()) {
-				CON_NewLineConsole();
+				con_newline();
 				strncat(ConsoleLines[0], ptemp, VChars - strlen(ConsoleLines[0]));
 				ConsoleLines[0][VChars] = '\0';
 				ptemp = p;
@@ -559,13 +558,13 @@ void CON_Out(const char *str, ...)
 			strncat(ConsoleLines[0], ptemp, VChars - strlen(ConsoleLines[0]));
 			ConsoleLines[0][VChars] = '\0';
 		}
-		CON_UpdateConsole();
+		con_update();
 	}
 }
 
 
 /* Adds background image to the console, scaled to size of console*/
-int CON_Background(grs_bitmap *image)
+int con_background(grs_bitmap *image)
 {
 	/* Free the background from the console */
 	if (image == NULL) {
@@ -588,7 +587,7 @@ int CON_Background(grs_bitmap *image)
 
 
 /* Sets font info for the console */
-void CON_Font(grs_font *font, int fg, int bg)
+void con_font(grs_font *font, int fg, int bg)
 {
 	grs_canvas *canv_save;
 
@@ -602,7 +601,7 @@ void CON_Font(grs_font *font, int fg, int bg)
 
 /* resizes the console, has to reset alot of stuff
  * returns 1 on error */
-void CON_Resize(int w, int h)
+void con_resize(int w, int h)
 {
 	/* make sure that the size of the console is valid */
 	if(w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
@@ -629,13 +628,13 @@ void CON_Resize(int w, int h)
 
 
 /* Sets the key that deactivates (hides) the console. */
-void CON_SetHideKey(int key)
+void con_set_hide_key(int key)
 {
 	HideKey = key;
 }
 
 
-void Clear_History(void)
+void con_clear(void)
 {
 	int loop;
 	
@@ -660,7 +659,7 @@ void con_printf(int priority, char *fmt, ...)
 		va_end (arglist);
 
 		if (con_initialized)
-			CON_Out(buffer);
+			con_out(buffer);
 
 		if (!text_console_enabled)
 			return;

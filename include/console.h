@@ -27,23 +27,23 @@ enum {
 /* Takes keys from the keyboard and inputs them to the console if the console isVisible().
  * If the event was not handled (i.e. WM events or unknown ctrl- or alt-sequences)
  * the function returns the event for further processing. */
-int CON_Events(int event);
+int con_key_handler(int key);
 /* Makes the console visible */
-void CON_Show(void);
+void con_show(void);
 /* Hides the console */
-void CON_Hide(void);
+void con_hide(void);
 /* Returns 1 if the console is visible, 0 else */
-int CON_isVisible(void);
+int con_is_visible(void);
 /* Draws the console to the screen if it isVisible()*/
-void CON_DrawConsole(void);
+void con_draw(void);
 /* Initializes the console */
-void CON_Init(void);
+void con_init(void);
 /* Initializes the graphical console */
-void CON_InitGFX(int w, int h);
+void con_init_gfx(int w, int h);
 /* printf for the console */
-void CON_Out(const char *str, ...);
+void con_out(const char *str, ...);
 /* Changes the size of the console */
-void CON_Resize(int w, int h);
+void con_resize(int w, int h);
 
 
 /* Priority levels */

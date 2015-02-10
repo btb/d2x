@@ -967,7 +967,7 @@ int HandleSystemKey(int key)
 
 		case KEY_LAPOSTRO:
 		case KEY_SHIFTED + KEY_LAPOSTRO:
-			CON_Show();
+			con_show();
 			break;
 
 		case KEY_SHIFTED + KEY_ESC:     //quick exit
@@ -2381,7 +2381,7 @@ void ReadControls()
 		#endif
 		#endif
 
-		if(!CON_Events(key))
+		if(!con_key_handler(key))
 			continue;
 
 		if (Player_is_dead)

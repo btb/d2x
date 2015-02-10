@@ -475,7 +475,7 @@ void key_handle_binding(int keycode, int state)
 	if (Function_mode != FMODE_GAME)
 		return;
 
-	if (CON_isVisible())
+	if (con_is_visible())
 		return;
 
 	if (!state && key_binding_list[keycode][0] == '+')

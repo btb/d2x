@@ -1020,7 +1020,7 @@ void game_render_frame_mono(void)
 			Game_mode = GM_NORMAL;
 	}
 
-	CON_DrawConsole();
+	con_draw();
 
 	vid_update();
 #ifdef OGL

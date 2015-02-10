@@ -735,7 +735,7 @@ int set_screen_mode(int sm)
 				FontHires = 0;
 		}
 
-		CON_InitGFX(grd_curscreen->sc_w, grd_curscreen->sc_h / 2);
+		con_init_gfx(grd_curscreen->sc_w, grd_curscreen->sc_h / 2);
 
 		mouse_set_mode(Config_control_mouse.intval);
 		newmenu_hide_cursor();
