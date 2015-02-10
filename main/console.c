@@ -61,7 +61,7 @@ cvar_t con_threshold = {"con_threshold", "0",};
 // Indicator showing that you scrolled up the history
 #define CON_SCROLL_INDICATOR    "^"
 // Defines the default hide key (Hide() the console if pressed)
-#define CON_DEFAULT_HIDEKEY	KEY_ESC
+#define CON_DEFAULT_HIDEKEY	KEY_LAPOSTRO
 // Defines the opening/closing speed
 #define CON_OPENCLOSE_SPEED 50
 
@@ -106,119 +106,67 @@ static void con_clear(void);
  * sequences) the function returns the event for further processing. */
 int con_key_handler(int key)
 {
+	unsigned char character = key_to_ascii(key);
+
 	if (!con_is_visible())
 		return key;
 
-	if (key & KEY_CTRLED)
-	{
-		// CTRL pressed
-		switch (key & ~KEY_CTRLED)
-		{
-			case KEY_A:
-				cli_cursor_home();
-				break;
-			case KEY_E:
-				cli_cursor_end();
-				break;
-			case KEY_C:
-				cli_clear();
-				break;
-			case KEY_L:
-				con_clear();
-				con_update();
-				break;
-			default:
-				return key;
-		}
+	if (key == HideKey) {
+		// deactivate Console
+		con_hide();
+		return 0;
 	}
-	else if (key & KEY_ALTED)
-	{
-		// the console does not handle ALT combinations!
-		return key;
-	}
-	else
-	{
-		// first of all, check if the console hide key was pressed
-		if (key == HideKey)
-		{
-			con_hide();
-			return 0;
-		}
-		switch (key & 0xff)
-		{
-			case KEY_LSHIFT:
-			case KEY_RSHIFT:
-				return key;
-			case KEY_HOME:
-				if(key & KEY_SHIFTED)
-				{
-					ConsoleScrollBack = LineBuffer-1;
-					con_update();
-				} else {
-					cli_cursor_home();
-				}
-				break;
-			case KEY_END:
-				if(key & KEY_SHIFTED)
-				{
-					ConsoleScrollBack = 0;
-					con_update();
-				} else {
-					cli_cursor_end();
-				}
-				break;
-			case KEY_PAGEUP:
-				ConsoleScrollBack += CON_LINE_SCROLL;
-				if(ConsoleScrollBack > LineBuffer-1)
-					ConsoleScrollBack = LineBuffer-1;
-				con_update();
-				break;
-			case KEY_PAGEDOWN:
-				ConsoleScrollBack -= CON_LINE_SCROLL;
-				if(ConsoleScrollBack < 0)
-					ConsoleScrollBack = 0;
-				con_update();
-				break;
-			case KEY_UP:
-				cli_history_prev();
-				break;
-			case KEY_DOWN:
-				cli_history_next();
-				break;
-			case KEY_LEFT:
-				cli_cursor_left();
-				break;
-			case KEY_RIGHT:
-				cli_cursor_right();
-				break;
-			case KEY_BACKSP:
-				cli_cursor_backspace();
-				break;
-			case KEY_DELETE:
-				cli_cursor_del();
-				break;
-			case KEY_INSERT:
-				CLI_insert_mode = !CLI_insert_mode;
-				break;
-			case KEY_TAB:
-				cli_autocomplete();
-				break;
-			case KEY_ENTER:
-				cli_execute();
-				break;
-			case KEY_LAPOSTRO:
-				// deactivate Console
-				con_hide();
-				return 0;
-			default:
-			{
-				unsigned char character = key_to_ascii(key);
 
-				if (character == 255)
-					break;
-				cli_add_character(character);
-			}
-		}
+	switch (key) {
+		case KEY_SHIFTED + KEY_ESC:
+			con_hide();
+			break;
+		case KEY_CTRLED + KEY_L:
+			con_clear();
+			con_update();
+			break;
+		case KEY_SHIFTED + KEY_HOME:
+			ConsoleScrollBack = LineBuffer-1;
+			con_update();
+			break;
+		case KEY_SHIFTED + KEY_END:
+			ConsoleScrollBack = 0;
+			con_update();
+			break;
+		case KEY_PAGEUP:
+			ConsoleScrollBack += CON_LINE_SCROLL;
+			if(ConsoleScrollBack > LineBuffer-1)
+				ConsoleScrollBack = LineBuffer-1;
+			con_update();
+			break;
+		case KEY_PAGEDOWN:
+			ConsoleScrollBack -= CON_LINE_SCROLL;
+			if(ConsoleScrollBack < 0)
+				ConsoleScrollBack = 0;
+			con_update();
+			break;
+		case KEY_CTRLED + KEY_A:
+		case KEY_HOME:              cli_cursor_home();      break;
+		case KEY_END:
+		case KEY_CTRLED + KEY_E:    cli_cursor_end();       break;
+		case KEY_CTRLED + KEY_C:    cli_clear();            break;
+		case KEY_LEFT:              cli_cursor_left();      break;
+		case KEY_RIGHT:             cli_cursor_right();     break;
+		case KEY_BACKSP:            cli_cursor_backspace(); break;
+		case KEY_CTRLED + KEY_D:
+		case KEY_DELETE:            cli_cursor_del();       break;
+		case KEY_UP:                cli_history_prev();     break;
+		case KEY_DOWN:              cli_history_next();     break;
+		case KEY_TAB:               cli_autocomplete();     break;
+		case KEY_ENTER:             cli_execute();          break;
+		case KEY_INSERT:
+			CLI_insert_mode = !CLI_insert_mode;
+			break;
+		default:
+			if (character == 255)
+				break;
+			cli_add_character(character);
+			break;
 	}
 	return 0;
 }
