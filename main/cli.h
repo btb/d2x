@@ -1,7 +1,7 @@
 /*
- *  Code for controlling the console
- *  Based on an early version of SDL_Console
+ *  Command-line interface for the console
  *
+ *  Based on an early version of SDL_Console
  *  Written By: Garrett Banuk <mongoose@mongeese.org>
  *  Code Cleanup and heavily extended by: Clemens Wacha <reflex-2000@gmx.net>
  *  Ported to use native Descent interfaces by: Bradley Bell <btb@icculus.org>

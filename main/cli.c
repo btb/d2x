@@ -1,7 +1,7 @@
 /*
- *  Code for controlling the console
- *  Based on an early version of SDL_Console
+ *  Command-line interface for the console
  *
+ *  Based on an early version of SDL_Console
  *  Written By: Garrett Banuk <mongoose@mongeese.org>
  *  Code Cleanup and heavily extended by: Clemens Wacha <reflex-2000@gmx.net>
  *  Ported to use native Descent interfaces by: Bradley Bell <btb@icculus.org>
@@ -46,7 +46,7 @@ static char **CommandLines;     // List of all the past commands
 static int TotalCommands;       // Number of commands in the Back Commands
 static int LineBuffer;          // The number of visible lines in the console (autocalculated)
 static char *Prompt;            // Prompt displayed in command line
-static char  Command[CLI_CHARS_PER_LINE];   // current command in command line = lcommand + rcommand
+static char Command[CLI_CHARS_PER_LINE];    // current command in command line = lcommand + rcommand
 static char LCommand[CLI_CHARS_PER_LINE];   // right hand side of cursor
 static char RCommand[CLI_CHARS_PER_LINE];   // left hand side of cursor
 static char VCommand[CLI_CHARS_PER_LINE];   // current visible command line
@@ -56,9 +56,19 @@ static int CommandScrollBack;   // How much the users scrolled back in the comma
 
 
 /* Frees all the memory loaded by the cli */
-static void cli_free(void);
-/* shift command history (the one you can switch with the up/down keys) */
-static void cli_newline(void);
+static void cli_free(void)
+{
+	int i;
+
+	for (i = 0; i <= LineBuffer - 1; i++) {
+		d_free(CommandLines[i]);
+	}
+	d_free(CommandLines);
+
+	CommandLines = NULL;
+
+	d_free(Prompt);
+}
 
 
 /* Initializes the cli */
@@ -84,22 +94,6 @@ void cli_init()
 	memset(VCommand, 0, CLI_CHARS_PER_LINE);
 
 	atexit(cli_free);
-}
-
-
-/* Frees all the memory loaded by the console */
-static void cli_free(void)
-{
-	int i;
-
-	for (i = 0; i <= LineBuffer - 1; i++) {
-		d_free(CommandLines[i]);
-	}
-	d_free(CommandLines);
-
-	CommandLines = NULL;
-
-	d_free(Prompt);
 }
 
 
@@ -129,8 +123,8 @@ void cli_draw(int y)
 	int x, w, h, aw;
 	float real_aw;
 	int commandbuffer;
-	static unsigned int LastBlinkTime = 0;  // Last time the consoles cursor blinked
-	static int LastCursorPos = 0;           // Last Cursor Position
+	static unsigned int LastBlinkTime = 0;  // Last time the cursor blinked
+	static int LastCursorPos = 0;           // Last cursor position
 	static int Blink = 0;                   // Is the cursor currently blinking
 
 	// Concatenate the left and right side to command
@@ -222,7 +216,7 @@ void cli_autocomplete(void)
 
 	j = (int)strlen(command);
 	if (j > CLI_CHARS_PER_LINE - 2)
-		j = CLI_CHARS_PER_LINE-1;
+		j = CLI_CHARS_PER_LINE - 1;
 
 	memset(LCommand, 0, CLI_CHARS_PER_LINE);
 	CursorPos = 0;
@@ -295,6 +289,7 @@ void cli_cursor_del(void)
 	}
 }
 
+
 void cli_cursor_backspace(void)
 {
 	if (CursorPos > 0) {
@@ -323,7 +318,7 @@ void cli_add_character(char character)
 void cli_clear(void)
 {
 	CursorPos = 0;
-	memset( Command, 0, CLI_CHARS_PER_LINE);
+	memset(Command, 0, CLI_CHARS_PER_LINE);
 	memset(LCommand, 0, CLI_CHARS_PER_LINE);
 	memset(RCommand, 0, CLI_CHARS_PER_LINE);
 	memset(VCommand, 0, CLI_CHARS_PER_LINE);
