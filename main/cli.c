@@ -26,7 +26,7 @@
 
 #define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
 
-#define CLI_NUM_LINES           128
+#define CLI_HISTORY_MAX         128
 // Cut the buffer line if it becomes longer than this
 #define CLI_CHARS_PER_LINE      128
 // Cursor blink frequency in ms
@@ -40,19 +40,18 @@
 // Cursor shown if we are in overwrite mode
 #define CLI_OVR_CURSOR          "|"
 
-int CLI_insert_mode;            // Insert or Overwrite characters?
+int CLI_insert_mode;                        // Insert or Overwrite characters?
 
-static char **CommandLines;     // List of all the past commands
-static int TotalCommands;       // Number of commands in the Back Commands
-static int LineBuffer;          // The number of visible lines in the console (autocalculated)
-static char *Prompt;            // Prompt displayed in command line
+static char *CommandLines[CLI_HISTORY_MAX]; // List of all the past commands
+static int TotalCommands;                   // Number of commands in the Back Commands
+static char *Prompt;                        // Prompt displayed in command line
 static char Command[CLI_CHARS_PER_LINE];    // current command in command line = lcommand + rcommand
 static char LCommand[CLI_CHARS_PER_LINE];   // right hand side of cursor
 static char RCommand[CLI_CHARS_PER_LINE];   // left hand side of cursor
 static char VCommand[CLI_CHARS_PER_LINE];   // current visible command line
-static int CursorPos;           // Current cursor position in CurrentCommand
-static int Offset;              // CommandOffset (first visible char of command) - if command is too long to fit into console
-static int CommandScrollBack;   // How much the users scrolled back in the command lines
+static int CursorPos;                       // Current cursor position in CurrentCommand
+static int Offset;                          // CommandOffset (first visible char of command) - if command is too long to fit into console
+static int CommandScrollBack;               // How much the users scrolled back in the command lines
 
 
 /* Frees all the memory loaded by the cli */
@@ -60,12 +59,10 @@ static void cli_free(void)
 {
 	int i;
 
-	for (i = 0; i <= LineBuffer - 1; i++) {
-		d_free(CommandLines[i]);
+	for (i = 0; i <= CLI_HISTORY_MAX - 1; i++) {
+		if (CommandLines[i])
+			d_free(CommandLines[i]);
 	}
-	d_free(CommandLines);
-
-	CommandLines = NULL;
 
 	d_free(Prompt);
 }
@@ -74,20 +71,13 @@ static void cli_free(void)
 /* Initializes the cli */
 void cli_init()
 {
-	int loop;
-
-	CommandLines = NULL;
 	TotalCommands = 0;
 	CLI_insert_mode = 1;
 	CursorPos = 0;
 	CommandScrollBack = 0;
 	Prompt = d_strdup(CLI_DEFAULT_PROMPT);
-	LineBuffer = CLI_NUM_LINES;
 
-	CommandLines = (char **)d_malloc(sizeof(char *) * LineBuffer);
-	for (loop = 0; loop <= LineBuffer - 1; loop++) {
-		CommandLines[loop] = (char *)d_calloc(CLI_CHARS_PER_LINE, sizeof(char));
-	}
+	memset(CommandLines, 0, CLI_HISTORY_MAX);
 	memset(Command, 0, CLI_CHARS_PER_LINE);
 	memset(LCommand, 0, CLI_CHARS_PER_LINE);
 	memset(RCommand, 0, CLI_CHARS_PER_LINE);
@@ -101,17 +91,16 @@ void cli_init()
 static void cli_newline(void)
 {
 	int loop;
-	char *temp;
 
-	temp  = CommandLines[LineBuffer - 1];
+	if (CommandLines[CLI_HISTORY_MAX - 1])
+		d_free(CommandLines[CLI_HISTORY_MAX - 1]);
 
-	for (loop = LineBuffer - 1; loop > 0; loop--)
+	for (loop = CLI_HISTORY_MAX - 1; loop > 0; loop--)
 		CommandLines[loop] = CommandLines[loop - 1];
 
-	CommandLines[0] = temp;
+	CommandLines[0] = NULL;
 
-	memset(CommandLines[0], 0, CLI_CHARS_PER_LINE);
-	if (TotalCommands < LineBuffer - 1)
+	if (TotalCommands < CLI_HISTORY_MAX - 1)
 		TotalCommands++;
 }
 
@@ -191,7 +180,7 @@ void cli_execute(void)
 		cli_newline();
 
 		// copy the input into the past commands strings
-		strcpy(CommandLines[0], Command);
+		CommandLines[0] = d_strdup(Command);
 
 		// display the command including the prompt
 		con_printf(CON_NORMAL, "%s%s\n", Prompt, Command);
