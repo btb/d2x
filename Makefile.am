@@ -14,15 +14,15 @@ d2x_SOURCES = \
 arch/sdl/digi.c    arch/sdl/init.c    arch/sdl/midi.c    arch/sdl/rbaudio.c arch/sdl/timer.c   \
 iff/iff.c     \
 libmve/decoder16.c libmve/decoder8.c  libmve/mve_audio.c libmve/mvelib.c    libmve/mveplay.c   \
-main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cli.c      main/cmd.c      \
-main/cntrlcen.c main/collide.c  main/config.c   main/console.c  main/controls.c main/credits.c  \
-main/crypt.c    main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c main/escort.c   \
-main/fireball.c main/fuelcen.c  main/fvi.c      main/game.c     main/gamecntl.c main/gamefont.c \
-main/gamemine.c main/gamepal.c  main/gamerend.c main/gamesave.c main/gameseg.c  main/gameseq.c  \
-main/gauges.c   main/hostage.c  main/hud.c      main/inferno.c  main/kconfig.c  main/kludge.c   \
-main/laser.c    main/lighting.c main/menu.c     main/mglobal.c  main/mission.c  main/morph.c    \
-main/movie.c    main/newdemo.c  main/newmenu.c  main/object.c   main/paging.c   main/physics.c  \
-main/piggy.c    main/player.c   main/polyobj.c  main/powerup.c  main/render.c   \
+main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cli.c      \
+main/cmd.c      main/cntrlcen.c main/collide.c  main/config.c   main/console.c  main/controls.c \
+main/credits.c  main/crypt.c    main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c \
+main/escort.c   main/fireball.c main/fuelcen.c  main/fvi.c      main/game.c     main/gamecntl.c \
+main/gamefont.c main/gamemine.c main/gamepal.c  main/gamerend.c main/gamesave.c main/gameseg.c  \
+main/gameseq.c  main/gauges.c   main/hostage.c  main/hud.c      main/inferno.c  main/kconfig.c  \
+main/kludge.c   main/laser.c    main/lighting.c main/menu.c     main/mglobal.c  main/mission.c  \
+main/morph.c    main/movie.c    main/newdemo.c  main/newmenu.c  main/object.c   main/paging.c   \
+main/physics.c  main/piggy.c    main/player.c   main/polyobj.c  main/powerup.c  main/render.c   \
 main/robot.c    main/scores.c   main/segment.c  main/slew.c     main/songs.c    main/state.c    \
 main/switch.c   main/terrain.c  main/texmerge.c main/text.c     main/titles.c   main/vclip.c    \
 main/wall.c     main/weapon.c   \
