@@ -1043,7 +1043,7 @@ void texmap_init(void)
 	                                                     "        ppro\n"
 #endif
 	                                                     "        fp\n"
-	                                                     "        c\n");
+	                                                     "        c");
 
 	if ((t = FindArg("-tmap")))
 		select_tmap(Args[t+1]);

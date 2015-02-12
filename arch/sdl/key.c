@@ -591,9 +591,9 @@ void key_init()
 	}
 
 	cmd_addcommand("bind", key_cmd_bind,     "bind <key> <commands>\n" "    bind <commands> to <key>\n"
-                                             "bind <key>\n"            "    show the current binding for <key>\n"
-                                             "bind\n"                  "    show all key bindings\n");
-	cmd_addcommand("unbind", key_cmd_unbind, "unbind <key>\n"          "    remove binding from <key>\n");
+	                                         "bind <key>\n"            "    show the current binding for <key>\n"
+	                                         "bind\n"                  "    show all key bindings");
+	cmd_addcommand("unbind", key_cmd_unbind, "unbind <key>\n"          "    remove binding from <key>");
 
 	// Clear the keyboard array
 	key_flush();

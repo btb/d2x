@@ -74,7 +74,7 @@ void cvar_init(void)
 {
 	cmd_addcommand("set", cvar_cmd_set, "set <name> <value>\n"  "    set variable <name> equal to <value>\n"
 	                                    "set <name>\n"          "    show value of <name>\n"
-	                                    "set\n"                 "    show value of all variables\n");
+	                                    "set\n"                 "    show value of all variables");
 
 	atexit(cvar_free);
 }

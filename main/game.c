@@ -384,13 +384,13 @@ void init_game()
 	cvar_registervariable(&Player_highest_level);
 
 	/* Register cmds */
-	cmd_addcommand("player", game_cmd_player,               "player <name>\n"    "    set player name to <name>\n");
-	cmd_addcommand("map", game_cmd_map,                     "map <name> [num]\n" "    start level <num> of mission <name> (defaults to level 1)\n");
-	cmd_addcommand("say", game_cmd_say,                     "say <text>\n"       "    send the message <text> to the network\n");
-	cmd_addcommand("sizeup", game_cmd_sizeup,               "sizeup\n"           "    increase the game window size\n");
-	cmd_addcommand("sizedown", game_cmd_sizedown,           "sizedown\n"         "    decrease the game window size\n");
-	cmd_addcommand("recorddemo", game_cmd_recorddemo,       "recorddemo\n"       "    start recording a demo\n");
-	cmd_addcommand("stoprecording", game_cmd_stoprecording, "stoprecording\n"    "    stop recording the current demo\n");
+	cmd_addcommand("player", game_cmd_player,               "player <name>\n"    "    set player name to <name>");
+	cmd_addcommand("map", game_cmd_map,                     "map <name> [num]\n" "    start level <num> of mission <name> (defaults to level 1)");
+	cmd_addcommand("say", game_cmd_say,                     "say <text>\n"       "    send the message <text> to the network");
+	cmd_addcommand("sizeup", game_cmd_sizeup,               "sizeup\n"           "    increase the game window size");
+	cmd_addcommand("sizedown", game_cmd_sizedown,           "sizedown\n"         "    decrease the game window size");
+	cmd_addcommand("recorddemo", game_cmd_recorddemo,       "recorddemo\n"       "    start recording a demo");
+	cmd_addcommand("stoprecording", game_cmd_stoprecording, "stoprecording\n"    "    stop recording the current demo");
 }
 
 

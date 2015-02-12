@@ -15,9 +15,9 @@
 
 typedef struct cmd_s
 {
-	char          *name;
+	const char    *name;
 	cmd_handler_t function;
-	char          *help_text;
+	const char    *help_text;
 	struct cmd_s  *next;
 } cmd_t;
 
@@ -38,7 +38,7 @@ static cmd_alias_t *cmd_alias_list;
 
 
 /* add a new console command */
-void cmd_addcommand(char *cmd_name, cmd_handler_t cmd_func, char *cmd_help_text)
+void cmd_addcommand(const char *cmd_name, cmd_handler_t cmd_func, const char *cmd_help_text)
 {
 	cmd_t *cmd;
 
@@ -478,7 +478,7 @@ void cmd_help(int argc, char **argv)
 		return;
 	}
 
-	con_printf(CON_NORMAL, cmd->help_text);
+	con_printf(CON_NORMAL, "%s\n", cmd->help_text);
 }
 
 
@@ -522,12 +522,12 @@ void cmd_init(void)
 {
 	cmd_addcommand("alias",     cmd_alias,      "alias <name> <commands>\n" "    define <name> as an alias for <commands>\n"
 	                                            "alias <name>\n"            "    show the current definition of <name>\n"
-	                                            "alias\n"                   "    show all defined aliases\n");
-	cmd_addcommand("unalias",   cmd_unalias,    "unalias <name>\n"          "    undefine the alias <name>\n");
-	cmd_addcommand("echo",      cmd_echo,       "echo [text]\n"             "    write <text> to the console\n");
-	cmd_addcommand("exec",      cmd_exec,       "exec <file>\n"             "    execute <file>\n");
-	cmd_addcommand("help",      cmd_help,       "help [command]\n"          "    get help for <command>, or list all commands if not specified.\n");
-	cmd_addcommand("wait",      cmd_wait,       "usage: wait [n]\n"         "    stop processing commands, resume in <n> cycles (default 1)\n");
+	                                            "alias\n"                   "    show all defined aliases");
+	cmd_addcommand("unalias",   cmd_unalias,    "unalias <name>\n"          "    undefine the alias <name>");
+	cmd_addcommand("echo",      cmd_echo,       "echo [text]\n"             "    write <text> to the console");
+	cmd_addcommand("exec",      cmd_exec,       "exec <file>\n"             "    execute <file>");
+	cmd_addcommand("help",      cmd_help,       "help [command]\n"          "    get help for <command>, or list all commands if not specified.");
+	cmd_addcommand("wait",      cmd_wait,       "usage: wait [n]\n"         "    stop processing commands, resume in <n> cycles (default 1)");
 
 	atexit(cmd_free);
 }

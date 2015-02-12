@@ -47,7 +47,7 @@ int gr_init(void)
 	cvar_registervariable(&gr_palette_gamma);
 	cvar_registervariable(&gr_aspectratio);
 
-	cmd_addcommand("pixelaspect", gr_cmd_pixelaspect, "pixelaspect [n]\n" "    set the pixel aspect ratio to <n> (1.0 is square pixels)\n");
+	cmd_addcommand("pixelaspect", gr_cmd_pixelaspect, "pixelaspect [n]\n" "    set the pixel aspect ratio to <n> (1.0 is square pixels)");
 
 	// Set flags indicating that this is installed.
 	gr_installed = 1;

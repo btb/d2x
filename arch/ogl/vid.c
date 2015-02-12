@@ -534,7 +534,7 @@ int vid_init(void)
 	                                                                             "        GL_NEAREST_MIPMAP_NEAREST\n"
 	                                                                             "        GL_LINEAR_MIPMAP_NEAREST\n"
 	                                                                             "        GL_NEAREST_MIPMAP_LINEAR\n"
-	                                                                             "        GL_LINEAR_MIPMAP_LINEAR\n");
+	                                                                             "        GL_LINEAR_MIPMAP_LINEAR");
 
 	vid_installed = 1;
 	
