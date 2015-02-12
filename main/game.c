@@ -226,9 +226,8 @@ void load_background_bitmap()
 /* load player */
 void game_cmd_player(int argc, char **argv)
 {
-	if (argc < 2 || !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s <name>\n", argv[0]);
-		con_printf(CON_NORMAL, "    use the player/pilot file <name>\n");
+	if (argc < 2 || argc > 2) {
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -243,9 +242,8 @@ void game_cmd_map(int argc, char **argv)
 {
 	int level_num = 1;
 
-	if (argc < 2 || !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s <name> [num]\n", argv[0]);
-		con_printf(CON_NORMAL, "    start level <num> of mission <name> (defaults to level 1)\n");
+	if (argc < 2 || argc > 3) {
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -277,9 +275,8 @@ void game_cmd_say(int argc, char **argv)
 	int ret, i;
 #endif
 
-	if (argc < 2 || !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s <text>\n", argv[0]);
-		con_printf(CON_NORMAL, "    send the message <text> to the network\n");
+	if (argc < 2) {
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -309,8 +306,7 @@ void game_cmd_say(int argc, char **argv)
 void game_cmd_sizeup(int argc, char **argv)
 {
 	if (argc > 1) {
-		con_printf(CON_NORMAL, "%s\n", argv[0]);
-		con_printf(CON_NORMAL, "    increase the game window size\n");
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -322,8 +318,7 @@ void game_cmd_sizeup(int argc, char **argv)
 void game_cmd_sizedown(int argc, char **argv)
 {
 	if (argc > 1) {
-		con_printf(CON_NORMAL, "%s\n", argv[0]);
-		con_printf(CON_NORMAL, "    decrease the game window size\n");
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -334,6 +329,11 @@ void game_cmd_sizedown(int argc, char **argv)
 /* start recording demo */
 void game_cmd_recorddemo(int argc, char **argv)
 {
+	if (argc > 1) {
+		cmd_insertf("help %s", argv[0]);
+		return;
+	}
+
 	if ( Newdemo_state != ND_STATE_NORMAL )
 		return;
 
@@ -347,6 +347,11 @@ void game_cmd_recorddemo(int argc, char **argv)
 /* stop recording demo */
 void game_cmd_stoprecording(int argc, char **argv)
 {
+	if (argc > 1) {
+		cmd_insertf("help %s", argv[0]);
+		return;
+	}
+
 	if ( Newdemo_state != ND_STATE_RECORDING )
 		return;
 
@@ -379,13 +384,13 @@ void init_game()
 	cvar_registervariable(&Player_highest_level);
 
 	/* Register cmds */
-	cmd_addcommand("player", game_cmd_player);
-	cmd_addcommand("map", game_cmd_map);
-	cmd_addcommand("say", game_cmd_say);
-	cmd_addcommand("sizeup", game_cmd_sizeup);
-	cmd_addcommand("sizedown", game_cmd_sizedown);
-	cmd_addcommand("recorddemo", game_cmd_recorddemo);
-	cmd_addcommand("stoprecording", game_cmd_stoprecording);
+	cmd_addcommand("player", game_cmd_player,               "player <name>\n"    "    set player name to <name>\n");
+	cmd_addcommand("map", game_cmd_map,                     "map <name> [num]\n" "    start level <num> of mission <name> (defaults to level 1)\n");
+	cmd_addcommand("say", game_cmd_say,                     "say <text>\n"       "    send the message <text> to the network\n");
+	cmd_addcommand("sizeup", game_cmd_sizeup,               "sizeup\n"           "    increase the game window size\n");
+	cmd_addcommand("sizedown", game_cmd_sizedown,           "sizedown\n"         "    decrease the game window size\n");
+	cmd_addcommand("recorddemo", game_cmd_recorddemo,       "recorddemo\n"       "    start recording a demo\n");
+	cmd_addcommand("stoprecording", game_cmd_stoprecording, "stoprecording\n"    "    stop recording the current demo\n");
 }
 
 

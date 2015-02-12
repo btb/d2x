@@ -379,8 +379,10 @@ int ogl_testneedmipmaps(int i){
 
 void ogl_cmd_texturemode(int argc, char **argv)
 {
-	if (argc < 2)
+	if (argc < 2) {
+		cmd_insertf("help %s", argv[0]);
 		return;
+	}
 
 	if (!stricmp(argv[1], "GL_NEAREST")) {
 		GL_texminfilt = GL_NEAREST;
@@ -456,7 +458,6 @@ int vid_init(void)
 	if (vid_installed == 1)
 		return -1;
 
-
 #ifdef OGL_RUNTIME_LOAD
 	ogl_init_load_library();
 #endif
@@ -527,7 +528,13 @@ int vid_init(void)
 
 	ogl_init_texture_list_internal();
 		
-	cmd_addcommand("gl_texturemode", ogl_cmd_texturemode);
+	cmd_addcommand("gl_texturemode", ogl_cmd_texturemode, "gl_texturemode <x>\n" "    use OpenGL texture mode <x>. Available mode are\n"
+	                                                                             "        GL_NEAREST\n"
+	                                                                             "        GL_LINEAR\n"
+	                                                                             "        GL_NEAREST_MIPMAP_NEAREST\n"
+	                                                                             "        GL_LINEAR_MIPMAP_NEAREST\n"
+	                                                                             "        GL_NEAREST_MIPMAP_LINEAR\n"
+	                                                                             "        GL_LINEAR_MIPMAP_LINEAR\n");
 
 	vid_installed = 1;
 	

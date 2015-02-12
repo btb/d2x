@@ -388,16 +388,6 @@ void key_cmd_bind(int argc, char **argv)
 	int key = -1;
 	int i;
 
-	if (argc == 2 && !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s <key> <commands>\n", argv[0]);
-		con_printf(CON_NORMAL, "    bind <commands> to <key>\n");
-		con_printf(CON_NORMAL, "%s <key>\n", argv[0]);
-		con_printf(CON_NORMAL, "    show the current binding for <key>\n");
-		con_printf(CON_NORMAL, "%s\n", argv[0]);
-		con_printf(CON_NORMAL, "    show all key bindings\n");
-		return;
-	}
-
 	if (argc < 2)
 	{
 		con_printf(CON_NORMAL, "key bindings:\n");
@@ -446,9 +436,8 @@ void key_cmd_unbind(int argc, char **argv)
 {
 	unsigned int key;
 
-	if (argc != 2 || !stricmp(argv[1], "-h")) {
-		con_printf(CON_NORMAL, "%s <key>\n", argv[0]);
-		con_printf(CON_NORMAL, "    remove binding from <key>\n");
+	if (argc < 2 || argc > 2) {
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -601,8 +590,10 @@ void key_init()
 		key_text[KEY_MB1 + i] = d_strdup(temp);
 	}
 
-	cmd_addcommand("bind", key_cmd_bind);
-	cmd_addcommand("unbind", key_cmd_unbind);
+	cmd_addcommand("bind", key_cmd_bind,     "bind <key> <commands>\n" "    bind <commands> to <key>\n"
+                                             "bind <key>\n"            "    show the current binding for <key>\n"
+                                             "bind\n"                  "    show all key bindings\n");
+	cmd_addcommand("unbind", key_cmd_unbind, "unbind <key>\n"          "    remove binding from <key>\n");
 
 	// Clear the keyboard array
 	key_flush();

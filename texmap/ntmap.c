@@ -1023,17 +1023,8 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 
 void texmap_cmd_tmap(int argc, char **argv)
 {
-	if (argc != 2 || (!stricmp(argv[1], "-h"))) {
-		con_printf(CON_NORMAL, "usage: %s [x]\n", argv[0]);
-		con_printf(CON_NORMAL, "    use texture mapper <x>. Avilable mappers:\n");
-#if !defined(NO_ASM) && !defined(OGL)
-		con_printf(CON_NORMAL, "        i386\n");
-		con_printf(CON_NORMAL, "        pent\n");
-		con_printf(CON_NORMAL, "        ppro\n");
-#endif
-		con_printf(CON_NORMAL, "        fp\n");
-		con_printf(CON_NORMAL, "        c\n");
-
+	if (argc < 2 || argc > 2) {
+		cmd_insertf("help %s", argv[0]);
 		return;
 	}
 
@@ -1045,7 +1036,14 @@ void texmap_init(void)
 {
 	int t;
 
-	cmd_addcommand("tmap", texmap_cmd_tmap);
+	cmd_addcommand("tmap", texmap_cmd_tmap, "tmap <x>\n" "    use texture mapper <x>. Available mappers:\n"
+#if !defined(NO_ASM) && !defined(OGL)
+	                                                     "        i386\n"
+	                                                     "        pent\n"
+	                                                     "        ppro\n"
+#endif
+	                                                     "        fp\n"
+	                                                     "        c\n");
 
 	if ((t = FindArg("-tmap")))
 		select_tmap(Args[t+1]);

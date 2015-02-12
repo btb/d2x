@@ -47,7 +47,7 @@ int gr_init(void)
 	cvar_registervariable(&gr_palette_gamma);
 	cvar_registervariable(&gr_aspectratio);
 
-	cmd_addcommand("pixelaspect", gr_cmd_pixelaspect);
+	cmd_addcommand("pixelaspect", gr_cmd_pixelaspect, "pixelaspect [n]\n" "    set the pixel aspect ratio to <n> (1.0 is square pixels)\n");
 
 	// Set flags indicating that this is installed.
 	gr_installed = 1;
@@ -116,5 +116,10 @@ int gr_init_screen(int bitmap_type, int w, int h, int x, int y, int rowsize, uby
 
 void gr_cmd_pixelaspect(int argc, char **argv)
 {
+	if (argc < 2 || argc > 2) {
+		cmd_insertf("help %s", argv[0]);
+		return;
+	}
+
 	grd_curscreen->sc_aspect = fl2f(strtof(argv[1], NULL));
 }
