@@ -24,13 +24,11 @@
 #include "strutil.h"
 
 
-#define get_msecs() approx_fsec_to_msec(timer_get_approx_seconds())
-
 #define CLI_HISTORY_MAX         128
 // Cut the buffer line if it becomes longer than this
 #define CLI_CHARS_PER_LINE      128
-// Cursor blink frequency in ms
-#define CLI_BLINK_RATE          500
+// Cursor blink interval
+#define CLI_BLINK_RATE          (F1_0/2)
 // Border in pixels from the most left to the first letter
 #define CLI_CHAR_BORDER         4
 // Default prompt used at the commandline
@@ -77,7 +75,7 @@ void cli_init()
 	CommandScrollBack = 0;
 	Prompt = d_strdup(CLI_DEFAULT_PROMPT);
 
-	memset(CommandLines, 0, CLI_HISTORY_MAX);
+	memset(CommandLines, 0, sizeof(CommandLines));
 	memset(Command, 0, CLI_CHARS_PER_LINE);
 	memset(LCommand, 0, CLI_CHARS_PER_LINE);
 	memset(RCommand, 0, CLI_CHARS_PER_LINE);
@@ -112,16 +110,17 @@ void cli_draw(int y)
 	int x, w, h, aw;
 	float real_aw;
 	int commandbuffer;
-	static unsigned int LastBlinkTime = 0;  // Last time the cursor blinked
-	static int LastCursorPos = 0;           // Last cursor position
-	static int Blink = 0;                   // Is the cursor currently blinking
+	fix cur_time = timer_get_fixed_seconds();
+	static fix LastBlinkTime = 0;   // Last time the cursor blinked
+	static int LastCursorPos = 0;   // Last cursor position
+	static int Blink = 0;           // Is the cursor currently blinking
 
 	// Concatenate the left and right side to command
 	strcpy(Command, LCommand);
-	strncat(Command, RCommand, strlen(RCommand));
+	strncat(Command, RCommand, CLI_CHARS_PER_LINE - strlen(Command));
 
 	gr_get_string_size(Command, &w, &h, &aw);
-	if (w > 0 && strlen(Command))
+	if (w > 0 && *Command)
 		real_aw = (float)w/(float)strlen(Command);
 	else
 		real_aw = (float)aw;
@@ -137,15 +136,15 @@ void cli_draw(int y)
 	strcpy(VCommand, Prompt);
 
 	// then add the visible part of the command
-	strncat(VCommand, &Command[Offset], strlen(&Command[Offset]));
+	strncat(VCommand, &Command[Offset], CLI_CHARS_PER_LINE - strlen(VCommand));
 
 	// now display the result
 	gr_string(CLI_CHAR_BORDER, y-h, VCommand);
 
 	// at last add the cursor
 	// check if the blink period is over
-	if (get_msecs() > LastBlinkTime) {
-		LastBlinkTime = get_msecs() + CLI_BLINK_RATE;
+	if (cur_time > LastBlinkTime) {
+		LastBlinkTime = cur_time + CLI_BLINK_RATE;
 		if(Blink)
 			Blink = 0;
 		else
@@ -155,7 +154,7 @@ void cli_draw(int y)
 	// check if cursor has moved - if yes display cursor anyway
 	if (CursorPos != LastCursorPos) {
 		LastCursorPos = CursorPos;
-		LastBlinkTime = get_msecs() + CLI_BLINK_RATE;
+		LastBlinkTime = cur_time + CLI_BLINK_RATE;
 		Blink = 1;
 	}
 
@@ -196,7 +195,7 @@ void cli_execute(void)
 void cli_autocomplete(void)
 {
 	int i, j;
-	char *command;
+	const char *command;
 
 	command = cmd_complete(LCommand);
 

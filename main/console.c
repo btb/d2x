@@ -294,6 +294,7 @@ void con_init()
 
 	cli_init();
 	cmd_init();
+	cvar_init();
 
 	/* Initialise the cvars */
 	cvar_registervariable (&con_threshold);

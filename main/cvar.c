@@ -18,9 +18,7 @@
 
 
 /* The list of cvars */
-cvar_t *cvar_list = NULL;
-
-int cvar_initialized = 0;
+cvar_t *cvar_list;
 
 
 void cvar_free(void)
@@ -79,7 +77,6 @@ void cvar_init(void)
 	                                    "set\n"                 "    show value of all variables\n");
 
 	atexit(cvar_free);
-	cvar_initialized = 1;
 }
 
 
@@ -95,7 +92,7 @@ cvar_t *cvar_find(char *cvar_name)
 }
 
 
-char *cvar_complete(char *text)
+const char *cvar_complete(char *text)
 {
 	cvar_t *ptr;
 	int len = (int)strlen(text);
@@ -112,20 +109,17 @@ char *cvar_complete(char *text)
 
 
 /* Register a cvar */
-void cvar_registervariable (cvar_t *cvar)
+void cvar_registervariable(cvar_t *cvar)
 {
 	char *stringval;
 	cvar_t *ptr;
-
-	if (!cvar_initialized)
-		cvar_init();
 
 	Assert(cvar != NULL);
 
 	stringval = cvar->string;
 
 	cvar->string = d_strdup(stringval);
-	cvar->value = fl2f(strtod(cvar->string, (char **) NULL));
+	cvar->value = fl2f(strtod(cvar->string, NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	cvar->next = NULL;
 
@@ -155,7 +149,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 }
 
 
-void cvar_set_cvarf(cvar_t *cvar, char *fmt, ...)
+void cvar_set_cvarf(cvar_t *cvar, const char *fmt, ...)
 {
 	va_list arglist;
 	char buf[CVAR_MAX_LENGTH];

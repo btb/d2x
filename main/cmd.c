@@ -22,7 +22,7 @@ typedef struct cmd_s
 } cmd_t;
 
 /* The list of cmds */
-static cmd_t *cmd_list = NULL;
+static cmd_t *cmd_list;
 
 
 #define ALIAS_NAME_MAX 32
@@ -34,7 +34,7 @@ typedef struct cmd_alias_s
 } cmd_alias_t;
 
 /* The list of aliases */
-static cmd_alias_t *cmd_alias_list = NULL;
+static cmd_alias_t *cmd_alias_list;
 
 
 /* add a new console command */
@@ -71,8 +71,8 @@ typedef struct cmd_queue_s
 } cmd_queue_t;
 
 /* The list of commands to be executed */
-static cmd_queue_t *cmd_queue_head = NULL;
-static cmd_queue_t *cmd_queue_tail = NULL;
+static cmd_queue_t *cmd_queue_head;
+static cmd_queue_t *cmd_queue_tail;
 
 
 void cvar_cmd_set(int argc, char **argv);
@@ -124,8 +124,8 @@ void cmd_parse(char *input)
 	Assert(input != NULL);
 	
 	/* Strip leading spaces */
-	for (i=0; isspace(input[i]); i++) ;
-	strncpy( buffer, &input[i], CMD_MAX_LENGTH );
+	while( isspace(*input) ) { ++input; }
+	strncpy( buffer, input, CMD_MAX_LENGTH );
 
 	//printf("lead strip \"%s\"\n",buffer);
 	l = (int)strlen(buffer);
@@ -272,7 +272,7 @@ void cmd_enqueue(int insert, char *input)
 	}
 }
 
-void cmd_enqueuef(int insert, char *fmt, ...)
+void cmd_enqueuef(int insert, const char *fmt, ...)
 {
 	va_list arglist;
 	char buf[CMD_MAX_LENGTH];
@@ -286,7 +286,7 @@ void cmd_enqueuef(int insert, char *fmt, ...)
 
 
 /* Attempt to autocomplete an input string */
-char *cmd_complete(char *input)
+const char *cmd_complete(char *input)
 {
 	cmd_t *ptr;
 	cmd_alias_t *aptr;
