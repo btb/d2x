@@ -7,8 +7,7 @@
 #include "cfile.h"
 
 
-typedef struct cvar_s
-{
+typedef struct cvar_s {
 	char *name;
 	char *string;
 	bool archive;

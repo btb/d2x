@@ -18,7 +18,7 @@ extern int CLI_insert_mode;
 
 void cli_init(void);
 /* executes the command typed in at the console (called if you press ENTER)*/
-void cli_execute();
+void cli_execute(void);
 /* Gets called when TAB was pressed */
 void cli_autocomplete(void);
 /* draws the commandline the user is typing in to the screen. called by update? */

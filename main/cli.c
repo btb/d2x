@@ -67,7 +67,7 @@ static void cli_free(void)
 
 
 /* Initializes the cli */
-void cli_init()
+void cli_init(void)
 {
 	TotalCommands = 0;
 	CLI_insert_mode = 1;

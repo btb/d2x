@@ -165,7 +165,7 @@ void cvar_set_cvarf(cvar_t *cvar, const char *fmt, ...)
 }
 
 
-void cvar_set (char *cvar_name, char *value)
+void cvar_set(char *cvar_name, char *value)
 {
 	cvar_t *cvar;
 

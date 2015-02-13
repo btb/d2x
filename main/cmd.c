@@ -37,6 +37,21 @@ typedef struct cmd_alias_s
 static cmd_alias_t *cmd_alias_list;
 
 
+typedef struct cmd_queue_s
+{
+	char *command_line;
+	struct cmd_queue_s *next;
+} cmd_queue_t;
+
+/* The list of commands to be executed */
+static cmd_queue_t *cmd_queue_head;
+static cmd_queue_t *cmd_queue_tail;
+
+
+/* number of cycles to wait before processing any commands */
+static int cmd_queue_wait;
+
+
 /* add a new console command */
 void cmd_addcommand(const char *cmd_name, cmd_handler_t cmd_func, const char *cmd_help_text)
 {
@@ -62,17 +77,6 @@ void cmd_addcommand(const char *cmd_name, cmd_handler_t cmd_func, const char *cm
 	con_printf(CON_DEBUG, "cmd_addcommand: added %s\n", cmd->name);
 	cmd_list = cmd;
 }
-
-
-typedef struct cmd_queue_s
-{
-	char *command_line;
-	struct cmd_queue_s *next;
-} cmd_queue_t;
-
-/* The list of commands to be executed */
-static cmd_queue_t *cmd_queue_head;
-static cmd_queue_t *cmd_queue_tail;
 
 
 void cvar_cmd_set(int argc, char **argv);
@@ -161,8 +165,6 @@ void cmd_parse(char *input)
 	cmd_execute(num_tokens, tokens);
 }
 
-
-int cmd_queue_wait = 0;
 
 int cmd_queue_process(void)
 {
