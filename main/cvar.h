@@ -39,9 +39,6 @@ cvar_t *cvar_find(char *cvar_name);
 /* Try to autocomplete a cvar name */
 const char *cvar_complete(char *text);
 
-/* Get a CVar's value */
-fix cvar(char *cvar_name);
-
 /* Write archive cvars to file */
 void cvar_write(CFILE *file);
 

@@ -180,20 +180,6 @@ void cvar_set (char *cvar_name, char *value)
 }
 
 
-/* Get a CVar's value */
-fix cvar (char *cvar_name)
-{
-	cvar_t *cvar;
-
-	cvar = cvar_find(cvar_name);
-
-	if (!cvar)
-		return 0.0; // If we didn't find the cvar, give up
-
-	return cvar->value;
-}
-
-
 /* Write archive cvars to file */
 void cvar_write(CFILE *file)
 {
