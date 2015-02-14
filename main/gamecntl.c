@@ -965,11 +965,11 @@ int HandleSystemKey(int key)
 
 	switch (key) {
 
-		case KEY_LAPOSTRO:
-		case KEY_SHIFTED + KEY_LAPOSTRO:
+#if 1
+		case KEY_SHIFTED + KEY_ESC:
 			con_show();
 			break;
-
+#else
 		case KEY_SHIFTED + KEY_ESC:     //quick exit
 			#ifdef EDITOR
 				if (! SafetyCheck()) break;
@@ -979,6 +979,7 @@ int HandleSystemKey(int key)
 			Game_aborted=1;
 			Function_mode=FMODE_EXIT;
 			break;
+#endif
 
 		case KEY_COMMAND+KEY_P:
 		case KEY_PAUSE: 

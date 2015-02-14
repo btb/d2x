@@ -60,8 +60,6 @@ cvar_t con_threshold = {"con_threshold", "0",};
 #define CON_LINE_SCROLL         2
 // Indicator showing that you scrolled up the history
 #define CON_SCROLL_INDICATOR    "^"
-// Defines the default hide key (Hide() the console if pressed)
-#define CON_DEFAULT_HIDEKEY	KEY_LAPOSTRO
 // Defines the opening/closing speed
 #define CON_OPENCLOSE_SPEED 50
 
@@ -69,7 +67,6 @@ cvar_t con_threshold = {"con_threshold", "0",};
 /* The console's data */
 static int Visible;             // Enum that tells which visible state we are in CON_HIDE, CON_SHOW, CON_RAISE, CON_LOWER
 static int RaiseOffset;         // Offset used when scrolling in the console
-static int HideKey;             // The key that can hide the console
 static char **ConsoleLines;     // List of all the past lines
 static int TotalConsoleLines;   // Total number of lines in the console
 static int ConsoleScrollBack;   // How much the user scrolled back in the console
@@ -108,13 +105,9 @@ int con_key_handler(int key)
 	if (!con_is_visible())
 		return key;
 
-	if (key == HideKey) {
-		// deactivate Console
-		con_hide();
-		return 0;
-	}
-
 	switch (key) {
+		case KEY_LAPOSTRO:
+		case KEY_ESC:
 		case KEY_SHIFTED + KEY_ESC:
 			con_hide();
 			break;
@@ -265,6 +258,20 @@ void con_draw(void)
 }
 
 
+void con_cmd_toggleconsole(int argc, char **argv)
+{
+	if (argc > 1) {
+		cmd_appendf("help %s", argv[0]);
+		return;
+	}
+
+	if (con_is_visible())
+		con_hide();
+	else
+		con_show();
+}
+
+
 /* Initializes the console */
 void con_init()
 {
@@ -276,7 +283,6 @@ void con_init()
 	TotalConsoleLines = 0;
 	ConsoleScrollBack = 0;
 	BackgroundImage = NULL;
-	HideKey = CON_DEFAULT_HIDEKEY;
 
 	/* load the console surface */
 	ConsoleSurface = NULL;
@@ -296,7 +302,7 @@ void con_init()
 	cmd_init();
 	cvar_init();
 
-	/* Initialise the cvars */
+	cmd_addcommand("toggleconsole", con_cmd_toggleconsole, "toggleconsole\n" "    show or hide the console");
 	cvar_registervariable (&con_threshold);
 
 	con_initialized = 1;
