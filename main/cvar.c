@@ -95,7 +95,7 @@ cvar_t *cvar_find(char *cvar_name)
 const char *cvar_complete(char *text)
 {
 	cvar_t *ptr;
-	int len = (int)strlen(text);
+	size_t len = strlen(text);
 
 	if (!len)
 		return NULL;
@@ -143,7 +143,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 
 	d_free(cvar->string);
 	cvar->string = d_strdup(value);
-	cvar->value = fl2f(strtod(cvar->string, (char **) NULL));
+	cvar->value = fl2f(strtod(cvar->string, NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	con_printf(CON_VERBOSE, "%s: %s\n", cvar->name, cvar->string);
 }
