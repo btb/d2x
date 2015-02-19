@@ -565,9 +565,7 @@ int main(int argc, char *argv[])
 // end addition/edit -MM
 #define S_MODE(V,VV,VG) argnum = INT_MAX; SMODE(V, VV, VG); SMODE_GR(V, VG); SMODE_PRINT(V, VV, VG);
 
-		cvar_registervariable(&automap_use_game_res);
 		S_MODE(automap,automap_mode,automap_use_game_res);
-		cvar_registervariable(&menu_use_game_res);
 		SMODE_GR(menu, menu_use_game_res);
 		SMODE_PRINT(menu, MENU_SCREEN_MODE, menu_use_game_res);
 	}

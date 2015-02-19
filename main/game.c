@@ -122,7 +122,7 @@ grs_canvas	VR_editor_canvas;						//  The canvas that the editor writes to.
 //do menus work in 640x480 or 320x200?
 //PC version sets this in main().  Mac versios is always high-res, so set to 1 here
 int MenuHiresAvailable = 1;		//can we do highres menus?
-cvar_t menu_use_game_res = { "MenuGameres", "0", 0 };
+cvar_t menu_use_game_res = { "MenuGameres", "0", 1 };
 
 int Debug_pause=0;				//John's debugging pause system
 
