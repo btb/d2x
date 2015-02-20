@@ -99,7 +99,8 @@ cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
 cvar_t Config_lifetime_kills    = { "LifetimeKills", "0", 1 };
 cvar_t Config_lifetime_killed   = { "LifetimeKilled", "0", 1 };
 cvar_t Config_lifetime_checksum = { "LifetimeChecksum", "0", 1 };
-cvar_t Config_display_mode      = { "vid_mode", "0", 1 };
+cvar_t Config_resolution_x      = { "ResolutionX", "640", 1 };
+cvar_t Config_resolution_y      = { "ResolutionY", "480", 1 };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
@@ -111,8 +112,6 @@ cvar_t Config_display_mode      = { "vid_mode", "0", 1 };
 extern sbyte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, Debris_amount, SoundChannels;
 
 void set_custom_detail_vars(void);
-
-uint32_t legacy_display_mode[] = { SM(320,200), SM(640,480), SM(320,400), SM(640,400), SM(800,600), SM(1024,768), SM(1280,1024) };
 
 
 #define CL_MC0 0xF8F
@@ -229,7 +228,8 @@ static void config_init(void)
 	cvar_registervariable(&Auto_leveling_on);
 	cvar_registervariable(&Reticle_on);
 	cvar_registervariable(&Cockpit_mode);
-	cvar_registervariable(&Config_display_mode);
+	cvar_registervariable(&Config_resolution_x);
+	cvar_registervariable(&Config_resolution_y);
 	cvar_registervariable(&Missile_view_enabled);
 	cvar_registervariable(&Headlight_active_default);
 	cvar_registervariable(&Guided_in_big_window);
@@ -456,7 +456,7 @@ int ReadConfigFile()
 	}
 #endif
 
-	Default_display_mode = legacy_display_mode[Config_display_mode.intval];
+	Default_display_mode = SM(Config_resolution_x.intval, Config_resolution_y.intval);
 
 #if 0
 	printf( "DigiDeviceID: 0x%x\n", digi_driver_board );
@@ -563,10 +563,8 @@ int WriteConfigFile()
 
 	cvar_setint(&Cockpit_mode, (Cockpit_mode_save != -1)?Cockpit_mode_save:Cockpit_mode.intval); //if have saved mode, write it instead of letterbox/rear view
 
-	for (i = 0; i < (sizeof(legacy_display_mode) / sizeof(uint32_t)); i++) {
-		if (legacy_display_mode[i] == Current_display_mode)
-			cvar_setint(&Config_display_mode, i);
-	}
+	cvar_setint(&Config_resolution_x, SM_W(Current_display_mode));
+	cvar_setint(&Config_resolution_y, SM_H(Current_display_mode));
 
 	outfile = PHYSFSX_openWriteBuffered("descent.cfg");
 	if (outfile == NULL)
