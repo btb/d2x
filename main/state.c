@@ -538,6 +538,11 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	cnv = gr_create_canvas( THUMBNAIL_W, THUMBNAIL_H );
 	if ( cnv )
 	{
+#ifdef OGL
+		ubyte *buf;
+		int k;
+		GLint gl_draw_buffer;
+#endif
 		grs_canvas * cnv_save;
 		cnv_save = grd_curcanv;
 
@@ -546,7 +551,22 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 		render_frame(0, 0);
 
 #if defined(OGL)
+# if 1
+		buf = d_malloc(THUMBNAIL_W * THUMBNAIL_H * 3);
+		glGetIntegerv(GL_DRAW_BUFFER, &gl_draw_buffer);
+		glReadBuffer(gl_draw_buffer);
+		glReadPixels(0, SHEIGHT - THUMBNAIL_H, THUMBNAIL_W, THUMBNAIL_H, GL_RGB, GL_UNSIGNED_BYTE, buf);
+		k = THUMBNAIL_H;
+		for (i = 0; i < THUMBNAIL_W * THUMBNAIL_H; i++) {
+			if (!(j = i % THUMBNAIL_W))
+				k--;
+			cnv->cv_bitmap.bm_data[THUMBNAIL_W * k + j] =
+				gr_find_closest_color(buf[3*i]/4, buf[3*i+1]/4, buf[3*i+2]/4);
+		}
+		d_free(buf);
+# else // simpler d1x method, not tested yet
 		ogl_ubitblt_tolinear(grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h, 0, 0, 0, 0, &grd_curscreen->sc_canvas.cv_bitmap, &grd_curcanv->cv_bitmap);
+# endif
 #endif
 
 		pal = gr_palette;
