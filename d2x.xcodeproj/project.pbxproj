@@ -59,7 +59,6 @@
 		142869E11A672E6300A095F6 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696671A2729870070D41D /* console.c */; };
 		142869E21A672E6300A095F6 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696681A2729870070D41D /* controls.c */; };
 		142869E31A672E6300A095F6 /* credits.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966A1A2729870070D41D /* credits.c */; };
-		142869E41A672E6300A095F6 /* crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966C1A2729870070D41D /* crypt.c */; };
 		142869E51A672E6300A095F6 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
 		142869E61A672E6300A095F6 /* digiobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696711A2729870070D41D /* digiobj.c */; };
 		142869E71A672E6300A095F6 /* effects.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AD1A2729870070D41D /* effects.c */; };
@@ -282,7 +281,6 @@
 		14F0D5301A4CA50D00682BB0 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696671A2729870070D41D /* console.c */; };
 		14F0D5311A4CA50D00682BB0 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696681A2729870070D41D /* controls.c */; };
 		14F0D5321A4CA50D00682BB0 /* credits.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966A1A2729870070D41D /* credits.c */; };
-		14F0D5331A4CA50D00682BB0 /* crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966C1A2729870070D41D /* crypt.c */; };
 		14F0D5341A4CA50D00682BB0 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
 		14F0D5351A4CA50D00682BB0 /* digiobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696711A2729870070D41D /* digiobj.c */; };
 		14F0D5361A4CA50D00682BB0 /* effects.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AD1A2729870070D41D /* effects.c */; };
@@ -417,7 +415,6 @@
 		14F0D5C01A4CB34F00682BB0 /* console.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696671A2729870070D41D /* console.c */; };
 		14F0D5C11A4CB34F00682BB0 /* controls.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696681A2729870070D41D /* controls.c */; };
 		14F0D5C21A4CB34F00682BB0 /* credits.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966A1A2729870070D41D /* credits.c */; };
-		14F0D5C31A4CB34F00682BB0 /* crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466966C1A2729870070D41D /* crypt.c */; };
 		14F0D5C41A4CB34F00682BB0 /* cvar.c in Sources */ = {isa = PBXBuildFile; fileRef = 14E97E061A3703D40027FB84 /* cvar.c */; };
 		14F0D5C51A4CB34F00682BB0 /* digiobj.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696711A2729870070D41D /* digiobj.c */; };
 		14F0D5C61A4CB34F00682BB0 /* effects.c in Sources */ = {isa = PBXBuildFile; fileRef = 146696AD1A2729870070D41D /* effects.c */; };
@@ -882,7 +879,6 @@
 		146696691A2729870070D41D /* controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controls.h; sourceTree = "<group>"; };
 		1466966A1A2729870070D41D /* credits.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = credits.c; sourceTree = "<group>"; };
 		1466966B1A2729870070D41D /* credits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = credits.h; sourceTree = "<group>"; };
-		1466966C1A2729870070D41D /* crypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crypt.c; sourceTree = "<group>"; };
 		1466966D1A2729870070D41D /* desc_id.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = desc_id.h; sourceTree = "<group>"; };
 		1466966F1A2729870070D41D /* desw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = desw.h; sourceTree = "<group>"; };
 		146696701A2729870070D41D /* digi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = digi.h; sourceTree = "<group>"; };
@@ -1788,7 +1784,6 @@
 				146696691A2729870070D41D /* controls.h */,
 				1466966A1A2729870070D41D /* credits.c */,
 				1466966B1A2729870070D41D /* credits.h */,
-				1466966C1A2729870070D41D /* crypt.c */,
 				14E97E061A3703D40027FB84 /* cvar.c */,
 				14E97E051A3703BE0027FB84 /* cvar.h */,
 				1466966D1A2729870070D41D /* desc_id.h */,
@@ -2289,7 +2284,6 @@
 				142869E21A672E6300A095F6 /* controls.c in Sources */,
 				14286A5B1A67313E00A095F6 /* kgroup.c in Sources */,
 				142869E31A672E6300A095F6 /* credits.c in Sources */,
-				142869E41A672E6300A095F6 /* crypt.c in Sources */,
 				14286A841A67330000A095F6 /* radio.c in Sources */,
 				14286A601A67313E00A095F6 /* ksegsize.c in Sources */,
 				14286A551A67313E00A095F6 /* group.c in Sources */,
@@ -2480,7 +2474,6 @@
 				14F0D5301A4CA50D00682BB0 /* console.c in Sources */,
 				14F0D5311A4CA50D00682BB0 /* controls.c in Sources */,
 				14F0D5321A4CA50D00682BB0 /* credits.c in Sources */,
-				14F0D5331A4CA50D00682BB0 /* crypt.c in Sources */,
 				14F0D5341A4CA50D00682BB0 /* cvar.c in Sources */,
 				14F0D5351A4CA50D00682BB0 /* digiobj.c in Sources */,
 				140D3B431A7DB909005D0E95 /* midi.c in Sources */,
@@ -2644,7 +2637,6 @@
 				14F0D5C01A4CB34F00682BB0 /* console.c in Sources */,
 				14F0D5C11A4CB34F00682BB0 /* controls.c in Sources */,
 				14F0D5C21A4CB34F00682BB0 /* credits.c in Sources */,
-				14F0D5C31A4CB34F00682BB0 /* crypt.c in Sources */,
 				14F0D5C41A4CB34F00682BB0 /* cvar.c in Sources */,
 				14F0D5C51A4CB34F00682BB0 /* digiobj.c in Sources */,
 				14F0D5C61A4CB34F00682BB0 /* effects.c in Sources */,

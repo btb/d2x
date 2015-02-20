@@ -391,6 +391,8 @@ void init_game()
 	cmd_addcommand("sizedown", game_cmd_sizedown,           "sizedown\n"         "    decrease the game window size");
 	cmd_addcommand("recorddemo", game_cmd_recorddemo,       "recorddemo\n"       "    start recording a demo");
 	cmd_addcommand("stoprecording", game_cmd_stoprecording, "stoprecording\n"    "    stop recording the current demo");
+
+	gamecntl_init();
 }
 
 
