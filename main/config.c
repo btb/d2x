@@ -522,7 +522,6 @@ int WriteConfigFile()
 	int joy_axis_min[7];
 	int joy_axis_center[7];
 	int joy_axis_max[7];
-	int i;
 	
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 
