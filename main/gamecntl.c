@@ -2151,7 +2151,7 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 	if (Newdemo_state == ND_STATE_RECORDING)
 		newdemo_record_laser_level(Players[Player_num].laser_level, MAX_LASER_LEVEL);
 
-	Players[Player_num].energy = MAX_ENERGY;
+	Players[Player_num].energy = EMULATING_D1?INITIAL_ENERGY:MAX_ENERGY;
 	Players[Player_num].laser_level = EMULATING_D1?MAX_LASER_LEVEL:MAX_SUPER_LASER_LEVEL;
 	Players[Player_num].flags |= PLAYER_FLAGS_QUAD_LASERS;
 	update_laser_weapon_info();
@@ -2215,7 +2215,7 @@ static void gamecntl_cmd_ShieldCheat(int argc, char **argv)
 
 	do_cheat_penalty();
 	HUD_init_message(TXT_FULL_SHIELDS);
-	Players[Player_num].shields = MAX_SHIELDS;
+	Players[Player_num].shields = INITIAL_SHIELDS;
 }
 
 
