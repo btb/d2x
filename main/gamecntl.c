@@ -2088,49 +2088,36 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 	}
 
 	do_cheat_penalty();
+	HUD_init_message("%s%s", !stricmp(argv[0], "bigred")?"SUPER ":"", TXT_WOWIE_ZOWIE);
 
-	if (!stricmp(argv[0], "scourge"))
+	Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG | HAS_VULCAN_FLAG | HAS_SPREADFIRE_FLAG;
+	Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG | HAS_HOMING_FLAG | HAS_PROXIMITY_FLAG;
+
+	if (!stricmp(argv[0], "bigred"))
 	{
-		HUD_init_message(TXT_WOWIE_ZOWIE);
-		Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG | HAS_VULCAN_FLAG | HAS_SPREADFIRE_FLAG;
-		Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG | HAS_HOMING_FLAG | HAS_PROXIMITY_FLAG;
+		Players[Player_num].primary_weapon_flags |= HAS_PLASMA_FLAG | HAS_FUSION_FLAG;
+		Players[Player_num].secondary_weapon_flags |= HAS_SMART_FLAG | HAS_MEGA_FLAG;
 	}
-	else if (!stricmp(argv[0], "bigred"))
+	else if (!stricmp(argv[0], "motherlode"))
 	{
-		HUD_init_message("SUPER %s",TXT_WOWIE_ZOWIE);
-		Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG | HAS_VULCAN_FLAG | HAS_SPREADFIRE_FLAG | HAS_PLASMA_FLAG | HAS_FUSION_FLAG;
-		Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG | HAS_HOMING_FLAG | HAS_PROXIMITY_FLAG | HAS_SMART_FLAG | HAS_MEGA_FLAG;
+		Players[Player_num].primary_weapon_flags = ~(HAS_FLAG(PHOENIX_INDEX) | HAS_FLAG(OMEGA_INDEX) | HAS_FLAG(FUSION_INDEX));
+		Players[Player_num].secondary_weapon_flags = ~(HAS_FLAG(SMISSILE4_INDEX) | HAS_FLAG(MEGA_INDEX) | HAS_FLAG(SMISSILE5_INDEX));
 	}
-	else if (Piggy_hamfile_version < 3) // SHAREWARE
+	else if (!stricmp(argv[0], "honestbob"))
 	{
-		HUD_init_message(TXT_WOWIE_ZOWIE);
-		Players[Player_num].primary_weapon_flags = ~((1<<PHOENIX_INDEX) | (1<<OMEGA_INDEX) | (1<<FUSION_INDEX) | HAS_FLAG(SUPER_LASER_INDEX));
-		Players[Player_num].secondary_weapon_flags = ~((1<<SMISSILE4_INDEX) | (1<<MEGA_INDEX) | (1<<SMISSILE5_INDEX));
-	}
-	else
-	{
-		HUD_init_message(TXT_WOWIE_ZOWIE);
-		Players[Player_num].primary_weapon_flags = 0xffff ^ HAS_FLAG(SUPER_LASER_INDEX); // no super laser
+		Players[Player_num].primary_weapon_flags = 0xffff;
 		Players[Player_num].secondary_weapon_flags = 0xffff;
 	}
 
-	for (i = 0; i < (EMULATING_D1?5:MAX_PRIMARY_WEAPONS); i++)
-		Players[Player_num].primary_ammo[i] = Primary_ammo_max[i];
+	Players[Player_num].primary_weapon_flags &= ~HAS_FLAG(SUPER_LASER_INDEX); // no super laser
+
+	for (i = 0; i < (MAX_PRIMARY_WEAPONS); i++)
+		if (Players[Player_num].primary_weapon_flags & HAS_FLAG(i))
+			Players[Player_num].primary_ammo[i] = Primary_ammo_max[i];
 
 	for (i = 0; i < (EMULATING_D1?5:MAX_SECONDARY_WEAPONS); i++)
-		Players[Player_num].secondary_ammo[i] = Secondary_ammo_max[i];
-
-	if (!stricmp(argv[0], "scourge"))
-	{
-		Players[Player_num].secondary_ammo[SMART_INDEX] = 0;
-		Players[Player_num].secondary_ammo[MEGA_INDEX] = 0;
-	}
-	else if (Piggy_hamfile_version < 3) // SHAREWARE
-	{
-		Players[Player_num].secondary_ammo[SMISSILE4_INDEX] = 0;
-		Players[Player_num].secondary_ammo[SMISSILE5_INDEX] = 0;
-		Players[Player_num].secondary_ammo[MEGA_INDEX] = 0;
-	}
+		if (Players[Player_num].secondary_weapon_flags & HAS_FLAG(i))
+			Players[Player_num].secondary_ammo[i] = Secondary_ammo_max[i];
 
 	if (Game_mode & GM_HOARD)
 		Players[Player_num].secondary_ammo[PROXIMITY_INDEX] = 12;
