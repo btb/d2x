@@ -1795,62 +1795,6 @@ void HandleTestKey(int key)
 
 //	Cheat functions ------------------------------------------------------------
 
-static char *Cheats[] = {
-	"gabbagabbahey", // enable
-	"scourge",       // wowie
-	"mitzi",         // allkeys
-	"racerx",        // invuln
-	"guile",         // cloak
-	"twilight",      // shield
-	"farmerjoe",     // warp
-	"astral",        // physics
-
-	"buggin",        // turbo
-	"bigred",        // super wowie
-	"bruin",         // newlife
-	"flash",         // exitpath
-	"ahimsa",        // robotpause
-
-	"poboys",        // open exit door
-	"porgys",        // megawow
-	"lunacy",        // lunacy
-	"pletch",        // ugly robot
-
-	"motherlode",
-	"currygoat",
-	"zingermans",
-	"eatangelos",
-	"ericaanne",
-	"joshuaakira",
-	"whammazoom",
-
-	"honestbob",
-	"oralgroove",
-	"almighty",
-	"lpnlizard",
-	"duddaboo",
-	"rockrgrl",
-	"freespace",
-	"godzilla",
-	"helpvishnu",
-	"gowingnut",
-	"spaniard",
-	"delshiftb",
-	"wildfire",
-	"silkwing",
-	"imagespace",
-	"alifalafel",
-	"pigfarmer",
-	"bittersweet",
-	"frametime",
-};
-#define N_CHEATS (sizeof(Cheats) / sizeof(*Cheats))
-
-char CheatBuffer[]="AAAAAAAAAAAAAAA";
-
-#define CHEATSPOT 14
-#define CHEATEND 15
-
 void do_cheat_penalty ()
  {
   digi_play_sample( SOUND_CHEATER, F1_0);
@@ -2470,60 +2414,72 @@ static void gamecntl_cmd_JohnCheat4(int argc, char **argv)
 }
 
 
-void gamecntl_init(void)
+#define CHEATSPOT 14
+#define CHEATEND 15
+
+struct cheat_code
 {
-	cmd_addcommand("gabbagabbahey", gamecntl_cmd_EnableCheats, "");
-	cmd_addcommand("scourge",       gamecntl_cmd_WowieCheat, "");
-	cmd_addcommand("mitzi",         gamecntl_cmd_AllKeysCheat, "");
-	cmd_addcommand("racerx",        gamecntl_cmd_InvulCheat, "");
-	cmd_addcommand("guile",         gamecntl_cmd_CloakCheat, "");
-	cmd_addcommand("twilight",      gamecntl_cmd_ShieldCheat, "");
-	cmd_addcommand("farmerjoe",     gamecntl_cmd_LevelWarpCheat, "");
-	cmd_addcommand("astral",        gamecntl_cmd_PhysicsCheat, "");
+	const char string[CHEATEND];
+	cmd_handler_t cheat_cmd;
+};
 
-	cmd_addcommand("buggin",        gamecntl_cmd_TurboCheat, "");
-	cmd_addcommand("bigred",        gamecntl_cmd_WowieCheat, "");
-	cmd_addcommand("bruin",         gamecntl_cmd_NewLifeCheat, "");
-	cmd_addcommand("flash",         gamecntl_cmd_ExitPathCheat, "");
-	cmd_addcommand("ahimsa",        gamecntl_cmd_RobotFiringCheat, "");
+static const struct cheat_code Cheats[] = {
+	{ "gabbagabbahey", gamecntl_cmd_EnableCheats          },
+	{ "scourge",       gamecntl_cmd_WowieCheat            },
+	{ "mitzi",         gamecntl_cmd_AllKeysCheat          },
+	{ "racerx",        gamecntl_cmd_InvulCheat            },
+	{ "guile",         gamecntl_cmd_CloakCheat            },
+	{ "twilight",      gamecntl_cmd_ShieldCheat           },
+	{ "farmerjoe",     gamecntl_cmd_LevelWarpCheat        },
+	{ "astral",        gamecntl_cmd_PhysicsCheat          },
 
-	cmd_addcommand("poboys",        gamecntl_cmd_JohnCheat1, "");
-	cmd_addcommand("porgys",        gamecntl_cmd_JohnCheat2, "");
-	cmd_addcommand("lunacy",        gamecntl_cmd_JohnCheat3, "");
-	cmd_addcommand("pletch",        gamecntl_cmd_JohnCheat4, "");
+	{ "buggin",        gamecntl_cmd_TurboCheat            },
+	{ "bigred",        gamecntl_cmd_WowieCheat            },
+	{ "bruin",         gamecntl_cmd_NewLifeCheat          },
+	{ "flash",         gamecntl_cmd_ExitPathCheat         },
+	{ "ahimsa",        gamecntl_cmd_RobotFiringCheat      },
 
-	cmd_addcommand("motherlode",    gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("currygoat",     gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("zingermans",    gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("eatangelos",    gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("ericaanne",     gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("joshuaakira",   gamecntl_cmd_LamerCheat, "");
-	cmd_addcommand("whammazoom",    gamecntl_cmd_LamerCheat, "");
+	{ "poboys",        gamecntl_cmd_JohnCheat1            },
+	{ "porgys",        gamecntl_cmd_JohnCheat2            },
+	{ "lunacy",        gamecntl_cmd_JohnCheat3            },
+	{ "pletch",        gamecntl_cmd_JohnCheat4            },
 
-	cmd_addcommand("pigfarmer",     gamecntl_cmd_JohnHeadCheat, "");
-	cmd_addcommand("bittersweet",   gamecntl_cmd_AcidCheat, "");
-	cmd_addcommand("frametime",     gamecntl_cmd_FramerateCheat, "");
-	cmd_addcommand("blueorb",       gamecntl_cmd_BlueOrbCheat, "");
-	cmd_addcommand("helpvishnu",    gamecntl_cmd_BuddyLifeCheat, "");
-	cmd_addcommand("gowingnut",     gamecntl_cmd_BuddyDudeCheat, "");
-	cmd_addcommand("godzilla",      gamecntl_cmd_MonsterCheat, "");
-	cmd_addcommand("duddaboo",      gamecntl_cmd_BouncyCheat, "");
-	cmd_addcommand("freespace",     gamecntl_cmd_LevelWarpCheat, "");
-	cmd_addcommand("honestbob",     gamecntl_cmd_WowieCheat, "");
-	cmd_addcommand("oralgroove",    gamecntl_cmd_AllKeysCheat, "");
-	cmd_addcommand("almighty",      gamecntl_cmd_InvulCheat, "");
-	cmd_addcommand("alifalafel",    gamecntl_cmd_AccessoryCheat, "");
-	cmd_addcommand("rockrgrl",      gamecntl_cmd_FullMapCheat, "");
-	cmd_addcommand("lpnlizard",     gamecntl_cmd_HomingCheat, "");
-	cmd_addcommand("spaniard",      gamecntl_cmd_KillRobotsCheat, "");
-	cmd_addcommand("delshiftb",     gamecntl_cmd_FinishLevelCheat, "");
-	cmd_addcommand("silkwing",      gamecntl_cmd_RobotsKillRobotsCheat, "");
-	cmd_addcommand("imagespace",    gamecntl_cmd_RobotFiringCheat, "");
-	cmd_addcommand("wildfire",      gamecntl_cmd_RapidFireCheat, "");
-}
+	{ "motherlode",    gamecntl_cmd_LamerCheat            },
+	{ "currygoat",     gamecntl_cmd_LamerCheat            },
+	{ "zingermans",    gamecntl_cmd_LamerCheat            },
+	{ "eatangelos",    gamecntl_cmd_LamerCheat            },
+	{ "ericaanne",     gamecntl_cmd_LamerCheat            },
+	{ "joshuaakira",   gamecntl_cmd_LamerCheat            },
+	{ "whammazoom",    gamecntl_cmd_LamerCheat            },
+
+	{ "pigfarmer",     gamecntl_cmd_JohnHeadCheat         },
+	{ "bittersweet",   gamecntl_cmd_AcidCheat             },
+	{ "frametime",     gamecntl_cmd_FramerateCheat        },
+	{ "blueorb",       gamecntl_cmd_BlueOrbCheat          },
+	{ "helpvishnu",    gamecntl_cmd_BuddyLifeCheat        },
+	{ "gowingnut",     gamecntl_cmd_BuddyDudeCheat        },
+	{ "godzilla",      gamecntl_cmd_MonsterCheat          },
+	{ "duddaboo",      gamecntl_cmd_BouncyCheat           },
+	{ "freespace",     gamecntl_cmd_LevelWarpCheat        },
+	{ "honestbob",     gamecntl_cmd_WowieCheat            },
+	{ "oralgroove",    gamecntl_cmd_AllKeysCheat          },
+	{ "almighty",      gamecntl_cmd_InvulCheat            },
+	{ "alifalafel",    gamecntl_cmd_AccessoryCheat        },
+	{ "rockrgrl",      gamecntl_cmd_FullMapCheat          },
+	{ "lpnlizard",     gamecntl_cmd_HomingCheat           },
+	{ "spaniard",      gamecntl_cmd_KillRobotsCheat       },
+	{ "delshiftb",     gamecntl_cmd_FinishLevelCheat      },
+	{ "silkwing",      gamecntl_cmd_RobotsKillRobotsCheat },
+	{ "imagespace",    gamecntl_cmd_RobotFiringCheat      },
+	{ "wildfire",      gamecntl_cmd_RapidFireCheat        },
+};
+#define N_CHEATS (sizeof(Cheats) / sizeof(struct cheat_code))
 
 
 // Main Cheat function
+
+char CheatBuffer[]="AAAAAAAAAAAAAAA";
+
 void FinalCheats(int key)
 {
 	int i;
@@ -2535,9 +2491,12 @@ void FinalCheats(int key)
 
 	CheatBuffer[CHEATSPOT] = key;
 
-	for (i = 0; i < N_CHEATS; i++)
-		if (!stricmp(&CheatBuffer[CHEATEND-strlen(Cheats[i])], Cheats[i]))
-			cmd_append(&CheatBuffer[CHEATEND-strlen(Cheats[i])]);
+	if (!strnicmp(&CheatBuffer[CHEATEND-9], "pletch", 6))
+		cmd_appendf("pletch %d", atoi(&CheatBuffer[CHEATEND-3]));
+	else
+		for (i = 0; i < N_CHEATS; i++)
+			if (!stricmp(&CheatBuffer[CHEATEND-strlen(Cheats[i].string)], Cheats[i].string))
+				cmd_append(&CheatBuffer[CHEATEND-strlen(Cheats[i].string)]);
 }
 
 
@@ -2822,4 +2781,13 @@ void ReadControls()
 
 //	if ((Players[Player_num].flags & PLAYER_FLAGS_CONVERTER) && keyd_pressed[KEY_F8] && (keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT]))
   //		transfer_energy_to_shield(key_down_time(KEY_F8));
+}
+
+
+void gamecntl_init(void)
+{
+	int i;
+
+	for (i = 0; i < N_CHEATS; i++)
+		cmd_addcommand(Cheats[i].string, Cheats[i].cheat_cmd, "");
 }
