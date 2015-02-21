@@ -1862,13 +1862,14 @@ static void gamecntl_cmd_EnableCheats(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (EMULATING_D1)
+	if (!EMULATING_D1)
 	{
-		do_cheat_penalty();
-		HUD_init_message(TXT_CHEATS_ENABLED);
-	}
-	else
 		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
+
+	do_cheat_penalty();
+	HUD_init_message(TXT_CHEATS_ENABLED);
 }
 
 
@@ -1975,6 +1976,12 @@ static void gamecntl_cmd_BouncyCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
+	if (!is_SHAREWARE && !stricmp(argv[0], "ericaanne"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
+
 	do_cheat_penalty();
 	HUD_init_message("Bouncing weapons!");
 	BounceCheat = 1;
@@ -1990,6 +1997,12 @@ static void gamecntl_cmd_LevelWarpCheat(int argc, char **argv)
 
 	if (Game_mode & GM_MULTI)
 		return;
+
+	if (!is_SHAREWARE && !stricmp(argv[0], "whammazoom"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
 
 	//digi_play_sample(SOUND_CHEATER, F1_0);
 	m.type = NM_TYPE_INPUT; m.text_len = 10; m.text = text;
@@ -2068,6 +2081,12 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 	if (!Cheats_enabled && EMULATING_D1)
 		return;
 
+	if (!is_SHAREWARE && !stricmp(argv[0], "motherlode"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
+
 	do_cheat_penalty();
 
 	if (!stricmp(argv[0], "scourge"))
@@ -2134,6 +2153,12 @@ static void gamecntl_cmd_AllKeysCheat(int argc, char **argv)
 	if (!Cheats_enabled && EMULATING_D1)
 		return;
 
+	if (!is_SHAREWARE && !stricmp(argv[0], "currygoat"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
+
 	do_cheat_penalty();
 	HUD_init_message(TXT_ALL_KEYS);
 	Players[Player_num].flags |= PLAYER_FLAGS_BLUE_KEY | PLAYER_FLAGS_RED_KEY | PLAYER_FLAGS_GOLD_KEY;
@@ -2147,6 +2172,12 @@ static void gamecntl_cmd_InvulCheat(int argc, char **argv)
 
 	if (!Cheats_enabled && EMULATING_D1)
 		return;
+
+	if (!is_SHAREWARE && !stricmp(argv[0], "zingermans"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
 
 	do_cheat_penalty();
 	Players[Player_num].flags ^= PLAYER_FLAGS_INVULNERABLE;
@@ -2225,6 +2256,12 @@ static void gamecntl_cmd_FullMapCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
+	if (!is_SHAREWARE && !stricmp(argv[0], "joshuaakira"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
+
 	do_cheat_penalty();
 	Players[Player_num].flags |= PLAYER_FLAGS_MAP_ALL;
 
@@ -2236,6 +2273,12 @@ static void gamecntl_cmd_HomingCheat(int argc, char **argv)
 {
 	if (Game_mode & GM_MULTI)
 		return;
+
+	if (!is_SHAREWARE && !stricmp(argv[0], "eatangelos"))
+	{
+		gamecntl_cmd_LamerCheat(argc, argv);
+		return;
+	}
 
 	if (!HomingCheat) {
 		int i;
@@ -2468,13 +2511,13 @@ static const struct cheat_code Cheats[] = {
 	{ "lunacy",        gamecntl_cmd_JohnCheat3            },
 	{ "pletch",        gamecntl_cmd_JohnCheat4            },
 
-	{ "motherlode",    gamecntl_cmd_LamerCheat            },
-	{ "currygoat",     gamecntl_cmd_LamerCheat            },
-	{ "zingermans",    gamecntl_cmd_LamerCheat            },
-	{ "eatangelos",    gamecntl_cmd_LamerCheat            },
-	{ "ericaanne",     gamecntl_cmd_LamerCheat            },
-	{ "joshuaakira",   gamecntl_cmd_LamerCheat            },
-	{ "whammazoom",    gamecntl_cmd_LamerCheat            },
+	{ "motherlode",    gamecntl_cmd_WowieCheat            },
+	{ "currygoat",     gamecntl_cmd_AllKeysCheat          },
+	{ "zingermans",    gamecntl_cmd_InvulCheat            },
+	{ "eatangelos",    gamecntl_cmd_HomingCheat           },
+	{ "ericaanne",     gamecntl_cmd_BouncyCheat           },
+	{ "joshuaakira",   gamecntl_cmd_FullMapCheat          },
+	{ "whammazoom",    gamecntl_cmd_LevelWarpCheat        },
 
 	{ "pigfarmer",     gamecntl_cmd_JohnHeadCheat         },
 	{ "bittersweet",   gamecntl_cmd_AcidCheat             },
