@@ -1527,6 +1527,30 @@ void kill_buddy(void)
 			}
 }
 
+
+void gamecntl_cmd_kill(int argc, char **argv)
+{
+	if (!Cheats_enabled)
+		return;
+
+	if (argc == 1)
+	{
+		ConsoleObject->flags |= OF_SHOULD_BE_DEAD;
+	}
+	else if (argc == 2)
+	{
+		if (!stricmp(argv[1], "all"))
+			kill_all_robots();
+		else if (!stricmp(argv[1], "snipers"))
+			kill_all_snipers();
+		else if (!stricmp(argv[1], "thief"))
+			kill_thief();
+		else if (!stricmp(argv[1], "buddy"))
+			kill_buddy();
+	}
+}
+
+
 void toggle_movie_saving(void);
 extern char Language[];
 
@@ -2790,4 +2814,6 @@ void gamecntl_init(void)
 
 	for (i = 0; i < N_CHEATS; i++)
 		cmd_addcommand(Cheats[i].string, Cheats[i].cheat_cmd, "");
+
+	cmd_addcommand("kill", gamecntl_cmd_kill, "");
 }
