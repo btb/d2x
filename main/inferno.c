@@ -371,6 +371,16 @@ void do_register_player(ubyte *title_pal)
 
 }
 
+
+void inferno_cmd_quit(int argc, char **argv)
+{
+	if (argc > 1)
+		return;
+
+	quit_request();
+}
+
+
 #define PROGNAME argv[0]
 
 extern char Language[];
@@ -402,6 +412,8 @@ int main(int argc, char *argv[])
 
 	mem_init();
 	con_init(); // Initialise the console
+
+	cmd_addcommand("quit", inferno_cmd_quit, "");
 
 	error_init(NULL, NULL);
 	PHYSFSX_init(argc, argv);
