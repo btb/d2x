@@ -1796,7 +1796,26 @@ void HandleTestKey(int key)
 //	Cheat functions ------------------------------------------------------------
 
 static char *Cheats[] = {
-	"gabbagabbahey",
+	"gabbagabbahey", // enable
+	"scourge",       // wowie
+	"mitzi",         // allkeys
+	"racerx",        // invuln
+	"guile",         // cloak
+	"twilight",      // shield
+	"farmerjoe",     // warp
+	"astral",        // physics
+
+	"buggin",        // turbo
+	"bigred",        // super wowie
+	"bruin",         // newlife
+	"flash",         // exitpath
+	"ahimsa",        // robotpause
+
+	"poboys",        // open exit door
+	"porgys",        // megawow
+	"lunacy",        // lunacy
+	"pletch",        // ugly robot
+
 	"motherlode",
 	"currygoat",
 	"zingermans",
@@ -1867,6 +1886,21 @@ static void gamecntl_cmd_LamerCheat(int argc, char **argv)
 	}
 #endif
 	HUD_init_message("Take that...cheater!");
+}
+
+
+static void gamecntl_cmd_EnableCheats(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (EMULATING_D1)
+	{
+		do_cheat_penalty();
+		HUD_init_message(TXT_CHEATS_ENABLED);
+	}
+	else
+		gamecntl_cmd_LamerCheat(argc, argv);
 }
 
 
@@ -2004,6 +2038,58 @@ static void gamecntl_cmd_LevelWarpCheat(int argc, char **argv)
 }
 
 
+static void gamecntl_cmd_PhysicsCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	if ( Physics_cheat_flag == 0xBADA55 )
+	{
+		Physics_cheat_flag = 0;
+	}
+	else
+	{
+		Physics_cheat_flag = 0xBADA55;
+	}
+	HUD_init_message("%s %s!", "Ghosty mode", Physics_cheat_flag == 0xBADA55?TXT_ON:TXT_OFF);
+}
+
+
+static void gamecntl_cmd_TurboCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	Game_turbo_mode ^= 1;
+	HUD_init_message("%s %s!", "Turbo mode", Game_turbo_mode?TXT_ON:TXT_OFF);
+}
+
+
+static void gamecntl_cmd_NewLifeCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	if (Players[Player_num].lives >= 50)
+		return;
+
+	do_cheat_penalty();
+	Players[Player_num].lives++;
+	HUD_init_message("Extra life!");
+}
+
+
 static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 {
 	int i;
@@ -2011,27 +2097,48 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	HUD_init_message(TXT_WOWIE_ZOWIE);
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
 	do_cheat_penalty();
 
-	if (Piggy_hamfile_version < 3) // SHAREWARE
+	if (!stricmp(argv[0], "scourge"))
 	{
+		HUD_init_message(TXT_WOWIE_ZOWIE);
+		Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG | HAS_VULCAN_FLAG | HAS_SPREADFIRE_FLAG;
+		Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG | HAS_HOMING_FLAG | HAS_PROXIMITY_FLAG;
+	}
+	else if (!stricmp(argv[0], "bigred"))
+	{
+		HUD_init_message("SUPER %s",TXT_WOWIE_ZOWIE);
+		Players[Player_num].primary_weapon_flags = HAS_LASER_FLAG | HAS_VULCAN_FLAG | HAS_SPREADFIRE_FLAG | HAS_PLASMA_FLAG | HAS_FUSION_FLAG;
+		Players[Player_num].secondary_weapon_flags = HAS_CONCUSSION_FLAG | HAS_HOMING_FLAG | HAS_PROXIMITY_FLAG | HAS_SMART_FLAG | HAS_MEGA_FLAG;
+	}
+	else if (Piggy_hamfile_version < 3) // SHAREWARE
+	{
+		HUD_init_message(TXT_WOWIE_ZOWIE);
 		Players[Player_num].primary_weapon_flags = ~((1<<PHOENIX_INDEX) | (1<<OMEGA_INDEX) | (1<<FUSION_INDEX) | HAS_FLAG(SUPER_LASER_INDEX));
 		Players[Player_num].secondary_weapon_flags = ~((1<<SMISSILE4_INDEX) | (1<<MEGA_INDEX) | (1<<SMISSILE5_INDEX));
 	}
 	else
 	{
+		HUD_init_message(TXT_WOWIE_ZOWIE);
 		Players[Player_num].primary_weapon_flags = 0xffff ^ HAS_FLAG(SUPER_LASER_INDEX); // no super laser
 		Players[Player_num].secondary_weapon_flags = 0xffff;
 	}
 
-	for (i = 0; i < MAX_PRIMARY_WEAPONS; i++)
+	for (i = 0; i < (EMULATING_D1?5:MAX_PRIMARY_WEAPONS); i++)
 		Players[Player_num].primary_ammo[i] = Primary_ammo_max[i];
 
-	for (i = 0; i < MAX_SECONDARY_WEAPONS; i++)
+	for (i = 0; i < (EMULATING_D1?5:MAX_SECONDARY_WEAPONS); i++)
 		Players[Player_num].secondary_ammo[i] = Secondary_ammo_max[i];
 
-	if (Piggy_hamfile_version < 3) // SHAREWARE
+	if (!stricmp(argv[0], "scourge"))
+	{
+		Players[Player_num].secondary_ammo[SMART_INDEX] = 0;
+		Players[Player_num].secondary_ammo[MEGA_INDEX] = 0;
+	}
+	else if (Piggy_hamfile_version < 3) // SHAREWARE
 	{
 		Players[Player_num].secondary_ammo[SMISSILE4_INDEX] = 0;
 		Players[Player_num].secondary_ammo[SMISSILE5_INDEX] = 0;
@@ -2045,7 +2152,7 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 		newdemo_record_laser_level(Players[Player_num].laser_level, MAX_LASER_LEVEL);
 
 	Players[Player_num].energy = MAX_ENERGY;
-	Players[Player_num].laser_level = MAX_SUPER_LASER_LEVEL;
+	Players[Player_num].laser_level = EMULATING_D1?MAX_LASER_LEVEL:MAX_SUPER_LASER_LEVEL;
 	Players[Player_num].flags |= PLAYER_FLAGS_QUAD_LASERS;
 	update_laser_weapon_info();
 }
@@ -2054,6 +2161,9 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 static void gamecntl_cmd_AllKeysCheat(int argc, char **argv)
 {
 	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2067,10 +2177,63 @@ static void gamecntl_cmd_InvulCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
 	do_cheat_penalty();
 	Players[Player_num].flags ^= PLAYER_FLAGS_INVULNERABLE;
 	HUD_init_message("%s %s!", TXT_INVULNERABILITY, (Players[Player_num].flags&PLAYER_FLAGS_INVULNERABLE)?TXT_ON:TXT_OFF);
 	Players[Player_num].invulnerable_time = GameTime+i2f(1000);
+}
+
+
+static void gamecntl_cmd_CloakCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	Players[Player_num].flags ^= PLAYER_FLAGS_CLOAKED;
+	HUD_init_message("%s %s!", TXT_CLOAK, (Players[Player_num].flags&PLAYER_FLAGS_CLOAKED)?TXT_ON:TXT_OFF);
+	if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED) {
+		ai_do_cloak_stuff();
+		Players[Player_num].cloak_time = GameTime;
+	}
+}
+
+
+static void gamecntl_cmd_ShieldCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	HUD_init_message(TXT_FULL_SHIELDS);
+	Players[Player_num].shields = MAX_SHIELDS;
+}
+
+
+static void gamecntl_cmd_ExitPathCheat(int argc, char **argv)
+{
+	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+#ifdef SHOW_EXIT_PATH
+	if (!create_special_path())
+		return;
+
+	do_cheat_penalty();
+	HUD_init_message("Exit path illuminated!");
+#endif
 }
 
 
@@ -2136,6 +2299,9 @@ static void gamecntl_cmd_FinishLevelCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
 	do_cheat_penalty();
 	kill_and_so_forth();
 }
@@ -2157,9 +2323,12 @@ static void gamecntl_cmd_RobotsKillRobotsCheat(int argc, char **argv)
 }
 
 
-static void gamecntl_cmd_AhimsaCheat(int argc, char **argv)
+static void gamecntl_cmd_RobotFiringCheat(int argc, char **argv)
 {
 	if (Game_mode & GM_MULTI)
+		return;
+
+	if (!Cheats_enabled && EMULATING_D1)
 		return;
 
 	Robot_firing_enabled = !Robot_firing_enabled;
@@ -2192,9 +2361,137 @@ static void gamecntl_cmd_RapidFireCheat(int argc, char **argv)
 }
 
 
+static void gamecntl_cmd_JohnCheat1(int argc, char **argv)
+{
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	do_controlcen_destroyed_stuff(NULL);
+}
+
+
+static void gamecntl_cmd_JohnCheat2(int argc, char **argv)
+{
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	do_cheat_penalty();
+	Laser_rapid_fire = 0xbada55;
+	do_megawow_powerup(200);
+}
+
+
+static int Lunacy = 0;
+static int Diff_save = 1;
+
+static fix   Firing_wait_copy[MAX_ROBOT_TYPES];
+static ubyte Rapidfire_count_copy[MAX_ROBOT_TYPES];
+
+
+static void do_lunacy_on(void)
+{
+	int	i;
+
+	if ( !Lunacy )
+	{
+		Lunacy = 1;
+		Diff_save = Difficulty_level;
+		Difficulty_level = NDL-1;
+
+		for (i = 0; i < MAX_ROBOT_TYPES; i++)
+		{
+			Firing_wait_copy[i] = Robot_info[i].firing_wait[NDL-1];
+			Rapidfire_count_copy[i] = Robot_info[i].rapidfire_count[NDL-1];
+
+			Robot_info[i].firing_wait[NDL-1] = Robot_info[i].firing_wait[1];
+			Robot_info[i].rapidfire_count[NDL-1] = Robot_info[i].rapidfire_count[1];
+		}
+	}
+}
+
+
+static void do_lunacy_off(void)
+{
+	int	i;
+
+	if ( Lunacy )
+	{
+		Lunacy = 0;
+		for (i = 0; i < MAX_ROBOT_TYPES; i++)
+		{
+			Robot_info[i].firing_wait[NDL-1] = Firing_wait_copy[i];
+			Robot_info[i].rapidfire_count[NDL-1] = Rapidfire_count_copy[i];
+		}
+		Difficulty_level = Diff_save;
+	}
+}
+
+
+static void gamecntl_cmd_JohnCheat3(int argc, char **argv)
+{
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	if (Lunacy) {
+		do_lunacy_off();
+		HUD_init_message( TXT_NO_LUNACY );
+	} else {
+		do_cheat_penalty();
+		do_lunacy_on();
+		HUD_init_message( TXT_LUNACY );
+	}
+}
+
+
+extern int Ugly_robot_cheat, Ugly_robot_texture;
+
+static void gamecntl_cmd_JohnCheat4(int argc, char **argv)
+{
+	if (!Cheats_enabled && EMULATING_D1)
+		return;
+
+	if (argc < 2)
+		return;
+
+	Ugly_robot_texture = atoi(argv[1]);
+
+	if (Ugly_robot_texture == 999)
+	{
+		Ugly_robot_cheat = 0;
+		HUD_init_message( TXT_ROBOT_PAINTING_OFF );
+	}
+	else
+	{
+		HUD_init_message( TXT_ROBOT_PAINTING_ON, Ugly_robot_texture );
+		Ugly_robot_cheat = 0xbada55;
+	}
+	mprintf((0, "Paint value = %i\n", Ugly_robot_texture));
+}
+
+
 void gamecntl_init(void)
 {
-	cmd_addcommand("gabbagabbahey", gamecntl_cmd_LamerCheat, "");
+	cmd_addcommand("gabbagabbahey", gamecntl_cmd_EnableCheats, "");
+	cmd_addcommand("scourge",       gamecntl_cmd_WowieCheat, "");
+	cmd_addcommand("mitzi",         gamecntl_cmd_AllKeysCheat, "");
+	cmd_addcommand("racerx",        gamecntl_cmd_InvulCheat, "");
+	cmd_addcommand("guile",         gamecntl_cmd_CloakCheat, "");
+	cmd_addcommand("twilight",      gamecntl_cmd_ShieldCheat, "");
+	cmd_addcommand("farmerjoe",     gamecntl_cmd_LevelWarpCheat, "");
+	cmd_addcommand("astral",        gamecntl_cmd_PhysicsCheat, "");
+
+	cmd_addcommand("buggin",        gamecntl_cmd_TurboCheat, "");
+	cmd_addcommand("bigred",        gamecntl_cmd_WowieCheat, "");
+	cmd_addcommand("bruin",         gamecntl_cmd_NewLifeCheat, "");
+	cmd_addcommand("flash",         gamecntl_cmd_ExitPathCheat, "");
+	cmd_addcommand("ahimsa",        gamecntl_cmd_RobotFiringCheat, "");
+
+	cmd_addcommand("poboys",        gamecntl_cmd_JohnCheat1, "");
+	cmd_addcommand("porgys",        gamecntl_cmd_JohnCheat2, "");
+	cmd_addcommand("lunacy",        gamecntl_cmd_JohnCheat3, "");
+	cmd_addcommand("pletch",        gamecntl_cmd_JohnCheat4, "");
+
 	cmd_addcommand("motherlode",    gamecntl_cmd_LamerCheat, "");
 	cmd_addcommand("currygoat",     gamecntl_cmd_LamerCheat, "");
 	cmd_addcommand("zingermans",    gamecntl_cmd_LamerCheat, "");
@@ -2221,7 +2518,7 @@ void gamecntl_init(void)
 	cmd_addcommand("spaniard",      gamecntl_cmd_KillRobotsCheat, "");
 	cmd_addcommand("delshiftb",     gamecntl_cmd_FinishLevelCheat, "");
 	cmd_addcommand("silkwing",      gamecntl_cmd_RobotsKillRobotsCheat, "");
-	cmd_addcommand("imagespace",    gamecntl_cmd_AhimsaCheat, "");
+	cmd_addcommand("imagespace",    gamecntl_cmd_RobotFiringCheat, "");
 	cmd_addcommand("wildfire",      gamecntl_cmd_RapidFireCheat, "");
 }
 

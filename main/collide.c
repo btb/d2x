@@ -39,6 +39,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 
+int Ugly_robot_cheat = 0;
+int Ugly_robot_texture = 0;
+
 #define STANDARD_EXPL_DELAY (f1_0/4)
 
 //##void collide_fireball_and_wall(object *fireball,fix hitspeed, short hitseg, short hitwall, vms_vector * hitpt)	{
@@ -1556,6 +1559,10 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 			damage_flag = do_boss_weapon_collision(robot, weapon, collision_point);
 			boss_invul_flag = !damage_flag;
 		}
+	}
+
+	if ( Ugly_robot_cheat == 0xbada55 ) {
+		robot->rtype.pobj_info.tmap_override = Ugly_robot_texture % NumTextures;
 	}
 
 	//	Put in at request of Jasen (and Adam) because the Buddy-Bot gets in their way.
