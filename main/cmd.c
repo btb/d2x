@@ -11,6 +11,7 @@
 #include "u_mem.h"
 #include "strutil.h"
 #include "inferno.h"
+#include "hash.h"
 
 
 typedef struct cmd_s
@@ -18,11 +19,14 @@ typedef struct cmd_s
 	const char    *name;
 	cmd_handler_t function;
 	const char    *help_text;
-	struct cmd_s  *next;
 } cmd_t;
 
+#define CMD_MAX_CMDS 1024
+
 /* The list of cmds */
-static cmd_t *cmd_list;
+static hashtable cmd_hash;
+static cmd_t *cmd_list[CMD_MAX_CMDS];
+static int Num_cmds;
 
 
 #define ALIAS_NAME_MAX 32
@@ -30,11 +34,14 @@ typedef struct cmd_alias_s
 {
 	char           name[ALIAS_NAME_MAX];
 	char           *value;
-	struct cmd_alias_s *next;
 } cmd_alias_t;
 
+#define CMD_MAX_ALIASES 1024
+
 /* The list of aliases */
-static cmd_alias_t *cmd_alias_list;
+static hashtable cmd_alias_hash;
+static cmd_alias_t *cmd_alias_list[CMD_MAX_ALIASES];
+static int Num_cmd_aliases;
 
 
 typedef struct cmd_queue_s
@@ -52,6 +59,32 @@ static cmd_queue_t *cmd_queue_tail;
 static int cmd_queue_wait;
 
 
+static cmd_t *cmd_findcommand(const char *cmd_name)
+{
+	int i;
+
+	i = hashtable_search( &cmd_hash, cmd_name );
+
+	if ( i < 0 )
+		return NULL;
+
+	return cmd_list[i];
+}
+
+
+static cmd_alias_t *cmd_findalias(const char *alias_name )
+{
+	int i;
+
+	i = hashtable_search( &cmd_alias_hash, alias_name );
+
+	if ( i < 0 )
+		return NULL;
+
+	return cmd_alias_list[i];
+}
+
+
 /* add a new console command */
 void cmd_addcommand(const char *cmd_name, cmd_handler_t cmd_func, const char *cmd_help_text)
 {
@@ -59,23 +92,23 @@ void cmd_addcommand(const char *cmd_name, cmd_handler_t cmd_func, const char *cm
 
 	Assert(cmd_name != NULL);
 
-	for (cmd = cmd_list; cmd; cmd = cmd->next) {
-		if (!stricmp(cmd_name, cmd->name))
-		{
-			Int3();
-			con_printf(CON_NORMAL, "command %s already exists, not adding\n", cmd_name);
-			return;
-		}
+	if (cmd_findcommand(cmd_name))
+	{
+		Int3();
+		con_printf(CON_NORMAL, "command %s already exists, not adding\n", cmd_name);
+		return;
 	}
 
-	/* create command, insert at front of list */
+	/* create command, insert to hashtable */
 	MALLOC(cmd, cmd_t, 1);
 	cmd->name = cmd_name;
 	cmd->function = cmd_func;
 	cmd->help_text = cmd_help_text;
-	cmd->next = cmd_list;
+
+	hashtable_insert(&cmd_hash, cmd_name, Num_cmds);
 	con_printf(CON_DEBUG, "cmd_addcommand: added %s\n", cmd->name);
-	cmd_list = cmd;
+
+	cmd_list[Num_cmds++] = cmd;
 }
 
 
@@ -88,20 +121,18 @@ void cmd_execute(int argc, char **argv)
 	cmd_t *cmd;
 	cmd_alias_t *alias;
 
-	for (cmd = cmd_list; cmd; cmd = cmd->next) {
-		if (!stricmp(argv[0], cmd->name)) {
-			con_printf(CON_DEBUG, "cmd_execute: executing %s\n", argv[0]);
-			cmd->function(argc, argv);
-			return;
-		}
+	if ( (cmd = cmd_findcommand(argv[0])) )
+	{
+		con_printf(CON_DEBUG, "cmd_execute: executing %s\n", argv[0]);
+		cmd->function(argc, argv);
+		return;
 	}
 
-	for (alias = cmd_alias_list; alias; alias = alias->next) {
-		if (!stricmp(argv[0], alias->name)) {
-			con_printf(CON_DEBUG, "cmd_execute: pushing alias \"%s\": %s\n", alias->name, alias->value);
-			cmd_insert(alias->value);
-			return;
-		}
+	if ( (alias = cmd_findalias(argv[0])) && alias->value )
+	{
+		con_printf(CON_DEBUG, "cmd_execute: pushing alias \"%s\": %s\n", alias->name, alias->value);
+		cmd_insert(alias->value);
+		return;
 	}
 
 	/* Otherwise */
@@ -290,20 +321,19 @@ void cmd_enqueuef(int insert, const char *fmt, ...)
 /* Attempt to autocomplete an input string */
 const char *cmd_complete(char *input)
 {
-	cmd_t *ptr;
-	cmd_alias_t *aptr;
+	int i;
 	size_t len = strlen(input);
 
 	if (!len)
 		return NULL;
 
-	for (ptr = cmd_list; ptr != NULL; ptr = ptr->next)
-		if (!strnicmp(input, ptr->name, len))
-			return ptr->name;
+	for (i = 0; i < Num_cmds; i++)
+		if (!strnicmp(input, cmd_list[i]->name, len))
+			return cmd_list[i]->name;
 
-	for (aptr = cmd_alias_list; aptr != NULL; aptr = aptr->next)
-		if (!strnicmp(input, aptr->name, len))
-			return aptr->name;
+	for (i = 0; i < Num_cmd_aliases; i++)
+		if (!strnicmp(input, cmd_alias_list[i]->name, len))
+			return cmd_alias_list[i]->name;
 
 	return cvar_complete(input);
 }
@@ -318,17 +348,17 @@ void cmd_alias(int argc, char **argv)
 
 	if (argc < 2) {
 		con_printf(CON_NORMAL, "aliases:\n");
-		for (alias = cmd_alias_list; alias; alias = alias->next)
-			con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
+		for (i = 0; i < Num_cmd_aliases; i++)
+			con_printf(CON_NORMAL, "%s: %s\n", cmd_alias_list[i]->name, cmd_alias_list[i]->value);
 		return;
 	}
 
 	if (argc == 2) {
-		for (alias = cmd_alias_list; alias; alias = alias->next)
-			if (!stricmp(argv[1], alias->name)) {
-				con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
-				return;
-			}
+		if ( (alias = cmd_findalias(argv[1])) && alias->value )
+		{
+			con_printf(CON_NORMAL, "%s: %s\n", alias->name, alias->value);
+			return;
+		}
 
 		con_printf(CON_NORMAL, "alias: %s not found\n", argv[1]);
 		return;
@@ -340,50 +370,45 @@ void cmd_alias(int argc, char **argv)
 		strncat(buf, argv[i], sizeof(buf) - strlen(buf) - 1);
 	}
 
-	for (alias = cmd_alias_list; alias; alias = alias->next) {
-		if (!stricmp(argv[1], alias->name)) {
+	if ( (alias = cmd_findalias(argv[1])) )
+	{
+		if ( alias->value )
 			d_free(alias->value);
-			alias->value = d_strdup(buf);
-			return;
-		}
+		alias->value = d_strdup(buf);
+		return;
 	}
 
 	MALLOC(alias, cmd_alias_t, 1);
 	strncpy(alias->name, argv[1], sizeof(alias->name));
 	alias->value = d_strdup(buf);
-	alias->next = cmd_alias_list;
-	cmd_alias_list = alias;
+
+	hashtable_insert(&cmd_alias_hash, argv[1], Num_cmd_aliases);
+
+	cmd_alias_list[Num_cmd_aliases++] = alias;
 }
 
 
 /* unalias */
 void cmd_unalias(int argc, char **argv)
 {
-	cmd_alias_t *alias, *prev_alias = NULL;
+	cmd_alias_t *alias;
 
 	if (argc < 2 || argc > 2) {
 		cmd_insertf("help %s", argv[0]);
 		return;
 	}
-	
-	for (alias = cmd_alias_list; alias ; alias = alias->next) {
-		if (!stricmp(argv[1], alias->name))
-			break;
-		prev_alias = alias;
-	}
 
-	if (!alias) {
+	alias = cmd_findalias(argv[1]);
+
+	if (!alias || !alias->value )
+	{
 		con_printf(CON_NORMAL, "unalias: %s not found\n", argv[1]);
 		return;
 	}
 
-	if (prev_alias)
-		prev_alias->next = alias->next;
-	else
-		cmd_alias_list = alias->next;
-
 	d_free(alias->value);
-	d_free(alias);
+
+	//d_free(alias); // Can't remove from hashtable, so just leave it
 }
 
 
@@ -457,17 +482,16 @@ void cmd_help(int argc, char **argv)
 	}
 
 	if (argc < 2) {
+		int i;
+
 		con_printf(CON_NORMAL, "Available commands:\n");
-		for (cmd = cmd_list; cmd; cmd = cmd->next) {
-			con_printf(CON_NORMAL, "    %s\n", cmd->name);
-		}
+		for (i = 0; i < Num_cmds; i++)
+			con_printf(CON_NORMAL, "    %s\n", cmd_list[i]->name);
 
 		return;
 	}
 
-	for (cmd = cmd_list; cmd != NULL; cmd = cmd->next)
-		if (!stricmp(argv[1], cmd->name))
-			break;
+	cmd = cmd_findcommand(argv[1]);
 
 	if (!cmd) {
 		con_printf(CON_URGENT, "Command %s not found\n", argv[1]);
@@ -500,28 +524,25 @@ void cmd_wait(int argc, char **argv)
 
 void cmd_free(void)
 {
-	cmd_t *cmd_p;
-	cmd_alias_t *alias_p;
+	while (Num_cmds--)
+		d_free(cmd_list[Num_cmds]);
 
-	cmd_p = cmd_list;
-	while (cmd_p) {
-		cmd_t *temp = cmd_p;
-		cmd_p = cmd_p->next;
-		d_free(temp);
+	while (Num_cmd_aliases--)
+	{
+		d_free(cmd_alias_list[Num_cmd_aliases]->value);
+		d_free(cmd_alias_list[Num_cmd_aliases]);
 	}
 
-	alias_p = cmd_alias_list;
-	while (alias_p) {
-		cmd_alias_t *temp = alias_p;
-		d_free(alias_p->value);
-		alias_p = alias_p->next;
-		d_free(temp);
-	}
+	hashtable_free(&cmd_hash);
+	hashtable_free(&cmd_alias_hash);
 }
 
 
 void cmd_init(void)
 {
+	hashtable_init(&cmd_hash, CMD_MAX_CMDS);
+	hashtable_init(&cmd_alias_hash, CMD_MAX_ALIASES);
+
 	cmd_addcommand("alias",     cmd_alias,      "alias <name> <commands>\n" "    define <name> as an alias for <commands>\n"
 	                                            "alias <name>\n"            "    show the current definition of <name>\n"
 	                                            "alias\n"                   "    show all defined aliases");
