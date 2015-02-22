@@ -907,6 +907,33 @@ int read_sndfile()
 	return 1;
 }
 
+
+void piggy_cmd_play(int argc, char **argv)
+{
+	int i;
+
+	if (argc == 1)
+	{
+		con_printf(CON_NORMAL, "Available sounds:\n");
+		for (i = 0; i < Num_sound_files; i++)
+			con_printf(CON_NORMAL, "    %s\n", AllSounds[i].name);
+
+		return;
+	}
+
+	i = piggy_find_sound(argv[1]);
+
+	if (i != 255)
+	{
+		digi_start_sound( i, F1_0, 0xffff/2, 0, -1, -1, -1 );
+
+		return;
+	}
+
+	con_printf(CON_NORMAL, "Sound %s not found.\n", argv[1]);
+}
+
+
 int piggy_init(void)
 {
 	int ham_ok=0,snd_ok=0;
@@ -968,6 +995,8 @@ int piggy_init(void)
 
 	if (Piggy_hamfile_version >= 3)
 		snd_ok = read_sndfile();
+
+	cmd_addcommand("play", piggy_cmd_play, "");
 
 	atexit(piggy_close);
 
