@@ -18,6 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "u_mem.h"
 #include "strutil.h"
@@ -72,7 +73,7 @@ int hashtable_getkey( char *key )	{
 	int k = 0, i=0;
 
 	while( *key )	{
-		k^=((int)(*key++))<<i;
+		k ^= ((int)tolower(*key++)) << i;
 		i++;
 	}
 	return k;
@@ -80,8 +81,6 @@ int hashtable_getkey( char *key )	{
 
 int hashtable_search( hashtable *ht, char *key )	{
 	int i,j,k;
-
-	strlwr( key );
 
 	k = hashtable_getkey( key );
 	i = 0;
@@ -99,7 +98,6 @@ int hashtable_search( hashtable *ht, char *key )	{
 void hashtable_insert( hashtable *ht, char *key, int value )	{
 	int i,j,k;
 
-	strlwr( key );
 	k = hashtable_getkey( key );
 	i = 0;
 
