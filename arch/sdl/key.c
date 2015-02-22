@@ -381,6 +381,27 @@ void key_write_bindings(CFILE *file)
 }
 
 
+int key_get_keycode(const char *text)
+{
+	int i;
+
+	if ( strlen(text) == 1 )
+	{
+		char c = text[0];
+
+		for (i = 0; i < 256; i++)
+			if (key_properties[i].ascii_value == c || key_properties[i].shifted_ascii_value == c)
+				return i;
+	}
+
+	for (i = 0; i < 256; i++)
+		if (!stricmp(text, key_text[i]))
+			return i;
+
+	return -1;
+}
+
+
 /* bind */
 void key_cmd_bind(int argc, char **argv)
 {
@@ -399,12 +420,7 @@ void key_cmd_bind(int argc, char **argv)
 		return;
 	}
 
-	for (i = 0; i < 256; i++) {
-		if (!stricmp(argv[1], key_text[i])) {
-			key = i;
-			break;
-		}
-	}
+	key = key_get_keycode(argv[1]);
 
 	if (key < 0) {
 		con_printf(CON_CRITICAL, "bind: key %s not found\n", argv[1]);
