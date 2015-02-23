@@ -45,62 +45,62 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #ifdef __MSDOS__
-cvar_t Config_digi_type         = { "DigiDeviceID8", "0", 1 };
-cvar_t digi_driver_board_16     = { "DigiDeviceID16", "0", 1 };
-//cvar_t digi_driver_port         = { "DigiPort", "0", 1 };
-//cvar_t digi_driver_irq          = { "DigiIrq", "0", 1 };
-cvar_t Config_digi_dma          = { "DigiDma8", "0", 1 };
-cvar_t digi_driver_dma_16       = { "DigiDma16", "0", 1 };
-cvar_t Config_midi_type         = { "MidiDeviceID", "0", 1 };
-//cvar_t digi_midi_port           = { "MidiPort", "0", 1 };
+cvar_t Config_digi_type         = { "DigiDeviceID8",  "0", CVAR_ARCHIVE };
+cvar_t digi_driver_board_16     = { "DigiDeviceID16", "0", CVAR_ARCHIVE };
+//cvar_t digi_driver_port         = { "DigiPort",       "0", CVAR_ARCHIVE };
+//cvar_t digi_driver_irq          = { "DigiIrq",        "0", CVAR_ARCHIVE };
+cvar_t Config_digi_dma          = { "DigiDma8",       "0", CVAR_ARCHIVE };
+cvar_t digi_driver_dma_16       = { "DigiDma16",      "0", CVAR_ARCHIVE };
+cvar_t Config_midi_type         = { "MidiDeviceID",   "0", CVAR_ARCHIVE };
+//cvar_t digi_midi_port           = { "MidiPort",       "0", CVAR_ARCHIVE };
 #endif
-cvar_t Config_digi_volume       = { "DigiVolume", "8", 1 };
-cvar_t Config_midi_volume       = { "MidiVolume", "8", 1 };
-cvar_t Config_redbook_volume    = { "RedbookVolume", "8", 1 };
-cvar_t Config_detail_level      = { "DetailLevel", "4", 1 };
-cvar_t Config_gamma_level       = { "GammaLevel", "0", 1 };
-cvar_t Config_control_joystick  = { "in_joystick", "0", 1 };
-cvar_t Config_control_mouse     = { "in_mouse", "0", 1 };
-cvar_t Config_channels_reversed = { "StereoReverse", "0", 1 };
+cvar_t Config_digi_volume       = { "DigiVolume",     "8", CVAR_ARCHIVE };
+cvar_t Config_midi_volume       = { "MidiVolume",     "8", CVAR_ARCHIVE };
+cvar_t Config_redbook_volume    = { "RedbookVolume",  "8", CVAR_ARCHIVE };
+cvar_t Config_detail_level      = { "DetailLevel",    "4", CVAR_ARCHIVE };
+cvar_t Config_gamma_level       = { "GammaLevel",     "0", CVAR_ARCHIVE };
+cvar_t Config_control_joystick  = { "in_joystick",    "0", CVAR_ARCHIVE };
+cvar_t Config_control_mouse     = { "in_mouse",       "0", CVAR_ARCHIVE };
+cvar_t Config_channels_reversed = { "StereoReverse",  "0", CVAR_ARCHIVE };
 cvar_t Config_joystick_sensitivity[] = {
-	{ "joy_forwardsensitivity", "1.0", 1 },
-	{ "joy_pitchsensitivity", "1.0", 1 },
-	{ "joy_sidesensitivity", "1.0", 1 },
-	{ "joy_yawsensitivity", "1.0", 1 },
-	{ "joy_upsensitivity", "1.0", 1 },
-	{ "joy_banksensitivity", "1.0", 1 },
+	{ "joy_forwardsensitivity", "1.0", CVAR_ARCHIVE },
+	{ "joy_pitchsensitivity",   "1.0", CVAR_ARCHIVE },
+	{ "joy_sidesensitivity",    "1.0", CVAR_ARCHIVE },
+	{ "joy_yawsensitivity",     "1.0", CVAR_ARCHIVE },
+	{ "joy_upsensitivity",      "1.0", CVAR_ARCHIVE },
+	{ "joy_banksensitivity",    "1.0", CVAR_ARCHIVE },
 };
 cvar_t Config_joystick_deadzone[] = {
-	{ "joy_forwardthreshold", "0.16", 1 },
-	{ "joy_pitchthreshold", "0.08", 1 },
-	{ "joy_sidethreshold", "0.08", 1 },
-	{ "joy_yawthreshold", "0.08", 1 },
-	{ "joy_upthreshold", "0.08", 1 },
-	{ "joy_bankthreshold", "0.08", 1 },
+	{ "joy_forwardthreshold", "0.16", CVAR_ARCHIVE },
+	{ "joy_pitchthreshold",   "0.08", CVAR_ARCHIVE },
+	{ "joy_sidethreshold",    "0.08", CVAR_ARCHIVE },
+	{ "joy_yawthreshold",     "0.08", CVAR_ARCHIVE },
+	{ "joy_upthreshold",      "0.08", CVAR_ARCHIVE },
+	{ "joy_bankthreshold",    "0.08", CVAR_ARCHIVE },
 };
 cvar_t Config_mouse_sensitivity[] = {
-	{ "m_forward", "1.0", 1 },
-	{ "m_pitch", "1.0", 1 },
-	{ "m_side", "1.0", 1 },
-	{ "m_yaw", "1.0", 1 },
-	{ "m_up", "1.0", 1 },
-	{ "m_bank", "1.0", 1 },
+	{ "m_forward", "1.0", CVAR_ARCHIVE },
+	{ "m_pitch",   "1.0", CVAR_ARCHIVE },
+	{ "m_side",    "1.0", CVAR_ARCHIVE },
+	{ "m_yaw",     "1.0", CVAR_ARCHIVE },
+	{ "m_up",      "1.0", CVAR_ARCHIVE },
+	{ "m_bank",    "1.0", CVAR_ARCHIVE },
 };
-cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", 1 };
-cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", 1 };
-cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", 1 };
-cvar_t config_last_player       = { "LastPlayer", "", 1 };
-cvar_t config_last_mission      = { "LastMission", "", 1 };
-cvar_t Config_vr_type           = { "VR_type", "0", 1 };
-cvar_t Config_vr_resolution     = { "VR_resolution", "0", 1 };
-cvar_t Config_vr_tracking       = { "VR_tracking", "0", 1 };
-cvar_t Config_primary_order     = { "PrimaryOrder", "", 1 };
-cvar_t Config_secondary_order   = { "SecondaryOrder", "", 1 };
-cvar_t Config_lifetime_kills    = { "LifetimeKills", "0", 1 };
-cvar_t Config_lifetime_killed   = { "LifetimeKilled", "0", 1 };
-cvar_t Config_lifetime_checksum = { "LifetimeChecksum", "0", 1 };
-cvar_t Config_resolution_x      = { "ResolutionX", "640", 1 };
-cvar_t Config_resolution_y      = { "ResolutionY", "480", 1 };
+cvar_t Config_joystick_min      = { "JoystickMin", "0,0,0,0", CVAR_ARCHIVE };
+cvar_t Config_joystick_max      = { "JoystickMax", "0,0,0,0", CVAR_ARCHIVE };
+cvar_t Config_joystick_cen      = { "JoystickCen", "0,0,0,0", CVAR_ARCHIVE };
+cvar_t config_last_player       = { "LastPlayer",         "", CVAR_ARCHIVE };
+cvar_t config_last_mission      = { "LastMission",        "", CVAR_ARCHIVE };
+cvar_t Config_vr_type           = { "VR_type",           "0", CVAR_ARCHIVE };
+cvar_t Config_vr_resolution     = { "VR_resolution",     "0", CVAR_ARCHIVE };
+cvar_t Config_vr_tracking       = { "VR_tracking",       "0", CVAR_ARCHIVE };
+cvar_t Config_primary_order     = { "PrimaryOrder",       "", CVAR_ARCHIVE };
+cvar_t Config_secondary_order   = { "SecondaryOrder",     "", CVAR_ARCHIVE };
+cvar_t Config_lifetime_kills    = { "LifetimeKills",     "0", CVAR_ARCHIVE };
+cvar_t Config_lifetime_killed   = { "LifetimeKilled",    "0", CVAR_ARCHIVE };
+cvar_t Config_lifetime_checksum = { "LifetimeChecksum",  "0", CVAR_ARCHIVE };
+cvar_t Config_resolution_x      = { "ResolutionX",     "640", CVAR_ARCHIVE };
+cvar_t Config_resolution_y      = { "ResolutionY",     "480", CVAR_ARCHIVE };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201

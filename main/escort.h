@@ -8,7 +8,7 @@
 #ifndef _ESCORT_H
 #define _ESCORT_H
 
-extern int Buddy_dude_cheat;
+extern cvar_t Buddy_dude_cheat;
 
 
 #define GUIDEBOT_NAME_LEN 9

@@ -46,7 +46,7 @@ int Num_songs;
 
 extern void digi_stop_current_song();
 
-cvar_t Redbook_enabled = { "RedbookEnabled", "1", 1 };
+cvar_t Redbook_enabled = { "RedbookEnabled", "1", CVAR_ARCHIVE };
 
 //0 if redbook is no playing, else the track number
 int Redbook_playing = 0;

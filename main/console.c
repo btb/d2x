@@ -43,7 +43,7 @@ int isvga();
 
 
 /* How discriminating we are about which messages are displayed */
-cvar_t con_threshold = {"con_threshold", "0",};
+cvar_t con_threshold = { "con_threshold", "0", CVAR_NONE };
 
 #define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
 #define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx

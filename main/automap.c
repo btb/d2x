@@ -609,12 +609,12 @@ int Automap_active = 0;
 #define MAP_BACKGROUND_FILENAME ((AutomapHires && cfexist("mapb.pcx"))?"MAPB.PCX":"MAP.PCX")
 #endif
 
-cvar_t Automap_always_hires = { "AutomapHires", "0", 1 };
+cvar_t Automap_always_hires = { "AutomapHires", "0", CVAR_ARCHIVE };
 
 uint32_t automap_mode = SM(640,480);
 int automap_width = 640;
 int automap_height = 480;
-cvar_t automap_use_game_res = { "AutomapGameres", "0", 1 };
+cvar_t automap_use_game_res = { "AutomapGameres", "0", CVAR_ARCHIVE };
 int nice_automap = 0;
 
 #define RESCALE_X(x) ((x) * automap_width / 640)

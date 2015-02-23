@@ -167,11 +167,18 @@ void cvar_set_cvarf(cvar_t *cvar, const char *fmt, ...)
 void cvar_set(char *cvar_name, char *value)
 {
 	cvar_t *cvar;
+	extern cvar_t Cheats_enabled;
 
 	cvar = cvar_find(cvar_name);
 	if (!cvar) {
 		Int3();
 		con_printf(CON_NORMAL, "cvar %s not found\n", cvar_name);
+		return;
+	}
+
+	if (cvar->flags & CVAR_CHEAT && !Cheats_enabled.intval)
+	{
+		con_printf(CON_NORMAL, "cvar %s is cheat protected.\n", cvar_name);
 		return;
 	}
 
@@ -185,6 +192,6 @@ void cvar_write(CFILE *file)
 	int i;
 
 	for (i = 0; i < Num_cvars; i++)
-		if (cvar_list[i]->archive)
+		if (cvar_list[i]->flags & CVAR_ARCHIVE)
 			PHYSFSX_printf(file, "%s=%s\n", cvar_list[i]->name, cvar_list[i]->string);
 }

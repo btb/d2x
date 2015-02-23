@@ -71,7 +71,7 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 #define N_BUILTIN_MOVIE_LIBS (N_MOVIE_LIBS - 1)
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 
-cvar_t MovieHires = { "MovieHires", "1", 1 }; //default is highres
+cvar_t MovieHires = { "MovieHires", "1", CVAR_ARCHIVE }; // default is highres
 
 SDL_RWops *RoboFile = NULL;
 MVE_videoSpec MVESpec;

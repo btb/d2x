@@ -122,18 +122,18 @@ grs_canvas	VR_editor_canvas;						//  The canvas that the editor writes to.
 //do menus work in 640x480 or 320x200?
 //PC version sets this in main().  Mac versios is always high-res, so set to 1 here
 int MenuHiresAvailable = 1;		//can we do highres menus?
-cvar_t menu_use_game_res = { "MenuGameres", "0", 1 };
+cvar_t menu_use_game_res = { "MenuGameres", "0", CVAR_ARCHIVE };
 
 int Debug_pause=0;				//John's debugging pause system
 
-cvar_t Cockpit_mode = { "CockpitMode", "0", 1 }; // CM_FULL_COCKPIT, see game.h for values
+cvar_t Cockpit_mode = { "CockpitMode", "0", CVAR_ARCHIVE }; // CM_FULL_COCKPIT, see game.h for values
 
 int Cockpit_mode_save=-1;					//set while in letterbox or rear view, or -1
 int force_cockpit_redraw=0;
 
 fix oldfov;
-cvar_t r_framerate = {"show_fps", "0"};
-cvar_t cg_fov = {"fov", "30"};
+cvar_t r_framerate = { "show_fps", "0", CVAR_NONE };
+cvar_t cg_fov = { "fov", "30", CVAR_NONE };
 
 int PaletteRedAdd, PaletteGreenAdd, PaletteBlueAdd;
 
@@ -425,8 +425,8 @@ void game_show_warning(char *s)
 
 int Game_window_x = 0;
 int Game_window_y = 0;
-cvar_t Game_window_w = { "GameWidth", "0", 1 };
-cvar_t Game_window_h = { "GameHeight", "0", 1 };
+cvar_t Game_window_w = { "GameWidth", "0", CVAR_ARCHIVE };
+cvar_t Game_window_h = { "GameHeight", "0", CVAR_ARCHIVE };
 int max_window_w = 0;
 int max_window_h = 0;
 
@@ -1796,7 +1796,7 @@ int gr_renderstats = 0;
 int gr_badtexture = 0;
 // need to define "cheat" for badtexture
 
-cvar_t Cheats_enabled = { "sv_cheats", "0", 0 };
+cvar_t Cheats_enabled = { "sv_cheats", "0", CVAR_NONE };
 
 extern int Laser_rapid_fire;
 extern void do_lunacy_on(), do_lunacy_off();
@@ -1804,7 +1804,6 @@ extern void do_lunacy_on(), do_lunacy_off();
 extern int Physics_cheat_flag,Robots_kill_robots_cheat;
 extern char BounceCheat,HomingCheat,OldHomingState[20];
 extern char AcidCheatOn,old_IntMethod, Monster_mode;
-extern int Buddy_dude_cheat;
 
 //turns off active cheats
 void turn_cheats_off()
@@ -1821,7 +1820,7 @@ void turn_cheats_off()
 		Interpolation_method=old_IntMethod;
 	}
 
-	Buddy_dude_cheat = 0;
+	cvar_setint(&Buddy_dude_cheat, 0);
 	BounceCheat=0;
    HomingCheat=0;
 	do_lunacy_off();
@@ -2120,13 +2119,13 @@ extern	int	Do_appearance_effect;
 
 object *Missile_viewer=NULL;
 
-cvar_t Missile_view_enabled = { "MissileView", "1", 1 };
+cvar_t Missile_view_enabled = { "MissileView", "1", CVAR_ARCHIVE };
 
 int Marker_viewer_num[2]={-1,-1};
 int Coop_view_player[2]={-1,-1};
 cvar_t Cockpit_3d_view[2] = {
-	{ "CockpitViewLeft", "0", 1 },
-	{ "CockpitViewRight", "0", 1 },
+	{ "CockpitViewLeft", "0", CVAR_ARCHIVE },
+	{ "CockpitViewRight", "0", CVAR_ARCHIVE },
 };
 
 //returns ptr to escort robot, or NULL

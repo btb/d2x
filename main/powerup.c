@@ -242,7 +242,7 @@ extern void invalidate_escort_goal(void);
 extern void check_to_use_primary(int);
 extern void multi_send_got_flag (char);
 
-cvar_t Headlight_active_default = { "HeadlightActive", "1", 1 }; // is headlight on when picked up?
+cvar_t Headlight_active_default = { "HeadlightActive", "1", CVAR_ARCHIVE }; // is headlight on when picked up?
 extern int PlayerMessage;
 
 //	returns true if powerup consumed

@@ -78,7 +78,7 @@ int Player_num = 0; // The player number who is on the console.
 player Players[MAX_PLAYERS+4]; // Misc player info
 obj_position Player_init[MAX_PLAYERS];
 
-cvar_t Player_highest_level = { "HighestLevel", "0", 0 };
+cvar_t Player_highest_level = { "HighestLevel", "0", CVAR_NONE };
 
 // Global variables telling what sort of game we have
 int MaxNumNetPlayers = -1;

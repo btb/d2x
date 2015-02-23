@@ -32,15 +32,15 @@ static struct mouseinfo {
 
 
 cvar_t mouse_axes[3] = {
-	{ "mouse_axisx", "4", 1 },
-	{ "mouse_axisy", "2", 1 },
-	{ "mouse_axisz", "0", 1 },
+	{ "mouse_axisx", "4", CVAR_ARCHIVE },
+	{ "mouse_axisy", "2", CVAR_ARCHIVE },
+	{ "mouse_axisz", "0", CVAR_ARCHIVE },
 };
 
 cvar_t mouse_invert[] = {
-	{ "mouse_invertx", "0", 1 },
-	{ "mouse_inverty", "0", 1 },
-	{ "mouse_invertz", "0", 1 },
+	{ "mouse_invertx", "0", CVAR_ARCHIVE },
+	{ "mouse_inverty", "0", CVAR_ARCHIVE },
+	{ "mouse_invertz", "0", CVAR_ARCHIVE },
 };
 
 

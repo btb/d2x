@@ -1301,7 +1301,6 @@ void do_final_boss_hacks(void)
 	Final_boss_is_dead = 1;
 }
 
-extern int Buddy_dude_cheat;
 extern int multi_all_players_alive();
 void multi_send_finish_game ();
 
@@ -1324,7 +1323,7 @@ int apply_damage_to_robot(object *robot, fix damage, int killer_objnum)
 	//	Buddy invulnerable on level 24 so he can give you his important messages.  Bah.
 	//	Also invulnerable if his cheat for firing weapons is in effect.
 	if (Robot_info[robot->id].companion) {
-//		if ((PLAYING_BUILTIN_MISSION && Current_level_num == Last_level) || Buddy_dude_cheat)
+//		if ((PLAYING_BUILTIN_MISSION && Current_level_num == Last_level) || Buddy_dude_cheat.intval)
 #ifdef NETWORK
 		if (PLAYING_BUILTIN_MISSION && Current_level_num == Last_level)
 			return 0;

@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int gr_installed = 0;
 
-cvar_t gr_aspectratio = { "r_aspectratio", "0", 0 };
+cvar_t gr_aspectratio = { "r_aspectratio", "0", CVAR_NONE };
 
 //	Functions for GR.C
 

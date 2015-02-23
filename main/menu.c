@@ -104,9 +104,9 @@ void do_sound_menu();
 void do_toggles_menu();
 
 ubyte do_auto_demo = 1;                 // Flag used to enable auto demo starting in main menu.
-cvar_t Player_default_difficulty = { "skill", "1", 1 }; // Last difficulty level chosen by the player
-cvar_t Auto_leveling_on = { "AutoLeveling", "1", 1 };
-cvar_t Guided_in_big_window = { "GuidedBig", "0", 1 };
+cvar_t Player_default_difficulty = { "skill", "1", CVAR_ARCHIVE }; // Last difficulty level chosen by the player
+cvar_t Auto_leveling_on = { "AutoLeveling", "1", CVAR_ARCHIVE };
+cvar_t Guided_in_big_window = { "GuidedBig", "0", CVAR_ARCHIVE };
 int Menu_draw_copyright = 0;
 int EscortHotKeys=1;
 

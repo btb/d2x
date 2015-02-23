@@ -48,7 +48,7 @@ grs_canvas *Canv_RightEnergyGauge = NULL;
 grs_canvas *Canv_NumericalGauge = NULL;
 
 //Flags for gauges/hud stuff
-cvar_t Reticle_on = { "crosshair", "1", 1 };
+cvar_t Reticle_on = { "crosshair", "1", CVAR_ARCHIVE };
 
 //bitmap numbers for gauges
 

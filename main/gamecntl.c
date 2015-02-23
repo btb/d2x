@@ -1957,8 +1957,8 @@ static void gamecntl_cmd_BuddyDudeCheat(int argc, char **argv)
 		return;
 
 	do_cheat_penalty();
-	Buddy_dude_cheat = !Buddy_dude_cheat;
-	if (Buddy_dude_cheat)
+	cvar_toggle(&Buddy_dude_cheat);
+	if (Buddy_dude_cheat.intval)
 	{
 		HUD_init_message("%s gets angry!", guidebot_name);
 		strcpy(guidebot_name, "Wingnut");
@@ -2824,4 +2824,6 @@ void gamecntl_init(void)
 		cmd_addcommand(Cheats[i].string, Cheats[i].cheat_cmd, "");
 
 	cmd_addcommand("kill", gamecntl_cmd_kill, "");
+
+	cvar_registervariable(&Buddy_dude_cheat);
 }

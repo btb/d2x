@@ -111,10 +111,10 @@ int   Network_laser_level;      // What level
 short Network_laser_track;      // Who is it tracking?
 char  Network_message[MAX_MESSAGE_LEN];
 cvar_t Network_message_macro[4] = {
-	{ "TauntMacro1", "", 1 },
-	{ "TauntMacro2", "", 1 },
-	{ "TauntMacro3", "", 1 },
-	{ "TauntMacro4", "", 1 },
+	{ "TauntMacro1", "", CVAR_ARCHIVE },
+	{ "TauntMacro2", "", CVAR_ARCHIVE },
+	{ "TauntMacro3", "", CVAR_ARCHIVE },
+	{ "TauntMacro4", "", CVAR_ARCHIVE },
 };
 int   Network_message_reciever=-1;
 int   sorted_kills[MAX_NUM_NET_PLAYERS];

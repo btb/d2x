@@ -85,7 +85,7 @@ int	Last_buddy_key;
 fix	Last_buddy_message_time;
 
 char guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
-cvar_t real_guidebot_name = { "GuideBotName", "GUIDE-BOT", 1 };
+cvar_t real_guidebot_name = { "GuideBotName", "GUIDE-BOT", CVAR_ARCHIVE };
 
 void init_buddy_for_level(void)
 {
@@ -920,7 +920,7 @@ int time_to_visit_player(object *objp, ai_local *ailp, ai_static *aip)
 }
 
 int	Buddy_objnum;
-int Buddy_dude_cheat;
+cvar_t Buddy_dude_cheat = { "BuddyDude", "0", CVAR_CHEAT };
 fix	Last_come_back_message_time = 0;
 
 fix	Buddy_last_missile_time;
@@ -1055,7 +1055,7 @@ void do_escort_frame(object *objp, fix dist_to_player, int player_visibility)
 
 	}
 
-	if (Buddy_dude_cheat)
+	if (Buddy_dude_cheat.intval)
 		do_buddy_dude_stuff();
 
 	if (Buddy_sorry_time + F1_0 > GameTime) {

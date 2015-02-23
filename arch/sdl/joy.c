@@ -78,21 +78,21 @@ static struct {
 // 6 = bank left/right
 
 cvar_t joy_advaxes[] = {
-	{ "joy_advaxisx", "4", 1 },
-	{ "joy_advaxisy", "2", 1 },
-	{ "joy_advaxisz", "0", 1 },
-	{ "joy_advaxisr", "0", 1 },
-	{ "joy_advaxisu", "0", 1 },
-	{ "joy_advaxisv", "0", 1 },
+	{ "joy_advaxisx", "4", CVAR_ARCHIVE },
+	{ "joy_advaxisy", "2", CVAR_ARCHIVE },
+	{ "joy_advaxisz", "0", CVAR_ARCHIVE },
+	{ "joy_advaxisr", "0", CVAR_ARCHIVE },
+	{ "joy_advaxisu", "0", CVAR_ARCHIVE },
+	{ "joy_advaxisv", "0", CVAR_ARCHIVE },
 };
 
 cvar_t joy_invert[] = {
-	{ "joy_invertx", "0", 1 },
-	{ "joy_inverty", "0", 1 },
-	{ "joy_invertz", "0", 1 },
-	{ "joy_invertr", "0", 1 },
-	{ "joy_invertu", "0", 1 },
-	{ "joy_invertv", "0", 1 },
+	{ "joy_invertx", "0", CVAR_ARCHIVE },
+	{ "joy_inverty", "0", CVAR_ARCHIVE },
+	{ "joy_invertz", "0", CVAR_ARCHIVE },
+	{ "joy_invertr", "0", CVAR_ARCHIVE },
+	{ "joy_invertu", "0", CVAR_ARCHIVE },
+	{ "joy_invertv", "0", CVAR_ARCHIVE },
 };
 
 
