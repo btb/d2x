@@ -2358,50 +2358,9 @@ static void gamecntl_cmd_JohnCheat2(int argc, char **argv)
 }
 
 
-static int Lunacy = 0;
-static int Diff_save = 1;
-
-static fix   Firing_wait_copy[MAX_ROBOT_TYPES];
-static ubyte Rapidfire_count_copy[MAX_ROBOT_TYPES];
-
-
-static void do_lunacy_on(void)
-{
-	int	i;
-
-	if ( !Lunacy )
-	{
-		Lunacy = 1;
-		Diff_save = Difficulty_level;
-		Difficulty_level = NDL-1;
-
-		for (i = 0; i < MAX_ROBOT_TYPES; i++)
-		{
-			Firing_wait_copy[i] = Robot_info[i].firing_wait[NDL-1];
-			Rapidfire_count_copy[i] = Robot_info[i].rapidfire_count[NDL-1];
-
-			Robot_info[i].firing_wait[NDL-1] = Robot_info[i].firing_wait[1];
-			Robot_info[i].rapidfire_count[NDL-1] = Robot_info[i].rapidfire_count[1];
-		}
-	}
-}
-
-
-static void do_lunacy_off(void)
-{
-	int	i;
-
-	if ( Lunacy )
-	{
-		Lunacy = 0;
-		for (i = 0; i < MAX_ROBOT_TYPES; i++)
-		{
-			Robot_info[i].firing_wait[NDL-1] = Firing_wait_copy[i];
-			Robot_info[i].rapidfire_count[NDL-1] = Rapidfire_count_copy[i];
-		}
-		Difficulty_level = Diff_save;
-	}
-}
+extern int Lunacy;
+extern void do_lunacy_on(void);
+extern void do_lunacy_off(void);
 
 
 static void gamecntl_cmd_JohnCheat3(int argc, char **argv)
