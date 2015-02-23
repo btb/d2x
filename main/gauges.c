@@ -900,7 +900,7 @@ void hud_show_score_added()
 
 		color = color - (color % 4);	//	Only allowing colors 12,16,20,24,28 speeds up gr_getcolor, improves caching
 
-		if (Cheats_enabled)
+		if (Cheats_enabled.intval)
 			sprintf(score_str, "%s", TXT_CHEATER);
 		else
 			sprintf(score_str, "%5d", score_display[0]);
@@ -999,7 +999,7 @@ void sb_show_score_added()
 		if (color < 10) color = 10;
 		if (color > 31) color = 31;
 
-		if (Cheats_enabled)
+		if (Cheats_enabled.intval)
 			sprintf(score_str, "%s", TXT_CHEATER);
 		else
 			sprintf(score_str, "%5d", score_display[VR_current_page]);
@@ -1595,7 +1595,7 @@ void add_points_to_score(int points)
 	score_display[1] += points;
 	if (score_time > f1_0*4) score_time = f1_0*4;
 
-	if (points == 0 || Cheats_enabled)
+	if (points == 0 || Cheats_enabled.intval)
 		return;
 
 	if ((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))
@@ -1629,7 +1629,7 @@ void add_bonus_points_to_score(int points)
 {
 	int prev_score;
 
-	if (points == 0 || Cheats_enabled)
+	if (points == 0 || Cheats_enabled.intval)
 		return;
 
 	prev_score=Players[Player_num].score;

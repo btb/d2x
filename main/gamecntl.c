@@ -1530,7 +1530,7 @@ void kill_buddy(void)
 
 void gamecntl_cmd_kill(int argc, char **argv)
 {
-	if (!Cheats_enabled)
+	if (!Cheats_enabled.intval)
 		return;
 
 	if (argc == 1)
@@ -1822,7 +1822,7 @@ void HandleTestKey(int key)
 void do_cheat_penalty ()
  {
   digi_play_sample( SOUND_CHEATER, F1_0);
-  Cheats_enabled=1;
+  cvar_setint(&Cheats_enabled, 1);
   Players[Player_num].score=0;
  }
 
@@ -2024,7 +2024,7 @@ static void gamecntl_cmd_PhysicsCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2045,7 +2045,7 @@ static void gamecntl_cmd_TurboCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2059,7 +2059,7 @@ static void gamecntl_cmd_NewLifeCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (Players[Player_num].lives >= 50)
@@ -2078,7 +2078,7 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "motherlode"))
@@ -2137,7 +2137,7 @@ static void gamecntl_cmd_AllKeysCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "currygoat"))
@@ -2157,7 +2157,7 @@ static void gamecntl_cmd_InvulCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "zingermans"))
@@ -2178,7 +2178,7 @@ static void gamecntl_cmd_CloakCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2196,7 +2196,7 @@ static void gamecntl_cmd_ShieldCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2210,7 +2210,7 @@ static void gamecntl_cmd_ExitPathCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 #ifdef SHOW_EXIT_PATH
@@ -2297,7 +2297,7 @@ static void gamecntl_cmd_FinishLevelCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2326,7 +2326,7 @@ static void gamecntl_cmd_RobotFiringCheat(int argc, char **argv)
 	if (Game_mode & GM_MULTI)
 		return;
 
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	Robot_firing_enabled = !Robot_firing_enabled;
@@ -2361,7 +2361,7 @@ static void gamecntl_cmd_RapidFireCheat(int argc, char **argv)
 
 static void gamecntl_cmd_JohnCheat1(int argc, char **argv)
 {
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2371,7 +2371,7 @@ static void gamecntl_cmd_JohnCheat1(int argc, char **argv)
 
 static void gamecntl_cmd_JohnCheat2(int argc, char **argv)
 {
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	do_cheat_penalty();
@@ -2428,7 +2428,7 @@ static void do_lunacy_off(void)
 
 static void gamecntl_cmd_JohnCheat3(int argc, char **argv)
 {
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (Lunacy) {
@@ -2446,7 +2446,7 @@ extern int Ugly_robot_cheat, Ugly_robot_texture;
 
 static void gamecntl_cmd_JohnCheat4(int argc, char **argv)
 {
-	if (!Cheats_enabled && EMULATING_D1)
+	if (!Cheats_enabled.intval && EMULATING_D1)
 		return;
 
 	if (argc < 2)

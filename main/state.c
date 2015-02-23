@@ -632,7 +632,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 // Save the difficulty level
 	PHYSFS_write(fp, &Difficulty_level, sizeof(int), 1);
 // Save cheats enabled
-	PHYSFS_write(fp, &Cheats_enabled,sizeof(int), 1);
+	PHYSFS_write(fp, &Cheats_enabled.intval, sizeof(int), 1);
 
 	if ( !between_levels )	{
 
@@ -1074,8 +1074,12 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	PHYSFS_read(fp, &Difficulty_level, sizeof(int), 1);
 
 // Restore the cheats enabled flag
+	{
+		int cheats_enabled;
 
-	PHYSFS_read(fp, &Cheats_enabled, sizeof(int),1);
+		PHYSFS_read(fp, &cheats_enabled, sizeof(int), 1);
+		cvar_setint(&Cheats_enabled, cheats_enabled);
+	}
 
 	if ( !between_levels )	{
 		Do_appearance_effect = 0;			// Don't do this for middle o' game stuff.

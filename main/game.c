@@ -382,6 +382,7 @@ void init_game()
 	cvar_registervariable(&r_framerate);
 	cvar_registervariable(&cg_fov);
 	cvar_registervariable(&Player_highest_level);
+	cvar_registervariable(&Cheats_enabled);
 
 	/* Register cmds */
 	cmd_addcommand("player", game_cmd_player,               "player <name>\n"    "    set player name to <name>");
@@ -1795,7 +1796,7 @@ int gr_renderstats = 0;
 int gr_badtexture = 0;
 // need to define "cheat" for badtexture
 
-int Cheats_enabled=0;
+cvar_t Cheats_enabled = { "sv_cheats", "0", 0 };
 
 extern int Laser_rapid_fire;
 extern void do_lunacy_on(), do_lunacy_off();
@@ -1835,7 +1836,7 @@ void turn_cheats_off()
 void game_disable_cheats()
 {
 	turn_cheats_off();
-	Cheats_enabled=0;
+	cvar_setint(&Cheats_enabled, 0);
 }
 
 

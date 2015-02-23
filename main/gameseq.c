@@ -876,7 +876,7 @@ void DoEndLevelScoreGlitz(int network)
 
 	level_points = Players[Player_num].score - Players[Player_num].last_score;
 
-	if (!Cheats_enabled) {
+	if (!Cheats_enabled.intval) {
 		if (Difficulty_level > 1) {
 			skill_points = level_points*(Difficulty_level)/4;
 			skill_points -= skill_points % 100;
@@ -899,13 +899,13 @@ void DoEndLevelScoreGlitz(int network)
 	all_hostage_text[0] = 0;
 	endgame_text[0] = 0;
 
-	if (!Cheats_enabled && (Players[Player_num].hostages_on_board == Players[Player_num].hostages_level)) {
+	if (!Cheats_enabled.intval && (Players[Player_num].hostages_on_board == Players[Player_num].hostages_level)) {
 		all_hostage_points = Players[Player_num].hostages_on_board * 1000 * (Difficulty_level+1);
 		sprintf(all_hostage_text, "%s%i\n", TXT_FULL_RESCUE_BONUS, all_hostage_points);
 	} else
 		all_hostage_points = 0;
 
-	if (!Cheats_enabled && !(Game_mode & GM_MULTI) && (Players[Player_num].lives) && (Current_level_num == Last_level)) { // player has finished the game!
+	if (!Cheats_enabled.intval && !(Game_mode & GM_MULTI) && (Players[Player_num].lives) && (Current_level_num == Last_level)) { // player has finished the game!
 		endgame_points = Players[Player_num].lives * 10000;
 		sprintf(endgame_text, "%s%i\n", TXT_SHIP_BONUS, endgame_points);
 		is_last_level = 1;
@@ -1730,7 +1730,7 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 
 	turn_cheats_off();
 
-	if (!(Game_mode & GM_MULTI) && !Cheats_enabled)
+	if (!(Game_mode & GM_MULTI) && !Cheats_enabled.intval)
 		mission_write_config();
 
 	reset_special_effects();
