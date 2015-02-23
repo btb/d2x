@@ -1819,6 +1819,18 @@ void HandleTestKey(int key)
 
 //	Cheat functions ------------------------------------------------------------
 
+
+// check of cheats are, or can be, enabled
+static int check_cheat_enable(void)
+{
+	// cheats have to be enabled explicitly
+	if (EMULATING_D1 || Game_mode & GM_MULTI)
+		return Cheats_enabled.intval;
+
+	return 1;
+}
+
+
 void do_cheat_penalty ()
  {
   digi_play_sample( SOUND_CHEATER, F1_0);
@@ -1908,7 +1920,7 @@ static void gamecntl_cmd_FramerateCheat(int argc, char **argv)
 
 static void gamecntl_cmd_BlueOrbCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (Players[Player_num].shields < MAX_SHIELDS)
@@ -1930,7 +1942,7 @@ static void gamecntl_cmd_BlueOrbCheat(int argc, char **argv)
 
 static void gamecntl_cmd_BuddyLifeCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -1941,7 +1953,7 @@ static void gamecntl_cmd_BuddyLifeCheat(int argc, char **argv)
 
 static void gamecntl_cmd_BuddyDudeCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -1962,7 +1974,7 @@ static void gamecntl_cmd_BuddyDudeCheat(int argc, char **argv)
 
 static void gamecntl_cmd_MonsterCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	Monster_mode = 1 - Monster_mode;
@@ -1973,7 +1985,7 @@ static void gamecntl_cmd_MonsterCheat(int argc, char **argv)
 
 static void gamecntl_cmd_BouncyCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "ericaanne"))
@@ -1995,7 +2007,7 @@ static void gamecntl_cmd_LevelWarpCheat(int argc, char **argv)
 	int new_level_num;
 	int item;
 
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "whammazoom"))
@@ -2021,10 +2033,7 @@ static void gamecntl_cmd_LevelWarpCheat(int argc, char **argv)
 
 static void gamecntl_cmd_PhysicsCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2042,10 +2051,7 @@ static void gamecntl_cmd_PhysicsCheat(int argc, char **argv)
 
 static void gamecntl_cmd_TurboCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2056,10 +2062,7 @@ static void gamecntl_cmd_TurboCheat(int argc, char **argv)
 
 static void gamecntl_cmd_NewLifeCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (Players[Player_num].lives >= 50)
@@ -2075,10 +2078,7 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 {
 	int i;
 
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "motherlode"))
@@ -2134,10 +2134,7 @@ static void gamecntl_cmd_WowieCheat(int argc, char **argv)
 
 static void gamecntl_cmd_AllKeysCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "currygoat"))
@@ -2154,10 +2151,7 @@ static void gamecntl_cmd_AllKeysCheat(int argc, char **argv)
 
 static void gamecntl_cmd_InvulCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "zingermans"))
@@ -2175,10 +2169,7 @@ static void gamecntl_cmd_InvulCheat(int argc, char **argv)
 
 static void gamecntl_cmd_CloakCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2193,10 +2184,7 @@ static void gamecntl_cmd_CloakCheat(int argc, char **argv)
 
 static void gamecntl_cmd_ShieldCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2207,10 +2195,7 @@ static void gamecntl_cmd_ShieldCheat(int argc, char **argv)
 
 static void gamecntl_cmd_ExitPathCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 #ifdef SHOW_EXIT_PATH
@@ -2225,7 +2210,7 @@ static void gamecntl_cmd_ExitPathCheat(int argc, char **argv)
 
 static void gamecntl_cmd_AccessoryCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2240,7 +2225,7 @@ static void gamecntl_cmd_AccessoryCheat(int argc, char **argv)
 
 static void gamecntl_cmd_FullMapCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "joshuaakira"))
@@ -2258,7 +2243,7 @@ static void gamecntl_cmd_FullMapCheat(int argc, char **argv)
 
 static void gamecntl_cmd_HomingCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (!is_SHAREWARE && !stricmp(argv[0], "eatangelos"))
@@ -2284,7 +2269,7 @@ static void gamecntl_cmd_HomingCheat(int argc, char **argv)
 
 static void gamecntl_cmd_KillRobotsCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2294,11 +2279,7 @@ static void gamecntl_cmd_KillRobotsCheat(int argc, char **argv)
 
 static void gamecntl_cmd_FinishLevelCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
-		return;
+	if (!check_cheat_enable())
 
 	do_cheat_penalty();
 	kill_and_so_forth();
@@ -2307,7 +2288,7 @@ static void gamecntl_cmd_FinishLevelCheat(int argc, char **argv)
 
 static void gamecntl_cmd_RobotsKillRobotsCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	Robots_kill_robots_cheat = !Robots_kill_robots_cheat;
@@ -2323,10 +2304,7 @@ static void gamecntl_cmd_RobotsKillRobotsCheat(int argc, char **argv)
 
 static void gamecntl_cmd_RobotFiringCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
-		return;
-
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	Robot_firing_enabled = !Robot_firing_enabled;
@@ -2342,7 +2320,7 @@ static void gamecntl_cmd_RobotFiringCheat(int argc, char **argv)
 
 static void gamecntl_cmd_RapidFireCheat(int argc, char **argv)
 {
-	if (Game_mode & GM_MULTI)
+	if (!check_cheat_enable())
 		return;
 
 	if (Laser_rapid_fire)
@@ -2361,7 +2339,7 @@ static void gamecntl_cmd_RapidFireCheat(int argc, char **argv)
 
 static void gamecntl_cmd_JohnCheat1(int argc, char **argv)
 {
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2371,7 +2349,7 @@ static void gamecntl_cmd_JohnCheat1(int argc, char **argv)
 
 static void gamecntl_cmd_JohnCheat2(int argc, char **argv)
 {
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	do_cheat_penalty();
@@ -2428,7 +2406,7 @@ static void do_lunacy_off(void)
 
 static void gamecntl_cmd_JohnCheat3(int argc, char **argv)
 {
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (Lunacy) {
@@ -2446,7 +2424,7 @@ extern int Ugly_robot_cheat, Ugly_robot_texture;
 
 static void gamecntl_cmd_JohnCheat4(int argc, char **argv)
 {
-	if (!Cheats_enabled.intval && EMULATING_D1)
+	if (!check_cheat_enable())
 		return;
 
 	if (argc < 2)
