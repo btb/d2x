@@ -79,6 +79,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "digi.h"
 #include "effects.h"
 #include "endlevel.h"
+#include "entity.h"
 #include "escort.h"
 #include "fuelcen.h"
 #include "fvi.h"

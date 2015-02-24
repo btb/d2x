@@ -16,7 +16,7 @@ iff/iff.c     \
 libmve/decoder16.c libmve/decoder8.c  libmve/mve_audio.c libmve/mvelib.c    libmve/mveplay.c   \
 main/ai.c       main/ai2.c      main/aipath.c   main/automap.c  main/bm.c       main/cli.c      \
 main/cmd.c      main/cntrlcen.c main/collide.c  main/config.c   main/console.c  main/controls.c \
-main/credits.c  main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c \
+main/credits.c  main/cvar.c     main/digiobj.c  main/effects.c  main/endlevel.c main/entity.c   \
 main/escort.c   main/fireball.c main/fuelcen.c  main/fvi.c      main/game.c     main/gamecntl.c \
 main/gamefont.c main/gamemine.c main/gamepal.c  main/gamerend.c main/gamesave.c main/gameseg.c  \
 main/gameseq.c  main/gauges.c   main/hostage.c  main/hud.c      main/inferno.c  main/kconfig.c  \

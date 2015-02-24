@@ -394,6 +394,7 @@ void init_game()
 	cmd_addcommand("stoprecording", game_cmd_stoprecording, "stoprecording\n"    "    stop recording the current demo");
 
 	gamecntl_init();
+	entity_init();
 }
 
 
