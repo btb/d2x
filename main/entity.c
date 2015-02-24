@@ -36,11 +36,24 @@ static void entity_add_object_type(ubyte object_type, char typenames[][16], int 
 		ent->object_type = object_type;
 		ent->object_number = i;
 
-		hashtable_insert(&entity_hash, entity_name, Num_entities);
+		hashtable_insert(&entity_hash, ent->name, Num_entities);
 		con_printf(CON_DEBUG, "entity_add: added %s\n", ent->name);
 
 		entity_list[Num_entities++] = ent;
 	}
+}
+
+
+entity *entity_find(const char *entity_name)
+{
+	int i;
+
+	i = hashtable_search( &entity_hash, entity_name );
+
+	if ( i < 0 )
+		return NULL;
+
+	return entity_list[i];
 }
 
 
@@ -53,6 +66,106 @@ void entity_cmd_report_entities(int argc, char **argv)
 
 	for (i = 0; i < Num_entities; i++)
 		con_printf(CON_NORMAL, "    %s\n", entity_list[i]->name);
+}
+
+
+#define SPIT_SPEED 20
+
+
+void entity_cmd_create(int argc, char **argv)
+{
+	entity     *ent;
+	int        objnum;
+	object     *obj;
+	vms_vector new_velocity, new_pos;
+	fix        objsize;
+	ubyte      ctype, mtype, rtype;
+
+	if (argc < 2)
+		return;
+
+	ent = entity_find(argv[1]);
+
+	if (!ent)
+		return;
+
+	vm_vec_scale_add(&new_velocity, &ConsoleObject->mtype.phys_info.velocity, &ConsoleObject->orient.fvec, i2f(SPIT_SPEED));
+
+	// there's a piece of code which lets the player pick up a powerup if
+	// the distance between him and the powerup is less than 2 time their
+	// combined radii.  So we need to create powerups pretty far out from
+	// the player.
+	vm_vec_scale_add(&new_pos, &ConsoleObject->pos, &ConsoleObject->orient.fvec, ConsoleObject->size);
+
+#ifdef NETWORK
+	if (Game_mode & GM_MULTI)
+	{
+		if (Net_create_loc >= MAX_NET_CREATE_OBJECTS)
+		{
+			con_printf(CON_NORMAL, "ent_create: Not enough slots\n" ));
+			return (-1);
+		}
+	}
+#endif
+
+	switch (ent->object_type) {
+		case OBJ_POWERUP:
+			objsize = Powerup_info[ent->object_number].size;
+			ctype = CT_POWERUP;
+			mtype = MT_PHYSICS;
+			rtype = RT_POWERUP;
+			break;
+		case OBJ_ROBOT:
+			objsize = Polygon_models[Robot_info[ent->object_number].model_num].rad;
+			ctype = CT_AI;
+			mtype = MT_PHYSICS;
+			rtype = RT_POLYOBJ;
+			break;
+		default:
+			Int3();
+			break;
+	}
+
+	objnum = obj_create( ent->object_type, ent->object_number, ConsoleObject->segnum, &new_pos, &vmd_identity_matrix, objsize, ctype, mtype, rtype);
+
+	if (objnum < 0 ) {
+		con_printf(CON_NORMAL, "ent_create: cannot create. Aborting.\n");
+		Int3();
+		return;
+	}
+
+	obj = &Objects[objnum];
+
+	switch (ent->object_type) {
+		case OBJ_POWERUP:
+			obj->mtype.phys_info.velocity = new_velocity;
+			obj->mtype.phys_info.drag = 512;
+			obj->mtype.phys_info.mass = F1_0;
+
+			obj->mtype.phys_info.flags = PF_BOUNCE;
+
+			obj->rtype.vclip_info.vclip_num = Powerup_info[obj->id].vclip_num;
+			obj->rtype.vclip_info.frametime = Vclip[obj->rtype.vclip_info.vclip_num].frame_time;
+			obj->rtype.vclip_info.framenum = 0;
+
+			obj->ctype.powerup_info.flags |= PF_SPAT_BY_PLAYER;
+			break;
+		case OBJ_ROBOT:
+			obj->mtype.phys_info.velocity = new_velocity;
+			obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
+			obj->rtype.pobj_info.subobj_flags = 0;
+
+			obj->mtype.phys_info.mass = Robot_info[obj->id].mass;
+			obj->mtype.phys_info.drag = Robot_info[obj->id].drag;
+
+			obj->mtype.phys_info.flags |= (PF_LEVELLING);
+
+			obj->shields = Robot_info[obj->id].strength;
+			break;
+		default:
+			Int3();
+			break;
+	}
 }
 
 
@@ -75,6 +188,7 @@ void entity_init(void)
 	entity_add_object_type(OBJ_POWERUP, Powerup_names, MAX_POWERUP_TYPES);
 
 	cmd_addcommand("report_entities", entity_cmd_report_entities, "");
+	cmd_addcommand("ent_create", entity_cmd_create, "");
 
 	atexit(entity_free);
 }
