@@ -35,6 +35,46 @@ int	N_robot_joints = 0;
 //	Robot stuff
 robot_info Robot_info[MAX_ROBOT_TYPES];
 
+#ifndef EDITOR
+/* names "mech" through "escort" found in bitmaps.tbl */
+char Robot_names[MAX_ROBOT_TYPES][ROBOT_NAME_LENGTH] = {
+	"mech",
+	"green",        // green guy
+	"spider",       // red spider
+	"josh",
+	"violet",       // spike
+	"clkvulc",      // cloak vulcan guy
+	"clkmech",      // cloak mech
+	"brain",
+	"onearm",       // one arm
+	"plasguy",
+	"toaster",
+	"bird",
+	"mislbird",
+	"splitpod",     // splitter pods
+	"smspider",     // small spider
+	"miniboss",
+	"suprmech",     // super mech
+	"boss1",        // shareware boss
+	"cloakgrn",     // cloaked green
+	"vulcnguy",     // vulcan guy
+	"rifleman",
+	"fourclaw",
+	"quadlaser",
+	"boss2",        // bigboss
+	"babyplas",
+	"newguy",
+	"icespidr",     // icespider
+	"gaussguy",
+	"newguy2",
+	"newguy3",
+	"newguy4",
+	"newguy5",
+	"newboss1",
+	"escort",
+};
+#endif
+
 //Big array of joint positions.  All robots index into this array
 
 #define deg(a) ((int) (a) * 32768 / 180)

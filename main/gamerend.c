@@ -203,9 +203,7 @@ void draw_window_label(void)
 		{
 			case OBJ_FIREBALL:  viewer_name = "Fireball";       break;
 			case OBJ_ROBOT:     viewer_name = "Robot";
-#ifdef EDITOR
 			                    viewer_id = Robot_names[Viewer->id];
-#endif
 				break;
 			case OBJ_HOSTAGE:   viewer_name = "Hostage";        break;
 			case OBJ_PLAYER:    viewer_name = "Player";         break;
