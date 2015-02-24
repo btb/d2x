@@ -41,6 +41,61 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 int N_powerup_types = 0;
 powerup_type_info Powerup_info[MAX_POWERUP_TYPES];
 
+#ifndef EDITOR
+/* names "Life" through "Phoenix" found in bitmaps.tbl, rest are invented */
+char Powerup_names[MAX_POWERUP_TYPES][POWERUP_NAME_LENGTH] = {
+	"Life",         // POW_EXTRA_LIFE
+	"Energy",       // POW_ENERGY
+	"Shield",       // POW_SHIELD_BOOST
+	"Laser",        // POW_LASER
+	"BlueKey",      // POW_KEY_BLUE
+	"RedKey",       // POW_KEY_RED
+	"YelKey",       // POW_KEY_GOLD
+	"R_Pill",       // POW_HOARD_ORB // was POW_RADAR_ROBOTS "radar-robot-shower"
+	"P_Pill",       // unused - POW_RADAR_POWERUPS "radar-powerup-shower"
+	"M_Pill",       // unused - "full-map"
+	"Cmiss_1",      // POW_MISSILE_1
+	"Cmiss_4",      // POW_MISSILE_4
+	"QudLas",       // POW_QUAD_FIRE
+	"Vulcan",       // POW_VULCAN_WEAPON
+	"Sprdfr",       // POW_SPREADFIRE_WEAPON
+	"Plasma",       // POW_PLASMA_WEAPON
+	"Fusion",       // POW_FUSION_WEAPON
+	"Proxim",       // POW_PROXIMITY_WEAPON
+	"Hmiss_1",      // POW_HOMING_AMMO_1
+	"Hmiss_4",      // POW_HOMING_AMMO_4
+	"Smiss",        // POW_SMARTBOMB_WEAPON
+	"Mmiss",        // POW_MEGA_WEAPON
+	"V_Ammo",       // POW_VULCAN_AMMO
+	"Cloak",        // POW_CLOAK
+	"Turbo",        // POW_TURBO
+	"Invuln",       // POW_INVULNERABILITY
+	"Headli",       // unused
+	"Megwow",       // POW_MEGAWOW
+	"Gauss",        // POW_GAUSS_WEAPON
+	"Helix",        // POW_HELIX_WEAPON
+	"Phoenix",      // POW_PHOENIX_WEAPON
+	"Omega",        // POW_OMEGA_WEAPON
+	"SuperLaser",   // POW_SUPER_LASER
+	"FullMap",      // POW_FULL_MAP
+	"Converter",    // POW_CONVERTER
+	"AmmoRack",     // POW_AMMO_RACK
+	"Afterburner",  // POW_AFTERBURNER
+	"Headlight",    // POW_HEADLIGHT
+	"Smart_1",      // POW_SMISSILE1_1
+	"Smart_4",      // POW_SMISSILE1_4
+	"Guided_1",     // POW_GUIDED_MISSILE_1
+	"Guided_4",     // POW_GUIDED_MISSILE_4
+	"SmartMine",    // POW_SMART_MINE
+	"Mercury_1",    // POW_MERCURY_MISSILE_1
+	"Mercury_4",    // POW_MERCURY_MISSILE_4
+	"Earthshaker",  // POW_EARTHSHAKER_MISSILE
+	"BlueFlag",     // POW_FLAG_BLUE
+	"RedFlag",      // POW_FLAG_RED
+};
+#endif
+
+
 //process this powerup for this frame
 void do_powerup_frame(object *obj)
 {

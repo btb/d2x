@@ -201,9 +201,7 @@ void draw_window_label()
 			case OBJ_WEAPON:		viewer_name = "Weapon"; break;
 			case OBJ_CAMERA:		viewer_name = "Camera"; break;
 			case OBJ_POWERUP:		viewer_name = "Powerup";
-#ifdef EDITOR
 										viewer_id = Powerup_names[Viewer->id];
-#endif
 				break;
 			case OBJ_DEBRIS:		viewer_name = "Debris"; break;
 			case OBJ_CNTRLCEN:	viewer_name = "Reactor"; break;
