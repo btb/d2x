@@ -2098,7 +2098,14 @@ void teleport_boss(object *objp)
 {
 	int			rand_segnum, rand_index;
 	vms_vector	boss_dir;
-	Assert(Num_boss_teleport_segs > 0);
+
+	if (Num_boss_teleport_segs <= 0)
+	{
+		Int3();
+		con_printf(CON_URGENT, "No boss-teleportable segments!\n");
+		Last_teleport_time = GameTime;
+		return;
+	}
 
 	//	Pick a random segment from the list of boss-teleportable-to segments.
 	rand_index = (d_rand() * Num_boss_teleport_segs) >> 15;	
