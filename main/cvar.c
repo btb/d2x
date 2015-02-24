@@ -83,7 +83,7 @@ void cvar_init(void)
 }
 
 
-cvar_t *cvar_find(char *cvar_name)
+cvar_t *cvar_find(const char *cvar_name)
 {
 	int i;
 
@@ -168,7 +168,7 @@ void cvar_set_cvarf(cvar_t *cvar, const char *fmt, ...)
 }
 
 
-void cvar_set(char *cvar_name, char *value)
+void cvar_set(const char *cvar_name, char *value)
 {
 	cvar_t *cvar;
 	extern cvar_t Cheats_enabled;

@@ -25,7 +25,7 @@
 //#define CVAR_NORESTART     1024 // do not clear when a cvar_restart is issued
 
 typedef struct cvar_s {
-	char *name;
+	const char *name;
 	char *string;
 	ushort flags;
 	fix value;
@@ -46,10 +46,10 @@ void cvar_set_cvarf(cvar_t *cvar, const char *fmt, ...);
 #define cvar_toggle(cvar) cvar_setint((cvar), !(cvar)->intval)
 
 /* Equivalent to typing <var_name> <value> at the console */
-void cvar_set(char *cvar_name, char *value);
+void cvar_set(const char *cvar_name, char *value);
 
 /* Get the pointer to a cvar by name */
-cvar_t *cvar_find(char *cvar_name);
+cvar_t *cvar_find(const char *cvar_name);
 
 /* Try to autocomplete a cvar name */
 const char *cvar_complete(char *text);
