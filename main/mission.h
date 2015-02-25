@@ -119,6 +119,10 @@ int load_mission_by_name(char *mission_name);
 // Returns 1 if a mission was loaded.
 int select_mission(int anarchy_mode, char *message);
 
+#ifdef EDITOR
+void create_new_mission(void);
+#endif
+
 int mission_write_config(void);
 int mission_read_config(void);
 

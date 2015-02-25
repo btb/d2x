@@ -877,6 +877,18 @@ int select_mission(int anarchy_mode, char *message)
 }
 
 
+#ifdef EDITOR
+void create_new_mission(void)
+{
+	if (Current_mission)
+		free_mission();
+	Current_mission = d_malloc(sizeof(Mission));
+	Current_mission->filename = d_strdup("new_mission");
+	strcpy(Level_names[0], "GAMESAVE.LVL");
+}
+#endif
+
+
 //set a new highest level for player for this mission
 int mission_write_config(void)
 {
