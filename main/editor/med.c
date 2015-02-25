@@ -339,6 +339,8 @@ void init_editor()
 {
 	minit();
 
+	cfile_init("editor/");
+
 	ui_init();
 
 	init_med_functions();	// Must be called before medlisp_init
