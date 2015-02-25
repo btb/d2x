@@ -432,6 +432,8 @@ void bm_read_extra_robots(char *fname,int type)
 	if (N_robot_types >= MAX_ROBOT_TYPES)
 		Error("Too many robots (%d) in <%s>.  Max is %d.",t,fname,MAX_ROBOT_TYPES-N_D2_ROBOT_TYPES);
 	robot_info_read_n(&Robot_info[N_D2_ROBOT_TYPES], t, fp);
+	for (i = N_D2_ROBOT_TYPES; i < N_robot_types; i++)
+		entity_add(OBJ_ROBOT, i, Robot_names[i]);
 
 	t = cfile_read_int(fp);
 	N_robot_joints = N_D2_ROBOT_JOINTS+t;

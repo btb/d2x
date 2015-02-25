@@ -38,40 +38,85 @@ robot_info Robot_info[MAX_ROBOT_TYPES];
 #ifndef EDITOR
 /* names "mech" through "escort" found in bitmaps.tbl */
 char Robot_names[MAX_ROBOT_TYPES][ROBOT_NAME_LENGTH] = {
-	"mech",
-	"green",        // green guy
-	"spider",       // red spider
-	"josh",
-	"violet",       // spike
-	"clkvulc",      // cloak vulcan guy
-	"clkmech",      // cloak mech
-	"brain",
-	"onearm",       // one arm
-	"plasguy",
-	"toaster",
-	"bird",
-	"mislbird",
-	"splitpod",     // splitter pods
-	"smspider",     // small spider
-	"miniboss",
-	"suprmech",     // super mech
-	"boss1",        // shareware boss
-	"cloakgrn",     // cloaked green
-	"vulcnguy",     // vulcan guy
-	"rifleman",
-	"fourclaw",
-	"quadlaser",
-	"boss2",        // bigboss
-	"babyplas",
-	"newguy",
-	"icespidr",     // icespider
-	"gaussguy",
-	"newguy2",
-	"newguy3",
-	"newguy4",
-	"newguy5",
-	"newboss1",
-	"escort",
+	"mech",         // medium hulk
+	"green",        // green claw, medium lifter
+	"spider",       // red spider, processing robot
+	"josh",         // class 1 drone
+	"violet",       // spike, class 2 drone
+	"clkvulc",      // cloaked class 1 driller
+	"clkmech",      // cloaked hulk
+	"brain",        // class 2 supervisor robot
+	"onearm",       // secondary lifter
+	"plasguy",      // class 1 heavy driller
+	"toaster",      // class 3 gopher robot
+	"bird",         // class 1 platform robot
+	"mislbird",     // class 2 platform robot
+	"splitpod",     // polyhedron, split pod
+	"smspider",     // baby spider
+	"miniboss",     // mini boss, fusion hulk
+	"suprmech",     // super mech, heavy hulk
+	"boss1",        // shareware boss, super hulk
+	"cloakgrn",     // cloaked lifter
+	"vulcnguy",     // vulcan guy, class 1 driller
+	"rifleman",     // toad, small hulk
+	"fourclaw",     // advanced lifter
+	"quadlaser",    // defense prototype
+	"boss2",        // bigboss, mega hulk
+	"babyplas",     // bper bot
+	"newguy",       // smelter
+	"icespidr",     // ice spindle defense robot
+	"gaussguy",     // bulk destroyer
+	"newguy2",      // trn racer
+	"newguy3",      // fox attack bot
+	"newguy4",      // sidearm
+	"newguy5",      // zeta aquilae boss
+	"newboss1",     // ?? boss2
+	"escort",       // guide bot
+	"plasguy2",     // ?? plasguy w/missiles
+	"kamikaze",     // ?? kamikaze escort
+	"itsc",         // internal tactical security control robot
+	"itd",          // internal tactical droid
+	"pest",         // portable equalizing standard transport
+	"pig",          // preliminary integration groundbot
+	"diamondclaw",  // diamond claw, second generation
+	"redhornet",    // red hornet
+	"thief",        // thief, bandit
+	"seeker",       // seeker
+	"ebandit",      // e-bandit
+	"45",           // brimspark boss
+	"46",           // quartzon boss
+	"boarshead",    // boarshead
+	"spider2",      // spider
+	"omegadefense", // omega defense spawn
+	"sidearmmodula", // sidearm modula
+	"louguard",     // lou guard
+	"52",           // baloris prime boss
+	"53",           // brimspark mini boss
+	"clkdiamondclaw", // cloaked diamond claw
+	"clksmelter",   // cloaked smelter
+	"purpleomega",  // ?? purple omegadefense
+	"smelter",      // ?? another newguy
+	"omegadefense2", // ?? another omegadefense
+	"bper",         // ?? another babyplas
+	"spider2b",     // ?? another spider2
+	"spawn",        // spawn
+	"62",           // limefrost spiral boss
+	"spawn2",       // ?? another spawn
+	"64",           // tycho brahe boss
+	"65",           // ?? a reactor?
+	/* vertigo robots, possibly not constant */
+	"compactlifter", // compact lifter
+	"fervid99",     // fervid 99
+	"fiddler",      // fiddler
+	"heavydriller2", // class 2 heavy driller
+	"smelter2",     // smelter ii
+	"max",          // maximum amplified xenophobe
+	"sniperng",     // sniper ng
+	"logikill",     // codename: logikill
+	"canary",       // canary
+	"75",           // vertigo boss 1
+	"76",           // vertigo boss 2
+	"spike",        // s.p.i.k.e.
 };
 #endif
 

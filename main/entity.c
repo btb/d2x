@@ -11,9 +11,8 @@ entity *entity_list[ENTITY_MAX_ENTITIES];
 int Num_entities;
 
 
-static void entity_add_object_type(ubyte object_type, char typenames[][16], int num)
+void entity_add(ubyte object_type, int object_id, char object_name[16])
 {
-	int i;
 	entity *ent;
 	char entity_name[32];
 	char *p;
@@ -23,23 +22,32 @@ static void entity_add_object_type(ubyte object_type, char typenames[][16], int 
 	if (!p)
 		p = strchr(entity_name, '\0');
 	*p++ = '_';
+
+	strcpy(p, object_name);
+	strlwr(entity_name);
+
+	MALLOC(ent, entity, 1);
+	ent->name = d_strdup(entity_name);
+	ent->object_type = object_type;
+	ent->object_number = object_id;
+
+	hashtable_insert(&entity_hash, ent->name, Num_entities);
+	con_printf(CON_DEBUG, "entity_add: added %s\n", ent->name);
+
+	entity_list[Num_entities++] = ent;
+}
+
+
+static void entity_add_object_type(ubyte object_type, char typenames[][16], int num)
+{
+	int i;
+
 	for (i = 0; i < num; i++)
 	{
 		if (!typenames[i] || !typenames[i][0])
 			continue;
 
-		strcpy(p, typenames[i]);
-		strlwr(entity_name);
-
-		MALLOC(ent, entity, 1);
-		ent->name = d_strdup(entity_name);
-		ent->object_type = object_type;
-		ent->object_number = i;
-
-		hashtable_insert(&entity_hash, ent->name, Num_entities);
-		con_printf(CON_DEBUG, "entity_add: added %s\n", ent->name);
-
-		entity_list[Num_entities++] = ent;
+		entity_add(object_type, i, typenames[i]);
 	}
 }
 
@@ -91,12 +99,6 @@ void entity_cmd_create(int argc, char **argv)
 
 	vm_vec_scale_add(&new_velocity, &ConsoleObject->mtype.phys_info.velocity, &ConsoleObject->orient.fvec, i2f(SPIT_SPEED));
 
-	// there's a piece of code which lets the player pick up a powerup if
-	// the distance between him and the powerup is less than 2 time their
-	// combined radii.  So we need to create powerups pretty far out from
-	// the player.
-	vm_vec_scale_add(&new_pos, &ConsoleObject->pos, &ConsoleObject->orient.fvec, ConsoleObject->size);
-
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)
 	{
@@ -125,6 +127,12 @@ void entity_cmd_create(int argc, char **argv)
 			Int3();
 			break;
 	}
+
+	// there's a piece of code which lets the player pick up a powerup if
+	// the distance between him and the powerup is less than 2 time their
+	// combined radii.  So we need to create powerups pretty far out from
+	// the player.
+	vm_vec_scale_add(&new_pos, &ConsoleObject->pos, &ConsoleObject->orient.fvec, ConsoleObject->size + objsize);
 
 	objnum = obj_create( ent->object_type, ent->object_number, ConsoleObject->segnum, &new_pos, &vmd_identity_matrix, objsize, ctype, mtype, rtype);
 
@@ -184,8 +192,8 @@ void entity_init(void)
 {
 	hashtable_init(&entity_hash, ENTITY_MAX_ENTITIES);
 
-	entity_add_object_type(OBJ_ROBOT, Robot_names, MAX_ROBOT_TYPES);
-	entity_add_object_type(OBJ_POWERUP, Powerup_names, MAX_POWERUP_TYPES);
+	entity_add_object_type(OBJ_ROBOT, Robot_names, N_robot_types);
+	entity_add_object_type(OBJ_POWERUP, Powerup_names, N_powerup_types);
 
 	cmd_addcommand("report_entities", entity_cmd_report_entities, "");
 	cmd_addcommand("ent_create", entity_cmd_create, "");

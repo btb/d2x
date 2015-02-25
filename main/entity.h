@@ -14,5 +14,6 @@ typedef struct entity
 } entity;
 
 void entity_init(void);
+void entity_add(ubyte object_type, int object_id, char object_name[16]);
 
 #endif
