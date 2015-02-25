@@ -292,7 +292,7 @@ if (!render_3d_in_big_window)
 
 		}
 		else {
-			render_canv	= VR_offscreen_buffer;
+			render_canv	= Canv_editor_game; //VR_offscreen_buffer;
 			show_canv	= Canv_editor_game;
 		}
 
