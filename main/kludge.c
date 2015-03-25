@@ -13,14 +13,14 @@
 #include "inferno.h"
 
 
-void g3_remap_interp_colors()
+void g3_remap_interp_colors(void)
 {
 
 }
 
 /*
 extern short interp_color_table
-void g3_remap_interp_colors()
+void g3_remap_interp_colors(void)
 {
  int eax, ebx;
  
@@ -43,12 +43,12 @@ int com_level_sync(void)
 	return 0;
 }
 
-void com_main_menu()
+void com_main_menu(void)
 {
 
 }
 
-void com_do_frame()
+void com_do_frame(void)
 {
 
 }
@@ -58,12 +58,12 @@ void com_send_data(char *buf, int len, int repeat)
 
 }
 
-void com_endlevel()
+void com_endlevel(int *secret)
 {
 
 }
 
-void serial_leave_game()
+void serial_leave_game(void)
 {
 
 }
