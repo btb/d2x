@@ -44,12 +44,20 @@ main(int argc, char *argv[])
 	stat(argv[1], &statbuf);
 	printf("%i\n", (int)statbuf.st_size);
 	buf = (char *)malloc(3);
-	fread(buf, 3, 1, hogfile);
+	if ( fread(buf, 3, 1, hogfile) != 1 ) {
+		printf("Error reading %s\n", argv[1]);
+		fclose(hogfile);
+		exit(EXIT_FAILURE);
+	}
 	printf("Extracting from: %s\n", argv[1]);
 	free(buf);
 	while(ftell(hogfile)<statbuf.st_size) {
-		fread(filename, 13, 1, hogfile);
-		fread(&len, 1, 4, hogfile);
+		if ( fread(filename, 13, 1, hogfile) != 1 ||
+			 fread(&len, 1, 4, hogfile) != 1 ) {
+			printf("Error reading %s\n", argv[1]);
+			fclose(hogfile);
+			exit(EXIT_FAILURE);
+		}
 #ifdef WORDS_BIGENDIAN
 		len = SWAPINT(len);
 #endif
@@ -64,7 +72,11 @@ main(int argc, char *argv[])
 				if (buf == NULL) {
 					printf("Unable to allocate memory\n");
 				} else {
-					fread(buf, len, 1, hogfile);
+					if ( fread(buf, len, 1, hogfile) != 1 ) {
+						printf("Error reading %s\n", argv[1]);
+						fclose(hogfile);
+						exit(EXIT_FAILURE);
+					}
 					writefile = fopen(filename, "wb");
 					fwrite(buf, len, 1, writefile);
 					fclose(writefile);

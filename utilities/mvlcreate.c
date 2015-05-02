@@ -84,7 +84,11 @@ main(int argc, char *argv[])
 		if (buf == NULL) {
 			printf("Unable to allocate memory\n");
 		} else {
-			fread(buf, len[i], 1, readfile);
+			if ( fread(buf, len[i], 1, readfile) != 1 ) {
+				printf("Error reading %s\n", filename[i]);
+				fclose(readfile);
+				exit(EXIT_FAILURE);
+			}
 			fwrite(buf, len[i], 1, mvlfile);
 		}
 		fclose(readfile);
