@@ -1453,9 +1453,9 @@ int save_game_data(PHYSFS_file *SaveFile)
 {
 	short game_top_fileinfo_version = Gamesave_current_version >= 5 ? 31 : 25;
 	int  player_offset, object_offset, walls_offset, doors_offset, triggers_offset, control_offset, matcen_offset; //, links_offset;
-	int	dl_indices_offset, delta_light_offset;
+	int dl_indices_offset = 0, delta_light_offset = 0;
 	int offset_offset, end_offset;
-	int num_delta_lights;
+	int num_delta_lights = 0;
 	int i;
 
 	//===================== SAVE FILE INFO ========================
