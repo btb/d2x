@@ -4701,31 +4701,6 @@ extern int robot_fired[MAX_ROBOTS_CONTROLLED];
 extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 
-void multi_send_robot_controls (char pnum)
-{
-	int count=2;
-
-	mprintf ((0,"Sending ROBOT_CONTROLS!!!\n"));
-
-	multibuf[0]=MULTI_ROBOT_CONTROLS;
-	multibuf[1]=pnum;
-	memcpy (&(multibuf[count]),&robot_controlled,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_agitation,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_controlled_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_last_send_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_last_message_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_send_pending,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_fired,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-
-	network_send_naked_packet (multibuf,142,pnum);
-}
 void multi_do_robot_controls(char *buf)
 {
 	int count=2;

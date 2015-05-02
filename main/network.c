@@ -178,8 +178,6 @@ extern void multi_send_kill_goal_counts();
 extern int newmenu_dotiny( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem) );
 
 void network_process_naked_pdata (char *,int);
-extern void multi_send_robot_controls(char);
-
 void network_flush();
 void network_listen();
 void network_update_netgame();
