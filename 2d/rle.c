@@ -514,11 +514,11 @@ typedef struct rle_cache_element {
 	grs_bitmap * rle_bitmap;
 	ubyte * rle_data;
 	grs_bitmap * expanded_bitmap;
-	int last_used;
+	unsigned int last_used;
 } rle_cache_element;
 
 int rle_cache_initialized = 0;
-int rle_counter = 0;
+unsigned int rle_counter = 0;
 int rle_next = 0;
 rle_cache_element rle_cache[MAX_CACHE_BITMAPS];
 
@@ -590,7 +590,7 @@ void rle_expand_texture_sub( grs_bitmap * bmp, grs_bitmap * rle_temp_bitmap_1 )
 grs_bitmap * rle_expand_texture( grs_bitmap * bmp )
 {
 	int i;
-	int lowest_count, lc;
+	unsigned int lowest_count, lc;
 	int least_recently_used;
 
 	if (!rle_cache_initialized) rle_cache_init();
