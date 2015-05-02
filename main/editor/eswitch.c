@@ -411,11 +411,15 @@ void do_trigger_window()
  			ui_checkbox_check(TriggerFlag[2], trig->flags & TRIGGER_ENERGY_DRAIN);
  			ui_checkbox_check(TriggerFlag[3], trig->flags & TRIGGER_EXIT);
  			ui_checkbox_check(TriggerFlag[4], trig->flags & TRIGGER_ONE_SHOT);
+#if 0 // FIXME: trigger.flags is not big enough to hold this, and maybe shouldn't be used at all
  			ui_checkbox_check(TriggerFlag[5], trig->flags & TRIGGER_ILLUSION_ON);
+#endif
  			ui_checkbox_check(TriggerFlag[6], trig->flags & TRIGGER_ILLUSION_OFF);
  			ui_checkbox_check(TriggerFlag[7], trig->flags & TRIGGER_ON);
  			ui_checkbox_check(TriggerFlag[8], trig->flags & TRIGGER_MATCEN);
+#if 0 // FIXME: trigger.flags is not big enough to hold this, and maybe shouldn't be used at all
  			ui_checkbox_check(TriggerFlag[9], trig->flags & TRIGGER_SECRET_EXIT);
+#endif
 		}
 	}
 	
