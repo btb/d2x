@@ -187,9 +187,15 @@ void ipx_send_packet_data( ubyte * data, int datasize, ubyte *network, ubyte *ad
 	
 	memcpy(ipx_header.Destination.Network, network, 4);
 	memcpy(ipx_header.Destination.Node, immediate_address, 6);
-	*(u_short *)ipx_header.Destination.Socket = htons(ipx_socket_data.socket);
+	{
+		u_short socket = htons(ipx_socket_data.socket);
+		memcpy(ipx_header.Destination.Socket, &socket, 2);
+	}
 	ipx_header.PacketType = 4; /* Packet Exchange */
-	*(uint *)buf = INTEL_INT(ipx_packetnum);
+	{
+		int packetnum = INTEL_INT(ipx_packetnum);
+		memcpy(buf, &packetnum, 4);
+	}
 	ipx_packetnum++;
     //ipx_packettotal+=datasize+4;
     //if (f2i(Players[Player_num].time_level) && (f2i(Players[Player_num].time_level)%10!=ipx_lastspeed))
@@ -412,7 +418,8 @@ int ipx_send_game_packet(ubyte *data, int datasize)
 	if(driver->SendGamePacket) {
 		u_char buf[MAX_IPX_DATA];
 
-		*(uint *)buf = ipx_packetnum++;
+		memcpy(buf, &ipx_packetnum, 4);
+		ipx_packetnum++;
 		memcpy(buf + 4, data, datasize);
 		*(uint *)data = ipx_packetnum++;
 		return driver->SendGamePacket(&ipx_socket_data, buf, datasize + 4);
