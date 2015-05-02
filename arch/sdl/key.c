@@ -438,7 +438,7 @@ void key_cmd_bind(int argc, char **argv)
 	for (i = 2; i < argc; i++) {
 		if (i > 2)
 			strncat(buf, " ", CMD_MAX_LENGTH);
-		strncat(buf, argv[i], CMD_MAX_LENGTH);
+		strncat(buf, argv[i], CMD_MAX_LENGTH - strlen(buf));
 	}
 
 	if (key_binding_list[key])
