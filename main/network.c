@@ -756,7 +756,10 @@ network_new_player(sequence_packet *their)
    network_check_for_old_version(pnum);
 
 	if (Network_game_type == IPX_GAME) {
-		if ( (*(uint *)their->player.network.ipx.server) != 0 )
+		if ( their->player.network.ipx.server[0] ||
+			 their->player.network.ipx.server[1] ||
+			 their->player.network.ipx.server[2] ||
+			 their->player.network.ipx.server[3] )
 			ipx_get_local_target( their->player.network.ipx.server, their->player.network.ipx.node, Players[pnum].net_address );
 		else
 			memcpy(Players[pnum].net_address, their->player.network.ipx.node, 6);
@@ -879,7 +882,10 @@ void network_welcome_player(sequence_packet *their)
 	Network_player_added = 0;
 
 	if (Network_game_type == IPX_GAME) {
-		if ( (*(uint *)their->player.network.ipx.server) != 0 )
+		if ( their->player.network.ipx.server[0] ||
+			their->player.network.ipx.server[1] ||
+			their->player.network.ipx.server[2] ||
+			their->player.network.ipx.server[3] )
 			ipx_get_local_target( their->player.network.ipx.server, their->player.network.ipx.node, local_address );
 		else
 			memcpy(local_address, their->player.network.ipx.node, 6);
@@ -3275,7 +3281,10 @@ void network_read_sync_packet( netgame_info * sp, int rsinit)
 			if (server != 0)
 				ipx_get_local_target((ubyte *)&server, TempPlayersInfo->players[i].network.ipx.node, Players[i].net_address);
 #else // WORDS_NEED_ALIGNMENT
-			if ((*(uint *)TempPlayersInfo->players[i].network.ipx.server) != 0)
+			if ( TempPlayersInfo->players[i].network.ipx.server[0] ||
+				 TempPlayersInfo->players[i].network.ipx.server[1] ||
+				 TempPlayersInfo->players[i].network.ipx.server[2] ||
+				 TempPlayersInfo->players[i].network.ipx.server[3] )
 				ipx_get_local_target(TempPlayersInfo->players[i].network.ipx.server, TempPlayersInfo->players[i].network.ipx.node, Players[i].net_address);
 #endif // WORDS_NEED_ALIGNMENT
 			else
