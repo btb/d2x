@@ -1097,7 +1097,7 @@ int check_walls()
 				mprintf((0,"No valid links on Matcen Trigger %d\n", t));
 			else
 				for (l=0;l<Triggers[t].num_links;l++) {
-					if (!Segment2s[Triggers[t].seg[l]].special & SEGMENT_IS_ROBOTMAKER)
+					if ( !(Segment2s[Triggers[t].seg[l]].special & SEGMENT_IS_ROBOTMAKER) )
 						mprintf((0,"Bogus Matcen trigger detected on Trigger %d, No matcen at seg %d\n", t, Triggers[t].seg[l]));
 				}
                  }
