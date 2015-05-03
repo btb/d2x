@@ -105,7 +105,7 @@ d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
 
 if MINGW32
 d2x_sdl_CPPFLAGS += -I$(top_srcdir)/arch/win32/include
-_d2x_sdl_SOURCES += arch/win32/hmpfile.c arch/win32/midi.c arch/win32/mingw_init.c
+_d2x_sdl_SOURCES += arch/win32/mingw_init.c
 d2x_sdl_LDADD += -lwinmm
 
 if USE_NETWORK
