@@ -90,8 +90,8 @@ void entity_cmd_create(int argc, char **argv)
 	int        objnum;
 	object     *obj;
 	vms_vector new_velocity, new_pos;
-	fix        objsize;
-	ubyte      ctype, mtype, rtype;
+	fix        objsize = F0_0;
+	ubyte      ctype = 0, mtype = 0, rtype = 0;
 
 	if (argc < 2)
 		return;
