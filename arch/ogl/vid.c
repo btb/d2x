@@ -163,7 +163,8 @@ const char *gl_vendor, *gl_renderer, *gl_version, *gl_extensions;
 
 void ogl_get_verinfo(void)
 {
-	long t, sgi_max_textures = -1;
+	long t;
+	GLint sgi_max_textures = -1;
 	GLint arb_max_textures = -1;
 #ifdef GL_NV_register_combiners
 	GLint nv_register_combiners = -1;
