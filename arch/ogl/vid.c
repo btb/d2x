@@ -166,7 +166,7 @@ void ogl_get_verinfo(void)
 	long t, sgi_max_textures = -1;
 	GLint arb_max_textures = -1;
 #ifdef GL_NV_register_combiners
-	long nv_register_combiners = -1;
+	GLint nv_register_combiners = -1;
 #endif
 	float anisotropic_max = 0;
 
