@@ -216,12 +216,12 @@
 		14286A871A67330000A095F6 /* uidraw.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699321A2729C60070D41D /* uidraw.c */; };
 		14286A881A67330000A095F6 /* userbox.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699331A2729C60070D41D /* userbox.c */; };
 		14286A891A67330000A095F6 /* window.c in Sources */ = {isa = PBXBuildFile; fileRef = 146699341A2729C60070D41D /* window.c */; };
+		142B5D9C1AF5BDAB00273910 /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 142B5D9A1AF5BDAB00273910 /* entity.c */; };
+		142B5D9D1AF5BDAB00273910 /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 142B5D9A1AF5BDAB00273910 /* entity.c */; };
+		142B5D9E1AF5BDAB00273910 /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 142B5D9A1AF5BDAB00273910 /* entity.c */; };
 		143980CD1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
 		143980CE1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
 		143980CF1A89EE290082C110 /* cli.c in Sources */ = {isa = PBXBuildFile; fileRef = 143980CC1A89EE290082C110 /* cli.c */; };
-		143F63121A9C8B6200F1B9BD /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 143F63101A9C8B6200F1B9BD /* entity.c */; };
-		143F63131A9C8B6200F1B9BD /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 143F63101A9C8B6200F1B9BD /* entity.c */; };
-		143F63141A9C8B6200F1B9BD /* entity.c in Sources */ = {isa = PBXBuildFile; fileRef = 143F63101A9C8B6200F1B9BD /* entity.c */; };
 		144BC0321A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0331A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0341A74C612001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
@@ -562,10 +562,11 @@
 		141635EC1A4CB5B3005E575E /* d2x-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		141FE1001A2D36A600A4FB18 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		14286A481A672E6300A095F6 /* d2x-editor-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-editor-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
+		142B5D9A1AF5BDAB00273910 /* entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entity.c; sourceTree = "<group>"; };
+		142B5D9B1AF5BDAB00273910 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
 		143980CC1A89EE290082C110 /* cli.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cli.c; sourceTree = "<group>"; };
 		143980D01A89EF6F0082C110 /* cli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
-		143F63101A9C8B6200F1B9BD /* entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entity.c; sourceTree = "<group>"; };
-		143F63111A9C8B6200F1B9BD /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
+		143E00B01AC2683D005DE85E /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		144BC0311A74C40E001A6048 /* gr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
 		144BC0351A74D0D0001A6048 /* vid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vid.h; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
@@ -1213,6 +1214,7 @@
 		1466949C1A27246A0070D41D = {
 			isa = PBXGroup;
 			children = (
+				143E00B01AC2683D005DE85E /* .travis.yml */,
 				14804D641A4C9F74001CB0FB /* SDL_mixer.framework */,
 				14804D621A4C9F5C001CB0FB /* SDL.framework */,
 				14804D601A4C9F2D001CB0FB /* Cocoa.framework */,
@@ -1801,8 +1803,8 @@
 				146696AE1A2729870070D41D /* effects.h */,
 				146696AF1A2729870070D41D /* endlevel.c */,
 				146696B01A2729870070D41D /* endlevel.h */,
-				143F63101A9C8B6200F1B9BD /* entity.c */,
-				143F63111A9C8B6200F1B9BD /* entity.h */,
+				142B5D9A1AF5BDAB00273910 /* entity.c */,
+				142B5D9B1AF5BDAB00273910 /* entity.h */,
 				146696B11A2729870070D41D /* escort.c */,
 				146696B21A2729870070D41D /* escort.h */,
 				146696B31A2729870070D41D /* fireball.c */,
@@ -2223,7 +2225,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				143F63121A9C8B6200F1B9BD /* entity.c in Sources */,
 				142869B51A672E6300A095F6 /* tmapflat.c in Sources */,
 				142869B61A672E6300A095F6 /* vid.c in Sources */,
 				14286A671A67313E00A095F6 /* medrobot.c in Sources */,
@@ -2314,6 +2315,7 @@
 				142869F11A672E6300A095F6 /* gamepal.c in Sources */,
 				14286A751A67330000A095F6 /* gadget.c in Sources */,
 				14286A531A67313E00A095F6 /* fixseg.c in Sources */,
+				142B5D9C1AF5BDAB00273910 /* entity.c in Sources */,
 				142869F21A672E6300A095F6 /* gamerend.c in Sources */,
 				142869F31A672E6300A095F6 /* gamesave.c in Sources */,
 				142869F41A672E6300A095F6 /* gameseg.c in Sources */,
@@ -2496,13 +2498,13 @@
 				14F0D53D1A4CA50D00682BB0 /* gamecntl.c in Sources */,
 				14F0D53E1A4CA50D00682BB0 /* gamefont.c in Sources */,
 				14F0D53F1A4CA50D00682BB0 /* gamemine.c in Sources */,
-				143F63141A9C8B6200F1B9BD /* entity.c in Sources */,
 				14F0D5401A4CA50D00682BB0 /* gamepal.c in Sources */,
 				14F0D5411A4CA50D00682BB0 /* gamerend.c in Sources */,
 				14F0D5421A4CA50D00682BB0 /* gamesave.c in Sources */,
 				14F0D5431A4CA50D00682BB0 /* gameseg.c in Sources */,
 				14F0D5441A4CA50D00682BB0 /* gameseq.c in Sources */,
 				14F0D5451A4CA50D00682BB0 /* gauges.c in Sources */,
+				142B5D9E1AF5BDAB00273910 /* entity.c in Sources */,
 				14F0D5461A4CA50D00682BB0 /* hostage.c in Sources */,
 				14F0D5471A4CA50D00682BB0 /* hud.c in Sources */,
 				14F0D5481A4CA50D00682BB0 /* inferno.c in Sources */,
@@ -2606,10 +2608,10 @@
 				14F0D59A1A4CB34F00682BB0 /* ipx_mcast4.c in Sources */,
 				14F0D59B1A4CB34F00682BB0 /* ipx_udp.c in Sources */,
 				14F0D59C1A4CB34F00682BB0 /* linuxnet.c in Sources */,
+				142B5D9D1AF5BDAB00273910 /* entity.c in Sources */,
 				14F0D59D1A4CB34F00682BB0 /* ukali.c in Sources */,
 				14F0D59E1A4CB34F00682BB0 /* joy.c in Sources */,
 				14F0D59F1A4CB34F00682BB0 /* joydefs.c in Sources */,
-				143F63131A9C8B6200F1B9BD /* entity.c in Sources */,
 				14F0D5A01A4CB34F00682BB0 /* event.c in Sources */,
 				14F0D5A11A4CB34F00682BB0 /* key.c in Sources */,
 				14F0D5A21A4CB34F00682BB0 /* mouse.c in Sources */,

@@ -83,7 +83,7 @@ test "x$exec_prefix" = "xNONE" && exec_prefix="${prefix}"
 dnl Set default locations to find data files.
 default_sharepath="$datadir/games/$PACKAGE"
 
-CFLAGS="-Wall -Werror -Wno-deprecated-declarations -Wno-int-to-pointer-cast -Wno-unused-value -Wno-address $CFLAGS"
+CFLAGS="-Wall -Werror -Wno-deprecated-declarations -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast -Wno-unused-value -Wno-address $CFLAGS"
 AX_CHECK_COMPILE_FLAG([-Wno-ignored-attributes], [CFLAGS="$CFLAGS -Wno-ignored-attributes"])
 AX_CHECK_COMPILE_FLAG([-Wno-unused-but-set-variable], [CFLAGS="$CFLAGS -Wno-unused-but-set-variable"])
 

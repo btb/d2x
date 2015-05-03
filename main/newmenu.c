@@ -2010,7 +2010,7 @@ int newmenu_get_filename(char *title, char *type, char *filename, int allow_abor
 	int exit_value = 0;
 	int w_x, w_y, w_w, w_h, title_height;
 	int box_x, box_y, box_w, box_h;
-	bkg bg; // background under listbox
+	bkg bg = { NULL, NULL, NULL}; // background under listbox
 #ifdef NEWMENU_MOUSE
 	int mx, my, x1, x2, y1, y2, mouse_state, omouse_state;
 	int mouse2_state, omouse2_state;

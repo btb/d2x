@@ -274,6 +274,7 @@ int GotoMainMenu()
 }
 
 
+#if 0
 void ReadLispMacro( FILE * file, char * buffer )
 {
 //	char c;
@@ -298,6 +299,7 @@ void ReadLispMacro( FILE * file, char * buffer )
 
 	return;
 }
+#endif
 
 static int (*KeyFunction[2048])();
 
@@ -605,8 +607,6 @@ int DosShell()
 	key_close();
 #ifdef __MSDOS__
 	ok = spawnl(P_WAIT,getenv("COMSPEC"), NULL );
-#elif defined(__linux__)
-        system("");
 #endif
 	key_init();
 

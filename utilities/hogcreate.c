@@ -63,7 +63,11 @@ main(int argc, char *argv[])
 					tmp = SWAPINT(tmp);
 #endif
 					fwrite(&tmp, 4, 1, hogfile);
-					fread(buf, statbuf.st_size, 1, readfile);
+					if ( fread(buf, statbuf.st_size, 1, readfile) != 1 ) {
+						printf("Error reading %s\n", filename);
+						fclose(readfile);
+						exit(EXIT_FAILURE);
+					}
 					fwrite(buf, statbuf.st_size, 1, hogfile);
 				}
 				fclose(readfile);

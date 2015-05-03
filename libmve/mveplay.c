@@ -365,7 +365,7 @@ static int create_audiobuf_handler(unsigned char major, unsigned char minor, uns
 	fprintf(stderr, "sample rate = %d, stereo = %d, bitsize = %d, compressed = %d\n",
 			sample_rate, stereo, bitsize ? 16 : 8, compressed);
 
-	if (!Mix_OpenAudio(sample_rate, format, stereo ? 2 : 1, 4096) >= 0)
+	if (Mix_OpenAudio(sample_rate, format, stereo ? 2 : 1, 4096) == 0)
 	{
 		fprintf(stderr, "   success\n");
 		mve_audio_canplay = 1;

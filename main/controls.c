@@ -305,10 +305,11 @@ void controls_cmd_automap_on(int argc, char **argv)    { button_down(automap); }
 void controls_cmd_automap_off(int argc, char **argv)   { button_up(automap); }
 void controls_cmd_afterburn_on(int argc, char **argv)  { button_down(afterburner); }
 void controls_cmd_afterburn_off(int argc, char **argv) { button_up(afterburner); }
+
 void controls_cmd_flare(int argc, char **argv)         { button_down(fire_flare); }
-void controls_cmd_bomb(int argc, char **argv)          { button_up(drop_bomb); }
+void controls_cmd_bomb(int argc, char **argv)          { button_down(drop_bomb); }
 void controls_cmd_cycle(int argc, char **argv)         { button_down(cycle_primary); }
-void controls_cmd_cycle2(int argc, char **argv)        { button_up(cycle_secondary); }
+void controls_cmd_cycle2(int argc, char **argv)        { button_down(cycle_secondary); }
 void controls_cmd_headlight(int argc, char **argv)     { button_down(headlight); }
 
 void controls_cmd_togglebomb(int argc, char **argv)

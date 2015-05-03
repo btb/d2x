@@ -43,8 +43,12 @@ main(int argc, char *argv[])
 	stat(argv[1], &statbuf);
 	printf("%i\n", (int)statbuf.st_size);
 	buf = (char *)malloc(4);
-	fread(buf, 4, 1, mvlfile);
-	fread(&nfiles, 4, 1, mvlfile);
+	if ( fread(buf, 4, 1, mvlfile) != 1 ||
+		 fread(&nfiles, 4, 1, mvlfile) != 1 ) {
+		printf("Error reading %s\n", argv[1]);
+		fclose(mvlfile);
+		exit(EXIT_FAILURE);
+	}
 	printf("%d files\n", nfiles);
 	if (nfiles > MAX_FILES) { // must be a bigendian mvl
 		fprintf(stderr, "warning: nfiles>%d, trying reverse byte order...",
@@ -56,8 +60,12 @@ main(int argc, char *argv[])
 	printf("Extracting from: %s\n", argv[1]);
 	free(buf);
 	for (i = 0; i < nfiles; i++) {
-		fread(filename[i], 13, 1, mvlfile);
-		fread(&len[i], 4, 1, mvlfile);
+		if ( fread(filename[i], 13, 1, mvlfile) != 1 ||
+			 fread(&len[i], 4, 1, mvlfile) != 1 ) {
+			printf("Error reading %s\n", argv[1]);
+			fclose(mvlfile);
+			exit(EXIT_FAILURE);
+		}
 		if (bigendian)
 			len[i] = SWAPINT(len[i]);
 		if (argc == 2 || !strcmp(argv[2], filename[i]))
@@ -77,7 +85,11 @@ main(int argc, char *argv[])
 				if (buf == NULL) {
 					printf("Unable to allocate memory\n");
 				} else {
-					fread(buf, len[i], 1, mvlfile);
+					if ( fread(buf, len[i], 1, mvlfile) != 1 ) {
+						printf("Error reading %s\n", argv[1]);
+						fclose(mvlfile);
+						exit(EXIT_FAILURE);
+					}
 					writefile = fopen(filename[i], "wb");
 					fwrite(buf, len[i], 1, writefile);
 					fclose(writefile);

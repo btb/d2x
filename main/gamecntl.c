@@ -2782,7 +2782,9 @@ void gamecntl_init(void)
 	for (i = 0; i < N_CHEATS; i++)
 		cmd_addcommand(Cheats[i].string, Cheats[i].cheat_cmd, "");
 
+#ifndef RELEASE
 	cmd_addcommand("kill", gamecntl_cmd_kill, "");
+#endif
 
 	cvar_registervariable(&Buddy_dude_cheat);
 }

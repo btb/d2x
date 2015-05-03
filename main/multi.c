@@ -3600,7 +3600,11 @@ void multi_initiate_save_game()
 	game_id = timer_get_fixed_seconds();
 	game_id ^= N_players<<4;
 	for (i=0; i<N_players; i++ )
-		game_id ^= *(uint *)Players[i].callsign;
+	{
+		fix call2i;
+		memcpy(&call2i, Players[i].callsign, sizeof(fix));
+		game_id ^= call2i;
+	}
 	if ( game_id == 0 ) game_id = 1;                // 0 is invalid
 
 	mprintf(( 1, "Game_id = %8x\n", game_id));
@@ -4697,31 +4701,6 @@ extern int robot_fired[MAX_ROBOTS_CONTROLLED];
 extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 
-void multi_send_robot_controls (char pnum)
-{
-	int count=2;
-
-	mprintf ((0,"Sending ROBOT_CONTROLS!!!\n"));
-
-	multibuf[0]=MULTI_ROBOT_CONTROLS;
-	multibuf[1]=pnum;
-	memcpy (&(multibuf[count]),&robot_controlled,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_agitation,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_controlled_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_last_send_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_last_message_time,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_send_pending,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-	memcpy (&(multibuf[count]),&robot_fired,MAX_ROBOTS_CONTROLLED*4);
-	count+=(MAX_ROBOTS_CONTROLLED*4);
-
-	network_send_naked_packet (multibuf,142,pnum);
-}
 void multi_do_robot_controls(char *buf)
 {
 	int count=2;
