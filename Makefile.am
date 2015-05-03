@@ -158,7 +158,7 @@ d2x_gl_LDFLAGS += -framework OpenGL
 endif
 
 if MINGW32
-d2x_gl_LDADD += "-lopengl32 -lglu32"
+d2x_gl_LDADD += -lopengl32 -lglu32
 else
 if !MACOSX
 d2x_gl_LDADD += -lGL -lGLU
