@@ -2338,21 +2338,27 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 
 	do_boss_stuff(objp, player_visibility);
 
+#ifdef NETWORK
 	// Only master player can cause gating to occur.
 	if ((Game_mode & GM_MULTI) && !network_i_am_master())
 		return;
+#endif
 
 	if ((dist_to_player < BOSS_TO_PLAYER_GATE_DISTANCE) || player_visibility || (Game_mode & GM_MULTI)) {
 		if (GameTime - Last_gate_time > Gate_interval/2) {
 			restart_effect(BOSS_ECLIP_NUM);
 			if (eclip_state == 0) {
+#ifdef NETWORK
 				multi_send_boss_actions(OBJECT_NUMBER(objp), 4, 0, 0);
+#endif
 				eclip_state = 1;
 			}
 		} else {
 			stop_effect(BOSS_ECLIP_NUM);
 			if (eclip_state == 1) {
+#ifdef NETWORK
 				multi_send_boss_actions(OBJECT_NUMBER(objp), 5, 0, 0);
+#endif
 				eclip_state = 0;
 			}
 		}
@@ -2367,11 +2373,13 @@ void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility
 				Assert(randtype < N_robot_types);
 
 				rtval = gate_in_robot(randtype, -1);
+#ifdef NETWORK
 				if ((rtval != -1) && (Game_mode & GM_MULTI))
 				{
 					multi_send_boss_actions(OBJECT_NUMBER(objp), 3, randtype, Net_create_objnums[0]);
 					map_objnum_local_to_local(Net_create_objnums[0]);
 				}
+#endif
 			}
 	}
 }
