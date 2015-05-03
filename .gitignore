@@ -31,6 +31,7 @@ stamp-h1
 .DS_Store
 *.o
 *.a
+*.exe
 .deps
 debian/changelog
 rpm/d2x.spec
