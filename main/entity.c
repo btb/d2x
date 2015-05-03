@@ -109,7 +109,7 @@ void entity_cmd_create(int argc, char **argv)
 		if (Net_create_loc >= MAX_NET_CREATE_OBJECTS)
 		{
 			con_printf(CON_NORMAL, "ent_create: Not enough slots\n");
-			return (-1);
+			return;
 		}
 	}
 #endif
