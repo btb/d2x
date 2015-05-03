@@ -288,9 +288,6 @@ void print_commandline_help()
 //	printf( "  -gl_test1       %s\n","FIXME: Undocumented");
 	printf( "  -gl_test2       %s\n","FIXME: Undocumented");
 	printf( "  -gl_vidmem      %s\n","FIXME: Undocumented");
-#ifdef OGL_RUNTIME_LOAD
-	printf( "  -gl_library <l> %s\n","use alternate opengl library");
-#endif
 #ifdef WGL_VIDEO
 	printf("  -gl_refresh <r> %s\n", "set refresh rate (in fullscreen mode)");
 #endif

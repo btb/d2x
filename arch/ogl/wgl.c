@@ -429,9 +429,7 @@ bool OpenGL_Initialize(void)
 	// loaded)
 	// remove the following error when you figure out what you want to do
 	// it's put here to make sure you notice this
-#ifdef OGL_RUNTIME_LOAD
 	ogl_init_load_library();
-#endif
 
 	// Setup our pixel format
 

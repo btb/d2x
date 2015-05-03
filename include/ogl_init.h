@@ -13,16 +13,11 @@
 # define MAC(x)
 #endif
 
-#ifdef _MSC_VER //_WIN32
-#define OGL_RUNTIME_LOAD
-#endif
-
-#ifdef OGL_RUNTIME_LOAD
+#ifdef _WIN32
 #include "loadgl.h"
 int ogl_init_load_library(void);
 #else
 #define GL_GLEXT_LEGACY
-#undef GL_ARB_multitexture
 #if defined(__APPLE__) && defined(__MACH__)
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>

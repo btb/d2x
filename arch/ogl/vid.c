@@ -412,26 +412,14 @@ void ogl_cmd_texturemode(int argc, char **argv)
 }
 
 
-#ifdef OGL_RUNTIME_LOAD
 #ifdef _WIN32
 char *OglLibPath="opengl32.dll";
-#endif
-#ifdef __unix__
-char *OglLibPath="libGL.so";
-#endif
-#ifdef macintosh
-char *OglLibPath = NULL;
-#endif
 
 int ogl_rt_loaded=0;
 int ogl_init_load_library(void)
 {
 	int retcode=0;
 	if (!ogl_rt_loaded){
-		int t;
-		if ((t=FindArg("-gl_library")))
-			OglLibPath=Args[t+1];
-
 		retcode = OpenGL_LoadLibrary(true);
 		if(retcode)
 		{
@@ -459,7 +447,7 @@ int vid_init(void)
 	if (vid_installed == 1)
 		return -1;
 
-#ifdef OGL_RUNTIME_LOAD
+#ifdef _WIN32
 	ogl_init_load_library();
 #endif
 
@@ -553,7 +541,7 @@ void vid_close(void)
 
 	ogl_close();//platform specific code
 
-#ifdef OGL_RUNTIME_LOAD
+#ifdef _WIN32
 	if (ogl_rt_loaded)
 		OpenGL_LoadLibrary(false);
 #endif
