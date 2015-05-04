@@ -624,6 +624,7 @@ int main(int argc, char *argv[])
 	#endif
 		bm_init();
 
+#ifdef NETWORK
 	#ifdef EDITOR
 	if (FindArg("-hoarddata") != 0)
 	{
@@ -631,6 +632,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	#endif
+#endif
 
 	//the bitmap loading code changes gr_palette, so restore it
 	memcpy(gr_palette,title_pal,sizeof(gr_palette));
