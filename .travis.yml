@@ -6,14 +6,10 @@ compiler:
   - x86_64-w64-mingw32-gcc
 
 env:
-  - CONFIGURE_ARGS=" --enable-release --disable-debug --disable-editor --without-opengl"
-  - CONFIGURE_ARGS=" --enable-release --disable-debug --disable-editor    --with-opengl"
-# - CONFIGURE_ARGS=" --enable-release --disable-debug  --enable-editor --without-opengl"
-# - CONFIGURE_ARGS=" --enable-release --disable-debug  --enable-editor    --with-opengl"
-  - CONFIGURE_ARGS="--disable-release  --enable-debug --disable-editor --without-opengl"
-  - CONFIGURE_ARGS="--disable-release  --enable-debug --disable-editor    --with-opengl"
-  - CONFIGURE_ARGS="--disable-release  --enable-debug  --enable-editor --without-opengl"
-# - CONFIGURE_ARGS="--disable-release  --enable-debug  --enable-editor    --with-opengl"
+  - CONFIGURE_ARGS=" --enable-release --disable-debug --disable-editor --with-opengl"
+  - CONFIGURE_ARGS=" --enable-release --disable-debug  --enable-editor --with-opengl"
+  - CONFIGURE_ARGS="--disable-release  --enable-debug --disable-editor --with-opengl"
+  - CONFIGURE_ARGS="--disable-release  --enable-debug  --enable-editor --with-opengl"
 
 before_install:
   - sudo apt-get update -qq
