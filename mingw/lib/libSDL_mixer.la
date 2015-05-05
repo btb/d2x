@@ -11,7 +11,7 @@ dlname='../bin/SDL_mixer.dll'
 library_names='libSDL_mixer.dll.a'
 
 # The name of the static archive.
-old_library='libSDL_mixer.a'
+old_library=''
 
 # Linker flags that can not go in dependency_libs.
 inherited_linker_flags=''

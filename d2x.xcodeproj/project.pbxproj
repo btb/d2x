@@ -564,6 +564,7 @@
 		14286A481A672E6300A095F6 /* d2x-editor-soft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "d2x-editor-soft"; sourceTree = BUILT_PRODUCTS_DIR; };
 		142B5D9A1AF5BDAB00273910 /* entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entity.c; sourceTree = "<group>"; };
 		142B5D9B1AF5BDAB00273910 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
+		1434694D1AF84744001054C8 /* build-prereqs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "build-prereqs.sh"; path = "mingw/build-prereqs.sh"; sourceTree = "<group>"; };
 		143980CC1A89EE290082C110 /* cli.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cli.c; sourceTree = "<group>"; };
 		143980D01A89EF6F0082C110 /* cli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
 		143E00B01AC2683D005DE85E /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
@@ -1211,9 +1212,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1434694C1AF84716001054C8 /* mingw */ = {
+			isa = PBXGroup;
+			children = (
+				1434694D1AF84744001054C8 /* build-prereqs.sh */,
+			);
+			name = mingw;
+			sourceTree = "<group>";
+		};
 		1466949C1A27246A0070D41D = {
 			isa = PBXGroup;
 			children = (
+				1434694C1AF84716001054C8 /* mingw */,
 				143E00B01AC2683D005DE85E /* .travis.yml */,
 				14804D641A4C9F74001CB0FB /* SDL_mixer.framework */,
 				14804D621A4C9F5C001CB0FB /* SDL.framework */,

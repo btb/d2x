@@ -11,7 +11,7 @@ dlname='../bin/SDL.dll'
 library_names='libSDL.dll.a'
 
 # The name of the static archive.
-old_library='libSDL.a'
+old_library=''
 
 # Linker flags that can not go in dependency_libs.
 inherited_linker_flags=''
