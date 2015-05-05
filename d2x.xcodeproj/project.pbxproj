@@ -1674,7 +1674,8 @@
 				146695D31A2729860070D41D /* winmain.h */,
 				146695D41A2729860070D41D /* wsipx.h */,
 			);
-			path = include;
+			name = include;
+			path = oldinclude;
 			sourceTree = "<group>";
 		};
 		1466960A1A2729860070D41D /* iff */ = {

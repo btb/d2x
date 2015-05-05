@@ -104,7 +104,6 @@ d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
 d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
 
 if MINGW32
-d2x_sdl_CPPFLAGS += -I$(top_srcdir)/arch/win32/include
 _d2x_sdl_SOURCES += arch/win32/mingw_init.c
 _d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
 d2x_sdl_LDADD += -lwinmm
