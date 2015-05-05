@@ -8,25 +8,31 @@ compiler:
   - x86_64-w64-mingw32-gcc
 
 env:
-  - CONFIGURE_ARGS=" --enable-release --disable-debug --disable-editor --with-opengl"
-  - CONFIGURE_ARGS=" --enable-release --disable-debug  --enable-editor --with-opengl"
-  - CONFIGURE_ARGS="--disable-release  --enable-debug --disable-editor --with-opengl"
-  - CONFIGURE_ARGS="--disable-release  --enable-debug  --enable-editor --with-opengl"
+  - CONFLAGS=" --enable-release --disable-debug --disable-editor --with-opengl"
+  - CONFLAGS=" --enable-release --disable-debug  --enable-editor --with-opengl"
+  - CONFLAGS="--disable-release  --enable-debug --disable-editor --with-opengl"
+  - CONFLAGS="--disable-release  --enable-debug  --enable-editor --with-opengl"
 
 before_install:
   - sudo apt-get update -qq
 
-  - if [ "$CC" = "gcc" ]; then sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev; fi
+# native compilation
+  - case $CC in gcc|clang) sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev; esac
 
-  - if [ "$CC" = "clang" ]; then sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev; fi
+  - case $CC in *-w64-mingw32-*) sudo apt-get remove -qq -y mingw32; esac
+  - case $CC in *-w64-mingw32-*) sudo apt-get install -y mingw-w64; esac
 
-  - if [ "$CC" = "i586-mingw32msvc-gcc" ]; then export CONFIGURE_ARGS="$CONFIGURE_ARGS --host i586-mingw32msvc --disable-network --with-sdl-prefix=`pwd`/arch/win32 CPPFLAGS=-Iarch/win32/include LDFLAGS=-Larch/win32/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win32/lib/pkgconfig"; fi
+  - case $CC in *-*-gcc) export CONFLAGS="$CONFLAGS --host $(basename $CC -gcc)"; esac
 
-  - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get remove -qq -y mingw32; fi
-  - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get install -y mingw-w64; fi
-  - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then export CONFIGURE_ARGS="$CONFIGURE_ARGS --host x86_64-w64-mingw32 --disable-network --with-sdl-prefix=`pwd`/arch/win64 CPPFLAGS=-Iarch/win64/include LDFLAGS=-Larch/win64/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win64/lib/pkgconfig"; fi
+  - case $CC in *-*mingw32*-*) export CONFLAGS="$CONFLAGS --disable-network"; esac
+
+  - case $CC in i?86-*mingw32*-*) export CONFLAGS="$CONFLAGS --with-sdl-prefix=`pwd`/arch/win32 CPPFLAGS=-Iarch/win32/include LDFLAGS=-Larch/win32/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win32/lib/pkgconfig"; esac
+
+  - case $CC in x86_64-*mingw32*-*) export CONFLAGS="$CONFLAGS --with-sdl-prefix=`pwd`/arch/win64 CPPFLAGS=-Iarch/win64/include LDFLAGS=-Larch/win64/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win64/lib/pkgconfig"; esac
+
+  - echo $CONFLAGS
 
 script:
   - ./autogen.sh
-  - ./configure $CONFIGURE_ARGS
+  - ./configure $CONFLAGS
   - make
