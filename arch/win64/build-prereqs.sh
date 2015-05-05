@@ -35,5 +35,5 @@ $host-strip $prefix/bin/SDL_mixer.dll
 cd "$prefix"
 
 for file in bin/sdl-config lib/pkgconfig/sdl.pc lib/pkgconfig/SDL_mixer.pc; do \
-  sed -i "" 's/^prefix=.*/prefix=mingw/' $file; \
+  sed -i "" 's/^prefix=.*/prefix=arch\/win64/' $file; \
 done

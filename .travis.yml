@@ -20,7 +20,7 @@ before_install:
 
   - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get remove -qq -y mingw32; fi
   - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get install -y mingw-w64; fi
-  - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then export CONFIGURE_ARGS="$CONFIGURE_ARGS --host x86_64-w64-mingw32 --disable-network --with-sdl-prefix=`pwd`/mingw CPPFLAGS=-Imingw/include LDFLAGS=-Lmingw/lib PKG_CONFIG_LIBDIR=`pwd`/mingw/lib/pkgconfig"; fi
+  - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then export CONFIGURE_ARGS="$CONFIGURE_ARGS --host x86_64-w64-mingw32 --disable-network --with-sdl-prefix=`pwd`/arch/win64 CPPFLAGS=-Iarch/win64/include LDFLAGS=-Larch/win64/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win64/lib/pkgconfig"; fi
 
 script:
   - ./autogen.sh

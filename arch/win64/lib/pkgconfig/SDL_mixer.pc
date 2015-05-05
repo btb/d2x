@@ -1,4 +1,4 @@
-prefix=mingw
+prefix=arch/win64
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

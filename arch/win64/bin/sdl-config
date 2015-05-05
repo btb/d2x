@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prefix=mingw
+prefix=arch/win64
 exec_prefix=${prefix}
 exec_prefix_set=no
 libdir=${exec_prefix}/lib
