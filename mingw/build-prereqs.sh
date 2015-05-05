@@ -9,7 +9,7 @@ cd "$prefix"
 hg clone -r stable-2.0 http://hg.icculus.org/icculus/physfs/ || true
 cd physfs
 hg up
-cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$host-gcc -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_INSTALL_PREFIX="$prefix" .
+cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$(which $host-gcc) -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_INSTALL_PREFIX="$prefix" .
 make install
 
 cd "$prefix"
@@ -30,4 +30,6 @@ mkdir -p build
 make install-hdrs install-lib
 
 cd "$prefix"
-sed -i "" 's/^prefix=.*/prefix=mingw/' bin/sdl-config
+for file in bin/sdl-config lib/pkgconfig/sdl.pc lib/pkgconfig/SDL_mixer.pc; do \
+  sed -i "" 's/^prefix=.*/prefix=mingw/' $file; \
+done

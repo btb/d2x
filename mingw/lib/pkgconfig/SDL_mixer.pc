@@ -1,4 +1,4 @@
-prefix=/Users/bradleyb/src/descent/d2x/mingw
+prefix=mingw
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
