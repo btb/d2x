@@ -565,6 +565,7 @@
 		142B5D9A1AF5BDAB00273910 /* entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entity.c; sourceTree = "<group>"; };
 		142B5D9B1AF5BDAB00273910 /* entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entity.h; sourceTree = "<group>"; };
 		1434694D1AF84744001054C8 /* build-prereqs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-prereqs.sh"; sourceTree = "<group>"; };
+		1434694E1AF860C8001054C8 /* build-prereqs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-prereqs.sh"; sourceTree = "<group>"; };
 		143980CC1A89EE290082C110 /* cli.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cli.c; sourceTree = "<group>"; };
 		143980D01A89EF6F0082C110 /* cli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
 		143E00B01AC2683D005DE85E /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
@@ -1600,6 +1601,7 @@
 		146695A81A2729860070D41D /* win32 */ = {
 			isa = PBXGroup;
 			children = (
+				1434694E1AF860C8001054C8 /* build-prereqs.sh */,
 				146695A91A2729860070D41D /* d1x.ico */,
 				146695AA1A2729860070D41D /* d1x.rc */,
 				146695AB1A2729860070D41D /* d3d.ico */,

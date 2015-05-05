@@ -3,6 +3,8 @@ language: c
 compiler:
 # - gcc
   - clang
+  - i586-mingw32msvc-gcc
+# - i686-w64-mingw32-gcc
   - x86_64-w64-mingw32-gcc
 
 env:
@@ -17,6 +19,8 @@ before_install:
   - if [ "$CC" = "gcc" ]; then sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev; fi
 
   - if [ "$CC" = "clang" ]; then sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev; fi
+
+  - if [ "$CC" = "i586-mingw32msvc-gcc" ]; then export CONFIGURE_ARGS="$CONFIGURE_ARGS --host i586-mingw32msvc --disable-network --with-sdl-prefix=`pwd`/arch/win32 CPPFLAGS=-Iarch/win32/include LDFLAGS=-Larch/win32/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win32/lib/pkgconfig"; fi
 
   - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get remove -qq -y mingw32; fi
   - if [ "$CC" = "x86_64-w64-mingw32-gcc" ]; then sudo apt-get install -y mingw-w64; fi
