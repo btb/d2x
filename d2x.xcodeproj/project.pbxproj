@@ -781,9 +781,6 @@
 		146695D31A2729860070D41D /* winmain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winmain.h; sourceTree = "<group>"; };
 		146695D41A2729860070D41D /* wsipx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wsipx.h; sourceTree = "<group>"; };
 		146695D51A2729860070D41D /* init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init.c; sourceTree = "<group>"; };
-		146695D61A2729860070D41D /* ipx_drv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_drv.h; sourceTree = "<group>"; };
-		146695D71A2729860070D41D /* ipx_mcast4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipx_mcast4.c; sourceTree = "<group>"; };
-		146695D81A2729860070D41D /* ipx_udp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipx_udp.c; sourceTree = "<group>"; };
 		146695D91A2729860070D41D /* ipx_win.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ipx_win.c; sourceTree = "<group>"; };
 		146695DB1A2729860070D41D /* joyhh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = joyhh.c; sourceTree = "<group>"; };
 		146695DC1A2729860070D41D /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
@@ -1613,9 +1610,6 @@
 				146695C31A2729860070D41D /* vid.c */,
 				146695C51A2729860070D41D /* include */,
 				146695D51A2729860070D41D /* init.c */,
-				146695D61A2729860070D41D /* ipx_drv.h */,
-				146695D71A2729860070D41D /* ipx_mcast4.c */,
-				146695D81A2729860070D41D /* ipx_udp.c */,
 				146695D91A2729860070D41D /* ipx_win.c */,
 				146695DB1A2729860070D41D /* joyhh.c */,
 				146695DC1A2729860070D41D /* key.c */,

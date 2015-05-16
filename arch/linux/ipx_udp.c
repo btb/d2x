@@ -72,22 +72,32 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <arpa/inet.h>
-#include <netinet/in.h> /* for htons & co. */
 #include <unistd.h>
 #include <stdarg.h>
-#include <netdb.h>
 #include <stdlib.h>
 #ifdef __sun
 #  include <alloca.h>
 #endif
-#include <sys/ioctl.h>
-#include <sys/socket.h>
 #ifdef __sun__
 #  include <sys/sockio.h>
 #endif
-#include <net/if.h>
 #include <ctype.h>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <malloc.h>
+#else
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#define closesocket(x) close(x)
+#define ioctlsocket(x) ioctl(x)
+#define SOCKET int
+#endif
 
 #include "ipx_drv.h"
 #include "args.h"
@@ -139,6 +149,7 @@ static char compatibility=0;
 
 static int have_empty_address() {
 	int i;
+
 	for (i = 0; i < 10 && !ipx_MyAddress[i]; i++) ;
 	return i == 10;
 }
@@ -147,7 +158,8 @@ static int have_empty_address() {
 
 static void msg(const char *fmt,...)
 {
-va_list ap;
+	va_list ap;
+
 	fputs(MSGHDR,stdout);
 	va_start(ap,fmt);
 	vprintf(fmt,ap);
@@ -204,10 +216,11 @@ static void chkbroadsize(void)
 /* Stolen from my GGN */
 static int addiflist(void)
 {
-unsigned cnt=MAX_BRDINTERFACES,i,j;
-struct ifconf ifconf;
-int sock;
-struct sockaddr_in *sinp,*sinmp;
+#ifndef _WIN32
+	unsigned cnt=MAX_BRDINTERFACES,i,j;
+	struct ifconf ifconf;
+	SOCKET sock;
+	struct sockaddr_in *sinp,*sinmp;
 
 	free(broads);
 	if ((sock=socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP))<0)
@@ -222,22 +235,22 @@ struct sockaddr_in *sinp,*sinmp;
 
 	chk(ifconf.ifc_req=alloca((ifconf.ifc_len=cnt*sizeof(struct ifreq))));
 	if (ioctl(sock,SIOCGIFCONF,&ifconf)||ifconf.ifc_len%sizeof(struct ifreq)) {
-		close(sock);
+		closesocket(sock);
 		FAIL("ioctl(SIOCGIFCONF) failure during broadcast detection: %m");
-		}
+	}
 	cnt=ifconf.ifc_len/sizeof(struct ifreq);
 	chk(broads=malloc(cnt*sizeof(*broads)));
 	broadsize=cnt;
 	for (i=j=0;i<cnt;i++) {
 		if (ioctl(sock,SIOCGIFFLAGS,ifconf.ifc_req+i)) {
-			close(sock);
+			closesocket(sock);
 			FAIL("ioctl(udp,\"%s\",SIOCGIFFLAGS) error: %m",ifconf.ifc_req[i].ifr_name);
 			}
 		if (((ifconf.ifc_req[i].ifr_flags&IF_REQFLAGS)!=IF_REQFLAGS)||
 				 (ifconf.ifc_req[i].ifr_flags&IF_NOTFLAGS))
 			continue;
 		if (ioctl(sock,(ifconf.ifc_req[i].ifr_flags&IFF_BROADCAST?SIOCGIFBRDADDR:SIOCGIFDSTADDR),ifconf.ifc_req+i)) {
-			close(sock);
+			closesocket(sock);
 			FAIL("ioctl(udp,\"%s\",SIOCGIF{DST/BRD}ADDR) error: %m",ifconf.ifc_req[i].ifr_name);
 			}
 
@@ -246,7 +259,7 @@ struct sockaddr_in *sinp,*sinmp;
 		sinmp = (struct sockaddr_in *)&ifconf.ifc_req[i].ifr_netmask;
 #else // portable code
 		if (ioctl(sock, SIOCGIFNETMASK, ifconf.ifc_req+i)) {
-			close(sock);
+			closesocket(sock);
 			FAIL("ioctl(udp,\"%s\",SIOCGIFNETMASK) error: %m", ifconf.ifc_req[i].ifr_name);
 		}
 		sinmp = (struct sockaddr_in *)&ifconf.ifc_req[i].ifr_addr;
@@ -259,6 +272,7 @@ struct sockaddr_in *sinp,*sinmp;
 		}
 	broadnum=j;
 	masksnum=j;
+#endif
 	return(0);
 }
 
@@ -426,7 +440,7 @@ struct sockaddr_in *sin;
  */
 
 static int ipx_udp_OpenSocket(ipx_socket_t *sk, int port) {
-struct sockaddr_in sin;
+	struct sockaddr_in sin;
 
 	if (!open_sockets)
 		if (have_empty_address())
@@ -441,8 +455,8 @@ struct sockaddr_in sin;
 		sk->fd = -1;
 		FAIL("socket() creation failed on port %d: %m",port);
 		}
-  if (setsockopt(sk->fd,SOL_SOCKET,SO_BROADCAST,&val_one,sizeof(val_one))) {
-		if (close(sk->fd)) msg("close() failed during error recovery: %m");
+	if (setsockopt(sk->fd, SOL_SOCKET, SO_BROADCAST, (const void *)&val_one, sizeof(val_one))) {
+		if (closesocket(sk->fd)) msg("closesocket() failed during error recovery: %m");
 		sk->fd=-1;
 		FAIL("setsockopt(SO_BROADCAST) failed: %m");
 		}
@@ -450,7 +464,7 @@ struct sockaddr_in sin;
 	sin.sin_addr.s_addr=htonl(INADDR_ANY);
 	sin.sin_port=htons(baseport);
 	if (bind(sk->fd,(struct sockaddr *)&sin,sizeof(sin))) {
-		if (close(sk->fd)) msg("close() failed during error recovery: %m");
+		if (closesocket(sk->fd)) msg("closesocket() failed during error recovery: %m");
 		sk->fd=-1;
 		FAIL("bind() to UDP port %d failed: %m",baseport);
 		}
@@ -469,8 +483,8 @@ static void ipx_udp_CloseSocket(ipx_socket_t *mysock) {
 		return;
 	}
 	msg("CloseSocket on D1X socket port %d",mysock->socket);
-	if (close(mysock->fd))
-		msg("close() failed on CloseSocket D1X socket port %d: %m",mysock->socket);
+	if (closesocket(mysock->fd))
+		msg("closesocket() failed on CloseSocket D1X socket port %d: %m",mysock->socket);
 	mysock->fd=-1;
 	if (--open_sockets) {
 		msg("(closesocket) %d sockets left", open_sockets);
@@ -533,7 +547,7 @@ static int ipx_udp_ReceivePacket(ipx_socket_t *s, char *outbuf, int outbufsize,
  struct ipx_recv_data *rd) {
 	int size;
 	struct sockaddr_in fromaddr;
-	uint fromaddrsize=sizeof(fromaddr);
+	socklen_t fromaddrsize = sizeof(fromaddr);
 	unsigned short ports;
 	size_t offs;
 	int i;
