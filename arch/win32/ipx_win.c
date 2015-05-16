@@ -172,15 +172,17 @@ static int ipx_win_SendPacket(ipx_socket_t *mysock, IPXPacket_t *IPXHeader,
   /* get destination address from IPX packet header */
   memcpy(&ipxs.sa_netnum, IPXHeader->Destination.Network, 4);
   /* if destination address is 0, then send to my net */
-  if ((*(unsigned int *)&ipxs.sa_netnum) == 0) {
-    (*(unsigned int *)&ipxs.sa_netnum)= *((unsigned int *)&ipx_MyAddress[0]);
-/*  ipxs.sa_netnum = htonl(MyNetwork); */
+	if (ipxs.sa_netnum[0] == 0 && ipxs.sa_netnum[1] == 0 && ipxs.sa_netnum[2] == 0 && ipxs.sa_netnum[3] == 0) {
+		ipxs.sa_netnum[0] = ipx_MyAddress[0];
+		ipxs.sa_netnum[1] = ipx_MyAddress[1];
+		ipxs.sa_netnum[2] = ipx_MyAddress[2];
+		ipxs.sa_netnum[3] = ipx_MyAddress[3];
   }
   memcpy(&ipxs.sa_nodenum, IPXHeader->Destination.Node, 6);
   memcpy(&ipxs.sa_socket, IPXHeader->Destination.Socket, 2);
 //  ipxs.sa_type = IPXHeader->PacketType;
   /*	ipxs.sipx_port=htons(0x452); */
-  return sendto(mysock->fd, data, dataLen, 0,
+  return sendto(mysock->fd, (const void *)data, dataLen, 0,
 	     (struct sockaddr *) &ipxs, sizeof(ipxs));
 }
 

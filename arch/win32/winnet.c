@@ -33,8 +33,8 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ipx_drv.h"
 #include "ipx_udp.h"
 #include "ipx_mcast4.h"
-#include "../../main/player.h"	/* for Players */
-#include "../../main/multi.h"	/* for NetPlayers */
+#include "inferno.h"
+
 
 extern struct ipx_driver ipx_win;
 
@@ -186,9 +186,16 @@ void ipx_send_packet_data( ubyte * data, int datasize, ubyte *network, ubyte *ad
 	
 	memcpy(ipx_header.Destination.Network, network, 4);
 	memcpy(ipx_header.Destination.Node, immediate_address, 6);
-	*(u_short *)ipx_header.Destination.Socket = htons(ipx_socket_data.socket);
+	{
+		u_short socket = htons(ipx_socket_data.socket);
+		memcpy(ipx_header.Destination.Socket, &socket, 2);
+	}
 	ipx_header.PacketType = 4; /* Packet Exchange */
-	*(uint *)buf = ipx_packetnum++;
+	{
+		int packetnum = INTEL_INT(ipx_packetnum);
+		memcpy(buf, &packetnum, 4);
+	}
+	ipx_packetnum++;
 	memcpy(buf + 4, data, datasize);
 	driver->SendPacket(&ipx_socket_data, &ipx_header, buf, datasize + 4);
 }
@@ -397,7 +404,8 @@ int ipx_send_game_packet(ubyte *data, int datasize)
 	if(driver->SendGamePacket) {
 		u_char buf[MAX_IPX_DATA];
 
-		*(uint *)buf = ipx_packetnum++;
+		memcpy(buf, &ipx_packetnum, 4);
+		ipx_packetnum++;
 		memcpy(buf + 4, data, datasize);
 		*(uint *)data = ipx_packetnum++;
 		return driver->SendGamePacket(&ipx_socket_data, buf, datasize + 4);
