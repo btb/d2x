@@ -24,8 +24,6 @@ before_install:
 
   - case $CC in *-*-gcc) export CONFLAGS="$CONFLAGS --host $(basename $CC -gcc)"; esac
 
-  - case $CC in *-*mingw32*-*) export CONFLAGS="$CONFLAGS --disable-network"; esac
-
   - case $CC in i?86-*mingw32*-*) export CONFLAGS="$CONFLAGS --with-sdl-prefix=`pwd`/arch/win32 CPPFLAGS=-Iarch/win32/include LDFLAGS=-Larch/win32/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win32/lib/pkgconfig"; esac
 
   - case $CC in x86_64-*mingw32*-*) export CONFLAGS="$CONFLAGS --with-sdl-prefix=`pwd`/arch/win64 CPPFLAGS=-Iarch/win64/include LDFLAGS=-Larch/win64/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win64/lib/pkgconfig"; esac
