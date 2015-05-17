@@ -29,7 +29,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/time.h>
+
+#ifdef _WIN32
+#include <winsock.h>
+#else
 #include <netinet/in.h> /* for htons & co. */
+#endif
 
 #include "pstypes.h"
 #include "args.h"
@@ -51,6 +56,11 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#include "checker.h"
 //end addition -MM
 #include "byteswap.h"
+
+
+#ifdef _WIN32
+extern struct ipx_driver ipx_win;
+#endif
 
 #define MAX_IPX_DATA 576
 
@@ -105,9 +115,13 @@ ubyte * ipx_get_my_local_address()
 void arch_ipx_set_driver(int ipx_driver)
 {
 	switch(ipx_driver) {
+#ifdef _WIN32
+	case IPX_DRIVER_IPX: driver = &ipx_win; break;
+#else
 #ifdef NATIVE_IPX
 	case IPX_DRIVER_IPX: driver = &ipx_bsd; break;
 #endif //NATIVE_IPX
+#endif
 #ifdef KALINIX
 	case IPX_DRIVER_KALI: driver = &ipx_kali; break;
 #endif
@@ -120,7 +134,26 @@ void arch_ipx_set_driver(int ipx_driver)
 int ipx_init(int socket_number)
 {
 	int i;
-
+#ifdef _WIN32
+	WORD wVersionRequested;
+	WSADATA wsaData;
+	
+	wVersionRequested = MAKEWORD(2, 0);
+	if (WSAStartup( wVersionRequested, &wsaData))
+	{
+		return IPX_SOCKET_ALREADY_OPEN;
+	}
+	
+#if 0
+	if ( LOBYTE( wsaData.wVersion ) != 2 ||
+		HIBYTE( wsaData.wVersion ) != 0 ) {
+		/* We couldn't find a usable WinSock DLL. */
+		WSACleanup( );
+		return IPX_SOCKET_TABLE_FULL;
+	}
+#endif
+#endif
+	
 	if ((i = FindArg("-ipxnetwork")) && Args[i + 1]) {
 		unsigned long n = strtol(Args[i + 1], NULL, 16);
 		ipx_MyAddress[0] = n >> 24; ipx_MyAddress[1] = (n >> 16) & 255;
@@ -142,7 +175,12 @@ int ipx_init(int socket_number)
 void ipx_close()
 {
 	if (ipx_installed)
-                driver->CloseSocket(&ipx_socket_data);
+	{
+#ifdef _WIN32
+		WSACleanup();
+#endif
+		driver->CloseSocket(&ipx_socket_data);
+	}
 	ipx_installed = 0;
 }
 

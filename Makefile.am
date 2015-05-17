@@ -97,27 +97,28 @@ d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
 
 
-d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS)
+d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include
 _d2x_sdl_SOURCES = $(d2x_SOURCES) arch/sdl/event.c arch/sdl/key.c arch/sdl/mouse.c
-_d2x_sdl_SOURCES += arch/linux/ipx_mcast4.c arch/linux/ipx_udp.c
 d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/vid.c texmap/tmapflat.c
 d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
 d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
 
+if USE_NETWORK
+_d2x_sdl_SOURCES += arch/linux/ipx_mcast4.c arch/linux/ipx_udp.c arch/linux/linuxnet.c
+endif
+
 if MINGW32
-d2x_sdl_CPPFLAGS += -I$(top_srcdir)/arch/linux/include
 _d2x_sdl_SOURCES += arch/win32/mingw_init.c
 _d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
 d2x_sdl_LDADD += -lwinmm
 
 if USE_NETWORK
-_d2x_sdl_SOURCES += arch/win32/ipx_win.c arch/win32/winnet.c
+_d2x_sdl_SOURCES += arch/win32/ipx_win.c
 d2x_sdl_LDADD += -lwsock32
 endif
 
 else # !MINGW32
 
-d2x_sdl_CPPFLAGS += -I$(top_srcdir)/arch/linux/include
 _d2x_sdl_SOURCES += arch/linux/init.c
 d2x_sdl_LDADD += -lm
 
@@ -128,7 +129,6 @@ _d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
 endif
 
 if USE_NETWORK
-_d2x_sdl_SOURCES += arch/linux/linuxnet.c
 
 if USE_NATIVE_IPX
 _d2x_sdl_SOURCES += arch/linux/ipx_bsd.c

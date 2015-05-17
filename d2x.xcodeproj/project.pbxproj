@@ -695,7 +695,6 @@
 		146695691A2729860070D41D /* mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mouse.h; sourceTree = "<group>"; };
 		1466956B1A2729860070D41D /* alsadigi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = alsadigi.c; sourceTree = "<group>"; };
 		1466956C1A2729860070D41D /* hmiplay.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmiplay.c; sourceTree = "<group>"; };
-		1466956D1A2729860070D41D /* hmistub.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hmistub.c; sourceTree = "<group>"; };
 		1466956F1A2729860070D41D /* ipx_bsd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_bsd.h; sourceTree = "<group>"; };
 		146695701A2729860070D41D /* ipx_drv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_drv.h; sourceTree = "<group>"; };
 		146695711A2729860070D41D /* ipx_hlpr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_hlpr.h; sourceTree = "<group>"; };
@@ -770,8 +769,6 @@
 		146695C61A2729860070D41D /* d3dhelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = d3dhelp.h; sourceTree = "<group>"; };
 		146695C71A2729860070D41D /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
 		146695C81A2729860070D41D /* hmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hmp.h; sourceTree = "<group>"; };
-		146695C91A2729860070D41D /* ipx_mcast4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_mcast4.h; sourceTree = "<group>"; };
-		146695CA1A2729860070D41D /* ipx_udp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ipx_udp.h; sourceTree = "<group>"; };
 		146695CB1A2729860070D41D /* joy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = joy.h; sourceTree = "<group>"; };
 		146695CE1A2729860070D41D /* pch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pch.h; sourceTree = "<group>"; };
 		146695CF1A2729860070D41D /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; };
@@ -795,7 +792,6 @@
 		146695E81A2729860070D41D /* timer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = timer.c; sourceTree = "<group>"; };
 		146695E91A2729860070D41D /* win32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = win32.c; sourceTree = "<group>"; };
 		146695EA1A2729860070D41D /* winmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = winmain.cpp; sourceTree = "<group>"; };
-		146695EB1A2729860070D41D /* winnet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = winnet.c; sourceTree = "<group>"; };
 		1466960C1A2729860070D41D /* iff15bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff15bpp.c; sourceTree = "<group>"; };
 		1466960D1A2729860070D41D /* iff8bpp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iff8bpp.c; sourceTree = "<group>"; };
 		1466960E1A2729860070D41D /* iffmike.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = iffmike.c; sourceTree = "<group>"; };
@@ -1516,7 +1512,6 @@
 			children = (
 				1466956B1A2729860070D41D /* alsadigi.c */,
 				1466956C1A2729860070D41D /* hmiplay.c */,
-				1466956D1A2729860070D41D /* hmistub.c */,
 				1466956E1A2729860070D41D /* include */,
 				1466957A1A2729860070D41D /* init.c */,
 				1466957B1A2729860070D41D /* ipx_bsd.c */,
@@ -1608,7 +1603,7 @@
 				146695C11A2729860070D41D /* digi.c */,
 				146695C21A2729860070D41D /* glinit.c */,
 				146695C31A2729860070D41D /* vid.c */,
-				146695C51A2729860070D41D /* include */,
+				146695C51A2729860070D41D /* oldinclude */,
 				146695D51A2729860070D41D /* init.c */,
 				146695D91A2729860070D41D /* ipx_win.c */,
 				146695DB1A2729860070D41D /* joyhh.c */,
@@ -1624,7 +1619,6 @@
 				146695E81A2729860070D41D /* timer.c */,
 				146695E91A2729860070D41D /* win32.c */,
 				146695EA1A2729860070D41D /* winmain.cpp */,
-				146695EB1A2729860070D41D /* winnet.c */,
 			);
 			path = win32;
 			sourceTree = "<group>";
@@ -1654,13 +1648,11 @@
 			path = d3dframe;
 			sourceTree = "<group>";
 		};
-		146695C51A2729860070D41D /* include */ = {
+		146695C51A2729860070D41D /* oldinclude */ = {
 			isa = PBXGroup;
 			children = (
 				146695C61A2729860070D41D /* d3dhelp.h */,
 				146695C71A2729860070D41D /* debug.h */,
-				146695C91A2729860070D41D /* ipx_mcast4.h */,
-				146695CA1A2729860070D41D /* ipx_udp.h */,
 				146695CB1A2729860070D41D /* joy.h */,
 				146695CE1A2729860070D41D /* pch.h */,
 				146695CF1A2729860070D41D /* resource.h */,
@@ -1670,7 +1662,6 @@
 				146695D31A2729860070D41D /* winmain.h */,
 				146695D41A2729860070D41D /* wsipx.h */,
 			);
-			name = include;
 			path = oldinclude;
 			sourceTree = "<group>";
 		};
