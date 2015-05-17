@@ -103,13 +103,18 @@ d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/vid.c texmap/tmapflat.c
 d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
 d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
 
+if USE_LINUX_JOY
+_d2x_sdl_SOURCES += arch/linux/joystick.c arch/linux/joydefs.c
+else
+_d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
+endif
+
 if USE_NETWORK
 _d2x_sdl_SOURCES += arch/linux/ipx_mcast4.c arch/linux/ipx_udp.c arch/linux/linuxnet.c
 endif
 
 if MINGW32
 _d2x_sdl_SOURCES += arch/win32/mingw_init.c
-_d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
 d2x_sdl_LDADD += -lwinmm
 
 if USE_NETWORK
@@ -121,12 +126,6 @@ else # !MINGW32
 
 _d2x_sdl_SOURCES += arch/linux/init.c
 d2x_sdl_LDADD += -lm
-
-if USE_LINUX_JOY
-_d2x_sdl_SOURCES += arch/linux/joystick.c arch/linux/joydefs.c
-else
-_d2x_sdl_SOURCES += arch/sdl/joy.c arch/sdl/joydefs.c
-endif
 
 if USE_NETWORK
 
