@@ -151,26 +151,3 @@
 #define __unix__ /* since we're doing a unix-style compilation... */
 #endif
 
-#ifdef __unix__
-#  ifdef SVGA
-#   define SVGALIB_INPUT 1
-#   define SVGALIB_VIDEO 1
-#  else
-#   define SDL_INPUT 1
-#   ifdef OGL
-#    define SDL_GL_VIDEO 1
-#   else
-#    define SDL_VIDEO 1
-#   endif
-#  endif
-#endif
-
-#ifdef _WIN32
-# define SDL_INPUT 1
-# ifdef OGL
-#  define SDL_GL_VIDEO 1
-# else
-#  define SDL_VIDEO 1
-# endif
-#endif
-        

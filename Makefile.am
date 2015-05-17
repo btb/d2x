@@ -95,7 +95,7 @@ miner_LDADD = $(d2x_LDADD)
 
 # Remaining targets are based on d2x_*
 
-d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA
+d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA -DSVGALIB_INPUT -DSVGALIB_VIDEO
 d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
@@ -106,8 +106,10 @@ miner_svga_LDFLAGS = $(d2x_svga_LDFLAGS)
 miner_svga_LDADD = $(d2x_svga_LDADD)
 
 
-d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include
+_d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include -DSDL_INPUT
 _d2x_sdl_SOURCES = $(d2x_SOURCES) arch/sdl/event.c arch/sdl/key.c arch/sdl/mouse.c
+
+d2x_sdl_CPPFLAGS = $(_d2x_sdl_CPPFLAGS) -DSDL_VIDEO
 d2x_sdl_SOURCES = $(_d2x_sdl_SOURCES) arch/sdl/vid.c texmap/tmapflat.c
 d2x_sdl_LDFLAGS = $(d2x_LDFLAGS)
 d2x_sdl_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLIMAGE_LIBS) $(SDLMIXER_LIBS)
@@ -162,7 +164,7 @@ miner_sdl_LDADD = $(d2x_sdl_LDADD)
 
 # GL target is based on d2x_sdl_*, other than renderer
 
-d2x_gl_CPPFLAGS = $(d2x_sdl_CPPFLAGS) -DOGL
+d2x_gl_CPPFLAGS = $(d2x_sdl_CPPFLAGS) -DOGL -DSDL_GL_VIDEO
 d2x_gl_SOURCES = $(_d2x_sdl_SOURCES) arch/ogl/vid.c arch/ogl/ogl.c arch/ogl/sdlgl.c
 d2x_gl_LDFLAGS = $(d2x_sdl_LDFLAGS)
 d2x_gl_LDADD = $(d2x_sdl_LDADD)
