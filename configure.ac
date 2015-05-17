@@ -90,11 +90,6 @@ AX_CHECK_COMPILE_FLAG([-Wno-unused-but-set-variable], [CFLAGS="$CFLAGS -Wno-unus
 dnl Enable editor build?
 AC_ARG_ENABLE(editor,
     [  --enable-editor         Build editor? (not functional)],,)
-if test x$enable_editor = xyes; then
-    AC_DEFINE(EDITOR,,[Define if you want to build the editor])
-    D2X_FEATURES="editor $D2X_FEATURES"
-fi
-AM_CONDITIONAL(USE_EDITOR, test x$enable_editor = xyes)
 
 dnl Enable macdata build?
 AC_ARG_ENABLE(macdata,
@@ -167,6 +162,9 @@ TARGETS=
 # Test for MSDOS
 if test x$MSDOS = xyes; then
     TARGETS="d2x$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner$ac_cv_exeext $TARGETS"
+	fi
 else
 
     CFLAGS="-pipe $CFLAGS"
@@ -178,6 +176,9 @@ else
     )
 
     TARGETS="d2x-sdl$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner-sdl$ac_cv_exeext $TARGETS"
+	fi
 
     AC_CHECK_HEADERS(netipx/ipx.h)
 
@@ -213,6 +214,9 @@ else
         [  --with-opengl           Build OpenGL support ],,)
     if test x$with_opengl = xyes; then
         TARGETS="d2x-gl$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-gl$ac_cv_exeext $TARGETS"
+		fi
     fi
 
   # Check for SVGALib
@@ -220,6 +224,9 @@ else
         [  --with-svga             Build SVGALib support ],,)
     if test x$with_svga = xyes; then
         TARGETS="d2x-svga$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-svga$ac_cv_exeext $TARGETS"
+		fi
     fi
     AC_SUBST(SVGA_LIBS)
     AM_CONDITIONAL(USE_SVGALIB, test x$with_svga = xyes)

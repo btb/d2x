@@ -1,5 +1,5 @@
 bin_PROGRAMS = @TARGETS@ hogcreate hogextract mveplayer mvlcreate mvlextract txb2tex tex2txb
-EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga
+EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga
 
 # Common to all d2x platforms/options
 
@@ -57,8 +57,8 @@ if USE_NETWORK
 d2x_SOURCES += main/kmatrix.c main/multi.c main/multibot.c main/network.c main/netmisc.c
 endif
 
-if USE_EDITOR
-d2x_SOURCES += main/bmread.c main/dumpmine.c \
+_miner_CPPFLAGS = -DEDITOR
+_miner_SOURCES = main/bmread.c main/dumpmine.c \
 main/editor/autosave.c  main/editor/centers.c   main/editor/curves.c    main/editor/eglobal.c   \
 main/editor/ehostage.c  main/editor/elight.c    main/editor/eobject.c   main/editor/eswitch.c   \
 main/editor/fixseg.c    main/editor/func.c      main/editor/group.c     main/editor/info.c      \
@@ -73,7 +73,6 @@ ui/barbox.c    ui/button.c    ui/checkbox.c  ui/file.c      ui/gadget.c    ui/ic
 ui/inputbox.c  ui/keypad.c    ui/keypress.c  ui/keytrap.c   ui/listbox.c   ui/menu.c      \
 ui/menubar.c   ui/message.c   ui/mouse.c     ui/number.c    ui/popup.c     ui/radio.c     \
 ui/scroll.c    ui/ui.c        ui/uidraw.c    ui/userbox.c   ui/window.c
-endif
 
 if USE_LIBPNG
 d2x_SOURCES += misc/pngfile.c
@@ -88,6 +87,11 @@ d2x_SOURCES += arch/dos/digi.c arch/dos/dpmi.c arch/dos/findfile.c arch/dos/vid.
 d2x_LDADD += arch/dos/timer.o arch/dos/modex.o
 endif
 
+miner_CPPFLAGS = $(d2x_CPPFLAGS) $(_miner_CPPFLAGS)
+miner_SOURCES = $(d2x_SOURCES) $(_miner_SOURCES)
+miner_LDFLAGS = $(d2x_LDFLAGS)
+miner_LDADD = $(d2x_LDADD)
+
 
 # Remaining targets are based on d2x_*
 
@@ -95,6 +99,11 @@ d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA
 d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
+
+miner_svga_CPPFLAGS = $(d2x_svga_CPPFLAGS) $(_miner_CPPFLAGS)
+miner_svga_SOURCES = $(d2x_svga_SOURCES) $(_miner_SOURCES)
+miner_svga_LDFLAGS = $(d2x_svga_LDFLAGS)
+miner_svga_LDADD = $(d2x_svga_LDADD)
 
 
 d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include
@@ -145,6 +154,11 @@ if MACOSX
 #d2x_sdl_LDFLAGS += -all_load
 endif
 
+miner_sdl_CPPFLAGS = $(d2x_sdl_CPPFLAGS) $(_miner_CPPFLAGS)
+miner_sdl_SOURCES = $(d2x_sdl_SOURCES) $(_miner_SOURCES)
+miner_sdl_LDFLAGS = $(d2x_sdl_LDFLAGS)
+miner_sdl_LDADD = $(d2x_sdl_LDADD)
+
 
 # GL target is based on d2x_sdl_*, other than renderer
 
@@ -164,6 +178,11 @@ if !MACOSX
 d2x_gl_LDADD += -lGL -lGLU
 endif
 endif
+
+miner_gl_CPPFLAGS = $(d2x_gl_CPPFLAGS) $(_miner_CPPFLAGS)
+miner_gl_SOURCES = $(d2x_gl_SOURCES) $(_miner_SOURCES)
+miner_gl_LDFLAGS = $(d2x_gl_LDFLAGS)
+miner_gl_LDADD = $(d2x_gl_LDADD)
 
 
 # Other programs

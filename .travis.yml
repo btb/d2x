@@ -8,9 +8,7 @@ compiler:
   - x86_64-w64-mingw32-gcc
 
 env:
-  - CONFLAGS=" --enable-release --disable-debug --disable-editor --with-opengl"
   - CONFLAGS=" --enable-release --disable-debug  --enable-editor --with-opengl"
-  - CONFLAGS="--disable-release  --enable-debug --disable-editor --with-opengl"
   - CONFLAGS="--disable-release  --enable-debug  --enable-editor --with-opengl"
 
 before_install:
