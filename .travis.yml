@@ -32,3 +32,18 @@ script:
   - ./autogen.sh
   - ./configure $CONFLAGS
   - make
+
+deploy:
+  provider: releases
+  api_key:
+    secure: Az9+gNmtIdRVTIMixHmLAOgcmAd94ECemfNxVPyG8v/NXPKjV3uTJu0im3A1p2rlpjwwIpIcC92v9lCxcxO4MMPzP05Q15WILXMlUoTt40c3gmFRdhwsfmxCLk1eH/wXeUhTGahgDb/Fq3OttNQiGOErAT4ew2+8Kx6skUmp1r0=
+  file:
+    - miner-gl.exe
+    - d2x-gl.exe
+    - miner-sdl.exe
+    - d2x-sdl.exe
+  skip-cleanup: true
+  on:
+    repo: btb/d2x
+    tags: true
+    condition: "$CC = x86_64-w64-mingw32-gcc"
