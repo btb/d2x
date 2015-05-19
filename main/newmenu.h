@@ -164,6 +164,9 @@ extern int newmenu_getch(void);
 #  define newmenu_show_cursor()
 #  define newmenu_hide_cursor()
 # endif
+#else
+# define newmenu_show_cursor()
+# define newmenu_hide_cursor()
 #endif
 
 #endif /* _NEWMENU_H */
