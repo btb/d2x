@@ -164,7 +164,7 @@ int parse_body(PHYSFS_file *ifile, int32_t len, iff_bitmap_header *bmheader)
         width=0;
         depth=0;
 
-	end_pos = PHYSFS_tell(ifile) + len;
+	end_pos = (int)PHYSFS_tell(ifile) + len;
 	if (len&1)
 		end_pos++;
 
@@ -261,7 +261,7 @@ int parse_delta(PHYSFS_file *ifile, int32_t len, iff_bitmap_header *bmheader)
 {
 	unsigned char  *p=bmheader->raw_data;
 	int y;
-	int32_t chunk_end = PHYSFS_tell(ifile) + len;
+	int32_t chunk_end = (int)PHYSFS_tell(ifile) + len;
 
 	cfseek(ifile, 4, SEEK_CUR);		//longword, seems to be equal to 4.  Don't know what it is
 
@@ -347,7 +347,7 @@ int iff_parse_ilbm_pbm(PHYSFS_file *ifile, int32_t form_type, iff_bitmap_header 
 	//char ignore=0;
 	int32_t start_pos, end_pos;
 
-	start_pos = PHYSFS_tell(ifile);
+	start_pos = (int)PHYSFS_tell(ifile);
 	end_pos = start_pos-4+form_len;
 
 //      printf(" %ld ",form_len);
@@ -987,7 +987,7 @@ int iff_write_bitmap(char *ofilename,grs_bitmap *bm,ubyte *palette)
 //returns iff error codes
 int iff_read_animbrush(char *ifilename,grs_bitmap **bm_list,int max_bitmaps,int *n_bitmaps,ubyte *palette)
 {
-	int ret;			//return code
+	int ret = IFF_READ_ERROR; //return code
 	PHYSFS_file *ifile;
 	iff_bitmap_header bmheader;
 	int32_t sig, form_len;
@@ -1014,7 +1014,7 @@ int iff_read_animbrush(char *ifilename,grs_bitmap **bm_list,int max_bitmaps,int 
 	if ((form_type == pbm_sig) || (form_type == ilbm_sig))
 		ret = IFF_FORM_BITMAP;
 	else if (form_type == anim_sig) {
-		int anim_end = PHYSFS_tell(ifile) + form_len - 4;
+		int anim_end = (int)PHYSFS_tell(ifile) + form_len - 4;
 
 		while (PHYSFS_tell(ifile) < anim_end && *n_bitmaps < max_bitmaps) {
 
