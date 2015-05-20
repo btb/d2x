@@ -1,5 +1,6 @@
-bin_PROGRAMS = @TARGETS@ hogcreate hogextract mveplayer mvlcreate mvlextract txb2tex tex2txb
-EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga
+bin_PROGRAMS = \
+d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga \
+hogcreate hogextract mveplayer mvlcreate mvlextract txb2tex tex2txb
 
 # Common to all d2x platforms/options
 
