@@ -11,6 +11,7 @@
 #endif
 
 #include "gr.h"
+#include "vid.h"
 #include "u_mem.h"
 #include "error.h"
 #include "vers_id.h"
@@ -332,9 +333,6 @@ void Win32_MakePalVisible(void)
 {
 }
 //end additions - adb
-
-
-void vid_close(void);
 
 
 int vid_init(int mode)

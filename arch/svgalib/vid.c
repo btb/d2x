@@ -16,6 +16,7 @@
 #include <vgagl.h>
 
 #include "gr.h"
+#include "vid.h"
 #include "u_mem.h"
 #include "error.h"
 #ifdef SVGALIB_INPUT

@@ -16,6 +16,7 @@
 #include <dpmi.h>
 
 #include "gr.h"
+#include "vid.h"
 #include "maths.h"
 #include "u_mem.h"
 #include "u_dpmi.h"
