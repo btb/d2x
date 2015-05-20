@@ -177,36 +177,6 @@ void mouse_get_cyberman_pos( int *x, int *y )
  event_poll();
 }
 
-// Returns how long this button has been down since last call.
-fix mouse_button_down_time(int button)
-{
- fix time_down, time;
-
- event_poll();
-
- if (!Mouse.buttons[button].pressed) {
-   time_down = Mouse.buttons[button].time_held_down;
-   Mouse.buttons[button].time_held_down = 0;
- } else {
-   time = timer_get_fixed_seconds();
-   time_down = time - Mouse.buttons[button].time_held_down;
-   Mouse.buttons[button].time_held_down = time;
- }
- return time_down;
-}
-
-// Returns how many times this button has went down since last call
-int mouse_button_down_count(int button)
-{
-  int count;
-
-  event_poll();
-
-  count = Mouse.buttons[button].num_downs;
-  Mouse.buttons[button].num_downs = 0;
-
-  return count;
-}
 
 // Returns 1 if this button is currently down
 int mouse_button_state(int button)
