@@ -121,7 +121,7 @@ int vid_init(void)
 	
 	vga_init();
 
-	if ((retcode = gr_set_mode(mode)))
+	if ((retcode = vid_set_mode(mode)))
 		return retcode;
 
 	vid_installed = 1;
