@@ -60,7 +60,6 @@ _go32_dpmi_registers handler_regs;
 #define ME_H_C 			(1<<14)
 #define ME_O_C 			(1<<15)
 
-#define MOUSE_MAX_BUTTONS	11
 
 typedef struct event_info {
 	short x;

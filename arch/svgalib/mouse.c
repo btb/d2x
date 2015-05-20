@@ -17,7 +17,6 @@
 #include "event.h"
 #include "mouse.h"
 
-#define MOUSE_MAX_BUTTONS       8
 
 ubyte installed = 0;
 
