@@ -81,15 +81,13 @@ void d_mouse_close(void)
  installed = 0;
 }
 
-int
-d_mouse_init(int enable_cyberman)
+void d_mouse_init(void)
 {
  memset(&Mouse,0,sizeof(Mouse));
  vga_setmousesupport(1);
  if (!installed)
 	atexit(d_mouse_close);
  installed = 1;
- return 0; /* should return # of buttons... dunno how w/svgalib */
 }
 
 void
