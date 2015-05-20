@@ -229,7 +229,6 @@ else
 		fi
     fi
     AC_SUBST(SVGA_LIBS)
-    AM_CONDITIONAL(USE_SVGALIB, test x$with_svga = xyes)
 fi
 
 dnl Check for network

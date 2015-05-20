@@ -3,7 +3,7 @@ EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga
 
 # Common to all d2x platforms/options
 
-d2x_CPPFLAGS = -DFL1_WITH_FLAT -I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
+d2x_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
 
 d2x_SOURCES = \
 2d/2dsline.c  2d/box.c      2d/disc.c     2d/ibitblt.c  2d/pcx.c      2d/rect.c     2d/scalec.c   \
@@ -95,7 +95,7 @@ miner_LDADD = $(d2x_LDADD)
 
 # Remaining targets are based on d2x_*
 
-d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGA -DSVGALIB_INPUT -DSVGALIB_VIDEO
+d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGALIB_INPUT
 d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
