@@ -96,7 +96,7 @@ miner_LDADD = $(d2x_LDADD)
 
 # Remaining targets are based on d2x_*
 
-d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -DSDL_AUDIO -DSVGALIB_INPUT
+d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include -DSDL_AUDIO -DSVGALIB_INPUT
 d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c texmap/tmapflat.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
 d2x_svga_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLMIXER_LIBS) -lvga -lvgagl
