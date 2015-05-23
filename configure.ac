@@ -4,21 +4,16 @@ define([D2X_MAJOR],0)
 define([D2X_MINOR],2)
 define([D2X_MICRO],6)
 
-AC_INIT(d2x,[D2X_MAJOR.D2X_MINOR.D2X_MICRO],[https://github.com/btb/d2x/issues])
-AC_PREREQ(2.52)
-
-m4_include([m4/ax_check_compile_flag.m4])
+AC_INIT([d2x],[D2X_MAJOR.D2X_MINOR.D2X_MICRO],[https://github.com/btb/d2x/issues])
+AC_PREREQ([2.52])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AC_EXEEXT
-AC_OBJEXT
-
 AM_INIT_AUTOMAKE([subdir-objects])
 
-AM_CONFIG_HEADER(conf.h)
+AC_CONFIG_HEADERS(conf.h)
 
 AC_DEFINE_UNQUOTED(D2XMAJOR,D2X_MAJOR,[d2x major version])
 AC_DEFINE_UNQUOTED(D2XMINOR,D2X_MINOR,[d2x minor version])
@@ -31,14 +26,12 @@ CFLAGS=" $CFLAGS"
 
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_CHECK_TOOL(CC, gcc, :)
 AC_CHECK_TOOL(RANLIB, ranlib, :)
 AC_CHECK_TOOL(STRIP, strip, :)
 AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_CC
-AC_PROG_CXX
-AC_STDC_HEADERS
 AC_PATH_PROGS(NASM, nasm nasmw, no)
 AC_C_BIGENDIAN
 AC_CHECK_SIZEOF(void *)
@@ -337,11 +330,11 @@ AC_SUBST(NASMFLAGS)
 
 AC_SUBST(CFLAGS)
 
-AC_OUTPUT(
-    Makefile
+AC_CONFIG_FILES([Makefile
     debian/changelog
     rpm/d2x.spec
-)
+])
+AC_OUTPUT
 
 AC_MSG_RESULT([
         d2x has been configured successfully.
