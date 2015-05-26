@@ -11,7 +11,7 @@ cd physfs
 hg up
 mkdir -p build
 cd build
-cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$(which $host-gcc) -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" -DPHYSFS_BUILD_STATIC=OFF -DPHYSFS_BUILD_TEST=OFF ..
+cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$(which $host-gcc) -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" -DPHYSFS_BUILD_TEST=OFF ..
 make install/strip
 
 cd "$prefix"
