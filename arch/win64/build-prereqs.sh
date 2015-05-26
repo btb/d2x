@@ -21,6 +21,8 @@ hg up
 ./autogen.sh
 ./configure --host=$host --prefix="$prefix" --disable-static
 make install
+cp include/SDL_config.h.default "$prefix/include/SDL/SDL_config.h"
+cp include/SDL_config_win32.h "$prefix/include/SDL/"
 $host-strip $prefix/bin/SDL.dll
 
 cd "$prefix"
