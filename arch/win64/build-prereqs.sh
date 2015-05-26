@@ -11,7 +11,7 @@ cd physfs
 hg up
 mkdir -p build
 cd build
-cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$(which $host-gcc) -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" -DPHYSFS_BUILD_TEST=OFF ..
+cmake -DCMAKE_SYSTEM_NAME=windows -DCMAKE_C_COMPILER=$(which $host-gcc) -DCMAKE_C_FLAGS=-Wno-pointer-to-int-cast -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" -DCMAKE_EXE_LINKER_FLAGS=-static-libgcc -DPHYSFS_BUILD_TEST=OFF ..
 make install/strip
 
 cd "$prefix"
@@ -19,7 +19,7 @@ hg clone -r SDL-1.2 http://hg.libsdl.org/SDL || true
 cd SDL
 hg up
 ./autogen.sh
-./configure --host=$host --prefix="$prefix" --disable-static
+./configure --host=$host --prefix="$prefix" --disable-static LDFLAGS=-static-libgcc
 make install
 cp include/SDL_config.h.default "$prefix/include/SDL/SDL_config.h"
 cp include/SDL_config_win32.h "$prefix/include/SDL/"
@@ -30,7 +30,7 @@ hg clone -r SDL-1.2 http://hg.libsdl.org/SDL_mixer || true
 cd SDL_mixer
 hg up
 ./autogen.sh
-./configure --host=$host --with-sdl-prefix="$prefix" --prefix="$prefix" --disable-static
+./configure --host=$host --with-sdl-prefix="$prefix" --prefix="$prefix" --disable-static LDFLAGS=-static-libgcc
 make install-hdrs install-lib
 $host-strip $prefix/bin/SDL_mixer.dll
 
