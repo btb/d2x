@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <ctype.h>
 
@@ -20,6 +19,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else
+#include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>

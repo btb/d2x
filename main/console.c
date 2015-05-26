@@ -22,7 +22,9 @@
 #include <fcntl.h>
 #endif
 #include <ctype.h>
+#ifdef __unix__
 #include <unistd.h>
+#endif
 
 #include "inferno.h"
 #include "u_mem.h"

@@ -26,13 +26,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
-#include <sys/time.h>
 
 #ifdef _WIN32
 #include <winsock.h>
 #else
+#include <unistd.h>
+#include <sys/time.h>
 #include <netinet/in.h> /* for htons & co. */
 #endif
 
