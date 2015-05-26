@@ -42,7 +42,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #define ROW_SPACING (MenuHires?26:11)
-#define NUM_LINES (menu_use_game_res.intval?(SHEIGHT / ROW_SPACING + 2):(MenuHires?21:20))
+#define NUM_LINES 21//(menu_use_game_res.intval?(SHEIGHT / ROW_SPACING + 2):(MenuHires?21:20))
 
 ubyte fade_values[200] = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,9,9,10,10,
 11,11,12,12,12,13,13,14,14,15,15,15,16,16,17,17,17,18,18,19,19,19,20,20,

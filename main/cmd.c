@@ -137,7 +137,7 @@ void cmd_execute(int argc, char **argv)
 
 	/* Otherwise */
 	{  // set value of cvar
-		char *new_argv[argc+1];
+		char *new_argv[255];//argc+1];
 		int i;
 
 		new_argv[0] = "set";
@@ -245,8 +245,8 @@ void cmd_enqueue(int insert, char *input)
 	head = tail = NULL;
 
 	while (*input) {
-		optr = output;
 		int quoted = 0;
+		optr = output;
 
 		/* Strip leading spaces */
 		while(isspace(*input) || *input == ';')

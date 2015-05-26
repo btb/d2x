@@ -1950,7 +1950,7 @@ void game()
 					cvar_setint(&cg_fov, 1);
 				if (cg_fov.value > 170 * F1_0)
 					cvar_setint(&cg_fov, 170);
-				Render_zoom = cg_fov.value * M_PI / 180; // convert to radians
+				Render_zoom = cg_fov.value * 3.1416 / 180; // convert to radians
 				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", f2fl(cg_fov.value), Render_zoom);
 			}
 
