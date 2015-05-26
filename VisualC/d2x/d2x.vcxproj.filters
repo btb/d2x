@@ -58,6 +58,9 @@
     <Filter Include="Header Files\arch\linux\include">
       <UniqueIdentifier>{352a0c7d-4232-4cb8-8760-5592d8818eee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\libmve">
+      <UniqueIdentifier>{3741edfc-5d01-472c-8f2b-5fe51295dbe9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\2d\2dsline.c">
@@ -454,6 +457,30 @@
       <Filter>Source Files\arch\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\main\cvar.c">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libmve\decoder8.c">
+      <Filter>Source Files\libmve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libmve\decoder16.c">
+      <Filter>Source Files\libmve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libmve\mve_audio.c">
+      <Filter>Source Files\libmve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libmve\mvelib.c">
+      <Filter>Source Files\libmve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\libmve\mveplay.c">
+      <Filter>Source Files\libmve</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main\cli.c">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\misc\hmp.c">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main\entity.c">
       <Filter>Source Files\main</Filter>
     </ClCompile>
   </ItemGroup>
@@ -866,5 +893,19 @@
     <ClInclude Include="..\..\arch\linux\include\ukali.h">
       <Filter>Header Files\arch\linux\include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\arch\win32\lib\libSDL_mixer.dll.a">
+      <Filter>Source Files</Filter>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libSDL.dll.a">
+      <Filter>Source Files</Filter>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libSDLmain.a">
+      <Filter>Source Files</Filter>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libphysfs.dll.a">
+      <Filter>Source Files</Filter>
+    </Library>
   </ItemGroup>
 </Project>

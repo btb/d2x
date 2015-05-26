@@ -63,7 +63,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeaderOutputFile>.\Debug/d2x.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Debug/d2x-sdl.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
@@ -77,17 +77,17 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Debug/d2x.exe</OutputFile>
+      <OutputFile>.\Debug/d2x-sdl.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/d2x.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Debug/d2x-sdl.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug/d2x.bsc</OutputFile>
+      <OutputFile>.\Debug/d2x-sdl.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -368,7 +368,14 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="..\..\libmve\decoder16.c" />
+    <ClCompile Include="..\..\libmve\decoder8.c" />
+    <ClCompile Include="..\..\libmve\mvelib.c" />
+    <ClCompile Include="..\..\libmve\mveplay.c" />
+    <ClCompile Include="..\..\libmve\mve_audio.c" />
+    <ClCompile Include="..\..\main\cli.c" />
     <ClCompile Include="..\..\main\cvar.c" />
+    <ClCompile Include="..\..\main\entity.c" />
     <ClCompile Include="..\..\misc\args.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -393,6 +400,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="..\..\misc\hmp.c" />
     <ClCompile Include="..\..\misc\ignorecase.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1029,6 +1037,20 @@
     <ClInclude Include="..\..\main\vers_id.h" />
     <ClInclude Include="..\..\main\wall.h" />
     <ClInclude Include="..\..\main\weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\arch\win32\lib\libphysfs.dll.a">
+      <FileType>Document</FileType>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libSDL.dll.a">
+      <FileType>Document</FileType>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libSDLmain.a">
+      <FileType>Document</FileType>
+    </Library>
+    <Library Include="..\..\arch\win32\lib\libSDL_mixer.dll.a">
+      <FileType>Document</FileType>
+    </Library>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

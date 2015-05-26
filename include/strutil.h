@@ -30,6 +30,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 # define strrev _strrev
 #endif
 
+#ifdef _MSC_VER
+# define snprintf _snprintf
+#endif
+
 #ifndef _WIN32
 #ifndef __DJGPP__
 void strupr( char *s1 );

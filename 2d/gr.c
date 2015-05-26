@@ -121,5 +121,5 @@ void gr_cmd_pixelaspect(int argc, char **argv)
 		return;
 	}
 
-	grd_curscreen->sc_aspect = fl2f(strtof(argv[1], NULL));
+	grd_curscreen->sc_aspect = fl2f(atof(argv[1]));
 }

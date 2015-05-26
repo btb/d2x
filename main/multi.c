@@ -1332,8 +1332,10 @@ void multi_send_message_end()
 			kick_player:;
 				if (Network_game_type == IPX_GAME)
 					network_dump_player(NetPlayers.players[i].network.ipx.server,NetPlayers.players[i].network.ipx.node, 7);
+#ifdef MACINTOSH
 				else
 					network_dump_appletalk_player(NetPlayers.players[i].network.appletalk.node,NetPlayers.players[i].network.appletalk.net, NetPlayers.players[i].network.appletalk.socket, 7);
+#endif
 
 				HUD_init_message("Dumping %s...",Players[i].callsign);
 				multi_message_index = 0;
