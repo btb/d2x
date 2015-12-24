@@ -13,9 +13,6 @@
 /* d2x minor version */
 #define D2XMINOR 2
 
-/* Define if you want to build the editor */
-/* #undef EDITOR */
-
 /* Define for faster i/o on little-endian cpus */
 /* #undef FAST_FILE_IO */
 

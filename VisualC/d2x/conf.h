@@ -14,9 +14,6 @@
 /* d2x micro version */
 #define D2XMICRO 6
 
-/* Define if you want to build the editor */
-/* #undef EDITOR */
-
 /* Define for faster i/o on little-endian cpus */
 #define FAST_FILE_IO 
 
