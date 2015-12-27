@@ -55,5 +55,7 @@ void con_printf(int level, char *fmt, ...);
 /* How discriminating we are about which messages are displayed */
 extern cvar_t con_threshold;
 
+/* text foreground color */
+extern int CON_color;
 
 #endif /* _CONSOLE_H_ */

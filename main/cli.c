@@ -138,6 +138,8 @@ void cli_draw(int y)
 	// then add the visible part of the command
 	strncat(VCommand, &Command[Offset], sizeof(VCommand) - strlen(VCommand) - 1);
 
+	gr_set_fontcolor(CON_color, -1);
+
 	// now display the result
 	gr_string(CLI_CHAR_BORDER, y-h, VCommand);
 

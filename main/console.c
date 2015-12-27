@@ -48,6 +48,8 @@ cvar_t con_threshold = { "con_threshold", "0", CVAR_NONE };
 #define CON_BG_HIRES (cfexist("scoresb.pcx")?"scoresb.pcx":"scores.pcx")
 #define CON_BG_LORES (cfexist("scores.pcx")?"scores.pcx":"scoresb.pcx") // Mac datafiles only have scoresb.pcx
 #define CON_BG ((SWIDTH>=640)?CON_BG_HIRES:CON_BG_LORES)
+#define CON_FONT SMALL_FONT
+#define CON_DEFAULT_COLOR gr_find_closest_color(29, 29, 47)
 
 #define CON_NUM_LINES           128
 // Cut the buffer line if it becomes longer than this
@@ -79,6 +81,9 @@ static grs_bitmap *InputBackground; // Dirty rectangle to draw over behind the u
 /* console is ready to be written to */
 static int con_initialized;
 
+/* text foreground color */
+int CON_color;
+
 
 /* Internals */
 static void con_update_offset(void);
@@ -86,7 +91,7 @@ static void con_update_offset(void);
 static void con_free(void);
 static int con_background(grs_bitmap *image);
 /* Sets font info for the console */
-static void con_font(grs_font *font, int fg, int bg);
+static void con_font(grs_font *font);
 /* makes newline (same as printf("\n") or CON_Out("\n") ) */
 static void con_newline(void);
 /* updates console after resize etc. */
@@ -178,6 +183,8 @@ static void con_update(void)
 
 	canv_save = grd_curcanv;
 	gr_set_current_canvas(ConsoleSurface);
+
+	gr_set_fontcolor(CON_color, -1);
 
 	/* draw the background image if there is one */
 	if (BackgroundImage)
@@ -327,8 +334,10 @@ void con_init_gfx(int w, int h)
 		ConsoleSurface = gr_create_canvas(w, h);
 	}
 
+	CON_color = CON_DEFAULT_COLOR;
+
 	/* Load the consoles font */
-	con_font(SMALL_FONT, gr_find_closest_color(29,29,47), -1);
+	con_font(CON_FONT);
 
 	/* make sure that the size of the console is valid */
 	if (w > grd_curscreen->sc_w || w < ConsoleSurface->cv_font->ft_w * 32)
@@ -534,14 +543,13 @@ static int con_background(grs_bitmap *image)
 
 
 /* Sets font info for the console */
-static void con_font(grs_font *font, int fg, int bg)
+static void con_font(grs_font *font)
 {
 	grs_canvas *canv_save;
 
 	canv_save = grd_curcanv;
 	gr_set_current_canvas(ConsoleSurface);
 	gr_set_curfont(font);
-	gr_set_fontcolor(fg, bg);
 	gr_set_current_canvas(canv_save);
 }
 

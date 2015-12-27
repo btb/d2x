@@ -253,7 +253,7 @@ int HUD_init_message_va(char * format, va_list args)
 	/* Produce a colorised version and send it to the console */
 	if (HUD_color == -1)
 		HUD_color = BM_XRGB(0,28,0);
-	con_printf(CON_NORMAL, "%c%c%s%s\n", CC_COLOR, HUD_color, message);
+	con_printf(CON_NORMAL, "%c%c%s%c%c\n", CC_COLOR, HUD_color, message, CC_COLOR, CON_color);
 
 	// Added by Leighton
 
