@@ -901,7 +901,10 @@ dump_door_debugging_info()
 	
 			for (i=0;i<Num_open_doors;i++) {		//find door
 				d = &ActiveDoors[i];
-				if (d->front_wallnum[0]==wall-Walls || d->back_wallnum[0]==wall-Walls || (d->n_parts==2 && (d->front_wallnum[1]==wall-Walls || d->back_wallnum[1]==wall-Walls)))
+				if (d->front_wallnum[0] == WALL_NUMBER(wall) ||
+					d->back_wallnum[0] == WALL_NUMBER(wall) ||
+					(d->n_parts==2 && (d->front_wallnum[1] == WALL_NUMBER(wall) ||
+					                   d->back_wallnum[1] == WALL_NUMBER(wall))))
 					break;
 			} 
 	

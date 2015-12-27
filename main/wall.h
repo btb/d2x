@@ -185,6 +185,7 @@ extern char Wall_names[7][10];
 
 extern wall Walls[MAX_WALLS];           // Master walls array
 extern int Num_walls;                   // Number of walls
+#define WALL_NUMBER(wall) ((int)((wall) - Walls))
 
 extern active_door ActiveDoors[MAX_DOORS];  //  Master doors array
 extern int Num_open_doors;              // Number of open doors

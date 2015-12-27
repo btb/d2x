@@ -957,8 +957,8 @@ int wall_link_doors()
 	if (w2->linked_wall != -1)
 		editor_status("Markedseg/markedside is already linked");
 
-	w1->linked_wall = w2-Walls;
-	w2->linked_wall = w1-Walls;
+	w1->linked_wall = WALL_NUMBER(w2);
+	w2->linked_wall = WALL_NUMBER(w1);
 
 	return 1;
 }
@@ -978,7 +978,7 @@ int wall_unlink_door()
 	if (w1->linked_wall == -1)
 		editor_status("Curseg/curside is not linked");
 
-	Assert(Walls[w1->linked_wall].linked_wall == w1-Walls);
+	Assert(Walls[w1->linked_wall].linked_wall == WALL_NUMBER(w1));
 
 	Walls[w1->linked_wall].linked_wall = -1;
 	w1->linked_wall = -1;
