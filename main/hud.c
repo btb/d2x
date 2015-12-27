@@ -239,11 +239,6 @@ int HUD_init_message_va(char * format, va_list args)
 	int temp;
 	char *message = NULL;
 	char *last_message=NULL;
-#if 0
-	int temp2;
-	char *cleanmessage;
-#endif
-	char con_message[HUD_MESSAGE_LENGTH + 3];
 
 	Modex_hud_msg_count = 2;
 
@@ -258,11 +253,7 @@ int HUD_init_message_va(char * format, va_list args)
 	/* Produce a colorised version and send it to the console */
 	if (HUD_color == -1)
 		HUD_color = BM_XRGB(0,28,0);
-	con_message[0] = CC_COLOR;
-	con_message[1] = HUD_color;
-	con_message[2] = '\0';
-	strcat(con_message, message);
-	con_printf(CON_NORMAL, "%s\n", con_message);
+	con_printf(CON_NORMAL, "%c%c%s%s\n", CC_COLOR, HUD_color, message);
 
 	// Added by Leighton
 

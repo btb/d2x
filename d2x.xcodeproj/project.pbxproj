@@ -1462,6 +1462,7 @@
 				141635EB1A4CB5B3005E575E /* d2x-soft */,
 				141635EC1A4CB5B3005E575E /* d2x-opengl */,
 				14286A481A672E6300A095F6 /* miner-soft */,
+				1491DB201C2CAD3000D25CA0 /* miner-opengl */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1503,7 +1504,6 @@
 				1478618E1A44120900DB53B9 /* README */,
 				147861901A44121000DB53B9 /* NEWS */,
 				141635ED1A4CB608005E575E /* Products */,
-				1491DB201C2CAD3000D25CA0 /* miner-opengl */,
 			);
 			sourceTree = "<group>";
 		};
