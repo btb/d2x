@@ -256,6 +256,8 @@ extern fix              Boss_hit_time;
 // -- extern int              Boss_been_hit;
 // ------ John: End of variables which must be saved as part of gamesave. -----
 
+#define POINT_SEG_NUMBER(pseg) ((int)((pseg) - Point_segs))
+
 extern int  ai_evaded;
 
 extern sbyte Super_boss_gate_list[];
