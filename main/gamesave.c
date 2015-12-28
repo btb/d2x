@@ -128,7 +128,7 @@ int Gamesave_num_org_robots = 0;
 // Note that a pathspec can appear at the beginning of the filename.
 int is_real_level(char *filename)
 {
-	int len = strlen(filename);
+	int len = (int)strlen(filename);
 
 	if (len < 6)
 		return 0;
@@ -1465,7 +1465,7 @@ int save_game_data(PHYSFS_file *SaveFile)
 	PHYSFS_writeSLE32(SaveFile, sizeof(game_fileinfo));
 	PHYSFS_write(SaveFile, Current_level_name, 15, 1);
 	PHYSFS_writeSLE32(SaveFile, Current_level_num);
-	offset_offset = PHYSFS_tell(SaveFile);	// write the offsets later
+	offset_offset = (int)PHYSFS_tell(SaveFile);	// write the offsets later
 	PHYSFS_writeSLE32(SaveFile, -1);
 	PHYSFS_writeSLE32(SaveFile, sizeof(player));
 
@@ -1499,12 +1499,12 @@ int save_game_data(PHYSFS_file *SaveFile)
 
 	//==================== SAVE PLAYER INFO ===========================
 
-	player_offset = PHYSFS_tell(SaveFile);
-	PHYSFS_write(SaveFile, &Players[Player_num], sizeof(player), 1);	// not endian friendly, but not used either
+	player_offset = (int)PHYSFS_tell(SaveFile);
+	PHYSFS_write(SaveFile, &Players[Player_num], sizeof(player), 1); // not endian friendly, but not used either
 
 	//==================== SAVE OBJECT INFO ===========================
 
-	object_offset = PHYSFS_tell(SaveFile);
+	object_offset = (int)PHYSFS_tell(SaveFile);
 	//fwrite( &Objects, sizeof(object), game_fileinfo.object_howmany, SaveFile );
 	{
 		for (i = 0; i <= Highest_object_index; i++)
@@ -1513,7 +1513,7 @@ int save_game_data(PHYSFS_file *SaveFile)
 
 	//==================== SAVE WALL INFO =============================
 
-	walls_offset = PHYSFS_tell(SaveFile);
+	walls_offset = (int)PHYSFS_tell(SaveFile);
 	for (i = 0; i < Num_walls; i++)
 		wall_write(&Walls[i], game_top_fileinfo_version, SaveFile);
 
@@ -1529,19 +1529,19 @@ int save_game_data(PHYSFS_file *SaveFile)
 
 	//==================== SAVE TRIGGER INFO =============================
 
-	triggers_offset = PHYSFS_tell(SaveFile);
+	triggers_offset = (int)PHYSFS_tell(SaveFile);
 	for (i = 0; i < Num_triggers; i++)
 		trigger_write(&Triggers[i], game_top_fileinfo_version, SaveFile);
 
 	//================ SAVE CONTROL CENTER TRIGGER INFO ===============
 
-	control_offset = PHYSFS_tell(SaveFile);
+	control_offset = (int)PHYSFS_tell(SaveFile);
 	control_center_triggers_write(&ControlCenterTriggers, SaveFile);
 
 
 	//================ SAVE MATERIALIZATION CENTER TRIGGER INFO ===============
 
-	matcen_offset = PHYSFS_tell(SaveFile);
+	matcen_offset = (int)PHYSFS_tell(SaveFile);
 	// mprintf((0, "Writing %i materialization centers\n", game_fileinfo.matcen_howmany));
 	// { int i;
 	// for (i=0; i<game_fileinfo.matcen_howmany; i++)
@@ -1553,18 +1553,18 @@ int save_game_data(PHYSFS_file *SaveFile)
 	//================ SAVE DELTA LIGHT INFO ===============
 	if (game_top_fileinfo_version >= 29)
 	{
-		dl_indices_offset = PHYSFS_tell(SaveFile);
+		dl_indices_offset = (int)PHYSFS_tell(SaveFile);
 		for (i = 0; i < Num_static_lights; i++)
 			dl_index_write(&Dl_indices[i], SaveFile);
 
-		delta_light_offset = PHYSFS_tell(SaveFile);
+		delta_light_offset = (int)PHYSFS_tell(SaveFile);
 		for (i = 0; i < num_delta_lights; i++)
 			delta_light_write(&Delta_lights[i], SaveFile);
 	}
 
 	//============= SAVE OFFSETS ===============
 
-	end_offset = PHYSFS_tell(SaveFile);
+	end_offset = (int)PHYSFS_tell(SaveFile);
 
 	// Update the offset fields
 
@@ -1711,14 +1711,14 @@ int save_level_sub(char * filename, int compiled_version)
 		PHYSFSX_writeVector(SaveFile, &Secret_return_orient.uvec);
 	}
 
-	minedata_offset = PHYSFS_tell(SaveFile);
+	minedata_offset = (int)PHYSFS_tell(SaveFile);
 #if 0	// only save compiled mine data
 	if ( !compiled_version )	
 		save_mine_data(SaveFile);
 	else
 #endif
 		save_mine_data_compiled(SaveFile);
-	gamedata_offset = PHYSFS_tell(SaveFile);
+	gamedata_offset = (int)PHYSFS_tell(SaveFile);
 	save_game_data(SaveFile);
 
 	PHYSFS_seek(SaveFile, sizeof(int) + sizeof(Gamesave_current_version));
@@ -1726,7 +1726,7 @@ int save_level_sub(char * filename, int compiled_version)
 	PHYSFS_writeSLE32(SaveFile, gamedata_offset);
 
 	if (Gamesave_current_version < 5)
-		PHYSFS_writeSLE32(SaveFile, PHYSFS_fileLength(SaveFile));
+		PHYSFS_writeSLE32(SaveFile, (PHYSFS_sint32)PHYSFS_fileLength(SaveFile));
 
 	//==================== CLOSE THE FILE =============================
 	PHYSFS_close(SaveFile);

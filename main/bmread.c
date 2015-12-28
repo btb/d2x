@@ -473,7 +473,7 @@ int bm_init_use_tbl()
 		if (have_bin_tbl) {				// is this a binary tbl file
 			decode_text_line (inputline);
 		} else {
-			while (inputline[(l=strlen(inputline))-2]=='\\') {
+			while (inputline[(l = (int)strlen(inputline)) - 2] == '\\') {
 				if (!isspace(inputline[l-3])) {		//if not space before backslash...
 					inputline[l-2] = ' ';				//add one
 					l++;

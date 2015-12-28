@@ -56,7 +56,7 @@ static void texpage_print_name( char name[13] )
 	 int w,h,aw;
 	int i;
 
-	for (i=strlen(name);i<12;i++)
+	for (i = (int)strlen(name); i < 12; i++)
 		name[i]=' ';
 	name[i]=0;
 	

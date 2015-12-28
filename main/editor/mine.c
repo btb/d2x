@@ -361,7 +361,7 @@ int save_mine_data(CFILE * SaveFile)
 
 	//=================== Calculate offsets into file ==================
 
-	header_offset = cftell(SaveFile) + sizeof(mine_fileinfo);
+	header_offset = (int)(cftell(SaveFile) + sizeof(mine_fileinfo));
 	editor_offset = header_offset + sizeof(mine_header);
 	texture_offset = editor_offset + sizeof(mine_editor);
 	vertex_offset  = texture_offset + (13*NumTextures);

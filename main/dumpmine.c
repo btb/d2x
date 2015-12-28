@@ -532,7 +532,7 @@ void write_game_text_file(char *filename)
 
 	// mprintf((0, "Writing text file for mine [%s]\n", filename));
 
-	namelen = strlen(filename);
+	namelen = (int)strlen(filename);
 
 	Assert (namelen > 4);
 

@@ -106,7 +106,7 @@ UI_GADGET_BUTTON * ui_add_gadget_button( UI_WINDOW * wnd, short x, short y, shor
 
 	if ( text )
 	{
-		MALLOC( button->text, char, strlen(text)+1 );
+		MALLOC( button->text, char, (int)strlen(text)+1 );
 		strcpy( button->text, text );
 	} else {
 		button->text = NULL;

@@ -51,7 +51,7 @@ char **file_getdirlist(int *NumDirs, char *dir)
 		strncat(path, "/", PATH_MAX - strlen(dir));
 
 	test_filename = path + strlen(path);
-	test_max = PATH_MAX - (test_filename - path);
+	test_max = (int)(PATH_MAX - (test_filename - path));
 
 	for (i = list; *i; i++)
 	{
@@ -66,7 +66,7 @@ char **file_getdirlist(int *NumDirs, char *dir)
 	}
 	*j = NULL;
 
-	*NumDirs = j - list;
+	*NumDirs = (int)(j - list);
 	qsort(list, *NumDirs, sizeof(char *), (int (*)( const void *, const void * ))file_sort_func);
 
 	if (*dir)
@@ -105,7 +105,7 @@ char **file_getfilelist(int *NumFiles, char *filespec, char *dir)
 	*j = NULL;
 
 
-	*NumFiles = j - list;
+	*NumFiles = (int)(j - list);
 	qsort(list, *NumFiles, sizeof(char *), (int (*)( const void *, const void * ))file_sort_func);
 
 	return list;

@@ -129,7 +129,7 @@ int MacroLoad()
 			return 0;
 		if (RecordBuffer)
 			d_free( RecordBuffer );
-		length = PHYSFS_fileLength(fp);
+		length = (int)PHYSFS_fileLength(fp);
 		RecordBuffer = d_malloc(length);
 		if (!RecordBuffer)
 			return 0;

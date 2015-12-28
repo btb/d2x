@@ -1293,7 +1293,7 @@ void piggy_write_pigfile(char *filename)
 	fwrite( &Num_bitmap_files, sizeof(int), 1, pig_fp );
 	Num_bitmap_files++;
 
-	bitmap_data_start = ftell(pig_fp);
+	bitmap_data_start = (int)ftell(pig_fp);
 	bitmap_data_start += (Num_bitmap_files - 1) * sizeof(DiskBitmapHeader);
 	data_offset = bitmap_data_start;
 
@@ -1333,7 +1333,7 @@ void piggy_write_pigfile(char *filename)
 
 		if (fp1)
 			fprintf( fp1, "BMP: %s, size %d bytes", AllBitmaps[i].name, bmp->bm_rowsize * bmp->bm_h );
-		org_offset = ftell(pig_fp);
+		org_offset = (int)ftell(pig_fp);
 		bmh.offset = data_offset - bitmap_data_start;
 		fseek( pig_fp, data_offset, SEEK_SET );
 
@@ -1419,7 +1419,7 @@ void piggy_dump_all()
 		write_int(HAMFILE_VERSION,ham_fp);
 	
 		bm_write_all(ham_fp);
-		xlat_offset = ftell(ham_fp);
+		xlat_offset = (int)ftell(ham_fp);
 		fwrite( GameBitmapXlat, sizeof(ushort)*MAX_BITMAP_FILES, 1, ham_fp );
 		//Dump bitmaps
 	
@@ -1452,7 +1452,7 @@ void piggy_dump_all()
 	
 		mprintf( (0, "\nDumping sounds..." ));
 	
-		sound_data_start = ftell(ham_fp);
+		sound_data_start = (int)ftell(ham_fp);
 		sound_data_start += Num_sound_files*sizeof(DiskSoundHeader);
 		data_offset = sound_data_start;
 	
@@ -1464,7 +1464,7 @@ void piggy_dump_all()
 			sndh.length = GameSounds[i].length;
 			sndh.offset = data_offset - sound_data_start;
 	
-			org_offset = ftell(ham_fp);
+			org_offset = (int)ftell(ham_fp);
 			fseek( ham_fp, data_offset, SEEK_SET );
 	
 			sndh.data_length = GameSounds[i].length;

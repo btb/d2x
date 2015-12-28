@@ -74,9 +74,9 @@ void GetMouseRotation( int idx, int idy, vms_matrix * RotMat )
 
 	dx = i2f(idx); dy = i2f(idy);
 
-	dr = dist_2d(dx,dy);
+	dr = (fix)dist_2d(dx, dy);
 
-	denom = dist_2d(Radius,dr);
+	denom = (fix)dist_2d(Radius, dr);
 
 	cos_theta = fixdiv(Radius,denom);
 	sin_theta = fixdiv(dr,denom);
