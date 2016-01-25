@@ -1,0 +1,722 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1400B8F81C2BC7ED00B6F870 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8F71C2BC7ED00B6F870 /* SDLMain.m */; };
+		1400B8FF1C2BC85B00B6F870 /* decoder8.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8F91C2BC85B00B6F870 /* decoder8.c */; };
+		1400B9001C2BC85B00B6F870 /* decoder16.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8FA1C2BC85B00B6F870 /* decoder16.c */; };
+		1400B9011C2BC85B00B6F870 /* mve_audio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8FB1C2BC85B00B6F870 /* mve_audio.c */; };
+		1400B9021C2BC85B00B6F870 /* mve_main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8FC1C2BC85B00B6F870 /* mve_main.c */; };
+		1400B9031C2BC85B00B6F870 /* mvelib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8FD1C2BC85B00B6F870 /* mvelib.c */; };
+		1400B9041C2BC85B00B6F870 /* mveplay.c in Sources */ = {isa = PBXBuildFile; fileRef = 1400B8FE1C2BC85B00B6F870 /* mveplay.c */; };
+		1400B9061C2BC86900B6F870 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1400B9051C2BC86900B6F870 /* SDL.framework */; };
+		1400B9081C2BCD5A00B6F870 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1400B9071C2BCD5A00B6F870 /* SDL_mixer.framework */; };
+		1491D9FD1C2CA96C00D25CA0 /* hogcreate.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9E11C2CA85A00D25CA0 /* hogcreate.c */; };
+		1491DA2B1C2CAB4000D25CA0 /* hogextract.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9E31C2CA85A00D25CA0 /* hogextract.c */; };
+		1491DA2C1C2CAB4500D25CA0 /* mvlcreate.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9E51C2CA85A00D25CA0 /* mvlcreate.c */; };
+		1491DA2D1C2CAB4C00D25CA0 /* mvlextract.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9E71C2CA85A00D25CA0 /* mvlextract.c */; };
+		1491DA2E1C2CAB4F00D25CA0 /* tex2txb.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9E91C2CA85A00D25CA0 /* tex2txb.c */; };
+		1491DA2F1C2CAB5300D25CA0 /* txb2tex.c in Sources */ = {isa = PBXBuildFile; fileRef = 1491D9EB1C2CA85A00D25CA0 /* txb2tex.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1400B8EA1C2BC79600B6F870 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491D9F81C2CA93100D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491DA021C2CAA4300D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491DA0B1C2CAA4800D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491DA141C2CAA4B00D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491DA1D1C2CAA4E00D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		1491DA261C2CAA5300D25CA0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1400B8EC1C2BC79600B6F870 /* mveplayer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mveplayer; sourceTree = BUILT_PRODUCTS_DIR; };
+		1400B8F71C2BC7ED00B6F870 /* SDLMain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SDLMain.m; path = arch/cocoa/SDLMain.m; sourceTree = "<group>"; };
+		1400B8F91C2BC85B00B6F870 /* decoder8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = decoder8.c; path = libmve/decoder8.c; sourceTree = SOURCE_ROOT; };
+		1400B8FA1C2BC85B00B6F870 /* decoder16.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = decoder16.c; sourceTree = "<group>"; };
+		1400B8FB1C2BC85B00B6F870 /* mve_audio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_audio.c; sourceTree = "<group>"; };
+		1400B8FC1C2BC85B00B6F870 /* mve_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mve_main.c; sourceTree = "<group>"; };
+		1400B8FD1C2BC85B00B6F870 /* mvelib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mvelib.c; sourceTree = "<group>"; };
+		1400B8FE1C2BC85B00B6F870 /* mveplay.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mveplay.c; sourceTree = "<group>"; };
+		1400B9051C2BC86900B6F870 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../../../../../../Library/Frameworks/SDL.framework; sourceTree = "<group>"; };
+		1400B9071C2BCD5A00B6F870 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = ../../../../../../Library/Frameworks/SDL_mixer.framework; sourceTree = "<group>"; };
+		1491D9E11C2CA85A00D25CA0 /* hogcreate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hogcreate.c; sourceTree = "<group>"; };
+		1491D9E31C2CA85A00D25CA0 /* hogextract.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hogextract.c; sourceTree = "<group>"; };
+		1491D9E51C2CA85A00D25CA0 /* mvlcreate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mvlcreate.c; sourceTree = "<group>"; };
+		1491D9E71C2CA85A00D25CA0 /* mvlextract.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mvlextract.c; sourceTree = "<group>"; };
+		1491D9E91C2CA85A00D25CA0 /* tex2txb.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tex2txb.c; sourceTree = "<group>"; };
+		1491D9EB1C2CA85A00D25CA0 /* txb2tex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = txb2tex.c; sourceTree = "<group>"; };
+		1491D9FC1C2CA93100D25CA0 /* hogcreate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hogcreate; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA061C2CAA4300D25CA0 /* hogextract */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hogextract; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA0F1C2CAA4800D25CA0 /* mvlcreate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mvlcreate; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA181C2CAA4B00D25CA0 /* mvlextract */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mvlextract; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA211C2CAA4E00D25CA0 /* tex2txb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tex2txb; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA2A1C2CAA5300D25CA0 /* txb2tex */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = txb2tex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1491DA301C2CAB6E00D25CA0 /* hogcreate.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = hogcreate.1; sourceTree = "<group>"; };
+		1491DA311C2CAB6E00D25CA0 /* hogextract.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = hogextract.1; sourceTree = "<group>"; };
+		1491DA321C2CAB6E00D25CA0 /* mvlcreate.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = mvlcreate.1; sourceTree = "<group>"; };
+		1491DA331C2CAB6E00D25CA0 /* mvlextract.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = mvlextract.1; sourceTree = "<group>"; };
+		1491DA341C2CAB6E00D25CA0 /* tex2txb.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = tex2txb.1; sourceTree = "<group>"; };
+		1491DA351C2CAB6E00D25CA0 /* txb2tex.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = txb2tex.1; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1400B8E91C2BC79600B6F870 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1400B9061C2BC86900B6F870 /* SDL.framework in Frameworks */,
+				1400B9081C2BCD5A00B6F870 /* SDL_mixer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491D9F51C2CA93100D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA011C2CAA4300D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA0A1C2CAA4800D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA131C2CAA4B00D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA1C1C2CAA4E00D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA251C2CAA5300D25CA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1400B8DE1C2BC6CB00B6F870 = {
+			isa = PBXGroup;
+			children = (
+				1400B9071C2BCD5A00B6F870 /* SDL_mixer.framework */,
+				1400B9051C2BC86900B6F870 /* SDL.framework */,
+				1491D9D51C2CA7A500D25CA0 /* libmve */,
+				1491D9D61C2CA85A00D25CA0 /* utilities */,
+				1400B8F71C2BC7ED00B6F870 /* SDLMain.m */,
+				1400B8ED1C2BC79600B6F870 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1400B8ED1C2BC79600B6F870 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1400B8EC1C2BC79600B6F870 /* mveplayer */,
+				1491D9FC1C2CA93100D25CA0 /* hogcreate */,
+				1491DA061C2CAA4300D25CA0 /* hogextract */,
+				1491DA0F1C2CAA4800D25CA0 /* mvlcreate */,
+				1491DA181C2CAA4B00D25CA0 /* mvlextract */,
+				1491DA211C2CAA4E00D25CA0 /* tex2txb */,
+				1491DA2A1C2CAA5300D25CA0 /* txb2tex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1491D9D51C2CA7A500D25CA0 /* libmve */ = {
+			isa = PBXGroup;
+			children = (
+				1400B8F91C2BC85B00B6F870 /* decoder8.c */,
+				1400B8FA1C2BC85B00B6F870 /* decoder16.c */,
+				1400B8FB1C2BC85B00B6F870 /* mve_audio.c */,
+				1400B8FC1C2BC85B00B6F870 /* mve_main.c */,
+				1400B8FD1C2BC85B00B6F870 /* mvelib.c */,
+				1400B8FE1C2BC85B00B6F870 /* mveplay.c */,
+			);
+			path = libmve;
+			sourceTree = "<group>";
+		};
+		1491D9D61C2CA85A00D25CA0 /* utilities */ = {
+			isa = PBXGroup;
+			children = (
+				1491DA301C2CAB6E00D25CA0 /* hogcreate.1 */,
+				1491DA311C2CAB6E00D25CA0 /* hogextract.1 */,
+				1491DA321C2CAB6E00D25CA0 /* mvlcreate.1 */,
+				1491DA331C2CAB6E00D25CA0 /* mvlextract.1 */,
+				1491DA341C2CAB6E00D25CA0 /* tex2txb.1 */,
+				1491DA351C2CAB6E00D25CA0 /* txb2tex.1 */,
+				1491D9E11C2CA85A00D25CA0 /* hogcreate.c */,
+				1491D9E31C2CA85A00D25CA0 /* hogextract.c */,
+				1491D9E51C2CA85A00D25CA0 /* mvlcreate.c */,
+				1491D9E71C2CA85A00D25CA0 /* mvlextract.c */,
+				1491D9E91C2CA85A00D25CA0 /* tex2txb.c */,
+				1491D9EB1C2CA85A00D25CA0 /* txb2tex.c */,
+			);
+			path = utilities;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1400B8EB1C2BC79600B6F870 /* mveplayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1400B8F11C2BC79600B6F870 /* Build configuration list for PBXNativeTarget "mveplayer" */;
+			buildPhases = (
+				1400B8E81C2BC79600B6F870 /* Sources */,
+				1400B8E91C2BC79600B6F870 /* Frameworks */,
+				1400B8EA1C2BC79600B6F870 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mveplayer;
+			productName = mveplayer;
+			productReference = 1400B8EC1C2BC79600B6F870 /* mveplayer */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491D9EC1C2CA93100D25CA0 /* hogcreate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491D9F91C2CA93100D25CA0 /* Build configuration list for PBXNativeTarget "hogcreate" */;
+			buildPhases = (
+				1491D9ED1C2CA93100D25CA0 /* Sources */,
+				1491D9F51C2CA93100D25CA0 /* Frameworks */,
+				1491D9F81C2CA93100D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hogcreate;
+			productName = mveplayer;
+			productReference = 1491D9FC1C2CA93100D25CA0 /* hogcreate */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491D9FE1C2CAA4300D25CA0 /* hogextract */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491DA031C2CAA4300D25CA0 /* Build configuration list for PBXNativeTarget "hogextract" */;
+			buildPhases = (
+				1491D9FF1C2CAA4300D25CA0 /* Sources */,
+				1491DA011C2CAA4300D25CA0 /* Frameworks */,
+				1491DA021C2CAA4300D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hogextract;
+			productName = mveplayer;
+			productReference = 1491DA061C2CAA4300D25CA0 /* hogextract */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491DA071C2CAA4800D25CA0 /* mvlcreate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491DA0C1C2CAA4800D25CA0 /* Build configuration list for PBXNativeTarget "mvlcreate" */;
+			buildPhases = (
+				1491DA081C2CAA4800D25CA0 /* Sources */,
+				1491DA0A1C2CAA4800D25CA0 /* Frameworks */,
+				1491DA0B1C2CAA4800D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mvlcreate;
+			productName = mveplayer;
+			productReference = 1491DA0F1C2CAA4800D25CA0 /* mvlcreate */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491DA101C2CAA4B00D25CA0 /* mvlextract */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491DA151C2CAA4B00D25CA0 /* Build configuration list for PBXNativeTarget "mvlextract" */;
+			buildPhases = (
+				1491DA111C2CAA4B00D25CA0 /* Sources */,
+				1491DA131C2CAA4B00D25CA0 /* Frameworks */,
+				1491DA141C2CAA4B00D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mvlextract;
+			productName = mveplayer;
+			productReference = 1491DA181C2CAA4B00D25CA0 /* mvlextract */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491DA191C2CAA4E00D25CA0 /* tex2txb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491DA1E1C2CAA4E00D25CA0 /* Build configuration list for PBXNativeTarget "tex2txb" */;
+			buildPhases = (
+				1491DA1A1C2CAA4E00D25CA0 /* Sources */,
+				1491DA1C1C2CAA4E00D25CA0 /* Frameworks */,
+				1491DA1D1C2CAA4E00D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = tex2txb;
+			productName = mveplayer;
+			productReference = 1491DA211C2CAA4E00D25CA0 /* tex2txb */;
+			productType = "com.apple.product-type.tool";
+		};
+		1491DA221C2CAA5300D25CA0 /* txb2tex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1491DA271C2CAA5300D25CA0 /* Build configuration list for PBXNativeTarget "txb2tex" */;
+			buildPhases = (
+				1491DA231C2CAA5300D25CA0 /* Sources */,
+				1491DA251C2CAA5300D25CA0 /* Frameworks */,
+				1491DA261C2CAA5300D25CA0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = txb2tex;
+			productName = mveplayer;
+			productReference = 1491DA2A1C2CAA5300D25CA0 /* txb2tex */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1400B8DF1C2BC6CB00B6F870 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				TargetAttributes = {
+					1400B8EB1C2BC79600B6F870 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = 1400B8E21C2BC6CB00B6F870 /* Build configuration list for PBXProject "utils" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1400B8DE1C2BC6CB00B6F870;
+			productRefGroup = 1400B8ED1C2BC79600B6F870 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1400B8EB1C2BC79600B6F870 /* mveplayer */,
+				1491D9EC1C2CA93100D25CA0 /* hogcreate */,
+				1491D9FE1C2CAA4300D25CA0 /* hogextract */,
+				1491DA071C2CAA4800D25CA0 /* mvlcreate */,
+				1491DA101C2CAA4B00D25CA0 /* mvlextract */,
+				1491DA191C2CAA4E00D25CA0 /* tex2txb */,
+				1491DA221C2CAA5300D25CA0 /* txb2tex */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1400B8E81C2BC79600B6F870 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1400B8F81C2BC7ED00B6F870 /* SDLMain.m in Sources */,
+				1400B8FF1C2BC85B00B6F870 /* decoder8.c in Sources */,
+				1400B9001C2BC85B00B6F870 /* decoder16.c in Sources */,
+				1400B9011C2BC85B00B6F870 /* mve_audio.c in Sources */,
+				1400B9021C2BC85B00B6F870 /* mve_main.c in Sources */,
+				1400B9031C2BC85B00B6F870 /* mvelib.c in Sources */,
+				1400B9041C2BC85B00B6F870 /* mveplay.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491D9ED1C2CA93100D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491D9FD1C2CA96C00D25CA0 /* hogcreate.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491D9FF1C2CAA4300D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491DA2B1C2CAB4000D25CA0 /* hogextract.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA081C2CAA4800D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491DA2C1C2CAB4500D25CA0 /* mvlcreate.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA111C2CAA4B00D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491DA2D1C2CAB4C00D25CA0 /* mvlextract.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA1A1C2CAA4E00D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491DA2E1C2CAB4F00D25CA0 /* tex2txb.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1491DA231C2CAA5300D25CA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1491DA2F1C2CAB5300D25CA0 /* txb2tex.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1400B8E31C2BC6CB00B6F870 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1400B8E41C2BC6CB00B6F870 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1400B8F21C2BC79600B6F870 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"HAVE_STRUCT_TIMEVAL=1",
+					"HAVE_STRUCT_TIMESPEC=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "arch/cocoa include";
+			};
+			name = Debug;
+		};
+		1400B8F31C2BC79600B6F870 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"HAVE_STRUCT_TIMEVAL=1",
+					HAVE_STRUCT_TIMESPEC,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "arch/cocoa include";
+			};
+			name = Release;
+		};
+		1491D9FA1C2CA93100D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491D9FB1C2CA93100D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1491DA041C2CAA4300D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491DA051C2CAA4300D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1491DA0D1C2CAA4800D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491DA0E1C2CAA4800D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1491DA161C2CAA4B00D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491DA171C2CAA4B00D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1491DA1F1C2CAA4E00D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491DA201C2CAA4E00D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1491DA281C2CAA5300D25CA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1491DA291C2CAA5300D25CA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1400B8E21C2BC6CB00B6F870 /* Build configuration list for PBXProject "utils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1400B8E31C2BC6CB00B6F870 /* Debug */,
+				1400B8E41C2BC6CB00B6F870 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1400B8F11C2BC79600B6F870 /* Build configuration list for PBXNativeTarget "mveplayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1400B8F21C2BC79600B6F870 /* Debug */,
+				1400B8F31C2BC79600B6F870 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491D9F91C2CA93100D25CA0 /* Build configuration list for PBXNativeTarget "hogcreate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491D9FA1C2CA93100D25CA0 /* Debug */,
+				1491D9FB1C2CA93100D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491DA031C2CAA4300D25CA0 /* Build configuration list for PBXNativeTarget "hogextract" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491DA041C2CAA4300D25CA0 /* Debug */,
+				1491DA051C2CAA4300D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491DA0C1C2CAA4800D25CA0 /* Build configuration list for PBXNativeTarget "mvlcreate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491DA0D1C2CAA4800D25CA0 /* Debug */,
+				1491DA0E1C2CAA4800D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491DA151C2CAA4B00D25CA0 /* Build configuration list for PBXNativeTarget "mvlextract" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491DA161C2CAA4B00D25CA0 /* Debug */,
+				1491DA171C2CAA4B00D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491DA1E1C2CAA4E00D25CA0 /* Build configuration list for PBXNativeTarget "tex2txb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491DA1F1C2CAA4E00D25CA0 /* Debug */,
+				1491DA201C2CAA4E00D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1491DA271C2CAA5300D25CA0 /* Build configuration list for PBXNativeTarget "txb2tex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1491DA281C2CAA5300D25CA0 /* Debug */,
+				1491DA291C2CAA5300D25CA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1400B8DF1C2BC6CB00B6F870 /* Project object */;
+}

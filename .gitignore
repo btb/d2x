@@ -35,3 +35,4 @@ stamp-h1
 debian/changelog
 rpm/d2x.spec
 .dirstamp
+xcuserdata/
