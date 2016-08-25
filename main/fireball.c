@@ -197,16 +197,20 @@ object *object_create_explosion_sub(object *objp, short segnum, vms_vector * pos
 								if (parent > -1 ) {
 									killer = &Objects[parent];
 									if (killer != ConsoleObject)		// if someone else whacks you, cut force by 2x
+									{
 										vforce2.x /= 2;	vforce2.y /= 2;	vforce2.z /= 2;
+									}
 								}
 								vforce2.x /= 2;	vforce2.y /= 2;	vforce2.z /= 2;
 
 								phys_apply_force(obj0p,&vforce);
 								phys_apply_rot(obj0p,&vforce2);
-								if (Difficulty_level == 0)
-									damage /= 4;
 								if ( obj0p->shields >= 0 )
+								{
+									if (Difficulty_level == 0)
+										damage /= 4;
 									apply_damage_to_player(obj0p, killer, damage );
+								}
 							}
 								break;
 
