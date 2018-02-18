@@ -2754,10 +2754,11 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
 					"HAVE_CONFIG_H=1",
 					"EDITOR=1",
+					"SDL_INPUT=1",
+					"SDL_VIDEO=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2815,7 +2816,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"HAVE_CONFIG_H=1",
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
@@ -2927,10 +2931,10 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
-					"HAVE_CONFIG_H=1",
 					"OGL=1",
+					"SDL_INPUT=1",
+					"SDL_GL_VIDEO=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2968,12 +2972,6 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"HAVE_STRUCT_TIMEVAL=1",
-					"HAVE_STRUCT_TIMESPEC=1",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2984,10 +2982,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"HAVE_STRUCT_TIMEVAL=1",
-					HAVE_STRUCT_TIMESPEC,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -3003,9 +2997,10 @@
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
 					"HAVE_CONFIG_H=1",
+					"SDL_INPUT=1",
+					"SDL_VIDEO=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
