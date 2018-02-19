@@ -347,7 +347,7 @@ void wall_open_door(segment *seg, int side)
 	Assert(seg->sides[side].wall_num != -1); 	//Opening door on illegal wall
 
 	w = &Walls[seg->sides[side].wall_num];
-	wall_num = (int)(w - Walls);
+	wall_num = WALL_NUMBER(w);
 	//kill_stuck_objects(seg->sides[side].wall_num);
 
 	if ((w->state == WALL_DOOR_OPENING) ||		//already opening
@@ -365,7 +365,7 @@ void wall_open_door(segment *seg, int side)
 
 			d = &ActiveDoors[i];
 	
-			if (d->front_wallnum[0]==w-Walls || d->back_wallnum[0]==wall_num ||
+			if (d->front_wallnum[0] == WALL_NUMBER(w) || d->back_wallnum[0] == wall_num ||
 				 (d->n_parts==2 && (d->front_wallnum[1]==wall_num || d->back_wallnum[1]==wall_num)))
 				break;
 		}
@@ -484,7 +484,7 @@ void start_wall_cloak(segment *seg, int side)
 
 			d = &CloakingWalls[i];
 	
-			if (d->front_wallnum==w-Walls || d->back_wallnum==w-Walls )
+			if (d->front_wallnum == WALL_NUMBER(w) || d->back_wallnum == WALL_NUMBER(w))
 				break;
 		}
 
@@ -564,7 +564,7 @@ void start_wall_decloak(segment *seg, int side)
 
 			d = &CloakingWalls[i];
 	
-			if (d->front_wallnum==w-Walls || d->back_wallnum==w-Walls )
+			if (d->front_wallnum == WALL_NUMBER(w) || d->back_wallnum == WALL_NUMBER(w))
 				break;
 		}
 
@@ -716,7 +716,7 @@ void wall_close_door(segment *seg, int side)
 	Assert(seg->sides[side].wall_num != -1); 	//Opening door on illegal wall
 
 	w = &Walls[seg->sides[side].wall_num];
-	wall_num = (int)(w - Walls);
+	wall_num = WALL_NUMBER(w);
 	if ((w->state == WALL_DOOR_CLOSING) ||		//already closing
 		 (w->state == WALL_DOOR_WAITING)	||		//open, waiting to close
 		 (w->state == WALL_DOOR_CLOSED))			//closed
