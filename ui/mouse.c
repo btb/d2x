@@ -122,6 +122,7 @@ void ui_mouse_hide()
 
 void ui_mouse_process()
 {   int buttons,w,h;
+	int x, y;
 
 	//if (Mouse.hidden==0)
 	//    mouse_get_pos( &Mouse.x, &Mouse.y );
@@ -133,8 +134,12 @@ void ui_mouse_process()
 	Mouse.dy = Mouse.new_dy;
 	buttons = Mouse.new_buttons;
 
-	Mouse.x += Mouse.dx;
-	Mouse.y += Mouse.dy;
+	mouse_get_pos(&x, &y);
+	Mouse.x = x;
+	Mouse.y = y;
+
+	//Mouse.x += Mouse.dx;
+	//Mouse.y += Mouse.dy;
 
 	w = grd_curscreen->sc_w;
 	h = grd_curscreen->sc_h;
