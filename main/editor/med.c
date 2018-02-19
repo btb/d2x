@@ -301,7 +301,7 @@ void ReadLispMacro( FILE * file, char * buffer )
 }
 #endif
 
-static int (*KeyFunction[2048])();
+static int (*KeyFunction[8192])();
 
 void medkey_init()
 {
@@ -1111,6 +1111,8 @@ void editor(void)
 		if ((last_keypress&0xff)==KEY_RCTRL) last_keypress=0;
 //		if ((last_keypress&0xff)==KEY_LALT) last_keypress=0;
 //		if ((last_keypress&0xff)==KEY_RALT) last_keypress=0;
+		if ((last_keypress&0xff)==KEY_LMETA) last_keypress=0;
+		if ((last_keypress&0xff)==KEY_RMETA) last_keypress=0;
 
 		gr_set_curfont(editor_font);
 		menubar_do( last_keypress );
