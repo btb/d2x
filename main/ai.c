@@ -1559,7 +1559,7 @@ int ai_save_state(PHYSFS_file *fp)
 
 	{
 		int temp;
-		temp = (int)(Point_segs_free_ptr - Point_segs);
+		temp = POINT_SEG_NUMBER(Point_segs_free_ptr);
 		PHYSFS_write(fp, &temp, sizeof(int), 1);
 	}
 

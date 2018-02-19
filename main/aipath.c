@@ -284,7 +284,7 @@ int create_path_points(object *objp, int start_seg, int end_seg, point_seg *pseg
 	point_seg	*original_psegs = psegs;
 	int		l_num_points;
 
-// -- mprintf((0, "cpp: frame = %4i obj %3i, psegs = %5i\n", FrameCount, OBJECT_NUMBER(objp), psegs-Point_segs));
+// -- mprintf((0, "cpp: frame = %4i obj %3i, psegs = %5i\n", FrameCount, OBJECT_NUMBER(objp), POINT_SEG_NUMBER(psegs)));
 #if PATH_VALIDATION
 	validate_all_paths();
 #endif
@@ -409,7 +409,7 @@ cpp_done1: ;
 	#ifdef EDITOR
 	// -- N_selected_segs = 0;
 	#endif
-//printf("Object #%3i, start: %3i ", OBJECT_NUMBER(objp), psegs-Point_segs);
+//printf("Object #%3i, start: %3i ", OBJECT_NUMBER(objp), POINT_SEG_NUMBER(psegs));
 	while (qtail >= 0) {
 		int	parent_seg, this_seg;
 
@@ -457,7 +457,7 @@ cpp_done1: ;
 	//	between the two points.  This is messy because we must insert into the list.  The simplest (and not too slow)
 	//	way to do this is to start at the end of the list and go backwards.
 	if (safety_flag) {
-		if (psegs - Point_segs + l_num_points + 2 > MAX_POINT_SEGS) {
+		if (POINT_SEG_NUMBER(psegs) + l_num_points + 2 > MAX_POINT_SEGS) {
 			//	Ouch!  Cannot insert center points in path.  So return unsafe path.
 //			Int3();	// Contact Mike:  This is impossible.
 //			force_dump_ai_objects_all("Error in create_path_points");
@@ -562,7 +562,7 @@ int validate_path(int debug_flag, point_seg *psegs, int num_points)
 
 	curseg = psegs->segnum;
 	if ((curseg < 0) || (curseg > Highest_segment_index)) {
-		mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", psegs-Point_segs, num_points));
+		mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", POINT_SEG_NUMBER(psegs), num_points));
 		Int3();		//	Contact Mike: Debug trap for elusive, nasty bug.
 		return 0;
 	}
@@ -573,13 +573,13 @@ if (debug_flag == 999)
 if (num_points == 0)
 	return 1;
 
-// printf("(%i) Validating path at psegs=%i, num_points=%i, segments = %3i ", debug_flag, psegs-Point_segs, num_points, psegs[0].segnum);
+// printf("(%i) Validating path at psegs=%i, num_points=%i, segments = %3i ", debug_flag, POINT_SEG_NUMBER(psegs), num_points, psegs[0].segnum);
 	for (i=1; i<num_points; i++) {
 		int	sidenum;
 		int	nextseg = psegs[i].segnum;
 
 		if ((nextseg < 0) || (nextseg > Highest_segment_index)) {
-			mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", psegs-Point_segs, num_points));
+			mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", POINT_SEG_NUMBER(psegs), num_points));
 			Int3();		//	Contact Mike: Debug trap for elusive, nasty bug.
 			return 0;
 		}
@@ -592,7 +592,7 @@ if (num_points == 0)
 
 			// Assert(sidenum != MAX_SIDES_PER_SEGMENT);	//	Hey, created path is not contiguous, why!?
 			if (sidenum == MAX_SIDES_PER_SEGMENT) {
-				mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", psegs-Point_segs, num_points));
+				mprintf((0, "Path beginning at index %i, length=%i is bogus!\n", POINT_SEG_NUMBER(psegs), num_points));
 				// printf("BOGUS");
 				Int3();
 				return 0;
@@ -659,13 +659,13 @@ void validate_all_paths(void)
 // -- 		; //mprintf((0, "Object %i, hide_segment = -1, not creating path.\n", OBJECT_NUMBER(objp)));
 // -- 	} else {
 // -- 		create_path_points(objp, start_seg, end_seg, Point_segs_free_ptr, &aip->path_length, -1, 0, 0, -1);
-// -- 		aip->hide_index = Point_segs_free_ptr - Point_segs;
+// -- 		aip->hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 // -- 		aip->cur_path_index = 0;
 // -- #if PATH_VALIDATION
 // -- 		validate_path(5, Point_segs_free_ptr, aip->path_length);
 // -- #endif
 // -- 		Point_segs_free_ptr += aip->path_length;
-// -- 		if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+// -- 		if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 // -- 			//Int3();	//	Contact Mike: This is curious, though not deadly. /eip++;g
 // -- 			//force_dump_ai_objects_all("Error in create_path");
 // -- 			ai_reset_all_paths();
@@ -708,16 +708,16 @@ void create_path_to_player(object *objp, int max_length, int safety_flag)
 	} else {
 		create_path_points(objp, start_seg, end_seg, Point_segs_free_ptr, &aip->path_length, max_length, 1, safety_flag, -1);
 		aip->path_length = polish_path(objp, Point_segs_free_ptr, aip->path_length);
-		aip->hide_index = Point_segs_free_ptr - Point_segs;
+		aip->hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 		aip->cur_path_index = 0;
 		Point_segs_free_ptr += aip->path_length;
-		if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+		if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 			//Int3();	//	Contact Mike: This is stupid.  Should call maybe_ai_garbage_collect before the add.
 			//force_dump_ai_objects_all("Error in create_path_to_player");
 			ai_reset_all_paths();
 			return;
 		}
-//		Assert(Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 < MAX_POINT_SEGS);
+//		Assert(POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 < MAX_POINT_SEGS);
 		aip->PATH_DIR = 1;		//	Initialize to moving forward.
 		// -- UNUSED! aip->SUBMODE = AISM_GOHIDE;		//	This forces immediate movement.
 		ailp->mode = AIM_FOLLOW_PATH;
@@ -750,10 +750,10 @@ void create_path_to_segment(object *objp, int goalseg, int max_length, int safet
 		;
 	} else {
 		create_path_points(objp, start_seg, end_seg, Point_segs_free_ptr, &aip->path_length, max_length, 1, safety_flag, -1);
-		aip->hide_index = Point_segs_free_ptr - Point_segs;
+		aip->hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 		aip->cur_path_index = 0;
 		Point_segs_free_ptr += aip->path_length;
-		if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+		if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 			ai_reset_all_paths();
 			return;
 		}
@@ -794,17 +794,17 @@ void create_path_to_station(object *objp, int max_length)
 	} else {
 		create_path_points(objp, start_seg, end_seg, Point_segs_free_ptr, &aip->path_length, max_length, 1, 1, -1);
 		aip->path_length = polish_path(objp, Point_segs_free_ptr, aip->path_length);
-		aip->hide_index = Point_segs_free_ptr - Point_segs;
+		aip->hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 		aip->cur_path_index = 0;
 
 		Point_segs_free_ptr += aip->path_length;
-		if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+		if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 			//Int3();	//	Contact Mike: Stupid.
 			//force_dump_ai_objects_all("Error in create_path_to_station");
 			ai_reset_all_paths();
 			return;
 		}
-//		Assert(Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 < MAX_POINT_SEGS);
+//		Assert(POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 < MAX_POINT_SEGS);
 		aip->PATH_DIR = 1;		//	Initialize to moving forward.
 		// aip->SUBMODE = AISM_GOHIDE;		//	This forces immediate movement.
 		ailp->mode = AIM_FOLLOW_PATH;
@@ -834,13 +834,13 @@ void create_n_segment_path(object *objp, int path_length, int avoid_seg)
 		}
 	}
 
-	aip->hide_index = Point_segs_free_ptr - Point_segs;
+	aip->hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 	aip->cur_path_index = 0;
 #if PATH_VALIDATION
 	validate_path(8, Point_segs_free_ptr, aip->path_length);
 #endif
 	Point_segs_free_ptr += aip->path_length;
-	if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+	if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 		//Int3();	//	Contact Mike: This is curious, though not deadly. /eip++;g
 		//force_dump_ai_objects_all("Error in crete_n_segment_path 2");
 		ai_reset_all_paths();
@@ -1003,7 +1003,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 		}
 	}
 
-	if ((aip->hide_index + aip->path_length > Point_segs_free_ptr - Point_segs) && (aip->path_length>0)) {
+	if ((aip->hide_index + aip->path_length > POINT_SEG_NUMBER(Point_segs_free_ptr)) && (aip->path_length>0)) {
 		Int3();	//	Contact Mike: Bad.  Path goes into what is believed to be free space.
 		//	This is debugging code.  Figure out why garbage collection
 		//	didn't compress this object's path information.
@@ -1384,7 +1384,7 @@ void ai_path_garbage_collect(void)
 	force_dump_ai_objects_all("***** Start ai_path_garbage_collect *****");
 #endif
 
-	// -- mprintf((0, "Garbage collection frame %i, last frame %i!  Old free index = %i ", FrameCount, Last_frame_garbage_collected, Point_segs_free_ptr - Point_segs));
+	// -- mprintf((0, "Garbage collection frame %i, last frame %i!  Old free index = %i ", FrameCount, Last_frame_garbage_collected, POINT_SEG_NUMBER(Point_segs_free_ptr)));
 
 	Last_frame_garbage_collected = FrameCount;
 
@@ -1427,7 +1427,7 @@ void ai_path_garbage_collect(void)
 	Point_segs_free_ptr = &Point_segs[free_path_index];
 
 	// mprintf((0, "new = %i\n", free_path_index));
-//printf("After garbage collection, free index = %i\n", Point_segs_free_ptr - Point_segs);
+//printf("After garbage collection, free index = %i\n", POINT_SEG_NUMBER(Point_segs_free_ptr));
 #ifndef NDEBUG
 	{
 	int i;
@@ -1438,7 +1438,7 @@ void ai_path_garbage_collect(void)
 		ai_static	*aip = &Objects[i].ctype.ai_info;
 
 		if ((Objects[i].type == OBJ_ROBOT) && (Objects[i].control_type == CT_AI))
-			if ((aip->hide_index + aip->path_length > Point_segs_free_ptr - Point_segs) && (aip->path_length>0))
+			if ((aip->hide_index + aip->path_length > POINT_SEG_NUMBER(Point_segs_free_ptr)) && (aip->path_length>0))
 				Int3();		//	Contact Mike: Debug trap for nasty, elusive bug.
 	}
 
@@ -1452,7 +1452,7 @@ void ai_path_garbage_collect(void)
 //	Do garbage collection if not been done for awhile, or things getting really critical.
 void maybe_ai_path_garbage_collect(void)
 {
-	if (Point_segs_free_ptr - Point_segs > MAX_POINT_SEGS - MAX_PATH_LENGTH) {
+	if (POINT_SEG_NUMBER(Point_segs_free_ptr) > MAX_POINT_SEGS - MAX_PATH_LENGTH) {
 		if (Last_frame_garbage_collected+1 >= FrameCount) {
 			//	This is kind of bad.  Garbage collected last frame or this frame.
 			//	Just destroy all paths.  Too bad for the robots.  They are memory wasteful.
@@ -1462,13 +1462,13 @@ void maybe_ai_path_garbage_collect(void)
 			//	We are really close to full, but didn't just garbage collect, so maybe this is recoverable.
 			mprintf((1, "Warning: Almost full garbage collection being performed: "));
 			ai_path_garbage_collect();
-			mprintf((1, "Free records = %i/%i\n", MAX_POINT_SEGS - (Point_segs_free_ptr - Point_segs), MAX_POINT_SEGS));
+			mprintf((1, "Free records = %i/%i\n", MAX_POINT_SEGS - (POINT_SEG_NUMBER(Point_segs_free_ptr)), MAX_POINT_SEGS));
 		}
-	} else if (Point_segs_free_ptr - Point_segs > 3*MAX_POINT_SEGS/4) {
+	} else if (POINT_SEG_NUMBER(Point_segs_free_ptr) > 3*MAX_POINT_SEGS/4) {
 		if (Last_frame_garbage_collected + 16 < FrameCount) {
 			ai_path_garbage_collect();
 		}
-	} else if (Point_segs_free_ptr - Point_segs > MAX_POINT_SEGS/2) {
+	} else if (POINT_SEG_NUMBER(Point_segs_free_ptr) > MAX_POINT_SEGS/2) {
 		if (Last_frame_garbage_collected + 256 < FrameCount) {
 			ai_path_garbage_collect();
 		}
@@ -1814,10 +1814,10 @@ void create_player_path_to_segment(int segnum)
 
 	Player_following_path_flag = 1;
 
-	Player_hide_index = Point_segs_free_ptr - Point_segs;
+	Player_hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 	Player_cur_path_index = 0;
 	Point_segs_free_ptr += Player_path_length;
-	if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+	if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 		//Int3();	//	Contact Mike: This is curious, though not deadly. /eip++;g
 		ai_reset_all_paths();
 	}

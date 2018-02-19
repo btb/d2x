@@ -2863,10 +2863,10 @@ int mark_player_path_to_segment(int segnum)
 		return 0;
 	}
 
-	player_hide_index = (int)(Point_segs_free_ptr - Point_segs);
+	player_hide_index = POINT_SEG_NUMBER(Point_segs_free_ptr);
 	Point_segs_free_ptr += player_path_length;
 
-	if (Point_segs_free_ptr - Point_segs + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
+	if (POINT_SEG_NUMBER(Point_segs_free_ptr) + MAX_PATH_LENGTH*2 > MAX_POINT_SEGS) {
 		mprintf((1, "Can't create path.  Not enough point_segs.\n"));
 		ai_reset_all_paths();
 		return 0;
