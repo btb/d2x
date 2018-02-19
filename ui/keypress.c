@@ -56,6 +56,7 @@ void GetKeyDescription( char * text, int keypress )
 	char Ctrl[10];
 	char Alt[10];
 	char Shift[10];
+	char Meta[10];
 
 	if (keypress & KEY_CTRLED)
 		strcpy( Ctrl, "{Ctrl}");
@@ -72,7 +73,12 @@ void GetKeyDescription( char * text, int keypress )
 	else
 		strcpy( Shift, "");
 
-	sprintf( text, "%s%s%s%s", Ctrl, Alt, Shift, KeyDesc[keypress & 255 ]  );
+	if (keypress & KEY_METAED)
+		strcpy(Meta, "{Meta}");
+	else
+		strcpy(Meta, "");
+
+	sprintf( text, "%s%s%s%s%s", Ctrl, Alt, Shift, Meta, KeyDesc[keypress & 255 ]  );
 }
 
 
