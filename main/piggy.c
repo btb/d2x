@@ -1293,7 +1293,7 @@ void piggy_write_pigfile(char *filename)
 	fwrite( &Num_bitmap_files, sizeof(int), 1, pig_fp );
 	Num_bitmap_files++;
 
-	bitmap_data_start = ftell(pig_fp);
+	bitmap_data_start = (int)ftell(pig_fp);
 	bitmap_data_start += (Num_bitmap_files - 1) * sizeof(DiskBitmapHeader);
 	data_offset = bitmap_data_start;
 

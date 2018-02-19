@@ -51,7 +51,7 @@ char **file_getdirlist(int *NumDirs, char *dir)
 		strncat(path, "/", PATH_MAX - strlen(dir));
 
 	test_filename = path + strlen(path);
-	test_max = PATH_MAX - (test_filename - path);
+	test_max = PATH_MAX - (int)(test_filename - path);
 
 	for (i = list; *i; i++)
 	{

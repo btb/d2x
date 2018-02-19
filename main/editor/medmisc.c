@@ -43,7 +43,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //return 2d distance, i.e, sqrt(x*x + y*y)
 #ifdef __WATCOMC__
-long dist_2d(long x,long y);
+fix dist_2d(fix x, fix y);
 
 #pragma aux dist_2d parm [eax] [ebx] value [eax] modify [ecx edx] = \
 	"imul	eax"			\
@@ -55,8 +55,8 @@ long dist_2d(long x,long y);
 	"call	quad_sqrt";
 #else
 #include <math.h>
-long dist_2d(long x,long y) {
-	return (long)sqrt((double)x * (double)x + (double)y * (double)y);
+fix dist_2d(fix x, fix y) {
+	return (fix)sqrt((double)x * (double)x + (double)y * (double)y);
 }
 #endif
 

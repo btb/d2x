@@ -5221,7 +5221,7 @@ void save_hoard_data(void)
 
 		ifile = PHYSFS_openRead(sounds[i]);
 		Assert(ifile != NULL);
-		size = PHYSFS_fileLength(ifile);
+		size = (int)PHYSFS_fileLength(ifile);
 		buf = d_malloc(size);
 		PHYSFS_read(ifile, buf, size, 1);
 		PHYSFS_writeULE32(ofile, size);
