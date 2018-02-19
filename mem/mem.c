@@ -281,7 +281,7 @@ int mem_check_integrity( int block_number )
 	for (i=0; i<CHECKSIZE; i++ )
 		if (CheckData[i] != CHECKBYTE ) {
 			ErrorCount++;
-			fprintf( stderr, "OA: %p ", &CheckData[i] );
+			fprintf( stderr, "OA: %p ", (void *)&CheckData[i] );
 		}
 
 	if (ErrorCount &&  (!out_of_memory))	{
