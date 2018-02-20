@@ -822,7 +822,7 @@
 		1434694E1AF860C8001054C8 /* build-prereqs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-prereqs.sh"; sourceTree = "<group>"; };
 		143980CC1A89EE290082C110 /* cli.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cli.c; sourceTree = "<group>"; };
 		143980D01A89EF6F0082C110 /* cli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cli.h; sourceTree = "<group>"; };
-		143E00B01AC2683D005DE85E /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		143E00B01AC2683D005DE85E /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		144BC0311A74C40E001A6048 /* gr.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gr.c; sourceTree = "<group>"; };
 		144BC0351A74D0D0001A6048 /* vid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vid.h; sourceTree = "<group>"; };
 		146694D11A2729860070D41D /* 2dsline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = 2dsline.c; sourceTree = "<group>"; };
