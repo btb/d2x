@@ -28,14 +28,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #if 1	//ndef RELEASE	//kill error on RELEASE build
 
 void slew_init(object *obj);                // say this is slew obj
-int slew_stop();                            // Stops object
-void slew_reset_orient();                   // Resets orientation
+int slew_stop(void);                        // Stops object
+void slew_reset_orient(void);               // Resets orientation
 int slew_frame(int dont_check_keys);        // Does slew frame
 
 #else
 
 #define slew_init(obj)
-#define slew_stop(obj)
+#define slew_stop()
 #define slew_reset_orient()
 #define slew_frame(dont_check_keys)
 

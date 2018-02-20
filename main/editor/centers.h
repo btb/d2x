@@ -26,7 +26,7 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 extern        char    Center_names[MAX_CENTER_TYPES][CENTER_STRING_LENGTH];
 
-void close_centers_window();
-void do_centers_window();
+void close_centers_window(void);
+void do_centers_window(void);
 
 #endif

@@ -152,7 +152,7 @@ extern ubyte Version_fix;
  **	Functions
  **/
 
-void quit_request();
+void quit_request(void);
 
 
 #endif

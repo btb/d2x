@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "player.h"
 
 extern void do_automap(int key_code);
-extern void automap_clear_visited();
+extern void automap_clear_visited(void);
 extern ubyte Automap_visited[MAX_SEGMENTS];
 void DropBuddyMarker(object *objp);
 

@@ -23,15 +23,15 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 
 
-extern int bind_wall_to_trigger();
+extern int bind_wall_to_trigger(void);
 
-extern int trigger_remove();
+extern int trigger_remove(void);
 
 extern int remove_trigger(segment *seg, short side);
 
-extern void close_trigger_window();
+extern void close_trigger_window(void);
 
-extern void do_trigger_window();
+extern void do_trigger_window(void);
 
 #endif
 

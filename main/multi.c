@@ -42,26 +42,26 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void multi_reset_player_object(object *objp);
 void multi_reset_object_texture(object *objp);
-void multi_add_lifetime_killed();
-void multi_add_lifetime_kills();
+void multi_add_lifetime_killed(void);
+void multi_add_lifetime_kills(void);
 void multi_send_play_by_play(int num,int spnum,int dpnum);
-void multi_send_heartbeat();
-void multi_send_modem_ping();
-void multi_cap_objects();
+void multi_send_heartbeat(void);
+void multi_send_modem_ping(void);
+void multi_cap_objects(void);
 void multi_adjust_remote_cap(int pnum);
 void multi_save_game(ubyte slot, uint id, char *desc);
 void multi_restore_game(ubyte slot, uint id);
 void multi_set_robot_ai(void);
-void multi_send_powerup_update();
+void multi_send_powerup_update(void);
 void bash_to_shield(int i,char *s);
-void init_hoard_data();
-void multi_apply_goal_textures();
+void init_hoard_data(void);
+void multi_apply_goal_textures(void);
 int  find_goal_texture(ubyte t);
-void multi_bad_restore();
+void multi_bad_restore(void);
 void multi_do_capture_bonus(char *buf);
 void multi_do_orb_bonus(char *buf);
 void multi_send_drop_flag(int objnum,int seed);
-void multi_send_ranking();
+void multi_send_ranking(void);
 void multi_do_play_by_play(char *buf);
 
 //
@@ -430,7 +430,7 @@ get_team(int pnum)
 		return 0;
 }
 
-extern void game_disable_cheats();
+extern void game_disable_cheats(void);
 
 void
 multi_new_game(void)
@@ -1149,7 +1149,7 @@ extern fix StartingShields;
 fix PingLaunchTime,PingReturnTime;
 
 extern void network_send_ping (ubyte);
-extern int network_who_is_master();
+extern int network_who_is_master(void);
 extern char NameReturning;
 extern int force_cockpit_redraw;
 
@@ -4823,7 +4823,7 @@ void multi_send_finish_game ()
 }
 
 
-extern void do_final_boss_hacks();
+extern void do_final_boss_hacks(void);
 void multi_do_finish_game (char *buf)
 {
 	if (buf[0]!=MULTI_FINISH_GAME)

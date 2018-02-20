@@ -241,18 +241,18 @@ extern void ui_draw_box_in( short x1, short y1, short x2, short y2 );
 extern void ui_draw_line_in( short x1, short y1, short x2, short y2 );
 
 
-void ui_init();
-void ui_close();
+void ui_init(void);
+void ui_close(void);
 int ui_messagebox( short x, short y, int NumButtons, char * text, ... );
 void ui_string_centered( short x, short y, char * s );
 int PopupMenu( int NumItems, char * text[] );
 
-extern void ui_mouse_init();
+extern void ui_mouse_init(void);
 extern grs_bitmap * ui_mouse_set_pointer( grs_bitmap * new );
 
-extern void ui_mouse_process();
-extern void ui_mouse_hide();
-extern void ui_mouse_show();
+extern void ui_mouse_process(void);
+extern void ui_mouse_hide(void);
+extern void ui_mouse_show(void);
 
 #define WIN_BORDER 1
 #define WIN_FILLED 2
@@ -276,7 +276,7 @@ extern void ui_listbox_do( UI_GADGET_LISTBOX * listbox, int keypress );
 extern void ui_draw_listbox( UI_GADGET_LISTBOX * listbox );
 extern UI_GADGET_LISTBOX *ui_add_gadget_listbox(UI_WINDOW *wnd, short x, short y, short w, short h, short numitems, char **list);
 
-extern void ui_mega_process();
+extern void ui_mega_process(void);
 
 extern void ui_get_button_size( char * text, int * width, int * height );
 
@@ -329,7 +329,7 @@ void ui_free( void * buffer );
 UI_GADGET_KEYTRAP * ui_add_gadget_keytrap( UI_WINDOW * wnd, int key_to_trap, int (*function_to_call)(void)  );
 void ui_keytrap_do( UI_GADGET_KEYTRAP * keytrap, int keypress );
 
-void ui_mouse_close();
+void ui_mouse_close(void);
 
 #define UI_RECORD_MOUSE     1
 #define UI_RECORD_KEYS      2
@@ -341,7 +341,7 @@ void ui_mouse_close();
 int ui_record_events( int NumberOfEvents, UI_EVENT * buffer, int Flags );
 int ui_play_events_realtime( int NumberOfEvents, UI_EVENT * buffer );
 int ui_play_events_fast( int NumberOfEvents, UI_EVENT * buffer );
-int ui_recorder_status();
+int ui_recorder_status(void);
 void ui_set_playback_speed( int speed );
 
 extern unsigned int ui_number_of_events;
@@ -362,23 +362,23 @@ void GetKeyDescription( char * text, int keypress );
 
 extern void menubar_init(char * filename );
 extern void menubar_do( int keypress );
-extern void menubar_close();
-extern void menubar_hide();
-extern void menubar_show();
+extern void menubar_close(void);
+extern void menubar_hide(void);
+extern void menubar_show(void);
 
-void ui_pad_init();
-void ui_pad_close();
+void ui_pad_init(void);
+void ui_pad_close(void);
 void ui_pad_activate( UI_WINDOW * wnd, int x, int y );
-void ui_pad_deactivate();
+void ui_pad_deactivate(void);
 void ui_pad_goto(int n);
-void ui_pad_goto_next();
-void ui_pad_goto_prev();
+void ui_pad_goto_next(void);
+void ui_pad_goto_prev(void);
 void ui_pad_read( int n, char * filename );
-int ui_pad_get_current();
+int ui_pad_get_current(void);
 
 void ui_barbox_open( char * text, int length );
 void ui_barbox_update( int position );
-void ui_barbox_close();
+void ui_barbox_close(void);
 
 void ui_reset_idle_seconds(void);
 int ui_get_idle_seconds(void);

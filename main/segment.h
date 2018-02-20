@@ -246,7 +246,7 @@ extern void delete_segment_from_group(int segment_num, int group_num);
 extern void add_segment_to_group(int segment_num, int group_num);
 
 // Verify that all vertices are legal.
-extern void med_check_all_vertices();
+extern void med_check_all_vertices(void);
 
 #ifdef FAST_FILE_IO
 #define segment2_read(s2, fp) cfread(s2, sizeof(segment2), 1, fp)

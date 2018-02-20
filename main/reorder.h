@@ -9,7 +9,7 @@
 #define _REORDER_H
 
 /* These are defined in weapon.c */
-extern void ReorderPrimary();
-extern void ReorderSecondary();
+extern void ReorderPrimary(void);
+extern void ReorderSecondary(void);
 
 #endif /* _REORDER_H */

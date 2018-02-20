@@ -32,7 +32,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "strutil.h"
 
 
-extern void g3_remap_interp_colors();
+extern void g3_remap_interp_colors(void);
 
 char Current_level_palette[FILENAME_LEN];
 

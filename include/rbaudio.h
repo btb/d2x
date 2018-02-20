@@ -34,7 +34,7 @@ extern void RBARegisterCD(void);
 extern long RBAGetDeviceStatus(void);
 extern int RBAPlayTrack(int track);
 extern int RBAPlayTracks(int first, int last);	//plays tracks first through last, inclusive
-extern int RBACheckMediaChange();
+extern int RBACheckMediaChange(void);
 extern long	RBAGetHeadLoc(int *min, int *sec, int *frame);
 extern int	RBAPeekPlayStatus(void);
 extern void RBAStop(void);
@@ -47,14 +47,14 @@ extern int	RBAEnabled(void);
 extern void RBADisable(void);
 extern void RBAEnable(void);
 extern int	RBAGetNumberOfTracks(void);
-extern void	RBAPause();
-extern int	RBAResume();
+extern void RBAPause(void);
+extern int  RBAResume(void);
 
 //return the track number currently playing.  Useful if RBAPlayTracks() 
 //is called.  Returns 0 if no track playing, else track number
-int RBAGetTrackNum();
+int RBAGetTrackNum(void);
 
 // get the cddb discid for the current cd.
-uint32_t RBAGetDiscID();
+uint32_t RBAGetDiscID(void);
 
 #endif

@@ -1592,7 +1592,7 @@ void newdemo_pop_ctrlcen_triggers()
 #define N_PLAYER_SHIP_TEXTURES 6
 
 void nd_render_extras (ubyte,object *);
-extern void multi_apply_goal_textures ();
+extern void multi_apply_goal_textures(void);
 ubyte Newdemo_flying_guided=0;
 
 int newdemo_read_frame_information()

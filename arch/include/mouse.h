@@ -69,20 +69,20 @@ extern void d_mouse_init(void);
 
 /* changed from int to void */
 extern void mouse_set_limits( int x1, int y1, int x2, int y2 );
-extern void mouse_flush();	// clears all mice events...
+extern void mouse_flush(void); // clears all mice events...
 
 //========================================================================
 // Shutdowns mouse system.
 #ifdef SVGALIB_INPUT
 extern void d_mouse_close(); /* conflict with <vgamouse.h> */
 #else
-extern void mouse_close();
+extern void mouse_close(void);
 #endif
 
 //========================================================================
 extern void mouse_get_pos( int *x, int *y );
 extern void mouse_get_delta( int *dx, int *dy, int *dz );
-extern int mouse_get_btns();
+extern int mouse_get_btns(void);
 extern void mouse_set_pos( int x, int y);
 
 // Returns how long this button has been down since last call.

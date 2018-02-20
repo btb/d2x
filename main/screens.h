@@ -54,7 +54,7 @@ extern int 			VR_eye_switch;
 #define VR_BLACK_INDEX 0
 extern int			VR_eye_offset;
 extern int 			VR_eye_offset_changed;
-extern void 		VR_reset_params();
+extern void 		VR_reset_params(void);
 extern int			VR_use_reg_code;
 
 

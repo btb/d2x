@@ -20,7 +20,7 @@
 #include "args.h"
 #include "digi.h"
 
-extern void d_mouse_init();
+extern void d_mouse_init(void);
 
 void sdl_close()
 {

@@ -21,7 +21,7 @@ extern ubyte virtual_memory_on;
 
 extern int show_mem_info;
 
-void mem_display_blocks();
+void mem_display_blocks(void);
 extern void * mem_malloc( unsigned int size, char * var, char * file, int line, int fill_zero );
 extern void * mem_realloc( void * buffer, unsigned int size, char * var, char * file, int line );
 extern void mem_free( void * buffer );
@@ -37,7 +37,7 @@ extern char * mem_strdup(char * str, char * var, char * file, int line );
 #define MALLOC( var, type, count )   (var=(type *)mem_malloc((count)*sizeof(type),#var, __FILE__,__LINE__,0 ))
 
 // Checks to see if any blocks are overwritten
-void mem_validate_heap();
+void mem_validate_heap(void);
 
 #else
 

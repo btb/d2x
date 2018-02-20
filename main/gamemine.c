@@ -126,7 +126,7 @@ struct mfi_v19 {
 };
 #endif // 0
 
-int CreateDefaultNewSegment();
+int CreateDefaultNewSegment(void);
 
 int New_file_format_load = 1; // "new file format" is everything newer than d1 shareware
 

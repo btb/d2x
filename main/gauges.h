@@ -36,20 +36,20 @@ extern bitmap_index Gauges_hires[MAX_GAUGE_BMS];    // hires gauges
 // Flags for gauges/hud stuff
 extern cvar_t Reticle_on;
 
-extern void init_gauge_canvases();
-extern void close_gauge_canvases();
+extern void init_gauge_canvases(void);
+extern void close_gauge_canvases(void);
 
-extern void show_score();
-extern void show_score_added();
-extern void add_points_to_score();
-extern void add_bonus_points_to_score();
+extern void show_score(void);
+extern void show_score_added(void);
+extern void add_points_to_score(int points);
+extern void add_bonus_points_to_score(int points);
 
 void render_gauges(void);
 void init_gauges(void);
 extern void check_erase_message(void);
 
-extern void HUD_render_message_frame();
-extern void HUD_clear_messages();
+extern void HUD_render_message_frame(void);
+extern void HUD_clear_messages(void);
 
 // Call to flash a message on the HUD.  Returns true if message drawn.
 // (message might not be drawn if previous message was same)
@@ -57,7 +57,7 @@ extern int HUD_init_message(char *format, ... );
 
 #define gauge_message HUD_init_message
 
-extern void draw_hud();     // draw all the HUD stuff
+extern void draw_hud(void);     // draw all the HUD stuff
 
 extern void player_dead_message(void);
 //extern void say_afterburner_status(void);

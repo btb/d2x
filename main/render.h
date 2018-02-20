@@ -34,7 +34,7 @@ extern int Clear_window;    // 1 = Clear whole background window, 2 = clear view
 void render_frame(fix eye_offset, int window_num);  //draws the world into the current canvas
 
 // cycle the flashing light for when mine destroyed
-void flash_frame();
+void flash_frame(void);
 
 int find_seg_side_face(short x,short y,int *seg,int *side,int *face,int *poly);
 

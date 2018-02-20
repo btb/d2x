@@ -815,7 +815,7 @@ int load_mission(mle *mission)
 
 	if (Current_mission->enhanced) {
 		char t[50];
-		extern void bm_read_extra_robots();
+		extern void bm_read_extra_robots(char *fname, int type);
 		sprintf(t,"%s.ham",Current_mission_filename);
 		bm_read_extra_robots(t, Current_mission->enhanced);
 		strncpy(t,Current_mission_filename,6);

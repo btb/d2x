@@ -48,8 +48,8 @@ int find_homing_object_complete(vms_vector *curpos, object *tracker, int track_o
 extern char Multi_is_guided;
 extern char BounceCheat;
                                                                                                 
-extern void newdemo_record_guided_end();
-extern void newdemo_record_guided_start();
+extern void newdemo_record_guided_end(void);
+extern void newdemo_record_guided_start(void);
 
 int find_homing_object(vms_vector *curpos, object *tracker);
 

@@ -108,10 +108,10 @@ extern trigger Triggers[MAX_TRIGGERS];
 
 extern int Num_triggers;
 
-extern void trigger_init();
+extern void trigger_init(void);
 extern void check_trigger(segment *seg, short side, short objnum,int shot);
 extern int check_trigger_sub(int trigger_num, int player_num,int shot);
-extern void triggers_frame_process();
+extern void triggers_frame_process(void);
 
 #ifdef FAST_FILE_IO
 #define v29_trigger_read(t, fp) cfread(t, sizeof(v29_trigger), 1, fp)

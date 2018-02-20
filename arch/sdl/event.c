@@ -57,7 +57,7 @@ void event_poll()
 			break;
 #endif
 		case SDL_QUIT: {
-			void quit_request();
+			void quit_request(void);
 			quit_request();
 		} break;
 		}

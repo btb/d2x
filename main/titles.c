@@ -719,7 +719,7 @@ void flash_cursor(int cursor_flag)
 	vid_update();
 }
 
-extern int InitMovieBriefing();
+extern int InitMovieBriefing(void);
 
 static int robot_movie_model_map(char kludge)
 {

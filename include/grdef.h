@@ -21,7 +21,7 @@ void gr_init_bitmap_alloc( grs_bitmap *bm, int mode, int x, int y, int w, int h,
 void gr_init_sub_bitmap (grs_bitmap *bm, grs_bitmap *bmParent, int x, int y, int w, int h );
 void gr_init_bitmap( grs_bitmap *bm, int mode, int x, int y, int w, int h, int bytesperline, unsigned char * data );
 
-extern void gr_set_buffer(int w, int h, int r, int (*buffer_func)());
+extern void gr_set_buffer(int w, int h, int r, int (*buffer_func)(void));
 
 extern void gr_pal_setblock( int start, int n, unsigned char * palette );
 extern void gr_pal_getblock( int start, int n, unsigned char * palette );

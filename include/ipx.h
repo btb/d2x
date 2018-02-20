@@ -53,9 +53,9 @@ extern void ipx_close(void);
 extern int ipx_change_default_socket( ushort socket_number );
 
 // Returns a pointer to 6-byte address
-extern ubyte * ipx_get_my_local_address();
+extern ubyte * ipx_get_my_local_address(void);
 // Returns a pointer to 4-byte server
-extern ubyte * ipx_get_my_server_address();
+extern ubyte * ipx_get_my_server_address(void);
 
 // Determines the local address equivalent of an internetwork address.
 void ipx_get_local_target( ubyte * server, ubyte * node, ubyte * local_target );
@@ -78,7 +78,7 @@ extern int ipx_send_game_packet(ubyte *data, int datasize);
 extern void ipx_init_netgame_aux_data(ubyte data[]);
 extern int ipx_handle_netgame_aux_data(const ubyte data[]);
 // Handle disconnecting from the game
-extern void ipx_handle_leave_game();
+extern void ipx_handle_leave_game(void);
 
 #define IPX_MAX_DATA_SIZE (542)		//(546-4)
 

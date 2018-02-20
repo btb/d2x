@@ -40,10 +40,10 @@ typedef enum
 	AXIS_BANK,
 } kc_axis_map;
 
-extern void kc_set_controls();
+extern void kc_set_controls(void);
 
 // Tries to use vfx1 head tracking.
-void kconfig_sense_init();
+void kconfig_sense_init(void);
 
 extern int kconfig_is_axes_used(int axis);
 

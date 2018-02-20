@@ -51,7 +51,7 @@ void draw_morph_object(object *obj);
 void do_morph_frame(object *obj);
 
 //called at the start of a level
-void init_morphs();
+void init_morphs(void);
 
 extern morph_data *find_morph_data(object *obj);
 

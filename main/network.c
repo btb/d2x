@@ -174,20 +174,20 @@ int NamesInfoSecurity=-1;
 netgame_info TempNetInfo;
 
 extern void multi_send_drop_marker (int player,vms_vector position,char messagenum,char text[]);
-extern void multi_send_kill_goal_counts();
+extern void multi_send_kill_goal_counts(void);
 extern int newmenu_dotiny( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem) );
 
 void network_process_naked_pdata (char *,int);
-void network_flush();
-void network_listen();
-void network_update_netgame();
+void network_flush(void);
+void network_listen(void);
+void network_update_netgame(void);
 void network_check_for_old_version(char pnum);
-void network_send_objects();
+void network_send_objects(void);
 void network_send_rejoin_sync(int player_num);
 void network_send_game_info(sequence_packet *their);
 void network_send_endlevel_short_sub(int from_player_num, int to_player);
 void network_read_sync_packet(netgame_info * sp, int rsinit);
-int  network_wait_for_playerinfo();
+int  network_wait_for_playerinfo(void);
 void network_process_pdata(char *data);
 void network_read_object_packet(ubyte *data );
 void network_read_endlevel_packet(ubyte *data );
@@ -196,13 +196,13 @@ void network_ping(ubyte flat, int pnum);
 void network_handle_ping_return(ubyte pnum);
 void network_process_names_return(ubyte *data);
 void network_send_player_names(sequence_packet *their);
-int  network_choose_connect();
-void network_more_game_options();
-void network_count_powerups_in_mine();
+int  network_choose_connect(void);
+void network_more_game_options(void);
+void network_count_powerups_in_mine(void);
 int  network_wait_for_all_info(int choice);
-void network_AdjustMaxDataSize();
+void network_AdjustMaxDataSize(void);
 void network_do_big_wait(int choice);
-void network_send_extras();
+void network_send_extras(void);
 void network_read_pdata_packet(frame_info *pd);
 void network_read_pdata_short_packet(short_frame_info *pd);
 
@@ -279,13 +279,13 @@ extern ubyte SurfingNet;
 extern char MaxPowerupsAllowed[MAX_POWERUP_TYPES];
 extern char PowerupsInMine[MAX_POWERUP_TYPES];
 
-extern void multi_send_stolen_items();
+extern void multi_send_stolen_items(void);
 
-int network_wait_for_snyc();
+int network_wait_for_snyc(void);
 extern void multi_send_wall_status (int,ubyte,ubyte,ubyte);
 extern void multi_send_wall_status_specific (int,int,ubyte,ubyte,ubyte);
 
-extern void game_disable_cheats();
+extern void game_disable_cheats(void);
 
 char IWasKicked=0;
 #ifdef NETPROFILING
@@ -1354,7 +1354,7 @@ void network_send_objects(void)
 	} // For PACKETS_PER_FRAME
 }
 
-extern void multi_send_powerup_update();
+extern void multi_send_powerup_update(void);
 
 void network_send_rejoin_sync(int player_num)
 {

@@ -27,10 +27,10 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define DEFAULT_LEVEL_PALETTE "groupa.256" //don't confuse with D2_DEFAULT_PALETTE
 
 extern void gr_palette_set_gamma( int gamma );
-extern int gr_palette_get_gamma();
+extern int gr_palette_get_gamma(void);
 extern ubyte gr_palette_faded_out;
 extern int grd_fades_disabled;
-extern void gr_palette_clear();
+extern void gr_palette_clear(void);
 extern int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys );
 extern int gr_palette_fade_in(ubyte *pal,int nsteps, int allow_keys );
 extern void gr_palette_load( ubyte * pal );

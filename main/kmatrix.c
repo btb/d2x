@@ -52,8 +52,8 @@ int Kmatrix_nomovie_message = 0;
 extern char MaxPowerupsAllowed[], PowerupsInMine[];
 
 void kmatrix_reactor(char *message);
-void kmatrix_phallic();
-void kmatrix_redraw_coop();
+void kmatrix_phallic(void);
+void kmatrix_redraw_coop(void);
 
 #define LHX(x)  ((x)*(MenuHires?2:1))
 #define LHY(y)  ((y)*(MenuHires?2.4:1))

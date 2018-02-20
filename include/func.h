@@ -23,9 +23,9 @@ typedef struct {
 } FUNCTION;
 
 void func_init( FUNCTION * funtable, int size );
-void func_close();
+void func_close(void);
 int (*func_get( char * name, int * numparams ))(void);
-int func_howmany();
+int func_howmany(void);
 int (*func_nget( int func_number, int * numparams, char **name ))(void);
 void func_set_param( int n, int value );
 int func_get_param( int n );

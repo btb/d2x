@@ -48,7 +48,7 @@ int	Control_center_present;
 
 vms_vector	Gun_pos[MAX_CONTROLCEN_GUNS], Gun_dir[MAX_CONTROLCEN_GUNS];
 
-void do_countdown_frame();
+void do_countdown_frame(void);
 
 //	-----------------------------------------------------------------------------
 //return the position & orientation of a gun on the control center object

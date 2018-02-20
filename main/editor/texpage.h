@@ -21,9 +21,9 @@ extern int TextureEffects;
 extern int TextureMetals;
 
 int texpage_grab_current(int n);
-int texpage_goto_first();
+int texpage_goto_first(void);
 void texpage_init( UI_WINDOW * win );
-void texpage_close();
-void texpage_do();
+void texpage_close(void);
+void texpage_do(void);
 
 #endif

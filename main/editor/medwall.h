@@ -23,44 +23,42 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 
 
-extern int wall_add_removable(); 
-
 // Restores all the walls to original status
-extern int wall_restore_all();
+extern int wall_restore_all(void);
 
 // Reset a wall.
 extern void wall_reset(segment *seg, int side);
 
 // Adds a removable wall (medwall.c)
-extern int wall_add_removable();
+extern int wall_add_removable(void);
 
 // Adds a door (medwall.c)
-extern int wall_add_door();
+extern int wall_add_door(void);
 
 // Adds an illusory wall (medwall.c)
-extern int wall_add_illusion();
+extern int wall_add_illusion(void);
 
 // Removes a removable wall (medwall.c) 
-extern int wall_remove_blastable(); 
+extern int wall_remove_blastable(void);
 
 // Adds a wall. (visually)
-extern int wall_add_to_curside();
+extern int wall_add_to_curside(void);
 extern int wall_add_to_markedside(sbyte type);
  
 // Removes a wall. (visually)
-extern int wall_remove();
+extern int wall_remove(void);
 
 // Removes a specific side.
 int wall_remove_side(segment *seg, short side);
 
-extern int bind_wall_to_control_center();
+extern int bind_wall_to_control_center(void);
 
-extern void close_wall_window();
+extern void close_wall_window(void);
 
-extern void do_wall_window();
+extern void do_wall_window(void);
 
-extern int wall_link_doors();
-extern int wall_unlink_door();
+extern int wall_link_doors(void);
+extern int wall_unlink_door(void);
 extern void copy_group_walls(int old_group, int new_group);
 
 #endif

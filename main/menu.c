@@ -100,8 +100,8 @@ extern int Speedtest_on;
 #define Speedtest_on 0
 #endif
 
-void do_sound_menu();
-void do_toggles_menu();
+void do_sound_menu(void);
+void do_toggles_menu(void);
 
 ubyte do_auto_demo = 1;                 // Flag used to enable auto demo starting in main menu.
 cvar_t Player_default_difficulty = { "skill", "1", CVAR_ARCHIVE }; // Last difficulty level chosen by the player
@@ -120,7 +120,7 @@ void ipx_set_driver(int ipx_driver);
 #endif //NETWORK
 
 //returns the number of demo files on the disk
-int newdemo_count_demos();
+int newdemo_count_demos(void);
 extern ubyte Version_major,Version_minor;
 
 // ------------------------------------------------------------------------

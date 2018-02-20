@@ -42,9 +42,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define	NUM_BOXES		6			//	Number of boxes, AI modes
 
-int GoodyNextID();
-int GoodyPrevID();
-void robot_close_window();
+int GoodyNextID(void);
+int GoodyPrevID(void);
+void robot_close_window(void);
 //-------------------------------------------------------------------------
 // Variables for this module...
 //-------------------------------------------------------------------------

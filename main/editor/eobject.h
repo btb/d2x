@@ -23,12 +23,12 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 int ObjectSelectNextInMine(void);
 int ObjectSelectPrevInMine(void);
 
-int   ObjectDecreaseBankBig(); 
-int   ObjectIncreaseBankBig(); 
-int   ObjectDecreasePitchBig();
-int   ObjectIncreasePitchBig();
-int   ObjectDecreaseHeadingBig();
-int   ObjectIncreaseHeadingBig();
-int   ObjectFlipObject();
+int ObjectDecreaseBankBig(void);
+int ObjectIncreaseBankBig(void);
+int ObjectDecreasePitchBig(void);
+int ObjectIncreasePitchBig(void);
+int ObjectDecreaseHeadingBig(void);
+int ObjectIncreaseHeadingBig(void);
+int ObjectFlipObject(void);
 
 #endif

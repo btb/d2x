@@ -44,7 +44,7 @@ int Songs_initialized = 0;
 
 int Num_songs;
 
-extern void digi_stop_current_song();
+extern void digi_stop_current_song(void);
 
 cvar_t Redbook_enabled = { "RedbookEnabled", "1", CVAR_ARCHIVE };
 
@@ -53,7 +53,7 @@ int Redbook_playing = 0;
 
 #define NumLevelSongs (Num_songs - SONG_FIRST_LEVEL_SONG)
 
-extern int CD_blast_mixer();
+extern int CD_blast_mixer(void);
 
 #define REDBOOK_VOLUME_SCALE (255/3) // 255 is MAX
 

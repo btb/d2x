@@ -199,7 +199,7 @@ extern int Num_wall_anims;
 extern int walls_bm_num[MAX_WALL_ANIMS];
 
 // Initializes all walls (i.e. no special walls.)
-extern void wall_init();
+extern void wall_init(void);
 
 // Automatically checks if a there is a doorway (i.e. can fly through)
 extern int wall_is_doorway ( segment *seg, int side );
@@ -240,10 +240,10 @@ extern int wall_hit_process(segment *seg, int side, fix damage, int playernum, o
 extern void wall_toggle(segment *seg, int side);
 
 // Tidy up Walls array for load/save purposes.
-extern void reset_walls();
+extern void reset_walls(void);
 
 // Called once per frame..
-void wall_frame_process();
+void wall_frame_process(void);
 
 extern stuckobj Stuck_objects[MAX_STUCK_OBJECTS];
 

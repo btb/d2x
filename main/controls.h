@@ -71,7 +71,7 @@ typedef struct _control_info {
 
 
 extern control_info Controls;
-extern void controls_read_all();
+extern void controls_read_all(void);
 extern void controls_init(void);
 
 //set the cruise speed to zero

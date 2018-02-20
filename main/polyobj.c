@@ -846,7 +846,7 @@ void init_polygon_models()
 {
 	N_polygon_models = 0;
 
-	atexit((void (*)())free_polygon_models);
+	atexit(free_polygon_models);
 
 }
 

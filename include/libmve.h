@@ -12,9 +12,9 @@ typedef struct{
 } MVE_videoSpec;
 
 int  MVE_rmPrepMovie(void *stream, int x, int y, int track);
-int  MVE_rmStepMovie();
-void MVE_rmHoldMovie();
-void MVE_rmEndMovie();
+int  MVE_rmStepMovie(void);
+void MVE_rmHoldMovie(void);
+void MVE_rmEndMovie(void);
 
 void MVE_getVideoSpec(MVE_videoSpec *vSpec);
 

@@ -127,7 +127,7 @@ int objnum_remote_to_local(int remote_obj, int owner);
 int objnum_local_to_remote(int local_obj, sbyte *owner);
 void map_objnum_local_to_remote(int local, int remote, int owner);
 void map_objnum_local_to_local(int objnum);
-void reset_network_objects();
+void reset_network_objects(void);
 
 void multi_init_objects(void);
 void multi_show_player_list(void);
@@ -141,7 +141,7 @@ void multi_send_endlevel_start(int);
 void multi_send_player_explode(char type);
 void multi_send_message(void);
 void multi_send_position(int objnum);
-void multi_send_reappear();
+void multi_send_reappear(void);
 void multi_send_kill(int objnum);
 void multi_send_remobj(int objnum);
 void multi_send_quit(int why);
@@ -229,8 +229,8 @@ extern int multi_quit_game;
 extern int multi_sending_message;
 extern int multi_defining_message;
 extern void multi_message_input_sub( int key );
-extern void multi_send_message_start();
-extern void multi_send_message_end();
+extern void multi_send_message_start(void);
+extern void multi_send_message_end(void);
 
 extern int multi_powerup_is_4pack(int );
 extern void multi_send_orb_bonus( char pnum );

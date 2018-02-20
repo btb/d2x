@@ -70,11 +70,11 @@ extern int Dead_modelnums[];
 extern int Marker_model_num;
 
 // Initializes the palette, bitmap system...
-int bm_init();
-void bm_close();
+int bm_init(void);
+void bm_close(void);
 
 // Initializes the Texture[] array of bmd_bitmap structures.
-void init_textures();
+void init_textures(void);
 
 extern int  Num_object_subtypes;     // Number of possible IDs for the current type of object to be placed
 
@@ -89,6 +89,6 @@ int bm_init_use_tbl(void);
 
 extern void bm_read_all(CFILE * fp);
 
-int load_exit_models();
+int load_exit_models(void);
 
 #endif /* _BM_H */

@@ -323,7 +323,7 @@ extern	int med_load_group( char *filename, short *vertex_ids, short *segment_ids
 extern	int med_save_group( char *filename, short *vertex_ids, short *segment_ids, int num_vertices, int num_segments);
 
 // Updates the screen... (I put the prototype here for curves.c)
-extern   int medlisp_update_screen();
+extern	int medlisp_update_screen(void);
 
 // Returns 0 if no error, 1 if error, whatever that might be.
 // Sets globals:
@@ -424,7 +424,7 @@ extern void plot_parametric(vms_equation *coeffs, fix min_t, fix max_t, fix del_
 extern int generate_curve( fix r1scale, fix r4scale );
 
 // Deletes existing curve generated in generate_curve().
-extern void delete_curve();
+extern void delete_curve(void);
 
 // --- // -- Temporary function, identical to med_rotate_segment, but it takes a vector instead of an angvec
 // --- extern	int med_rotate_segment_vec(segment *seg, vms_vector *vec);
@@ -571,7 +571,7 @@ extern editor_view FrontView;
 extern editor_view RightView;
 
 extern void set_view_target_from_segment(segment *sp);
-extern int SafetyCheck();
+extern int SafetyCheck(void);
 
 extern void editor_status( const char *format, ...);
 
@@ -605,7 +605,7 @@ extern void autosave_mine(char *name);
 
 // Timed autosave
 extern void TimedAutosave(char *name);
-extern void set_editor_time_of_day();
+extern void set_editor_time_of_day(void);
 
 // Undo function
 extern int undo(void);
@@ -618,7 +618,7 @@ int RotateSegmentNew(vms_angvec *pbh);
 int rotate_segment_new(vms_angvec *pbh);
 
 //get & free vertices
-int alloc_vert();
+int alloc_vert(void);
 void free_vert(int vert_num);
 
 // The current object type and id declared in eglobal.c

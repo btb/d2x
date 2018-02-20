@@ -314,7 +314,7 @@ extern int Player_fired_laser_this_frame;
 
 
 // do whatever setup needs to be done
-void init_objects();
+void init_objects(void);
 
 // returns segment number object is in.  Searches out from object's current
 // seg, so this shouldn't be called if the object has "jumped" to a new seg
@@ -363,16 +363,16 @@ void draw_object_blob(object *obj, bitmap_index bitmap);
 void draw_object_tmap_rod(object *obj, bitmap_index bitmap, int lighted);
 
 // Deletes all objects that have been marked for death.
-void obj_delete_all_that_should_be_dead();
+void obj_delete_all_that_should_be_dead(void);
 
 // Toggles whether or not lock-boxes draw.
-void object_toggle_lock_targets();
+void object_toggle_lock_targets(void);
 
 // move all objects for the current frame
-void object_move_all();     // moves all objects
+void object_move_all(void);
 
 // set viewer object to next object in array
-void object_goto_next_viewer();
+void object_goto_next_viewer(void);
 
 // draw target boxes for nearby robots
 void object_render_targets(void);
@@ -381,7 +381,7 @@ void object_render_targets(void);
 void object_move_one(object * obj);
 
 // make object0 the player, setting all relevant fields
-void init_player_object();
+void init_player_object(void);
 
 // check if object is in object->segnum.  if not, check the adjacent
 // segs.  if not any of these, returns false, else sets obj->segnum &
@@ -398,7 +398,7 @@ extern int find_object_seg(object * obj );
 
 // go through all objects and make sure they have the correct segment
 // numbers used when debugging is on
-void fix_object_segs();
+void fix_object_segs(void);
 
 // Drops objects contained in objp.
 int object_create_egg(object *objp);
@@ -450,7 +450,7 @@ int drop_marker_object(vms_vector *pos, int segnum, vms_matrix *orient, int mark
 
 extern void wake_up_rendered_objects(object *gmissp, int window_num);
 
-extern void AdjustMineSpawn();
+extern void AdjustMineSpawn(void);
 
 void reset_player_object(void);
 

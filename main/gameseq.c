@@ -727,7 +727,7 @@ void LoadLevel(int level_num, int page_in_textures)
 		if (Current_mission->enhanced) {
 			// load extra data
 			char t[50];
-			extern void bm_read_extra_robots();
+			extern void bm_read_extra_robots(char *fname, int type);
 			sprintf(t, "%s.ham", Current_mission_filename);
 			bm_read_extra_robots(t, Current_mission->enhanced);
 		}
@@ -1540,7 +1540,7 @@ void advancing_to_level_message(void)
 }
 
 
-void digi_stop_digi_sounds();
+void digi_stop_digi_sounds(void);
 
 
 void DoPlayerDead(void)

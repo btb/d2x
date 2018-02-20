@@ -114,9 +114,9 @@ extern ubyte DefiningMarkerMessage;
 //	Function prototypes --------------------------------------------------------
 
 
-extern void CyclePrimary();
-extern void CycleSecondary();
-extern void InitMarkerInput();
+extern void CyclePrimary(void);
+extern void CycleSecondary(void);
+extern void InitMarkerInput(void);
 extern void MarkerInputMessage (int);
 extern int	allowed_to_fire_missile(void);
 extern int	allowed_to_fire_flare(void);
@@ -128,9 +128,9 @@ extern void game_render_frame_mono(void);
 extern void newdemo_strip_frames(char *, int);
 extern void toggle_cockpit(void);
 extern int  dump_used_textures_all(void);
-extern void DropMarker();
-extern void DropSecondaryWeapon();
-extern void DropCurrentWeapon();
+extern void DropMarker(void);
+extern void DropSecondaryWeapon(void);
+extern void DropCurrentWeapon(void);
 
 void FinalCheats(int key);
 
@@ -187,7 +187,7 @@ void transfer_energy_to_shield(fix time)
 
 }
 
-void update_vcr_state();
+void update_vcr_state(void);
 void do_weapon_stuff(void);
 
 
@@ -288,8 +288,8 @@ void do_weapon_stuff(void)
 int Game_paused;
 char *Pause_msg;
 
-extern void game_render_frame();
-extern void show_extra_views();
+extern void game_render_frame(void);
+extern void show_extra_views(void);
 extern fix Flash_effect;
 
 void apply_modified_palette(void)
@@ -359,7 +359,7 @@ void format_time(char *str, int secs_int)
 }
 
 extern int Redbook_playing;
-void do_show_netgame_help();
+void do_show_netgame_help(void);
 
 //Process selected keys until game unpaused. returns key that left pause (p or esc)
 int do_game_pause()
@@ -478,7 +478,7 @@ int do_game_pause()
 }
 
 extern int newmenu_dotiny2( char * title, char * subtitle, int nitems, newmenu_item * item, void (*subfunction)(int nitems,newmenu_item * items, int * last_key, int citem) );
-extern int network_who_is_master(),network_how_many_connected(),GetMyNetRanking();
+extern int network_who_is_master(void), network_how_many_connected(void), GetMyNetRanking(void);
 extern int TotalMissedPackets,TotalPacketsGot;
 extern char Pauseable_menu;
 char *NetworkModeNames[]={"Anarchy","Team Anarchy","Robo Anarchy","Cooperative","Capture the Flag","Hoard","Team Hoard","Unknown"};
@@ -839,8 +839,8 @@ int select_next_window_function(int w)
 
 extern int Game_paused;
 
-void songs_goto_next_song();
-void songs_goto_prev_song();
+void songs_goto_next_song(void);
+void songs_goto_prev_song(void);
 
 #ifdef DOOR_DEBUGGING
 dump_door_debugging_info()
@@ -1326,7 +1326,7 @@ void HandleVRKey(int key)
 }
 
 
-extern void DropFlag();
+extern void DropFlag(void);
 
 void HandleGameKey(int key)
 {
@@ -1850,8 +1850,8 @@ char old_IntMethod;
 char OldHomingState[20];
 extern char Monster_mode;
 
-void fill_background();
-void load_background_bitmap();
+void fill_background(void);
+void load_background_bitmap(void);
 
 extern int Robots_kill_robots_cheat;
 

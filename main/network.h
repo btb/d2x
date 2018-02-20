@@ -102,28 +102,28 @@ typedef struct short_frame_info {
 	char        data[NET_XDATA_SIZE];   // extra data to be tacked on the end
 } __pack__ short_frame_info;
 
-void network_start_game();
-void network_join_game();
-void network_rejoin_game();
-void network_leave_game();
+void network_start_game(void);
+void network_join_game(void);
+void network_rejoin_game(void);
+void network_leave_game(void);
 int network_endlevel(int *secret);
 void network_endlevel_poll2(int nitems, struct newmenu_item * menus, int * key, int citem);
 
 
-int network_level_sync();
-void network_send_endlevel_packet();
+int network_level_sync(void);
+void network_send_endlevel_packet(void);
 
-int network_delete_extra_objects();
-int network_find_max_net_players();
+int network_delete_extra_objects(void);
+int network_find_max_net_players(void);
 int network_objnum_is_past(int objnum);
 char * network_get_player_name(int objnum);
 void network_send_endlevel_sub(int player_num);
 void network_disconnect_player(int playernum);
 
 extern void network_dump_player(ubyte * server, ubyte *node, int why);
-extern void network_send_netgame_update();
+extern void network_send_netgame_update(void);
 
-extern int GetMyNetRanking();
+extern int GetMyNetRanking(void);
 
 extern int NetGameType;
 extern int Network_send_objects;
@@ -150,6 +150,6 @@ void network_do_frame(int force, int listen);
 void network_send_data(ubyte * ptr, int len, int urgent);
 
 // returns 1 if hoard.ham available
-extern int HoardEquipped();
+extern int HoardEquipped(void);
 
 #endif /* _NETWORK_H */

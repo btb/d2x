@@ -70,7 +70,7 @@ extern int N_polygon_models;
 // array of names of currently-loaded models
 extern char Pof_names[MAX_POLYGON_MODELS][13];
 
-void init_polygon_models();
+void init_polygon_models(void);
 
 #ifndef DRIVE
 int load_polygon_model(char *filename,int n_textures,int first_texture,robot_info *r);

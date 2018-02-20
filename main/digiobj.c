@@ -216,9 +216,9 @@ void digi_play_sample_3d( int soundno, int angle, int volume, int no_dups )
 }
 
 
-void SoundQ_init();
-void SoundQ_process();
-void SoundQ_pause();
+void SoundQ_init(void);
+void SoundQ_process(void);
+void SoundQ_pause(void);
 
 void digi_init_sounds()
 {
@@ -739,7 +739,7 @@ void digi_resume_digi_sounds()
 	digi_unpause_looping_sound();
 }
 
-extern void digi_resume_midi();
+extern void digi_resume_midi(void);
 
 void digi_resume_all()
 {

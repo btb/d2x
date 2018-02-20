@@ -324,7 +324,7 @@ static int ipx_mcast4_SendGamePacket(ipx_socket_t *sk, ubyte *data, int dataLen)
 }
 
 // Pull this in from ipx_udp.c since it's the same for us.
-extern int ipx_udp_GetMyAddress();
+extern int ipx_udp_GetMyAddress(void);
 
 struct ipx_driver ipx_mcast4 = {
 	ipx_udp_GetMyAddress,

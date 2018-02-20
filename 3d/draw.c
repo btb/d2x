@@ -33,7 +33,7 @@ int (*line_drawer_ptr)(fix x0,fix y0,fix x1,fix y1) = gr_line;
 
 //specifies 2d drawing routines to use instead of defaults.  Passing
 //NULL for either or both restores defaults
-void g3_set_special_render(void (*tmap_drawer)(),void (*flat_drawer)(),int (*line_drawer)(fix, fix, fix, fix))
+void g3_set_special_render(void (*tmap_drawer)(void), void (*flat_drawer)(void), int (*line_drawer)(fix, fix, fix, fix))
 {
 	tmap_drawer_ptr = (tmap_drawer)?tmap_drawer:draw_tmap;
 	flat_drawer_ptr = (flat_drawer)?flat_drawer:gr_upoly_tmap;

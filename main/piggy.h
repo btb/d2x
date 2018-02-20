@@ -53,9 +53,9 @@ typedef struct bitmap_index {
 	ushort index;
 } __pack__ bitmap_index;
 
-int piggy_init();
-void piggy_close();
-void piggy_dump_all();
+int piggy_init(void);
+void piggy_close(void);
+void piggy_dump_all(void);
 bitmap_index piggy_register_bitmap( grs_bitmap * bmp, char * name, int in_file );
 int piggy_register_sound( digi_sound * snd, char * name, int in_file );
 bitmap_index piggy_find_bitmap( char * name );
@@ -66,7 +66,7 @@ extern int Pigfile_initialized;
 void piggy_read_bitmap_data(grs_bitmap * bmp);
 void piggy_read_sound_data(digi_sound *snd);
 
-void piggy_load_level_data();
+void piggy_load_level_data(void);
 
 char* piggy_game_bitmap_name(grs_bitmap *bmp);
 
@@ -79,7 +79,7 @@ extern grs_bitmap GameBitmaps[MAX_BITMAP_FILES];
 
 #ifdef PIGGY_USE_PAGING
 	extern void piggy_bitmap_page_in( bitmap_index bmp );
-	extern void piggy_bitmap_page_out_all();
+	extern void piggy_bitmap_page_out_all(void);
 	extern int piggy_page_flushed;
 
 /* Make GNUC use static inline function as #define with backslash continuations causes problems with dos linefeeds */
@@ -105,7 +105,7 @@ do {					\
 # define PIGGY_PAGE_IN(bmp)
 #endif
 
-void piggy_read_sounds();
+void piggy_read_sounds(void);
 
 //reads in a new pigfile (for new palette)
 //returns the size of all the bitmap data
@@ -114,7 +114,7 @@ void piggy_new_pigfile(char *pigname);
 //loads custom bitmaps for current level
 void load_bitmap_replacements(char *level_name);
 //if descent.pig exists, loads descent 1 texture bitmaps
-void load_d1_bitmap_replacements();
+void load_d1_bitmap_replacements(void);
 
 #ifdef FAST_FILE_IO
 #define bitmap_index_read(bi, fp) cfread(bi, sizeof(bitmap_index), 1, fp)

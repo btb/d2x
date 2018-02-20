@@ -356,8 +356,8 @@ void gr_close_font( grs_font * font );
 void gr_remap_font( grs_font *font, char * fontname, char *font_data );
 
 //remap (by re-reading) all the color fonts
-void gr_remap_color_fonts();
-void gr_remap_mono_fonts();
+void gr_remap_color_fonts(void);
+void gr_remap_mono_fonts(void);
 
 // Writes a string using current font. Returns the next column after last char.
 void gr_set_fontcolor( int fg, int bg );

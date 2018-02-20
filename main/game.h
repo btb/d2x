@@ -143,7 +143,7 @@ extern int draw_gauges_on;
 
 extern void init_game_screen(void);
 
-extern void game_flush_inputs();    // clear all inputs
+extern void game_flush_inputs(void); // clear all inputs
 
 extern int Playing_game;    // True if playing game
 extern int Auto_flythrough; // if set, start flythough automatically
@@ -157,7 +157,7 @@ extern void reset_time(void);       // called when starting level
 // If automap_flag == 1, then call automap routine to write message.
 extern void save_screen_shot(int automap_flag);
 
-extern grs_canvas * get_current_game_screen();
+extern grs_canvas * get_current_game_screen(void);
 
 //valid modes for cockpit
 #define CM_FULL_COCKPIT     0   // normal screen with cockput
@@ -189,13 +189,13 @@ void reset_palette_add(void);
 void palette_restore(void);
 
 // put up the help message
-void do_show_help();
+void do_show_help(void);
 
 // show a message in a nice little box
 void show_boxed_message(char *msg);
 
 // erases message drawn with show_boxed_message()
-void clear_boxed_message();
+void clear_boxed_message(void);
 
 // turns off rear view & rear view cockpit
 void reset_rear_view(void);
@@ -203,7 +203,7 @@ void reset_rear_view(void);
 extern int Game_turbo_mode;
 
 // returns ptr to escort robot, or NULL
-object *find_escort();
+object *find_escort(void);
 
 extern void apply_modified_palette(void);
 

@@ -12,132 +12,132 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 // In khelp.c
-int DoHelp();
+int DoHelp(void);
 
 // In kcurve.c
-int InitCurve();
-int GenerateCurve();
-int DecreaseR4();
-int IncreaseR4();
-int DecreaseR1();
-int IncreaseR1();
-int DeleteCurve();
-int SetCurve();
+int InitCurve(void);
+int GenerateCurve(void);
+int DecreaseR4(void);
+int IncreaseR4(void);
+int DecreaseR1(void);
+int IncreaseR1(void);
+int DeleteCurve(void);
+int SetCurve(void);
 
 // In kmine.c
-int SaveMine();
-int LoadMine();
-int MineMenu();
-int CreateNewMine();
-int LoadOldMine();
+int SaveMine(void);
+int LoadMine(void);
+int MineMenu(void);
+int CreateNewMine(void);
+int LoadOldMine(void);
 
-int SaveSituation();
-int LoadSituation();
+int SaveSituation(void);
+int LoadSituation(void);
 
 // In kgame.c
 int SetPlayerPosition(void);
-int SaveGameData();
-int LoadGameData();
-int LoadMineOnly();
-void ResetFilename();
+int SaveGameData(void);
+int LoadGameData(void);
+int LoadMineOnly(void);
+void ResetFilename(void);
 
 // In group.c
-int LoadGroup();
-int SaveGroup();
+int LoadGroup(void);
+int SaveGroup(void);
 int PrevGroup(void);
 int NextGroup(void);
-int CreateGroup();
-int SubtractFromGroup();
-int DeleteGroup();
-int MarkGroupSegment();
+int CreateGroup(void);
+int SubtractFromGroup(void);
+int DeleteGroup(void);
+int MarkGroupSegment(void);
 int MoveGroup(void);
 int CopyGroup(void);
-int AttachSegmentNew();
-int UngroupSegment();
-int GroupSegment();
-int Degroup();
-int RotateGroup();
+int AttachSegmentNew(void);
+int UngroupSegment(void);
+int GroupSegment(void);
+int Degroup(void);
+int RotateGroup(void);
 
 // In segment.c
-int ToggleBottom();
-void make_curside_bottom_side();
-int select_segment_by_number();
-int select_segment_with_powerup();
+int ToggleBottom(void);
+void make_curside_bottom_side(void);
+int select_segment_by_number(void);
+int select_segment_with_powerup(void);
 
 // In editor.c
-int UndoCommand();
+int UndoCommand(void);
 
 // In kview.c
-int ZoomOut();
-int ZoomIn();
-int MoveAway();
-int MoveCloser();
-int ToggleChaseMode();
+int ZoomOut(void);
+int ZoomIn(void);
+int MoveAway(void);
+int MoveCloser(void);
+int ToggleChaseMode(void);
 
 // In kbuild.c
-int CreateBridge();
-int FormJoint();
-int CreateAdjacentJoint();
-int CreateAdjacentJointsSegment();
-int CreateAdjacentJointsAll();
-int CreateSloppyAdjacentJoint();
-int CreateSloppyAdjacentJointsGroup();
+int CreateBridge(void);
+int FormJoint(void);
+int CreateAdjacentJoint(void);
+int CreateAdjacentJointsSegment(void);
+int CreateAdjacentJointsAll(void);
+int CreateSloppyAdjacentJoint(void);
+int CreateSloppyAdjacentJointsGroup(void);
 
 // In ksegmove.c
-int DecreaseHeading();
-int IncreaseHeading();
-int DecreasePitch();
-int IncreasePitch();
-int DecreaseBank();
-int IncreaseBank();
+int DecreaseHeading(void);
+int IncreaseHeading(void);
+int DecreasePitch(void);
+int IncreasePitch(void);
+int DecreaseBank(void);
+int IncreaseBank(void);
 
 // In ksegsel.c
-int SelectCurrentSegForward();
-int SelectCurrentSegBackward();
-int SelectNextSide();
-int SelectPrevSide();
-int CopySegToMarked();
-int SelectBottom();
-int SelectFront();
-int SelectTop();
-int SelectBack();
-int SelectLeft();
-int SelectRight();
+int SelectCurrentSegForward(void);
+int SelectCurrentSegBackward(void);
+int SelectNextSide(void);
+int SelectPrevSide(void);
+int CopySegToMarked(void);
+int SelectBottom(void);
+int SelectFront(void);
+int SelectTop(void);
+int SelectBack(void);
+int SelectLeft(void);
+int SelectRight(void);
 
 // In ksegsize.c
-int IncreaseSegLength();
-int DecreaseSegLength();
-int DecreaseSegWidth();
-int IncreaseSegWidth();
-int IncreaseSegHeight();
-int DecreaseSegHeight();
-int ToggleSegSizeMode();
-int PerturbCurside();
-int PerturbCursideBig();
+int IncreaseSegLength(void);
+int DecreaseSegLength(void);
+int DecreaseSegWidth(void);
+int IncreaseSegWidth(void);
+int IncreaseSegHeight(void);
+int DecreaseSegHeight(void);
+int ToggleSegSizeMode(void);
+int PerturbCurside(void);
+int PerturbCursideBig(void);
 
-int IncreaseSegLengthBig();
-int DecreaseSegLengthBig();
-int DecreaseSegWidthBig();
-int IncreaseSegWidthBig();
-int IncreaseSegHeightBig();
-int DecreaseSegHeightBig();
+int IncreaseSegLengthBig(void);
+int DecreaseSegLengthBig(void);
+int DecreaseSegWidthBig(void);
+int IncreaseSegWidthBig(void);
+int IncreaseSegHeightBig(void);
+int DecreaseSegHeightBig(void);
 
-int IncreaseSegLengthDefault();
-int DecreaseSegLengthDefault();
-int IncreaseSegWidthDefault();
-int DecreaseSegWidthDefault();
-int IncreaseSegHeightDefault();
-int DecreaseSegHeightDefault();
+int IncreaseSegLengthDefault(void);
+int DecreaseSegLengthDefault(void);
+int IncreaseSegWidthDefault(void);
+int DecreaseSegWidthDefault(void);
+int IncreaseSegHeightDefault(void);
+int DecreaseSegHeightDefault(void);
 
 //	In ktmap.c
-int AssignTexture();
-int AssignTexture2();
-int ClearTexture2();
-int PropagateTextures();
-int PropagateTexturesMove();
-int PropagateTexturesMoveUVs();
-int PropagateTexturesUVs();
-int PropagateTexturesSelected();
+int AssignTexture(void);
+int AssignTexture2(void);
+int ClearTexture2(void);
+int PropagateTextures(void);
+int PropagateTexturesMove(void);
+int PropagateTexturesMoveUVs(void);
+int PropagateTexturesUVs(void);
+int PropagateTexturesSelected(void);
 
 //--//// In macro.c
 //--//int MacroMenu();
@@ -149,128 +149,128 @@ int PropagateTexturesSelected();
 //--//int MacroLoad();
 
 // In editor.c
-int medlisp_update_screen();
+int medlisp_update_screen(void);
 int medlisp_delete_segment(void);
 int medlisp_scale_segment(void);
 int medlisp_rotate_segment(void);
-int medlisp_add_segment();
-int AttachSegment();
-int DeleteSegment();
-int DosShell();
-int CallLisp();
-int ExitEditor();
-int ShowAbout();
-int ExchangeMarkandCurseg();
-int CopySegtoMarked();
-int med_keypad_goto_prev();
-int med_keypad_goto_next();
-int med_keypad_goto();
-int med_increase_tilings();
-int med_decrease_tilings();
-int ToggleAutosave();
-int MarkStart();
-int MarkEnd();
+int medlisp_add_segment(void);
+int AttachSegment(void);
+int DeleteSegment(void);
+int DosShell(void);
+int CallLisp(void);
+int ExitEditor(void);
+int ShowAbout(void);
+int ExchangeMarkandCurseg(void);
+int CopySegtoMarked(void);
+int med_keypad_goto_prev(void);
+int med_keypad_goto_next(void);
+int med_keypad_goto(void);
+int med_increase_tilings(void);
+int med_decrease_tilings(void);
+int ToggleAutosave(void);
+int MarkStart(void);
+int MarkEnd(void);
 
 //	Texture.c
-int	TexFlipX();
-int	TexFlipY();
-int	TexSlideUp();
-int	TexSlideLeft();
-int	TexSetDefault();
-int	TexSetDefaultSelected();
-int	TexSlideRight();
-int	TexRotateLeft();
-int	TexSlideDown();
-int	TexRotateRight();
-int	TexSelectActiveEdge();
-int	TexRotate90Degrees();
-int	TexIncreaseTiling();
-int	TexDecreaseTiling();
-int	TexSlideUpBig();
-int	TexSlideLeftBig();
-int	TexSlideRightBig();
-int	TexRotateLeftBig();
-int	TexSlideDownBig();
-int	TexRotateRightBig();
-int	TexStretchDown();
-int	TexStretchUp();
-int	TexChangeAll();
-int	TexChangeAll2();
+int TexFlipX(void);
+int TexFlipY(void);
+int TexSlideUp(void);
+int TexSlideLeft(void);
+int TexSetDefault(void);
+int TexSetDefaultSelected(void);
+int TexSlideRight(void);
+int TexRotateLeft(void);
+int TexSlideDown(void);
+int TexRotateRight(void);
+int TexSelectActiveEdge(void);
+int TexRotate90Degrees(void);
+int TexIncreaseTiling(void);
+int TexDecreaseTiling(void);
+int TexSlideUpBig(void);
+int TexSlideLeftBig(void);
+int TexSlideRightBig(void);
+int TexRotateLeftBig(void);
+int TexSlideDownBig(void);
+int TexRotateRightBig(void);
+int TexStretchDown(void);
+int TexStretchUp(void);
+int TexChangeAll(void);
+int TexChangeAll2(void);
 
 //	object.c
-int	ObjectPlaceObject();
-int	ObjectMakeCoop();
-int	ObjectPlaceObjectTmap();
-int	ObjectDelete();
-int	ObjectMoveForward();
-int	ObjectMoveLeft();
-int	ObjectSetDefault();
-int	ObjectMoveRight();
-int	ObjectMoveBack();
-int	ObjectMoveDown();
-int	ObjectMoveUp();
-int	ObjectMoveNearer();
-int	ObjectMoveFurther();
-int	ObjectSelectNextinSegment();
-int	ObjectSelectNextType();
-int	ObjectDecreaseBank(); 
-int	ObjectIncreaseBank(); 
-int	ObjectDecreasePitch();
-int	ObjectIncreasePitch();
-int	ObjectDecreaseHeading();
-int	ObjectIncreaseHeading();
-int  	ObjectResetObject();
+int ObjectPlaceObject(void);
+int ObjectMakeCoop(void);
+int ObjectPlaceObjectTmap(void);
+int ObjectDelete(void);
+int ObjectMoveForward(void);
+int ObjectMoveLeft(void);
+int ObjectSetDefault(void);
+int ObjectMoveRight(void);
+int ObjectMoveBack(void);
+int ObjectMoveDown(void);
+int ObjectMoveUp(void);
+int ObjectMoveNearer(void);
+int ObjectMoveFurther(void);
+int ObjectSelectNextinSegment(void);
+int ObjectSelectNextType(void);
+int ObjectDecreaseBank(void);
+int ObjectIncreaseBank(void);
+int ObjectDecreasePitch(void);
+int ObjectIncreasePitch(void);
+int ObjectDecreaseHeading(void);
+int ObjectIncreaseHeading(void);
+int ObjectResetObject(void);
 
 
 //	elight.c
-int	LightSelectNextVertex();
-int	LightSelectNextEdge();
-int	LightCopyIntensity();
-int	LightCopyIntensitySegment();
-int	LightDecreaseLightVertex();
-int	LightIncreaseLightVertex();
-int	LightDecreaseLightSide();
-int	LightIncreaseLightSide();
-int	LightDecreaseLightSegment();
-int	LightIncreaseLightSegment();
-int	LightSetMaximum();
-int	LightSetDefault();
-int	LightSetDefaultAll();
-int	LightAmbientLighting();
+int LightSelectNextVertex(void);
+int LightSelectNextEdge(void);
+int LightCopyIntensity(void);
+int LightCopyIntensitySegment(void);
+int LightDecreaseLightVertex(void);
+int LightIncreaseLightVertex(void);
+int LightDecreaseLightSide(void);
+int LightIncreaseLightSide(void);
+int LightDecreaseLightSegment(void);
+int LightIncreaseLightSegment(void);
+int LightSetMaximum(void);
+int LightSetDefault(void);
+int LightSetDefaultAll(void);
+int LightAmbientLighting(void);
 
 // seguvs.c
-int fix_bogus_uvs_on_side();
-int fix_bogus_uvs_all();
+int fix_bogus_uvs_on_side(void);
+int fix_bogus_uvs_all(void);
 int set_average_light_on_curside(void);
 int set_average_light_on_all(void);
 int set_average_light_on_all_quick(void);
 
 // Miscellaneous, please put in correct file if you have time
-int IncreaseDrawDepth();
-int DecreaseDrawDepth();
-int GotoMainMenu();
-int GotoGameScreen();
-int DropIntoDebugger();
-int CreateDefaultNewSegment();
-int CreateDefaultNewSegmentandAttach();
-int ClearSelectedList();
-int ClearFoundList();
-int SortSelectedList();
-int SetPlayerFromCurseg();
-int SetPlayerFromCursegAndRotate();
-int SetPlayerFromCursegMinusOne();
-int FindConcaveSegs();
-int SelectNextFoundSeg();
+int IncreaseDrawDepth(void);
+int DecreaseDrawDepth(void);
+int GotoMainMenu(void);
+int GotoGameScreen(void);
+int DropIntoDebugger(void);
+int CreateDefaultNewSegment(void);
+int CreateDefaultNewSegmentandAttach(void);
+int ClearSelectedList(void);
+int ClearFoundList(void);
+int SortSelectedList(void);
+int SetPlayerFromCurseg(void);
+int SetPlayerFromCursegAndRotate(void);
+int SetPlayerFromCursegMinusOne(void);
+int FindConcaveSegs(void);
+int SelectNextFoundSeg(void);
 int SelectPreviousFoundSeg(void);
-int do_reset_orient();
-int GameZoomOut();
-int GameZoomIn();
+int do_reset_orient(void);
+int GameZoomOut(void);
+int GameZoomIn(void);
 
 // John's temp page stuff
-int medtmp_set_page();
+int medtmp_set_page(void);
 
 // In objpage.c
-int objpage_goto_next_object();
+int objpage_goto_next_object(void);
 
 // In medsel.c
 extern int SortSelectedList(void);
@@ -317,20 +317,20 @@ extern int do_centers_dialog(void);
 extern int bind_wall_to_control_trigger(void);
 
 // In med.c
-extern int fuelcen_create_from_curseg();
-extern int repaircen_create_from_curseg();
-extern int controlcen_create_from_curseg();
-extern int robotmaker_create_from_curseg();
-extern int fuelcen_reset_all();
-extern int RestoreGameState();
-extern int fuelcen_delete_from_curseg();
-extern int goal_blue_create_from_curseg();
-extern int goal_red_create_from_curseg();
+extern int fuelcen_create_from_curseg(void);
+extern int repaircen_create_from_curseg(void);
+extern int controlcen_create_from_curseg(void);
+extern int robotmaker_create_from_curseg(void);
+extern int fuelcen_reset_all(void);
+extern int RestoreGameState(void);
+extern int fuelcen_delete_from_curseg(void);
+extern int goal_blue_create_from_curseg(void);
+extern int goal_red_create_from_curseg(void);
 
 // In editor\robot.c
-extern int do_robot_dialog();
-extern int do_object_dialog();
+extern int do_robot_dialog(void);
+extern int do_object_dialog(void);
 
 // In editor\hostage.c
-extern int do_hostage_dialog();
+extern int do_hostage_dialog(void);
 

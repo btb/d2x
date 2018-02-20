@@ -78,11 +78,11 @@ object *endlevel_camera;
 #define FLY_SPEED i2f(50)
 
 void do_endlevel_flythrough(int n);
-void draw_stars();
+void draw_stars(void);
 int find_exit_side(object *obj);
-void generate_starfield();
+void generate_starfield(void);
 void start_endlevel_flythrough(int n,object *obj,fix speed);
-void start_rendered_endlevel_sequence();
+void start_rendered_endlevel_sequence(void);
 
 #ifdef D2_OEM
 static const char movie_table[] =	{	'a','a','a','a','d','d','d','d' };

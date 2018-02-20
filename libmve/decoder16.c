@@ -10,7 +10,7 @@ static unsigned short *backBuf1, *backBuf2;
 static int lookup_initialized;
 
 static void dispatchDecoder16(unsigned short **pFrame, unsigned char codeType, unsigned char **pData, unsigned char **pOffData, int *pDataRemain, int *curXb, int *curYb);
-static void genLoopkupTable();
+static void genLoopkupTable(void);
 
 void decodeFrame16(unsigned char *pFrame, unsigned char *pMap, int mapRemain, unsigned char *pData, int dataRemain)
 {

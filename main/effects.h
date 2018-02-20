@@ -51,16 +51,16 @@ extern int Num_effects;
 extern eclip Effects[MAX_EFFECTS];
 
 // Set up special effects.
-extern void init_special_effects();
+extern void init_special_effects(void);
 
 // Clear any active one-shots
-void reset_special_effects();
+void reset_special_effects(void);
 
 // Function called in game loop to do effects.
-extern void do_special_effects();
+extern void do_special_effects(void);
 
 // Restore bitmap
-extern void restore_effect_bitmap_icons();
+extern void restore_effect_bitmap_icons(void);
 
 //stop an effect from animating.  Show first frame.
 void stop_effect(int effect_num);

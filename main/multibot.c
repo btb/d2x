@@ -61,7 +61,7 @@ sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 #define MULTI_ROBOT_PRIORITY(objnum, pnum) (((objnum % 4) + pnum) % N_players)
 
-extern void multi_send_stolen_items();
+extern void multi_send_stolen_items(void);
 extern int multi_powerup_is_allowed (int);
 
 //#define MULTI_ROBOT_PRIORITY(objnum, pnum) multi_robot_priority(objnum, pnum)

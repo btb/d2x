@@ -1262,7 +1262,7 @@ char *d2_very_short_secondary_weapon_names[] =
 	d2_very_short_secondary_weapon_names[weapon_num-SMISSILE1_INDEX])
 
 //return which bomb will be dropped next time the bomb key is pressed
-extern int which_bomb();
+extern int which_bomb(void);
 
 void show_bomb_count(int x,int y,int bg_color,int always_show)
 {

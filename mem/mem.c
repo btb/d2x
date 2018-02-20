@@ -94,7 +94,7 @@ static int LargestIndex = 0;
 
 int out_of_memory = 0;
 
-void mem_display_blocks();
+void mem_display_blocks(void);
 
 void mem_init()
 {

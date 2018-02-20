@@ -22,15 +22,15 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void GetMouseRotation( int idx, int idy, vms_matrix * RotMat );
 extern int Gameview_lockstep;                         //In medmisc.c
-int ToggleLockstep();
+int ToggleLockstep(void);
 int medlisp_delete_segment(void);
 int medlisp_scale_segment(void);
 int medlisp_rotate_segment(void);
 int ToggleLockViewToCursegp(void);
-int ToggleDrawAllSegments();
+int ToggleDrawAllSegments(void);
 int IncreaseDrawDepth(void);
 int DecreaseDrawDepth(void);
-int ToggleCoordAxes();
+int ToggleCoordAxes(void);
 extern int    Big_depth;
 void set_chase_matrix(segment *sp);
 void set_view_target_from_segment(segment *sp);

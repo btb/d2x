@@ -183,8 +183,8 @@ void slide_textures(void);
 void powerup_grab_cheat_all(void);
 
 //	Other functions
-extern void multi_check_for_killgoal_winner();
-extern void RestoreGameSurfaces();
+extern void multi_check_for_killgoal_winner(void);
+extern void RestoreGameSurfaces(void);
 
 // window functions
 
@@ -193,7 +193,7 @@ void shrink_window(void);
 
 // text functions
 
-void fill_background();
+void fill_background(void);
 
 #ifndef RELEASE
 void show_framerate(void);
@@ -1032,8 +1032,8 @@ void game_draw_time_left()
 
 extern int Game_pause;
 
-void do_photos();
-void level_with_floor();
+void do_photos(void);
+void level_with_floor(void);
 
 void modex_clear_box(int x,int y,int w,int h)
 {
@@ -1305,7 +1305,7 @@ void fly_init(object *obj)
 
 //	------------------------------------------------------------------------------------
 
-void test_anim_states();
+void test_anim_states(void);
 
 #include "fvi.h"
 
@@ -1707,7 +1707,7 @@ void show_help()
 }
 
 //temp function until Matt cleans up game sequencing
-extern void temp_reset_stuff_on_level();
+extern void temp_reset_stuff_on_level(void);
 
 fix Rear_view_leave_time = 0x1000;   // how long until we decide key is down (Used to be 0x4000)
 
@@ -1800,7 +1800,7 @@ int gr_badtexture = 0;
 cvar_t Cheats_enabled = { "sv_cheats", "0", CVAR_NONE };
 
 extern int Laser_rapid_fire;
-extern void do_lunacy_on(), do_lunacy_off();
+extern void do_lunacy_on(void), do_lunacy_off(void);
 
 extern int Physics_cheat_flag,Robots_kill_robots_cheat;
 extern char BounceCheat,HomingCheat,OldHomingState[20];
@@ -2102,7 +2102,7 @@ grs_canvas * get_current_game_screen()
 }
 
 
-extern void kconfig_center_headset();
+extern void kconfig_center_headset(void);
 
 
 #ifndef	NDEBUG
@@ -2284,12 +2284,12 @@ void do_ambient_sounds()
 
 // -- extern void lightning_frame(void);
 
-void game_render_frame();
+void game_render_frame(void);
 extern void omega_charge_frame(void);
 
 extern time_t t_current_time, t_saved_time;
 
-void flicker_lights();
+void flicker_lights(void);
 
 void GameLoop(int RenderFlag, int ReadControlsFlag )
 {

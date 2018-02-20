@@ -1301,8 +1301,8 @@ void do_final_boss_hacks(void)
 	Final_boss_is_dead = 1;
 }
 
-extern int multi_all_players_alive();
-void multi_send_finish_game ();
+extern int multi_all_players_alive(void);
+void multi_send_finish_game(void);
 
 //	------------------------------------------------------------------------------------------------------
 //	Return 1 if robot died, else return 0

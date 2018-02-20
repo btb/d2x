@@ -38,7 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 
-extern void multi_send_stolen_items();
+extern void multi_send_stolen_items(void);
 void say_escort_goal(int goal_num);
 void show_escort_menu(char *msg);
 

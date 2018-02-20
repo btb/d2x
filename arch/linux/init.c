@@ -17,11 +17,11 @@
 #include "joy.h"
 #include "args.h"
 
-extern void arch_sdl_init();
-extern void arch_svgalib_init();
-extern void key_init();
-extern int com_init();
-extern void timer_init();
+extern void arch_sdl_init(void);
+extern void arch_svgalib_init(void);
+extern void key_init(void);
+extern int com_init(void);
+extern void timer_init(void);
 
 void arch_init_start()
 {

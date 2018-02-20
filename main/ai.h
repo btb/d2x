@@ -312,7 +312,7 @@ extern void move_towards_vector(object *objp, vms_vector *vec_goal, int dot_base
 extern void init_ai_frame(void);
 
 extern void create_bfs_list(int start_seg, short bfs_list[], int *length, int max_segs);
-extern void init_thief_for_level();
+extern void init_thief_for_level(void);
 
 
 extern int Escort_goal_object;

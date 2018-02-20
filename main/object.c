@@ -246,7 +246,7 @@ extern fix Max_thrust;
 
 //function that takes the same parms as draw_tmap, but renders as flat poly
 //we need this to do the cloaked effect
-extern void draw_tmap_flat();
+extern void draw_tmap_flat(void);
 
 //what darkening level to use when cloaked
 #define CLOAKED_FADE_LEVEL		28
@@ -1356,7 +1356,7 @@ int obj_create_copy(int objnum, vms_vector *new_pos, int newsegnum)
 }
 #endif
 
-extern void newdemo_record_guided_end();
+extern void newdemo_record_guided_end(void);
 
 //remove object from the world
 void obj_delete(int objnum)
@@ -1508,7 +1508,7 @@ void set_camera_pos(vms_vector *camera_pos, object *objp)
 
 extern void drop_player_eggs(object *objp);
 extern int get_explosion_vclip(object *obj,int stage);
-extern void multi_cap_objects();
+extern void multi_cap_objects(void);
 extern int Proximity_dropped,Smartmines_dropped;
 
 //	------------------------------------------------------------------------------------------------------------------
@@ -1910,9 +1910,9 @@ void object_move_one( object * obj )
 
 		#ifndef RELEASE
 		case CT_SLEW:
-			if ( keyd_pressed[KEY_PAD5] ) slew_stop( obj );
+			if ( keyd_pressed[KEY_PAD5] ) slew_stop();
 			if ( keyd_pressed[KEY_NUMLOCK] ) 		{
-				slew_reset_orient( obj );
+				slew_reset_orient();
 				* (ubyte *) 0x417 &= ~0x20;		//kill numlock
 			}
 			slew_frame(0 );		// Does velocity addition for us.

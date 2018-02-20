@@ -128,7 +128,7 @@ void g3_start_instance_matrix(vms_vector *pos,vms_matrix *orient);
 void g3_start_instance_angles(vms_vector *pos,vms_angvec *angles);
 
 //pops the old context
-void g3_done_instance();
+void g3_done_instance(void);
 
 //Misc utility functions:
 
@@ -222,6 +222,6 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int ori
 
 //specifies 2d drawing routines to use instead of defaults.  Passing
 //NULL for either or both restores defaults
-void g3_set_special_render(void (*tmap_drawer)(),void (*flat_drawer)(),int (*line_drawer)(fix, fix, fix, fix));
+void g3_set_special_render(void (*tmap_drawer)(void), void (*flat_drawer)(void), int (*line_drawer)(fix, fix, fix, fix));
 
 #endif

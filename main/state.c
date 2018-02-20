@@ -81,8 +81,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define THUMBNAIL_H 50
 #define DESC_LENGTH 20
 
-extern void multi_initiate_save_game();
-extern void multi_initiate_restore_game();
+extern void multi_initiate_save_game(void);
+extern void multi_initiate_restore_game(void);
 extern void apply_all_changed_light(void);
 
 extern int Do_appearance_effect;

@@ -51,7 +51,7 @@ extern sbyte Newdemo_do_interpolate;
 extern int Auto_demo;
 
 // Functions called during recording process...
-extern void newdemo_record_start_demo();
+extern void newdemo_record_start_demo(void);
 extern void newdemo_record_start_frame(int frame_number, fix frame_time );
 extern void newdemo_record_render_object(object * obj);
 extern void newdemo_record_viewer_object(object * obj);
@@ -62,11 +62,11 @@ extern void newdemo_record_sound( int soundno );
 extern void newdemo_record_wall_hit_process( int segnum, int side, int damage, int playernum );
 extern void newdemo_record_trigger( int segnum, int side, int objnum,int shot );
 extern void newdemo_record_hostage_rescued( int hostage_num );
-extern void newdemo_record_morph_frame();
+extern void newdemo_record_morph_frame(morph_data *md);
 extern void newdemo_record_player_stats(int shields, int energy, int score );
 extern void newdemo_record_player_afterburner(fix old_afterburner, fix afterburner);
 extern void newdemo_record_wall_toggle(int segnum, int side );
-extern void newdemo_record_control_center_destroyed();
+extern void newdemo_record_control_center_destroyed(void);
 extern void newdemo_record_hud_message(char *s);
 extern void newdemo_record_palette_effect(short r, short g, short b);
 extern void newdemo_record_player_energy(int, int);
@@ -101,18 +101,18 @@ extern void newdemo_record_secret_exit_blown(int truth);
 
 
 // Functions called during playback process...
-extern void newdemo_object_move_all();
-extern void newdemo_playback_one_frame();
-extern void newdemo_goto_end();
-extern void newdemo_goto_beginning();
+extern void newdemo_object_move_all(void);
+extern void newdemo_playback_one_frame(void);
+extern void newdemo_goto_end(void);
+extern void newdemo_goto_beginning(void);
 
 // Interactive functions to control playback/record;
 extern void newdemo_start_playback( char * filename );
-extern void newdemo_stop_playback();
-extern void newdemo_start_recording();
-extern void newdemo_stop_recording();
+extern void newdemo_stop_playback(void);
+extern void newdemo_start_recording(void);
+extern void newdemo_stop_recording(void);
 
-extern int newdemo_get_percent_done();
+extern int newdemo_get_percent_done(void);
 
 extern void newdemo_record_link_sound_to_object3( int soundno, short objnum, fix max_volume, fix  max_distance, int loop_start, int loop_end );
 extern int newdemo_find_object( int signature );

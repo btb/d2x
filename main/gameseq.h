@@ -47,7 +47,7 @@ extern cvar_t Player_highest_level;
 //
 
 // called once at program startup to get the player's name
-int RegisterPlayer();
+int RegisterPlayer(void);
 
 // Inputs the player's name, without putting up the background screen
 int RegisterPlayerSub(int allow_abort_flag);
@@ -62,8 +62,8 @@ void StartLevel(int random_flag);
 // Actually does the work to start new level
 void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag);
 
-void InitPlayerObject();            //make sure player's object set up
-void init_player_stats_game();      //clear all stats
+void InitPlayerObject(void);            //make sure player's object set up
+void init_player_stats_game(void);      //clear all stats
 
 // starts a resumed game loaded from disk
 void ResumeSavedGame(int start_level);
@@ -79,10 +79,10 @@ void DoPlayerDead(void);
 // Secret levels are -1,-2,-3
 void LoadLevel(int level_num, int page_in_textures);
 
-extern void gameseq_remove_unused_players();
+extern void gameseq_remove_unused_players(void);
 
-extern void show_help();
-extern void update_player_stats();
+extern void show_help(void);
+extern void update_player_stats(void);
 
 // from scores.c
 
@@ -90,7 +90,7 @@ extern void show_high_scores(int place);
 extern void draw_high_scores(int place);
 extern int add_player_to_high_scores(player *pp);
 extern void input_name (int place);
-extern int reset_high_scores();
+extern int reset_high_scores(void);
 extern void init_player_stats_level(int secret_flag);
 
 void open_message_window(void);
@@ -100,10 +100,10 @@ void close_message_window(void);
 extern void create_player_appearance_effect(object *player_obj);
 
 // goto whatever secrect level is appropriate given the current level
-extern void goto_secret_level();
+extern void goto_secret_level(void);
 
 // reset stuff so game is semi-normal when playing from editor
-void editor_reset_stuff_on_level();
+void editor_reset_stuff_on_level(void);
 
 // Show endlevel bonus scores
 extern void DoEndLevelScoreGlitz(int network);

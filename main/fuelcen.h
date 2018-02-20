@@ -48,7 +48,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 // Destroys all fuel centers, clears segment backpointer array.
-void fuelcen_reset();
+void fuelcen_reset(void);
 // Create materialization center
 int create_matcen( segment * segp );
 // Makes a segment a fuel center.
@@ -60,7 +60,7 @@ void fuelcen_activate( segment * segp, int station_type );
 void fuelcen_delete( segment * segp );
 
 // Charges all fuel centers to max capacity.
-void fuelcen_replentish_all();
+void fuelcen_replentish_all(void);
 
 // Create a matcen robot
 extern object *create_morph_robot(segment *segp, vms_vector *object_pos, int object_id);
@@ -71,7 +71,7 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake );
 fix repaircen_give_shields(segment *segp, fix MaxAmountCanTake );
 
 // Call once per frame.
-void fuelcen_update_all();
+void fuelcen_update_all(void);
 
 // Called when hit by laser.
 void fuelcen_damage(segment *segp, fix AmountOfDamage );

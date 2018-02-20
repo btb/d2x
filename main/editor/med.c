@@ -301,7 +301,7 @@ void ReadLispMacro( FILE * file, char * buffer )
 }
 #endif
 
-static int (*KeyFunction[8192])();
+static int (*KeyFunction[8192])(void);
 
 void medkey_init()
 {
@@ -573,7 +573,7 @@ int ToggleLighting(void)
 	return Lighting_on;
 }
 
-void find_concave_segs();
+void find_concave_segs(void);
 
 int FindConcaveSegs()
 {
@@ -651,7 +651,7 @@ int ToggleOutlineMode()
 
 //@@int do_reset_orient()
 //@@{
-//@@	slew_reset_orient(SlewObj);
+//@@	slew_reset_orient();
 //@@
 //@@	Update_flags |= UF_GAME_VIEW_CHANGED;
 //@@
