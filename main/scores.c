@@ -284,7 +284,7 @@ void scores_rprintf(int x, int y, char * format, ... )
 
 	//replace the digit '1' with special wider 1
 	for (p=buffer;*p;p++)
-		if (*p=='1') *p=132;
+		if (*p=='1') *p = (char)132;
 
 	gr_get_string_size(buffer, &w, &h, &aw );
 

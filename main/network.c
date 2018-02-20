@@ -6359,7 +6359,7 @@ void network_send_player_names (sequence_packet *their)
 
    if (!NameReturning)
 	 {
-     buf[count]=255; count++; 
+      buf[count] = (char)255; count++;
 	  goto sendit;
 	 }
  

@@ -1324,7 +1324,7 @@ void draw_primary_ammo_info(int ammo_count)
 }
 
 //convert '1' characters to special wide ones
-#define convert_1s(s) do {char *p=s; while ((p=strchr(p,'1')) != NULL) *p=132;} while(0)
+#define convert_1s(s) do {char *p=s; while ((p=strchr(p,'1')) != NULL) *p=(char)132;} while(0)
 
 void hud_show_weapons(void)
 {

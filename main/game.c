@@ -1412,7 +1412,7 @@ void do_afterburner_stuff(void)
 			digi_link_sound_to_object3( SOUND_AFTERBURNER_IGNITE, Players[Player_num].objnum, 1, F1_0, i2f(256), AFTERBURNER_LOOP_START, AFTERBURNER_LOOP_END );
 #ifdef NETWORK
 			if (Game_mode & GM_MULTI)
-				multi_send_sound_function (3,SOUND_AFTERBURNER_IGNITE);
+				multi_send_sound_function(3, (char)SOUND_AFTERBURNER_IGNITE);
 #endif
 		} else {
 			digi_kill_sound_linked_to_object( Players[Player_num].objnum);
