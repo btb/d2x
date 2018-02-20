@@ -3346,7 +3346,10 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "";
-				WARNING_CFLAGS = "-Wno-int-to-pointer-cast";
+				WARNING_CFLAGS = (
+					"-Wno-int-to-pointer-cast",
+					"-Wno-address-of-packed-member",
+				);
 			};
 			name = Debug;
 		};
@@ -3417,7 +3420,10 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "";
-				WARNING_CFLAGS = "-Wno-int-to-pointer-cast";
+				WARNING_CFLAGS = (
+					"-Wno-int-to-pointer-cast",
+					"-Wno-address-of-packed-member",
+				);
 			};
 			name = Release;
 		};
