@@ -55,7 +55,7 @@ int ogl_voodoohack=0;
 int vid_installed = 0;
 
 
-void gr_palette_clear(); // Function prototype for gr_init;
+void gr_palette_clear(void); // Function prototype for gr_init;
 int gl_initialized=0;
 int gl_reticle = 0;
 

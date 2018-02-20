@@ -54,7 +54,7 @@ typedef struct _ogl_texture {
 	char wantmip;
 } ogl_texture;
 
-extern ogl_texture* ogl_get_free_texture();
+extern ogl_texture* ogl_get_free_texture(void);
 void ogl_init_texture(ogl_texture* t, int w, int h, int flags);
 
 extern int ogl_alttexmerge;//merge textures by just printing the seperate textures?
