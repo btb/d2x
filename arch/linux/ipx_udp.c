@@ -516,7 +516,11 @@ static int ipx_udp_SendPacket(ipx_socket_t *mysock, IPXPacket_t *IPXHeader,
  
  	toaddr.sin_family=AF_INET;
 	memcpy(&toaddr.sin_addr,IPXHeader->Destination.Node+0,4);
-	toaddr.sin_port=htons(((short)ntohs(*(unsigned short *)(IPXHeader->Destination.Node+4)))+UDP_BASEPORT);
+	{
+		unsigned short port;
+		memcpy(&port, IPXHeader->Destination.Node + 4, 2);
+		toaddr.sin_port = htons(ntohs(port + UDP_BASEPORT));
+	}
 
 	for (bcast=(toaddr.sin_addr.s_addr==htonl(INADDR_BROADCAST)?0:-1);bcast<broadnum;bcast++) {
 		if (bcast>=0) dest=broads+bcast;
