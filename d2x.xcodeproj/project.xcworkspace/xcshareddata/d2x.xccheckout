@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B3372B23-A367-4C75-9B17-771D0821CBD3</string>
+	<key>IDESourceControlProjectName</key>
+	<string>project</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CFE9D757F2FB92910E8773D4BF2B5AFA31FC06EE</key>
+		<string>https://github.com/btb/d2x.git</string>
+		<key>D97FD2949629B1E30B219971C521E5C6EA21AA8C</key>
+		<string>ssh://github.com/btb/d2x.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>d2x.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CFE9D757F2FB92910E8773D4BF2B5AFA31FC06EE</key>
+		<string>../../..</string>
+		<key>D97FD2949629B1E30B219971C521E5C6EA21AA8C</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/btb/d2x.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D97FD2949629B1E30B219971C521E5C6EA21AA8C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CFE9D757F2FB92910E8773D4BF2B5AFA31FC06EE</string>
+			<key>IDESourceControlWCCName</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D97FD2949629B1E30B219971C521E5C6EA21AA8C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>d2x</string>
+		</dict>
+	</array>
+</dict>
+</plist>
