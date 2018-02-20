@@ -33,8 +33,8 @@ before_install:
   - case $CC in x86_64-*mingw32*-*) export CONFLAGS="$CONFLAGS --with-sdl-prefix=`pwd`/arch/win64 CPPFLAGS=-Iarch/win64/include LDFLAGS=-Larch/win64/lib PKG_CONFIG_LIBDIR=`pwd`/arch/win64/lib/pkgconfig"; esac
 
 # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/4aeb45bc1b3c6ffbc075943c4c9f519b932dcf2b/Formula/physfs.rb; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl sdl_mixer sdl_image; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/4aeb45bc1b3c6ffbc075943c4c9f519b932dcf2b/Formula/physfs.rb; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install sdl sdl_mixer sdl_image; fi
 
   - echo $CONFLAGS
 
