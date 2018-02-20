@@ -246,7 +246,7 @@ extern fix Max_thrust;
 
 //function that takes the same parms as draw_tmap, but renders as flat poly
 //we need this to do the cloaked effect
-extern void draw_tmap_flat(void);
+extern void draw_tmap_flat(grs_bitmap *bp,int nverts, g3s_point **vertbuf);
 
 //what darkening level to use when cloaked
 #define CLOAKED_FADE_LEVEL		28
