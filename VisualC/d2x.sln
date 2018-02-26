@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d2x", "d2x\d2x.vcxproj", "{157BD888-2B5B-4292-889F-E4F7B95C3605}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "d2xgl", "d2xgl\d2xgl.vcxproj", "{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmve", "libmve\libmve.vcxproj", "{1D0A333C-4DB1-451E-B4C6-8577F49361FE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mveplayer", "mveplayer\mveplayer.vcxproj", "{1AD14CB6-116A-4E79-8AEA-1261F9CFF696}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{157BD888-2B5B-4292-889F-E4F7B95C3605}.Debug|Win32.ActiveCfg = Debug|Win32
+		{157BD888-2B5B-4292-889F-E4F7B95C3605}.Debug|Win32.Build.0 = Debug|Win32
+		{157BD888-2B5B-4292-889F-E4F7B95C3605}.Release|Win32.ActiveCfg = Release|Win32
+		{157BD888-2B5B-4292-889F-E4F7B95C3605}.Release|Win32.Build.0 = Release|Win32
+		{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}.Debug|Win32.Build.0 = Debug|Win32
+		{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}.Release|Win32.ActiveCfg = Release|Win32
+		{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}.Release|Win32.Build.0 = Release|Win32
+		{1D0A333C-4DB1-451E-B4C6-8577F49361FE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D0A333C-4DB1-451E-B4C6-8577F49361FE}.Debug|Win32.Build.0 = Debug|Win32
+		{1D0A333C-4DB1-451E-B4C6-8577F49361FE}.Release|Win32.ActiveCfg = Release|Win32
+		{1D0A333C-4DB1-451E-B4C6-8577F49361FE}.Release|Win32.Build.0 = Release|Win32
+		{1AD14CB6-116A-4E79-8AEA-1261F9CFF696}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1AD14CB6-116A-4E79-8AEA-1261F9CFF696}.Debug|Win32.Build.0 = Debug|Win32
+		{1AD14CB6-116A-4E79-8AEA-1261F9CFF696}.Release|Win32.ActiveCfg = Release|Win32
+		{1AD14CB6-116A-4E79-8AEA-1261F9CFF696}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7988E989-5A03-4A0C-8F42-901C962B2408}
+	EndGlobalSection
+EndGlobal

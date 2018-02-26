@@ -36,3 +36,12 @@ debian/changelog
 rpm/d2x.spec
 .dirstamp
 xcuserdata/
+
+# Visual Studio
+*.user
+*.suo
+*.ncb
+Debug/
+VisualC/Backup*/
+VisualC/*.htm
+

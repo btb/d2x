@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.26730.12</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\Release\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/d2xgl.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\main;..\..\arch\include;..\..\arch\win32\include;..\..\..\..\physfs\physfs-1.0.0;..\..\include;..\..\..\..\sdl\SDL-1.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/d2xgl.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Debug/d2xgl.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/d2xgl.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/d2xgl.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/d2xgl.tlb</TypeLibraryName>
+      <HeaderFileName />
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>.;..\..\main;..\..\arch\include;..\..\arch\win32\include;..\..\..\..\physfs\physfs-1.0.0;..\..\include;..\..\..\..\sdl\SDL-1.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;RELEASE;WIN32;_WINDOWS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/d2xgl.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/d2xgl.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ProgramDatabaseFile>.\Release/d2xgl.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Release/d2xgl.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\2d\2dsline.c" />
+    <ClCompile Include="..\..\2d\bitblt.c" />
+    <ClCompile Include="..\..\2d\bitmap.c" />
+    <ClCompile Include="..\..\2d\box.c" />
+    <ClCompile Include="..\..\2d\canvas.c" />
+    <ClCompile Include="..\..\2d\circle.c" />
+    <ClCompile Include="..\..\2d\disc.c" />
+    <ClCompile Include="..\..\2d\font.c" />
+    <ClCompile Include="..\..\2d\gpixel.c" />
+    <ClCompile Include="..\..\2d\ibitblt.c" />
+    <ClCompile Include="..\..\2d\line.c" />
+    <ClCompile Include="..\..\2d\palette.c" />
+    <ClCompile Include="..\..\2d\pcx.c" />
+    <ClCompile Include="..\..\2d\pixel.c" />
+    <ClCompile Include="..\..\2d\poly.c" />
+    <ClCompile Include="..\..\2d\rect.c" />
+    <ClCompile Include="..\..\2d\rle.c" />
+    <ClCompile Include="..\..\2d\scalec.c" />
+    <ClCompile Include="..\..\2d\tmerge.c" />
+    <ClCompile Include="..\..\3d\clipper.c" />
+    <ClCompile Include="..\..\3d\draw.c" />
+    <ClCompile Include="..\..\3d\globvars.c" />
+    <ClCompile Include="..\..\3d\instance.c" />
+    <ClCompile Include="..\..\3d\interp.c" />
+    <ClCompile Include="..\..\3d\matrix.c" />
+    <ClCompile Include="..\..\3d\points.c" />
+    <ClCompile Include="..\..\3d\rod.c" />
+    <ClCompile Include="..\..\3d\setup.c" />
+    <ClCompile Include="..\..\arch\ogl\gr.c" />
+    <ClCompile Include="..\..\arch\ogl\ogl.c" />
+    <ClCompile Include="..\..\arch\ogl\sdlgl.c" />
+    <ClCompile Include="..\..\arch\sdl\digi.c" />
+    <ClCompile Include="..\..\arch\sdl\event.c" />
+    <ClCompile Include="..\..\arch\sdl\init.c" />
+    <ClCompile Include="..\..\arch\sdl\joy.c" />
+    <ClCompile Include="..\..\arch\sdl\joydefs.c" />
+    <ClCompile Include="..\..\arch\sdl\key.c" />
+    <ClCompile Include="..\..\arch\sdl\mouse.c" />
+    <ClCompile Include="..\..\arch\sdl\rbaudio.c" />
+    <ClCompile Include="..\..\arch\sdl\timer.c" />
+    <ClCompile Include="..\..\arch\win32\hmpfile.c" />
+    <ClCompile Include="..\..\arch\win32\ipx_mcast4.c" />
+    <ClCompile Include="..\..\arch\win32\ipx_udp.c" />
+    <ClCompile Include="..\..\arch\win32\ipx_win.c" />
+    <ClCompile Include="..\..\arch\win32\midi.c" />
+    <ClCompile Include="..\..\arch\win32\mingw_init.c" />
+    <ClCompile Include="..\..\arch\win32\winnet.c" />
+    <ClCompile Include="..\..\console\CON_console.c" />
+    <ClCompile Include="..\..\iff\iff.c" />
+    <ClCompile Include="..\..\main\ai.c" />
+    <ClCompile Include="..\..\main\ai2.c" />
+    <ClCompile Include="..\..\main\aipath.c" />
+    <ClCompile Include="..\..\main\automap.c" />
+    <ClCompile Include="..\..\main\bm.c" />
+    <ClCompile Include="..\..\main\cmd.c" />
+    <ClCompile Include="..\..\main\cntrlcen.c" />
+    <ClCompile Include="..\..\main\collide.c" />
+    <ClCompile Include="..\..\main\config.c" />
+    <ClCompile Include="..\..\main\console.c" />
+    <ClCompile Include="..\..\main\controls.c" />
+    <ClCompile Include="..\..\main\credits.c" />
+    <ClCompile Include="..\..\main\crypt.c" />
+    <ClCompile Include="..\..\main\digiobj.c" />
+    <ClCompile Include="..\..\main\effects.c" />
+    <ClCompile Include="..\..\main\endlevel.c" />
+    <ClCompile Include="..\..\main\escort.c" />
+    <ClCompile Include="..\..\main\fireball.c" />
+    <ClCompile Include="..\..\main\fuelcen.c" />
+    <ClCompile Include="..\..\main\fvi.c" />
+    <ClCompile Include="..\..\main\game.c" />
+    <ClCompile Include="..\..\main\gamecntl.c" />
+    <ClCompile Include="..\..\main\gamefont.c" />
+    <ClCompile Include="..\..\main\gamemine.c" />
+    <ClCompile Include="..\..\main\gamepal.c" />
+    <ClCompile Include="..\..\main\gamerend.c" />
+    <ClCompile Include="..\..\main\gamesave.c" />
+    <ClCompile Include="..\..\main\gameseg.c" />
+    <ClCompile Include="..\..\main\gameseq.c" />
+    <ClCompile Include="..\..\main\gauges.c" />
+    <ClCompile Include="..\..\main\hostage.c" />
+    <ClCompile Include="..\..\main\hud.c" />
+    <ClCompile Include="..\..\main\inferno.c" />
+    <ClCompile Include="..\..\main\kconfig.c" />
+    <ClCompile Include="..\..\main\kludge.c" />
+    <ClCompile Include="..\..\main\kmatrix.c" />
+    <ClCompile Include="..\..\main\laser.c" />
+    <ClCompile Include="..\..\main\lighting.c" />
+    <ClCompile Include="..\..\main\menu.c" />
+    <ClCompile Include="..\..\main\mglobal.c" />
+    <ClCompile Include="..\..\main\mission.c" />
+    <ClCompile Include="..\..\main\morph.c" />
+    <ClCompile Include="..\..\main\movie.c" />
+    <ClCompile Include="..\..\main\multi.c" />
+    <ClCompile Include="..\..\main\multibot.c" />
+    <ClCompile Include="..\..\main\netmisc.c" />
+    <ClCompile Include="..\..\main\network.c" />
+    <ClCompile Include="..\..\main\newdemo.c" />
+    <ClCompile Include="..\..\main\newmenu.c" />
+    <ClCompile Include="..\..\main\object.c" />
+    <ClCompile Include="..\..\main\paging.c" />
+    <ClCompile Include="..\..\main\physics.c" />
+    <ClCompile Include="..\..\main\piggy.c" />
+    <ClCompile Include="..\..\main\player.c" />
+    <ClCompile Include="..\..\main\playsave.c" />
+    <ClCompile Include="..\..\main\polyobj.c" />
+    <ClCompile Include="..\..\main\powerup.c" />
+    <ClCompile Include="..\..\main\render.c" />
+    <ClCompile Include="..\..\main\robot.c" />
+    <ClCompile Include="..\..\main\scores.c" />
+    <ClCompile Include="..\..\main\segment.c" />
+    <ClCompile Include="..\..\main\slew.c" />
+    <ClCompile Include="..\..\main\songs.c" />
+    <ClCompile Include="..\..\main\state.c" />
+    <ClCompile Include="..\..\main\switch.c" />
+    <ClCompile Include="..\..\main\terrain.c" />
+    <ClCompile Include="..\..\main\texmerge.c" />
+    <ClCompile Include="..\..\main\text.c" />
+    <ClCompile Include="..\..\main\titles.c" />
+    <ClCompile Include="..\..\main\vclip.c" />
+    <ClCompile Include="..\..\main\wall.c" />
+    <ClCompile Include="..\..\main\weapon.c" />
+    <ClCompile Include="..\..\maths\fixc.c" />
+    <ClCompile Include="..\..\maths\rand.c" />
+    <ClCompile Include="..\..\maths\tables.c" />
+    <ClCompile Include="..\..\maths\vecmat.c" />
+    <ClCompile Include="..\..\mem\mem.c" />
+    <ClCompile Include="..\..\misc\args.c" />
+    <ClCompile Include="..\..\misc\error.c" />
+    <ClCompile Include="..\..\misc\hash.c" />
+    <ClCompile Include="..\..\misc\ignorecase.c" />
+    <ClCompile Include="..\..\misc\physfsrwops.c" />
+    <ClCompile Include="..\..\misc\strio.c" />
+    <ClCompile Include="..\..\misc\strutil.c" />
+    <ClCompile Include="..\..\texmap\ntmap.c" />
+    <ClCompile Include="..\..\texmap\scanline.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\2d\bitmap.h" />
+    <ClInclude Include="..\..\2d\clip.h" />
+    <ClInclude Include="..\..\3d\clipper.h" />
+    <ClInclude Include="..\..\3d\globvars.h" />
+    <ClInclude Include="..\..\arch\include\event.h" />
+    <ClInclude Include="..\..\arch\include\joy.h" />
+    <ClInclude Include="..\..\arch\include\key.h" />
+    <ClInclude Include="..\..\arch\include\mouse.h" />
+    <ClInclude Include="..\..\arch\ogl\internal.h" />
+    <ClInclude Include="..\..\arch\win32\include\ipx_mcast4.h" />
+    <ClInclude Include="..\..\arch\win32\include\ipx_udp.h" />
+    <ClInclude Include="..\..\arch\win32\ipx_drv.h" />
+    <ClInclude Include="..\..\include\3d.h" />
+    <ClInclude Include="..\..\include\args.h" />
+    <ClInclude Include="..\..\include\byteswap.h" />
+    <ClInclude Include="..\..\include\cfile.h" />
+    <ClInclude Include="..\..\include\cmd.h" />
+    <ClInclude Include="..\..\include\console.h" />
+    <ClInclude Include="..\..\include\CON_console.h" />
+    <ClInclude Include="..\..\include\d_io.h" />
+    <ClInclude Include="..\..\include\error.h" />
+    <ClInclude Include="..\..\include\findfile.h" />
+    <ClInclude Include="..\..\include\fix.h" />
+    <ClInclude Include="..\..\include\gr.h" />
+    <ClInclude Include="..\..\include\grdef.h" />
+    <ClInclude Include="..\..\include\hash.h" />
+    <ClInclude Include="..\..\include\ibitblt.h" />
+    <ClInclude Include="..\..\include\iff.h" />
+    <ClInclude Include="..\..\include\ignorecase.h" />
+    <ClInclude Include="..\..\include\interp.h" />
+    <ClInclude Include="..\..\include\ipx.h" />
+    <ClInclude Include="..\..\include\libmve.h" />
+    <ClInclude Include="..\..\include\loadgl.h" />
+    <ClInclude Include="..\..\include\makesig.h" />
+    <ClInclude Include="..\..\include\maths.h" />
+    <ClInclude Include="..\..\include\modex.h" />
+    <ClInclude Include="..\..\include\mono.h" />
+    <ClInclude Include="..\..\include\ogl_init.h" />
+    <ClInclude Include="..\..\include\palette.h" />
+    <ClInclude Include="..\..\include\pa_enabl.h" />
+    <ClInclude Include="..\..\include\pcx.h" />
+    <ClInclude Include="..\..\include\physfsrwops.h" />
+    <ClInclude Include="..\..\include\physfsx.h" />
+    <ClInclude Include="..\..\include\pstypes.h" />
+    <ClInclude Include="..\..\include\rbaudio.h" />
+    <ClInclude Include="..\..\include\rle.h" />
+    <ClInclude Include="..\..\include\strio.h" />
+    <ClInclude Include="..\..\include\strutil.h" />
+    <ClInclude Include="..\..\include\texmap.h" />
+    <ClInclude Include="..\..\include\timer.h" />
+    <ClInclude Include="..\..\include\u_dpmi.h" />
+    <ClInclude Include="..\..\include\u_mem.h" />
+    <ClInclude Include="..\..\include\vecmat.h" />
+    <ClInclude Include="..\..\include\vesa.h" />
+    <ClInclude Include="..\..\main\ai.h" />
+    <ClInclude Include="..\..\main\aistruct.h" />
+    <ClInclude Include="..\..\main\automap.h" />
+    <ClInclude Include="..\..\main\bm.h" />
+    <ClInclude Include="..\..\main\bmread.h" />
+    <ClInclude Include="..\..\main\cntrlcen.h" />
+    <ClInclude Include="..\..\main\collide.h" />
+    <ClInclude Include="..\..\main\config.h" />
+    <ClInclude Include="..\..\main\controls.h" />
+    <ClInclude Include="..\..\main\credits.h" />
+    <ClInclude Include="..\..\main\desc_id.h" />
+    <ClInclude Include="..\..\main\digi.h" />
+    <ClInclude Include="..\..\main\effects.h" />
+    <ClInclude Include="..\..\main\endlevel.h" />
+    <ClInclude Include="..\..\main\escort.h" />
+    <ClInclude Include="..\..\main\fireball.h" />
+    <ClInclude Include="..\..\main\fuelcen.h" />
+    <ClInclude Include="..\..\main\fvi.h" />
+    <ClInclude Include="..\..\main\fvi_a.h" />
+    <ClInclude Include="..\..\main\game.h" />
+    <ClInclude Include="..\..\main\gamefont.h" />
+    <ClInclude Include="..\..\main\gamemine.h" />
+    <ClInclude Include="..\..\main\gamepal.h" />
+    <ClInclude Include="..\..\main\gamesave.h" />
+    <ClInclude Include="..\..\main\gameseg.h" />
+    <ClInclude Include="..\..\main\gameseq.h" />
+    <ClInclude Include="..\..\main\gamestat.h" />
+    <ClInclude Include="..\..\main\gauges.h" />
+    <ClInclude Include="..\..\main\hostage.h" />
+    <ClInclude Include="..\..\main\hudmsg.h" />
+    <ClInclude Include="..\..\main\inferno.h" />
+    <ClInclude Include="..\..\main\joydefs.h" />
+    <ClInclude Include="..\..\main\kconfig.h" />
+    <ClInclude Include="..\..\main\kmatrix.h" />
+    <ClInclude Include="..\..\main\laser.h" />
+    <ClInclude Include="..\..\main\lighting.h" />
+    <ClInclude Include="..\..\main\menu.h" />
+    <ClInclude Include="..\..\main\mission.h" />
+    <ClInclude Include="..\..\main\modem.h" />
+    <ClInclude Include="..\..\main\morph.h" />
+    <ClInclude Include="..\..\main\movie.h" />
+    <ClInclude Include="..\..\main\multi.h" />
+    <ClInclude Include="..\..\main\multibot.h" />
+    <ClInclude Include="..\..\main\netmisc.h" />
+    <ClInclude Include="..\..\main\newdemo.h" />
+    <ClInclude Include="..\..\main\newmenu.h" />
+    <ClInclude Include="..\..\main\object.h" />
+    <ClInclude Include="..\..\main\paging.h" />
+    <ClInclude Include="..\..\main\physics.h" />
+    <ClInclude Include="..\..\main\piggy.h" />
+    <ClInclude Include="..\..\main\player.h" />
+    <ClInclude Include="..\..\main\playsave.h" />
+    <ClInclude Include="..\..\main\polyobj.h" />
+    <ClInclude Include="..\..\main\powerup.h" />
+    <ClInclude Include="..\..\main\render.h" />
+    <ClInclude Include="..\..\main\reorder.h" />
+    <ClInclude Include="..\..\main\robot.h" />
+    <ClInclude Include="..\..\main\scores.h" />
+    <ClInclude Include="..\..\main\screens.h" />
+    <ClInclude Include="..\..\main\segment.h" />
+    <ClInclude Include="..\..\main\segpoint.h" />
+    <ClInclude Include="..\..\main\slew.h" />
+    <ClInclude Include="..\..\main\songs.h" />
+    <ClInclude Include="..\..\main\sounds.h" />
+    <ClInclude Include="..\..\main\state.h" />
+    <ClInclude Include="..\..\main\switch.h" />
+    <ClInclude Include="..\..\main\terrain.h" />
+    <ClInclude Include="..\..\main\texmerge.h" />
+    <ClInclude Include="..\..\main\text.h" />
+    <ClInclude Include="..\..\main\textures.h" />
+    <ClInclude Include="..\..\main\titles.h" />
+    <ClInclude Include="..\..\main\vclip.h" />
+    <ClInclude Include="..\..\main\vers_id.h" />
+    <ClInclude Include="..\..\main\wall.h" />
+    <ClInclude Include="..\..\main\weapon.h" />
+    <ClInclude Include="..\..\texmap\scanline.h" />
+    <ClInclude Include="..\..\texmap\texmapl.h" />
+    <ClInclude Include="conf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\..\physfs\physfs-1.0.0\physfs_static_release\physfs_static.lib" />
+    <Library Include="..\..\..\..\sdl\SDL-1.2.8\lib\SDL.lib" />
+    <Library Include="..\..\..\..\sdl\SDL-1.2.8\lib\SDLmain.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libmve\libmve.vcxproj">
+      <Project>{1d0a333c-4db1-451e-b4c6-8577f49361fe}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
