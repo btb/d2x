@@ -1030,8 +1030,6 @@ void game_draw_time_left()
 #endif
 
 
-extern int Game_pause;
-
 void do_photos(void);
 void level_with_floor(void);
 
