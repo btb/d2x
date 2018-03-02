@@ -309,7 +309,7 @@ int parse_delta(PHYSFS_file *ifile, int32_t len, iff_bitmap_header *bmheader)
 		}
 
 		if (cnt == -1) {
-			if (!bmheader->w&1)
+			if (!(bmheader->w & 1)) // width is odd?
 				return IFF_CORRUPT;
 		}
 		else if (cnt)

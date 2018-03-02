@@ -509,8 +509,13 @@ static int ipx_udp_SendPacket(ipx_socket_t *mysock, IPXPacket_t *IPXHeader,
 #endif
 	if (dataLen<0 || dataLen>MAX_PACKETSIZE) return -1;
 	chk(buf=alloca(8+dataLen));
-	if (compatibility) memcpy(buf+0,D1Xudp,6),buf+=6;
-	else               memcpy(buf+0,D1Xid ,2),buf+=2;
+	if (compatibility) {
+		memcpy(buf + 0, D1Xudp, 6);
+		buf += 6;
+	} else {
+		memcpy(buf + 0, D1Xid, 2);
+		buf += 2;
+	}
 	memcpy(buf+0,IPXHeader->Destination.Socket,2);
 	memcpy(buf+2,data,dataLen);
  
