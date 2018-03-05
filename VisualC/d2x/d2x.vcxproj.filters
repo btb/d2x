@@ -2,36 +2,36 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{75dace48-04ab-4192-8e90-50167c75bad9}</UniqueIdentifier>
+      <UniqueIdentifier>{29390309-96aa-44d8-a93a-40ce02d70249}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
     <Filter Include="Source Files\2d">
-      <UniqueIdentifier>{78e7f087-872e-4896-bbb7-b934827b468c}</UniqueIdentifier>
+      <UniqueIdentifier>{f80aee73-e3a8-45e3-8a49-e16929607594}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\3d">
-      <UniqueIdentifier>{9037ea81-01e2-4876-8e5f-eea8729f647a}</UniqueIdentifier>
+      <UniqueIdentifier>{ea02b4f5-4e58-4f34-a3e5-7790bd9b13fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\arch">
-      <UniqueIdentifier>{d9c15453-c8c9-4d24-b1dc-5067d3347515}</UniqueIdentifier>
+      <UniqueIdentifier>{5e88cb7b-bf8f-4329-876b-afe9f47623bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\misc">
-      <UniqueIdentifier>{79d0fdc2-18b3-49fe-91d9-9ef358dd777a}</UniqueIdentifier>
+      <UniqueIdentifier>{211daf7a-b317-4abf-8051-f3c9cc956d19}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\main">
-      <UniqueIdentifier>{8905bdbc-9785-4bbc-936e-b505236d4fb9}</UniqueIdentifier>
+      <UniqueIdentifier>{e873f98b-6646-4f70-99ff-e6436d468789}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\maths">
-      <UniqueIdentifier>{59170bc7-eba5-4603-b3d5-c7e20346d676}</UniqueIdentifier>
+      <UniqueIdentifier>{9998af08-1af5-4c7b-81a5-38e0ce615923}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\texmap">
-      <UniqueIdentifier>{f6b5b811-7f29-432f-8569-bc6072127324}</UniqueIdentifier>
+      <UniqueIdentifier>{8f3c570b-7aab-4cbb-a4b9-cc89cef49c77}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{672f55f4-63a5-4442-a945-60d41f3deab4}</UniqueIdentifier>
+      <UniqueIdentifier>{57e68a49-3d91-4b84-b7fb-0d67eff606c2}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{d6f9ad13-86bb-4f98-90e5-8a7086030fe0}</UniqueIdentifier>
+      <UniqueIdentifier>{dea9afe6-0e49-47af-be8a-25aa4f31e182}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
   </ItemGroup>
@@ -142,9 +142,6 @@
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\arch\sdl\mouse.c">
-      <Filter>Source Files\arch</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\ogl\ogl.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\arch\sdl\rbaudio.c">
@@ -408,6 +405,9 @@
     <ClCompile Include="..\..\texmap\scanline.c">
       <Filter>Source Files\texmap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\texmap\tmapflat.c">
+      <Filter>Source Files\texmap</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\arch\sdl\midi.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
@@ -417,10 +417,7 @@
     <ClCompile Include="..\..\2d\gr.c">
       <Filter>Source Files\2d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\ogl\vid.c">
-      <Filter>Source Files\arch</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\ogl\sdlgl.c">
+    <ClCompile Include="..\..\arch\sdl\vid.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\misc\hmp.c">
@@ -432,16 +429,16 @@
     <ClCompile Include="..\..\main\cli.c">
       <Filter>Source Files\main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\linux\ipx_udp.c">
+    <ClCompile Include="..\..\arch\linux\linuxnet.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\arch\linux\ipx_mcast4.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\win32\ipx_win.c">
+    <ClCompile Include="..\..\arch\linux\ipx_udp.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\linux\linuxnet.c">
+    <ClCompile Include="..\..\arch\win32\ipx_win.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
   </ItemGroup>
@@ -596,9 +593,6 @@
     <ClInclude Include="..\..\main\inferno.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\arch\ogl\internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\interp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -627,9 +621,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\lighting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\loadgl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\makesig.h">
@@ -678,9 +669,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ogl_init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\pa_enabl.h">
@@ -836,13 +824,16 @@
     <ClInclude Include="..\..\main\editor\centers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\checker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\main\desw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\editor.h">
+    <ClInclude Include="..\..\main\editor\ehostage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\ehostage.h">
+    <ClInclude Include="..\..\main\editor\editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\editor\eobject.h">
@@ -851,16 +842,22 @@
     <ClInclude Include="..\..\main\editor\eswitch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\arch\include\vid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\arch\linux\include\ipx_mcast4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\hmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\ui.h">
+    <ClInclude Include="..\..\main\editor\info.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\arch\linux\include\ipx_udp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\arch\linux\include\ipx_bsd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\arch\linux\include\ipx_kali.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\arch\linux\include\ipx_mcast4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\arch\linux\include\joystick.h">
@@ -869,10 +866,7 @@
     <ClInclude Include="..\..\main\editor\kdefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\kfuncs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\main\editor\macro.h">
+    <ClInclude Include="..\..\main\editor\medwall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\editor\meddraw.h">
@@ -890,28 +884,31 @@
     <ClInclude Include="..\..\main\editor\medsel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\medwall.h">
+    <ClInclude Include="..\..\main\editor\macro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\objpage.h">
+    <ClInclude Include="..\..\include\loadgl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\texpage.h">
+    <ClInclude Include="..\..\main\editor\kfuncs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ogl_init.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\editor\info.h">
+    <ClInclude Include="..\..\main\editor\objpage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\arch\linux\include\ipx_bsd.h">
+    <ClInclude Include="..\..\arch\include\vid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\arch\linux\include\ipx_kali.h">
+    <ClInclude Include="..\..\main\editor\texpage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\arch\linux\include\ipx_udp.h">
+    <ClInclude Include="..\..\include\ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -919,8 +916,8 @@
     <None Include="..\..\include\descent.xpm" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
     <Library Include="..\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib" />
+    <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
     <Library Include="..\physfs-2.0.3\Release\physfs.lib" />
     <Library Include="..\SDL-1.2.15\VisualC\SDLmain\Release\SDLmain.lib" />
   </ItemGroup>

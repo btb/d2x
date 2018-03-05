@@ -10,7 +10,7 @@ config.log
 config.status
 config.sub
 configure
-d2x
+
 d2x-ggi
 d2x-gl
 d2x-sdl
@@ -44,4 +44,4 @@ xcuserdata/
 Debug/
 VisualC/Backup*/
 VisualC/*.htm
-
+.vs

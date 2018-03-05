@@ -11,7 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}</ProjectGuid>
+    <ProjectGuid>{157BD888-2B5B-4292-889F-E4F7B95C3605}</ProjectGuid>
+    <RootNamespace>d2x</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -59,7 +60,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/d2xgl.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/d2x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -69,7 +70,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeaderOutputFile>.\Debug/d2xgl.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Debug/d2x.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
@@ -82,20 +83,21 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Debug/d2xgl.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Debug/d2x.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/d2xgl.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Debug/d2x.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug/d2xgl.bsc</OutputFile>
+      <OutputFile>.\Debug/d2x.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,7 +106,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/d2xgl.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/d2x.tlb</TypeLibraryName>
       <HeaderFileName />
     </Midl>
     <ClCompile>
@@ -115,7 +117,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeaderOutputFile>.\Release/d2xgl.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile>.\Release/d2x.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
       <ObjectFileName>.\Release/</ObjectFileName>
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
@@ -127,11 +129,11 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Release/d2xgl.exe</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;wsock32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/d2x.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ProgramDatabaseFile>.\Release/d2xgl.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\Release/d2x.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
@@ -139,7 +141,7 @@
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release/d2xgl.bsc</OutputFile>
+      <OutputFile>.\Release/d2x.bsc</OutputFile>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -175,9 +177,6 @@
     <ClCompile Include="..\..\arch\linux\ipx_mcast4.c" />
     <ClCompile Include="..\..\arch\linux\ipx_udp.c" />
     <ClCompile Include="..\..\arch\linux\linuxnet.c" />
-    <ClCompile Include="..\..\arch\ogl\ogl.c" />
-    <ClCompile Include="..\..\arch\ogl\sdlgl.c" />
-    <ClCompile Include="..\..\arch\ogl\vid.c" />
     <ClCompile Include="..\..\arch\sdl\digi.c" />
     <ClCompile Include="..\..\arch\sdl\event.c" />
     <ClCompile Include="..\..\arch\sdl\init.c" />
@@ -188,6 +187,7 @@
     <ClCompile Include="..\..\arch\sdl\rbaudio.c" />
     <ClCompile Include="..\..\arch\sdl\timer.c" />
     <ClCompile Include="..\..\arch\sdl\midi.c" />
+    <ClCompile Include="..\..\arch\sdl\vid.c" />
     <ClCompile Include="..\..\arch\win32\ipx_win.c" />
     <ClCompile Include="..\..\arch\win32\mingw_init.c" />
     <ClCompile Include="..\..\iff\iff.c" />
@@ -279,6 +279,7 @@
     <ClCompile Include="..\..\misc\strutil.c" />
     <ClCompile Include="..\..\texmap\ntmap.c" />
     <ClCompile Include="..\..\texmap\scanline.c" />
+    <ClCompile Include="..\..\texmap\tmapflat.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\2d\bitmap.h" />
@@ -296,11 +297,11 @@
     <ClInclude Include="..\..\arch\linux\include\ipx_mcast4.h" />
     <ClInclude Include="..\..\arch\linux\include\ipx_udp.h" />
     <ClInclude Include="..\..\arch\linux\include\joystick.h" />
-    <ClInclude Include="..\..\arch\ogl\internal.h" />
     <ClInclude Include="..\..\include\3d.h" />
     <ClInclude Include="..\..\include\args.h" />
     <ClInclude Include="..\..\include\byteswap.h" />
     <ClInclude Include="..\..\include\cfile.h" />
+    <ClInclude Include="..\..\include\checker.h" />
     <ClInclude Include="..\..\include\console.h" />
     <ClInclude Include="..\..\include\error.h" />
     <ClInclude Include="..\..\include\fix.h" />
