@@ -11,6 +11,7 @@
 #ifndef _IPX_DRV_H
 #define _IPX_DRV_H
 #include <sys/types.h>
+#include "pstypes.h"
 
 #define IPX_MANUAL_ADDRESS
 
@@ -20,16 +21,16 @@ typedef struct IPXAddressStruct {
 	u_char Network[4];
 	u_char Node[6];
 	u_char Socket[2];
-} __attribute__((packed)) IPXAddress_t;
+} __pack__ IPXAddress_t;
 
 typedef struct IPXPacketStructure {
-	u_short Checksum __attribute__((packed));
-	u_short Length __attribute__((packed));
+	u_short Checksum __pack__;
+	u_short Length __pack__;
 	u_char TransportControl;
 	u_char PacketType;
 	IPXAddress_t Destination;
 	IPXAddress_t Source;
-} __attribute__((packed)) IPXPacket_t;
+} __pack__ IPXPacket_t;
 
 typedef struct ipx_socket_struct {
 #ifdef DOSEMU

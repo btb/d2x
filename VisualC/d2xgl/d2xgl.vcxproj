@@ -12,6 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4B97C94F-DDEB-4D7A-B29E-2A60A3730BCE}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -45,6 +46,7 @@
     <OutDir>.\Debug\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_SourcePath)\arch\win32\include\SDL;$(VC_SourcePath)\arch\linux\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -150,6 +152,7 @@
     <ClCompile Include="..\..\2d\disc.c" />
     <ClCompile Include="..\..\2d\font.c" />
     <ClCompile Include="..\..\2d\gpixel.c" />
+    <ClCompile Include="..\..\2d\gr.c" />
     <ClCompile Include="..\..\2d\ibitblt.c" />
     <ClCompile Include="..\..\2d\line.c" />
     <ClCompile Include="..\..\2d\palette.c" />
@@ -169,9 +172,11 @@
     <ClCompile Include="..\..\3d\points.c" />
     <ClCompile Include="..\..\3d\rod.c" />
     <ClCompile Include="..\..\3d\setup.c" />
-    <ClCompile Include="..\..\arch\ogl\gr.c" />
+    <ClCompile Include="..\..\arch\linux\ipx_mcast4.c" />
+    <ClCompile Include="..\..\arch\linux\ipx_udp.c" />
     <ClCompile Include="..\..\arch\ogl\ogl.c" />
     <ClCompile Include="..\..\arch\ogl\sdlgl.c" />
+    <ClCompile Include="..\..\arch\ogl\vid.c" />
     <ClCompile Include="..\..\arch\sdl\digi.c" />
     <ClCompile Include="..\..\arch\sdl\event.c" />
     <ClCompile Include="..\..\arch\sdl\init.c" />
@@ -182,10 +187,8 @@
     <ClCompile Include="..\..\arch\sdl\rbaudio.c" />
     <ClCompile Include="..\..\arch\sdl\timer.c" />
     <ClCompile Include="..\..\arch\win32\hmpfile.c" />
-    <ClCompile Include="..\..\arch\win32\ipx_mcast4.c" />
-    <ClCompile Include="..\..\arch\win32\ipx_udp.c" />
+    <ClCompile Include="..\..\arch\sdl\midi.c" />
     <ClCompile Include="..\..\arch\win32\ipx_win.c" />
-    <ClCompile Include="..\..\arch\win32\midi.c" />
     <ClCompile Include="..\..\arch\win32\mingw_init.c" />
     <ClCompile Include="..\..\arch\win32\winnet.c" />
     <ClCompile Include="..\..\console\CON_console.c" />
@@ -195,6 +198,7 @@
     <ClCompile Include="..\..\main\aipath.c" />
     <ClCompile Include="..\..\main\automap.c" />
     <ClCompile Include="..\..\main\bm.c" />
+    <ClCompile Include="..\..\main\cli.c" />
     <ClCompile Include="..\..\main\cmd.c" />
     <ClCompile Include="..\..\main\cntrlcen.c" />
     <ClCompile Include="..\..\main\collide.c" />
@@ -203,9 +207,11 @@
     <ClCompile Include="..\..\main\controls.c" />
     <ClCompile Include="..\..\main\credits.c" />
     <ClCompile Include="..\..\main\crypt.c" />
+    <ClCompile Include="..\..\main\cvar.c" />
     <ClCompile Include="..\..\main\digiobj.c" />
     <ClCompile Include="..\..\main\effects.c" />
     <ClCompile Include="..\..\main\endlevel.c" />
+    <ClCompile Include="..\..\main\entity.c" />
     <ClCompile Include="..\..\main\escort.c" />
     <ClCompile Include="..\..\main\fireball.c" />
     <ClCompile Include="..\..\main\fuelcen.c" />
@@ -270,6 +276,7 @@
     <ClCompile Include="..\..\misc\args.c" />
     <ClCompile Include="..\..\misc\error.c" />
     <ClCompile Include="..\..\misc\hash.c" />
+    <ClCompile Include="..\..\misc\hmp.c" />
     <ClCompile Include="..\..\misc\ignorecase.c" />
     <ClCompile Include="..\..\misc\physfsrwops.c" />
     <ClCompile Include="..\..\misc\strio.c" />
@@ -286,10 +293,8 @@
     <ClInclude Include="..\..\arch\include\joy.h" />
     <ClInclude Include="..\..\arch\include\key.h" />
     <ClInclude Include="..\..\arch\include\mouse.h" />
+    <ClInclude Include="..\..\arch\linux\include\ipx_drv.h" />
     <ClInclude Include="..\..\arch\ogl\internal.h" />
-    <ClInclude Include="..\..\arch\win32\include\ipx_mcast4.h" />
-    <ClInclude Include="..\..\arch\win32\include\ipx_udp.h" />
-    <ClInclude Include="..\..\arch\win32\ipx_drv.h" />
     <ClInclude Include="..\..\include\3d.h" />
     <ClInclude Include="..\..\include\args.h" />
     <ClInclude Include="..\..\include\byteswap.h" />
@@ -337,15 +342,18 @@
     <ClInclude Include="..\..\main\automap.h" />
     <ClInclude Include="..\..\main\bm.h" />
     <ClInclude Include="..\..\main\bmread.h" />
+    <ClInclude Include="..\..\main\cli.h" />
     <ClInclude Include="..\..\main\cntrlcen.h" />
     <ClInclude Include="..\..\main\collide.h" />
     <ClInclude Include="..\..\main\config.h" />
     <ClInclude Include="..\..\main\controls.h" />
     <ClInclude Include="..\..\main\credits.h" />
+    <ClInclude Include="..\..\main\cvar.h" />
     <ClInclude Include="..\..\main\desc_id.h" />
     <ClInclude Include="..\..\main\digi.h" />
     <ClInclude Include="..\..\main\effects.h" />
     <ClInclude Include="..\..\main\endlevel.h" />
+    <ClInclude Include="..\..\main\entity.h" />
     <ClInclude Include="..\..\main\escort.h" />
     <ClInclude Include="..\..\main\fireball.h" />
     <ClInclude Include="..\..\main\fuelcen.h" />

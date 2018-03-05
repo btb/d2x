@@ -126,9 +126,6 @@
     <ClCompile Include="..\..\arch\sdl\event.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\ogl\gr.c">
-      <Filter>Source Files\arch</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\arch\win32\hmpfile.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
@@ -144,9 +141,6 @@
     <ClCompile Include="..\..\arch\sdl\key.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\arch\win32\midi.c">
-      <Filter>Source Files\arch</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\arch\win32\mingw_init.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
@@ -157,9 +151,6 @@
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\arch\sdl\rbaudio.c">
-      <Filter>Source Files\arch</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\ogl\sdlgl.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\arch\sdl\timer.c">
@@ -292,15 +283,6 @@
       <Filter>Source Files\main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\main\inferno.c">
-      <Filter>Source Files\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\win32\ipx_mcast4.c">
-      <Filter>Source Files\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\win32\ipx_udp.c">
-      <Filter>Source Files\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\arch\win32\ipx_win.c">
       <Filter>Source Files\main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\main\kconfig.c">
@@ -440,6 +422,39 @@
     </ClCompile>
     <ClCompile Include="..\..\texmap\scanline.c">
       <Filter>Source Files\texmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\sdl\midi.c">
+      <Filter>Source Files\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main\cvar.c">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\2d\gr.c">
+      <Filter>Source Files\2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\ogl\vid.c">
+      <Filter>Source Files\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\ogl\sdlgl.c">
+      <Filter>Source Files\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\misc\hmp.c">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main\entity.c">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main\cli.c">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\linux\ipx_udp.c">
+      <Filter>Source Files\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\linux\ipx_mcast4.c">
+      <Filter>Source Files\arch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\arch\win32\ipx_win.c">
+      <Filter>Source Files\arch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -612,15 +627,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ipx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\arch\win32\ipx_drv.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\arch\win32\include\ipx_mcast4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\arch\win32\include\ipx_udp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\arch\include\joy.h">
@@ -837,6 +843,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\main\weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\main\cvar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\main\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\main\cli.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\arch\linux\include\ipx_drv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -363,7 +363,7 @@ ubyte key_find_binding(char *text)
 	int i;
 
 	for (i = 0; i < 256; i++)
-		if (key_binding_list[i] && !strncasecmp(key_binding_list[i], text, CMD_MAX_LENGTH))
+		if (key_binding_list[i] && !strnicmp(key_binding_list[i], text, CMD_MAX_LENGTH))
 			return i;
 
 	return 0;

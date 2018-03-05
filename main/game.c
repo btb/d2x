@@ -27,6 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 #include <ctype.h>
 #include <time.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #ifdef MACINTOSH
 #include <Files.h>

@@ -26,9 +26,13 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <sys/types.h>
+#if 0//def HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
 
 #ifdef _WIN32
 #include <winsock.h>
