@@ -544,7 +544,7 @@ int player_is_visible_from_object(object *objp, vms_vector *pos, fix field_of_vi
 			move_towards_segment_center(objp);
 		} else {
 			if (segnum != objp->segnum) {
-				// -- mprintf((0, "Warning: Robot's gun tip not in same segment as robot center, frame %i.\n", FrameCount));
+				// -- mprintf((0, "Warning: Robot's gun tip not in same segment as robot center, tick %i.\n", d_tick_count));
 				objp->ctype.ai_info.SUB_FLAGS |= SUB_FLAGS_GUNSEG;
 			}
 			fq.startseg = segnum;
@@ -2097,7 +2097,7 @@ void teleport_boss(object *objp)
 	rand_segnum = Boss_teleport_segs[rand_index];
 	Assert((rand_segnum >= 0) && (rand_segnum <= Highest_segment_index));
 
-	//mprintf((0, "Frame %i: Boss teleporting to segment #%i, pos = {%8x %8x %8x}.\n", FrameCount, rand_segnum, objp->pos.x, objp->pos.y, objp->pos.z));
+	//mprintf((0, "Tick %i: Boss teleporting to segment #%i, pos = {%8x %8x %8x}.\n", d_tick_count, rand_segnum, objp->pos.x, objp->pos.y, objp->pos.z));
 
 #ifdef NETWORK
 	if (Game_mode & GM_MULTI)

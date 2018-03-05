@@ -314,7 +314,7 @@ void delete_old_omega_blobs(object *parent_objp)
 					count++;
 				}
 
-	mprintf((0, "%i Omega blobs deleted in frame %i\n", count, FrameCount));
+	mprintf((0, "%i Omega blobs deleted in tick %i\n", count, d_tick_count));
 }
 
 // ---------------------------------------------------------------------------------
@@ -1517,7 +1517,7 @@ void Laser_do_weapon_sequence(object *obj)
 
 			int	track_goal = obj->ctype.laser_info.track_goal;
 
-			//mprintf((0, "%5i: mtd=%5.2f", FrameCount, f2fl(Min_trackable_dot)));
+			//mprintf((0, "%5i: mtd=%5.2f", d_tick_count, f2fl(Min_trackable_dot)));
 
 			//	If it's time to do tracking, then it's time to grow up, stop bouncing and start exploding!.
 			if ((obj->id == ROBOT_SMART_MINE_HOMING_ID) || (obj->id == ROBOT_SMART_HOMING_ID) || (obj->id == SMART_MINE_HOMING_ID) || (obj->id == PLAYER_SMART_HOMING_ID) || (obj->id == EARTHSHAKER_MEGA_ID)) {
