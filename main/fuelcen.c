@@ -353,7 +353,7 @@ object * create_morph_robot( segment *segp, vms_vector *object_pos, int object_i
 int Num_extry_robots = 15;
 
 #ifndef NDEBUG
-int	FrameCount_last_msg = 0;
+int	Tick_count_last_msg = 0;
 #endif
 
 //	----------------------------------------------------------------------------------------------------------
@@ -412,9 +412,9 @@ void robotmaker_proc( FuelCenter * robotcen )
    //	  <<<<<<<<<<<<<<<< Num robots in mine >>>>>>>>>>>>>>>>>>>>>>>>>>    <<<<<<<<<<<< Max robots in mine >>>>>>>>>>>>>>>
 	if ( (Players[Player_num].num_robots_level - Players[Player_num].num_kills_level) >= (Gamesave_num_org_robots + Num_extry_robots ) ) {
 		#ifndef NDEBUG
-		if (FrameCount > FrameCount_last_msg + 20) {
+		if (d_tick_count > Tick_count_last_msg + 20) {
 			mprintf((0, "Cannot morph until you kill one!\n"));
-			FrameCount_last_msg = FrameCount;
+			Tick_count_last_msg = d_tick_count;
 		}
 		#endif
 		return;

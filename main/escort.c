@@ -964,7 +964,7 @@ int maybe_buddy_fire_mega(int objnum)
 		return 0;
 	}
 
-	mprintf((0, "Buddy firing mega in frame %i\n", FrameCount));
+	mprintf((0, "Buddy firing mega in tick %i\n", d_tick_count));
 
 	buddy_message("GAHOOGA!");
 
@@ -992,7 +992,7 @@ int maybe_buddy_fire_smart(int objnum)
 	if (!object_to_object_visibility(buddy_objp, objp, FQ_TRANSWALL))
 		return 0;
 
-	mprintf((0, "Buddy firing smart missile in frame %i\n", FrameCount));
+	mprintf((0, "Buddy firing smart missile in tick %i\n", d_tick_count));
 
 	buddy_message("WHAMMO!");
 
@@ -1085,7 +1085,7 @@ void do_escort_frame(object *objp, fix dist_to_player, int player_visibility)
 	if (Escort_special_goal == ESCORT_GOAL_SCRAM) {
 		if (player_visibility)
 			if (Escort_last_path_created + F1_0*3 < GameTime) {
-				mprintf((0, "Frame %i: Buddy creating new scram path.\n", FrameCount));
+				mprintf((0, "Frame %i: Buddy creating new scram path.\n", d_tick_count));
 				create_n_segment_path(objp, 10 + d_rand() * 16, ConsoleObject->segnum);
 				Escort_last_path_created = GameTime;
 			}
