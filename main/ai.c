@@ -425,7 +425,7 @@ _exit_cheat:
 // if (objnum == 1)
 // {
 // 	compute_vis_and_vec(obj, &vis_vec_pos, ailp, &vec_to_player, &player_visibility, robptr, &visibility_and_vec_computed);
-// 	mprintf((0, "Frame %i: dist=%7.3f, vecdot = %7.3f, mode=%i\n", FrameCount, f2fl(dist_to_player), f2fl(vm_vec_dot(&vec_to_player, &obj->orient.fvec)), ailp->mode));
+// 	mprintf((0, "Tick %i: dist=%7.3f, vecdot = %7.3f, mode=%i\n", d_tick_count, f2fl(dist_to_player), f2fl(vm_vec_dot(&vec_to_player, &obj->orient.fvec)), ailp->mode));
 // }
 	// - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - 
 	// Occasionally make non-still robots make a path to the player.  Based on agitation and distance from player.
@@ -433,7 +433,7 @@ _exit_cheat:
 		if (Overall_agitation > 70) {
 			if ((dist_to_player < F1_0*200) && (d_rand() < FrameTime/4)) {
 				if (d_rand() * (Overall_agitation - 40) > F1_0*5) {
-					// -- mprintf((0, "(1) Object #%i going from still to path in frame %i.\n", objnum, FrameCount));
+					// -- mprintf((0, "(1) Object #%i going from still to path in tick %i.\n", objnum, d_tick_count));
 					create_path_to_player(obj, 4 + Overall_agitation/8 + Difficulty_level, 1);
 					return;
 				}
@@ -468,7 +468,7 @@ _exit_cheat:
 					//}
 					break;
 				case AIM_CHASE_OBJECT:
-					// -- mprintf((0, "(2) Object #%i, retries while chasing, creating path to player in frame %i\n", objnum, FrameCount));
+					// -- mprintf((0, "(2) Object #%i, retries while chasing, creating path to player in tick %i\n", objnum, d_tick_count));
 					create_path_to_player(obj, 4 + Overall_agitation/8 + Difficulty_level, 1);
 					break;
 				case AIM_STILL:
@@ -478,7 +478,7 @@ _exit_cheat:
 						attempt_to_resume_path(obj);
 					break;
 				case AIM_FOLLOW_PATH:
-					// mprintf((0, "Object %i following path got %i retries in frame %i\n", OBJECT_NUMBER(obj), ailp->consecutive_retries, FrameCount));
+					// mprintf((0, "Object %i following path got %i retries in tick %i\n", OBJECT_NUMBER(obj), ailp->consecutive_retries, d_tick_count));
 					if (Game_mode & GM_MULTI) {
 						ailp->mode = AIM_STILL;
 					} else
@@ -817,7 +817,7 @@ _exit_cheat:
 						ai_do_actual_firing_stuff(obj, aip, ailp, robptr, &vec_to_player, dist_to_player, &gun_point, player_visibility, object_animates, aip->CURRENT_GUN);
 					return;
 				}
-				// -- mprintf((0, "(3) Object #%i going from chase to player path in frame %i.\n", objnum, FrameCount));
+				// -- mprintf((0, "(3) Object #%i going from chase to player path in tick %i.\n", objnum, d_tick_count));
 				create_path_to_player(obj, 8, 1);
 				ai_multi_send_robot_position(objnum, -1);
 			} else if ((player_visibility == 0) && (dist_to_player > F1_0*80) && (!(Game_mode & GM_MULTI))) {
@@ -826,7 +826,7 @@ _exit_cheat:
 				// This has one desirable benefit of avoiding physics retries.
 				if (aip->behavior == AIB_STATION) {
 					ailp->goal_segment = aip->hide_segment;
-					// -- mprintf((0, "(1) Object #%i going from chase to STATION in frame %i.\n", objnum, FrameCount));
+					// -- mprintf((0, "(1) Object #%i going from chase to STATION in tick %i.\n", objnum, d_tick_count));
 					create_path_to_station(obj, 15);
 				} // -- this looks like a dumb thing to do...robots following paths far away from you! else create_n_segment_path(obj, 5, -1);
 				break;
@@ -857,7 +857,7 @@ _exit_cheat:
 						ai_do_actual_firing_stuff(obj, aip, ailp, robptr, &vec_to_player, dist_to_player, &gun_point, player_visibility, object_animates, aip->CURRENT_GUN);
 					return;
 				}
-				// -- bad idea, robots charge player they've never seen! -- mprintf((0, "(4) Object #%i going from chase to player path in frame %i.\n", objnum, FrameCount));
+				// -- bad idea, robots charge player they've never seen! -- mprintf((0, "(4) Object #%i going from chase to player path in tick %i.\n", objnum, d_tick_count));
 				// -- bad idea, robots charge player they've never seen! -- create_path_to_player(obj, 10, 1);
 				// -- bad idea, robots charge player they've never seen! -- ai_multi_send_robot_position(objnum, -1);
 			} else if ((aip->CURRENT_STATE != AIS_REST) && (aip->GOAL_STATE != AIS_REST)) {
@@ -1114,7 +1114,7 @@ _exit_cheat:
 					// This has one desirable benefit of avoiding physics retries.
 					if (aip->behavior == AIB_STATION) {
 						ailp->goal_segment = aip->hide_segment;
-						// -- mprintf((0, "(2) Object #%i going from STILL to STATION in frame %i.\n", objnum, FrameCount));
+						// -- mprintf((0, "(2) Object #%i going from STILL to STATION in tick %i.\n", objnum, d_tick_count));
 						create_path_to_station(obj, 15);
 					}
 					break;

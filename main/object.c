@@ -1070,7 +1070,7 @@ int obj_allocate(void)
 		int	num_freed;
 
 		num_freed = free_object_slots(MAX_OBJECTS-10);
-		mprintf((0, " *** Freed %i objects in frame %i\n", num_freed, FrameCount));
+		mprintf((0, " *** Freed %i objects in tick %i\n", num_freed, d_tick_count));
 	}
 
 	if ( num_objects >= MAX_OBJECTS ) {
@@ -2086,7 +2086,7 @@ void object_move_all()
 	int i;
 	object *objp;
 
-// -- mprintf((0, "Frame %i: %i/%i objects used.\n", FrameCount, num_objects, MAX_OBJECTS));
+// -- mprintf((0, "Tick %i: %i/%i objects used.\n", d_tick_count, num_objects, MAX_OBJECTS));
 
 //	check_duplicate_objects();
 //	remove_incorrect_objects();

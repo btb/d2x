@@ -284,7 +284,7 @@ int create_path_points(object *objp, int start_seg, int end_seg, point_seg *pseg
 	point_seg	*original_psegs = psegs;
 	int		l_num_points;
 
-// -- mprintf((0, "cpp: frame = %4i obj %3i, psegs = %5i\n", FrameCount, OBJECT_NUMBER(objp), POINT_SEG_NUMBER(psegs)));
+// -- mprintf((0, "cpp: tick = %4i obj %3i, psegs = %5i\n", d_tick_count, OBJECT_NUMBER(objp), POINT_SEG_NUMBER(psegs)));
 #if PATH_VALIDATION
 	validate_all_paths();
 #endif

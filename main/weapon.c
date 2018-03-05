@@ -1041,7 +1041,7 @@ void process_super_mines_frame(void)
 										fvi_info		hit_data;
 										int			fate;
 
-										mprintf((0, "Expensive proxmine collision check.  Frame %i\n", FrameCount));
+										mprintf((0, "Expensive proxmine collision check.  tick %i\n", d_tick_count));
 
 										fq.startseg = Objects[i].segnum;
 										fq.p0						= &Objects[i].pos;
