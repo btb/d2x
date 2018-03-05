@@ -86,7 +86,7 @@ extern int	Mark_count;
 extern int	Speedtest_start_time;
 extern int	Speedtest_segnum;
 extern int	Speedtest_sidenum;
-extern int	Speedtest_frame_start;
+extern int	Speedtest_tick_start;
 extern int	Speedtest_count;
 #endif
 
@@ -2566,7 +2566,7 @@ void speedtest_init(void)
 	Speedtest_on = 1;
 	Speedtest_segnum = 0;
 	Speedtest_sidenum = 0;
-	Speedtest_frame_start = FrameCount;
+	Speedtest_tick_start = d_tick_count;
 
 	mprintf((0, "Starting speedtest.  Will be %i frames.  Each . = 10 frames.\n", Highest_segment_index+1));
 }
@@ -2585,7 +2585,7 @@ void speedtest_frame(void)
 	vm_vec_normalized_dir_quick(&view_dir, &center_point, &Viewer->pos);
 	vm_vector_2_matrix(&Viewer->orient, &view_dir, NULL, NULL);
 
-	if (((FrameCount - Speedtest_frame_start) % 10) == 0)
+	if (((d_tick_count - Speedtest_tick_start) % 10) == 0)
 		mprintf((0, "."));
 
 	Speedtest_segnum++;
@@ -2594,9 +2594,9 @@ void speedtest_frame(void)
 		char    msg[128];
 
 		sprintf(msg, "\nSpeedtest done:  %i frames, %7.3f seconds, %7.3f frames/second.\n",
-			FrameCount-Speedtest_frame_start,
+			d_tick_count - Speedtest_tick_start,
 			f2fl(timer_get_fixed_seconds() - Speedtest_start_time),
-			(float) (FrameCount-Speedtest_frame_start) / f2fl(timer_get_fixed_seconds() - Speedtest_start_time));
+			(float)(d_tick_count - Speedtest_tick_start) / f2fl(timer_get_fixed_seconds() - Speedtest_start_time));
 
 		mprintf((0, "%s", msg));
 		HUD_init_message(msg);

@@ -5174,7 +5174,7 @@ listen:
 	}
 	network_listen();
 
-   if (VerifyPlayerJoined!=-1 && !(FrameCount & 63))
+   if (VerifyPlayerJoined!=-1 && !(d_tick_count & 63))
 	  resend_sync_due_to_packet_loss_for_allender(); // This will resend to network_player_rejoining
  
 	if (Network_send_objects)

@@ -1313,7 +1313,7 @@ void fill_background(void)
 
 void shrink_window(void)
 {
-	mprintf((0, "%d ", FrameCount));
+	mprintf((0, "%d ", d_tick_count));
 
 //	mprintf((0, "W=%d H=%d\n", Game_window_w.intval, Game_window_h.intval));
 

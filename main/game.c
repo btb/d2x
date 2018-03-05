@@ -85,7 +85,7 @@ int	Mark_count = 0;                 // number of debugging marks set
 int	Speedtest_start_time;
 int	Speedtest_segnum;
 int	Speedtest_sidenum;
-int	Speedtest_frame_start;
+int	Speedtest_tick_start;
 int	Speedtest_count=0;				//	number of times to do the debug test.
 #endif
 
