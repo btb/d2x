@@ -225,6 +225,10 @@
 		144BC0321A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0331A74C611001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
 		144BC0341A74C612001A6048 /* gr.c in Sources */ = {isa = PBXBuildFile; fileRef = 144BC0311A74C40E001A6048 /* gr.c */; };
+		1475C17C204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
+		1475C17D204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
+		1475C17E204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
+		1475C17F204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
 		14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
@@ -1503,6 +1507,7 @@
 		146699331A2729C60070D41D /* userbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = userbox.c; sourceTree = "<group>"; };
 		146699341A2729C60070D41D /* window.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = window.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		1475C174204EA70E004E1936 /* physfs_archiver_cue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_cue.c; sourceTree = "<group>"; };
 		1478618B1A4410C500DB53B9 /* README.utils */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.utils; sourceTree = "<group>"; };
 		1478618E1A44120900DB53B9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		147861901A44121000DB53B9 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
@@ -2589,6 +2594,7 @@
 				146697581A2729870070D41D /* parsarg.c */,
 				146697591A2729870070D41D /* parsarg.h */,
 				1466975A1A2729870070D41D /* parstest.c */,
+				1475C174204EA70E004E1936 /* physfs_archiver_cue.c */,
 				1466975B1A2729870070D41D /* physfsrwops.c */,
 				1466975C1A2729870070D41D /* pngfile.c */,
 				1466975D1A2729870070D41D /* strio.c */,
@@ -2833,6 +2839,7 @@
 				14286A5D1A67313E00A095F6 /* kmine.c in Sources */,
 				14286A621A67313E00A095F6 /* kview.c in Sources */,
 				14286A6C1A67313E00A095F6 /* segment.c in Sources */,
+				1475C17E204EA70E004E1936 /* physfs_archiver_cue.c in Sources */,
 				14286A811A67330000A095F6 /* mouse.c in Sources */,
 				142869BF1A672E6300A095F6 /* joy.c in Sources */,
 				142869C01A672E6300A095F6 /* joydefs.c in Sources */,
@@ -3152,6 +3159,7 @@
 				14F0D5171A4CA39800682BB0 /* instance.c in Sources */,
 				14F0D5181A4CA39800682BB0 /* interp.c in Sources */,
 				14F0D5191A4CA39800682BB0 /* matrix.c in Sources */,
+				1475C17D204EA70E004E1936 /* physfs_archiver_cue.c in Sources */,
 				14F0D51A1A4CA39800682BB0 /* points.c in Sources */,
 				14F0D51B1A4CA39800682BB0 /* rod.c in Sources */,
 				14F0D51C1A4CA39800682BB0 /* setup.c in Sources */,
@@ -3251,6 +3259,7 @@
 				1491DA8F1C2CAD3000D25CA0 /* radio.c in Sources */,
 				1491DA901C2CAD3000D25CA0 /* ksegsize.c in Sources */,
 				1491DA911C2CAD3000D25CA0 /* group.c in Sources */,
+				1475C17F204EA70E004E1936 /* physfs_archiver_cue.c in Sources */,
 				1491DA921C2CAD3000D25CA0 /* cvar.c in Sources */,
 				1491DA931C2CAD3000D25CA0 /* digiobj.c in Sources */,
 				1491DA941C2CAD3000D25CA0 /* effects.c in Sources */,
@@ -3475,6 +3484,7 @@
 				14F0D5E31A4CB34F00682BB0 /* newmenu.c in Sources */,
 				14F0D5E41A4CB34F00682BB0 /* object.c in Sources */,
 				14F0D5E51A4CB34F00682BB0 /* paging.c in Sources */,
+				1475C17C204EA70E004E1936 /* physfs_archiver_cue.c in Sources */,
 				14F0D5E61A4CB34F00682BB0 /* physics.c in Sources */,
 				14F0D5E71A4CB34F00682BB0 /* piggy.c in Sources */,
 				14F0D5E81A4CB34F00682BB0 /* player.c in Sources */,

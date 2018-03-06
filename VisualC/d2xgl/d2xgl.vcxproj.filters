@@ -444,6 +444,9 @@
     <ClCompile Include="..\..\arch\linux\linuxnet.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\misc\physfs_archiver_cue.c">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\3d.h">

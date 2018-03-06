@@ -65,7 +65,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;..\..\main;..\..\arch\include;..\..\arch\linux\include;..\..\include;..\physfs-2.0.3;..\SDL_mixer-1.2.12\include;..\SDL-1.2.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\main;..\..\arch\include;..\..\arch\linux\include;..\..\include;..\physfs-3.0.1\src;..\SDL_mixer-1.2.12\include;..\SDL-1.2.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -275,6 +275,7 @@
     <ClCompile Include="..\..\misc\hmp.c" />
     <ClCompile Include="..\..\misc\ignorecase.c" />
     <ClCompile Include="..\..\misc\physfsrwops.c" />
+    <ClCompile Include="..\..\misc\physfs_archiver_cue.c" />
     <ClCompile Include="..\..\misc\strio.c" />
     <ClCompile Include="..\..\misc\strutil.c" />
     <ClCompile Include="..\..\texmap\ntmap.c" />
@@ -449,7 +450,7 @@
     <None Include="..\..\include\descent.xpm" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\physfs-2.0.3\Release\physfs.lib" />
+    <Library Include="..\physfs-3.0.1\Debug\physfs-static.lib" />
     <Library Include="..\SDL-1.2.15\VisualC\SDLmain\Release\SDLmain.lib" />
     <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
     <Library Include="..\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib" />

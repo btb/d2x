@@ -441,6 +441,9 @@
     <ClCompile Include="..\..\arch\win32\ipx_win.c">
       <Filter>Source Files\arch</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\misc\physfs_archiver_cue.c">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\3d.h">
@@ -918,7 +921,7 @@
   <ItemGroup>
     <Library Include="..\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib" />
     <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
-    <Library Include="..\physfs-2.0.3\Release\physfs.lib" />
     <Library Include="..\SDL-1.2.15\VisualC\SDLmain\Release\SDLmain.lib" />
+    <Library Include="..\physfs-3.0.1\Debug\physfs-static.lib" />
   </ItemGroup>
 </Project>

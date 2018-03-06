@@ -275,6 +275,7 @@
     <ClCompile Include="..\..\misc\hmp.c" />
     <ClCompile Include="..\..\misc\ignorecase.c" />
     <ClCompile Include="..\..\misc\physfsrwops.c" />
+    <ClCompile Include="..\..\misc\physfs_archiver_cue.c" />
     <ClCompile Include="..\..\misc\strio.c" />
     <ClCompile Include="..\..\misc\strutil.c" />
     <ClCompile Include="..\..\texmap\ntmap.c" />
