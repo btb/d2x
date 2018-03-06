@@ -137,7 +137,7 @@ void cmd_execute(int argc, char **argv)
 
 	/* Otherwise */
 	{  // set value of cvar
-		char *new_argv[argc+1];
+		char *new_argv[CMD_MAX_TOKENS];
 		int i;
 
 		new_argv[0] = "set";

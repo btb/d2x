@@ -43,6 +43,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define ROW_SPACING (MenuHires?26:11)
 #define NUM_LINES (menu_use_game_res.intval?(SHEIGHT / ROW_SPACING + 2):(MenuHires?21:20))
+#define MAX_LINES 128
 
 ubyte fade_values[200] = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,8,9,9,10,10,
 11,11,12,12,12,13,13,14,14,15,15,15,16,16,17,17,17,18,18,19,19,19,20,20,
@@ -100,7 +101,7 @@ void credits_show(char *credits_filename)
 {
 	int i, j, l, done;
 	CFILE * file;
-	char buffer[NUM_LINES][80];
+	char buffer[MAX_LINES][80];
 	grs_bitmap backdrop;
 	ubyte backdrop_palette[768];
 	int pcx_error;
@@ -114,12 +115,13 @@ void credits_show(char *credits_filename)
 	char * tempp;
 	char filename[32];
 	ubyte *fade_values_scaled = NULL;
-	box_t dirty_box[NUM_LINES];
+	box_t dirty_box[MAX_LINES];
 	grs_canvas *CreditsOffscreenBuf=NULL;
 	grs_canvas *save_canv;
 
 	save_canv = grd_curcanv;
 
+	Assert(NUM_LINES <= MAX_LINES);
 	// Clear out all tex buffer lines.
 	for (i=0; i<NUM_LINES; i++ )
 	{
