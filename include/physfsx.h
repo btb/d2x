@@ -26,6 +26,8 @@
 #include "vecmat.h"
 #include "args.h"
 
+PHYSFS_Archiver *getCueArchiver(void);
+
 // Initialise PhysicsFS, set up basic search paths and add arguments from .ini file(s).
 // The arguments are used to determine the search paths, so the first .ini file must be
 // in the same directory as D2X. A second one can be in the user directory.
@@ -35,6 +37,8 @@ static inline void PHYSFSX_init(int argc, char *argv[])
 
 	PHYSFS_init(argv[0]);
 	PHYSFS_permitSymbolicLinks(1);
+
+	PHYSFS_registerArchiver(getCueArchiver());
 
 	PHYSFS_addToSearchPath(PHYSFS_getBaseDir(), 1);
 	InitArgs( argc,argv );

@@ -23,7 +23,7 @@ char *substr(const char *str, size_t pos, size_t len)
 	char *sub = malloc(len + 1);
 	memcpy(sub, &str[pos], len);
 	sub[len] = '\0';
-	return len;
+	return sub;
 }
 
 size_t findstr(const char *haystack, const char *needle, size_t pos)
@@ -46,6 +46,12 @@ uint64_t file_size(const char *filename)
 	struct stat statbuf;
 	stat(filename, &statbuf);
 	return statbuf.st_size;
+}
+
+int file_exists(const char *filename)
+{
+	struct stat statbuf;
+	return (stat(filename, &statbuf) == 0);
 }
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
@@ -169,7 +175,8 @@ typedef struct CueParser
 			last_char--;
 		}
 
-		char *fileTypeStr = substr(arg, first_char, last_char - first_char + 1);
+		char *fileTypeStr = &arg[first_char];
+		fileTypeStr[last_char - first_char + 1] = '\0';
 
 		if (stricmp(fileTypeStr, "BINARY") != 0)
 		{
@@ -179,7 +186,6 @@ typedef struct CueParser
 			free(fileTypeStr);
 			return 0;
 		}
-		free(fileTypeStr);
 		this->fileType = CueFileType_FT_BINARY;
 		return 1;
 	}
@@ -230,7 +236,8 @@ typedef struct CueParser
 		{
 			last_char--;
 		}
-		char *modeStr = substr(arg, first_char, last_char - first_char + 1);
+		char *modeStr = &arg[first_char];
+		modeStr[last_char - first_char + 1] = '\0';
 		this->trackMode = CueTrackMode_MODE_UNDEFINED;
 		if (stricmp(modeStr, "MODE1/2048") == 0)
 			this->trackMode = CueTrackMode_MODE1_2048;
@@ -248,10 +255,8 @@ typedef struct CueParser
 		{
 			LogError("Unknown/unimplemented mode \"%s\"", modeStr);
 			this->parserState = PARSER_ERROR;
-			free(modeStr);
 			return 0;
 		}
-		free(modeStr);
 		return 1;
 	}
 
@@ -279,8 +284,10 @@ typedef struct CueParser
 		}
 		while (cueFile)
 		{
-			char *cueLine = NULL;
+			char cueLine[1024];
 			fgets(cueLine, 1024, cueFile);
+//			while ( isspace( cueLine[strlen(cueLine) - 1] ) )
+//				cueLine[strlen(cueLine) - 1] = '\0';
 
 			// Cut the leading whitespaces
 			size_t lead_whitespace = 0;
@@ -297,13 +304,14 @@ typedef struct CueParser
 			{
 				continue;
 			}
-			char *command = substr(cueLine, lead_whitespace, first_whitespace - lead_whitespace);
+			char *command = &cueLine[lead_whitespace];
 			size_t last_whitespace = first_whitespace;
 			while ((last_whitespace < strlen(cueLine)) && isspace(cueLine[last_whitespace]))
 			{
 				last_whitespace++;
 			}
-			char *arg = substr(cueLine, 0, last_whitespace);
+			char *arg = &cueLine[last_whitespace];
+			command[first_whitespace - lead_whitespace] = '\0';
 			switch (this->parserState)
 			{
 				case PARSER_START:
@@ -327,8 +335,6 @@ typedef struct CueParser
 				default:
 					LogError("Invalid CueParser state!");
 			}
-			free(command);
-			free(arg);
 			if ((this->parserState == PARSER_FINISH) || (this->parserState == PARSER_ERROR))
 				return this->parserState == PARSER_FINISH;
 		}
@@ -538,7 +544,7 @@ typedef struct CueIO
 			// Each block is 2048 bytes, but there's a prefix and
 			// a postfix area for each sector
 			case CueTrackMode_MODE1_2352:
-			return lba * 2352 + 12 + 4; // 12 sync bytes, 4 header bytes
+				return lba * 2352 + 12 + 4; // 12 sync bytes, 4 header bytes
 			// FIXME: Reality check?
 			// For mode2, each block might be slightly larger than for mode1
 			// These cases are dealing with "cooked" data
@@ -1201,17 +1207,20 @@ typedef struct CueArchiver
 		// We know it's a valid CUE file, so claim it
 		*claimed = 1;
 
-#if 0
-		fs::path cueFilePath(filename);
+		char *cueFilePath = (char *)filename;
 
-		fs::path dataFilePath(cueFilePath.parent_path()); // parser.getDataFileName());
-		dataFilePath /= parser.getDataFileName().cStr();
-		if (exists(dataFilePath))
+		char *dataFilePath = malloc(strlen(cueFilePath) + strlen(CueParser_getDataFileName(parser)));
+		_splitpath(cueFilePath, NULL, dataFilePath, NULL, NULL); // CueParser_getDataFileName(parser);
+		if (dataFilePath[strlen(dataFilePath) - 1] != '/') strcat(dataFilePath, "/");
+		strcat(dataFilePath, CueParser_getDataFileName(parser));
+
+		if (!file_exists(dataFilePath))
 		{
 			LogWarning("Could not find binary file \"%s\" referenced in the cuesheet",
 			           CueParser_getDataFileName(parser));
 			LogWarning("Trying case-insensitive search...");
 			char *ucBin = CueParser_getDataFileName(parser);
+#if 0
 			for (fs::directory_entry &dirent :
 			fs::directory_iterator(cuefilepath.parent_path()))
 			for (auto dirent_it = fs::directory_iterator(cuefilepath.parent_path());
@@ -1226,7 +1235,8 @@ typedef struct CueArchiver
 					datafilepath /= dirent.path().filename();
 				}
 			}
-			if (exists(dataFilePath))
+#endif
+			if (!file_exists(dataFilePath))
 			{
 				LogError("Binary file does not exist: \"%s\"", dataFilePath);
 				return NULL;
@@ -1234,11 +1244,10 @@ typedef struct CueArchiver
 			LogWarning("Using \"%s\" as a binary file source", dataFilePath);
 		}
 
-		CueArchiver *archiver = CueArchiver_new(dataFilePath, CueParser_getDataFileType(parser),
+		CueArchiver *archiver = _CueArchiver_new(dataFilePath, CueParser_getDataFileType(parser),
 		                       CueParser_getTrackMode(parser));
-#endif
 		CueParser_delete(parser);
-		return NULL; //archiver;
+		return archiver;
 	}
 
 	static PHYSFS_EnumerateCallbackResult cueEnumerateFiles(void *opaque, const char *dirname,

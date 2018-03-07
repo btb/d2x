@@ -166,7 +166,7 @@ void _splitpath(char *name, char *drive, char *path, char *base, char *ext)
 	} else if (drive)
 		*drive = '\0';
 	
-	s = strrchr(p, '\\');
+	s = strrchr(p, '/');
 	if ( s != NULL) {
 		if (path) {
 			char c;

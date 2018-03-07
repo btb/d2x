@@ -420,6 +420,9 @@ int main(int argc, char *argv[])
 	else if (FindArg("-verbose"))
 		cvar_setint( &con_threshold, CON_VERBOSE );
 
+	// Add the cd image distributed by GOG (and Steam)
+	cfile_init("descent_ii.inst");
+
 	if (! cfile_init("descent2.hog"))
 		if (! cfile_init("d2demo.hog"))
 			Warning("Could not find a valid hog file (descent2.hog or d2demo.hog)\nPossible locations are:\n"
