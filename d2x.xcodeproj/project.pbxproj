@@ -149,7 +149,6 @@
 		14286A3C1A672E6300A095F6 /* rect.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E51A2729860070D41D /* rect.c */; };
 		14286A3D1A672E6300A095F6 /* rle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E61A2729860070D41D /* rle.c */; };
 		14286A3E1A672E6300A095F6 /* scalec.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EA1A2729860070D41D /* scalec.c */; };
-		14286A401A672E6300A095F6 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 		14286A411A672E6300A095F6 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
 		14286A421A672E6300A095F6 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14286A431A672E6300A095F6 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
@@ -229,6 +228,7 @@
 		1475C17D204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
 		1475C17E204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
 		1475C17F204EA70E004E1936 /* physfs_archiver_cue.c in Sources */ = {isa = PBXBuildFile; fileRef = 1475C174204EA70E004E1936 /* physfs_archiver_cue.c */; };
+		1475C1B7204FB3F3004E1936 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1475C1B4204FB3E1004E1936 /* libphysfs.a */; };
 		14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
 		14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
@@ -451,7 +451,6 @@
 		1491DB141C2CAD3000D25CA0 /* rect.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E51A2729860070D41D /* rect.c */; };
 		1491DB151C2CAD3000D25CA0 /* rle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E61A2729860070D41D /* rle.c */; };
 		1491DB161C2CAD3000D25CA0 /* scalec.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EA1A2729860070D41D /* scalec.c */; };
-		1491DB181C2CAD3000D25CA0 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 		1491DB191C2CAD3000D25CA0 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
 		1491DB1A1C2CAD3000D25CA0 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		1491DB1B1C2CAD3000D25CA0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
@@ -578,7 +577,6 @@
 		14F0D58B1A4CA79400682BB0 /* ogl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695901A2729860070D41D /* ogl.c */; };
 		14F0D58C1A4CA79400682BB0 /* sdlgl.c in Sources */ = {isa = PBXBuildFile; fileRef = 146695911A2729860070D41D /* sdlgl.c */; };
 		14F0D58F1A4CABD400682BB0 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
-		14F0D5911A4CB2A300682BB0 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 		14F0D5941A4CB34F00682BB0 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 146695051A2729860070D41D /* SDLMain.m */; };
 		14F0D5981A4CB34F00682BB0 /* init.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957A1A2729860070D41D /* init.c */; };
 		14F0D5991A4CB34F00682BB0 /* ipx_kali.c in Sources */ = {isa = PBXBuildFile; fileRef = 1466957C1A2729860070D41D /* ipx_kali.c */; };
@@ -713,7 +711,6 @@
 		14F0D61C1A4CB34F00682BB0 /* rect.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E51A2729860070D41D /* rect.c */; };
 		14F0D61D1A4CB34F00682BB0 /* rle.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694E61A2729860070D41D /* rle.c */; };
 		14F0D61E1A4CB34F00682BB0 /* scalec.c in Sources */ = {isa = PBXBuildFile; fileRef = 146694EA1A2729860070D41D /* scalec.c */; };
-		14F0D6201A4CB34F00682BB0 /* libphysfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E0A3211A2C4DDE0039A9FC /* libphysfs.a */; };
 		14F0D6211A4CB34F00682BB0 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D641A4C9F74001CB0FB /* SDL_mixer.framework */; };
 		14F0D6221A4CB34F00682BB0 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D621A4C9F5C001CB0FB /* SDL.framework */; };
 		14F0D6231A4CB34F00682BB0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14804D601A4C9F2D001CB0FB /* Cocoa.framework */; };
@@ -728,6 +725,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = 1400B8EC1C2BC79600B6F870;
 			remoteInfo = mveplayer;
+		};
+		1475C1B1204FB3E1004E1936 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE9BADDC216A486F8B73D7CE;
+			remoteInfo = physfs;
+		};
+		1475C1B3204FB3E1004E1936 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81E4F83ABCC4439AB21AB3D4;
+			remoteInfo = "physfs-static";
+		};
+		1475C1B5204FB3E1004E1936 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA1CAFB372484196BCEDF289;
+			remoteInfo = test_physfs;
 		};
 		1491DA3D1C2CAB7800D25CA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1508,6 +1526,9 @@
 		146699341A2729C60070D41D /* window.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = window.c; sourceTree = "<group>"; };
 		14669A431A285F9B0070D41D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		1475C174204EA70E004E1936 /* physfs_archiver_cue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_cue.c; sourceTree = "<group>"; };
+		1475C1A0204FAB7B004E1936 /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../physfs/libphysfs.a; sourceTree = "<group>"; };
+		1475C1A3204FAEA2004E1936 /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = ../../physfs/Debug/libphysfs.a; sourceTree = "<group>"; };
+		1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhysicsFS.xcodeproj; path = ../../physfs/PhysicsFS.xcodeproj; sourceTree = "<group>"; };
 		1478618B1A4410C500DB53B9 /* README.utils */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.utils; sourceTree = "<group>"; };
 		1478618E1A44120900DB53B9 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		147861901A44121000DB53B9 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
@@ -1519,7 +1540,6 @@
 		1491DB201C2CAD3000D25CA0 /* miner-opengl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "miner-opengl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		14D696841A5B2C98009ABFD2 /* COPYING.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYING.txt; sourceTree = "<group>"; };
 		14D696851A5B2C98009ABFD2 /* GPL-3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GPL-3.txt"; sourceTree = "<group>"; };
-		14E0A3211A2C4DDE0039A9FC /* libphysfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libphysfs.a; path = /usr/local/Cellar/physfs/2.0.3/lib/libphysfs.a; sourceTree = "<absolute>"; };
 		14E97E051A3703BE0027FB84 /* cvar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cvar.h; sourceTree = "<group>"; };
 		14E97E061A3703D40027FB84 /* cvar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cvar.c; sourceTree = "<group>"; };
 		14F0D5901A4CB09C00682BB0 /* conf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = conf.h; sourceTree = "<group>"; };
@@ -1530,7 +1550,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14286A401A672E6300A095F6 /* libphysfs.a in Frameworks */,
 				14286A411A672E6300A095F6 /* SDL_mixer.framework in Frameworks */,
 				14286A421A672E6300A095F6 /* SDL.framework in Frameworks */,
 				14286A431A672E6300A095F6 /* Cocoa.framework in Frameworks */,
@@ -1541,7 +1560,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14F0D5911A4CB2A300682BB0 /* libphysfs.a in Frameworks */,
 				14804D651A4C9F74001CB0FB /* SDL_mixer.framework in Frameworks */,
 				14804D631A4C9F5C001CB0FB /* SDL.framework in Frameworks */,
 				14804D611A4C9F2D001CB0FB /* Cocoa.framework in Frameworks */,
@@ -1552,7 +1570,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1491DB181C2CAD3000D25CA0 /* libphysfs.a in Frameworks */,
 				1491DB191C2CAD3000D25CA0 /* SDL_mixer.framework in Frameworks */,
 				1491DB1A1C2CAD3000D25CA0 /* SDL.framework in Frameworks */,
 				1491DB1B1C2CAD3000D25CA0 /* Cocoa.framework in Frameworks */,
@@ -1563,7 +1580,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14F0D6201A4CB34F00682BB0 /* libphysfs.a in Frameworks */,
+				1475C1B7204FB3F3004E1936 /* libphysfs.a in Frameworks */,
 				14F0D6211A4CB34F00682BB0 /* SDL_mixer.framework in Frameworks */,
 				14F0D6221A4CB34F00682BB0 /* SDL.framework in Frameworks */,
 				14F0D6231A4CB34F00682BB0 /* Cocoa.framework in Frameworks */,
@@ -1786,11 +1803,11 @@
 		1466949C1A27246A0070D41D = {
 			isa = PBXGroup;
 			children = (
+				1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */,
 				1400B8E51C2BC6CB00B6F870 /* utils.xcodeproj */,
 				14804D641A4C9F74001CB0FB /* SDL_mixer.framework */,
 				14804D621A4C9F5C001CB0FB /* SDL.framework */,
 				14804D601A4C9F2D001CB0FB /* Cocoa.framework */,
-				14E0A3211A2C4DDE0039A9FC /* libphysfs.a */,
 				146694D01A2729860070D41D /* 2d */,
 				146694ED1A2729860070D41D /* 3d */,
 				146694FC1A2729860070D41D /* arch */,
@@ -1813,6 +1830,7 @@
 				147861901A44121000DB53B9 /* NEWS */,
 				1420D653204CF1830032C223 /* unused */,
 				141635ED1A4CB608005E575E /* Products */,
+				1475C198204FAB7B004E1936 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2656,6 +2674,25 @@
 			path = ui;
 			sourceTree = "<group>";
 		};
+		1475C198204FAB7B004E1936 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1475C1A3204FAEA2004E1936 /* libphysfs.a */,
+				1475C1A0204FAB7B004E1936 /* libphysfs.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1475C1A7204FB3E1004E1936 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1475C1B2204FB3E1004E1936 /* libphysfs.dylib */,
+				1475C1B4204FB3E1004E1936 /* libphysfs.a */,
+				1475C1B6204FB3E1004E1936 /* test_physfs */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2754,6 +2791,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1475C1A7204FB3E1004E1936 /* Products */;
+					ProjectRef = 1475C1A6204FB3E1004E1936 /* PhysicsFS.xcodeproj */;
+				},
+				{
 					ProductGroup = 1400B9091C2BD3A300B6F870 /* Products */;
 					ProjectRef = 1400B8E51C2BC6CB00B6F870 /* utils.xcodeproj */;
 				},
@@ -2774,6 +2815,28 @@
 			fileType = "compiled.mach-o.executable";
 			path = mveplayer;
 			remoteRef = 1400B90C1C2BD3A300B6F870 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1475C1B2204FB3E1004E1936 /* libphysfs.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			name = libphysfs.dylib;
+			path = libphysfs.3.0.0.dylib;
+			remoteRef = 1475C1B1204FB3E1004E1936 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1475C1B4204FB3E1004E1936 /* libphysfs.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libphysfs.a;
+			remoteRef = 1475C1B3204FB3E1004E1936 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1475C1B6204FB3E1004E1936 /* test_physfs */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = test_physfs;
+			remoteRef = 1475C1B5204FB3E1004E1936 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1491DA3E1C2CAB7800D25CA0 /* hogcreate */ = {
