@@ -54,12 +54,34 @@ int file_exists(const char *filename)
 	return (stat(filename, &statbuf) == 0);
 }
 
+void path_cat(char *path, const char* name)
+{
+	const char *sep = PHYSFS_getDirSeparator();
+	if (strcmp(&path[strlen(path) - strlen(sep)], sep) != 0)
+		strcat(path, sep);
+	strcat(path, name);
+}
+
+void make_parent_path(char *path)
+{
+	const char *sep = PHYSFS_getDirSeparator();
+	char *p = &path[strlen(path) - strlen(sep)];
+
+	while (p > path) {
+		if (strncmp(p, sep, strlen(sep)) == 0) {
+			*p = '\0';
+			return;
+		}
+		p--;
+	}
+}
+
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-#define LogInfo(...) printf(__VA_ARGS__)
-#define LogWarning(...) printf(__VA_ARGS__)
-#define LogError(...) printf(__VA_ARGS__)
+#define LogInfo(...) (printf(__VA_ARGS__),printf("\n"))
+#define LogWarning(...) (printf(__VA_ARGS__),printf("\n"))
+#define LogError(...) (printf(__VA_ARGS__),printf("\n"))
 
 // We actually only use BINARY here, but just for the sake of completion
 typedef enum CueFileType
@@ -845,7 +867,21 @@ typedef struct CueArchiver
 	CueTrackMode trackMode;
 
 	CueIO *cio;
-	FSEntry *root;
+
+	struct FSEntry
+	{
+		char *name;
+		enum
+		{
+			FSEntry_FS_FILE,
+			FSEntry_FS_DIRECTORY
+		} type;
+		uint32_t offset;
+		uint64_t length;
+		int64_t timestamp;
+		//		std::map<UString, FSEntry> children;
+	} root;
+
 } CueArchiver;
 
 	typedef struct IsoVolumeDescriptor
@@ -933,20 +969,6 @@ typedef struct CueArchiver
 		FSFLAG_RESERVED2 = 0x40,
 		FSFLAG_NOTFINAL = 0x80
 	} FSEntryFlags;
-
-	typedef struct FSEntry
-	{
-		char *name;
-		enum
-		{
-			FSEntry_FS_FILE,
-			FSEntry_FS_DIRECTORY
-		} type;
-		uint32_t offset;
-		uint64_t length;
-		int64_t timestamp;
-		//		std::map<UString, FSEntry> children;
-	} FSEntry;
 
 	void _CueArchiver_readDir(CueArchiver *this, const IsoDirRecord_hdr *dirRecord, FSEntry *parent)
 	{
@@ -1080,7 +1102,7 @@ typedef struct CueArchiver
 		memcpy(&rootRecord, descriptor.primary.rootDirEnt, 34);
 		LogInfo("Volume ID: %s", descriptor.primary.volIdentifier);
 		LogInfo("Root dirent length: %d", (int)rootRecord.length);
-		_CueArchiver_readDir(this, &rootRecord, this->root);
+		_CueArchiver_readDir(this, &rootRecord, &this->root);
 		
 		return this;
 	}
@@ -1089,7 +1111,7 @@ typedef struct CueArchiver
 
 	const FSEntry *_CueArchiver_getFsEntry(const CueArchiver *this, const char *name)
 	{
-		const FSEntry *current = this->root;
+		const FSEntry *current = &this->root;
 		char *dname = strdup(name);
 		if (strlen(dname) > 0)
 		{
@@ -1210,9 +1232,9 @@ typedef struct CueArchiver
 		char *cueFilePath = (char *)filename;
 
 		char *dataFilePath = malloc(strlen(cueFilePath) + strlen(CueParser_getDataFileName(parser)));
-		_splitpath(cueFilePath, NULL, dataFilePath, NULL, NULL); // CueParser_getDataFileName(parser);
-		if (dataFilePath[strlen(dataFilePath) - 1] != '/') strcat(dataFilePath, "/");
-		strcat(dataFilePath, CueParser_getDataFileName(parser));
+		strcpy(dataFilePath, cueFilePath);
+		make_parent_path(dataFilePath); // CueParser_getDataFileName(parser);
+		path_cat(dataFilePath, CueParser_getDataFileName(parser));
 
 		if (!file_exists(dataFilePath))
 		{
