@@ -103,8 +103,16 @@ typedef enum CueTrackMode
 	CueTrackMode_MODE2_2048,
 	CueTrackMode_MODE2_2324,
 	CueTrackMode_MODE2_2336,
-	CueTrackMode_MODE2_2352
+	CueTrackMode_MODE2_2352,
+	CueTrackMode_AUDIO
 } CueTrackMode;
+
+typedef struct CueTrack
+{
+	CueTrackMode trackMode;
+	int pregapFrame;
+	int startFrame;
+} CueTrack;
 
 // FIXME: This is a very incomplete CueSheet parser!
 typedef struct CueParser
@@ -126,7 +134,8 @@ typedef struct CueParser
 
 	char *dataFileName;
 	CueFileType fileType;
-	CueTrackMode trackMode;
+	CueTrack tracks[100];
+	CueTrack *currentTrack;
 } CueParser;
 
 	// Parse command while not being in a specific context
@@ -242,10 +251,15 @@ typedef struct CueParser
 		int trackNumber = atoi(s);
 		free(s);
 
-		if (trackNumber > 1)
+		if (trackNumber < 1 || trackNumber > 99)
 		{
-			LogWarning("First track is not numbered 1 (actual number is %d)", trackNumber);
+			LogError("Track number is not between 1 and 99 (actual number is %d)", trackNumber);
+			this->parserState = PARSER_ERROR;
+			return 0;
 		}
+
+		this->currentTrack = &this->tracks[trackNumber];
+		memset(this->currentTrack, 0, sizeof(CueTrack));
 
 		// Read track mode
 		first_char = last_char + 1;
@@ -260,20 +274,22 @@ typedef struct CueParser
 		}
 		char *modeStr = &arg[first_char];
 		modeStr[last_char - first_char + 1] = '\0';
-		this->trackMode = CueTrackMode_MODE_UNDEFINED;
+		this->currentTrack->trackMode = CueTrackMode_MODE_UNDEFINED;
 		if (stricmp(modeStr, "MODE1/2048") == 0)
-			this->trackMode = CueTrackMode_MODE1_2048;
+			this->currentTrack->trackMode = CueTrackMode_MODE1_2048;
 		else if (stricmp(modeStr, "MODE1/2352") == 0)
-			this->trackMode = CueTrackMode_MODE1_2352;
+			this->currentTrack->trackMode = CueTrackMode_MODE1_2352;
 		else if (stricmp(modeStr, "MODE2/2048") == 0)
-			this->trackMode = CueTrackMode_MODE2_2048;
+			this->currentTrack->trackMode = CueTrackMode_MODE2_2048;
 		else if (stricmp(modeStr, "MODE2/2324") == 0)
-			this->trackMode = CueTrackMode_MODE2_2324;
+			this->currentTrack->trackMode = CueTrackMode_MODE2_2324;
 		else if (stricmp(modeStr, "MODE2/2336") == 0)
-			this->trackMode = CueTrackMode_MODE2_2336;
+			this->currentTrack->trackMode = CueTrackMode_MODE2_2336;
 		else if (stricmp(modeStr, "MODE2/2352") == 0)
-			this->trackMode = CueTrackMode_MODE2_2352;
-		if (this->trackMode == CueTrackMode_MODE_UNDEFINED)
+			this->currentTrack->trackMode = CueTrackMode_MODE2_2352;
+		else if (stricmp(modeStr, "AUDIO") == 0)
+			this->currentTrack->trackMode = CueTrackMode_AUDIO;
+		if (this->currentTrack->trackMode == CueTrackMode_MODE_UNDEFINED)
 		{
 			LogError("Unknown/unimplemented mode \"%s\"", modeStr);
 			this->parserState = PARSER_ERROR;
@@ -292,7 +308,21 @@ typedef struct CueParser
 			LogInfo("Encountered unexpected/unknown command: \"%s\", ignoring", cmd);
 			return 0;
 		}
-		// FIXME: I seriously could not make heads or tails of these indices.
+		int index, min, sec, frame;
+		sscanf(arg, "%d %d:%d:%d", &index, &min, &sec, &frame);
+		switch (index)
+		{
+		case 0:
+			this->currentTrack->pregapFrame = min * 60 * 75 + sec * 75 + frame;
+			break;
+		case 1:
+			this->currentTrack->startFrame = min * 60 * 75 + sec * 75 + frame;
+			break;
+		default:
+			LogError("Unknown/unimplemented track index \"%d\"", index);
+			this->parserState = PARSER_ERROR;
+			return 0;
+		}
 		return 1;
 	}
 
@@ -304,13 +334,9 @@ typedef struct CueParser
 			// Stream is unusable, bail out
 			return 0;
 		}
-		while (cueFile)
+		char cueLine[1024];
+		while (cueFile && fgets(cueLine, 1024, cueFile))
 		{
-			char cueLine[1024];
-			fgets(cueLine, 1024, cueFile);
-//			while ( isspace( cueLine[strlen(cueLine) - 1] ) )
-//				cueLine[strlen(cueLine) - 1] = '\0';
-
 			// Cut the leading whitespaces
 			size_t lead_whitespace = 0;
 			while ((lead_whitespace < strlen(cueLine)) && isspace(cueLine[lead_whitespace]))
@@ -351,7 +377,7 @@ typedef struct CueParser
 				case PARSER_TRACK:
 					if (_CueParser_parseTrack(this, command, arg))
 					{
-						this->parserState = PARSER_FINISH;
+						this->parserState = PARSER_FILE; // Try to parse next track
 					}
 					break;
 				default:
@@ -360,6 +386,8 @@ typedef struct CueParser
 			if ((this->parserState == PARSER_FINISH) || (this->parserState == PARSER_ERROR))
 				return this->parserState == PARSER_FINISH;
 		}
+		if (this->parserState == PARSER_FILE)
+			this->parserState = PARSER_FINISH;
 		return this->parserState == PARSER_FINISH;
 	}
 
@@ -370,7 +398,7 @@ typedef struct CueParser
 
 		this->parserState = PARSER_START;
 		this->fileType = CueFileType_FT_UNDEFINED;
-		this->trackMode = CueTrackMode_MODE_UNDEFINED;
+		this->tracks[0].trackMode = CueTrackMode_MODE_UNDEFINED;
 
 		_CueParser_parse(this, cueFile);
 		return this;
@@ -379,7 +407,7 @@ typedef struct CueParser
 	int CueParser_isValid(CueParser *this) { return this->parserState == PARSER_FINISH; }
 	char *CueParser_getDataFileName(CueParser *this) { return this->dataFileName; }
 	CueFileType CueParser_getDataFileType(CueParser *this) { return this->fileType; }
-	CueTrackMode CueParser_getTrackMode(CueParser *this) { return this->trackMode; }
+	CueTrackMode CueParser_getTrackMode(CueParser *this, int trackNumber) { return this->tracks[trackNumber].trackMode; }
 	void CueParser_delete(CueParser *this) { free(this->dataFileName); free(this); }
 // End of CueParser
 
@@ -1291,7 +1319,7 @@ typedef struct CueArchiver
 		}
 
 		CueArchiver *archiver = _CueArchiver_new(dataFilePath, CueParser_getDataFileType(parser),
-		                       CueParser_getTrackMode(parser));
+		                       CueParser_getTrackMode(parser, 1));
 		CueParser_delete(parser);
 		return archiver;
 	}
@@ -1373,7 +1401,7 @@ void parseCueFile(char *fileName)
 	CueParser *parser = CueParser_new(fileName);
 	LogInfo("Parser status: %d", CueParser_isValid(parser));
 	LogInfo("Data file: %s", CueParser_getDataFileName(parser));
-	LogInfo("Track mode: %d", (int)CueParser_getTrackMode(parser));
+	LogInfo("Track mode: %d", (int)CueParser_getTrackMode(parser, 1));
 	LogInfo("File mode: %d", (int)CueParser_getDataFileType(parser));
 	CueParser_delete(parser);
 }
