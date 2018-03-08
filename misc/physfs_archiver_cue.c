@@ -879,7 +879,8 @@ typedef struct CueArchiver
 		uint32_t offset;
 		uint64_t length;
 		int64_t timestamp;
-		//		std::map<UString, FSEntry> children;
+		FSEntry *children;
+		FSEntry *next;
 	} root;
 
 } CueArchiver;
@@ -970,6 +971,29 @@ typedef struct CueArchiver
 		FSFLAG_NOTFINAL = 0x80
 	} FSEntryFlags;
 
+	void add_child(FSEntry *parent, FSEntry *child)
+	{
+		if (parent->children == NULL) {
+			parent->children = child;
+			return;
+		}
+
+		FSEntry *current = parent->children;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = child;
+	}
+
+	FSEntry *find_entry(FSEntry *entry, const char *name)
+	{
+		do {
+			if (strcmp(entry->name, name) == 0)
+				return entry;
+		} while (entry = entry->next);
+
+		return NULL;
+	}
+
 	void _CueArchiver_readDir(CueArchiver *this, const IsoDirRecord_hdr *dirRecord, FSEntry *parent)
 	{
 		Int32LsbMsb lm_location;
@@ -992,6 +1016,7 @@ typedef struct CueArchiver
 		parent->length = length;
 		parent->offset = location;
 		parent->timestamp = DirDatetime_toUnixTime(d_datetime);
+		parent->children = parent->next = NULL;
 #if 0 // Stop archiver from being extremely chatty
         LogInfo("Adding entry: %s", parent->name);
         LogInfo("  Location %" PRIu64, parent->offset);
@@ -1054,13 +1079,13 @@ typedef struct CueArchiver
 			}
 
 			// Now decode what we've read
-			FSEntry childEntry;
+			FSEntry *childEntry = malloc(sizeof(FSEntry));
 			int64_t pos = _CueIO_tell(this->cio);
-			_CueArchiver_readDir(this, &childDirRecord, &childEntry);
+			_CueArchiver_readDir(this, &childDirRecord, childEntry);
 			// Reset reading position
 			_CueIO_seek(this->cio, pos);
 			// _CueIO_seek(this->cio, _CueIO_blockSize(this->cio) * location + readpos);
-			//parent->children[childEntry.name] = childEntry;
+			add_child(parent, childEntry);
 		} while ((childDirRecord.length > 0));
 	}
 
@@ -1115,20 +1140,19 @@ typedef struct CueArchiver
 		char *dname = strdup(name);
 		if (strlen(dname) > 0)
 		{
-			//auto pathParts = dname.split("/");
-			//for (auto ppart = pathParts.begin(); ppart != pathParts.end(); ppart++)
-			//{
-			//	auto subdir = current->children.find(*ppart);
-			//	if (subdir == current->children.end())
-			//	{
-			//		// Not a valid directory, fail fast.
-			//		PHYSFS_setErrorCode(PHYSFS_ERR_NOT_FOUND);
-			//		free(dname);
-			//		return NULL;
-			//	}
-			//	// Go into specified subdirectory
-			//	current = &(subdir->second);
-			//}
+			for (char *ppart = strtok(dname, "/"); ppart; ppart = strtok(NULL, "/"))
+			{
+				FSEntry *subdir = find_entry(current->children, ppart);
+				if (subdir == NULL)
+				{
+					// Not a valid directory, fail fast.
+					PHYSFS_setErrorCode(PHYSFS_ERR_NOT_FOUND);
+					free(dname);
+					return NULL;
+				}
+				// Go into specified subdirectory
+				current = subdir;
+			}
 		}
 		free(dname);
 		return current;
@@ -1142,21 +1166,21 @@ typedef struct CueArchiver
 			return PHYSFS_ENUM_ERROR;
 		if (current->type == FSEntry_FS_DIRECTORY)
 		{
-			//for (auto entry = current->children.begin(); entry != current->children.end(); entry++)
-			//{
-			//	auto ret = cb(callbackdata, origdir, entry->first.cStr());
-			//	switch (ret)
-			//	{
-			//		case PHYSFS_ENUM_ERROR:
-			//			PHYSFS_setErrorCode(PHYSFS_ERR_APP_CALLBACK);
-			//			return PHYSFS_ENUM_ERROR;
-			//		case PHYSFS_ENUM_STOP:
-			//			return PHYSFS_ENUM_STOP;
-			//		default:
-			//			// Continue enumeration
-			//			break;
-			//	}
-			//}
+			for (FSEntry *entry = current->children; entry != NULL; entry = entry->next)
+			{
+				PHYSFS_EnumerateCallbackResult ret = cb(callbackdata, origdir, entry->name);
+				switch (ret)
+				{
+					case PHYSFS_ENUM_ERROR:
+						PHYSFS_setErrorCode(PHYSFS_ERR_APP_CALLBACK);
+						return PHYSFS_ENUM_ERROR;
+					case PHYSFS_ENUM_STOP:
+						return PHYSFS_ENUM_STOP;
+					default:
+						// Continue enumeration
+						break;
+				}
+			}
 		}
 		return PHYSFS_ENUM_OK;
 	}
