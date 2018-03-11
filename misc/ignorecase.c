@@ -22,12 +22,13 @@
  *  NO WARRANTY.
  *
  * Unless otherwise stated, the rest of PhysicsFS falls under the zlib license.
- *  Please see LICENSE in the root of the source tree.
+ *  Please see LICENSE.txt in the root of the source tree.
  *
  *  \author Ryan C. Gordon.
  */
 
 /* I'm not screwing around with stricmp vs. strcasecmp... */
+/* !!! FIXME: this will NOT work with UTF-8 strings in physfs2.0 */
 static int caseInsensitiveStringCompare(const char *x, const char *y)
 {
     int ux, uy;
@@ -97,7 +98,7 @@ int PHYSFSEXT_locateCorrectCase(char *buf)
     if (*ptr == '\0')
         return(0);  /* Uh...I guess that's success. */
 
-    while ((ptr = strchr(ptr + 1, '/')))
+    while ( (ptr = strchr(ptr + 1, '/')) != NULL )
     {
         *ptr = '\0';  /* block this path section off */
         rc = locateOneElement(buf);
@@ -116,7 +117,7 @@ int main(int argc, char **argv)
 {
     int rc;
     char buf[128];
-    PHYSFS_file *f;
+    PHYSFS_File *f;
 
     if (!PHYSFS_init(argv[0]))
     {

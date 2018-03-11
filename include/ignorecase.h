@@ -1,3 +1,6 @@
+#ifndef INCL_PHYSFSEXT_IGNORECASE_H
+#define INCL_PHYSFSEXT_IGNORECASE_H
+
 /** \file ignorecase.h */
 
 /**
@@ -39,11 +42,14 @@
  *  NO WARRANTY.
  *
  * Unless otherwise stated, the rest of PhysicsFS falls under the zlib license.
- *  Please see LICENSE in the root of the source tree.
+ *  Please see LICENSE.txt in the root of the source tree.
  *
  *  \author Ryan C. Gordon.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * \fn int PHYSFSEXT_locateCorrectCase(char *buf)
@@ -70,6 +76,12 @@
  *               is missing, -2 if one of the parent directories is missing.
  */
 int PHYSFSEXT_locateCorrectCase(char *buf);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* include-once blocker. */
 
 /* end of ignorecase.h ... */
 
