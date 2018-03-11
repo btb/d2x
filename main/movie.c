@@ -46,6 +46,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "cfile.h"
 #include "libmve.h"
 #include "physfsrwops.h"
+#include "ignorecase.h"
 
 
 // Subtitle data
@@ -757,6 +758,8 @@ static SDL_RWops *open_movie_file(const char *filename, int must_have)
 
 	strcpy(moviepath, "movies/");
 	strcat(moviepath, filename);
+
+	PHYSFSEXT_locateCorrectCase(moviepath);
 
 	return PHYSFSRWOPS_openRead(moviepath);
 }
