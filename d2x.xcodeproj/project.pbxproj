@@ -3838,6 +3838,11 @@
 					"$(inherited)",
 					"SDL_VIDEO=1",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					arch/cocoa,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -3849,6 +3854,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"SDL_VIDEO=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					arch/cocoa,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
