@@ -13,11 +13,11 @@
  *  NO WARRANTY.
  *
  * Unless otherwise stated, the rest of PhysicsFS falls under the zlib license.
- *  Please see LICENSE in the root of the source tree.
+ *  Please see LICENSE.txt in the root of the source tree.
  *
  * SDL falls under the LGPL license. You can get SDL at http://www.libsdl.org/
  *
- *  This file was written by Ryan C. Gordon. (icculus@clutteredmind.org).
+ *  This file was written by Ryan C. Gordon. (icculus@icculus.org).
  */
 
 #ifndef _INCLUDE_PHYSFSRWOPS_H_
@@ -76,7 +76,7 @@ __EXPORT__ SDL_RWops *PHYSFSRWOPS_openAppend(const char *fname);
  *  @return A valid SDL_RWops structure on success, NULL on error. Specifics
  *           of the error can be gleaned from PHYSFS_getLastError().
  */
-__EXPORT__ SDL_RWops *PHYSFSRWOPS_makeRWops(PHYSFS_file *handle);
+__EXPORT__ SDL_RWops *PHYSFSRWOPS_makeRWops(PHYSFS_File *handle);
 
 #ifdef __cplusplus
 }
