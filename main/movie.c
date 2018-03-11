@@ -82,6 +82,14 @@ int RunMovie(char *filename, int highres_flag, int allow_abort,int dx,int dy);
 void decode_text_line(char *p);
 void draw_subtitles(int frame_num);
 
+// Abstraction for movie files
+static SDL_RWops *open_movie_file(const char *filename, int must_have);
+#define read_movie_file(handle, buf, count) SDL_RWread((SDL_RWops *)handle, buf, 1, count);
+#define reset_movie_file(handle) SDL_RWseek(handle, 0, SEEK_SET)
+#define close_movie_file(handle) SDL_RWclose(handle)
+
+
+// Callbacks for MVE lib
 
 // ----------------------------------------------------------------------
 void* MPlayAlloc(unsigned size)
@@ -100,7 +108,7 @@ void MPlayFree(void *p)
 unsigned int FileRead(void *handle, void *buf, unsigned int count)
 {
     unsigned numread;
-    numread = SDL_RWread((SDL_RWops *)handle, buf, 1, count);
+    numread = read_movie_file(handle, buf, count);
     return (numread == count);
 }
 
@@ -297,7 +305,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 	// Open Movie file.  If it doesn't exist, no movie, just return.
 
-	filehndl = PHYSFSRWOPS_openRead(filename);
+	filehndl = open_movie_file(filename, must_have);
 
 	if (!filehndl)
 	{
@@ -363,7 +371,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
     MVE_rmEndMovie();
 
-	SDL_RWclose(filehndl); // Close Movie File
+	close_movie_file(filehndl); // Close Movie File
 
 	// Restore old graphic state
 
@@ -398,7 +406,7 @@ int RotateRobot()
 
 	if (err == MVE_ERR_EOF)     //end of movie, so reset
 	{
-		SDL_RWseek(RoboFile, 0, SEEK_SET);
+		reset_movie_file(RoboFile);
 		if (MVE_rmPrepMovie(RoboFile, MenuHires?280:140, MenuHires?200:80, 0))
 		{
 			Int3();
@@ -417,7 +425,7 @@ int RotateRobot()
 void DeInitRobotMovie(void)
 {
 	MVE_rmEndMovie();
-	SDL_RWclose(RoboFile); // Close Movie File
+	close_movie_file(RoboFile); // Close Movie File
 	RoboFile = NULL;
 }
 
@@ -434,7 +442,7 @@ int InitRobotMovie(char *filename)
 	MVE_memCallbacks(MPlayAlloc, MPlayFree);
 	MVE_ioCallbacks(FileRead);
 
-	RoboFile = PHYSFSRWOPS_openRead(filename);
+	RoboFile = open_movie_file(filename, 1);
 
 	if (!RoboFile)
 	{
@@ -619,10 +627,25 @@ void draw_subtitles(int frame_num)
 }
 
 
+//find the specified movie library, and read in list of movies in it
+static int init_movie_lib(char *filename)
+{
+	//note: this based on cfile_init_hogfile()
+
+	char pathname[PATH_MAX];
+
+	if (!PHYSFSX_getRealPath(filename, pathname))
+		return 0;
+
+	return PHYSFS_mount(pathname, "movies", 1);
+}
+
+
 void close_movie(char *movielib, int is_robots)
 {
 	int high_res;
 	char filename[FILENAME_LEN];
+	char pathname[PATH_MAX];
 
 	if (is_robots)
 		high_res = MenuHiresAvailable;
@@ -631,12 +654,14 @@ void close_movie(char *movielib, int is_robots)
 
 	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 
-	if (!cfile_close(filename))
+	if (!PHYSFSX_getRealPath(filename, pathname) ||
+		!PHYSFS_removeFromSearchPath(pathname))
 	{
 		con_printf(CON_URGENT, "Can't close movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 		sprintf(filename, "%s-%s.mvl", movielib, high_res?"l":"h");
 
-		if (!cfile_close(filename))
+		if (!PHYSFSX_getRealPath(filename, pathname) ||
+			!PHYSFS_removeFromSearchPath(pathname))
 			con_printf(CON_URGENT, "Can't close movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 	}
 }
@@ -670,14 +695,14 @@ void init_movie(char *movielib, int is_robots, int required)
 
 	sprintf(filename, "%s-%s.mvl", movielib, high_res?"h":"l");
 
-	if (!cfile_init(filename))
+	if (!init_movie_lib(filename))
 	{
 		if (required)
 			con_printf(CON_URGENT, "Can't open movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 
 		sprintf(filename, "%s-%s.mvl", movielib, high_res?"l":"h");
 
-		if (!cfile_init(filename))
+		if (!init_movie_lib(filename))
 			if (required)
 				con_printf(CON_URGENT, "Can't open movielib <%s>: %s\n", filename, PHYSFS_getLastError());
 	}
@@ -710,8 +735,7 @@ void init_movies()
 void close_extra_robot_movie(void)
 {
 	if (strlen(movielib_files[EXTRA_ROBOT_LIB]))
-		if (!cfile_close(movielib_files[EXTRA_ROBOT_LIB]))
-			con_printf(CON_URGENT, "Can't close robot movielib: %s\n", PHYSFS_getLastError());
+		close_movie(movielib_files[EXTRA_ROBOT_LIB], 1);
 }
 
 void init_extra_robot_movie(char *movielib)
@@ -723,4 +747,16 @@ void init_extra_robot_movie(char *movielib)
 	init_movie(movielib, 1, 0);
 	strcpy(movielib_files[EXTRA_ROBOT_LIB], movielib);
 	atexit(close_extra_robot_movie);
+}
+
+
+//returns file handle
+static SDL_RWops *open_movie_file(const char *filename, int must_have)
+{
+	char moviepath[PATH_MAX];
+
+	strcpy(moviepath, "movies/");
+	strcat(moviepath, filename);
+
+	return PHYSFSRWOPS_openRead(moviepath);
 }
