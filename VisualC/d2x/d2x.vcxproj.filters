@@ -916,9 +916,9 @@
     <None Include="..\..\include\descent.xpm" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib" />
-    <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
-    <Library Include="..\physfs-2.0.3\Release\physfs.lib" />
-    <Library Include="..\SDL-1.2.15\VisualC\SDLmain\Release\SDLmain.lib" />
+    <Library Include="..\..\..\physfs\Debug\physfs.lib" />
+    <Library Include="..\..\..\SDL_mixer\VisualC\Debug\SDL_mixer.lib" />
+    <Library Include="..\..\..\SDL\VisualC\SDLmain\Win32\Debug\SDLmain.lib" />
+    <Library Include="..\..\..\SDL\VisualC\SDL\Win32\Debug\SDL.lib" />
   </ItemGroup>
 </Project>
