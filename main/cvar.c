@@ -122,7 +122,7 @@ void cvar_registervariable(cvar_t *cvar)
 	stringval = cvar->string;
 
 	cvar->string = d_strdup(stringval);
-	cvar->value = fl2f(strtod(cvar->string, NULL));
+	cvar->fixval = fl2f(strtod(cvar->string, NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 
 	if (cvar_find(cvar->name))
@@ -146,7 +146,7 @@ void cvar_set_cvar(cvar_t *cvar, char *value)
 
 	d_free(cvar->string);
 	cvar->string = d_strdup(value);
-	cvar->value = fl2f(strtod(cvar->string, NULL));
+	cvar->fixval = fl2f(strtod(cvar->string, NULL));
 	cvar->intval = (int)strtol(cvar->string, NULL, 10);
 	con_printf(CON_VERBOSE, "%s: %s\n", cvar->name, cvar->string);
 }

@@ -58,30 +58,30 @@ void joydefs_sensitivity(void)
 	int nitems = 0;
 
 	m[nitems].type = NM_TYPE_TEXT; m[nitems].text = "Joystick Sensitivity"; nitems++;
-	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_joystick_sensitivity[AXIS_TURN-1].value), 0, 16);
-	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_joystick_sensitivity[AXIS_PITCH-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_joystick_sensitivity[AXIS_LEFTRIGHT-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_joystick_sensitivity[AXIS_UPDOWN-1].value), 0, 16);
-	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_joystick_sensitivity[AXIS_BANK-1].value), 0, 16);
-	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_joystick_sensitivity[AXIS_THROTTLE-1].value), 0, 16);
+	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_joystick_sensitivity[AXIS_TURN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_joystick_sensitivity[AXIS_PITCH-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_joystick_sensitivity[AXIS_LEFTRIGHT-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_joystick_sensitivity[AXIS_UPDOWN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_joystick_sensitivity[AXIS_BANK-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_joystick_sensitivity[AXIS_THROTTLE-1].fixval), 0, 16);
 
 	m[nitems].type = NM_TYPE_TEXT; m[nitems].text = ""; nitems++;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems].text = "Joystick Deadzone"; nitems++;
-	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_joystick_deadzone[AXIS_TURN-1].value), 0, 16);
-	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_joystick_deadzone[AXIS_PITCH-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_joystick_deadzone[AXIS_LEFTRIGHT-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_joystick_deadzone[AXIS_UPDOWN-1].value), 0, 16);
-	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_joystick_deadzone[AXIS_BANK-1].value), 0, 16);
-	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_joystick_deadzone[AXIS_THROTTLE-1].value), 0, 16);
+	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_joystick_deadzone[AXIS_TURN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_joystick_deadzone[AXIS_PITCH-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_joystick_deadzone[AXIS_LEFTRIGHT-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_joystick_deadzone[AXIS_UPDOWN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_joystick_deadzone[AXIS_BANK-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_joystick_deadzone[AXIS_THROTTLE-1].fixval), 0, 16);
 
 	m[nitems].type = NM_TYPE_TEXT; m[nitems].text = ""; nitems++;
 	m[nitems].type = NM_TYPE_TEXT; m[nitems].text = "Mouse Sensitivity"; nitems++;
-	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_mouse_sensitivity[AXIS_TURN-1].value), 0, 16);
-	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_mouse_sensitivity[AXIS_PITCH-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_mouse_sensitivity[AXIS_LEFTRIGHT-1].value), 0, 16);
-	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_mouse_sensitivity[AXIS_UPDOWN-1].value), 0, 16);
-	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_mouse_sensitivity[AXIS_BANK-1].value), 0, 16);
-	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_mouse_sensitivity[AXIS_THROTTLE-1].value), 0, 16);
+	ADD_SLIDER(TXT_TURN_LR,  f2i(8 * Config_mouse_sensitivity[AXIS_TURN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_PITCH_UD, f2i(8 * Config_mouse_sensitivity[AXIS_PITCH-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_LR, f2i(8 * Config_mouse_sensitivity[AXIS_LEFTRIGHT-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_SLIDE_UD, f2i(8 * Config_mouse_sensitivity[AXIS_UPDOWN-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_BANK_LR,  f2i(8 * Config_mouse_sensitivity[AXIS_BANK-1].fixval), 0, 16);
+	ADD_SLIDER(TXT_THROTTLE, f2i(8 * Config_mouse_sensitivity[AXIS_THROTTLE-1].fixval), 0, 16);
 
 	do
 		i1 = newmenu_do1(NULL, "Sensitivity", nitems, m, NULL, i1);

@@ -1942,15 +1942,15 @@ void game()
 			ExtGameStatus=GAMESTAT_RUNNING;
 			GameLoop( 1, 1 );		// Do game loop with rendering and reading controls.
 
-			if (oldfov != cg_fov.value)
+			if (oldfov != cg_fov.fixval)
 			{
-				oldfov = cg_fov.value;
-				if (cg_fov.value < F1_0)
+				oldfov = cg_fov.fixval;
+				if (cg_fov.fixval < F1_0)
 					cvar_setint(&cg_fov, 1);
-				if (cg_fov.value > 170 * F1_0)
+				if (cg_fov.fixval > 170 * F1_0)
 					cvar_setint(&cg_fov, 170);
-				Render_zoom = cg_fov.value * M_PI / 180; // convert to radians
-				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", f2fl(cg_fov.value), Render_zoom);
+				Render_zoom = cg_fov.fixval * M_PI / 180; // convert to radians
+				con_printf(CON_VERBOSE, "FOV set to %f (0x%08x)\n", f2fl(cg_fov.fixval), Render_zoom);
 			}
 
 			//if the player is taking damage, give up guided missile control

@@ -28,7 +28,7 @@ typedef struct cvar_s {
 	const char *name;
 	char *string;
 	ushort flags;
-	fix value;
+	fix fixval;
 	int intval;
 } cvar_t;
 

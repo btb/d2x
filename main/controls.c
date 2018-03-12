@@ -467,7 +467,7 @@ void controls_read_all()
 	if (Config_control_joystick.intval)
 		for (i = 0; i < 6; i++)
 		{
-			temp = fixmul(joy_axis[i], Config_joystick_sensitivity[joy_advaxes[i].intval-1].value);
+			temp = fixmul(joy_axis[i], Config_joystick_sensitivity[joy_advaxes[i].intval-1].fixval);
 			if (joy_invert[i].intval)
 				analog_control[joy_advaxes[i].intval] -= temp;
 			else
@@ -478,17 +478,17 @@ void controls_read_all()
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 
-		temp = fixmul(dx * FrameTime / 35, Config_mouse_sensitivity[mouse_axes[0].intval-1].value);
+		temp = fixmul(dx * FrameTime / 35, Config_mouse_sensitivity[mouse_axes[0].intval-1].fixval);
 		if (mouse_invert[0].intval)
 			analog_control[mouse_axes[0].intval] -= temp;
 		else
 			analog_control[mouse_axes[0].intval] += temp;
-		temp = fixmul(dy * FrameTime / 25, Config_mouse_sensitivity[mouse_axes[1].intval-1].value);
+		temp = fixmul(dy * FrameTime / 25, Config_mouse_sensitivity[mouse_axes[1].intval-1].fixval);
 		if (mouse_invert[1].intval)
 			analog_control[mouse_axes[1].intval] -= temp;
 		else
 			analog_control[mouse_axes[1].intval] += temp;
-		temp = fixmul(dz * FrameTime, Config_mouse_sensitivity[mouse_axes[2].intval-1].value);
+		temp = fixmul(dz * FrameTime, Config_mouse_sensitivity[mouse_axes[2].intval-1].fixval);
 		if (mouse_invert[2].intval)
 			analog_control[mouse_axes[2].intval] -= temp;
 		else
