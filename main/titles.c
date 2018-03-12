@@ -980,22 +980,24 @@ int show_briefing_message(int screen_num, char *message)
 					digi_stop_sound( printing_channel );
 				printing_channel = -1;
 
-				vid_update();
-
+				start_time = timer_get_fixed_seconds();
 				while ( (keypress = local_key_inkey()) == 0 ) { // Wait for a key
-					start_time = timer_get_fixed_seconds();
+					vid_update();
+
+					delay_until(start_time + KEY_DELAY_DEFAULT/2);
 
 					flash_cursor(flashing_cursor);
 
 					if (RobotPlaying)
 						RotateRobot();
+
 					if (robot_num != -1)
 						show_spinning_robot_frame(robot_num);
 
 					if (Bitmap_name[0] != 0)
 						show_bitmap_frame();
 
-					delay_until(start_time + KEY_DELAY_DEFAULT/2);
+					start_time += KEY_DELAY_DEFAULT/2;
 				}
 
 #ifndef NDEBUG
@@ -1119,15 +1121,21 @@ int show_briefing_message(int screen_num, char *message)
 			start_time = timer_get_fixed_seconds();
 			while ( (keypress = local_key_inkey()) == 0 ) { // Wait for a key
 				vid_update();
+
+				delay_until(start_time + KEY_DELAY_DEFAULT/2);
+
 				flash_cursor(flashing_cursor);
+
 				if (RobotPlaying)
 					RotateRobot();
+
 				if (robot_num != -1)
 					show_spinning_robot_frame(robot_num);
+
 				if (Bitmap_name[0] != 0)
 					show_bitmap_frame();
+
 				start_time += KEY_DELAY_DEFAULT/2;
-				delay_until(start_time + KEY_DELAY_DEFAULT/2);
 			}
 
 			if (RobotPlaying)
