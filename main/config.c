@@ -382,10 +382,13 @@ int ReadConfigFile()
 
 	if (cfexist("descent.cfg"))
 		cmd_append("exec descent.cfg");
-	else
-		LoadConfigDefaults();
 
 	cmd_queue_process();
+
+	if (!key_find_binding("toggleconsole")) {
+		LoadConfigDefaults();
+		cmd_queue_process();
+	}
 
 	/* TODO: allow cvars to define a callback that will carry out these initialization things on change. */
 
