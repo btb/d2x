@@ -413,6 +413,7 @@ void controls_read_all()
 	fix ctime;
 	int raw_joy_axis[JOY_MAX_AXES];
 	fix kp, kh;
+	fix temp;
 	ubyte channel_masks;
 	fix analog_control[7]; // indexed on control_analog
 
@@ -465,15 +466,33 @@ void controls_read_all()
 
 	if (Config_control_joystick.intval)
 		for (i = 0; i < 6; i++)
-			analog_control[joy_advaxes[i].intval] += joy_axis[i] * (joy_invert[i].intval ? -1 : 1) * Config_joystick_sensitivity[joy_advaxes[i].intval-1].value;
+		{
+			temp = fixmul(joy_axis[i], Config_joystick_sensitivity[joy_advaxes[i].intval-1].value);
+			if (joy_invert[i].intval)
+				analog_control[joy_advaxes[i].intval] -= temp;
+			else
+				analog_control[joy_advaxes[i].intval] += temp;
+		}
 
 	if (Config_control_mouse.intval) {
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy, &dz );
 
-		analog_control[mouse_axes[0].intval] += dx * FrameTime / 35 * (mouse_invert[0].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[0].intval-1].value;
-		analog_control[mouse_axes[1].intval] += dy * FrameTime / 25 * (mouse_invert[1].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[1].intval-1].value;
-		analog_control[mouse_axes[2].intval] += dz * FrameTime      * (mouse_invert[2].intval ? -1 : 1) * Config_mouse_sensitivity[mouse_axes[2].intval-1].value;
+		temp = fixmul(dx * FrameTime / 35, Config_mouse_sensitivity[mouse_axes[0].intval-1].value);
+		if (mouse_invert[0].intval)
+			analog_control[mouse_axes[0].intval] -= temp;
+		else
+			analog_control[mouse_axes[0].intval] += temp;
+		temp = fixmul(dy * FrameTime / 25, Config_mouse_sensitivity[mouse_axes[1].intval-1].value);
+		if (mouse_invert[1].intval)
+			analog_control[mouse_axes[1].intval] -= temp;
+		else
+			analog_control[mouse_axes[1].intval] += temp;
+		temp = fixmul(dz * FrameTime, Config_mouse_sensitivity[mouse_axes[2].intval-1].value);
+		if (mouse_invert[2].intval)
+			analog_control[mouse_axes[2].intval] -= temp;
+		else
+			analog_control[mouse_axes[2].intval] += temp;
 	}
 
 	//------------ Read pitch_time -----------
