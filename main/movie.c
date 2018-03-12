@@ -55,6 +55,8 @@ typedef struct {
 	char *msg;
 } subtitle;
 
+#define BUFFER_MOVIE
+
 #define MAX_SUBTITLES 500
 #define MAX_ACTIVE_SUBTITLES 3
 subtitle Subtitles[MAX_SUBTITLES];
@@ -73,6 +75,12 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 
 cvar_t MovieHires = { "MovieHires", "1", CVAR_ARCHIVE }; // default is highres
+
+#ifdef BUFFER_MOVIE
+char *RoboBuffer[50];
+unsigned char RobBufCount = 0, PlayingBuf = 0, RobBufLimit = 0;
+int RoboFilePos = 0;
+#endif
 
 SDL_RWops *RoboFile = NULL;
 MVE_videoSpec MVESpec;
@@ -178,6 +186,11 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 	source_bm.bm_type = BM_LINEAR;
 	source_bm.bm_flags = 0;
 	source_bm.bm_data = buf;
+
+#ifdef BUFFER_MOVIE
+	if (RoboFile)
+		memcpy(RoboBuffer[RobBufCount++], buf, bufw * bufh);
+#endif
 
 	if (menu_use_game_res.intval) {
 		float aspect = (float)w / (float)h;
@@ -398,21 +411,85 @@ int InitMovieBriefing()
 }
 
 
+void ShowRobotBuffer()
+{
+	// shows a frame from the robot buffer
+
+#ifndef BUFFER_MOVIE
+	Int3(); // Get Jason...how'd we get here?
+	return;
+#else
+	grs_bitmap source_bm;
+	grs_canvas *dest_canv, *save_canv;
+	int rw, rh, rdx, rdy;
+
+	if (MenuHires) {
+		rw=320; rh=200; rdx=280; rdy=200;
+	} else {
+		rw=160; rh=100; rdx=140; rdy=80;
+	}
+
+	source_bm.bm_x = source_bm.bm_y = 0;
+	source_bm.bm_w = source_bm.bm_rowsize = rw;
+	source_bm.bm_h = rh;
+	source_bm.bm_type = BM_LINEAR;
+	source_bm.bm_flags = 0;
+
+	source_bm.bm_data = (unsigned char *)RoboBuffer[RobBufCount];
+
+	if (menu_use_game_res.intval) {
+		float aspect = (float)rw / (float)rh;
+
+		rh = rh * GHEIGHT / MVESpec.screenHeight;
+		rw = rh * aspect;
+		rdx = rdx * GWIDTH / MVESpec.screenWidth;
+		rdy = rdy * GHEIGHT / MVESpec.screenHeight;
+
+		dest_canv = gr_create_sub_canvas(grd_curcanv, rdx, rdy, rw, rh);
+		save_canv = grd_curcanv;
+		gr_set_current_canvas(dest_canv);
+		gr_bitmap_fullscr(&source_bm);
+		gr_set_current_canvas(save_canv);
+		gr_free_sub_canvas(dest_canv);
+	} else
+		gr_bm_ubitblt(rw, rh, rdx, rdy, 0, 0, &source_bm, &grd_curcanv->cv_bitmap);
+
+	RobBufCount++;
+	RobBufCount %= RobBufLimit;
+#endif
+}
+
+
 //returns 1 if frame updated ok
 int RotateRobot()
 {
 	int err;
 
+#ifdef BUFFER_MOVIE
+	if (PlayingBuf)
+	{
+		ShowRobotBuffer();
+		return 1;
+	}
+#endif
+
 	err = MVE_rmStepMovie();
 
 	if (err == MVE_ERR_EOF)     //end of movie, so reset
 	{
+#ifdef BUFFER_MOVIE
+		PlayingBuf = 1;
+		RobBufLimit = RobBufCount;
+		RobBufCount = 0;
+		return 1;
+#else
 		reset_movie_file(RoboFile);
 		if (MVE_rmPrepMovie(RoboFile, MenuHires?280:140, MenuHires?200:80, 0))
 		{
 			Int3();
 			return 0;
 		}
+#endif
 	}
 	else if (err) {
 		Int3();
@@ -423,9 +500,33 @@ int RotateRobot()
 }
 
 
+void FreeRoboBuffer(int n)
+{
+	// frees the 64k frame buffers, starting with n and then working down
+
+#ifndef BUFFER_MOVIE
+	n++; // kill warning
+	return;
+#else
+	int i;
+
+	for (i = n; i >= 0; i--)
+		d_free(RoboBuffer[i]);
+#endif
+}
+
+
 void DeInitRobotMovie(void)
 {
+#ifdef BUFFER_MOVIE
+	RobBufCount = 0;
+	PlayingBuf = 0;
+#endif
+
 	MVE_rmEndMovie();
+
+	FreeRoboBuffer(49);
+
 	close_movie_file(RoboFile); // Close Movie File
 	RoboFile = NULL;
 }
@@ -433,10 +534,37 @@ void DeInitRobotMovie(void)
 
 int InitRobotMovie(char *filename)
 {
+#ifdef BUFFER_MOVIE
+	int i;
+
+	RobBufCount = 0;
+	PlayingBuf = 0;
+	RobBufLimit = 0;
+#endif
+
 	if (FindArg("-nomovies"))
 		return 0;
 
 	con_printf(CON_DEBUG, "RoboFile=%s\n", filename);
+
+#ifdef BUFFER_MOVIE
+
+	for (i = 0; i < 50; i++)
+	{
+		if (MenuHires)
+			RoboBuffer[i] = d_malloc(65000L);
+		else
+			RoboBuffer[i] = d_malloc(17000L);
+
+		if (RoboBuffer[i] == NULL)
+		{
+			con_printf(CON_URGENT, "ROBOERROR: Could't allocate frame %d!\n", i);
+			if (i)
+				FreeRoboBuffer(i - 1);
+			return 0;
+		}
+	}
+#endif
 
 	MVE_sndInit(-1);        //tell movies to play no sound for robots
 
@@ -447,6 +575,7 @@ int InitRobotMovie(char *filename)
 
 	if (!RoboFile)
 	{
+		FreeRoboBuffer(49);
 		con_printf(CON_URGENT, "Can't open movie <%s>: %s\n", filename, PHYSFS_getLastError());
 		return MOVIE_NOT_PLAYED;
 	}
@@ -456,10 +585,16 @@ int InitRobotMovie(char *filename)
 
 	if (MVE_rmPrepMovie((void *)RoboFile, MenuHires?280:140, MenuHires?200:80, 0)) {
 		Int3();
+		FreeRoboBuffer(49);
 		return 0;
 	}
 
 	MVE_getVideoSpec(&MVESpec);
+
+#ifdef BUFFER_MOVIE
+	RoboFilePos = SDL_RWseek(RoboFile, 0L, SEEK_CUR);
+	con_printf(CON_DEBUG, "RoboFilePos=%d!\n", RoboFilePos);
+#endif
 
 	return 1;
 }
