@@ -749,7 +749,8 @@ int set_screen_mode(int sm)
 
 		con_init_gfx(grd_curscreen->sc_w, grd_curscreen->sc_h / 2);
 
-		mouse_set_mode(Config_control_mouse.intval);
+		if (Newdemo_state != ND_STATE_PLAYBACK)
+			mouse_set_mode(Config_control_mouse.intval);
 		newmenu_hide_cursor();
 
 		break;
@@ -2031,7 +2032,8 @@ void game()
 			#endif
 
 			if (VR_screen_flags & VRF_COMPATIBLE_MENUS) {
-				mouse_set_mode(Config_control_mouse.intval);
+				if (Newdemo_state != ND_STATE_PLAYBACK)
+					mouse_set_mode(Config_control_mouse.intval);
 				newmenu_hide_cursor();
 			}
 		}

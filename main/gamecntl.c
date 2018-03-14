@@ -456,7 +456,8 @@ int do_game_pause()
 
 	if (VR_screen_flags & VRF_COMPATIBLE_MENUS) {
 		clear_boxed_message();
-		mouse_set_mode(Config_control_mouse.intval);
+		if (Newdemo_state != ND_STATE_PLAYBACK)
+			mouse_set_mode(Config_control_mouse.intval);
 		newmenu_hide_cursor();
 	}
 
