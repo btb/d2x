@@ -853,11 +853,11 @@ try_again:
 		m[1].type=NM_TYPE_INPUT; m[1].text_len = 10; m[1].text = num_text;
 		n_items = 2;
 
-		#ifdef WINDOWS
+#ifdef NEWMENU_MOUSE
 		m[2].type = NM_TYPE_TEXT; m[2].text = "";
 		m[3].type = NM_TYPE_MENU; m[3].text = "          Ok";
 		n_items = 4;
-		#endif
+#endif
 
 		strcpy(num_text,"1");
 
