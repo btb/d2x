@@ -47,6 +47,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "libmve.h"
 #include "physfsrwops.h"
 #include "ignorecase.h"
+#include "timer.h"
 
 
 // Subtitle data
@@ -411,6 +412,11 @@ int InitMovieBriefing()
 }
 
 
+#ifdef BUFFER_MOVIE
+static fix RobBufTime = 0;
+#endif
+
+
 void ShowRobotBuffer()
 {
 	// shows a frame from the robot buffer
@@ -422,6 +428,12 @@ void ShowRobotBuffer()
 	grs_bitmap source_bm;
 	grs_canvas *dest_canv, *save_canv;
 	int rw, rh, rdx, rdy;
+
+
+	if (timer_get_approx_seconds() < (RobBufTime + fixdiv(F1_0, i2f(15))))
+		return;
+
+	RobBufTime = timer_get_approx_seconds();
 
 	if (MenuHires) {
 		rw=320; rh=200; rdx=280; rdy=200;
@@ -481,6 +493,7 @@ int RotateRobot()
 		PlayingBuf = 1;
 		RobBufLimit = RobBufCount;
 		RobBufCount = 0;
+		//RobBufTime=timer_get_approx_seconds();
 		return 1;
 #else
 		reset_movie_file(RoboFile);
