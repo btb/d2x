@@ -577,6 +577,9 @@ int show_char_delay(char the_char, int delay, int robot_num, int cursor_flag)
 		vid_update();
 	}
 
+	if (delay && !EMULATING_D1)
+		delay = fixdiv(F1_0, i2f(15));
+
 	if ((Bitmap_name[0] != 0) && (delay != 0))
 		show_bitmap_frame();
 
@@ -664,7 +667,7 @@ int load_new_briefing_screen( char *fname )
 
 
 
-#define KEY_DELAY_DEFAULT       ((F1_0*20)/1000)
+#define KEY_DELAY_DEFAULT       ((F1_0*(EMULATING_D1?28:20))/1000)
 
 //-----------------------------------------------------------------------------
 int get_message_num(char **message)
