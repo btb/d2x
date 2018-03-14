@@ -1127,8 +1127,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 		digi_play_sample_once( SOUND_DROP_BOMB, F1_0 );
 	}
 
-#ifdef WINDOWS
-	if (!wmidi_support_volchange()) {
+	if (!digi_support_midi_volchange()) {
 		if (!items[1].value && Config_midi_volume.intval) {
 			cvar_setint( &Config_midi_volume, 0 );
 			digi_set_midi_volume(0);
@@ -1139,9 +1138,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 			cvar_setint( &Config_midi_volume, 4 );
 		}
 	}
-	else 	 // LINK TO BELOW IF
-#endif
-	if (Config_midi_volume.intval != items[1].value )   {
+	else if (Config_midi_volume.intval != items[1].value )   {
 		cvar_setint( &Config_midi_volume, items[1].value );
 		#ifdef WINDOWS
 			if (!windigi_driver_off) {
@@ -1221,13 +1218,11 @@ void do_sound_menu()
 		m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume.intval;m[0].min_value=0; m[0].max_value=8;
 		m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume.intval;m[1].min_value=0; m[1].max_value=8;
 
-	#ifdef WINDOWS
-		if (!wmidi_support_volchange() && !Redbook_playing) {
+		if (!digi_support_midi_volchange() && !Redbook_playing) {
 			m[1].type = NM_TYPE_CHECK;
 			m[1].text = "MIDI MUSIC";
 			if (Config_midi_volume.intval) m[1].value = 1;
 		}
-	#endif
 
 		m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume.intval;m[2].min_value=0; m[2].max_value=8;
 #ifndef MACINTOSH

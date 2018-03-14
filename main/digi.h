@@ -82,6 +82,7 @@ extern void digi_sync_sounds(void);
 extern void digi_kill_sound_linked_to_segment( int segnum, int sidenum, int soundnum );
 extern void digi_kill_sound_linked_to_object( int objnum );
 
+extern int digi_support_midi_volchange(void);
 extern void digi_set_midi_volume( int mvolume );
 extern void digi_set_digi_volume( int dvolume );
 extern void digi_set_volume( int dvolume, int mvolume );

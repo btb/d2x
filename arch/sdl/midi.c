@@ -32,6 +32,19 @@ ubyte *SongData = NULL;
 unsigned int SongSize;
 
 
+int digi_support_midi_volchange()
+{
+#ifdef _WIN32
+	int i, n = Mix_GetNumMusicDecoders();
+	for (i = 0; i<n; ++i)
+		if (strcmp(Mix_GetMusicDecoder(i), "NATIVEMIDI") == 0)
+			return 0;
+#endif
+
+	return 1;
+}
+
+
 void digi_set_midi_volume( int mvolume )
 {
 	int old_volume = midi_volume;
