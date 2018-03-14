@@ -493,7 +493,7 @@ int RotateRobot()
 		PlayingBuf = 1;
 		RobBufLimit = RobBufCount;
 		RobBufCount = 0;
-		//RobBufTime=timer_get_approx_seconds();
+		RobBufTime = timer_get_approx_seconds();
 		return 1;
 #else
 		reset_movie_file(RoboFile);
