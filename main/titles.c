@@ -394,11 +394,20 @@ char    Bitmap_name[32] = "";
 #define DOOR_DIV_INIT   3
 sbyte   Door_dir=1, Door_div_count=0, Animating_bitmap_type=0;
 
+#define KEY_DELAY_DEFAULT       ((F1_0*(EMULATING_D1?28:20))/1000)
+
+
 //-----------------------------------------------------------------------------
 void show_bitmap_frame(void)
 {
 	grs_canvas *bitmap_canv = 0;
 	grs_bitmap *bitmap_ptr;
+	static fix frame_time = 0;
+
+	if (timer_get_approx_seconds() < frame_time + KEY_DELAY_DEFAULT/2)
+		return;
+
+	frame_time = timer_get_approx_seconds();
 
 	// Only plot every nth frame.
 	if (Door_div_count) {
@@ -517,8 +526,14 @@ void show_briefing_bitmap(grs_bitmap *bmp)
 void show_spinning_robot_frame(int robot_num)
 {
 	grs_canvas *curcanv_save;
+	static fix frame_time = 0;
 
 	if (robot_num != -1) {
+		if (timer_get_approx_seconds() < (frame_time + KEY_DELAY_DEFAULT/4))
+			return;
+
+		frame_time = timer_get_approx_seconds();
+
 		Robot_angles.h += 150;
 
 		curcanv_save = grd_curcanv;
@@ -665,9 +680,6 @@ int load_new_briefing_screen( char *fname )
 	return 1;
 }
 
-
-
-#define KEY_DELAY_DEFAULT       ((F1_0*(EMULATING_D1?28:20))/1000)
 
 //-----------------------------------------------------------------------------
 int get_message_num(char **message)
