@@ -194,6 +194,8 @@ try_again:;
 #ifdef OGL
 					Screen_mode = -1;
 #endif
+					gr_palette_fade_out(gr_palette, 32, 0);
+					gr_set_current_canvas(NULL);
 					PlayMovie("intro.mve",0);
 					songs_play_song(SONG_TITLE,1);
 					*last_key = -3; //exit menu to force redraw even if not going to game mode. -3 tells menu system not to restore
