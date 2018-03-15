@@ -107,32 +107,17 @@ static int end_movie_handler(unsigned char major, unsigned char minor, unsigned 
  * timer handlers
  *************************/
 
-#if !defined(HAVE_STRUCT_TIMEVAL) || !HAVE_STRUCT_TIMEVAL // ifdef _WIN32_WCE
-struct timeval
-{
-	long tv_sec;
-	long tv_usec;
-};
-#endif
-
 /*
  * timer variables
  */
 static int timer_created = 0;
 static int micro_frame_delay=0;
 static int timer_started=0;
-static struct timeval timer_expire = {0, 0};
-
-#if !defined(HAVE_STRUCT_TIMESPEC) || !HAVE_STRUCT_TIMESPEC
-struct timespec
-{
-	long int tv_sec;            /* Seconds.  */
-	long int tv_nsec;           /* Nanoseconds.  */
-};
-#endif
+static unsigned long int timer_expire = 0;
 
 #if defined(_WIN32) || defined(macintosh)
-int gettimeofday(struct timeval *tv, void *tz)
+
+unsigned long int timer_getmicroseconds()
 {
 	static int counter = 0;
 #ifdef _WIN32
@@ -142,13 +127,39 @@ int gettimeofday(struct timeval *tv, void *tz)
 #endif
 	counter++;
 
-	tv->tv_sec = now / 1000;
-	tv->tv_usec = (now % 1000) * 1000 + counter;
-
-	return 0;
+	return now * 1000 + counter;
 }
-#endif //  defined(_WIN32) || defined(macintosh)
 
+#else
+
+unsigned long int timer_getmicroseconds()
+{
+	struct timeval tv;
+	static time_t starttime = 0;
+
+	gettimeofday(&tv, NULL);
+
+	if (!starttime)
+		starttime = tv.tv_sec;
+
+	return (tv.tv_sec - starttime) * 1000000 + tv.tv_usec;
+}
+
+#endif
+
+void timer_sleepmicroseconds(unsigned long int usec)
+{
+#ifdef _WIN32
+	Sleep(usec / 1000);
+#elif defined(macintosh)
+	Delay(usec / 1000);
+#else
+	struct timespec ts;
+	ts.tv_sec = usec / 1000000;
+	ts.tv_nsec = usec % 1000000 * 1000;
+	nanosleep(&ts, NULL);
+#endif
+}
 
 static int create_timer_handler(unsigned char major, unsigned char minor, unsigned char *data, int len, void *context)
 {
@@ -178,63 +189,35 @@ static int create_timer_handler(unsigned char major, unsigned char minor, unsign
 
 static void timer_stop(void)
 {
-	timer_expire.tv_sec = 0;
-	timer_expire.tv_usec = 0;
+	timer_expire = 0;
 	timer_started = 0;
 }
 
 static void timer_start(void)
 {
-	int nsec=0;
-	gettimeofday(&timer_expire, NULL);
-	timer_expire.tv_usec += micro_frame_delay;
-	if (timer_expire.tv_usec > 1000000)
-	{
-		nsec = timer_expire.tv_usec / 1000000;
-		timer_expire.tv_sec += nsec;
-		timer_expire.tv_usec -= nsec*1000000;
-	}
+	timer_expire = timer_getmicroseconds();
+	timer_expire += micro_frame_delay;
 	timer_started=1;
 }
 
 static void do_timer_wait(void)
 {
-	int nsec=0;
-	struct timespec ts;
-	struct timeval tv;
+	unsigned long int ts;
+	unsigned long int tv;
+
 	if (! timer_started)
 		return;
 
-	gettimeofday(&tv, NULL);
-	if (tv.tv_sec > timer_expire.tv_sec)
-		goto end;
-	else if (tv.tv_sec == timer_expire.tv_sec  &&  tv.tv_usec >= timer_expire.tv_usec)
+	tv = timer_getmicroseconds();
+	if (tv > timer_expire)
 		goto end;
 
-	ts.tv_sec = timer_expire.tv_sec - tv.tv_sec;
-	ts.tv_nsec = 1000 * (timer_expire.tv_usec - tv.tv_usec);
-	if (ts.tv_nsec < 0)
-	{
-		ts.tv_nsec += 1000000000UL;
-		--ts.tv_sec;
-	}
-#ifdef _WIN32
-	Sleep(ts.tv_sec * 1000 + ts.tv_nsec / 1000000);
-#elif defined(macintosh)
-	Delay(ts.tv_sec * 1000 + ts.tv_nsec / 1000000, NULL);
-#else
-	if (nanosleep(&ts, NULL) == -1  &&  errno == EINTR)
-		exit(1);
-#endif
+	ts = timer_expire - tv;
+
+	timer_sleepmicroseconds(ts);
 
  end:
-	timer_expire.tv_usec += micro_frame_delay;
-	if (timer_expire.tv_usec > 1000000)
-	{
-		nsec = timer_expire.tv_usec / 1000000;
-		timer_expire.tv_sec += nsec;
-		timer_expire.tv_usec -= nsec*1000000;
-	}
+	timer_expire += micro_frame_delay;
 }
 
 /*************************
