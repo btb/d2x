@@ -38,8 +38,10 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 	int oc_joy = Config_control_joystick.intval;
 	int oc_mouse = Config_control_mouse.intval;
 
-	cvar_setint(&Config_control_joystick, items[0].value);
-	cvar_setint(&Config_control_mouse, items[1].value);
+	if (Config_control_joystick.intval != items[0].value)
+		cvar_setint(&Config_control_joystick, items[0].value);
+	if (Config_control_mouse.intval != items[1].value)
+		cvar_setint(&Config_control_mouse, items[1].value);
 
 	if (!oc_joy && Config_control_joystick.intval)
 		joydefs_calibrate_flag = 1;
@@ -129,8 +131,10 @@ void joydefs_config()
 	do {
 		i1 = newmenu_do1(NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1);
 
-		cvar_setint(&Config_control_joystick, m[0].value);
-		cvar_setint(&Config_control_mouse, m[1].value);
+		if (Config_control_joystick.intval != m[0].value)
+			cvar_setint(&Config_control_joystick, m[0].value);
+		if (Config_control_mouse.intval != m[1].value)
+			cvar_setint(&Config_control_mouse, m[1].value);
 
 		switch (i1) {
 		case 3: kconfig(0, TXT_KEYBOARD); break;
