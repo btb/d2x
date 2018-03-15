@@ -918,10 +918,4 @@
   <ItemGroup>
     <None Include="..\..\include\descent.xpm" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\SDL-1.2.15\VisualC\SDL\Release\SDL.lib" />
-    <Library Include="..\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib" />
-    <Library Include="..\physfs-2.0.3\Release\physfs.lib" />
-    <Library Include="..\SDL-1.2.15\VisualC\SDLmain\Release\SDLmain.lib" />
-  </ItemGroup>
 </Project>
