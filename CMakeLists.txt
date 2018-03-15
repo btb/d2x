@@ -81,6 +81,8 @@ message("${SDL_IMAGE_INCLUDE_DIRS}")
 message("${SDL_IMAGE_VERSION_STRING}")
 endif()
 find_package(PhysFS)
+find_package(OpenGL)
+
 
 include(CheckStructHasMember)
 CHECK_STRUCT_HAS_MEMBER("struct timeval" tv_sec sys/time.h HAVE_STRUCT_TIMEVAL)
@@ -98,24 +100,13 @@ include_directories( ${CMAKE_BINARY_DIR} )
 # Since we have created a config.h add a global define for it
 add_definitions( "-DHAVE_CONFIG_H" )
 
-# Generating the library hogcreate
-set(project "hogcreate")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/hogcreate.c
-)
-add_executable(hogcreate ${${project}_SOURCES} )
-
-
-# Generating the library hogextract
-set(project "hogextract")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/hogextract.c
-)
-add_executable(hogextract ${${project}_SOURCES} )
+#trivial utilities
+add_executable(hogcreate ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/hogcreate.c)
+add_executable(hogextract ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/hogextract.c)
+add_executable(mvlcreate ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/mvlcreate.c)
+add_executable(mvlextract ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/mvlextract.c)
+add_executable(txb2tex ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/txb2tex.c)
+add_executable(tex2txb ${${project}_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/utilities/tex2txb.c)
 
 
 # Generating the library mveplayer
@@ -140,46 +131,6 @@ add_executable(mveplayer ${${project}_SOURCES} )
 
 include_directories(${SDL_INCLUDE_DIR} ${SDL_MIXER_INCLUDE_DIRS})
 target_link_libraries(mveplayer)
-
-
-# Generating the library mvlcreate
-set(project "mvlcreate")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/mvlcreate.c
-)
-add_executable(mvlcreate ${${project}_SOURCES} )
-
-
-# Generating the library mvlextract
-set(project "mvlextract")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/mvlextract.c
-)
-add_executable(mvlextract ${${project}_SOURCES} )
-
-
-# Generating the library txb2tex
-set(project "txb2tex")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/txb2tex.c
-)
-add_executable(txb2tex ${${project}_SOURCES} )
-
-
-# Generating the library tex2txb
-set(project "tex2txb")
-
-set(${project}, "")
-list(APPEND ${project}_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/utilities/tex2txb.c
-)
-add_executable(tex2txb ${${project}_SOURCES} )
 
 
 # d2x common properties
@@ -332,8 +283,6 @@ list(APPEND _d2x_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/maths/fixc.c
 )
 
-
-
 list(APPEND _unused_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/2d/tmerge.c
 
@@ -389,10 +338,10 @@ list(APPEND ${project}_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/event.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/key.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/mouse.c
-	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/vid.c
-	${CMAKE_CURRENT_SOURCE_DIR}/texmap/tmapflat.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/joy.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/joydefs.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/vid.c
+	${CMAKE_CURRENT_SOURCE_DIR}/texmap/tmapflat.c
 )
 if(SDL_INCLUDE_DIR MATCHES ".framework")
 	list(APPEND ${project}_SOURCES
@@ -406,6 +355,8 @@ target_link_libraries(d2x-sdl
 	${SDL_IMAGE_LIBRARIES}
 	${PHYSFS_LIBRARY}
 )
+set_target_properties(d2x-sdl PROPERTIES COMPILE_DEFINITIONS "SDL_VIDEO")
+
 
 # Generating the library d2x-gl
 set(project "d2x_gl")
@@ -417,9 +368,27 @@ list(APPEND ${project}_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/event.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/key.c
 	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/mouse.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/joy.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/sdl/joydefs.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/ogl/vid.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/ogl/ogl.c
+	${CMAKE_CURRENT_SOURCE_DIR}/arch/ogl/sdlgl.c
 )
+
+if(SDL_INCLUDE_DIR MATCHES ".framework")
+	list(APPEND ${project}_SOURCES
+		${CMAKE_CURRENT_SOURCE_DIR}/arch/cocoa/SDLMain.m
+	)
+endif()
 add_executable(d2x-gl ${${project}_SOURCES})
-target_link_libraries(d2x-gl)
+target_link_libraries(d2x-gl
+	${SDL_LIBRARY}
+	${SDL_MIXER_LIBRARIES}
+	${SDL_IMAGE_LIBRARIES}
+	${PHYSFS_LIBRARY}
+	${OPENGL_LIBRARIES}
+)
+set_target_properties(d2x-gl PROPERTIES COMPILE_DEFINITIONS "OGL;SDL_GL_VIDEO")
 
 
 # Generating the library d2x-svga
@@ -523,6 +492,7 @@ list(APPEND ${project}_SOURCES
 )
 add_executable(miner ${${project}_SOURCES})
 target_link_libraries(miner)
+set_target_properties(miner PROPERTIES COMPILE_DEFINITIONS "EDITOR")
 
 
 # Generating the library miner-sdl
@@ -538,6 +508,7 @@ list(APPEND ${project}_SOURCES
 add_executable(miner-sdl ${${project}_SOURCES} )
 include_directories(${SDL_INCLUDE_DIR} ${SDL_MIXER_INCLUDE_DIRS} ${SDL_IMAGE_INCLUDE_DIRS} ${PHYSFS_INCLUDE_DIR})
 target_link_libraries(miner-sdl)
+set_target_properties(miner-sdl PROPERTIES COMPILE_DEFINITIONS "EDITOR;SDL_VIDEO")
 
 
 # Generating the library miner-gl
@@ -553,6 +524,7 @@ list(APPEND ${project}_SOURCES
 add_executable(miner-gl ${${project}_SOURCES} )
 include_directories(${SDL_INCLUDE_DIR} ${SDL_MIXER_INCLUDE_DIRS} ${SDL_IMAGE_INCLUDE_DIRS} ${PHYSFS_INCLUDE_DIR})
 target_link_libraries(miner-gl)
+set_target_properties(miner-gl PROPERTIES COMPILE_DEFINITIONS "EDITOR;OGL;SDL_GL_VIDEO")
 
 
 # Generating the library miner-svga
@@ -567,8 +539,9 @@ list(APPEND ${project}_SOURCES
 )
 add_executable(miner-svga ${${project}_SOURCES} )
 target_link_libraries(miner-svga)
+set_target_properties(miner-svga PROPERTIES COMPILE_DEFINITIONS "EDITOR")
 
-set_target_properties(miner miner-gl miner-sdl miner-svga PROPERTIES COMPILE_DEFINITIONS "-DEDITOR")
 
 #Some global stuff
+
 set_target_properties(d2x d2x-svga miner miner-svga PROPERTIES EXCLUDE_FROM_ALL 1)
