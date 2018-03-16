@@ -1382,6 +1382,9 @@ void update_cockpits(int force_redraw)
 	if (VR_render_mode != VR_NONE )
 		return;
 
+	if (Cockpit_mode.intval != last_drawn_cockpit[VR_current_page])
+		init_cockpit();
+
 	switch( Cockpit_mode.intval )
 	{
 	case CM_FULL_COCKPIT:
