@@ -1330,7 +1330,7 @@ void shrink_window(void)
 		return;
 	}
 
-	if (Cockpit_mode.intval == CM_FULL_SCREEN && (VR_screen_flags & VRF_ALLOW_COCKPIT))
+	if (Cockpit_mode.intval == CM_FULL_SCREEN)
 	{
 		//cvar_setint(&Game_window_w, max_window_w);
 		//cvar_setint(&Game_window_h, max_window_h);
