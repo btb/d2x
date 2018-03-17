@@ -1140,7 +1140,11 @@ void toggle_cockpit(void)
 	{
 		case CM_FULL_COCKPIT:
 		{
-			int max_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR + (SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+			int max_h;
+			if (max_window_w <= GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_w)
+				max_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR + (SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+			else
+				max_h = grd_curscreen->sc_h;
 
 			if (Game_window_h.intval > max_h) //too big for statusbar
 				new_mode = CM_FULL_SCREEN;
@@ -1376,7 +1380,7 @@ extern void ogl_loadbmtexture(grs_bitmap *bm);
 // This actually renders the new cockpit onto the screen.
 void update_cockpits(int force_redraw)
 {
-	int x; //y, w, h;
+	int x, y; //w, h;
 	bitmap_index bm_idx;
 	grs_bitmap *bm;
 
@@ -1411,15 +1415,14 @@ void update_cockpits(int force_redraw)
 
 		PIGGY_PAGE_IN(bm_idx);
 		x = (max_window_w - bm->bm_w) / 2;
-		gr_ubitmapm(x, max_window_h, bm);
-
-		// fill in sides
-		copy_background_rect(0, max_window_h, x-1, grd_curscreen->sc_h-1);
-		copy_background_rect(x+bm->bm_w, max_window_h, max_window_w-1, grd_curscreen->sc_h-1);
-
+		if (max_window_w == bm->bm_w)
+			y = max_window_h;
+		else
+			y = max_window_h - bm->bm_h;
 		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
 		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 		fill_background();
+		gr_ubitmapm(x, y, bm);
 		break;
 
 	case CM_LETTERBOX:

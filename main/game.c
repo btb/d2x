@@ -500,7 +500,10 @@ void init_cockpit()
 
 	case CM_STATUS_BAR:
 
-		max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+		if (max_window_w <= GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_w)
+			max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+		else
+			max_window_h = grd_curscreen->sc_h;
 
 		if (Game_window_h.intval > max_window_h)
 			cvar_setint(&Game_window_h, max_window_h);
@@ -706,7 +709,11 @@ int set_screen_mode(int sm)
 			max_window_h = grd_curscreen->sc_h;
 
 			if (Cockpit_mode.intval == CM_STATUS_BAR)
-				max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+				if (max_window_w <= GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_w)
+					max_window_h = grd_curscreen->sc_h - GameBitmaps[cockpit_bitmap[CM_STATUS_BAR+(SM_HIRES?(Num_cockpits/2):0)].index].bm_h;
+				else
+					max_window_h = grd_curscreen->sc_h;
+
 			else if (!(VR_screen_flags & VRF_ALLOW_COCKPIT) && Cockpit_mode.intval != CM_LETTERBOX)
 				cvar_setint(&Cockpit_mode, CM_FULL_SCREEN);
 
