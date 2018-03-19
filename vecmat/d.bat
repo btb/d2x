@@ -1,2 +1,0 @@
-wvideo vectest
-fix

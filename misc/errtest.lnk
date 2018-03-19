@@ -1,4 +1,0 @@
-system dos4g option quiet debug all 
-file .\obj\errtest.obj
-library .\misc.lib
-name errtest
