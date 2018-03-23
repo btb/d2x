@@ -45,7 +45,6 @@ set(gr_OTHERS
     mspeed.c
     nonvesa.c
     paging.asm
-    paging.h
     palette.h
     pcx.h
     pflow.asm
