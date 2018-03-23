@@ -31,7 +31,6 @@ static char rcsid[] = "$Id: controls.c 2.15 1996/01/25 21:24:51 champaign Exp $"
 
 #include "controls.h"
 #include "joydefs.h"
-#include "victor.h"
 #include "render.h"
 #include "args.h"
 #include "palette.h"

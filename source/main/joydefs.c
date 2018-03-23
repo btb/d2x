@@ -34,7 +34,6 @@ static char rcsid[] = "$Id: joydefs.c 2.29 1996/05/30 15:16:03 champaign Exp $";
 
 #include "controls.h"
 #include "joydefs.h"
-#include "victor.h"
 #include "render.h"
 #include "palette.h"
 #include "newmenu.h"

@@ -119,8 +119,9 @@ static char rcsid[] = "$Id: gamecntl.c 1.211 1997/01/24 18:19:42 jeremy Exp $";
 #define Arcade_mode 0
 #endif
 
+#ifdef VICTOR
 #include "victor.h"
-
+#endif
 
 #ifdef EDITOR
 #include "editor\editor.h"
@@ -1513,12 +1514,12 @@ void HandleVRKey(int key)
 	switch( key )   {
 
 		case KEY_ALTED+KEY_F5:
-			#if !defined(WINDOWS) && !defined(MACINTOSH)
+#ifdef VICTOR
 			if ( Game_victor_flag )	{
 				victor_init_graphics();
 				HUD_init_message( "Victor mode toggled" );
 			}
-			#endif
+#endif
 #ifndef MACINTOSH
 			kconfig_center_headset();
 #endif

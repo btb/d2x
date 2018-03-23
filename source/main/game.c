@@ -128,8 +128,6 @@ char game_rcsid[] = "$Id: game.c 2.285 1996/12/09 14:45:35 jeremy Exp $";
 #define Arcade_mode 0
 #endif
 
-#include "victor.h"
-
 #include "vfx.h"
 
 #ifdef EDITOR
