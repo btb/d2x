@@ -57,9 +57,9 @@ static char rcsid[] = "$Id: piggy.c 2.102 1996/12/04 18:28:09 matt Exp $";
 #include "byteswap.h"
 #include "findfile.h"
 
-#ifndef MACINTOSH
+#if defined(UNARJ)
    #include "unarj.h"
-#else
+#elif defined(MACINTOSH)
    #include <Strings.h>    // MacOS Toolbox header
    #include <Files.h>
    #include <unistd.h>
@@ -471,7 +471,7 @@ CFILE *copy_pigfile_from_cd(char *filename)     // MACINTOSH VERSION
    return cfopen(destPathAndFileCStr, "rb");
 }
 
-#else //PC Version of copy_pigfile_from_cd is below
+#elif defined(UNARJ) //PC Version of copy_pigfile_from_cd is below
 
 //copies a pigfile from the CD to the current dir
 //retuns file handle of new pig
@@ -519,6 +519,13 @@ CFILE *copy_pigfile_from_cd(char *filename)
    } while (ret != EXIT_SUCCESS);
 
    return cfopen(filename, "rb");
+}
+
+#else
+
+CFILE *copy_pigfile_from_cd(char *filename)
+{
+   return NULL;
 }
 
 #endif // end of ifdef MAC around copy_pigfile_from_cd
