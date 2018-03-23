@@ -5,6 +5,7 @@
 set(io_SRCS
     dpmi.c
     error.c
+    findfile.c  #DOS/Win
     ipx.c
     joy.asm
     joyc.c
@@ -18,7 +19,6 @@ set(io_SRCS
 set(io_OTHERS
     dpmi.h
     error.h
-    findfile.c  #DOS/Win
     findfile.h
     ipx.h
     joy.h

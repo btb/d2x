@@ -5,12 +5,29 @@
 set(TARGSYS "WIN32" CACHE STRING "one of WIN32 DOS4G CAUSEWAY")
 set(COMPILER "WATCOM" CACHE STRING "one of WATCOM SYMANTEC TURBOC")
 
+find_path(SOS_DIGI_INCLUDE_DIR sos.h /sos)
+find_library(SOS_DIGI_LIBRARIES sosdigi /sos)
+
+find_path(SOS_MIDI_INCLUDE_DIR sosm.h /sos)
+find_library(SOS_MIDI_LIBRARIES sosmidi /sos)
+
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SOSDigi DEFAULT_MSG SOS_DIGI_LIBRARIES SOS_DIGI_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SOSMidi DEFAULT_MSG SOS_MIDI_LIBRARIES SOS_MIDI_INCLUDE_DIR)
+
+mark_as_advanced(
+  SOS_DIGI_INCLUDE_DIR SOS_DIGI_LIBRARIES
+  SOS_MIDI_INCLUDE_DIR SOS_MIDI_LIBRARIES
+)
 
 # These define changes in the code
 
 option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
 option(NMONO            "is monochrome debugging turned off?" ON)
-option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
+#option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
+if(NOT CMAKE_BUILD_TYPE MATCHES "^Debug$")
+    set(NDEBUG ON)
+endif()
 
 option(D2_OEM           "8-level OEM version?" OFF)
 
@@ -19,7 +36,7 @@ option(TACTILE          "are tactile-feedback joysticks supported?" OFF)
 
 option(SHAREWARE        "is this the smaller shareware" OFF)
 option(BUILD_EDITOR     "is the editor included?" OFF)
-
+option(NO_MULTIPLAYER   "turn off networking" OFF)
 
 # These never really get changed
 
@@ -43,7 +60,7 @@ option(STACK_CHECK_ON   "re-enable stack check" OFF)
 
 
 # What programs to make
-if(TARGSYS EQUAL "WIN32")
+if(TARGSYS MATCHES "^WIN32$")
     set(PROGS descentw)
 elseif(SHAREWARE)
     set(PROGS d2share)
@@ -67,8 +84,8 @@ set(descent2_SRCS
     multi.c cntrlcen.c credits.c config.c kmatrix.c
     paging.c mission.c songs.c bmread.c
     escort.c gamepal.c multibot.c state.c
+    cdmix32.c
 )
-#    cdmix32.c #needs sos
 #    vfx.c vfxread.c #missing
 #    3dmax.c #missing
 #    demo.c garage.c radar.c coindev.c serial.c hash.c args.c
@@ -124,7 +141,7 @@ set(descent2_OTHERS
 if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_SRCS winferno.c descentw.c winmodem.c joydefsw.c windigi.c) #winmovie.c
 else()
-    list(APPEND descent2_SRCS inferno.c joydefs.c) #victor.c digi.c movie.c iglasses.c modem.c
+    list(APPEND descent2_SRCS digi.c inferno.c joydefs.c movie.c) #victor.c iglasses.c modem.c
 endif()
 
 if(ARCADE)
@@ -146,13 +163,13 @@ endif()
 # These sources are always built optimized
 #descent2_SRCS_OPT = ## gameseg.c wall.c
 
-list(APPEND descent2_LIBS
+set(descent2_LIBS
     3d gr fix iff vecmat
     div0 misc
-    loadpats cfile
-    vidlib texmap unarj
+    cfile
+    texmap
 )
-#   iglasses
+#   iglasses loadpats vidlib unarj
 #   lzw sosdwxcr sosmwxcr 
 
 if(TACTILE AND NOT TARGSYS MATCHES "^WIN32$")
@@ -180,9 +197,10 @@ if(TARGSYS MATCHES "^WIN32$")
 
 else()
     list(APPEND descent2_LIBS
-        io vga gclfr32 sosdigi sosmidi mvelb32s
-        poly_acc s3dtkwdr vlib spd3d
+        io vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
+        poly_acc
     )
+    # gclfr32 mvelb32s s3dtkwdr vlib spd3d
 endif()
 
 set(descent2_DIRS editor)
@@ -217,9 +235,20 @@ else()
     set(EDITOR_SRCS)
 endif()
 
+
+if(WATCOM)
+    if(TARGSYS MATCHES "^DOS4G$")
+        add_definitions(/bt=dos)
+    endif()
+endif()
+
 # Force include of settings for all files
 if(MSVC)
     add_definitions(/FI"settings.h")
+elseif(WATCOM)
+    add_definitions(/fi=settings.h)
+elseif(BORLAND)
+    add_definitions(/HIsettings.h)
 else()
     # GCC or Clang
     add_definitions(-include settings.h)
@@ -245,6 +274,8 @@ set_source_files_properties(${descent2_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_executable(${PROGS} ${descent2_SRCS} ${descent2_OTHERS})
 
+target_link_libraries(${PROGS} ${descent2_LIBS})
+
 include_directories(../pa_null)
 include_directories(../includes)
 include_directories(../vecmat)
@@ -261,6 +292,13 @@ include_directories(../cfile)
 include_directories(../div)
 if(TARGSYS MATCHES "^WIN32$")
     include_directories(../win95)
+endif()
+
+if(SOS_DIGI_INCLUDE_DIR)
+    include_directories(${SOS_DIGI_INCLUDE_DIR})
+endif()
+if(SOS_MIDI_INCLUDE_DIR)
+    include_directories(${SOS_MIDI_INCLUDE_DIR})
 endif()
 
 

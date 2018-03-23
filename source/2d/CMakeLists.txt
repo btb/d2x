@@ -13,9 +13,10 @@ set(gr_SRCS
     gpixel.c
     gr.c
     ibitblt.c
+    lbitblt.asm
     line.c
     linear.asm  #DOS/Win
-    macstubs.c  #Mac
+#    macstubs.c  #Mac
     pcx.c
     pixel.c
     poly.c
@@ -23,7 +24,7 @@ set(gr_SRCS
     rle.c
     scale.c     #DOS
     scalea.asm  #DOS
-    scalemac.c  #Mac
+#    scalemac.c  #Mac
     scanline.c
 )
 #    blit.c     #Mac, missing
@@ -39,7 +40,6 @@ set(gr_OTHERS
     gr.inc
     grdef.h
     ibitblt.h
-    lbitblt.asm
     makefile
     makefile.mac
     mspeed.c
@@ -66,8 +66,7 @@ include_directories(../mem)
 include_directories(../fix)
 include_directories(../cfile)
 include_directories(../pa_null)
-include_directories(../bios)    #DOS
-#include_directories(../win95)  #Windows
+include_directories(../bios)
 
 #add_executable(testg testg.c tmapbits.c)
 #target_link_libraries(testg io gr misc mem iff cfile)
