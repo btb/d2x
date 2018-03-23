@@ -17,7 +17,7 @@ static char rcsid[] = "$Id: tactile.c 1.2 1996/09/17 18:03:43 samir Exp $";
 #pragma on (unreferenced)
 
 
-#include "types.h"
+#include "pstypes.h"
 
 #include "iforce.h"
 #include "tactile.h"

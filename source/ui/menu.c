@@ -18,7 +18,7 @@ static char rcsid[] = "$Id: menu.c 1.5 1994/11/18 23:07:19 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 

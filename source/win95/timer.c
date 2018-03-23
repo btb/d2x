@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 static char rcsid[] = "$Id: timer.c 1.9 1996/10/04 16:46:13 samir Exp $";
 #pragma on (unreferenced)
 
-#include "types.h"
+#include "pstypes.h"
 #include "fix.h"
 #include "error.h"
 #include "mono.h"

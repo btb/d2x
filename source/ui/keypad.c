@@ -8,7 +8,7 @@
 
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "key.h"
 

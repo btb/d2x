@@ -26,7 +26,7 @@ static char rcsid[] = "$Id: ibitblt.c 1.16 1996/12/19 16:51:38 matt Exp $";
 #include <string.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "mem.h"
 #include "error.h"

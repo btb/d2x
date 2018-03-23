@@ -25,7 +25,7 @@ static char rcsid[] = "$Id: ipx.c 2.15 1996/06/08 22:38:57 matt Exp $";
 #include <conio.h>
 #include <assert.h>
 
-#include "types.h"
+#include "pstypes.h"
 #include "timer.h"
 #include "ipx.h"
 #include "error.h"

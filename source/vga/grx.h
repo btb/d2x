@@ -14,7 +14,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _GR_H
 #define _GR_H
 
-#include "types.h"
+#include "pstypes.h"
 #include "fix.h"
 
 #define GR_FADE_LEVELS 34

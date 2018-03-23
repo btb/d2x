@@ -20,7 +20,7 @@ char palette_rcsid[] = "$Id: palette.c 1.49 1996/04/12 19:21:55 jay Exp $";
 #include <string.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
-#include "types.h"
+#include "pstypes.h"
 #include "mem.h"
 #include "gr.h"
 #include "grdef.h"

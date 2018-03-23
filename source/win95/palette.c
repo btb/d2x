@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "ddraw.h"
 
-#include "types.h"
+#include "pstypes.h"
 #include "mem.h"
 #include "gr.h"
 #include "cfile.h"

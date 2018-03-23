@@ -22,7 +22,7 @@ static char rcsid[] = "$Id: icon.c 1.2 1994/11/18 23:07:33 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

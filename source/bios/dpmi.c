@@ -24,7 +24,7 @@ static char rcsid[] = "$Id: dpmi.c 1.21 1996/02/07 11:00:22 matt Exp $";
 #include <stdlib.h>
 #include <conio.h>
 
-#include "types.h"
+#include "pstypes.h"
 #include "error.h"
 #include "mono.h"
 #include "error.h"

@@ -25,7 +25,7 @@ static char rcsid[] = "$Id: arcade.c 2.0 1995/02/27 11:29:12 john Exp $";
 #include <ctype.h>
 
 #include "error.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "mono.h"
 #include "key.h"

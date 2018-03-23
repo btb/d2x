@@ -24,7 +24,7 @@ static char rcsid[] = "$Id: joyc.c 1.37 1995/11/22 11:30:10 matt Exp $";
 
 //#define ARCADE 1
 
-#include "types.h"
+#include "pstypes.h"
 #include "error.h"
 #include "mono.h"
 #include "joy.h"

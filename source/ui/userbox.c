@@ -18,7 +18,7 @@ static char rcsid[] = "$Id: userbox.c 1.4 1993/12/07 12:30:05 john Exp $";
 #include <string.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

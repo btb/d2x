@@ -17,7 +17,7 @@ static char rcsid[] = "$Id: listbox.c 1.5 1994/11/18 23:07:32 john Exp $";
 #include <stdlib.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

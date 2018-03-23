@@ -20,7 +20,7 @@ static char rcsid[] = "$Id: inputbox.c 1.6 1994/11/18 23:07:30 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

@@ -20,7 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <conio.h>
 
-#include "types.h"
+#include "pstypes.h"
 #include "mem.h"
 #include "error.h"
 #include "mono.h"

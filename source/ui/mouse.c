@@ -18,7 +18,7 @@ static char rcsid[] = "$Id: mouse.c 1.8 1995/03/06 17:54:17 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "mouse.h"
 

@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: keypress.c 1.2 1994/06/09 12:18:27 john Exp $";
 #include <string.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"
