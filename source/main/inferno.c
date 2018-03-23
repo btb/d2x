@@ -60,7 +60,9 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "text.h"
 #include "ipx.h"
 #include "newdemo.h"
+#ifdef VICTOR
 #include "victor.h"
+#endif
 #include "network.h"
 #include "modem.h"
 #include "gamefont.h"
@@ -640,6 +642,7 @@ void do_headset_init()
 
       break;
    }
+#ifdef VICTOR
    case VRD_CYBERMAXX:
       if ( Config_vr_tracking>0 )
          victor_init_tracking( Config_vr_tracking );
@@ -653,6 +656,7 @@ void do_headset_init()
       game_init_render_buffers(SM_320x400U, 320, 200, VR_INTERLACED, VRF_USE_PAGING );
       VR_low_res = 3;
       break;
+#endif
    case VRD_IGLASSES:
       if (Config_vr_tracking>0)
          iglasses_init_tracking( Config_vr_tracking );
