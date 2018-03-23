@@ -47,7 +47,6 @@ static char rcsid[] = "$Id: gamerend.c 1.93 1996/12/09 15:01:53 jeremy Exp $";
 #include "newdemo.h"
 #include "text.h"
 #include "multi.h"
-#include "vfx.h"
 #include "endlevel.h"
 #include "cntrlcen.h"
 #include "powerup.h"

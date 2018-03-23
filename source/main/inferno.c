@@ -83,7 +83,9 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "dpmi.h"
 #include "movie.h"
 #include "compbit.h"
+#ifdef VFX
 #include "vfx.h"
+#endif
 
 #ifdef TACTILE
 #include "tactile.h"
@@ -601,6 +603,7 @@ void do_headset_init()
       set_display_mode(0);    //set normal 320x200 mode
       is_special = 0;         //not a special mode
       break;
+#ifdef VFX
    case VRD_VFX1: {
       int status;
       status = vfx_init();
@@ -642,6 +645,7 @@ void do_headset_init()
 
       break;
    }
+#endif
 #ifdef VICTOR
    case VRD_CYBERMAXX:
       if ( Config_vr_tracking>0 )

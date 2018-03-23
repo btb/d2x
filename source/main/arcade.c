@@ -39,7 +39,9 @@ static char rcsid[] = "$Id: arcade.c 2.0 1995/02/27 11:29:12 john Exp $";
 #include "kconfig.h"
 #include "gauges.h"
 #include "joydefs.h"
+#ifdef VFX
 #include "vfx1.h"
+#endif
 #include "render.h"
 #include "arcade.h"
 
@@ -113,7 +115,9 @@ void arcade_read_controls()
    if (Controls.heading_time>FrameTime) Controls.heading_time=FrameTime;
    if (Controls.heading_time<-FrameTime) Controls.heading_time=-FrameTime;
 
+#ifdef VFX
    read_vfx1_sense();
+#endif
 }
 
 
