@@ -45,7 +45,9 @@ static char rcsid[] = "$Id: kconfig.c 2.93 1996/09/20 14:41:45 jeremy Exp $";
 #include "gauges.h"
 #include "joydefs.h"
 #include "songs.h"
+#ifdef VFX
 #include "vfx.h"
+#endif
 #include "render.h"
 #include "arcade.h"
 #include "digi.h"
@@ -1818,9 +1820,12 @@ read_head_tracker()
 	int buttons;
 
 //------ read vfx1 helmet --------
+#ifdef VFX
 	if (vfx1_installed) {
 		vfx_get_data(&yaw,&pitch,&roll,&buttons);
-	} else if (iglasses_headset_installed)	{
+	} else
+#endif
+	if (iglasses_headset_installed)	{
 		iglasses_read_headset( &yaw, &pitch, &roll );
 	} else
 #ifdef VICTOR
@@ -3385,7 +3390,7 @@ void kc_set_controls()
 
 void kconfig_center_headset()
 {
-#ifndef WINDOWS
+#ifdef VFX
 	if (vfx1_installed)
 		vfx_center_headset();
 #endif

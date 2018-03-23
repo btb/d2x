@@ -130,7 +130,9 @@ char game_rcsid[] = "$Id: game.c 2.285 1996/12/09 14:45:35 jeremy Exp $";
 #define Arcade_mode 0
 #endif
 
+#ifdef VFX
 #include "vfx.h"
+#endif
 
 #ifdef EDITOR
 #include "editor\editor.h"
@@ -929,7 +931,7 @@ WIN(static int saved_window_h);
 				game_3dmax_off();
 #endif
 
-#ifndef MACINTOSH
+#ifdef VFX
 			if ( Game_vfx_flag )
 				vfx_disable_stereo();
 #endif
@@ -978,7 +980,7 @@ WIN(static int saved_window_h);
 			game_3dmax_on();
 #endif
 
-#ifndef MACINTOSH
+#ifdef VFX
 		if ( Game_vfx_flag )		{
 
 			vfx_enable_stereo();
