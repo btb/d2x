@@ -61,7 +61,9 @@ static char rcsid[] = "$Id: kconfig.c 2.93 1996/09/20 14:41:45 jeremy Exp $";
 #include "text.h"
 #include "player.h"
 #include "menu.h"
+#ifdef IGLASSES
 #include "iglasses.h"
+#endif
 #include "automap.h"
 #include "args.h"
 #include "lighting.h"
@@ -1825,9 +1827,11 @@ read_head_tracker()
       vfx_get_data(&yaw,&pitch,&roll,&buttons);
    } else
 #endif
+#ifdef IGLASSES
    if (iglasses_headset_installed)  {
       iglasses_read_headset( &yaw, &pitch, &roll );
    } else
+#endif
 #ifdef VICTOR
    if (Victor_headset_installed)   {
       victor_read_headset_filtered( &yaw, &pitch, &roll );
