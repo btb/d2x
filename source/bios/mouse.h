@@ -44,7 +44,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // buttons if driver is present.
 
 extern int mouse_init(int enable_cyberman);
-extern int mouse_set_limits( int x1, int y1, int x2, int y2 );
+extern void mouse_set_limits( int x1, int y1, int x2, int y2 );
 extern void mouse_flush(); // clears all mice events...
 
 //========================================================================
