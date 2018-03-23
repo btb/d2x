@@ -8,7 +8,7 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "^Debug$")
     #add_definitions(/DNDEBUG)
 endif()
 
-find_path(3DFX_INCLUDE_DIR 3dfx.h /3Dfx/Sdk/Glide3x/Src/Include/)
+find_path(3DFX_INCLUDE_DIR 3dfx.h ../extlib/glide/dos/include/)
 mark_as_advanced(3DFX_INCLUDE_DIR)
 
 

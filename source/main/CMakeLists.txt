@@ -5,11 +5,11 @@
 set(TARGSYS "WIN32" CACHE STRING "one of WIN32 DOS4G CAUSEWAY")
 set(COMPILER "WATCOM" CACHE STRING "one of WATCOM SYMANTEC TURBOC")
 
-find_path(SOS_DIGI_INCLUDE_DIR sos.h /sos)
-find_library(SOS_DIGI_LIBRARIES sosdigi /sos)
+find_path(SOS_DIGI_INCLUDE_DIR sos.h ../../extlib/soslib)
+find_library(SOS_DIGI_LIBRARIES sosdigi ../../extlib/soslib)
 
-find_path(SOS_MIDI_INCLUDE_DIR sosm.h /sos)
-find_library(SOS_MIDI_LIBRARIES sosmidi /sos)
+find_path(SOS_MIDI_INCLUDE_DIR sosm.h ../../extlib/soslib)
+find_library(SOS_MIDI_LIBRARIES sosmidi ../../extlib/soslib)
 
 include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SOSDigi DEFAULT_MSG SOS_DIGI_LIBRARIES SOS_DIGI_INCLUDE_DIR)
