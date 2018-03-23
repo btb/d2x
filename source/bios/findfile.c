@@ -81,7 +81,7 @@ int	FileFindClose(void)
 //returns 0 if no error
 int GetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 {
-	return _dos_getftime(filehandle, &ftstruct->date, &ftstruct->time);
+	return _dos_getftime(filehandle, (unsigned *)&ftstruct->date, (unsigned *)&ftstruct->time);
 
 }
 
