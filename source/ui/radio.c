@@ -45,10 +45,10 @@ void ui_draw_radio( UI_GADGET_RADIO * radio )
 		if (radio->position == 0 )
 		{
 			ui_draw_box_out( 0, 0, radio->width-1, radio->height-1 );
-			ui_string_centered(  Middle(radio->width), Middle(radio->height), "þ" );
+			ui_string_centered(  Middle(radio->width), Middle(radio->height), "\xFE" );
 		} else {
 			ui_draw_box_in( 0, 0, radio->width-1, radio->height-1 );
-			ui_string_centered(  Middle(radio->width)+1, Middle(radio->height)+1, "þ" );
+			ui_string_centered(  Middle(radio->width)+1, Middle(radio->height)+1, "\xFE" );
 		}
 
 		if (CurWindow->keyboard_focus_gadget == (UI_GADGET *)radio)

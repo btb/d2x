@@ -642,8 +642,8 @@ void set_custom_detail_vars(void);
 
 static ubyte have_prefs = 0;
 
-//¥	------------------------------	Private Definitions
-//¥	------------------------------	Private Types
+//	------------------------------	Private Definitions
+//	------------------------------	Private Types
 
 typedef struct
 {
@@ -654,18 +654,18 @@ typedef struct
 	short	resID;
 } PrefsInfo, *PrefsInfoPtr, **PrefsInfoHandle;
 
-//¥	------------------------------	Private Variables
+//	------------------------------	Private Variables
 
 static PrefsInfo		prefsInfo;
 static Boolean		prefsInited = 0;
 
-//¥	------------------------------	Private Functions
+//	------------------------------	Private Functions
 
 static void Pstrcpy(StringPtr dst, StringPtr src);
 static void Pstrcat(StringPtr dst, StringPtr src);
 static Boolean FindPrefsFile(short *prefVRefNum, long *prefDirID);
 
-//¥	--------------------	Pstrcpy
+//	--------------------	Pstrcpy
 
 static void
 Pstrcpy(StringPtr dst, StringPtr src)
@@ -673,7 +673,7 @@ Pstrcpy(StringPtr dst, StringPtr src)
 	BlockMove(src, dst, (*src) + 1);
 }
 
-//¥	--------------------	Pstrcat
+//	--------------------	Pstrcat
 
 static void
 Pstrcat(StringPtr dst, StringPtr src)
@@ -682,7 +682,7 @@ Pstrcat(StringPtr dst, StringPtr src)
 	*dst += *src;
 }
 
-//¥	--------------------	FindPrefsFile
+//	--------------------	FindPrefsFile
 
 static Boolean
 FindPrefsFile(short *prefVRefNum, long *prefDirID)
@@ -697,7 +697,7 @@ CInfoPBRec	infoPB;
 	theErr = Gestalt(gestaltFindFolderAttr, &response);
 	if (theErr == noErr && ((response >> gestaltFindFolderPresent) & 1))
 	{
-		//¥	Find (or make) it the easy way...
+		//	Find (or make) it the easy way...
 		theErr = FindFolder(kOnSystemDisk, kPreferencesFolderType, kCreateFolder, prefVRefNum, prefDirID);
 	}
 	else
@@ -705,14 +705,14 @@ CInfoPBRec	infoPB;
 	SysEnvRec	theSysEnv;
 	StringPtr		prefFolderName = "\pPreferences";
 
-		//¥	yeachh -- we have to do it all by hand!
+		//	yeachh -- we have to do it all by hand!
 		theErr = SysEnvirons(1, &theSysEnv);
 		if (theErr != noErr)
 			return (0);
 			
 		*prefVRefNum = theSysEnv.sysVRefNum;
 		
-		//¥	Check whether Preferences folder already exists
+		//	Check whether Preferences folder already exists
 		infoPB.hFileInfo.ioCompletion	= 0;
 		infoPB.hFileInfo.ioNamePtr	= prefFolderName;
 		infoPB.hFileInfo.ioVRefNum	= *prefVRefNum;
@@ -724,11 +724,11 @@ CInfoPBRec	infoPB;
 		{
 			*prefDirID = infoPB.hFileInfo.ioDirID;
 		}
-		else if (theErr == fnfErr)		//¥	Preferences doesn't already exist
+		else if (theErr == fnfErr)		//	Preferences doesn't already exist
 		{
 		HParamBlockRec	dirPB;
 		
-			//¥	Create "Preferences" folder
+			//	Create "Preferences" folder
 			dirPB.fileParam.ioCompletion	= 0;
 			dirPB.fileParam.ioVRefNum	= *prefVRefNum;
 			dirPB.fileParam.ioNamePtr	= prefFolderName;
@@ -740,7 +740,7 @@ CInfoPBRec	infoPB;
 		}
 	}
 	
-	//¥	If we make it here OK, create Preferences file if necessary
+	//	If we make it here OK, create Preferences file if necessary
 	if (theErr == noErr)
 	{
 		infoPB.hFileInfo.ioCompletion	= 0;
@@ -764,7 +764,7 @@ CInfoPBRec	infoPB;
 	return (theErr == noErr);
 }
 
-//¥	--------------------	InitPrefsFile
+//	--------------------	InitPrefsFile
 
 #define UNKNOWN_TYPE 0x3f3f3f3f
 
@@ -786,7 +786,7 @@ PrefsInfoHandle		piHdl;
 		thePIR.processName = nil;
 		thePIR.processAppSpec = &appSpec;
 		
-		//¥	Set default to 'ÇApplicationÈ Prefs', PREF 0
+		//	Set default to 'Application Prefs', PREF 0
 		err = GetProcessInformation(&thePSN, &thePIR);
 		if (err)
 			Int3();
@@ -796,8 +796,8 @@ PrefsInfoHandle		piHdl;
 		Pstrcpy(prefsInfo.fileName, app_string);
 		Pstrcat(prefsInfo.fileName, "\p Preferences");
 		
-		//¥	Set creator to calling application's signature (should be able to
-		//¥	Determine this automatically, but unable to for some reason)
+		//	Set creator to calling application's signature (should be able to
+		//	Determine this automatically, but unable to for some reason)
 		prefsInfo.creator = creator;
 		prefsInfo.fileType = 'pref';
 		prefsInfo.resType = 'pref';
@@ -805,7 +805,7 @@ PrefsInfoHandle		piHdl;
 	}
 	else
 	{
-		//¥	Get Preferences file setup from PRFI 0
+		//	Get Preferences file setup from PRFI 0
 		BlockMove(*piHdl, &prefsInfo, sizeof (prefsInfo));
 		ReleaseResource((Handle) piHdl);
 		
@@ -816,7 +816,7 @@ PrefsInfoHandle		piHdl;
 	prefsInited = 1;
 }
 
-//¥	--------------------	LoadPrefsFile
+//	--------------------	LoadPrefsFile
 
 OSErr
 LoadPrefsFile(Handle prefsHdl)
@@ -839,11 +839,11 @@ Size		prefSize, origSize;
 	if (prefRefNum == -1)
 		return (ResError());
 	
-	//¥	Not finding the resource is not an error -- caller will use default data
+	//	Not finding the resource is not an error -- caller will use default data
 	if ((origHdl = Get1Resource(prefsInfo.resType, prefsInfo.resID)) != nil)
 	{
 		origSize = GetHandleSize(origHdl);
-		if (origSize > prefSize)			//¥	Extend handle for extra stored data
+		if (origSize > prefSize)			//	Extend handle for extra stored data
 			SetHandleSize(prefsHdl, origSize);
 
 		BlockMove(*origHdl, *prefsHdl, origSize);
@@ -858,7 +858,7 @@ Size		prefSize, origSize;
 	return (theErr);
 }
 
-//¥	--------------------	SavePrefsFile
+//	--------------------	SavePrefsFile
 
 OSErr
 SavePrefsFile(Handle prefHdl)
@@ -883,7 +883,7 @@ OSErr	theErr = noErr;
 		
 	if ((origHdl = Get1Resource(prefsInfo.resType, prefsInfo.resID)) != nil)
 	{
-		//¥	Overwrite existing preferences
+		//	Overwrite existing preferences
 		origSize = GetHandleSize(origHdl);
 		if (prefSize > origSize)
 			SetHandleSize(origHdl, prefSize);
@@ -895,7 +895,7 @@ OSErr	theErr = noErr;
 	}
 	else
 	{
-		//¥	Store specified preferences for the first time
+		//	Store specified preferences for the first time
 		AddResource(prefHdl, prefsInfo.resType, prefsInfo.resID, "\p");
 		WriteResource(prefHdl);
 		DetachResource(prefHdl);
@@ -909,7 +909,7 @@ OSErr	theErr = noErr;
 	return (theErr);
 }
 
-//¥	-------------------------------------------------------------------------------------------
+//	-------------------------------------------------------------------------------------------
 
 /*
 
