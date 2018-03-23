@@ -371,6 +371,7 @@ int digi_init()
 
    Digi_initialized = 1;
 
+#ifdef LOADPATS
    if ( !FindArg( "-noloadpats" ) ) {
       if ( digi_midi_type == _MIDI_GUS )  {
          char fname[128];
@@ -382,6 +383,7 @@ int digi_init()
          }
       }
    }
+#endif
 
    // initialize the DIGI system and lock down all SOS memory
    sosDIGIInitSystem( digi_driver_path, _SOS_DEBUG_NORMAL );
