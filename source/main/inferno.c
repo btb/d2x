@@ -1269,10 +1269,12 @@ int main(int argc,char **argv)
    do_network_init();
 #endif
 
+#ifdef SERIAL
    if (!FindArg("-noserial"))
       serial_active = 1;
    else
       serial_active = 0;
+#endif
 
 #if defined(POLY_ACC)
     Current_display_mode = -1;
