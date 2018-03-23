@@ -74,7 +74,9 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "config.h"
 #include "joydefs.h"
 #include "multi.h"
+#ifdef IGLASSES
 #include "iglasses.h"
+#endif
 #include "songs.h"
 #include "cfile.h"
 #include "gameseq.h"
@@ -661,6 +663,7 @@ void do_headset_init()
 		VR_low_res = 3;
 		break;
 #endif
+#ifdef IGLASSES
 	case VRD_IGLASSES:
 		if (Config_vr_tracking>0)
 			iglasses_init_tracking( Config_vr_tracking );
@@ -668,6 +671,7 @@ void do_headset_init()
 		game_init_render_buffers(SM_320x400U, 320, 200, VR_INTERLACED, VRF_USE_PAGING );
 		VR_low_res = 3;
 		break;
+#endif
 	case VRD_3DMAX:
 		if (!is_3dbios_installed())     {
 			printf(	"Warning: Kasan's 3DBIOS needs to be installed.\n"
