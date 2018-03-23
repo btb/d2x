@@ -1,0 +1,5 @@
+build/
+extlib/
+
+#vs
+.vscode/
