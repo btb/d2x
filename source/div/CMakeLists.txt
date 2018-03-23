@@ -4,7 +4,6 @@
 
 set(div0_SRCS
     div0.asm
-    dummy.c
 )
 
 set(div0_OTHERS

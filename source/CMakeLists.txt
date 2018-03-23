@@ -4,6 +4,10 @@
 
 enable_language(C ASM_MASM)
 
+if(WATCOM)
+    set(CMAKE_ASM_MASM_CREATE_STATIC_LIBRARY ${CMAKE_C_CREATE_STATIC_LIBRARY})
+endif()
+
 if(NOT CMAKE_BUILD_TYPE MATCHES "^Debug$")
     #add_definitions(/DNDEBUG)
 endif()
