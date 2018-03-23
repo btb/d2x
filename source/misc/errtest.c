@@ -14,5 +14,3 @@ main(int argc,char **argv)
 
 	Error("test of error, argc=%d, argv=%x",argc,argv);
 }
-
-ÿ

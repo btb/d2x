@@ -88,5 +88,3 @@ line_done: ;
 	free( my_bh->raw_data );
 	return new;
 }
-
-ÿ

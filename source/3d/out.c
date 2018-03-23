@@ -82,4 +82,3 @@ segment Seg1 = {
 	{   4,    5,    6,    7},				// bvs
 	0				// robots
 };
-ÿ

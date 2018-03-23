@@ -24,4 +24,3 @@
 //#define NOSERIAL				//NOSERIAL not set 
 #define NETWORK 1				//NO_MULTIPLAYER not set  
 #define PIGGY_USE_PAGING 1				//PIGGY_NO_PAGING not set  
-ÿ

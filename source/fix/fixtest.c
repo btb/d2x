@@ -244,5 +244,3 @@ main()
 //	quad_sqrt_time();		//timing test
 
 }
-
-ÿ

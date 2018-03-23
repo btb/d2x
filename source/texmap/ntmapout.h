@@ -328,5 +328,3 @@ dont_draw_scanline:
 #undef INNER_LOOP
 #undef CHECK_WINDOW
 #undef USE_UVS
-
-ÿ

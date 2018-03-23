@@ -22,4 +22,3 @@ sets _v4 to:
 which seems wrong to me.
 
 Am I doing something wrong?
-ÿ

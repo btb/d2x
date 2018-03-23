@@ -5,5 +5,3 @@
 
 
 #define VERSION_TYPE	"Full Version" 
-
-ÿ
