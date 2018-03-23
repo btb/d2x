@@ -21,9 +21,8 @@ set(texmap_OTHERS
 	texmap.h
 	texmapl.h
 	tmap_inc.asm
-	tmapfade.asm
 )
-set_source_files_properties(${TEXMAP_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${texmap_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 if(NOT DEFINED NASM)
     list(APPEND texmap_SRCS
