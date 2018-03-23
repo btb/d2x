@@ -11,7 +11,6 @@ set(mem_OTHERS
 	2
 	makefile
 	makefile.mac
-	mem.c
 	mem.h
 )
 set_source_files_properties(${mem_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
