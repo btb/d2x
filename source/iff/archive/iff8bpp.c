@@ -90,5 +90,3 @@ line_done: ;
     fclose(ifile);
     return new;
 }
-
-ÿ

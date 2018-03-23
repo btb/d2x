@@ -31,8 +31,3 @@ void ui_keytrap_do( UI_GADGET_KEYTRAP * keytrap, int keypress )
 		result = keytrap->user_function();
 	}
 }
-
-
-
-
-ÿ

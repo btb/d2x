@@ -25,4 +25,3 @@ void draw_segment(segment *s)
 
 
 }
-ÿ

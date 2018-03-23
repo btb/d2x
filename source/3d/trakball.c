@@ -53,5 +53,3 @@ void GetMouseRotation( int idx, int idy, fix * RotMat )
 
 
 }
-
-ÿ

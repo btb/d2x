@@ -84,4 +84,3 @@ vms_vector up_vecs[] = {
 			{0x763f,0x61f6,0xffff332d},
 			{0,0,0x10000},
 		};
-ÿ
