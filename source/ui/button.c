@@ -20,7 +20,7 @@ static char rcsid[] = "$Id: button.c 1.10 1994/11/18 23:07:32 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

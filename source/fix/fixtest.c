@@ -6,7 +6,7 @@
 #include <conio.h>
 #include <stdlib.h>
 
-#include "types.h"
+#include "pstypes.h"
 #include "fix.h"
 #include "graph.h"
 

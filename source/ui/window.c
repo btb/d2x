@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: window.c 1.8 1994/11/18 23:21:46 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

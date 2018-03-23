@@ -18,7 +18,7 @@ static char rcsid[] = "$Id: radio.c 1.5 1994/04/22 11:10:15 john Exp $";
 #include <string.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

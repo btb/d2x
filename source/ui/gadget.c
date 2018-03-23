@@ -20,7 +20,7 @@ static char rcsid[] = "$Id: gadget.c 1.7 1995/06/05 11:15:21 matt Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 

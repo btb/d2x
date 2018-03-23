@@ -27,7 +27,7 @@ static char rcsid[] = "$Id: joyc.c 1.21 1996/10/15 17:09:16 samir Exp $";
 #include <conio.h>
 
 #include "winapp.h"
-#include "types.h"
+#include "pstypes.h"
 #include "mono.h"
 #include "joy.h"
 #include "tactile.h"

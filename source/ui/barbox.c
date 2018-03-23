@@ -20,7 +20,7 @@ static char rcsid[] = "$Id: barbox.c 1.2 1994/01/18 11:07:45 john Exp $";
 #include <stdarg.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

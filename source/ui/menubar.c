@@ -23,7 +23,7 @@ static char rcsid[] = "$Id: menubar.c 1.15 1996/01/05 16:32:17 matt Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

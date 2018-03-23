@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: checkbox.c 1.4 1993/12/07 12:30:47 john Exp $";
 
 #include "mem.h"
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 #include "key.h"

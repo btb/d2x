@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: number.c 1.2 1994/06/09 12:18:25 john Exp $";
 #include <stdarg.h>
 
 #include "fix.h"
-#include "types.h"
+#include "pstypes.h"
 #include "gr.h"
 #include "ui.h"
 
