@@ -39,8 +39,10 @@ static char rcsid[] = "$Id: movie.c 1.76 1996/08/28 17:34:03 jed Exp $";
 #include "gr.h"
 #include "palette.h"
 #include "config.h"
+#ifdef MVE
 #include "mvelib32.h"
 #include "mvegfx.h"
+#endif
 #include "mono.h"
 #include "error.h"
 #include "digi.h"
@@ -160,6 +162,7 @@ int PlayMovie(const char *filename, int must_have)
 	digi_sample_rate = SAMPLE_RATE_22K;		//always 22K for movies
 	digi_reset(); digi_reset();
 
+#ifdef MVE
 	// Start sound 
 	if (hSOSDigiDriver < 0xffff) {
 		MVE_SOS_sndInit(hSOSDigiDriver);
@@ -176,6 +179,9 @@ int PlayMovie(const char *filename, int must_have)
 //@@		name[strlen(name)-5] = MovieHires?'l':'h';				//change name
 //@@		ret = RunMovie(name,!MovieHires,allow_abort,-1,-1);	//try again
 //@@	}
+#else
+	ret = MOVIE_NOT_PLAYED;
+#endif
 
 	gr_palette_clear();		//clear out palette in case movie aborted
 
@@ -318,6 +324,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		#endif
 	}
 
+#ifdef MVE
 	MVE_memCallbacks(MPlayAlloc, MPlayFree);
 	MVE_ioCallbacks(FileRead);
 	
@@ -397,6 +404,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 		
 	MVE_rmEndMovie();
 	MVE_ReleaseMem();
+#endif
 
 	close(filehndl);                           // Close Movie File
  
@@ -417,6 +425,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 int InitMovieBriefing ()
  {
+#ifdef MVE
 #if defined(POLY_ACC)
     Assert(MenuHires);
 	 pa_flush();
@@ -448,6 +457,9 @@ int InitMovieBriefing ()
 		}
 	}
   return (1);
+#else
+	return MOVIE_NOT_PLAYED;
+#endif
  }  
   
 int FlipFlop=0;
@@ -549,6 +561,7 @@ int RotateRobot ()
 	   PA_DFX (pa_set_write_mode (1));
 	#endif
 
+#ifdef MVE
  	err = MVE_rmStepMovie();
 
 	#if defined(POLY_ACC)
@@ -580,6 +593,7 @@ int RotateRobot ()
 		Int3();
 		return 0;
 	}
+#endif
 
 	return 1;
 }
@@ -611,14 +625,18 @@ void DeInitRobotMovie()
   MyShowFrame();
 #endif
 
+#ifdef MVE
   MVE_rmEndMovie();
   MVE_ReleaseMem();
+#endif
   free (FirstVid);
   free (SecondVid);
    
   FreeRoboBuffer (49);	
  
+#ifdef MVE
   MVE_palCallbacks (MVE_SetPalette);
+#endif
   close(RoboFile);                           // Close Movie File
  }
 
@@ -633,7 +651,9 @@ void __cdecl PaletteChecker (unsigned char *p,unsigned start,unsigned count)
   if (i>=255 && (MVEPaletteCalls++)>0)
    return;
 
+#ifdef MVE
   MVE_SetPalette (p,start,count);
+#endif
  }
 
 
@@ -690,11 +710,13 @@ int InitRobotMovie (char *filename)
 	  return (NULL);
 	 }
 
+#ifdef MVE
 	MVE_SOS_sndInit(-1);		//tell movies to play no sound for robots
 
    MVE_memCallbacks(MPlayAlloc, MPlayFree);
    MVE_ioCallbacks(FileRead);
    MVE_memVID (FirstVid,SecondVid,65000);
+#endif
 
    RoboFile = open_movie_file(filename,1);
 
@@ -711,6 +733,7 @@ int InitRobotMovie (char *filename)
 
    Vid_State = VID_PLAY;                           
 
+#ifdef MVE
 #if !defined(POLY_ACC)
    MVE_sfCallbacks ((mve_cb_ShowFrame *)MyShowFrame);
 #endif
@@ -729,6 +752,7 @@ int InitRobotMovie (char *filename)
 
 #if !defined(POLY_ACC)
    MVE_palCallbacks (PaletteChecker);
+#endif
 #endif
 
    RoboFilePos=lseek (RoboFile,0L,SEEK_CUR);
