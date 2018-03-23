@@ -12,16 +12,16 @@
 ;**************** SCAN CODE TO ASCII TABLES *******************
 ;**************************************************************
 ; This are two tables of ASCII codes for a given scan code.
-; The character л is used to denote an invalid keystroke that won't
+; The character \xDB is used to denote an invalid keystroke that won't
 ; be put into the keyboard buffer.
 
 ;0                         1                    2               3               4               5               6               7
 ;0   1  23456789ABCD  E F  0123456789AB   C  DEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
-;db "л",27,"1234567890-=",8,9,"qwertyuiop[]",13,"лasdfghjkl;'`л\zxcvbnm,./л*л ллллллллллллл789-456+1230.лллллллллллллллллллллллллллллллллллллллллллл"
+;db "\xDB",27,"1234567890-=",8,9,"qwertyuiop[]",13,"\xDBasdfghjkl;'`\xDB\zxcvbnm,./\xDB*\xDB \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB789-456+1230.\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
 
 ;0                  1               2                    3               4               5               6               7
 ;0123456789ABCDE   F0123456789ABCDEF01234567   8  9ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
-;Key2 db "лл!@#$%^&*()_+л",11,"QWERTYUIOP{}ллASDFGHJKL:",34,"лл|ZXCVBNM<>?ллл лллллллллллллллл-ллл+ллллллллллллллллллллллллллллллллллллллллллллллллл"
+;Key2 db "\xDB\xDB!@#$%^&*()_+\xDB",11,"QWERTYUIOP{}\xDB\xDBASDFGHJKL:",34,"\xDB\xDB|ZXCVBNM<>?\xDB\xDB\xDB \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB-\xDB\xDB\xDB+\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
 
 Key1    db  255     ; No key for 0
 		db  255     ; Esc

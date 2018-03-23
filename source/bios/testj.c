@@ -92,7 +92,7 @@ void main (void)
 	joy_get_pos( &x, &y );
 	t2 = timer_get_microseconds();
 
-	printf( "~ %u æsec per reading using Timer Timing\n", t2 - t1 );
+	printf( "~ %u \xE6sec per reading using Timer Timing\n", t2 - t1 );
 
 	joy_close();
 	key_close();
@@ -105,7 +105,7 @@ void main (void)
 
 	stop = TICKER;
 
-	printf( "~ %d æsec per reading using BIOS ticker as a stopwatch.\n", USECS_PER_READING( start, stop, frames ) );
+	printf( "~ %d \xE6sec per reading using BIOS ticker as a stopwatch.\n", USECS_PER_READING( start, stop, frames ) );
 
 
 }

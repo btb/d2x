@@ -49,7 +49,7 @@ void main (void)
 	t1 = timer_get_microseconds();
 	t2 = timer_get_microseconds();
 
-	printf( "Overhead for 'timer_get_microseconds' call:  %d ÊSeconds\n", t2-t1 );
+	printf( "Overhead for 'timer_get_microseconds' call:  %d \xE6Seconds\n", t2-t1 );
 
 
 	timer_close();
