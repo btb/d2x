@@ -108,7 +108,9 @@ char game_rcsid[] = "$Id: game.c 2.285 1996/12/09 14:45:35 jeremy Exp $";
 #include "robot.h"
 #include "playsave.h"
 #include "fix.h"
+#ifdef KASAN
 #include "3dmax.h"
+#endif
 
 #ifndef WINDOWS
 #include "vga.h"
@@ -922,8 +924,10 @@ WIN(static int saved_window_h);
                gr_palette_load(gr_palette);
          }
 
+#ifdef KASAN
          if ( Game_3dmax_flag )
             game_3dmax_off();
+#endif
 
 #ifndef MACINTOSH
          if ( Game_vfx_flag )
@@ -969,8 +973,10 @@ WIN(static int saved_window_h);
       }
    #endif
 
+#ifdef KASAN
       if ( Game_3dmax_flag )
          game_3dmax_on();
+#endif
 
 #ifndef MACINTOSH
       if ( Game_vfx_flag )    {
