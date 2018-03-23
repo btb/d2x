@@ -56,8 +56,10 @@ static char rcsid[] = "$Id: multi.c 2.208 1996/10/29 18:37:02 jason Exp $";
 #include "newdemo.h"
 #include "text.h"
 #include "kmatrix.h"
+#ifdef SERIAL
 #include "glfmodem.h"
 #include "commlib.h"
+#endif
 #include "multibot.h"
 #include "gameseq.h"
 #include "physics.h"
@@ -887,11 +889,13 @@ multi_do_frame(void)
 	}
 #endif  
 
+#ifdef SERIAL
 	if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))
 	{
 		com_do_frame();
 	}
 	else
+#endif
 	{
 		network_do_frame(0, 1);
 	}
@@ -913,9 +917,12 @@ multi_send_data(char *buf, int len, int repeat)
 	if (Game_mode & GM_NETWORK)
 		Assert(buf[0] > 0);
 
+#ifdef SERIAL
 	if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))
 		com_send_data(buf, len, repeat);
-	else if (Game_mode & GM_NETWORK)
+	else
+#endif
+	if (Game_mode & GM_NETWORK)
 		network_send_data(buf, len, repeat);
 }
 
@@ -946,8 +953,10 @@ multi_leave_game(void)
 	mprintf((1, "Sending leave game.\n"));
 	multi_send_quit(MULTI_QUIT);
 
+#ifdef SERIAL
 	if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))
 		serial_leave_game();
+#endif
 	if (Game_mode & GM_NETWORK)
 		network_leave_game();
 
@@ -981,9 +990,12 @@ multi_endlevel(int *secret)
 {
 	int result = 0;
 
+#ifdef SERIAL
 	if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM))
 		com_endlevel(secret);          // an opportunity to re-sync or whatever
-	else if (Game_mode & GM_NETWORK)
+	else
+#endif
+	if (Game_mode & GM_NETWORK)
 		result = network_endlevel(secret);
 	
 	return(result);         
@@ -994,7 +1006,7 @@ multi_endlevel(int *secret)
 //          the state of the game in some way.
 //
 
-#ifndef MACINTOSH
+#ifdef SERIAL //ndef MACINTOSH
 extern PORT *com_port;
 #endif
 
@@ -1038,7 +1050,7 @@ multi_menu_poll(void)
 		return(-1);
 	}
 
-#if !defined(WINDOWS) && !defined(MACINTOSH)
+#ifdef SERIAL // !defined(WINDOWS) && !defined(MACINTOSH)
 	if ((Game_mode & GM_MODEM) && (!GetCd(com_port)))
 	{
 		multi_leave_menu = 1;

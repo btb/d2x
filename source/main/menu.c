@@ -476,9 +476,11 @@ void do_option ( int select)
 			// DoNewIPAddress();
 			break;
                   
+#ifdef SERIAL
 		case MENU_START_SERIAL:
 			com_main_menu();
 			break;
+#endif
 		case MENU_MULTIPLAYER:
 			do_multi_player_menu();
 			break;
