@@ -4,10 +4,10 @@
 #
 
 set(misc_SRCS
-	args.c
-	byteswap.c  #Mac
-	fileutil.c  #Mac
-	hash.c
+    args.c
+#   byteswap.c  #Mac
+#   fileutil.c  #Mac
+    hash.c
 )
 #    error.c     #Mac, missing
 
