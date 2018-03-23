@@ -246,7 +246,7 @@ extern int FindArg(char *);
 ** VESA initialization function.  Returns a pointer to the
 ** linear frame buffer.
 */
-int VesaInit( int mode )
+int VesaInit( FxU16 mode )
 {
   union REGS r;
 
