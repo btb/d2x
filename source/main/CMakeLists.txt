@@ -4,12 +4,6 @@
 
 # These define changes in the code
 
-option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
-option(NMONO            "is monochrome debugging turned off?" ON)
-#option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
-if(NOT CMAKE_BUILD_TYPE MATCHES "^Debug$")
-    set(NDEBUG ON)
-endif()
 
 option(D2_OEM           "8-level OEM version?" OFF)
 
@@ -19,13 +13,13 @@ option(TACTILE          "are tactile-feedback joysticks supported?" OFF)
 option(SHAREWARE        "is this the smaller shareware" OFF)
 option(BUILD_EDITOR     "is the editor included?" OFF)
 option(NO_MULTIPLAYER   "turn off networking" OFF)
+option(NO_SERIAL        "turn off serial" ON)
 
 # These never really get changed
 
 option(PIGGY_NO_PAGING  "don't use John's new paging code" OFF)
 option(STORE_DEMO       "is the one-level store demo in?" OFF)
-option(ARCADE           "is the Arcade/AWD code in?" OFF)
-option(MARK_ON          "are marks on?" OFF)
+#option(MARK_ON          "are marks on?" OFF)
 #set(PASSWORD "RUST" CACHE STRING "is a password required?")
 option(DEMO_ONLY        "is this a non-playable demo?" OFF)
 
@@ -33,10 +27,10 @@ option(DEMO_ONLY        "is this a non-playable demo?" OFF)
 # These define changes in compiling & linking
 # Undefining DEBUG_ON will kill symbols and source
 
-option(OPTIMIZE_ON      "build optimized" ON)
-option(DEBUG_ON         "debug" OFF)
+#option(OPTIMIZE_ON      "build optimized" ON)
+#option(DEBUG_ON         "debug" OFF)
 
-option(STACK_CHECK_ON   "re-enable stack check" OFF)
+#option(STACK_CHECK_ON   "re-enable stack check" OFF)
 
 #set(VERSION_NAME "CD Burn Test" CACHE STRING "This defines the name of this version")
 
@@ -218,12 +212,6 @@ else()
 endif()
 
 
-if(WATCOM)
-    if(TARGSYS MATCHES "^DOS4G$")
-        add_definitions(/bt=dos)
-    endif()
-endif()
-
 # Force include of settings for all files
 if(MSVC)
     add_definitions(/FI"settings.h")
@@ -298,17 +286,14 @@ endif()
 if(BUILD_EDITOR)
     set(EDITOR ON)
 endif()
-if(RELEASE_VERSION)
-    set(RELEASE ON)
-endif()
-if(TARGSYS MATCHES "^WIN32$")
-    set(WINDOWS 1)
-endif()
 if(MARK_ON)
     set(_MARK_ON ON)
 endif()
 if(NOT NO_MULTIPLAYER)
     set(NETWORK ON)
+endif()
+if(NOT NO_SERIAL)
+    set(SERIAL ON)
 endif()
 if(NOT PIGGY_NO_PAGING)
     set(PIGGY_USE_PAGING ON)
