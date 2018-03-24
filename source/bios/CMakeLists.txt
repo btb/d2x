@@ -35,7 +35,6 @@ set(io_OTHERS
     speaker.c
     swiftcfg.h
     testj.c
-    testk.c
     testm.c
     testms.c
     testt.c
@@ -58,3 +57,6 @@ include_directories(../bios)    #DOS
 
 #add_executable(demo cdrom.c)
 #target_link_libraries(demo io)
+
+add_executable(testk testk.c)
+target_link_libraries(testk io misc)
