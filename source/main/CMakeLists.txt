@@ -2,24 +2,6 @@
 # Makefile for DESCENT execuable
 #
 
-set(TARGSYS "WIN32" CACHE STRING "one of WIN32 DOS4G CAUSEWAY")
-set(COMPILER "WATCOM" CACHE STRING "one of WATCOM SYMANTEC TURBOC")
-
-find_path(SOS_DIGI_INCLUDE_DIR sos.h ../../extlib/soslib)
-find_library(SOS_DIGI_LIBRARIES sosdigi ../../extlib/soslib)
-
-find_path(SOS_MIDI_INCLUDE_DIR sosm.h ../../extlib/soslib)
-find_library(SOS_MIDI_LIBRARIES sosmidi ../../extlib/soslib)
-
-include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SOSDigi DEFAULT_MSG SOS_DIGI_LIBRARIES SOS_DIGI_INCLUDE_DIR)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SOSMidi DEFAULT_MSG SOS_MIDI_LIBRARIES SOS_MIDI_INCLUDE_DIR)
-
-mark_as_advanced(
-  SOS_DIGI_INCLUDE_DIR SOS_DIGI_LIBRARIES
-  SOS_MIDI_INCLUDE_DIR SOS_MIDI_LIBRARIES
-)
-
 # These define changes in the code
 
 option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)

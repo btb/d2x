@@ -4,17 +4,28 @@
 
 enable_language(C ASM_MASM)
 
+set(TARGSYS "WIN32" CACHE STRING "one of WIN32 DOS4G CAUSEWAY")
+set(COMPILER "WATCOM" CACHE STRING "one of WATCOM SYMANTEC TURBOC")
+
 if(WATCOM)
     set(CMAKE_ASM_MASM_CREATE_STATIC_LIBRARY ${CMAKE_C_CREATE_STATIC_LIBRARY})
+    if(${TARGSYS} MATCHES "^DOS4G$")
+        set(CMAKE_C_FLAGS "-bt=dos " CACHE STRING "" FORCE)
+        set(CMAKE_CREATE_CONSOLE_EXE "system dos4g" )
+    endif()
 endif()
 
 if(NOT CMAKE_BUILD_TYPE MATCHES "^Debug$")
     #add_definitions(/DNDEBUG)
 endif()
 
-find_path(3DFX_INCLUDE_DIR 3dfx.h ../extlib/glide/dos/include/)
-mark_as_advanced(3DFX_INCLUDE_DIR)
+find_path(SOS_DIGI_INCLUDE_DIR sos.h ../extlib/soslib)
+find_library(SOS_DIGI_LIBRARIES sosdigi ../extlib/soslib)
 
+find_path(SOS_MIDI_INCLUDE_DIR sosm.h ../extlib/soslib)
+find_library(SOS_MIDI_LIBRARIES sosmidi ../extlib/soslib)
+
+find_path(3DFX_INCLUDE_DIR 3dfx.h ../extlib/glide/dos/include/)
 
 add_subdirectory(includes)
 add_subdirectory(misc)
