@@ -214,6 +214,9 @@ static void VesaGetModeInfo( int mode, ModeInfoBlock *infoblock )
   r.x.ecx = 0;                // CX = 0
   segread( &sr );
   sr.es   = FP_SEG( &RMI );   // ES:EDI -> buffer to RMI struct
+  #ifndef FP_OFF //3dfx.h undefines this?
+  #define FP_OFF(__p) ((unsigned)(__p))
+  #endif
   r.x.edi = FP_OFF( &RMI );
 
   #define DPMI_INTERRUPT 0x31

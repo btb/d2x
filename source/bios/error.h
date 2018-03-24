@@ -34,9 +34,11 @@ void Error(char *fmt,...);					//exit with error code=1, print message
 		#define Assert(expr) _Assert(expr,#expr,__FILE__,__LINE__)
 
 	//make error do int3, then call func
+#if 0
 		#pragma aux Error aborts = \
 			"int	3"	\
 		"jmp Error";
+#endif
 
 	//#pragma aux Error aborts;
 
