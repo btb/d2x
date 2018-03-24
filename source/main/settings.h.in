@@ -5,14 +5,9 @@
 
 #define NEWDEMO                //Demo is always IN 
 #cmakedefine EDITOR                 //BUILD_EDITOR is @BUILD_EDITOR@
-#cmakedefine RELEASE                //RELEASE_VERSION is @RELEASE_VERSION@
-#cmakedefine NDEBUG                 //NDEBUG is @NDEBUG@
-#cmakedefine NMONO                  //NMONO is @NMONO@
-#cmakedefine WINDOWS                //TARGSYS == @TARGSYS@
 #cmakedefine SHAREWARE              //SHAREWARE is @SHAREWARE@
 #cmakedefine TACTILE                //TACTILE is @TACTILE@
 #cmakedefine SANTA                  //SANTA is @SANTA@
-#cmakedefine ARCADE                 //ARCADE is @ARCADE@
 #cmakedefine DEMO_ONLY              //DEMO_ONLY is @DEMO_ONLY@
 #cmakedefine _MARK_ON               //MARK_ON is @MARK_ON@
 #cmakedefine PASSWORD "@PASSWORD@"  //PASSWORD is @PASSWORD@
@@ -21,6 +16,6 @@
 #cmakedefine COMPILATION            //COMPILATION is @COMPILATION@
 #cmakedefine SATURN                 //SATURN is @SATURN@
 #cmakedefine COMPACT_SEGS           //COMPACT_SEGS is @COMPACT_SEGS@
-#cmakedefine NOSERIAL               //NOSERIAL is @NOSERIAL@
 #cmakedefine NETWORK                //NO_MULTIPLAYER is @NO_MULTIPLAYER@
+#cmakedefine SERIAL                 //NO_SERIAL is @NO_SERIAL@
 #cmakedefine PIGGY_USE_PAGING       //PIGGY_NO_PAGING is @PIGGY_NO_PAGING@

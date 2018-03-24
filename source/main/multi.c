@@ -1006,7 +1006,7 @@ multi_endlevel(int *secret)
 //          the state of the game in some way.
 //
 
-#ifdef SERIAL //ndef MACINTOSH
+#if defined(SERIAL) && !defined(MACINTOSH)
 extern PORT *com_port;
 #endif
 
@@ -1050,7 +1050,7 @@ multi_menu_poll(void)
 		return(-1);
 	}
 
-#ifdef SERIAL // !defined(WINDOWS) && !defined(MACINTOSH)
+#if defined(SERIAL) && !defined(WINDOWS) && !defined(MACINTOSH)
 	if ((Game_mode & GM_MODEM) && (!GetCd(com_port)))
 	{
 		multi_leave_menu = 1;
