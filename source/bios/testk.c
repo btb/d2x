@@ -16,6 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <conio.h>
 
 #include "key.h"
+#include "error.h"
 
 void main (void)
 {
@@ -60,7 +61,7 @@ void main (void)
          keyd_repeat = 1;
 
       if (keyd_pressed[KEY_F7] )
-         key_debug();
+         Int3(); //key_debug();
 
       if (keyd_pressed[KEY_UP])
          putch( 24 );
