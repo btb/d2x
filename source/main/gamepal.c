@@ -75,7 +75,7 @@ char last_palette_loaded_pig[FILENAME_LEN]="";
 
 ubyte last_palette_for_color_fonts[768];
 
-remap_fonts_and_menus(int do_fadetable_hack)
+void remap_fonts_and_menus(int do_fadetable_hack)
 {
    nm_remap_background();
    gr_remap_color_fonts();

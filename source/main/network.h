@@ -18,6 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "gameseq.h"
 #include "multi.h"
+#include "newmenu.h"
 
 // The default socket to use.
 
@@ -109,8 +110,7 @@ void network_join_game();
 void network_rejoin_game();
 void network_leave_game();
 int network_endlevel(int *secret);
-void network_endlevel_poll2( int nitems, struct newmenu_item * menus, int * key, int citem );
-
+void network_endlevel_poll2(int nitems, newmenu_item *menus, int *key, int citem);
 
 int network_level_sync();
 void network_send_endlevel_packet();
@@ -145,6 +145,9 @@ void network_do_frame(int force, int listen);
 // Tacks data of length 'len' onto the end of the next
 // packet that we're transmitting.
 void network_send_data( ubyte * ptr, int len, int urgent );
+
+void network_send_naked_packet(char *buf, short len, int who);
+int GetMyNetRanking(void);
 
 #endif
 #endif

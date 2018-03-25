@@ -75,6 +75,7 @@ char state_rcsid[] = "$Id: state.c 2.95 1997/01/24 18:35:39 jeremy Exp $";
 #include "controls.h"
 #include "laser.h"
 #include "multibot.h"
+#include "state.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
@@ -144,6 +145,10 @@ extern byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 #if defined(WINDOWS) || defined(MACINTOSH)
 extern ubyte Hack_DblClick_MenuMode;
 #endif
+
+
+// Internal prototypes
+void compute_all_static_light(void);
 
 
 //-------------------------------------------------------------------
@@ -997,7 +1002,6 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
    return state_restore_all_sub(filename, 0, secret_restore);
 }
 
-extern void reset_player_object(void);
 extern void init_player_stats_new_ship(void);
 
 void ShowLevelIntro(int level_num);

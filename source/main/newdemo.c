@@ -202,6 +202,11 @@ fix JasonPlaybackTotal=0;
 FILE *infile;
 FILE *outfile=NULL;
 
+
+// Internal prototypes
+void DoJasonInterpolate(fix recorded_time);
+
+
 int newdemo_get_percent_done()   {
    if ( Newdemo_state == ND_STATE_PLAYBACK ) {
       return (ftell(infile)*100)/Newdemo_size;

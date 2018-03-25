@@ -146,6 +146,8 @@ void do_detail_level_menu_custon(void);
 void do_multi_player_menu(void);
 void do_detail_level_menu_custom(void);
 void do_new_game_menu(void);
+void do_sound_menu(void);
+void do_toggles_menu(void);
 
 extern void ReorderSecondary();
 extern void ReorderPrimary();

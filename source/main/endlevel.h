@@ -19,9 +19,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "object.h"
 
 extern int Endlevel_sequence;
-do_endlevel_frame();
-stop_endlevel_sequence();
-start_endlevel_sequence();
+void do_endlevel_frame(void);
+void stop_endlevel_sequence(void);
+void start_endlevel_sequence(void);
 void render_endlevel_frame(fix eye_offset);
 
 #ifdef SHAREWARE

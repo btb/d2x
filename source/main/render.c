@@ -1687,7 +1687,7 @@ void update_rendered_data(int window_num, object *viewer, int rear_view_flag, in
 
 //build a list of segments to be rendered
 //fills in Render_list & N_render_segs
-build_segment_list(int start_seg_num, int window_num)
+void build_segment_list(int start_seg_num, int window_num)
 {
    int   lcnt,scnt,ecnt;
    int   l,c;

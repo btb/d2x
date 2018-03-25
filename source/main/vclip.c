@@ -30,7 +30,7 @@ int               Num_vclips = 0;
 vclip             Vclip[VCLIP_MAXNUM];    // General purpose vclips.
 
 //draw an object which renders as a vclip
-draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num)
+void draw_vclip_object(object *obj, fix timeleft, int lighted, int vclip_num)
 {
    int nf,bitmapnum;
 

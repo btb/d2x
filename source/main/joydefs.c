@@ -49,6 +49,11 @@ int joydefs_calibrate_flag = 0;
 ubyte joydefs_calibrating = 0;      // stupid hack all because of silly mouse cursor emulation
 #endif
 
+
+// Internal prototypes
+void joydefs_calibrate2(void);
+
+
 void joy_delay()
 {
    stop_time();

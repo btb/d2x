@@ -80,7 +80,6 @@ static char rcsid[] = "$Id: multi.c 2.208 1996/10/29 18:37:02 jason Exp $";
 
 #define vm_angvec_zero(v) (v)->p=(v)->b=(v)->h=0
 
-void reset_player_object(void); // In object.c but not in object.h
 void drop_player_eggs(object *player); // from collide.c
 void GameLoop(int, int); // From game.c
 
@@ -240,6 +239,57 @@ int message_length[MULTI_MAX_TYPE+1] = {
 
 char PowerupsInMine[MAX_POWERUP_TYPES],MaxPowerupsAllowed[MAX_POWERUP_TYPES];
 extern fix ThisLevelTime;
+
+
+// Internal prototypes
+void multi_reset_player_object(object *objp);
+void multi_reset_object_texture(object *objp);
+void multi_cap_objects(void);
+void multi_adjust_remote_cap(int pnum);
+void multi_apply_goal_textures(void);
+int find_goal_texture(ubyte t);
+void bash_to_shield(int i, char *s);
+void multi_set_robot_ai(void);
+void multi_save_game(ubyte slot, uint id, char *desc);
+void multi_restore_game(ubyte slot, uint id);
+void extract_netplayer_stats(netplayer_stats *ps, player * pd);
+void use_netplayer_stats(player *ps, netplayer_stats *pd);
+void multi_do_drop_weapon(char *buf);
+void multi_do_guided(char *buf);
+void multi_do_stolen_items(char *buf);
+void multi_do_wall_status(char *buf);
+void multi_do_kill_goal_counts(char *buf);
+void multi_send_heartbeat(void);
+void multi_do_heartbeat(char *buf);
+void multi_do_seismic(char *buf);
+void multi_do_light(char *buf);
+void multi_do_flags(char *buf);
+void multi_send_flags(char pnum);
+void multi_do_drop_blob(char *buf);
+void multi_send_powerup_update(void);
+void multi_do_powerup_update(char *buf);
+void multi_do_active_door(char *buf);
+void multi_do_sound_function(char *buf);
+void multi_do_capture_bonus(char *buf);
+void multi_do_orb_bonus(char *buf);
+void multi_do_got_flag(char *buf);
+void multi_do_got_orb(char *buf);
+void multi_send_drop_flag(int objnum, int seed);
+void multi_do_drop_flag(char *buf);
+void multi_bad_restore(void);
+void multi_do_robot_controls(char *buf);
+void multi_do_finish_game(char *buf);
+void multi_do_start_trigger(char *buf);
+void multi_add_lifetime_killed(void);
+void multi_send_ranking(void);
+void multi_do_ranking(char *buf);
+void multi_send_modem_ping(void);
+void multi_send_modem_ping_return(void);
+void multi_do_modem_ping_return(void);
+void multi_send_play_by_play(int num, int spnum, int dpnum);
+void multi_do_play_by_play(char *buf);
+void init_hoard_data(void);
+
 
 //
 //  Functions that replace what used to be macros
@@ -4901,7 +4951,6 @@ extern int robot_send_pending[MAX_ROBOTS_CONTROLLED];
 extern int robot_fired[MAX_ROBOTS_CONTROLLED];
 extern byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
-extern void network_send_naked_packet (char *,short,int);
 
 void multi_send_robot_controls (char pnum)
 {
@@ -5244,7 +5293,7 @@ void multi_do_play_by_play (char *buf)
 #include "effects.h"
 #include "mem.h"
 
-init_bitmap(grs_bitmap *bm,int w,int h,int flags,ubyte *data)
+void init_bitmap(grs_bitmap *bm, int w, int h, int flags, ubyte *data)
 {
    bm->bm_x = bm->bm_y = 0;
    bm->bm_w = bm->bm_rowsize = w;
@@ -5260,7 +5309,7 @@ grs_bitmap Orb_icons[2];
 
 int Hoard_goal_eclip;
 
-init_hoard_data()
+void init_hoard_data()
 {
    static int first_time=1;
    static int orb_vclip;

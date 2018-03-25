@@ -22,6 +22,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#define FL_HOVER   2
 //#define FL_REVERSE 3
 
+//make sure matrix is orthogonal
+void check_and_fix_matrix(vms_matrix *m);
+
 //these global vars are set after a call to do_physics_sim().  Ugly, I know.
 //list of segments went through
 extern int phys_seglist[MAX_FVI_SEGS],n_phys_segs;

@@ -203,6 +203,17 @@ extern void DropMarker();
 extern void DropSecondaryWeapon();
 extern void DropCurrentWeapon();
 
+
+// Internal prototypes
+void update_vcr_state(void);
+void do_weapon_stuff(void);
+void do_show_netgame_help(void);
+void HandleEndlevelKey(int key);
+void HandleDeathKey(int key);
+void HandleDemoKey(int key);
+int HandleSystemKey(int key);
+void HandleVRKey(int key);
+void HandleTestKey(int key);
 void FinalCheats(int key);
 
 #ifndef RELEASE
@@ -1029,7 +1040,7 @@ void HandleDemoKey(int key)
 }
 
 //switch a cockpit window to the next function
-select_next_window_function(int w)
+int select_next_window_function(int w)
 {
    Assert(w==0 || w==1);
 

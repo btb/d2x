@@ -170,7 +170,7 @@ extern ubyte Primary_last_was_super[MAX_PRIMARY_WEAPONS];
 extern ubyte Secondary_last_was_super[MAX_SECONDARY_WEAPONS];
 
 extern void auto_select_weapon(int weapon_type);      //parm is primary or secondary
-extern select_weapon(int weapon_num, int secondary_flag, int print_message,int wait_for_rearm);
+extern void select_weapon(int weapon_num, int secondary_flag, int print_message, int wait_for_rearm);
 
 extern char *Primary_weapon_names_short[];
 extern char *Secondary_weapon_names_short[];
@@ -196,14 +196,14 @@ extern int player_has_weapon(int weapon_num, int secondary_flag);
 
 //called when one of these weapons is picked up
 //when you pick up a secondary, you always get the weapon & ammo for it
-pick_up_secondary(int weapon_index,int count);
+int pick_up_secondary(int weapon_index, int count);
 
 //called when a primary weapon is picked up
 //returns true if actually picked up
 int pick_up_primary(int weapon_index);
 
 //called when ammo (for the vulcan cannon) is picked up
-pick_up_ammo(int class_flag,int weapon_index,int ammo_count);
+int pick_up_ammo(int class_flag, int weapon_index, int ammo_count);
 
 extern int attempt_to_steal_item(object *objp, int player_num);
 

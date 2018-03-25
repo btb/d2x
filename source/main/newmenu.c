@@ -108,12 +108,17 @@ grs_bitmap nm_background,nm_background_save;
 #define MESSAGEBOX_TEXT_SIZE 300    // How many characters in messagebox
 #define MAX_TEXT_WIDTH  200            // How many pixels wide a input box can be
 
-extern void gr_bm_bitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
-
 ubyte MenuReordering=0;
 ubyte SurfingNet=0;
 char Pauseable_menu=0;
 char already_showing_info=0;
+
+
+// Internal prototypes
+int newmenu_do4(char *title, char *subtitle, int nitems, newmenu_item *item,
+                void (*subfunction)(int nitems, newmenu_item *items, int *last_key, int citem),
+                int citem, char *filename, int width, int height, int TinyMode);
+void show_extra_netgame_info(int choice);
 
 
 void newmenu_close() {
@@ -579,7 +584,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 char *Newmenu_allowed_chars=NULL;
 
 //returns true if char is allowed
-char_allowed(char c)
+int char_allowed(char c)
 {
    char *p = Newmenu_allowed_chars;
 
@@ -693,7 +698,7 @@ MAC(extern ubyte joydefs_calibrating;)
 #define CLOSE_Y      15
 #define CLOSE_SIZE   10
 
-draw_close_box(int x,int y)
+void draw_close_box(int x,int y)
 {
    WIN (DDGRLOCK(dd_grd_curcanv));
    gr_setcolor( BM_XRGB(0, 0, 0) );

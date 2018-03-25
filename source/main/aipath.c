@@ -50,6 +50,7 @@ int validate_path(int debug_flag, point_seg* psegs, int num_points);
 void validate_all_paths(void);
 void ai_path_set_orient_and_vel(object *objp, vms_vector* goal_point, int player_visibility, vms_vector *vec_to_player);
 void maybe_ai_path_garbage_collect(void);
+void ai_path_garbage_collect(void);
 
 
 // ------------------------------------------------------------------------

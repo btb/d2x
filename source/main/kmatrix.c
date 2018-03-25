@@ -74,6 +74,13 @@ extern void network_send_endlevel_sub(int);
 #define LHX(x)    ((x)*(MenuHires?2:1))
 #define LHY(y)    ((y)*(MenuHires?2.4:1))
 
+
+// Internal prototypes
+void kmatrix_reactor(char *message);
+void kmatrix_phallic(void);
+void kmatrix_redraw_coop(void);
+
+
 void kmatrix_draw_item( int  i, int *sorted )
 {
    int j, x, y;
@@ -564,7 +571,7 @@ fix StartAbortMenuTime;
 extern void load_stars_palette();
 #endif
 
-extern void network_endlevel_poll3( int nitems, struct newmenu_item * menus, int * key, int citem );
+extern void network_endlevel_poll3(int nitems, newmenu_item *menus, int *key, int citem);
 
 void kmatrix_view(int network)
 {

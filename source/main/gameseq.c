@@ -101,6 +101,7 @@ char gameseq_rcsid[] = "$Id: gameseq.c 2.180 1997/01/27 16:27:02 matt Exp $";
 #include "gamepal.h"
 #include "movie.h"
 #include "controls.h"
+#include "credits.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
@@ -159,6 +160,14 @@ extern void HUD_clear_messages(); // From hud.c
 
 // Extra prototypes declared for the sake of LINT
 void init_player_stats_new_ship(void);
+void StartNewLevelSecret(int level_num, int page_in_textures);
+void DoEndGame(void);
+void AdvanceLevel(int secret_flag);
+void load_stars(void);
+void returning_to_level_message(void);
+void advancing_to_level_message(void);
+void filter_objects_from_level(void);
+void InitPlayerPosition(int random_flag);
 void copy_defaults_to_robot_all(void);
 
 int   Do_appearance_effect=0;
@@ -541,7 +550,6 @@ void editor_reset_stuff_on_level()
 }
 #endif
 
-void reset_player_object();
 
 //do whatever needs to be done when a player dies in multiplayer
 
@@ -805,7 +813,7 @@ typedef struct DiskBitmapHeader {
    int offset;
 } DiskBitmapHeader;
 
-load_bitmap_replacements(char *level_name)
+void load_bitmap_replacements(char *level_name)
 {
    char ifile_name[FILENAME_LEN];
    CFILE *ifile;

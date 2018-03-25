@@ -68,6 +68,8 @@ static char rcsid[] = "$Id: kconfig.c 2.93 1996/09/20 14:41:45 jeremy Exp $";
 #include "lighting.h"
 #include "ai.h"
 #include "cntrlcen.h"
+#include "collide.h"
+
 #if defined (TACTILE)
  #include "tactile.h"
 #endif
@@ -589,6 +591,20 @@ kc_item kc_mouse[NUM_OTHER_CONTROLS] = {
 };
 
 #endif
+
+
+// Internal prototypes
+void kc_drawitem(kc_item *item, int is_current);
+void kc_change_key(kc_item *item);
+void kc_change_joybutton(kc_item *item);
+void kc_change_mousebutton(kc_item *item);
+void kc_change_joyaxis(kc_item *item);
+void kc_change_mouseaxis(kc_item *item);
+void kc_change_invert(kc_item *item);
+void kconfig_read_fcs(int raw_axis);
+void kconfig_set_fcs_button(int btn, int button);
+void kconfig_read_external_controls(void);
+
 
 int kconfig_is_axes_used(int axis)
 {
@@ -1678,8 +1694,6 @@ void kc_change_invert( kc_item * item )
 
 #include "screens.h"
 
-extern void gr_bm_bitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
-
 void kconfig(int n, char * title)
 {
    int i;
@@ -1813,7 +1827,7 @@ extern int        VR_sensitivity;
 int VR_sense_range[3] = { 25, 50, 75 };
 
 #ifndef MACINTOSH
-read_head_tracker()
+void read_head_tracker()
 {
 #ifndef WINDOWS
 

@@ -69,6 +69,9 @@ void fuelcen_update_all();
 // Called when hit by laser.
 void fuelcen_damage(segment *segp, fix AmountOfDamage );
 
+// Check if scored orb goal
+void fuelcen_check_for_hoard_goal(segment *segp);
+
 // Called to repair an object
 //--repair-- int refuel_do_repair_effect( object * obj, int first_time, int repair_seg );
 

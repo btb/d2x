@@ -51,6 +51,7 @@ char gauges_rcsid[] = "$Id: gauges.c 2.130 1996/12/09 15:11:43 jeremy Exp $";
 #include "render.h"
 #include "piggy.h"
 #include "laser.h"
+#include "game.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
@@ -775,6 +776,11 @@ gauge_box gauge_boxes[] = {
 #define SB_SECONDARY_BOX         (!Current_display_mode?3:7)
 
 int   Color_0_31_0 = -1;
+
+
+// Internal prototypes
+void draw_ammo_info(int x, int y, int ammo_count, int primary);
+
 
 //copy a box from the off-screen buffer to the visible page
 #ifdef WINDOWS
@@ -3118,7 +3124,7 @@ extern int Saving_movie_frames;
 #endif
 
 //returns true if viewer can see object
-see_object(int objnum)
+int see_object(int objnum)
 {
    fvi_query fq;
    int hit_type;
@@ -3514,7 +3520,6 @@ void update_laser_weapon_info(void)
 
 extern int Game_window_y;
 void fill_background(void);
-extern void draw_guided_crosshair(void);
 
 int SW_drawn[2], SW_x[2], SW_y[2], SW_w[2], SW_h[2];
 

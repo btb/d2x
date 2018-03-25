@@ -24,7 +24,6 @@ extern int  Skip_briefing_screens;
 
 extern int show_title_screen( char * filename, int allow_keys, int from_hog_only );
 extern int show_briefing_screen( char * filename, int allow_keys );
-extern show_title_flick(char *name, int allow_keys );
 extern void do_briefing_screens(char *filename,int level_num);
 extern char * get_briefing_screen( int level_num );
 

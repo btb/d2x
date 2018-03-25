@@ -101,8 +101,6 @@ object *endlevel_camera;
 
 #define FLY_SPEED i2f(50)
 
-start_endlevel_flythrough(int n,object *obj,fix speed);
-
 #ifdef D2_OEM
 char movie_table[] = {  'a','a','a','a','d','d','d','d' };
 #else
@@ -158,7 +156,10 @@ vms_matrix mine_exit_orient;
 
 int outside_mine;
 
-start_endlevel_flythrough(int n,object *obj,fix speed);
+
+// Internal prototypes
+void start_endlevel_flythrough(int n, object *obj, fix speed);
+
 
 grs_bitmap terrain_bm_instance;
 grs_bitmap satellite_bm_instance;
@@ -292,7 +293,7 @@ vms_matrix surface_orient;
 int endlevel_data_loaded=0;
 extern char last_palette_loaded[];
 
-start_endlevel_sequence()
+void start_endlevel_sequence()
 {
    int   i;
    int movie_played;
@@ -362,8 +363,8 @@ start_endlevel_sequence()
 
 #ifndef SHAREWARE
 
-do_endlevel_frame() {Int3();}
-stop_endlevel_sequence() {Int3();}
+void do_endlevel_frame() {Int3();}
+void stop_endlevel_sequence() {Int3();}
 void render_endlevel_frame() {Int3();}
 
 #else
@@ -534,7 +535,7 @@ int chase_angles(vms_angvec *cur_angles,vms_angvec *desired_angles)
    return mask;
 }
 
-stop_endlevel_sequence()
+void stop_endlevel_sequence()
 {
    Interpolation_method = 0;
 
@@ -562,7 +563,7 @@ get_angs_to_object(vms_angvec *av,vms_vector *targ_pos,vms_vector *cur_pos)
    vm_extract_angles_vector(av,&tv);
 }
 
-do_endlevel_frame()
+void do_endlevel_frame()
 {
    #ifdef SHAREWARE
    static fix timer;
@@ -1202,7 +1203,7 @@ fixang interp_angle(fixang dest,fixang src,fixang step);
 #define MIN_D 0x100
 
 //if speed is zero, use default speed
-start_endlevel_flythrough(int n,object *obj,fix speed)
+void start_endlevel_flythrough(int n, object *obj, fix speed)
 {
    flydata = &fly_objects[n];
 

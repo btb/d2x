@@ -1936,7 +1936,7 @@ int n_changed_segs;
 
 // ------------------------------------------------------------------------------------------
 //cast static light from a segment to nearby segments
-apply_light_to_segment(segment *segp,vms_vector *segment_center, fix light_intensity,int recursion_depth)
+void apply_light_to_segment(segment *segp, vms_vector *segment_center, fix light_intensity, int recursion_depth)
 {
    vms_vector  r_segment_center;
    fix         dist_to_rseg;
@@ -1986,7 +1986,7 @@ extern object *old_viewer;
 
 //update the static_light field in a segment, which is used for object lighting
 //this code is copied from the editor routine calim_process_all_lights()
-change_segment_light(int segnum,int sidenum,int dir)
+void change_segment_light(int segnum, int sidenum, int dir)
 {
    segment *segp = &Segments[segnum];
 

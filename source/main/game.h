@@ -143,7 +143,7 @@ void close_game(void);
 void init_cockpit(void);
 void calc_frame_time(void);
 
-do_flythrough(object *obj,int first_time);
+//void do_flythrough(object *obj, int first_time);
 
 extern jmp_buf LeaveGame;              // Do a long jump to this when game is over.
 extern int  Difficulty_level;          // Difficulty level in 0..NDL-1, 0 = easiest, NDL-1 = hardest
@@ -254,6 +254,8 @@ void enable_flicker(int segnum,int sidenum);
 
 //returns 1 if ok, 0 if error
 int add_flicker(int segnum,int sidenum,fix delay,ulong mask);
+
+void draw_guided_crosshair(void);
 
 #endif
 
