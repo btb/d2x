@@ -289,6 +289,8 @@ int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
    } else if (bmheader->type == TYPE_ILBM) {
       width = (bmheader->w+7)/8;
       depth=bmheader->nplanes;
+   } else {
+      return IFF_UNKNOWN_FORM;
    }
 
    end_cnt = (width&1)?-1:0;
