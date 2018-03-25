@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: multibot.c 2.22 1996/10/18 13:04:06 jed Exp $";
-#pragma on (unreferenced)
 
 #include <string.h>
 #include <stdlib.h>

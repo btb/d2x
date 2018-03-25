@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: joydefsw.c 1.27 1996/10/16 16:13:50 samir Exp $";
-#pragma on (unreferenced)
-
 #include "desw.h"
 #include <mmsystem.h>
 

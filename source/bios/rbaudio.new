@@ -69,8 +69,6 @@
  * 
  */
 
-char rbaudio_rcsid[] = "$Id: rbaudio.c 1.18 1996/04/15 15:27:40 samir Exp $";
-
 
 #include <dos.h>
 #include <dpmi.h>

@@ -11,9 +11,7 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: message.c 1.8 1994/11/18 23:07:31 john Exp $";
-#pragma on (unreferenced)
+
 #include <stdio.h>
 #include <stdarg.h>
 

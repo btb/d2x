@@ -11,9 +11,7 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: userbox.c 1.4 1993/12/07 12:30:05 john Exp $";
-#pragma on (unreferenced)
+
 #include <stdlib.h>
 #include <string.h>
 

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: credits.c 2.32 1996/10/14 18:41:30 matt Exp $";
-#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

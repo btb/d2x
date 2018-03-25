@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: controls.c 2.15 1996/01/25 21:24:51 champaign Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 
 #include "mono.h"

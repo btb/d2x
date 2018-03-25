@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-//#pragma off (unreferenced)
-char bmread_rcsid[] = "$Id: bmread.c 2.78 1996/09/17 22:10:10 matt Exp $";
-//#pragma on (unreferenced)
-
 #include "settings.h"
 
 #ifdef EDITOR

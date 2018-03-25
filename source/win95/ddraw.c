@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ddraw.c 1.10 1996/08/20 16:30:52 samir Exp $";
-#pragma on (unreferenced)
-
-
 #define WIN95
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN

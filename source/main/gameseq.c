@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-// #pragma off (unreferenced)
-char gameseq_rcsid[] = "$Id: gameseq.c 2.180 1997/01/27 16:27:02 matt Exp $";
-// #pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

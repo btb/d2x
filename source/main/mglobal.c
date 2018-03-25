@@ -20,10 +20,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "3d.h"
 #include "game.h"
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: mglobal.c 2.7 1996/07/10 16:59:15 matt Exp $";
-#pragma on (unreferenced)
-
 // Global array of vertices, common to one mine.
 vms_vector Vertices[MAX_VERTICES];
 g3s_point Segment_points[MAX_VERTICES];

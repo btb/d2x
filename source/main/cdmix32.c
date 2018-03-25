@@ -11,7 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char cdmix32_rcsid[] = "$Id: cdmix32.c 1.8 1996/04/29 15:38:22 samir Exp $";
 
 #include <stdio.h>
 #include <string.h>

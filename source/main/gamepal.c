@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: gamepal.c 1.18 1996/02/12 11:09:34 jay Exp $";
-#pragma on (unreferenced)
-
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>

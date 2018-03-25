@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: physics.c 2.35 1996/06/12 16:11:30 matt Exp $";
-#pragma on (unreferenced)
 
 //@@#include <malloc.h>
 #include <stdio.h>

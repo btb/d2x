@@ -11,7 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char crypt_rcsid[] = "$Id: crypt.c 1.6 1996/03/06 10:27:57 matt Exp $";
 
 #include <time.h>
 #include <stdlib.h>

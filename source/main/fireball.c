@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: fireball.c 2.72 1996/09/18 17:17:19 jed Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 #include <string.h>
 

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: automap.c 2.71 1997/01/05 17:30:17 jeremy Exp $";
-#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

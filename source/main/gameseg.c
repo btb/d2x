@@ -33,9 +33,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "fvi.h"
 #include "byteswap.h"
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: gameseg.c 2.27 1996/10/25 11:36:33 samir Exp $";
-#pragma on (unreferenced)
 
 // How far a point can be from a plane, and still be "in" the plane
 #define PLANE_DIST_TOLERANCE  250

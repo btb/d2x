@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: effects.c 1.5 1994/11/18 22:51:04 john Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 #include <stdio.h>
 

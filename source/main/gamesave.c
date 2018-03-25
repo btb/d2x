@@ -11,7 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char gamesave_rcsid[] = "$Id: gamesave.c 2.72 1996/12/19 11:28:57 jason Exp $";
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: scale.c 1.26 1996/12/04 19:26:40 matt Exp $";
-#pragma on (unreferenced)
-
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include <math.h>
 #include <limits.h>

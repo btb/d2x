@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: winregs.c 1.5 1996/10/04 17:10:54 samir Exp $";
-#pragma on (unreferenced)
-
 #define WIN95
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN

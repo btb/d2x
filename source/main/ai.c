@@ -12,8 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-char ai_rcsid[] = "$Id: ai.c 2.69 1996/10/18 13:03:35 jed Exp $";
-
 #include <stdio.h>
 #include <stdlib.h>
 

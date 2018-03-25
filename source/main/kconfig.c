@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: kconfig.c 2.93 1996/09/20 14:41:45 jeremy Exp $";
-#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

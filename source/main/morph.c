@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: morph.c 2.3 1996/01/31 13:02:15 matt Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

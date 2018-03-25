@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: findfile.c 1.6 1996/04/19 16:50:25 jed Exp $";
-#pragma on (unreferenced)
-
 #include <dos.h>
 #include <string.h>
 

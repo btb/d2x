@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: rbaudio.c 1.13 1996/07/27 19:36:21 samir Exp $";
-#pragma on (unreferenced)
-
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN
 

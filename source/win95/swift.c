@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: swift.c 1.1 1995/12/21 11:21:09 samir Exp $";
-#pragma on (unreferenced)
-
-
 #include "swift.h"
 
 int SWIFT_Initialize(void)

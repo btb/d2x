@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: circle.c 1.3 1994/11/18 22:51:01 john Exp $";
-#pragma on (unreferenced)
-
 #include "mem.h"
 
 #include "gr.h"

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: novesa.c 1.3 1996/03/15 20:36:38 samir Exp $";
-#pragma on (unreferenced)
-
 #include "pstypes.h"
 
 #include "gr.h"

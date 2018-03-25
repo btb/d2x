@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: movie.c 1.76 1996/08/28 17:34:03 jed Exp $";
-#pragma on (unreferenced)
-
-
 #include <dos.h>
 #include <io.h>
 #include <fcntl.h>

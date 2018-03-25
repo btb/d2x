@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: barbox.c 1.2 1994/01/18 11:07:45 john Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdarg.h>
 

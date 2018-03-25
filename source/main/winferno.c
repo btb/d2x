@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: winferno.c 1.40 1996/10/15 10:42:39 matt Exp $";
-#pragma on (unreferenced)
-
 #include "desw.h"
 #include <mmsystem.h>
 

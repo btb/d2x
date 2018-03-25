@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: newmenu.c 2.133 1997/01/24 17:48:48 jeremy Exp $";
-#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

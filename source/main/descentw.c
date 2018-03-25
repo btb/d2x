@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: descentw.c 1.65 1996/10/22 10:52:38 samir Exp $";
-#pragma on (unreferenced)
-
 #include "desw.h"
 
 #include <mmsystem.h>

@@ -11,8 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char rbaudio_rcsid[] = "$Id: rbaudio.c 1.21 1996/04/17 16:54:16 matt Exp $";
-
 
 #include <dos.h>
 #include <dpmi.h>

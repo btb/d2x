@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: switch.c 2.53 1996/04/30 11:36:19 matt Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

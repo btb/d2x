@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ipx.c 1.7 1996/10/04 17:22:45 samir Exp $";
-#pragma on (unreferenced)
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>

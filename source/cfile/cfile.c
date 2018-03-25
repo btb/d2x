@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: cfile.c 1.43 1996/03/23 13:03:21 jeremy Exp $";
-#pragma on (unreferenced)
-
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>

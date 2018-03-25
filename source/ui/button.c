@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: button.c 1.10 1994/11/18 23:07:32 john Exp $";
-#pragma on (unreferenced)
 
 #include <stdlib.h>
 #include <string.h>

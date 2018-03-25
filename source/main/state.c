@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-//#pragma off (unreferenced)
-char state_rcsid[] = "$Id: state.c 2.95 1997/01/24 18:35:39 jeremy Exp $";
-//#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

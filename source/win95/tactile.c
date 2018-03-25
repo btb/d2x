@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: tactile.c 1.2 1996/09/17 18:03:43 samir Exp $";
-#pragma on (unreferenced)
-
-
 #include "pstypes.h"
 
 #include "iforce.h"

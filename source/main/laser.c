@@ -12,9 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-char laser_rcsid[] = "$Id: laser.c 2.111 1996/05/06 19:06:43 matt Exp $";
-
-
 #include <stdlib.h>
 
 #include "inferno.h"

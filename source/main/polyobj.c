@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: polyobj.c 2.13 1996/07/10 16:14:59 jed Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

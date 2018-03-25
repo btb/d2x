@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: vesatest.c 1.3 1993/12/21 11:40:47 john Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>

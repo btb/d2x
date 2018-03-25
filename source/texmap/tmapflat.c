@@ -11,10 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: tmapflat.c 1.21 1996/12/04 19:27:54 matt Exp $";
-#pragma on (unreferenced)
-
 
 #include <math.h>
 // #include <graph.h>

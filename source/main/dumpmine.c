@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: dumpmine.c 2.18 1996/02/02 09:54:40 champaign Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 //#include <stdlib.h>
 //#include <math.h>

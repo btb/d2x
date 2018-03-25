@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: gamerend.c 1.93 1996/12/09 15:01:53 jeremy Exp $";
-#pragma on (unreferenced)
-
-
 #ifdef WINDOWS
 #include "desw.h"
 #include "winapp.h"
