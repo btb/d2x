@@ -22,6 +22,6 @@ set_source_files_properties(${ui_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(ui ${ui_SRCS} ${ui_OTHERS})
 
-add_executable(testg testg.c)
-target_link_libraries(testg io gr ui misc mem readfile iff func cflib cfile
+#add_executable(testg testg.c)
+#target_link_libraries(testg io gr ui misc mem readfile iff func cflib cfile)
 #TESTG_LFLAGS = option stack=50k

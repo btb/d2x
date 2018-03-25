@@ -27,11 +27,3 @@ add_library(iff ${iff_SRCS} ${iff_OTHERS})
 
 #add_executable(ifftestv ifftestv.c)
 #target_link_libraries(ifftestv iff cfile) #vesa cflib 
-
-include_directories(../includes)
-include_directories(../2d)
-include_directories(../fix)
-include_directories(../mem)
-include_directories(../cfile)
-include_directories(../bios)    #DOS
-include_directories(../vga)

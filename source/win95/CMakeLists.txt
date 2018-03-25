@@ -7,9 +7,9 @@ set(TARGSYS "WIN32")
 set(win95_SRCS
     palette.c key.c findfile.c timer.c rbaudio.c error.c
     ipx.c joyc.c swift.c mouse.c winapp.c mono.c
-    comm.c winregs.c ds.c midifile.c winmidi.c winckpit.asm
+    comm.c winregs.c ds.c winmidi.c winckpit.asm
     gfx.c dd.c ddgr.c direct3d.c xtapi.c iforce.c tactile.c
-)
+) # midifile.c
 
 list(APPEND win95_OTHERS
     comm.h
@@ -18,7 +18,6 @@ list(APPEND win95_OTHERS
     ddraw.c
     direct3d.h
     ds.h
-    error.h
     global.h
     iforce.h
     makefile

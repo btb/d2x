@@ -59,14 +59,6 @@ add_library(gr ${gr_SRCS} ${gr_OTHERS})
 
 set_source_files_properties(${gr_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-include_directories(../includes)
-include_directories(../misc)
-include_directories(../mem)
-include_directories(../fix)
-include_directories(../cfile)
-include_directories(../pa_null)
-include_directories(../bios)
-
 #add_executable(testg testg.c tmapbits.c)
 #target_link_libraries(testg io gr misc mem iff cfile)
 

@@ -19,7 +19,5 @@ set_source_files_properties(${fix_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(fix ${fix_SRCS} ${fix_OTHERS})
 
-include_directories(../includes)
-
 #add_executable(fixtest fixtest.c)
 #target_link_libraries(fixtest fix io)

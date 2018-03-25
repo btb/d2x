@@ -45,11 +45,3 @@ else()
 endif()
 
 add_library(texmap ${texmap_SRCS} ${texmap_OTHERS})
-
-include_directories(../pa_null)
-include_directories(../bios)
-include_directories(../fix)
-include_directories(../includes)
-include_directories(../3d)
-include_directories(../vecmat)
-include_directories(../2d)
