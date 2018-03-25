@@ -595,11 +595,11 @@ int iff_parse_ilbm_pbm(FFILE *ifile,long form_type,iff_bitmap_header *bmheader,i
 int convert_ilbm_to_pbm(iff_bitmap_header *bmheader)
 {
 	int x,y,p;
-	byte *new_data,*destptr,*rowptr;
+	ubyte *new_data, *destptr, *rowptr;
 	int bytes_per_row,byteofs;
 	ubyte checkmask,newbyte,setbit;
 
-	MALLOC( new_data, byte, bmheader->w * bmheader->h );
+	MALLOC( new_data, ubyte, bmheader->w * bmheader->h );
 	if (new_data == NULL) return IFF_NO_MEM;
 
 	destptr = new_data;
@@ -722,7 +722,7 @@ copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
 
 //if bm->bm_data is set, use it (making sure w & h are correct), else
 //allocate the memory
-int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,grs_bitmap *prev_bm)
+int iff_parse_bitmap(FFILE *ifile, grs_bitmap *bm, int bitmap_type, ubyte *palette, grs_bitmap *prev_bm)
 {
 	int ret;			//return code
 	iff_bitmap_header bmheader;
@@ -827,7 +827,7 @@ done:
 
 //like iff_read_bitmap(), but reads into a bitmap that already exists,
 //without allocating memory for the bitmap. 
-int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette)
+int iff_read_into_bitmap(char *ifilename, grs_bitmap *bm, ubyte *palette)
 {
 	int ret;			//return code
 	FFILE ifile;
