@@ -12,8 +12,7 @@ if(WATCOM)
     if(${TARGSYS} MATCHES "^DOS4G$")
         set(CMAKE_C_FLAGS "-bt=dos -zp1" CACHE STRING "" FORCE)
         set(CMAKE_CREATE_CONSOLE_EXE "system dos4g")
-    endif()
-    if(${TARGSYS} MATCHES "^WIN32$")
+    elseif(${TARGSYS} MATCHES "^WIN32$")
         set(CMAKE_C_FLAGS "-bt=nt /w2 -zp1" CACHE STRING "" FORCE)
         set(CMAKE_CREATE_CONSOLE_EXE "system win95")
     endif()
@@ -45,6 +44,10 @@ set(SUBSYSTEMS_DOS includes misc mem fix cfile pa_null 2d vga bios iff div
 set(SUBSYSTEMS_WIN includes misc mem fix cfile pa_null 2d vga novga iff div
     vecmat win95 3d texmap) # tactile unarj
 
+# Subdirs to make for the OSX libraries
+set(SUBSYSTEMS_OSX includes misc mem fix cfile pa_null 2d novga iff div
+    vecmat 3d texmap)
+
 # All subdirs.  Needed for clean to work
 set(SUBSYSTEMS_OTHERS includes misc mem fix cfile pa_null 2d vga bios iff div
     ui vecmat 3d texmap win95 novga) # tactile unarj sosdigi sosmidi
@@ -68,6 +71,16 @@ elseif(TARGSYS MATCHES "^WIN32$")
         add_subdirectory(${SUBSYSTEM})
     endforeach()
     list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_WIN})
+
+elseif(TARGSYS MATCHES "^OSX$")
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OSX)
+        include_directories(${SUBSYSTEM})
+    endforeach()
+    include_directories(bios)
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OSX)
+        add_subdirectory(${SUBSYSTEM})
+    endforeach()
+    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_OSX})
 
 endif()
 

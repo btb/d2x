@@ -177,10 +177,15 @@ if(TARGSYS MATCHES "^WIN32$")
         list(APPEND descent2_LIBS eregreg2)
     endif()
 
-else()
+elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_LIBS
         io vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
         poly_acc
+    )
+    # gclfr32 mvelb32s s3dtkwdr vlib spd3d
+elseif(TARGSYS MATCHES "^OSX$")
+    list(APPEND descent2_LIBS
+        novga
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
 endif()
