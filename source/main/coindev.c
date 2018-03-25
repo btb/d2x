@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: coindev.c 2.0 1995/02/27 11:26:39 john Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <dos.h>
 #include <conio.h>

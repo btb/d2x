@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: vesalib.c 1.3 1994/11/07 12:07:42 john Exp $";
-#pragma on (unreferenced)
-
-
 #include "dpmi.h"
 
 typedef struct VgaInfoBlock {

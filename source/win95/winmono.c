@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: winmono.c 1.1 1995/12/21 11:21:38 samir Exp $";
-#pragma on (unreferenced)
-
-
 #include <windows.h>
 #include <malloc.h>
 #include <stdlib.h>

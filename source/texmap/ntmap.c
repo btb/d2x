@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ntmap.c 1.66 1996/12/04 19:27:55 matt Exp $";
-#pragma on (unreferenced)
-
 #define VESA 0
 #define NUM_TMAPS 16
 

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: medfunc.c 1.1 1993/12/07 12:31:18 john Exp $";
-#pragma on (unreferenced)
-
 typedef struct {
 	char *  name;
 	int     nparams;

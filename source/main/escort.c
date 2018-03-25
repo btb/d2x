@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: escort.c 1.88 1996/09/12 12:11:42 matt Exp $";
-#pragma on (unreferenced)
-
 #ifdef WINDOWS
 #include "desw.h"
 #endif

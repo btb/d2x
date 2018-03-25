@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: aipath.c 2.33 1996/06/18 10:54:32 matt Exp $";
-#pragma on (unreferenced)
 
 #include <stdio.h>		//	for printf()
 #include <stdlib.h>		// for rand() and qsort()

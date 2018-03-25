@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: titles.c 2.83 1997/01/27 16:27:07 matt Exp $";
-#pragma on (unreferenced)
 
 #ifdef WINDOWS
 #include "desw.h"

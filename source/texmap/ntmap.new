@@ -136,10 +136,6 @@
  */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ntmap.c 1.61 1996/03/12 20:15:58 jay Exp $";
-#pragma on (unreferenced)
-
 #define VESA 0
 #define NUM_TMAPS 16
 

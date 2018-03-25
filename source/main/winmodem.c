@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: winmodem.c 1.16 1996/10/04 16:58:59 samir Exp $";
-#pragma on (unreferenced)
-
 #ifdef NETWORK
 
 #include "desw.h"

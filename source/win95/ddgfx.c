@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ddgfx.c 1.3 1996/08/06 11:43:32 samir Exp $";
-#pragma on (unreferenced)
-
-
 #define WIN95
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN

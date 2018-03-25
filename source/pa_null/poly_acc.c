@@ -11,7 +11,7 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char poly_acc_rcsid[] = "$Id: poly_acc.c 1.6 1996/07/19 14:34:33 matt Exp $";
+
 static unsigned poly_count;
 
 //

@@ -49,9 +49,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "sos.h"
 #include "sosm.h"
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: config.c 2.35 1997/01/24 18:04:54 jeremy Exp $";
-#pragma on (unreferenced)
 
 ubyte Config_digi_volume = 8;
 ubyte Config_midi_volume = 8;
@@ -580,9 +577,6 @@ int WriteConfigFile()
 #include "poly_acc.h"
 #endif
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: config.c 2.35 1997/01/24 18:04:54 jeremy Exp $";
-#pragma on (unreferenced)
 
 #define MAX_CTB_LEN	512
 

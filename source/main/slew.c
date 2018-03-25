@@ -25,9 +25,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "kconfig.h"
 #include "args.h"
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: slew.c 2.3 1996/01/31 13:02:17 matt Exp $";
-#pragma on (unreferenced)
 
 //variables for slew system
 

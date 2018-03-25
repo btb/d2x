@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: gamefont.c 2.3 1996/01/12 16:03:16 matt Exp $";
-#pragma on (unreferenced)
-
 #include <stdlib.h>
 
 #include "inferno.h"

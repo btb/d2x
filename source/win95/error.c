@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: error.c 1.24 1996/10/04 16:50:37 samir Exp $";
-#pragma on (unreferenced)
 
 #if defined(__NT__)
 #define WIN32_LEAN_AND_MEAN

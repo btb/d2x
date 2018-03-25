@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: winapp.c 1.11 1996/10/04 17:19:08 samir Exp $";
-#pragma on (unreferenced)
-
-
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN
 

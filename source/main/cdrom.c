@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: cdrom.c 1.2 1995/03/20 15:01:19 john Exp $";
-#pragma on (unreferenced)
 
 #include <dos.h>
 #include <stdio.h>

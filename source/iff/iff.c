@@ -16,10 +16,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define MIN_COMPRESS_WIDTH	65	//don't compress if less than this wide
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: iff.c 1.48 1996/06/10 08:52:12 matt Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

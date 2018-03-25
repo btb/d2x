@@ -11,9 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: hostage.c 2.2 1995/12/18 11:10:34 champaign Exp $";
-#pragma on (unreferenced)
 
 #include <stdio.h>
 #include <stdlib.h>

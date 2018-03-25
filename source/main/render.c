@@ -10,9 +10,7 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: render.c 2.42 1996/12/04 18:28:12 matt Exp $";
-#pragma on (unreferenced)
+
 
 #include <stdlib.h>
 #include <stdio.h>

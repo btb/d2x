@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: mono.c 1.4 1996/07/03 17:15:38 samir Exp $";
-#pragma on (unreferenced)
-
 // Library functions for printing to mono card.
 
 #include <stdio.h>

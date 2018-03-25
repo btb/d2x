@@ -11,7 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char palette_rcsid[] = "$Id: palette.c 1.51 1996/10/30 11:33:00 jason Exp $";
 
 #include <conio.h>
 #include <stdlib.h>

@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: kmatrix.c 2.69 1996/09/17 15:07:36 jed Exp $";
-#pragma on (unreferenced)
-
 #ifdef NETWORK
 
 #ifdef WINDOWS

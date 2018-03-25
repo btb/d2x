@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: findfile.c 1.2 1996/02/07 17:09:02 samir Exp $";
-#pragma on (unreferenced)
-
 #define _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

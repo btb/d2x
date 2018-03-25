@@ -11,9 +11,7 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: mouse.c 1.8 1995/03/06 17:54:17 john Exp $";
-#pragma on (unreferenced)
+
 #include <stdlib.h>
 
 #include "mem.h"

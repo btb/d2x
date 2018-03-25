@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ipx.c 2.15 1996/06/08 22:38:57 matt Exp $";
-#pragma on (unreferenced)
-
 #include <i86.h>
 #include <dos.h>
 #include <stdio.h>

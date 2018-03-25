@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: iglasses.c 2.11 1996/06/11 15:28:48 matt Exp $";
-#pragma on (unreferenced)
-
 #define DOS4G		
 
 #include <stdio.h>

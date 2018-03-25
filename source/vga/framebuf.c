@@ -11,7 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-char framebuf_rcsid[] = "$Id: framebuf.c 1.5 1996/05/30 11:42:12 jed Exp $";
 
 #include <dos.h>
 #include <string.h>

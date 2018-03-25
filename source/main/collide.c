@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: collide.c 2.150 1996/10/04 18:22:33 samir Exp $";
-#pragma on (unreferenced)
-
 #pragma off (unreferenced)	//for all the standard-tempate rountines
 
 #include <string.h>	// for memset

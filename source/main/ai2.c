@@ -12,11 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: ai2.c 1.72 1996/09/17 14:52:15 matt Exp $";
-#pragma on (unreferenced)
-
-
 #include <stdio.h>
 #include <stdlib.h>
 

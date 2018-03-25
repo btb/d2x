@@ -15,10 +15,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define DOS4G
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: multi.c 2.208 1996/10/29 18:37:02 jason Exp $";
-#pragma on (unreferenced)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <dos.h>

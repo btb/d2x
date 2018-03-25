@@ -12,10 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#pragma off (unreferenced)
-static char rcsid[] = "$Id: windigi.c 1.26 1996/09/24 23:26:12 samir Exp $";
-#pragma on (unreferenced)
-
 #include "desw.h"
 #include "win\ds.h"
 #include <mmsystem.h>
