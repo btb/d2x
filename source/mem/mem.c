@@ -28,7 +28,6 @@ static char rcsid[] = "$Id: mem.c 1.29 1996/05/30 10:31:57 champaign Exp $";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <malloc.h>
 
 #include "pstypes.h"
 #include "mono.h"

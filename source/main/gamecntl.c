@@ -23,7 +23,6 @@ static char rcsid[] = "$Id: gamecntl.c 1.211 1997/01/24 18:19:42 jeremy Exp $";
 #endif
 
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -97,7 +96,6 @@ static char rcsid[] = "$Id: gamecntl.c 1.211 1997/01/24 18:19:42 jeremy Exp $";
 #include "desc_id.h"
 #include "cntrlcen.h"
 #include "pcx.h"
-#include "dpmi.h"
 #include "state.h"
 #include "piggy.h"
 #include "multibot.h"

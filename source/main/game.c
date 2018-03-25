@@ -18,7 +18,6 @@ char game_rcsid[] = "$Id: game.c 2.285 1996/12/09 14:45:35 jeremy Exp $";
 #endif
 
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -99,7 +98,6 @@ char game_rcsid[] = "$Id: game.c 2.285 1996/12/09 14:45:35 jeremy Exp $";
 #include "desc_id.h"
 #include "cntrlcen.h"
 #include "pcx.h"
-#include "dpmi.h"
 #include "state.h"
 #include "piggy.h"
 #include "multibot.h"

@@ -18,16 +18,7 @@ static char rcsid[] = "$Id: digiobj.c 1.25 1996/03/05 11:53:34 champaign Exp $";
 
 #include<stdlib.h>
 #include<stdio.h>
-#include<dos.h>
 #include<fcntl.h> 
-#include<malloc.h> 
-
-#ifndef MACINTOSH
-	#include<bios.h>
-#endif
-
-#include<io.h>
-#include<conio.h> 
 #include<string.h>
 #include<ctype.h>
 
@@ -42,7 +33,6 @@ static char rcsid[] = "$Id: digiobj.c 1.25 1996/03/05 11:53:34 champaign Exp $";
 #include "key.h"
 #include "newdemo.h"
 #include "game.h"
-#include "dpmi.h"
 #include "error.h"
 #include "wall.h"
 #include "cfile.h"

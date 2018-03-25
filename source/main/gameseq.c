@@ -22,7 +22,6 @@ char gameseq_rcsid[] = "$Id: gameseq.c 2.180 1997/01/27 16:27:02 matt Exp $";
 
 
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>

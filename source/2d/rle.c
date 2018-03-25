@@ -17,7 +17,6 @@ static char rcsid[] = "$Id: rle.c 1.27 1996/03/14 10:22:05 matt Exp $";
 #pragma on (unreferenced)
 
 #include <stdlib.h>
-#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -28,10 +27,6 @@ static char rcsid[] = "$Id: rle.c 1.27 1996/03/14 10:22:05 matt Exp $";
 
 #include "gr.h"
 #include "grdef.h"
-
-#if !defined(MACINTOSH)
-#include "dpmi.h"
-#endif
 
 #include "error.h"
 #include "key.h"

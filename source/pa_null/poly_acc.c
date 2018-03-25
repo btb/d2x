@@ -17,11 +17,9 @@ static unsigned poly_count;
 //
 //                                                         Includes
 //
-#include <i86.h>
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 #include <string.h>
 

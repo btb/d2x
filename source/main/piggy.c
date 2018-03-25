@@ -26,7 +26,6 @@ static char rcsid[] = "$Id: piggy.c 2.102 1996/12/04 18:28:09 matt Exp $";
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <dos.h>
 #include <errno.h>
 
 #include "pstypes.h"
@@ -42,7 +41,6 @@ static char rcsid[] = "$Id: piggy.c 2.102 1996/12/04 18:28:09 matt Exp $";
 #include "bmread.h"
 #include "hash.h"
 #include "args.h"
-#include "dpmi.h"
 #include "palette.h"
 #include "gamefont.h"
 #include "rle.h"
