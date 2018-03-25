@@ -16,7 +16,3 @@ set(mem_OTHERS
 set_source_files_properties(${mem_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(mem ${mem_SRCS} ${mem_OTHERS})
-
-include_directories(../includes)
-include_directories(../bios)
-

@@ -156,6 +156,12 @@ if(NOT NDEBUG)
     list(APPEND descent2_LIBS mem)
 endif()
 
+find_path(SOS_DIGI_INCLUDE_DIR sos.h ../../extlib/soslib)
+find_library(SOS_DIGI_LIBRARIES sosdigi ../../extlib/soslib)
+
+find_path(SOS_MIDI_INCLUDE_DIR sosm.h ../../extlib/soslib)
+find_library(SOS_MIDI_LIBRARIES sosmidi ../../extlib/soslib)
+
 if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_LIBS
         win95
@@ -245,24 +251,6 @@ set_source_files_properties(${descent2_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 add_executable(${PROGS} ${descent2_SRCS} ${descent2_OTHERS})
 
 target_link_libraries(${PROGS} ${descent2_LIBS})
-
-include_directories(../pa_null)
-include_directories(../includes)
-include_directories(../vecmat)
-include_directories(../fix)
-include_directories(../2d)
-include_directories(../bios)
-include_directories(../iff)
-include_directories(../3d)
-include_directories(../texmap)
-include_directories(../mem)
-include_directories(../misc)
-include_directories(../vga)
-include_directories(../cfile)
-include_directories(../div)
-if(TARGSYS MATCHES "^WIN32$")
-    include_directories(../win95)
-endif()
 
 if(SOS_DIGI_INCLUDE_DIR)
     include_directories(${SOS_DIGI_INCLUDE_DIR})

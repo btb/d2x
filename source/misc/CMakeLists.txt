@@ -30,15 +30,6 @@ set_source_files_properties(${misc_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(misc ${misc_SRCS} ${misc_OTHERS})
 
-include_directories(../includes)
-include_directories(../misc)
-include_directories(../mem)
-include_directories(../fix)
-include_directories(../cfile)
-include_directories(../pa_null)
-include_directories(../bios)    #DOS
-#include_directories(../win95)  #Windows
-
 #add_executable(parstest parstest.c)
 #target_link_libraries(parstest misc)
 

@@ -11,7 +11,11 @@ if(WATCOM)
     set(CMAKE_ASM_MASM_CREATE_STATIC_LIBRARY ${CMAKE_C_CREATE_STATIC_LIBRARY})
     if(${TARGSYS} MATCHES "^DOS4G$")
         set(CMAKE_C_FLAGS "-bt=dos -zp1" CACHE STRING "" FORCE)
-        set(CMAKE_CREATE_CONSOLE_EXE "system dos4g" )
+        set(CMAKE_CREATE_CONSOLE_EXE "system dos4g")
+    endif()
+    if(${TARGSYS} MATCHES "^WIN32$")
+        set(CMAKE_C_FLAGS "-bt=nt /w2 -zp1" CACHE STRING "" FORCE)
+        set(CMAKE_CREATE_CONSOLE_EXE "system win95")
     endif()
 endif()
 
@@ -20,9 +24,6 @@ option(NMONO            "is monochrome debugging turned off?" ON)
 option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
 option(ARCADE           "is the Arcade/AWD code in?" OFF)
 
-if(TARGSYS MATCHES "^WIN32$")
-    add_definitions(-dWINDOWS)
-endif()
 if(RELEASE_VERSION)
     add_definitions(-dRELEASE)
 endif()
@@ -36,34 +37,42 @@ if(ARCADE)
     add_definitions(-dARCADE)
 endif()
 
-find_path(SOS_DIGI_INCLUDE_DIR sos.h ../extlib/soslib)
-find_library(SOS_DIGI_LIBRARIES sosdigi ../extlib/soslib)
+# Subdirs to make for the DOS libraries
+set(SUBSYSTEMS_DOS includes misc mem fix cfile pa_null 2d vga bios iff div
+    ui vecmat 3d texmap) # tactile unarj sosdigi sosmidi
 
-find_path(SOS_MIDI_INCLUDE_DIR sosm.h ../extlib/soslib)
-find_library(SOS_MIDI_LIBRARIES sosmidi ../extlib/soslib)
+# Subdirs to make for the Win95 libraries
+set(SUBSYSTEMS_WIN includes misc mem fix cfile pa_null 2d vga novga iff div
+    vecmat win95 3d texmap) # tactile unarj
 
-find_path(3DFX_INCLUDE_DIR 3dfx.h ../extlib/glide/dos/include/)
+# All subdirs.  Needed for clean to work
+set(SUBSYSTEMS_OTHERS includes misc mem fix cfile pa_null 2d vga bios iff div
+    ui vecmat 3d texmap win95 novga) # tactile unarj sosdigi sosmidi
 
-add_subdirectory(includes)
-add_subdirectory(misc)
-add_subdirectory(mem)
-add_subdirectory(fix)       #Assembly only
-add_subdirectory(cfile)
-add_subdirectory(pa_null)
-add_subdirectory(2d)
-add_subdirectory(vga)       #VGA only
-add_subdirectory(bios)      #DOS only
-add_subdirectory(iff)
-add_subdirectory(div)       #Assembly only
-#add_subdirectory(ui)       #DOS only
-add_subdirectory(vecmat)    #Assembly only
-add_subdirectory(3d)        #Assembly only
-add_subdirectory(texmap)
-#add_subdirectory(win95)    #Windows only
-add_subdirectory(novga)     #Windows only
-#add_subdirectory(tactile)  #Don't have
-#add_subdirectory(unarj)    #Don't have
-#add_subdirectory(sosdigi)  #Don't have
-#add_subdirectory(sosmidi)  #Don't have
+if(TARGSYS MATCHES "^DOS4G$")
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_DOS)
+        include_directories(${SUBSYSTEM})
+    endforeach()
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_DOS)
+        add_subdirectory(${SUBSYSTEM})
+    endforeach()
+    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_DOS})
+
+elseif(TARGSYS MATCHES "^WIN32$")
+    add_definitions(-dWINDOWS)
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_WIN)
+        include_directories(${SUBSYSTEM})
+    endforeach()
+    include_directories(bios)
+    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_WIN)
+        add_subdirectory(${SUBSYSTEM})
+    endforeach()
+    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_WIN})
+
+endif()
+
+foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OTHERS)
+    add_subdirectory(${SUBSYSTEM} EXCLUDE_FROM_ALL)
+endforeach()
 
 add_subdirectory(main)

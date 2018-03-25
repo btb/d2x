@@ -28,11 +28,5 @@ set_source_files_properties(${vga_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(vga ${vga_SRCS} ${vga_OTHERS})
 
+find_path(3DFX_INCLUDE_DIR 3dfx.h ../../extlib/glide/dos/include/)
 include_directories(${3DFX_INCLUDE_DIR})
-include_directories(../pa_null)
-include_directories(../mem)
-include_directories(../bios)
-include_directories(../2d)
-include_directories(../includes)
-include_directories(../fix)
-include_directories(../cfile)

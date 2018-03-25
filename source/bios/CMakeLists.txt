@@ -47,14 +47,6 @@ set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(io ${io_SRCS} ${io_OTHERS})
 
-include_directories(../includes)
-include_directories(../misc)
-include_directories(../mem)
-include_directories(../fix)
-include_directories(../cfile)
-include_directories(../pa_null)
-include_directories(../bios)    #DOS
-
 #add_executable(demo cdrom.c)
 #target_link_libraries(demo io)
 

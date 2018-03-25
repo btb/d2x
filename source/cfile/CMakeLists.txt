@@ -15,8 +15,3 @@ set(cfile_OTHERS
 set_source_files_properties(${cfile_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(cfile ${cfile_SRCS}	${cfile_OTHERS})
-
-include_directories(../mem)
-include_directories(../includes)
-include_directories(../misc)
-include_directories(../bios)

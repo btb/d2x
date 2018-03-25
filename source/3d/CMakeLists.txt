@@ -34,10 +34,5 @@ set_source_files_properties(${3d_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(3d ${3d_SRCS} ${3d_OTHERS})
 
-include_directories(../includes)
-include_directories(../2d)
-include_directories(../fix)
-include_directories(../vecmat)
-
 #add_executable(3dtest 3dtest.c segment.c trakball.c)
 #target_link_libraries(3dtest 3d vecmat gr io fix div0 texmap misc bm)
