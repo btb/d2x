@@ -115,7 +115,6 @@ SM_1024x768V		EQU		16t
 	extn	gr_bm_ubitbltm_
 	extn	gr_set_palette_
 	extn	gr_getcolor_
-	extn	gr_set_drawmode_
 	extn	gr_poly_
 	extn	gr_upoly_
 	extn	gr_pixel_

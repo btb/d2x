@@ -220,9 +220,6 @@ void gr_use_palette_table(char * filename );
 //=========================================================================
 // Drawing functions:
 
-// For solid, XOR, or other fill modes.
-gr_set_drawmode(int mode);
-
 // Sets the color in the current canvas.  should be a macro
 // Use: gr_setcolor(int color);
 void gr_setcolor(int color);
