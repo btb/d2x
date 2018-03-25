@@ -275,7 +275,9 @@ int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
 	char ignore=0;
 	unsigned char *data_end;
 	int end_pos;
+#ifndef NDEBUG
 	int row_count=0;
+#endif
 
 	end_pos = ifile->position + len;
 	if (len&1)
