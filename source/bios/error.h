@@ -11,13 +11,19 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
+#ifdef __GNUC__
+# define __noreturn __attribute__ ((noreturn))
+#else
+# define __noreturn
+#endif
+
 int error_init(void (*func)(char *), char *fmt,...);			//init error system, set default message, returns 0=ok
 void set_exit_message(char *fmt,...);	//specify message to print at exit
 void Warning(char *fmt,...);				//print out warning message to user
 void set_warn_func(void (*f)(char *s));//specifies the function to call with warning messages
 void clear_warn_func(void (*f)(char *s));//say this function no longer valid
 void _Assert(int expr,char *expr_text,char *filename,int linenum);	//assert func
-void Error(char *fmt,...);					//exit with error code=1, print message
+void Error(char *fmt, ...) __noreturn;                  // exit with error code=1, print message
 
 #ifndef NDEBUG		//macros for debugging
 
