@@ -12,11 +12,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include "pa_enabl.h"                   //$$POLY_ACC
-#include <dos.h>
 #include <stdlib.h>
-#include <malloc.h>
 #include <stdio.h>
-#include <conio.h>
 #include <string.h>
 
 #include "pstypes.h"
@@ -28,10 +25,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"
-#endif
-
-#if !defined(WINDOWS) && !defined(MACINTOSH)
-#include "dpmi.h"
 #endif
 
 #include "palette.h"

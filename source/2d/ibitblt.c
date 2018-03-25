@@ -19,8 +19,6 @@ static char rcsid[] = "$Id: ibitblt.c 1.16 1996/12/19 16:51:38 matt Exp $";
 #ifndef MACINTOSH
 
 
-#include <conio.h>
-#include <dos.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

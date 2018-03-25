@@ -20,7 +20,6 @@ static char rcsid[] = "$Id: tmapflat.c 1.21 1996/12/04 19:27:54 matt Exp $";
 // #include <graph.h>
 #include <limits.h>
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC

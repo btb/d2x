@@ -19,7 +19,6 @@ static char rcsid[] = "$Id: mission.c 2.58 1996/12/19 11:26:47 jason Exp $";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <direct.h>
 #include <ctype.h>
 
 #include "cfile.h"

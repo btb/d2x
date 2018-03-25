@@ -27,7 +27,6 @@ static char rcsid[] = "$Id: ntmap.c 1.66 1996/12/04 19:27:55 matt Exp $";
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC

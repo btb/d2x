@@ -22,8 +22,6 @@ static char rcsid[] = "$Id: movie.c 1.76 1996/08/28 17:34:03 jed Exp $";
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
-#include <malloc.h>
 #include <string.h>
 #include <ctype.h>
 
