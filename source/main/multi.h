@@ -155,6 +155,8 @@ void multi_send_netplayer_stats_request(ubyte player_num);
 void multi_send_drop_weapon (int objnum,int seed);
 void multi_send_drop_marker (int player,vms_vector position,char messagenum,char text[]);
 void multi_send_guided_info (object *miss,char);
+void multi_send_orb_bonus(char pnum);
+void multi_send_got_orb (char pnum);
 
 
 void multi_endlevel_score(void);
@@ -178,6 +180,9 @@ int multi_choose_mission(int *anarchy_only);
 void multi_reset_stuff(void);
 
 void multi_send_data(char *buf, int len, int repeat);
+void multi_send_sound_function(char, char);
+int multi_powerup_is_4pack(int);
+void multi_add_lifetime_kills(void);
 
 int get_team(int pnum);
 

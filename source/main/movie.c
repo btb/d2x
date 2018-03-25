@@ -1067,13 +1067,13 @@ char *movielib_files[] = {"intro-l.mvl","other-l.mvl","robots-l.mvl"};
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 movielib *movie_libs[N_MOVIE_LIBS];
 
-close_movie(int i)
+void close_movie(int i)
 {
 	if (movie_libs[i])
 		free(movie_libs[i]);
 }
 
-close_movies()
+void close_movies()
 {
 	int i;
 
@@ -1146,7 +1146,7 @@ try_again:;
 //do we have the robot movies available
 int robot_movies=0;	//0 means none, 1 means lowres, 2 means hires
 
-init_movie(char *filename,int libnum,int is_robots,int required)
+void init_movie(char *filename, int libnum, int is_robots, int required)
 {
 	int high_res;
 
@@ -1204,7 +1204,7 @@ try_again:;
 }
 
 //find and initialize the movie libraries
-init_movies()
+void init_movies()
 {
 	int i;
 	int is_robots;
@@ -1225,7 +1225,7 @@ init_movies()
 
 }
 
-init_extra_robot_movie(char *filename)
+void init_extra_robot_movie(char *filename)
 {
 	close_movie(EXTRA_ROBOT_LIB);
 	init_movie(filename,EXTRA_ROBOT_LIB,1,0);
@@ -1236,7 +1236,7 @@ int movie_handle,movie_start;
 
 //looks through a movie library for a movie file
 //returns filehandle, with fileposition at movie, or -1 if can't find
-search_movie_lib(movielib *lib,char *filename,int must_have)
+int search_movie_lib(movielib *lib, char *filename, int must_have)
 {
 	int i;
 	int filehandle;

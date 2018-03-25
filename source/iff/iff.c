@@ -88,6 +88,11 @@ typedef struct fake_file {
 #define anim_sig MAKE_SIG('A','N','I','M')
 #define dlta_sig MAKE_SIG('D','L','T','A')
 
+
+//Internal prototypes
+int put_byte(unsigned char c,FILE *f);
+
+
 #ifndef NDEBUG
 //void printsig(long s)
 //{
@@ -698,7 +703,7 @@ int open_fake_file(char *ifilename,FFILE *ffile)
 	return ret;
 }
 
-close_fake_file(FFILE *f)
+void close_fake_file(FFILE *f)
 {
 	if (f->data)
 		free(f->data);
@@ -707,7 +712,7 @@ close_fake_file(FFILE *f)
 }
 
 //copy an iff header structure to a grs_bitmap structure
-copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
+void copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
 {
 	bm->bm_x = bm->bm_y = 0;
 	bm->bm_w = bmheader->w;

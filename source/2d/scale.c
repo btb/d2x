@@ -49,8 +49,23 @@ extern void rls_stretch_scanline_asm();
 extern void scale_do_cc_scanline();
 extern void rls_do_cc_setup_asm();
 
+
+//Internal prototypes
 void rls_stretch_scanline( char * source, char * dest, int XDelta, int YDelta );
 void rls_stretch_scanline_setup( int XDelta, int YDelta );
+void scale_bitmap_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp,
+                      int x0, int y0, int x1, int y1, fix u0, fix v0, fix u1, fix v1,
+                      int orientation);
+void scale_bitmap_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp,
+                          int x0, int y0, int x1, int y1, fix u0, fix v0, fix u1, fix v1,
+                          int orientation);
+void scale_bitmap_cc_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp,
+                         int x0, int y0, int x1, int y1, fix u0, fix v0, fix u1, fix v1,
+                         int orientation);
+void scale_bitmap_cc_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp,
+                             int x0, int y0, int x1, int y1, fix u0, fix v0, fix u1, fix v1,
+                             int orientation);
+
 
 void scale_row_c( ubyte * sbits, ubyte * dbits, int width, fix u, fix du )
 {

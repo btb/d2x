@@ -80,6 +80,12 @@ extern int Saving_movie_frames;
 #define Saving_movie_frames 0
 #endif
 
+
+//Internal prototypes
+void show_extra_views(void);
+void draw_guided_crosshair(void);
+
+
 // Returns the length of the first 'n' characters of a string.
 int string_width( char * s, int n )
 {
@@ -936,8 +942,6 @@ extern ubyte * Game_cockpit_copy_code;
 #else
 extern ubyte Game_cockpit_copy_code;
 #endif
-
-void draw_guided_crosshair(void);
 
 #ifdef MACINTOSH
 // special code to render a frame w/hw acceleration

@@ -78,6 +78,12 @@ short	Boss_teleport_segs[MAX_BOSS_TELEPORT_SEGS];
 int	Num_boss_gate_segs;
 short	Boss_gate_segs[MAX_BOSS_TELEPORT_SEGS];
 
+
+//Internal prototypes
+int boss_fits_in_seg(object *boss_objp, int segnum);
+void teleport_boss(object *objp);
+
+
 // ---------------------------------------------------------
 //	On entry, N_robot_types had darn sure better be set.
 //	Mallocs N_robot_types robot_info structs into global Robot_info.

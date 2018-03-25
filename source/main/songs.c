@@ -178,7 +178,7 @@ void songs_stop_all(void)
 
 int force_rb_register=0;
 
-reinit_redbook()
+void reinit_redbook()
 {
 	#if defined(WINDOWS) || defined(MACINTOSH)
 		RBAInit();

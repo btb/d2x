@@ -123,7 +123,12 @@ int	White_63;
 int	Blue_48;
 int	Red_48;
 
-init_automap_colors(void)
+
+//Internal prototypes
+void modex_printf(int x, int y, char *s, grs_font *font, int color);
+
+
+void init_automap_colors(void)
 {
 	Wall_normal_color = K_WALL_NORMAL_COLOR;
 	Wall_door_color = K_WALL_DOOR_COLOR;

@@ -109,6 +109,12 @@ fix	Last_buddy_message_time;
 char guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
 char real_guidebot_name[GUIDEBOT_NAME_LEN+1] = "GUIDE-BOT";
 
+
+//Internal prototypes
+void say_escort_goal(int goal_num);
+void show_escort_menu(char *msg);
+
+
 void init_buddy_for_level(void)
 {
 	int	i;

@@ -225,6 +225,8 @@ void gr_free_sub_bitmap(grs_bitmap *bm);
 
 void gr_bm_pixel( grs_bitmap * bm, int x, int y, unsigned char color );
 void gr_bm_upixel( grs_bitmap * bm, int x, int y, unsigned char color );
+
+void gr_bm_bitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap *src, grs_bitmap *dest);
 void gr_bm_ubitblt( int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 void gr_bm_ubitbltm(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 
@@ -259,8 +261,8 @@ void gr_setcolor(int color);
 // but not necessarily shaded as a concave polygon. It shouldn't hang.
 // probably good solution is to shade from minx to maxx on each scan line.
 // int should really be fix
-gr_poly(int nverts,int *verts);
-gr_upoly(int nverts,int *verts);
+void gr_poly(int nverts, int *verts);
+void gr_upoly(int nverts, int *verts);
 
 
 // Draws a point into the current canvas in the current color and drawmode.

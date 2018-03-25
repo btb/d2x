@@ -52,6 +52,10 @@ typedef struct	{
 } PCXHeader;
 
 
+//Internal prototypes
+int pcx_encode_line(ubyte *inBuff, int inLen, FILE *fp);
+
+
 int pcx_get_dimensions( char *filename, int *width, int *height)
 {
 	CFILE *PCXfile;

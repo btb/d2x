@@ -37,6 +37,11 @@ int gr_show_screen_info = 0;
 
 unsigned char * gr_video_memory = (unsigned char *)0xA0000;
 
+
+//Internal prototypes
+int gr_close_screen(void);
+
+
 //	Functions for GR.C
 
 void gr_close()

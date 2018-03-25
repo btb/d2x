@@ -216,7 +216,7 @@ uint check_point_to_face(vms_vector *checkp, side *s,int facenum,int nv,int *ver
 
 
 //check if a sphere intersects a face
-check_sphere_to_face(vms_vector *pnt, side *s,int facenum,int nv,fix rad,int *vertex_list)
+int check_sphere_to_face(vms_vector *pnt, side *s, int facenum, int nv, fix rad, int *vertex_list)
 {
 	vms_vector checkp=*pnt;
 	uint edgemask;
@@ -348,7 +348,7 @@ fix calc_det_value(vms_matrix *det)
 
 //computes the parameters of closest approach of two lines 
 //fill in two parameters, t0 & t1.  returns 0 if lines are parallel, else 1
-check_line_to_line(fix *t1,fix *t2,vms_vector *p1,vms_vector *v1,vms_vector *p2,vms_vector *v2)
+int check_line_to_line(fix *t1, fix *t2, vms_vector *p1, vms_vector *v1, vms_vector *p2, vms_vector *v2)
 {
 	vms_matrix det;
 	fix d,cross_mag2;		//mag squared cross product
@@ -833,7 +833,7 @@ if (hit_seg!=-1 && fq->flags&FQ_GET_SEGLIST)
 //--unused-- 	return vm_vec_dist(v0,v1);
 //--unused-- }
 
-obj_in_list(int objnum,int *obj_list)
+int obj_in_list(int objnum, int *obj_list)
 {
 	int t;
 

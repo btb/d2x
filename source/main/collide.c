@@ -1810,7 +1810,7 @@ void maybe_drop_secondary_weapon_egg(object *playerobj, int weapon_index, int co
 	}
 }
 
-drop_missile_1_or_4(object *playerobj,int missile_index)
+void drop_missile_1_or_4(object *playerobj, int missile_index)
 {
 	int num_missiles,powerup_id;
 

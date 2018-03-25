@@ -55,6 +55,8 @@ char gamesave_rcsid[] = "$Id: gamesave.c 2.72 1996/12/19 11:28:57 jason Exp $";
 #include "gamepal.h"
 #include "laser.h"
 #include "byteswap.h"
+#include "multi.h"
+#include "physics.h"
 
 #ifdef MACINTOSH
 #include "strutil.h"		// because my compiler doesn't have strupr
@@ -255,7 +257,6 @@ int Gamesave_num_players=0;
 int N_save_pof_names;
 char Save_pof_names[MAX_POLYGON_MODELS][FILENAME_LEN];
 
-check_and_fix_matrix(vms_matrix *m);
 
 void verify_object( object * obj )	{
 
@@ -562,7 +563,6 @@ static void gs_write_angvec(vms_angvec *v,FILE *file)
 #endif
 
 
-extern int multi_powerup_is_4pack(int);
 //reads one object of the given version from the given file
 void read_object(object *obj,CFILE *f,int version)
 {

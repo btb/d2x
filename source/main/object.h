@@ -364,6 +364,8 @@ void object_render_targets(void);
 //move an object for the current frame
 void object_move_one( object * obj );
 
+extern void reset_player_object(void);
+
 //make object0 the player, setting all relevant fields
 void init_player_object();
 
@@ -382,7 +384,7 @@ extern int find_object_seg(object * obj );
 
 //go through all objects and make sure they have the correct segment numbers
 //used when debugging is on
-fix_object_segs();
+void fix_object_segs();
 
 //	Drops objects contained in objp.
 int object_create_egg(object *objp);

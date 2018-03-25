@@ -152,6 +152,14 @@ char	Object_type_names[MAX_OBJECT_TYPES][9] = {
 };
 #endif
 
+
+//Internal prototypes
+int free_object_slots(int num_used);
+void obj_detach_one(object *sub);
+void obj_detach_all(object *parent);
+void AdjustMineSpawn(void);
+
+
 #ifndef RELEASE
 //set viewer object to next object in array
 void object_goto_next_viewer()
@@ -331,7 +339,7 @@ extern void draw_tmap_flat();
 #define	CLOAK_FADEOUT_DURATION_ROBOT	F1_0
 
 //do special cloaked render
-draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time)
+void draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fix cloak_end_time)
 {
 	fix cloak_delta_time,total_cloaked_time;
 	fix light_scale;
@@ -815,7 +823,6 @@ void render_object(object *obj)
 //--unused-- 	}
 //--unused-- }
 
-check_and_fix_matrix(vms_matrix *m);
 
 #define vm_angvec_zero(v) (v)->p=(v)->b=(v)->h=0
 
@@ -1822,7 +1829,7 @@ void obj_relink(int objnum,int newsegnum)
 }
 
 //process a continuously-spinning object
-spin_object(object *obj)
+void spin_object(object *obj)
 {
 	vms_angvec rotangs;
 	vms_matrix rotmat, new_pm;
@@ -2228,7 +2235,7 @@ int update_object_seg(object * obj )
 
 
 //go through all objects and make sure they have the correct segment numbers
-fix_object_segs()
+void fix_object_segs()
 {
 	int i;
 

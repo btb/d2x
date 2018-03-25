@@ -124,6 +124,12 @@ byte	Weapon_is_energy[MAX_WEAPON_TYPES] = {
 	1
 };
 
+
+//Internal prototypes
+int POrderList(int num);
+int SOrderList(int num);
+
+
 // ; (0) Laser Level 1
 // ; (1) Laser Level 2
 // ; (2) Laser Level 3
@@ -246,7 +252,7 @@ void CycleSecondary ()
 
 //	------------------------------------------------------------------------------------
 //if message flag set, print message saying selected
-select_weapon(int weapon_num, int secondary_flag, int print_message, int wait_for_rearm)
+void select_weapon(int weapon_num, int secondary_flag, int print_message, int wait_for_rearm)
 {
 	char	*weapon_name;
 

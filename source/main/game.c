@@ -270,7 +270,9 @@ int Game_aborted;
 
 void GameLoop(int RenderFlag, int ReadControlsFlag);
 void FireLaser(void);
+void game_palette_step_up(int r, int g, int b);
 void slide_textures(void);
+void flicker_lights(void);
 void powerup_grab_cheat_all(void);
 
 //	Other functions
@@ -1310,7 +1312,7 @@ extern int Game_pause;
 void do_photos();
 void level_with_floor();
 
-modex_clear_box(int x,int y,int w,int h)
+void modex_clear_box(int x, int y, int w, int h)
 {
 	grs_canvas *temp_canv,*save_canv;
 
@@ -1580,7 +1582,7 @@ void fly_init(object *obj)
 
 //	------------------------------------------------------------------------------------
 
-test_anim_states();
+//void test_anim_states(void);
 
 #include "fvi.h"
 
@@ -1664,7 +1666,6 @@ int	Ab_scale = 4;
 //@@}
 
 //	------------------------------------------------------------------------------------
-extern multi_send_sound_function (char,char);
 
 void do_afterburner_stuff(void)
 {
@@ -2387,9 +2388,6 @@ grs_canvas * get_current_game_screen()
 #endif
 
 
-extern kconfig_center_headset();
-
-
 #ifndef	NDEBUG
 void	speedtest_frame(void);
 int	Debug_slowdown=0;
@@ -2469,7 +2467,7 @@ void flush_movie_buffer()
 	start_time();
 }
 
-toggle_movie_saving()
+void toggle_movie_saving()
 {
 	int exit;
 

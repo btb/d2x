@@ -26,9 +26,10 @@ ubyte * gr_rle_find_xth_pixel( ubyte *src, int x,int * count, ubyte color );
 int gr_bitmap_rle_compress( grs_bitmap * bmp );
 void gr_rle_expand_scanline_masked( ubyte *dest, ubyte *src, int x1, int x2  );
 void gr_rle_expand_scanline( ubyte *dest, ubyte *src, int x1, int x2  );
+void gr_rle_expand_scanline_svga_masked(grs_bitmap *dest, int dx, int dy, ubyte *src, int x1, int x2);
 
 grs_bitmap * rle_expand_texture( grs_bitmap * bmp );
 
-rle_cache_flush();
+void rle_cache_flush(void);
 
 #endif

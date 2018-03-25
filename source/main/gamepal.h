@@ -30,6 +30,6 @@ int load_palette(char *name,int used_for_level,int no_change_screen);
 extern ubyte last_palette_for_color_fonts[768];
 
 //remap color font & menu background into the current palette
-remap_fonts_and_menus(int do_fadetable_hack);
+void remap_fonts_and_menus(int do_fadetable_hack);
 
 #endif

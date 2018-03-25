@@ -48,7 +48,7 @@ extern int Num_vclips;
 extern vclip Vclip[VCLIP_MAXNUM];
 
 //draw an object which renders as a vclip.
-draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num);
+void draw_vclip_object(object *obj, fix timeleft, int lighted, int vclip_num);
 extern void draw_weapon_vclip(object *obj);
 
 #endif

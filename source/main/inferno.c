@@ -140,6 +140,12 @@ int __far descent_critical_error_handler( unsigned deverr, unsigned errcode, uns
 void check_joystick_calibration(void);
 
 
+//Internal prototypes
+int is_3dbios_installed(void);
+int init_gameport(void);
+void show_order_form(void);
+
+
 //--------------------------------------------------------------------------
 
 #ifndef NDEBUG
@@ -485,7 +491,7 @@ extern int grd_fades_disabled;
 #define LINE_LEN	100
 
 //read help from a file & print to screen
-print_commandline_help()
+void print_commandline_help()
 {
 	CFILE *ifile;
 	int have_binary=0;
@@ -740,7 +746,7 @@ void do_headset_init()
 		set_display_mode(-1);	//flag as special non-changable mode
 }
 
-do_register_player(ubyte *title_pal)
+void do_register_player(ubyte *title_pal)
 {
 	Players[Player_num].callsign[0] = '\0';
 
@@ -763,7 +769,7 @@ do_register_player(ubyte *title_pal)
 
 #define verbose  if (Inferno_verbose) printf
 
-do_network_init()
+void do_network_init()
 {
 	if (!FindArg( "-nonetwork" ))	{
 		int socket=0, showaddress=0, t;
@@ -960,7 +966,7 @@ int find_descent_cd()
 }
 
 //look for D2 CD-ROM.  returns 1 if found cd, else 0
-init_cdrom()
+int init_cdrom()
 {
 	int i;
 

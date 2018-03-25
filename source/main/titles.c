@@ -93,6 +93,13 @@ extern int check_button_press();
 extern void macintosh_quit(void);
 #endif
 
+
+//Internal prototypes
+void DoBriefingColorStuff(void);
+int DefineBriefingBox(char **buf);
+int get_new_message_num(char **message);
+
+
 #ifndef MACINTOSH
 int local_key_inkey(void)
 {
