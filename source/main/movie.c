@@ -689,7 +689,7 @@ int InitRobotMovie (char *filename)
        mprintf ((0,"ROBOERROR: Could't allocate frame %d!\n",i));
        if (i)
         FreeRoboBuffer (i-1);
-       return (NULL);
+        return 0;
       }
     }
 #endif
@@ -697,13 +697,13 @@ int InitRobotMovie (char *filename)
    if ((FirstVid=calloc (65000L,1))==NULL)
     {
      FreeRoboBuffer(49);
-     return (NULL);
+     return 0;
     }
    if ((SecondVid=calloc (65000L,1))==NULL)
     {
      free (FirstVid);
      FreeRoboBuffer(49);
-     return (NULL);
+     return 0;
     }
 
 #ifdef MVE
