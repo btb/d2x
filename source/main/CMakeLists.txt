@@ -60,7 +60,6 @@ set(descent2_SRCS
     multi.c cntrlcen.c credits.c config.c kmatrix.c
     paging.c mission.c songs.c bmread.c
     escort.c gamepal.c multibot.c state.c
-    cdmix32.c
 )
 #    vfx.c vfxread.c #missing
 #    3dmax.c #missing
@@ -113,6 +112,10 @@ set(descent2_OTHERS
     vers_id.h.in            vers_id.h.orig
     editor/editor.h         editor/kdefs.h          editor/texpage.h
 )
+
+if(TARGSYS MATCHES "^WIN32$" OR TARGSYS MATCHES "^DOS4G$")
+    list(APPEND descent2_SRCS cdmix32.c)
+endif()
 
 if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_SRCS winferno.c descentw.c winmodem.c joydefsw.c windigi.c) #winmovie.c
