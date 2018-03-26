@@ -113,14 +113,12 @@ set(descent2_OTHERS
     editor/editor.h         editor/kdefs.h          editor/texpage.h
 )
 
-if(TARGSYS MATCHES "^WIN32$" OR TARGSYS MATCHES "^DOS4G$")
-    list(APPEND descent2_SRCS cdmix32.c)
-endif()
-
 if(TARGSYS MATCHES "^WIN32$")
-    list(APPEND descent2_SRCS winferno.c descentw.c winmodem.c joydefsw.c windigi.c) #winmovie.c
+    list(APPEND descent2_SRCS winferno.c descentw.c winmodem.c joydefsw.c windigi.c cdmix32.c) #winmovie.c
+elseif(TARGSYS MATCHES "^DOS4G$")
+    list(APPEND descent2_SRCS digi.c inferno.c joydefs.c movie.c cdmix32.c) #victor.c iglasses.c modem.c
 else()
-    list(APPEND descent2_SRCS digi.c inferno.c joydefs.c movie.c) #victor.c iglasses.c modem.c
+    list(APPEND descent2_SRCS inferno.c joydefs.c movie.c)
 endif()
 
 if(ARCADE)
