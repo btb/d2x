@@ -75,7 +75,7 @@ void mrefresh(short n);
 #define mDumpD(window, int_var) 
 #define mDumpX(window, int_var) 
 #define mclear( n )
-#define mprintf(args) 
+#define mprintf(args) do {} while(0)
 #define mprintf_at(args)
 #define mputc( n, c )
 #define mputc_at( n, row, col, c )
