@@ -456,13 +456,13 @@ void nd_read_object(object *obj)
  *  Do render type first, since with render_type == RT_NONE, we
  *  blow by all other object information
 */
-	nd_read_byte(&(obj->render_type));
- 	nd_read_byte(&(obj->type));
+	nd_read_byte((byte *)&(obj->render_type));
+	nd_read_byte((byte *)&(obj->type));
 	if ((obj->render_type == RT_NONE) && (obj->type != OBJ_CAMERA))
 		return;
 
-	nd_read_byte(&(obj->id));
-	nd_read_byte(&(obj->flags));
+	nd_read_byte((byte *)&(obj->id));
+	nd_read_byte((byte *)&(obj->flags));
 	nd_read_short((short *)&(obj->signature));
 	nd_read_shortpos(obj);
 
@@ -495,7 +495,7 @@ if ((obj->type == OBJ_ROBOT) && (obj->id == SPECIAL_REACTOR_ROBOT))
 
 		case OBJ_POWERUP:
 			obj->control_type = CT_POWERUP;
-			nd_read_byte(&(obj->movement_type));		// might have physics movement
+			nd_read_byte((byte *)&(obj->movement_type)); // might have physics movement
 			obj->size = Powerup_info[obj->id].size;
 			break;
 
@@ -516,8 +516,8 @@ if ((obj->type == OBJ_ROBOT) && (obj->id == SPECIAL_REACTOR_ROBOT))
 			break;
 
 		default:
-			nd_read_byte(&(obj->control_type));
-			nd_read_byte(&(obj->movement_type));
+			nd_read_byte((byte *)&(obj->control_type));
+			nd_read_byte((byte *)&(obj->movement_type));
 			nd_read_fix(&(obj->size));
 			break;	
 	}
@@ -529,7 +529,7 @@ if ((obj->type == OBJ_ROBOT) && (obj->id == SPECIAL_REACTOR_ROBOT))
 	else {
 		ubyte b;
 		
-		nd_read_byte(&b);
+		nd_read_byte((byte *)&b);
 		obj->lifeleft = (fix)b;
 // MWA old way -- won't work with big endian machines		nd_read_byte((ubyte *)&(obj->lifeleft));
 		obj->lifeleft = (fix)((int)obj->lifeleft << 12);
@@ -1411,7 +1411,7 @@ int newdemo_read_demo_start(int rnd_demo)
 	char c, energy, shield;
 	char text[50], current_mission[9];
 
-	nd_read_byte(&c);
+	nd_read_byte((byte *)&c);
 	if ((c != ND_EVENT_START_DEMO) || nd_bad_read) {
 		newmenu_item m[1];
 
@@ -1459,14 +1459,14 @@ int newdemo_read_demo_start(int rnd_demo)
 
 	change_playernum_to((Newdemo_game_mode >> 16) & 0x7);
 	if (Newdemo_game_mode & GM_TEAM) {
-		nd_read_byte(&(Netgame.team_vector));
+		nd_read_byte((byte *)&(Netgame.team_vector));
 		nd_read_string(Netgame.team_name[0]);
 		nd_read_string(Netgame.team_name[1]);
 	}
 	if (Newdemo_game_mode & GM_MULTI) {
 
 		multi_new_game();
-		nd_read_byte(&c);
+		nd_read_byte((byte *)&c);
 		N_players = (int)c;
 // changed this to above two lines -- breaks on the mac because of
 // endian issues
@@ -1518,8 +1518,8 @@ int newdemo_read_demo_start(int rnd_demo)
 
 	nd_recorded_total = 0;
 	nd_playback_total = 0;
-	nd_read_byte(&energy);
-	nd_read_byte(&shield);
+	nd_read_byte((byte *)&energy);
+	nd_read_byte((byte *)&shield);
 
 	nd_read_int((int *)&(Players[Player_num].flags));
 	if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED) {
@@ -1592,7 +1592,7 @@ int newdemo_read_frame_information()
 	prev_obj = NULL;
 
 	while( !done )	{
-		nd_read_byte(&c);
+		nd_read_byte((byte *)&c);
 		if (nd_bad_read) { done = -1; break; }
 
 		switch( c )	{
@@ -1613,7 +1613,7 @@ int newdemo_read_frame_information()
 		}
 
 		case ND_EVENT_VIEWER_OBJECT:				// Followed by an object structure
-         nd_read_byte (&WhichWindow);
+         nd_read_byte((byte *)&WhichWindow);
          if (WhichWindow&15)
 			  { 
 //				 mprintf ((0,"Reading extra!\n"));
@@ -1774,7 +1774,7 @@ int newdemo_read_frame_information()
 				if (Triggers[Walls[Segments[segnum].sides[side].wall_num].trigger].type == TT_SECRET_EXIT) {
 					int	truth;
 
-					nd_read_byte(&c);
+					nd_read_byte((byte *)&c);
 					Assert(c == ND_EVENT_SECRET_THINGY);
 					nd_read_int(&truth);
 					if (!truth)
@@ -1873,8 +1873,8 @@ int newdemo_read_frame_information()
 			ubyte energy;
 			ubyte old_energy;
 
-			nd_read_byte(&old_energy);
-			nd_read_byte(&energy);
+			nd_read_byte((byte *)&old_energy);
+			nd_read_byte((byte *)&energy);
 			if (nd_bad_read) {done = -1; break; }
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].energy = i2f(energy);
@@ -1889,8 +1889,8 @@ int newdemo_read_frame_information()
 			ubyte afterburner;
 			ubyte old_afterburner;
 
-			nd_read_byte(&old_afterburner);
-			nd_read_byte(&afterburner);
+			nd_read_byte((byte *)&old_afterburner);
+			nd_read_byte((byte *)&afterburner);
 			if (nd_bad_read) {done = -1; break; }
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Afterburner_charge = afterburner<<9;
@@ -1905,8 +1905,8 @@ int newdemo_read_frame_information()
 			ubyte shield;
 			ubyte old_shield;
 
-			nd_read_byte(&old_shield);
-			nd_read_byte(&shield);
+			nd_read_byte((byte *)&old_shield);
+			nd_read_byte((byte *)&shield);
 			if (nd_bad_read) {done = -1; break; }
 			if ((Newdemo_vcr_state == ND_STATE_PLAYBACK) || (Newdemo_vcr_state == ND_STATE_FASTFORWARD) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEFORWARD)) {
 				Players[Player_num].shields = i2f(shield);
@@ -2066,9 +2066,9 @@ int newdemo_read_frame_information()
 			ubyte side,cside;
 
 			nd_read_short(&seg);
-			nd_read_byte(&side);
+			nd_read_byte((byte *)&side);
 			nd_read_short(&cseg);
-			nd_read_byte(&cside);
+			nd_read_byte((byte *)&cside);
 			nd_read_short( &tmap );
 			if ((Newdemo_vcr_state != ND_STATE_PAUSED) && (Newdemo_vcr_state != ND_STATE_REWINDING) && (Newdemo_vcr_state != ND_STATE_ONEFRAMEBACKWARD))
 				Segments[seg].sides[side].tmap_num = Segments[cseg].sides[cside].tmap_num = tmap;
@@ -2080,9 +2080,9 @@ int newdemo_read_frame_information()
 			ubyte side,cside;
 
 			nd_read_short(&seg);
-			nd_read_byte(&side);
+			nd_read_byte((byte *)&side);
 			nd_read_short(&cseg);
-			nd_read_byte(&cside);
+			nd_read_byte((byte *)&cside);
 			nd_read_short( &tmap );
 			if ((Newdemo_vcr_state != ND_STATE_PAUSED) && (Newdemo_vcr_state != ND_STATE_REWINDING) && (Newdemo_vcr_state != ND_STATE_ONEFRAMEBACKWARD)) {
 				Assert(tmap!=0 && Segments[seg].sides[side].tmap_num2!=0);
@@ -2310,11 +2310,11 @@ int newdemo_read_frame_information()
 			segment *segp;
 			int sidenum;
 
-			nd_read_byte(&front_wall_num);
-			nd_read_byte(&back_wall_num);
-			nd_read_byte(&type);
-			nd_read_byte(&state);
-			nd_read_byte(&cloak_value);
+			nd_read_byte((byte *)&front_wall_num);
+			nd_read_byte((byte *)&back_wall_num);
+			nd_read_byte((byte *)&type);
+			nd_read_byte((byte *)&state);
+			nd_read_byte((byte *)&cloak_value);
 			nd_read_short(&l0);
 			nd_read_short(&l1);
 			nd_read_short(&l2);
@@ -2379,9 +2379,9 @@ int newdemo_read_frame_information()
 				nd_read_int (&Num_walls);
 				for (i=0;i<Num_walls;i++)    // restore the walls
 					{
-					 nd_read_byte (&Walls[i].type);
-					 nd_read_byte (&Walls[i].flags);
-					 nd_read_byte (&Walls[i].state);
+					 nd_read_byte((byte *)&Walls[i].type);
+					 nd_read_byte((byte *)&Walls[i].flags);
+					 nd_read_byte((byte *)&Walls[i].state);
 	
 					  seg = &Segments[Walls[i].segnum];
 					  side = Walls[i].sidenum;
@@ -2496,8 +2496,8 @@ void newdemo_goto_end()
 	nd_read_short(&bshort);
 	nd_read_int(&bint);
 	
-	nd_read_byte(&energy);
-	nd_read_byte(&shield);
+	nd_read_byte((byte *)&energy);
+	nd_read_byte((byte *)&shield);
 	Players[Player_num].energy = i2f(energy);
 	Players[Player_num].shields = i2f(shield);
 	nd_read_int((int *)&(Players[Player_num].flags));
@@ -2520,7 +2520,7 @@ void newdemo_goto_end()
 	}
 
 	if (Newdemo_game_mode & GM_MULTI) {
-		nd_read_byte(&c);
+		nd_read_byte((byte *)&c);
 		N_players = (int)c;
 // see newdemo_read_start_demo for explanation of
 // why this is commented out
