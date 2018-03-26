@@ -536,7 +536,7 @@ void print_commandline_help()
 
       printf("%s",line);
 
-      if (isatty(stdout->_handle) && ++line_count == screen_lines-1) {
+      if (isatty(fileno(stdout)) && ++line_count == screen_lines-1) {
          char c;
          printf("\n%s",TXT_PRESS_ANY_KEY3);
          c = key_getch();
@@ -1548,7 +1548,7 @@ int main(int argc,char **argv)
          ubyte *buf;
          ifile = fopen(sounds[i],"rb");
          Assert(ifile != NULL);
-         size = filelength(ifile->_handle);
+         size = filelength(fileno(ifile));
          buf = malloc(size);
          fread(buf,1,size,ifile);
          fwrite(&size,sizeof(size),1,ofile);
