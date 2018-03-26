@@ -767,7 +767,9 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
       #endif
    }
 
+#ifdef WINDOWS
 RePaintNewmenu4:
+#endif
    WINDOS( save_canvas = dd_grd_curcanv, save_canvas = grd_curcanv );
 
    WINDOS( dd_gr_set_current_canvas(NULL), gr_set_current_canvas(NULL) );
@@ -2098,7 +2100,9 @@ ReadFileNames:
 //    set_screen_mode(SCREEN_MENU);
       set_popup_screen();
 
+#ifdef WINDOWS
 RePaintNewmenuFile:
+#endif
 
    #ifdef WINDOWS
       dd_gr_set_current_canvas(NULL);
@@ -2727,9 +2731,9 @@ WIN(int win_redraw=0);
 // set_screen_mode(SCREEN_MENU);
    set_popup_screen();
 
+#ifdef WINDOWS
 RePaintNewmenuListbox:
 
-#ifdef WINDOWS
    dd_gr_set_current_canvas(NULL);
 #else
    gr_set_current_canvas(NULL);
