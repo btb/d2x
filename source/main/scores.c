@@ -21,7 +21,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <ctype.h>
 #include <stdarg.h>
+#ifdef __DOS__
 #include <io.h>
+#endif
 
 #include "error.h"
 #include "pstypes.h"

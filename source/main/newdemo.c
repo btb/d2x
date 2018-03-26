@@ -17,12 +17,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 #include <string.h>	// for memset
 #include <ctype.h>
-#include <malloc.h>
 #include <limits.h>
 #include <errno.h>
+#ifdef __DOS__
 #include <direct.h>
 #include <dos.h>
 #include <io.h>
+#endif
 
 #include "inferno.h"
 #include "game.h"

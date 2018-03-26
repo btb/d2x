@@ -19,7 +19,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __DOS__
 #include <dos.h>
+#endif
 #include <stdarg.h>
 #include <ctype.h>
 
@@ -3471,7 +3473,9 @@ char GetKeyValue (char key)
 extern object *obj_find_first_of_type (int);
 void kconfig_read_external_controls()
 {
+#ifdef __DOS__
 	union REGS r;
+#endif
    int i;
 
 	if ( !kc_enable_external_control ) return;
@@ -3536,13 +3540,11 @@ void kconfig_read_external_controls()
 
 	if ( Automap_active )			// (If in automap...)
 		kc_external_control->automap_state = 1;
+#ifdef __DOS__
 	memset(&r,0,sizeof(r));
 
-  #ifndef WINDOWS
- 
 	int386 ( kc_external_intno, &r, &r);		// Read external info...
-
-  #endif 
+#endif
 
 	if ( Player_num > -1 )	{
 		Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);	// Turn off roll when turning

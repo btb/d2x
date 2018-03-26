@@ -14,7 +14,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 #include <stdio.h>
+#if defined(WINDOWS) || defined(__DOS__)
 #include <malloc.h>	//for stackavail()
+#endif
 #include <string.h>	//	for memset()
 
 #ifdef MACINTOSH
@@ -752,8 +754,10 @@ int trace_segs(vms_vector *p0,int oldsegnum)
 	if (StackSpace() < 1024) {
 #elif defined(WINDOWS)
 	if (stackavail() < 10240) {
-#else
+#elif defined(__DOS__)
 	if (stackavail() < 1024) {		//if no debugging, we'll get past assert
+#else
+	if (0) {
 #endif
 
 		#ifndef NDEBUG

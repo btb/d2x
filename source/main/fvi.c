@@ -16,7 +16,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #include <stdlib.h>
+#if defined(WINDOWS) || defined(__DOS__)
 #include <malloc.h>
+#endif
 #include <string.h>
 
 #ifdef MACINTOSH
@@ -872,7 +874,7 @@ int fvi_sub(vms_vector *intp,int *ints,vms_vector *p0,int startseg,vms_vector *p
 		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));
 		Int3();
 	}
-#else
+#elif defined(__DOS__)
 	if ( stackavail() < 1024 )                      
 	{
 		mprintf( (0, "In fvi_sub, stack left is < 1k !\n" ));

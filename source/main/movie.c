@@ -12,8 +12,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include <dos.h>
+#ifdef __DOS__
 #include <io.h>
+#endif
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,7 +26,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "text.h"
 #include "args.h"
 #include "mem.h"
+#ifdef __DOS__
 #include "sos.h"
+#endif
 #include "byteswap.h"
 #include "cfile.h"
 #include "gamefont.h"
@@ -89,7 +92,9 @@ void __cdecl MPlayFree(void *p)
     free(p);
 }
 
+#ifdef __DOS__
 extern WORD hSOSDigiDriver;
+#endif
 
 int HiResRoboMovie=0;
 
@@ -1250,7 +1255,11 @@ int search_movie_lib(movielib *lib, char *filename, int must_have)
 
 			do {		//keep trying until we get the file handle
 
-				movie_handle = filehandle = open(lib->name, O_RDONLY + O_BINARY);
+				movie_handle = filehandle = open(lib->name, O_RDONLY
+#ifdef __DOS__
+                                                 + O_BINARY
+#endif
+                                                 );
 
 				if (must_have && from_cd && filehandle == -1) {		//didn't get file!
 
