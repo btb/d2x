@@ -151,7 +151,7 @@ void show_order_form(void);
 
 //--------------------------------------------------------------------------
 
-#ifndef NDEBUG
+#if 0 //ndef NDEBUG
 void do_heap_check()
 {
    int heap_status;
