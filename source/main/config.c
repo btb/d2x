@@ -18,15 +18,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "winapp.h"
-#else
+#elif defined(__DOS__)
 #include <conio.h>
+#include <dos.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <dos.h>
 
 #include "pstypes.h"
 #include "game.h"
@@ -44,10 +44,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pa_enabl.h"
 
 
+#ifdef __DOS__
 #pragma pack (4);                // Use 32-bit packing!
 #pragma off (check_stack);       // No stack checking!
 #include "sos.h"
 #include "sosm.h"
+#endif
 
 
 ubyte Config_digi_volume = 8;
@@ -116,6 +118,7 @@ extern byte Object_complexity, Object_detail, Wall_detail, Wall_render_depth, De
 void set_custom_detail_vars(void);
 
 
+#ifdef __DOS__
 #define CL_MC0 0xF8F
 #define CL_MC1 0xF8D
 
@@ -152,6 +155,7 @@ void CrystalLakeSetWSS()
    tmp |= 0x80;
    CrystalLakeWriteMCP( CL_MC1, tmp );
 }
+#endif
 
 //MovieHires might be changed by -nohighres, so save a "real" copy of it
 int SaveMovieHires;
@@ -368,7 +372,7 @@ int ReadConfigFile()
    Config_digi_type = digi_driver_board;
    Config_digi_dma = digi_driver_dma;
 
-#ifndef WINDOWS
+#ifdef __DOS__
    if (digi_driver_board_16 > 0 && !FindArg("-no16bit") && digi_driver_board_16 != _GUS_16_ST) {
       digi_driver_board = digi_driver_board_16;
       digi_driver_dma = digi_driver_dma_16;
@@ -378,7 +382,7 @@ int ReadConfigFile()
    // HACK!!!
    //Hack to make some cards look like others, such as
    //the Crytal Lake look like Microsoft Sound System
-#ifndef WINDOWS
+#ifdef __DOS__
    if ( digi_driver_board == _CRYSTAL_LAKE_8_ST )  {
       ubyte tmp;
       tmp = CrystalLakeReadMCP( CL_MC1 );
@@ -399,7 +403,9 @@ int ReadConfigFile()
       digi_driver_board = _SB16_16_ST;
    } else
       digi_driver_board    = digi_driver_board;
-#else
+#endif
+
+#ifdef WINDOWS
    infile = fopen("descentw.cfg", "rt");
    if (infile) {
       while (!feof(infile)) {

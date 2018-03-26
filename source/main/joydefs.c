@@ -15,7 +15,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __DOS__
 #include <dos.h>
+#endif
 
 #include "mono.h"
 #include "key.h"
@@ -53,9 +55,12 @@ void joydefs_calibrate2(void);
 void joy_delay()
 {
    stop_time();
-// timer_delay(.25);
+#ifndef __DOS__
+   timer_delay(F1_0/4);
+#else
    delay(250);          // changed by allender because   1) more portable
                      //                      2) was totally broken on PC
+#endif
    joy_flush();
    start_time();
 }

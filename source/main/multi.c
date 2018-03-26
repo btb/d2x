@@ -17,8 +17,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef __DOS__
 #include <dos.h>
-#include <conio.h>
+#endif
 #include <string.h>
 #include <time.h>
 #include <ctype.h>

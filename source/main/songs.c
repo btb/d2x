@@ -15,7 +15,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#if __DOS__
 #include <direct.h>
+#endif
 
 #include "inferno.h"
 #include "error.h"

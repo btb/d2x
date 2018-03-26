@@ -18,6 +18,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "fix.h"
 
+#ifndef __WATCOMC__
+#define _far
+#endif
+
 //==========================================================================
 // This installs the timer services and interrupts at the rate specified by
 // count_val.  If 'function' isn't 0, the function pointed to by function will

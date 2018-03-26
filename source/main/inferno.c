@@ -14,17 +14,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPORATION";
 
+#ifdef __DOS__
 #include <dos.h>
-#include <conio.h>
+#include <direct.h>
+#endif
 #include <stdio.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <direct.h>
 #include <math.h>
 #include <unistd.h>
-#include <conio.h>
 #include <ctype.h>
 
 #include "pa_enabl.h"       //$$POLY_ACC
@@ -82,7 +81,9 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "gameseq.h"
 #include "gamepal.h"
 #include "mission.h"
+#ifdef __DOS__
 #include "dpmi.h"
+#endif
 #include "movie.h"
 #include "compbit.h"
 #ifdef VFX
@@ -135,7 +136,9 @@ int Inferno_is_800x600_available = 0;
 //--unused-- int Cyberman_installed=0;       // SWIFT device present
 ubyte CybermouseActive=0;
 
+#ifdef __DOS__
 int __far descent_critical_error_handler( unsigned deverr, unsigned errcode, unsigned __far * devhdr );
+#endif
 
 void check_joystick_calibration(void);
 
@@ -267,6 +270,7 @@ int init_graphics()
 
 void check_dos_version()
 {
+#ifdef __DOS__
    int major, minor;
    union REGS regs;
 
@@ -281,6 +285,7 @@ void check_dos_version()
       Error( "%s %d.%d\n%s", TXT_DOS_VERSION_1, major, minor, TXT_DOS_VERSION_2);
    }
    //printf( "\nUsing MS-DOS %d.%d...\n", major, minor );
+#endif
 }
 
 void change_to_dir(char *cmd_line)
@@ -371,6 +376,7 @@ void mem_int_to_string( int number, char *dest )
 
 void check_memory()
 {
+#ifdef __DOS__
    char text[32];
 
    printf( "\n%s\n", TXT_AVAILABLE_MEMORY);
@@ -416,7 +422,7 @@ void check_memory()
       digi_sample_rate = SAMPLE_RATE_22K;
    else
       digi_sample_rate = SAMPLE_RATE_11K;
-
+#endif
 }
 
 
@@ -459,6 +465,7 @@ int descent_critical_error = 0;
 unsigned descent_critical_deverror = 0;
 unsigned descent_critical_errcode = 0;
 
+#ifdef __DOS__
 #pragma off (check_stack)
 int __far descent_critical_error_handler(unsigned deverror, unsigned errcode, unsigned __far * devhdr )
 {
@@ -472,6 +479,7 @@ void chandler_end (void)  // dummy functions
 {
 }
 #pragma on (check_stack)
+#endif
 
 extern int Network_allow_socket_changes;
 
@@ -812,6 +820,7 @@ void do_network_init()
 
 int is_3dbios_installed()
 {
+#ifdef __DOS__
    dpmi_real_regs rregs;
 
    memset(&rregs,0,sizeof(dpmi_real_regs));
@@ -819,11 +828,15 @@ int is_3dbios_installed()
    dpmi_real_int386x( 0x10, &rregs );
    if ( (rregs.edx & 0xFFFF) != 0x3344 ) return 0;
    else return 1;
+#else
+   return 0;
+#endif
 }
 
 
 int init_gameport()
 {
+#ifdef __DOS__
    union REGS regs;
 
    memset(&regs,0,sizeof(regs));
@@ -832,6 +845,9 @@ int init_gameport()
    int386( 0x15, &regs, &regs );
    if ( ( regs.x.eax & 0xFFFF ) == 'SG' ) return 1;
    else return 0;
+#else
+   return 0;
+#endif
 }
 
 typedef struct {
@@ -857,6 +873,7 @@ char CDROM_dir[30] = "";
 //returns neg number if error, else drive letter (a:==1)
 int find_descent_cd()
 {
+#ifdef __DOS__
    dpmi_real_regs rregs;
 
    // Get dos memory for call...
@@ -963,6 +980,9 @@ int find_descent_cd()
 
 // mprintf ((0,"cur_drive=%d cdrom_drive=%d\n",cur_drive,cdrom_drive));
    return cdrom_drive;
+#else
+   return -1;
+#endif
 }
 
 //look for D2 CD-ROM.  returns 1 if found cd, else 0
@@ -1064,6 +1084,7 @@ int main(int argc,char **argv)
    dpmi_init(Inferno_verbose);      // Before anything
    verbose( "\n" );
 
+#ifdef __DOS__
    if (!dpmi_lock_region((void near *)descent_critical_error_handler,(char *)chandler_end - (char near *)descent_critical_error_handler)) {
       Error( "Unable to lock critial error handler" );
    }
@@ -1115,6 +1136,7 @@ int main(int argc,char **argv)
 
    verbose( "\n%s...", TXT_INITIALIZING_CRIT);
    _harderr((void *)descent_critical_error_handler );
+#endif
 
    //tell cfile about our counter
    cfile_set_critical_error_counter_ptr(&descent_critical_error);
