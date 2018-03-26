@@ -1135,7 +1135,7 @@ int main(int argc,char **argv)
    #endif
 
    verbose( "\n%s...", TXT_INITIALIZING_CRIT);
-   _harderr((void *)descent_critical_error_handler );
+   _harderr(descent_critical_error_handler);
 #endif
 
    //tell cfile about our counter
