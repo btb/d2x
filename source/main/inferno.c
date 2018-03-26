@@ -288,6 +288,7 @@ void check_dos_version()
 #endif
 }
 
+#if 0
 void change_to_dir(char *cmd_line)
 {
 	char drive[_MAX_DRIVE], dir[_MAX_DIR], curdir[_MAX_DIR];
@@ -304,6 +305,7 @@ void change_to_dir(char *cmd_line)
 	if (stricmp(&(curdir[2]), dir))
 		chdir(dir);
 }
+#endif
 
 void dos_check_file_handles(int num_required)
 {
