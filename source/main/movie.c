@@ -462,7 +462,7 @@ int InitMovieBriefing ()
 
 int FlipFlop=0;
 
-int MyShowFrame (void)
+void MyShowFrame(void)
  {
   grs_bitmap source_bm;
 
@@ -496,8 +496,6 @@ int MyShowFrame (void)
   gr_bm_ubitblt(rw,rh,rdx,rdy,0,0,&source_bm,&grd_curcanv->cv_bitmap);
 
   FlipFlop=1-FlipFlop;
-
-  return (NULL);
  }
 
 #ifdef BUFFER_MOVIE
