@@ -3,8 +3,6 @@
 #
 
 set(includes_OTHERS
-    dtypes.h
-    dtypes.inc
     makefile
     psmacros.inc
     pstypes.h
