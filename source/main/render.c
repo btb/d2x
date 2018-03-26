@@ -1348,8 +1348,10 @@ sort_item sort_list[SORT_LIST_SIZE];
 int n_sort_items;
 
 //compare function for object sort.
-int sort_func(const sort_item *a,const sort_item *b)
+int sort_func(const void *_a, const void *_b)
 {
+   sort_item *a = (sort_item *)_a;
+   sort_item *b = (sort_item *)_b;
    fix delta_dist;
    object *obj_a,*obj_b;
 
@@ -1527,13 +1529,8 @@ void build_object_lists(int n_segs)
 
 
          //now call qsort
-      #if defined(__WATCOMC__) || defined(MACINTOSH)
          qsort(sort_list,n_sort_items,sizeof(*sort_list),
                sort_func);
-      #else
-         qsort(sort_list,n_sort_items,sizeof(*sort_list),
-               (int (cdecl *)(const void*,const void*))sort_func);
-      #endif
 
          //now copy back into list
 
