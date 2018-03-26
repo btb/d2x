@@ -801,7 +801,9 @@ WINDOS(
 );
    save_font = grd_curcanv->cv_font;
 
+#ifdef WINDOWS
 KConfigPaint:
+#endif
    game_flush_inputs();
    old_keyd_repeat = keyd_repeat;
    keyd_repeat = 1;
