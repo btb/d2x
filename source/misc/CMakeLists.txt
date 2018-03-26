@@ -12,11 +12,13 @@ set(misc_SRCS
 #    error.c     #Mac, missing
 
 set(misc_OTHERS
+	args.c
 	args.h
 	byteswap.h
 	debug.h
 	errtest.c
 	fileutil.h
+	hash.c
 	hash.h
 	makefile
 	makefile.mac
@@ -26,6 +28,12 @@ set(misc_OTHERS
 	strutil.c   #Mac
 	strutil.h
 )
+
+if(TARGSYS MATCHES "^OSX$")
+    list(APPEND misc_SRCS strutil.c)
+endif()
+
+list(REMOVE_ITEM misc_OTHERS ${misc_SRCS})
 set_source_files_properties(${misc_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(misc ${misc_SRCS} ${misc_OTHERS})

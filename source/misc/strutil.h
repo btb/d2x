@@ -14,13 +14,21 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _STRUTILS_
 #define _STRUTILS_
 
+#ifdef MACINTOSH
 extern char *strdup(char *s);
+#endif
 extern int stricmp(char *str1, char *str2);
 extern int strnicmp(char *str1, char *str2, int n);
 
 void strupr( char *s1 );
 void strlwr( char *s1 );
 void strrev( char *s1 );
+
+#define _MAX_PATH   260 /* maximum length of full pathname */
+#define _MAX_DRIVE   3  /* maximum length of drive component */
+#define _MAX_DIR    256 /* maximum length of path component */
+#define _MAX_FNAME  256 /* maximum length of file name component */
+#define _MAX_EXT    256 /* maximum length of extension component */
 
 void _splitpath(char *name, char *drive, char *path, char *base, char *ext);
 

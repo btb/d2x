@@ -67,6 +67,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "poly_acc.h"
 #endif
 
+#ifndef __DOS__
+#include "strutil.h"
+#endif
+
 #define MAXDISPLAYABLEITEMS 15
 
 #define LHX(x)		((x)*(MenuHires?2:1))

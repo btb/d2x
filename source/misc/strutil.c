@@ -21,6 +21,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 // string compare without regard to case
 
+#ifdef MACINTOSH
 char *strdup(char *s)
 {
 	char *new_s;
@@ -29,6 +30,7 @@ char *strdup(char *s)
 	strcpy(new_s, s);
 	return new_s;
 }
+#endif
 
 int stricmp( char *s1, char *s2 )
 {
