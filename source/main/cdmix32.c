@@ -63,7 +63,7 @@ int CD_blast_mixer ()
 #ifndef WINDOWS
   InFile = fopen("descent.cfg", "rt");
   if (InFile == NULL)
-    return (NULL);
+     return 0;
 
   while (!feof(InFile)) {
       memset(line, 0, 80);
