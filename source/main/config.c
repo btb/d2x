@@ -165,7 +165,8 @@ int save_redbook_enabled;
 void CheckMovieAttributes()
 {
 		HKEY hKey;
-		DWORD len, type, val;
+		DWORD len, type;
+		BYTE val;
 		long lres;
   
 		lres = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Parallax\\Descent II\\1.1\\INSTALL",
