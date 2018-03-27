@@ -65,6 +65,9 @@ extern void newdemo_record_guided_end();
 extern void newdemo_record_guided_start();
 
 
+// Internal prototypes
+int find_homing_object(vms_vector *curpos, object *tracker);
+
 
 //---------------------------------------------------------------------------------
 // Called by render code.... determines if the laser is from a robot or the

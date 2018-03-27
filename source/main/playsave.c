@@ -59,6 +59,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
    #include "isp.h"
 #endif
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 typedef struct hli {
    char  shortname[9];
    ubyte level_num;
@@ -101,6 +105,11 @@ extern void InitWeaponOrdering();
 extern ubyte default_firebird_settings[];
 extern ubyte default_mousestick_settings[];
 #endif
+
+
+// Internal prototypes
+int get_lifetime_checksum(int a, int b);
+
 
 int new_player_config()
 {
@@ -319,7 +328,7 @@ extern char real_guidebot_name[];
 
 WIN(extern char win95_current_joyname[]);
 
-read_string(char *s, FILE *f)
+void read_string(char *s, FILE *f)
 {
    if (feof(f))
       *s = 0;
@@ -329,7 +338,7 @@ read_string(char *s, FILE *f)
       while (!feof(f) && *s++!=0);
 }
 
-write_string(char *s, FILE *f)
+void write_string(char *s, FILE *f)
 {
    do
       fputc(*s,f);

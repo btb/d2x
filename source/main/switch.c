@@ -329,7 +329,7 @@ void do_matcen(sbyte trigger_num)
 }
 
 
-do_il_on(sbyte trigger_num)
+void do_il_on(sbyte trigger_num)
 {
    int i;
 

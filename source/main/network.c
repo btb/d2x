@@ -66,6 +66,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "appltalk.h"
 #endif
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 #define LHX(x)          ((x)*(MenuHires?2:1))
 #define LHY(y)          ((y)*(MenuHires?2.4:1))
 
@@ -313,6 +317,7 @@ void network_read_object_packet(ubyte *data);
 void network_read_sync_packet(netgame_info *sp, int rsinit);
 void network_count_powerups_in_mine(void);
 void network_AdjustMaxDataSize(void);
+int network_wait_for_all_info(int choice);
 void network_do_big_wait(int choice);
 void network_flush(void);
 void network_listen(void);
@@ -326,11 +331,14 @@ void network_more_options_poll(int nitems, newmenu_item *menus, int *key, int ci
 void network_ping(ubyte flag, int pnum);
 void network_handle_ping_return(ubyte pnum);
 void DoRefuseStuff(sequence_packet *their);
+int GetNewPlayerNumber(sequence_packet *their);
 void network_send_extras(void);
+int network_choose_connect(void);
 void ClipRank(signed char *rank);
 void network_check_for_old_version(char pnum);
 void network_process_names_return(char *data);
 void network_send_player_names(sequence_packet *their);
+int HoardEquipped(void);
 
 
 void

@@ -69,6 +69,7 @@ extern int multi_powerup_is_allowed (int);
 
 
 // Internal prototypes
+int multi_add_controlled_robot(int objnum, int agitation);
 void multi_delete_controlled_robot(int objnum);
 void multi_send_release_robot(int objnum);
 void multi_send_robot_position_sub(int objnum);

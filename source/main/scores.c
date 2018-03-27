@@ -45,6 +45,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "text.h"
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 #define VERSION_NUMBER     1
 #define SCORES_FILENAME    "DESCENT.HI"
 #define COOL_MESSAGE_LEN   50

@@ -28,6 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "fix.h"
 #include "key.h"
+#include "palette.h"
 
 #if defined(POLY_ACC)
 #include "poly_acc.h"

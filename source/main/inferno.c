@@ -112,6 +112,10 @@ extern int Current_display_mode;        //$$ there's got to be a better way than
 #include "ui.h"
 #endif
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 #include "vers_id.h"
 
 //Current version number

@@ -66,6 +66,8 @@ short vga_set_mode(short mode);
 short vga_init(void);
 short vga_mode13_checkmode(void);
 
+int gr_init_A0000(void);
+
 //  0=Mode set OK
 //  1=No VGA adapter installed
 //  2=Program doesn't support this VESA granularity

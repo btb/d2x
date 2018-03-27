@@ -42,6 +42,13 @@ DigiDevices SBCards[NUM_OF_CARDS]={
  };
 #endif
 
+
+// Internal prototypes
+void SetRedSB16(short aport, short dport, char vol);
+void SetRedSB(short aport, short dport, char vol);
+void SetRedSBPro(short aport, short dport, char vol);
+
+
 int CD_blast_mixer ()
  {
   FILE *InFile;
