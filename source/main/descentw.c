@@ -37,7 +37,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "text.h"
 #include "menu.h"
 #include "vers_id.h"
+#ifdef MVE
 #include "mvelibw.h"
+#endif
 #include "modem.h"
 #include "cntrlcen.h"
 
@@ -1054,7 +1056,9 @@ static int SavedScreenMode = 0;
 
 extern int Digi_initialized;
 extern int Current_display_mode;
+#ifdef MVE
 extern BOOL WMVEPlaying, RMVEPlaying;
+#endif
 extern int current_song_level;
 
 
@@ -1089,12 +1093,14 @@ void D2Shutdown()
       stop_time();
    }
 
+#ifdef MVE
    mprintf((0, "WMVE: %d, RMVE: %d\n", WMVEPlaying, RMVEPlaying));
 
    if (WMVEPlaying) MovieShutdown();
    if (RMVEPlaying) MVE_rmHoldMovie();
 
    if (!WMVEPlaying) digi_reset();
+#endif
 
    mprintf((0, "Descent 2 is asleep...\n"));
 
@@ -1106,7 +1112,13 @@ void D2Restore()
 {
    if (!GameShutdown) return;
 
-   if (!WMVEPlaying) digi_reset();
+#ifdef MVE
+   if (!WMVEPlaying)
+#endif
+   {
+      digi_reset();
+   }
+#ifdef MVE
    if (WMVEPlaying) {
       MovieRestore();
       key_flush();
@@ -1131,7 +1143,9 @@ void D2Restore()
       _AppPaused = FALSE;
       goto EndD2Restore;
    }
-   else {
+   else
+#endif
+   {
       if (_lpDD) RestoreVideoState();
 
       if (CD_audio_desktop_dev != -1)
