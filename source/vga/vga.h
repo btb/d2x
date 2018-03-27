@@ -60,7 +60,7 @@ void vga_enable_default_palette_loading(void);
 void vga_disable_default_palette_loading(void);
 void vga_set_cursor_position( uword position );
 void vga_restore_mode(void);
-short vga_close(void);
+void vga_close(void);
 int vga_vesa_setmode( short mode );
 short vga_set_mode(short mode);
 short vga_init(void);

@@ -307,7 +307,7 @@ void vga_restore_mode()
    }
 }
 
-short vga_close()
+void vga_close()
 {
 #if defined(POLY_ACC)
         pa_reset();
@@ -320,8 +320,6 @@ short vga_close()
       if( saved_video_memory )
          free(saved_video_memory);
    }
-
-   return 0;
 }
 
 int LinearSVGABuffer=0;

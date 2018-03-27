@@ -79,7 +79,7 @@ int dd_gfx_init()
 }
 
 
-int dd_gfx_close()
+void dd_gfx_close()
 {
    int i;
 
@@ -92,8 +92,6 @@ int dd_gfx_close()
    }
 
    dd_gfx_initialized =0;
-
-   return 0;
 }
 
 
