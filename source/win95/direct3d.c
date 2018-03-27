@@ -116,14 +116,13 @@ BOOL d3d_init(void)
 }
 
 
-int d3d_close(void)
+void d3d_close(void)
 {
 	if (d3d_initialized) {
 		IDirect3D_Release(_lpD3D);
 		_lpD3D = NULL;
 		d3d_initialized = FALSE;
 	}
-	return 0;
 }		
 
 
