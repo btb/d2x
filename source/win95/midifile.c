@@ -17,10 +17,11 @@
 #include <mmsystem.h>
 #include <memory.h>
 #include <strsafe.h>
+
 #include "muldiv32.h"
-#include "smf.h"
-#include "smfi.h"
-#include "debug.h"
+#include "midifile.h"
+#include "error.h"
+#include "mono.h"
 
 PRIVATE SMFRESULT FNLOCAL smfInsertParmData(
     PSMF                    pSmf,
@@ -51,6 +52,14 @@ PRIVATE SMFRESULT FNLOCAL smfInsertParmData(
 *     SMFOPENFILESTRUCT were invalid.
 *
 *****************************************************************************/
+#if 1
+SMFRESULT FNLOCAL smfOpenFile(
+    BYTE *data, UINT length, HSMF *pph)
+{
+    return SMF_OPEN_FAILED;
+}
+
+#else
 SMFRESULT FNLOCAL smfOpenFile(
     PSMFOPENFILESTRUCT      psofs)
 {
@@ -61,8 +70,8 @@ SMFRESULT FNLOCAL smfOpenFile(
     MMCKINFO                ckRIFF;
     MMCKINFO                ckDATA;
 
-    assert(psofs != NULL);
-    assert(psofs->pstrName != NULL);
+    Assert(psofs != NULL);
+    Assert(psofs->pstrName != NULL);
 
     /* Verify that the file can be opened or created
     */
@@ -71,7 +80,7 @@ SMFRESULT FNLOCAL smfOpenFile(
     hmmio = mmioOpen(psofs->pstrName, &mmioinfo, MMIO_READ|MMIO_ALLOCBUF);
     if ((HMMIO)NULL == hmmio)
     {
-        DPF(1, "smfOpenFile: mmioOpen failed!");
+        mprintf((1, "smfOpenFile: mmioOpen failed!"));
         return SMF_OPEN_FAILED;
     }
 
@@ -80,7 +89,7 @@ SMFRESULT FNLOCAL smfOpenFile(
     pSmf = (PSMF)LocalAlloc(LPTR, sizeof(SMF));
     if (NULL == pSmf)
     {
-        DPF(1, "smfOpenFile: LocalAlloc failed!");
+        mprintf((1, "smfOpenFile: LocalAlloc failed!"));
         smfrc = SMF_NO_MEMORY;
         goto smf_Open_File_Cleanup;
     }
@@ -104,7 +113,7 @@ SMFRESULT FNLOCAL smfOpenFile(
         }
         else
         {
-            DPF(1, "smfOpenFile: Could not descend into RIFF DATA chunk!");
+            mprintf((1, "smfOpenFile: Could not descend into RIFF DATA chunk!"));
             smfrc = SMF_INVALID_FILE;
             goto smf_Open_File_Cleanup;
         }
@@ -119,14 +128,14 @@ SMFRESULT FNLOCAL smfOpenFile(
 
     if (NULL == (pSmf->hpbImage = GlobalAllocPtr(GMEM_MOVEABLE|GMEM_SHARE, pSmf->cbImage)))
     {
-        DPF(1, "smfOpenFile: No memory for image! [%08lX]", pSmf->cbImage);
+        mprintf((1, "smfOpenFile: No memory for image! [%08lX]", pSmf->cbImage));
         smfrc = SMF_NO_MEMORY;
         goto smf_Open_File_Cleanup;
     }
 
     if (pSmf->cbImage != (DWORD)mmioRead(hmmio, pSmf->hpbImage, pSmf->cbImage))
     {
-        DPF(1, "smfOpenFile: Read error on image!");
+        mprintf((1, "smfOpenFile: Read error on image!"));
         smfrc = SMF_INVALID_FILE;
         goto smf_Open_File_Cleanup;
     }
@@ -137,7 +146,7 @@ SMFRESULT FNLOCAL smfOpenFile(
     smfrc = smfBuildFileIndex((PSMF BSTACK *)&pSmf);
     if (MMSYSERR_NOERROR != smfrc)
     {
-        DPF(1, "smfOpenFile: smfBuildFileIndex failed! [%lu]", (DWORD)smfrc);
+        mprintf((1, "smfOpenFile: smfBuildFileIndex failed! [%lu]", (DWORD)smfrc));
     }
 
 smf_Open_File_Cleanup:
@@ -163,6 +172,7 @@ smf_Open_File_Cleanup:
 
     return smfrc;
 }
+#endif
 
 /*****************************************************************************
 *
@@ -185,7 +195,7 @@ SMFRESULT FNLOCAL smfCloseFile(
 {
     PSMF                    pSmf        = (PSMF)hSmf;
 
-    assert(pSmf != NULL);
+    Assert(pSmf != NULL);
 
     /*
     ** Free up handle memory
@@ -219,8 +229,8 @@ SMFRESULT FNLOCAL smfGetFileInfo(
 {
     PSMF                    pSmf = (PSMF)hSmf;
 
-    assert(pSmf != NULL);
-    assert(psfi != NULL);
+    Assert(pSmf != NULL);
+    Assert(psfi != NULL);
 
     /*
     ** Just fill in the structure with useful information.
@@ -263,11 +273,11 @@ DWORD FNLOCAL smfTicksToMillisecs(
     UINT                    uSMPTE;
     DWORD                   dwTicksPerSec;
 
-    assert(pSmf != NULL);
+    Assert(pSmf != NULL);
 
     if (tkOffset > pSmf->tkLength)
     {
-        DPF(1, "sTTM: Clipping ticks to file length!");
+        mprintf((1, "sTTM: Clipping ticks to file length!"));
         tkOffset = pSmf->tkLength;
     }
 
@@ -293,7 +303,7 @@ DWORD FNLOCAL smfTicksToMillisecs(
     */
 
     pTempo = pSmf->pTempoMap;
-    assert(pTempo != NULL);
+    Assert(pTempo != NULL);
 
     for (idx = 0; idx < pSmf->cTempoMap; idx++, pTempo++)
         if (tkOffset < pTempo->tkTempo)
@@ -343,7 +353,7 @@ TICKS FNLOCAL smfMillisecsToTicks(
     DWORD                   dwTicksPerSec;
     TICKS                   tkOffset;
 
-    assert(pSmf != NULL);
+    Assert(pSmf != NULL);
 
     /* SMPTE time is easy -- no tempo map, just linear conversion
     ** Note that 30-Drop means nothing to us here since we're not
@@ -366,7 +376,7 @@ TICKS FNLOCAL smfMillisecsToTicks(
     ** calculate the rest (using MATH.ASM)
     */
     pTempo = pSmf->pTempoMap;
-    assert(pTempo != NULL);
+    Assert(pTempo != NULL);
 
     for (idx = 0; idx < pSmf->cTempoMap; idx++, pTempo++)
         if (msOffset < pTempo->msBase)
@@ -382,7 +392,7 @@ TICKS FNLOCAL smfMillisecsToTicks(
 
     if (tkOffset > pSmf->tkLength)
     {
-        DPF(1, "sMTT: Clipping ticks to file length!");
+        mprintf((1, "sMTT: Clipping ticks to file length!"));
         tkOffset = pSmf->tkLength;
     }
 
@@ -420,8 +430,8 @@ SMFRESULT FNLOCAL smfReadEvents(
     LPDWORD                 lpdw;
     DWORD                   dwTempo;
 
-    assert(pSmf != NULL);
-    assert(lpmh != NULL);
+    Assert(pSmf != NULL);
+    Assert(lpmh != NULL);
 
     /*
     ** Read events from the track and pack them into the buffer in polymsg
@@ -435,7 +445,7 @@ SMFRESULT FNLOCAL smfReadEvents(
         smfrc = smfInsertParmData(pSmf, (TICKS)0, lpmh);
         if (SMF_SUCCESS != smfrc)
         {
-            DPF(1, "smfInsertParmData() -> %u", (UINT)smfrc);
+            mprintf((1, "smfInsertParmData() -> %u", (UINT)smfrc));
             return smfrc;
         }
     }
@@ -449,7 +459,7 @@ SMFRESULT FNLOCAL smfReadEvents(
 
     while(TRUE)
     {
-        assert(lpmh->dwBytesRecorded <= lpmh->dwBufferLength);
+        Assert(lpmh->dwBytesRecorded <= lpmh->dwBufferLength);
 
         /* If we know ahead of time we won't have room for the
         ** event, just break out now. We need 2 DWORD's for the
@@ -463,8 +473,10 @@ SMFRESULT FNLOCAL smfReadEvents(
             break;
         }
 
+#if 0
         smfrc = smfGetNextEvent(pSmf, (SPEVENT)&event, tkMax);
         if (SMF_SUCCESS != smfrc)
+#endif
         {
             /* smfGetNextEvent doesn't set this because smfSeek uses it
             ** as well and needs to distinguish between reaching the
@@ -479,7 +491,7 @@ SMFRESULT FNLOCAL smfReadEvents(
                 pSmf->fdwSMF |= SMF_F_EOF;
             }
 
-            DPF(1, "smfReadEvents: smfGetNextEvent() -> %u", (UINT)smfrc);
+            mprintf((1, "smfReadEvents: smfGetNextEvent() -> %u", (UINT)smfrc));
             break;
         }
 
@@ -507,7 +519,7 @@ SMFRESULT FNLOCAL smfReadEvents(
         {
             if (event.cbParm != 3)
             {
-                DPF(1, "smfReadEvents: Corrupt tempo event");
+                mprintf((1, "smfReadEvents: Corrupt tempo event"));
                 return SMF_INVALID_FILE;
             }
 
@@ -549,7 +561,7 @@ SMFRESULT FNLOCAL smfReadEvents(
             smfrc = smfInsertParmData(pSmf, event.tkDelta, lpmh);
             if (SMF_SUCCESS != smfrc)
             {
-                DPF(1, "smfInsertParmData[2] %u", (UINT)smfrc);
+                mprintf((1, "smfInsertParmData[2] %u", (UINT)smfrc));
                 return smfrc;
             }
 
@@ -592,13 +604,13 @@ PRIVATE SMFRESULT FNLOCAL smfInsertParmData(
     DWORD                   dwRounded;
     LPDWORD                 lpdw;
 
-    assert(pSmf != NULL);
-    assert(lpmh != NULL);
+    Assert(pSmf != NULL);
+    Assert(lpmh != NULL);
 
     /* Can't fit 4 DWORD's? (tkDelta + stream-id + event + some data)
     ** Can't do anything.
     */
-    assert(lpmh->dwBufferLength >= lpmh->dwBytesRecorded);
+    Assert(lpmh->dwBufferLength >= lpmh->dwBytesRecorded);
 
     if (lpmh->dwBufferLength - lpmh->dwBytesRecorded < 4*sizeof(DWORD))
     {
@@ -608,7 +620,7 @@ PRIVATE SMFRESULT FNLOCAL smfInsertParmData(
         /* If we got here with a real delta, that means smfReadEvents screwed
         ** up calculating left space and we should flag it somehow.
         */
-        DPF(1, "Can't fit initial piece of SysEx into buffer!");
+        mprintf((1, "Can't fit initial piece of SysEx into buffer!"));
         return SMF_INVALID_FILE;
     }
 
@@ -633,10 +645,10 @@ PRIVATE SMFRESULT FNLOCAL smfInsertParmData(
 
     if (dwLength & 0x80000000L)
     {
-        DPF(1, "dwLength %08lX  dwBytesRecorded %08lX  dwBufferLength %08lX", dwLength, lpmh->dwBytesRecorded, lpmh->dwBufferLength);
-        DPF(1, "cbPendingUserEvent %08lX  dwPendingUserEvent %08lX dwRounded %08lX", pSmf->cbPendingUserEvent, pSmf->dwPendingUserEvent, dwRounded);
-        DPF(1, "Offset into MIDI image %08lX", (DWORD)(pSmf->hpbPendingUserEvent - pSmf->hpbImage));
-        DPF(1, "!hmemcpy is about to fault");
+        mprintf((1, "dwLength %08lX  dwBytesRecorded %08lX  dwBufferLength %08lX", dwLength, lpmh->dwBytesRecorded, lpmh->dwBufferLength));
+        mprintf((1, "cbPendingUserEvent %08lX  dwPendingUserEvent %08lX dwRounded %08lX", pSmf->cbPendingUserEvent, pSmf->dwPendingUserEvent, dwRounded));
+        mprintf((1, "Offset into MIDI image %08lX", (DWORD)(pSmf->hpbPendingUserEvent - pSmf->hpbImage)));
+        mprintf((1, "!hmemcpy is about to fault"));
     }
 
     hmemcpy(lpdw, pSmf->hpbPendingUserEvent, dwLength);
@@ -745,6 +757,7 @@ SMFRESULT FNLOCAL smfSeek(
         ptrk->fdwTrack          = 0;
     }
 
+#if 0
     while (SMF_SUCCESS == (smfrc = smfGetNextEvent(pSmf, (SPEVENT)&event, tkPosition)))
     {
         if (MIDI_META == (bEvent = EVENT_TYPE(event)))
@@ -769,6 +782,7 @@ SMFRESULT FNLOCAL smfSeek(
                 break;
         }
     }
+#endif
 
     if (SMF_REACHED_TKMAX != smfrc)
     {
