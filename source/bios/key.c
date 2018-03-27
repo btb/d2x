@@ -486,7 +486,7 @@ void key_init()
    if (!dpmi_lock_region ((void near *)key_handler, (char *)key_handler_end - (char near *)key_handler)) {
       Error( "Can't lock keyboard handler!\n" );
    }
-   if (!dpmi_lock_region (&key_data, sizeof(keyboard)))  {
+   if (!dpmi_lock_region((void *)&key_data, sizeof(keyboard))) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
    if (!dpmi_lock_region (&keyd_buffer_type, sizeof(char))) {
@@ -498,16 +498,16 @@ void key_init()
    if (!dpmi_lock_region (&keyd_editor_mode, sizeof(char))) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
-   if (!dpmi_lock_region (&keyd_last_pressed, sizeof(char)))   {
+   if (!dpmi_lock_region((void *)&keyd_last_pressed, sizeof(char))) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
-   if (!dpmi_lock_region (&keyd_last_released, sizeof(char)))  {
+   if (!dpmi_lock_region((void *)&keyd_last_released, sizeof(char))) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
-   if (!dpmi_lock_region (&keyd_pressed, sizeof(char)*256)) {
+   if (!dpmi_lock_region((void *)&keyd_pressed, sizeof(char)*256)) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
-   if (!dpmi_lock_region (&keyd_time_when_last_pressed, sizeof(int)))   {
+   if (!dpmi_lock_region((void *)&keyd_time_when_last_pressed, sizeof(int))) {
       Error( "Can't lock keyboard handler's data!\n" );
    }
 
