@@ -184,7 +184,9 @@ WIN(int credinit = 0;)
 
 	WIN(DEFINE_SCREEN(NULL));
 
+#ifdef WINDOWS
 CreditsPaint:
+#endif
 	gr_use_palette_table( "credits.256" );
 #if defined(POLY_ACC)
 	pa_update_clut(gr_palette, 0, 256, 0);
