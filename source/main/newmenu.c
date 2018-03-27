@@ -67,7 +67,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "poly_acc.h"
 #endif
 
-#ifndef __DOS__
+#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"
 #endif
 
