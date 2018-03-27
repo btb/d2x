@@ -6,9 +6,9 @@ set(TARGSYS "WIN32")
 
 set(win95_SRCS
     palette.c key.c findfile.c timer.c rbaudio.c error.c
-    ipx.c joyc.c swift.c mouse.c winapp.c mono.c
+    ipx.c joyc.c mouse.c winapp.c mono.c
     comm.c winregs.c ds.c winmidi.c winckpit.asm
-    gfx.c dd.c ddgr.c direct3d.c xtapi.c iforce.c tactile.c
+    gfx.c dd.c ddgr.c direct3d.c iforce.c tactile.c
 ) # midifile.c
 
 list(APPEND win95_OTHERS
@@ -23,11 +23,12 @@ list(APPEND win95_OTHERS
     makefile
     midifile.h
     midiseq.h
+    swift.c
     tactile.h
-    winapp.c
     winmidi.h
     winmono.c
     winregs.h
+    xtapi.c
     xtapi.h
 )
 set_source_files_properties(${win95_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
