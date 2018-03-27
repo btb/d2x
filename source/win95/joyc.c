@@ -35,7 +35,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //#include "cyberimp.h"
 //#include "spw_inp.h"
 
+#ifdef TACTILE
 #define WIN_TACTILE_ON
+#endif
 
 #define JOY_READ_BUTTONS 
 #define MAX_BUTTONS 20
