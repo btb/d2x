@@ -30,8 +30,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "win\dd.h"
-#include "win\winapp.h"
+#include "dd.h"
+#include "winapp.h"
 #include "pstypes.h"
 #include "fix.h"
 #include "gr.h"

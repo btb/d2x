@@ -14,7 +14,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef WINDOWS
 #include "desw.h"
-#include "win\ds.h"
+#include "ds.h"
 #endif
 
 

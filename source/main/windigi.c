@@ -13,7 +13,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #include "desw.h"
-#include "win\ds.h"
+#include "ds.h"
 #include <mmsystem.h>
 #include <mmreg.h>
 
@@ -47,7 +47,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #pragma pack (4);						// Use 32-bit packing!
 #pragma off (check_stack);			// No stack checking!
 
-#include "win\winmidi.h"
+#include "winmidi.h"
 #include "config.h"
 
 #define MAX_CHANNELS 32

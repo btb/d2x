@@ -18,7 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <windows.h>
 #include <stdlib.h>
-#include "win\ddraw.h"
+#include "ddraw.h"
 #include "dd.h"
 
 
