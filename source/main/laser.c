@@ -157,6 +157,7 @@ int laser_are_related( int o1, int o2 )
    // See if o2 is the parent of o1
    if ( Objects[o1].type == OBJ_WEAPON  )
       if ( (Objects[o1].ctype.laser_info.parent_num==o2) && (Objects[o1].ctype.laser_info.parent_signature==Objects[o2].signature) )
+      {
          // o1 is a weapon, o2 is the parent of 1, so if o1 is PROXIMITY_BOMB and o2 is player, they are related only if o1 < 2.0 seconds old
          if ((Objects[o1].id == PHOENIX_ID && (GameTime > Objects[o1].ctype.laser_info.creation_time + F1_0/4)) ||
             (Objects[o1].id == GUIDEDMISS_ID && (GameTime > Objects[o1].ctype.laser_info.creation_time + F1_0*2)) ||
@@ -164,10 +165,12 @@ int laser_are_related( int o1, int o2 )
             return 0;
          } else
             return 1;
+      }
 
    // See if o1 is the parent of o2
    if ( Objects[o2].type == OBJ_WEAPON  )
       if ( (Objects[o2].ctype.laser_info.parent_num==o1) && (Objects[o2].ctype.laser_info.parent_signature==Objects[o1].signature) )
+      {
          // o2 is a weapon, o1 is the parent of 2, so if o2 is PROXIMITY_BOMB and o1 is player, they are related only if o1 < 2.0 seconds old
          if ((Objects[o2].id == PHOENIX_ID && (GameTime > Objects[o2].ctype.laser_info.creation_time + F1_0/4)) ||
             (Objects[o2].id == GUIDEDMISS_ID && (GameTime > Objects[o2].ctype.laser_info.creation_time + F1_0*2)) ||
@@ -175,6 +178,7 @@ int laser_are_related( int o1, int o2 )
             return 0;
          } else
             return 1;
+      }
 
    // They must both be weapons
    if ( Objects[o1].type != OBJ_WEAPON || Objects[o2].type != OBJ_WEAPON )
@@ -184,6 +188,7 @@ int laser_are_related( int o1, int o2 )
    // See if they're siblings...
    // MK: 06/08/95, Don't allow prox bombs to detonate for 3/4 second.  Else too likely to get toasted by your own bomb if hit by opponent.
    if ( Objects[o1].ctype.laser_info.parent_signature==Objects[o2].ctype.laser_info.parent_signature )
+   {
       if (Objects[o1].id == PROXIMITY_ID  || Objects[o2].id == PROXIMITY_ID || Objects[o1].id == SUPERPROX_ID || Objects[o2].id == SUPERPROX_ID) {
          // If neither is older than 1/2 second, then can't blow up!
          if ((GameTime > (Objects[o1].ctype.laser_info.creation_time + F1_0/2)) || (GameTime > (Objects[o2].ctype.laser_info.creation_time + F1_0/2)))
@@ -192,6 +197,7 @@ int laser_are_related( int o1, int o2 )
             return 1;
       } else
          return 1;
+   }
 
    // Anything can cause a collision with a robot super prox mine.
    if (Objects[o1].id == ROBOT_SUPERPROX_ID || Objects[o2].id == ROBOT_SUPERPROX_ID ||
@@ -1080,6 +1086,7 @@ int find_homing_object_complete(vms_vector *curpos, object *tracker, int track_o
       object      *curobjp = &Objects[objnum];
 
       if ((curobjp->type != track_obj_type1) && (curobjp->type != track_obj_type2))
+      {
          if ((curobjp->type == OBJ_WEAPON) && ((curobjp->id == PROXIMITY_ID) || (curobjp->id == SUPERPROX_ID))) {
             if (curobjp->ctype.laser_info.parent_signature != tracker->ctype.laser_info.parent_signature)
                is_proximity = 1;
@@ -1087,6 +1094,7 @@ int find_homing_object_complete(vms_vector *curpos, object *tracker, int track_o
                continue;
          } else
             continue;
+      }
 
       if (objnum == tracker->ctype.laser_info.parent_num) // Don't track shooter
          continue;

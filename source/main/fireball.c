@@ -951,6 +951,7 @@ int object_create_egg(object *objp)
 
    if (!(Game_mode & GM_MULTI) & (objp->type != OBJ_PLAYER))
       if (objp->contains_type == OBJ_POWERUP)
+      {
          if (objp->contains_id == POW_SHIELD_BOOST) {
             if (Players[Player_num].shields >= i2f(100)) {
                if (rand() > 16384) {
@@ -976,6 +977,7 @@ int object_create_egg(object *objp)
                }
             }
          }
+      }
 
    rval = drop_powerup(objp->contains_type, objp->contains_id, objp->contains_count, &objp->mtype.phys_info.velocity, &objp->pos, objp->segnum);
 
@@ -985,11 +987,13 @@ int object_create_egg(object *objp)
          Objects[rval].flags |= OF_PLAYER_DROPPED;
 
       if (objp->type == OBJ_ROBOT && objp->contains_type==OBJ_POWERUP)
+      {
          if (objp->contains_id==POW_VULCAN_WEAPON || objp->contains_id==POW_GAUSS_WEAPON)
             Objects[rval].ctype.powerup_info.count = VULCAN_WEAPON_AMMO_AMOUNT;
          else if (objp->contains_id==POW_OMEGA_WEAPON)
             Objects[rval].ctype.powerup_info.count = MAX_OMEGA_CHARGE;
-    }
+      }
+   }
 
    return rval;
 }

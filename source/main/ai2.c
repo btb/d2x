@@ -932,10 +932,12 @@ int lead_player(object *objp, vms_vector *fire_point, vms_vector *believed_playe
    // At Rookie or Trainee, don't lead at all.
    // At higher skill levels, don't lead as well.  Accomplish this by screwing up max_weapon_speed.
    if (wptr->matter)
+   {
       if (Difficulty_level <= 1)
          return 0;
       else
          max_weapon_speed *= (NDL-Difficulty_level);
+   }
 
    projected_time = fixdiv(dist_to_player, max_weapon_speed);
 
@@ -1822,12 +1824,14 @@ int ai_door_is_openable(object *objp, segment *segp, int sidenum)
       }
    } else if ((objp->id == ROBOT_BRAIN) || (objp->ctype.ai_info.behavior == AIB_RUN_FROM) || (objp->ctype.ai_info.behavior == AIB_SNIPE)) {
       if (wall_num != -1)
+      {
          if ((wallp->type == WALL_DOOR) && (wallp->keys == KEY_NONE) && !(wallp->flags & WALL_DOOR_LOCKED))
             return 1;
          else if (wallp->keys != KEY_NONE) { // Allow bots to open doors to which player has keys.
             if (wallp->keys & Players[Player_num].flags)
                return 1;
          }
+      }
    }
    return 0;
 }
@@ -2489,10 +2493,12 @@ void ai_do_actual_firing_stuff(object *obj, ai_static *aip, ai_local *ailp, robo
             // Switch to next gun for next fire.  If has 2 gun types, select gun #1, if exists.
             aip->CURRENT_GUN++;
             if (aip->CURRENT_GUN >= Robot_info[obj->id].n_guns)
+            {
                if ((Robot_info[obj->id].n_guns == 1) || (Robot_info[obj->id].weapon_type2 == -1))
                   aip->CURRENT_GUN = 0;
                else
                   aip->CURRENT_GUN = 1;
+            }
          }
       }
    } else if ((!robptr->attack_type &&
@@ -2574,10 +2580,12 @@ void ai_do_actual_firing_stuff(object *obj, ai_static *aip, ai_local *ailp, robo
             // Switch to next gun for next fire.
             aip->CURRENT_GUN++;
             if (aip->CURRENT_GUN >= Robot_info[obj->id].n_guns)
+            {
                if (Robot_info[obj->id].n_guns == 1)
                   aip->CURRENT_GUN = 0;
                else
                   aip->CURRENT_GUN = 1;
+            }
          }
       }
       }

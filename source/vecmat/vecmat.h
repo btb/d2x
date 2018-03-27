@@ -82,7 +82,7 @@ extern vms_matrix vmd_identity_matrix;
 //Here's a handy constant
 
 #define ZERO_VECTOR {0,0,0}
-#define IDENTITY_MATRIX {f1_0,0,0,0,f1_0,0,0,0,f1_0}
+#define IDENTITY_MATRIX { {f1_0, 0, 0}, {0, f1_0, 0}, {0, 0, f1_0} }
 
 //#define vm_vec_make(v,_x,_y,_z) (((v)->x=(_x), (v)->y=(_y), (v)->z=(_z)), (v))
 

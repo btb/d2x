@@ -1927,7 +1927,9 @@ int newdemo_read_frame_information()
          oflags = Players[Player_num].flags >> 16;
          Players[Player_num].flags &= 0xffff;
 
-         if ((Newdemo_vcr_state == ND_STATE_REWINDING) || (Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD) && (oflags != 0xffff)) {
+         if ((Newdemo_vcr_state == ND_STATE_REWINDING) ||
+             ((Newdemo_vcr_state == ND_STATE_ONEFRAMEBACKWARD) &&
+              (oflags != 0xffff))) {
             if (!(oflags & PLAYER_FLAGS_CLOAKED) && (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)) {
                Players[Player_num].cloak_time = 0;
                Newdemo_players_cloaked &= ~(1 << Player_num);

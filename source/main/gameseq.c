@@ -1626,10 +1626,12 @@ void AdvanceLevel(int secret_flag)
    if (Game_mode & GM_MULTI)  {
       result = multi_endlevel(&secret_flag); // Wait for other players to reach this point
       if (result) // failed to sync
+      {
          if (Current_level_num == Last_level)      //player has finished the game!
             longjmp( LeaveGame, 0 );      // Exit out of game loop
          else
             return;
+      }
    }
 
    if (Current_level_num == Last_level) {    //player has finished the game!

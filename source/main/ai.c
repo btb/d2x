@@ -125,24 +125,24 @@ int   Believed_player_seg;
 #ifndef NDEBUG
 // Index into this array with ailp->mode
 char  *mode_text[18] = {
-   {"STILL"},
-   {"WANDER"},
-   {"FOL_PATH"},
-   {"CHASE_OBJ"},
-   {"RUN_FROM"},
-   {"BEHIND"},
-   {"FOL_PATH2"},
-   {"OPEN_DOOR"},
-   {"GOTO_PLR"},
-   {"GOTO_OBJ"},
-   {"SN_ATT"},
-   {"SN_FIRE"},
-   {"SN_RETR"},
-   {"SN_RTBK"},
-   {"SN_WAIT"},
-   {"TH_ATTACK"},
-   {"TH_RETREAT"},
-   {"TH_WAIT"},
+   "STILL",
+   "WANDER",
+   "FOL_PATH",
+   "CHASE_OBJ",
+   "RUN_FROM",
+   "BEHIND",
+   "FOL_PATH2",
+   "OPEN_DOOR",
+   "GOTO_PLR",
+   "GOTO_OBJ",
+   "SN_ATT",
+   "SN_FIRE",
+   "SN_RETR",
+   "SN_RTBK",
+   "SN_WAIT",
+   "TH_ATTACK",
+   "TH_RETREAT",
+   "TH_WAIT",
 
 };
 
@@ -1234,7 +1234,7 @@ _exit_cheat:
 
    // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -
    // If new state = fire, then set all gun states to fire.
-   if ((aip->GOAL_STATE == AIS_FIRE) ) {
+   if ( aip->GOAL_STATE == AIS_FIRE ) {
       int   i,num_guns;
       num_guns = Robot_info[obj->id].n_guns;
       for (i=0; i<num_guns; i++)
@@ -1333,10 +1333,12 @@ _exit_cheat:
    if (player_visibility == 0) {
       aip->CURRENT_GUN++;
       if (aip->CURRENT_GUN >= Robot_info[obj->id].n_guns)
+      {
          if ((robptr->n_guns == 1) || (robptr->weapon_type2 == -1))  // Two weapon types hack.
             aip->CURRENT_GUN = 0;
          else
             aip->CURRENT_GUN = 1;
+      }
    }
 
 }
@@ -1414,10 +1416,12 @@ void pae_aux(int segnum, int type, int level)
    for (j=0; j<MAX_SIDES_PER_SEGMENT; j++)
       if (IS_CHILD(Segments[segnum].children[j]))
          if (level <= 3)
+         {
             if (type == 4)
                pae_aux(Segments[segnum].children[j], type-1, level+1);
             else
                pae_aux(Segments[segnum].children[j], type, level+1);
+         }
 }
 
 
