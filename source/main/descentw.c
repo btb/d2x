@@ -388,8 +388,10 @@ int RunGame(int argc, char *argv[])
 	if (!FindArg("-nonetwork"))
 		InitNetwork();
 
+#ifdef SERIAL
 	if (!FindArg("-noserial"))
 		serial_active = 1;
+#endif
 
 	AllowActivates = TRUE;	
 
