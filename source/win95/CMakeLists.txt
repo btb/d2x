@@ -9,7 +9,7 @@ set(win95_SRCS
     ipx.c joyc.c mouse.c winapp.c mono.c
     comm.c winregs.c ds.c winmidi.c winckpit.asm
     gfx.c dd.c ddgr.c direct3d.c iforce.c tactile.c
-) # midifile.c
+)
 
 list(APPEND win95_OTHERS
     comm.h
@@ -21,8 +21,10 @@ list(APPEND win95_OTHERS
     global.h
     iforce.h
     makefile
+    midifile.c
     midifile.h
     midiseq.h
+    muldiv32.h
     swift.c
     tactile.h
     winmidi.h
