@@ -99,11 +99,7 @@ sbyte CybermouseActive = 0;
 
 static 	char 	title_pal[768];
 
-
-//	THIS IS A HACK UNTIL WE HAVE MOVIES
-int MovieHires = 1;
 char CDROM_dir[30] = "";
-int Hogfile_on_CD = 0;
 
 
 // Function Prototypes --------------------------------------------------------
