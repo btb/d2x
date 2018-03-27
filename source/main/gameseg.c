@@ -1519,7 +1519,7 @@ void create_walls_on_side(segment *sp, int sidenum)
 	get_verts_for_normal(v0, v1, v2, v3, &vm0, &vm1, &vm2, &vm3, &negate_flag);
 
 	vm_vec_normal(&vn, &Vertices[vm0], &Vertices[vm1], &Vertices[vm2]);
-	dist_to_plane = abs(vm_dist_to_plane(&Vertices[vm3], &vn, &Vertices[vm0]));
+	dist_to_plane = labs(vm_dist_to_plane(&Vertices[vm3], &vn, &Vertices[vm0]));
 
 //if ((sp-Segments == 0x7b) && (sidenum == 3)) {
 //	mprintf((0, "Verts = %3i %3i %3i %3i, negate flag = %3i, dist = %8x\n", vm0, vm1, vm2, vm3, negate_flag, dist_to_plane));

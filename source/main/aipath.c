@@ -166,12 +166,12 @@ void move_towards_outside(point_seg *psegs, int *num_points, object *objp, int r
 		//	I don't think we can use quick version here and this is _very_ rarely called. --MK, 07/03/95
 		vm_vec_normalize_quick(&a);
 		vm_vec_normalize_quick(&b);
-		if (abs(vm_vec_dot(&a, &b)) > 3*F1_0/4 ) {
-			if (abs(a.z) < F1_0/2) {
+		if (labs(vm_vec_dot(&a, &b)) > 3*F1_0/4 ) {
+			if (labs(a.z) < F1_0/2) {
 				if (rand_flag) {
 					e.x = (rand()-16384)/2;
 					e.y = (rand()-16384)/2;
-					e.z = abs(e.x) + abs(e.y) + 1;
+					e.z = labs(e.x) + labs(e.y) + 1;
 					vm_vec_normalize_quick(&e);
 				} else {
 					e.x = 0;
@@ -182,7 +182,7 @@ void move_towards_outside(point_seg *psegs, int *num_points, object *objp, int r
 				if (rand_flag) {
 					e.y = (rand()-16384)/2;
 					e.z = (rand()-16384)/2;
-					e.x = abs(e.y) + abs(e.z) + 1;
+					e.x = labs(e.y) + labs(e.z) + 1;
 					vm_vec_normalize_quick(&e);
 				} else {
 					e.x = F1_0;

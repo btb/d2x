@@ -1027,7 +1027,7 @@ void phys_apply_force(object *obj,vms_vector *force_vec)
 void physics_set_rotvel_and_saturate(fix *dest, fix delta)
 {
 	if ((delta ^ *dest) < 0) {
-		if (abs(delta) < F1_0/8) {
+		if (labs(delta) < F1_0/8) {
 			// mprintf((0, "D"));
 			*dest = delta/4;
 		} else
@@ -1073,8 +1073,8 @@ void physics_turn_towards_vector(vms_vector *goal_vector, object *obj, fix rate)
 	delta_p = fixdiv(delta_p, rate);
 	delta_h = fixdiv(delta_h, rate);
 
-	if (abs(delta_p) < F1_0/16) delta_p *= 4;
-	if (abs(delta_h) < F1_0/16) delta_h *= 4;
+	if (labs(delta_p) < F1_0/16) delta_p *= 4;
+	if (labs(delta_h) < F1_0/16) delta_h *= 4;
 
 	physics_set_rotvel_and_saturate(&rotvel_ptr->x, delta_p);
 	physics_set_rotvel_and_saturate(&rotvel_ptr->y, delta_h);

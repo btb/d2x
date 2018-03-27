@@ -1534,7 +1534,7 @@ void Laser_do_weapon_sequence(object *obj)
 				{
 					fix	lifelost, absdot;
 				
-					absdot = abs(F1_0 - dot);
+					absdot = labs(F1_0 - dot);
 				
 					lifelost = fixmul(absdot*32, FrameTime);
 					obj->lifeleft -= lifelost;
