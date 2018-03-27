@@ -22,6 +22,7 @@ option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
 option(NMONO            "is monochrome debugging turned off?" ON)
 option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
 option(ARCADE           "is the Arcade/AWD code in?" OFF)
+option(TACTILE          "are tactile-feedback joysticks supported?" OFF)
 
 if(RELEASE_VERSION)
     add_definitions(-DRELEASE)

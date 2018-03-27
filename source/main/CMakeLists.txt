@@ -8,7 +8,6 @@
 option(D2_OEM           "8-level OEM version?" OFF)
 
 option(_3DFX            "is the 3Dfx code compiled in?" OFF)
-option(TACTILE          "are tactile-feedback joysticks supported?" OFF)
 
 option(SHAREWARE        "is this the smaller shareware" OFF)
 option(BUILD_EDITOR     "is the editor included?" OFF)
