@@ -115,6 +115,12 @@ ushort ipx_packets_selector;
 ecb_header * last_ecb=NULL;
 int lastlen=0;
 
+
+//Internal prototypes
+void ipx_listen_for_packet(ecb_header *ecb);
+void got_new_packet(ecb_header *ecb);
+
+
 void free_packet( int id )
 {
 	packet_buffers[id].packetnum = -1;

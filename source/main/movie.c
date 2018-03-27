@@ -56,6 +56,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "poly_acc.h"
 #endif
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 extern char *Args[100];                                 // Arguments from args.c for
 char *FirstVid,*SecondVid;
 char *RoboBuffer[50];

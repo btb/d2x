@@ -43,6 +43,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "args.h"
 #include "pa_enabl.h"
 
+#if !defined(__DOS__) && !defined(WINDOWS)
+#include "strutil.h"
+#endif
+
 int hud_first = 0;
 int hud_last = 0;
 

@@ -309,7 +309,7 @@ void ui_close_window( UI_WINDOW * wnd )
 	ui_mouse_show();
 }
 
-restore_state()
+void restore_state()
 {
 	int i;
 	_disable();
