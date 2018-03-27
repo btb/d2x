@@ -18,7 +18,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
 
 //#define WATCOM_10
 

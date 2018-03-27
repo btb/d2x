@@ -20,7 +20,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <mmsystem.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <conio.h>
 
 #include "winapp.h"
 #include "pstypes.h"
