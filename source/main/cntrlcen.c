@@ -431,10 +431,12 @@ void init_controlcen_for_level(void)
 	for (i=0; i<=Highest_object_index; i++) {
 		objp = &Objects[i];
 		if (objp->type == OBJ_CNTRLCEN)
+		{
 			if (cntrlcen_objnum != -1)
 				mprintf((1, "Warning: Two or more control centers including %i and %i\n", i, cntrlcen_objnum));
 			else
 				cntrlcen_objnum = i;
+		}
 
 		if ((objp->type == OBJ_ROBOT) && (Robot_info[objp->id].boss_flag)) {
 //		 	mprintf((0, "Found boss robot %d.\n", objp->id));

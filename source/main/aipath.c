@@ -509,10 +509,12 @@ int polish_path(object *objp, point_seg *psegs, int num_points)
 
 	//	Prevent the buddy from polishing his path twice in one frame, which can cause him to get hung up.  Pretty ugly, huh?
 	if (Robot_info[objp->id].companion)
+	{
 		if (FrameCount == Last_buddy_polish_path_frame)
 			return num_points;
 		else
 			Last_buddy_polish_path_frame = FrameCount;
+	}
 
 	// -- MK: 10/18/95: for (i=0; i<num_points-3; i++) {
 	for (i=0; i<2; i++) {
@@ -988,6 +990,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 // mprintf((0, "Obj %i, dist=%6.1f index=%i len=%i seg=%i pos = %6.1f %6.1f %6.1f.\n", objp-Objects, f2fl(vm_vec_dist_quick(&objp->pos, &ConsoleObject->pos)), aip->cur_path_index, aip->path_length, objp->segnum, f2fl(objp->pos.x), f2fl(objp->pos.y), f2
 
 	if ((aip->hide_index == -1) || (aip->path_length == 0))
+	{
 		if (ailp->mode == AIM_RUN_FROM_OBJECT) {
 			create_n_segment_path(objp, 5, -1);
 			//--Int3_if((aip->path_length != 0));
@@ -997,6 +1000,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 			create_n_segment_path(objp, 5, -1);
 			//--Int3_if((aip->path_length != 0));
 		}
+	}
 
 	if ((aip->hide_index + aip->path_length > Point_segs_free_ptr - Point_segs) && (aip->path_length>0)) {
 		Int3();	//	Contact Mike: Bad.  Path goes into what is believed to be free space.
@@ -1157,6 +1161,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 			//	if player visible, then make a new path, else just return.
 			if (robptr->companion) {
 				if (Escort_special_goal == ESCORT_GOAL_SCRAM)
+				{
 					if (player_visibility) {
 						create_n_segment_path(objp, 16 + rand() * 16, -1);
 						aip->path_length = polish_path(objp, &Point_segs[aip->hide_index], aip->path_length);
@@ -1173,6 +1178,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
 						//!!Assert((aip->cur_path_index >= 0) && (aip->cur_path_index < aip->path_length));
 						return;
 					}
+				}
 			}
 
 			if (aip->behavior == AIB_FOLLOW) {

@@ -60,30 +60,30 @@ extern void multi_send_stolen_items();
 
 
 char *Escort_goal_text[MAX_ESCORT_GOALS] = {
-{	"BLUE KEY"},
-{	"YELLOW KEY"},
-{	"RED KEY"},
-{	"REACTOR"},
-{	"EXIT"},
-{	"ENERGY"},
-{	"ENERGYCEN"},
-{	"SHIELD"},
-{	"POWERUP"},
-{	"ROBOT"},
-{	"HOSTAGES"},
-{	"SPEW"},
-{	"SCRAM"},
-{	"EXIT"},
-{	"BOSS"},
-{	"MARKER 1"},
-{	"MARKER 2"},
-{	"MARKER 3"},
-{	"MARKER 4"},
-{	"MARKER 5"},
-{	"MARKER 6"},
-{	"MARKER 7"},
-{	"MARKER 8"},
-{	"MARKER 9"},
+	"BLUE KEY",
+	"YELLOW KEY",
+	"RED KEY",
+	"REACTOR",
+	"EXIT",
+	"ENERGY",
+	"ENERGYCEN",
+	"SHIELD",
+	"POWERUP",
+	"ROBOT",
+	"HOSTAGES",
+	"SPEW",
+	"SCRAM",
+	"EXIT",
+	"BOSS",
+	"MARKER 1",
+	"MARKER 2",
+	"MARKER 3",
+	"MARKER 4",
+	"MARKER 5",
+	"MARKER 6",
+	"MARKER 7",
+	"MARKER 8",
+	"MARKER 9",
 // -- too much work -- 	"KAMIKAZE  "
 };
 
@@ -335,6 +335,7 @@ if ((Escort_goal_index <= ESCORT_GOAL_RED_KEY) && (index >= 0)) {
 	}
 }
 	if (Escort_special_goal != -1)
+	{
 		if (Escort_special_goal == ESCORT_GOAL_ENERGYCEN) {
 			if (index == -4)
 				detected = 1;
@@ -358,6 +359,7 @@ if ((Escort_goal_index <= ESCORT_GOAL_RED_KEY) && (index >= 0)) {
 			// because of the insistence of both type and id matching.
 			detected = 1;
 		}
+	}
 
 dega_ok: ;
 	if (detected && ok_for_buddy_to_talk()) {
@@ -512,6 +514,7 @@ void set_escort_special_goal(int special_key)
 	#endif
 
 	if (Last_buddy_key == special_key)
+	{
 		if ((Looking_for_marker == -1) && (special_key != KEY_0)) {
 			if (marker_exists_in_mine(marker_key - KEY_1))
 				Looking_for_marker = marker_key - KEY_1;
@@ -522,6 +525,7 @@ void set_escort_special_goal(int special_key)
 			}
 		} else
 			Looking_for_marker = -1;
+	}
 
 	Last_buddy_key = special_key;
 

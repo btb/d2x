@@ -101,6 +101,7 @@ void read_flying_controls( object * obj )
 	forward_thrust_time = Controls.forward_thrust_time;
 
 	if (Players[Player_num].flags & PLAYER_FLAGS_AFTERBURNER)
+	{
 		if (Controls.afterburner_state) {			//player has key down
 			//if (forward_thrust_time >= 0) { 		//..and isn't moving backward
 			{
@@ -140,6 +141,7 @@ void read_flying_controls( object * obj )
 	
 			Players[Player_num].energy -= charge_up * 100 / 10;	//full charge uses 10% of energy
 		}
+	}
 
 	// Set object's thrust vector for forward/backward
 	vm_vec_copy_scale(&obj->mtype.phys_info.thrust,&obj->orient.fvec, forward_thrust_time );

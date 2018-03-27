@@ -92,11 +92,11 @@ int find_plane_line_intersection(vms_vector *new_pnt,vms_vector *plane_pnt,vms_v
 
 	//check for various bad values
 
-	if ( (den==0) ||					//moving parallel to wall, so can't hit it
-		  (den>0) &&
-			( (num>den) ||				//frac greater than one
-		     (-num>>15)>=den) ||	//will overflow (large negative)
-		  (den<0 && num<den))		//frac greater than one
+	if ( (den==0) ||                // moving parallel to wall, so can't hit it
+	    ( (den>0) &&
+	     ( (num>den) ||             // frac greater than one
+	      (-num>>15)>=den ) ) ||    // will overflow (large negative)
+	        (den<0 && num<den) )    // frac greater than one
 		return 0;
  
 //if (num>0) {mprintf(1,"HEY! num>0 in FVI!!!"); return 0;}

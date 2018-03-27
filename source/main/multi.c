@@ -1634,7 +1634,7 @@ multi_do_message(char *buf)
 
 	int loc = 2;
 	
-   if (tilde=strchr (buf+loc,'$'))  // do that stupid name stuff
+	if ( (tilde = strchr(buf+loc, '$')) )   // do that stupid name stuff
 	 {											// why'd I put this in?  Probably for the
 	  tloc=tilde-(buf+loc);				// same reason you can name your guidebot
 	  mprintf ((0,"Tloc=%d\n",tloc));

@@ -1983,10 +1983,12 @@ void render_mine(int start_seg_num,fix eye_offset, int window_num)
 			segnum = Render_list[i];
 
 			if (segnum != -1)
+			{
 				if (visited2[segnum])
 					Int3();		//get Matt
 				else
 					visited2[segnum] = 1;
+			}
 		}
 	}
 	#endif

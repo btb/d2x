@@ -268,11 +268,13 @@ void select_weapon(int weapon_num, int secondary_flag, int print_message, int wa
 			Global_laser_firing_count = 0;
 		} else 	{
 			// Select super version if available.
-			if (wait_for_rearm) 
+			if (wait_for_rearm)
+			{
 			 if (!Cycling)
 				; // -- MK, only plays when can't fire weapon anyway, fixes bug -- digi_play_sample_once( SOUND_ALREADY_SELECTED, F1_0 );
 			 else
 				digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
+			}
 		}
 		Primary_weapon = weapon_num;
 		weapon_name = PRIMARY_WEAPON_NAMES(weapon_num);
@@ -297,12 +299,13 @@ void select_weapon(int weapon_num, int secondary_flag, int print_message, int wa
 				Next_missile_fire_time = 0;
 			Global_missile_firing_count = 0;
 		} else	{
-			if (wait_for_rearm) 
+			if (wait_for_rearm)
+			{
 			 if (!Cycling)
 				digi_play_sample_once( SOUND_ALREADY_SELECTED, F1_0 );
 			 else
 				digi_play_sample_once( SOUND_BAD_SELECTION, F1_0 );
-				
+			}
 		}
 		Secondary_weapon = weapon_num;
 		weapon_name = SECONDARY_WEAPON_NAMES(weapon_num);
@@ -312,11 +315,12 @@ void select_weapon(int weapon_num, int secondary_flag, int print_message, int wa
 	}
 
 	if (print_message)
+	{
 		if (weapon_num == LASER_INDEX && !secondary_flag)
 			HUD_init_message("%s Level %d %s", weapon_name, Players[Player_num].laser_level+1, TXT_SELECTED);
 		else
 			HUD_init_message("%s %s", weapon_name, TXT_SELECTED);
-
+	}
 }
 
 //flags whether the last time we use this weapon, it was the 'super' version
@@ -722,11 +726,13 @@ int check_to_use_primary(int weapon_index)
 	cutpoint=POrderList (255);
 
 	if (!(old_flags & flag) && POrderList(weapon_index)<cutpoint && POrderList(weapon_index)<POrderList(Primary_weapon))
+	{
 		if (weapon_index==SUPER_LASER_INDEX)
 			select_weapon(LASER_INDEX,0,0,1);
 		else
 			select_weapon(weapon_index,0,0,1);
-		
+	}
+
 	PALETTE_FLASH_ADD(7,14,21);
 
 	return 1;
@@ -992,6 +998,7 @@ void process_super_mines_frame(void)
 		
 						if (j != parent_num)
 							if (dist - Objects[j].size < F1_0*20)
+							{
 								if (Objects[i].segnum == Objects[j].segnum)
 									Objects[i].lifeleft = 1;
 								else {
@@ -1017,6 +1024,7 @@ void process_super_mines_frame(void)
 											Objects[i].lifeleft = 1;
 									}
 								}
+							}
 					}
 				}
 			}

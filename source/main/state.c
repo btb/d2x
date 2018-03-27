@@ -1344,12 +1344,14 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 	}
 
 	if (version>=11)
+	{
 		if (secret_restore != 1)
 			fread (&Afterburner_charge,sizeof(fix),1,fp);
 		else {
 			fix	dummy_fix;
 			fread (&dummy_fix,sizeof(fix),1,fp);
 		}
+	}
 
 	if (version>=12) {
 		//read last was super information
@@ -1392,12 +1394,14 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 		First_secret_visit = 0;
 
 	if (version >= 22)
+	{
 		if (secret_restore != 1)
 			fread (&Omega_charge,sizeof(fix),1,fp);
 		else {
 			fix	dummy_fix;
 			fread (&dummy_fix,sizeof(fix),1,fp);
 		}
+	}
 
 	fclose(fp);
  

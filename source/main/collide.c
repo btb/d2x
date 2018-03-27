@@ -217,6 +217,7 @@ void bump_this_object(object *objp, object *other_objp, vms_vector *force, int d
 	fix force_mag;
 
 	if (! (objp->mtype.phys_info.flags & PF_PERSISTENT))
+	{
 		if (objp->type == OBJ_PLAYER) {
 			vms_vector force2;
 			force2.x = force->x/4;
@@ -242,6 +243,7 @@ void bump_this_object(object *objp, object *other_objp, vms_vector *force, int d
 				}
 			}
 		}
+	}
 }
 
 //	-----------------------------------------------------------------------------
@@ -1619,6 +1621,7 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 	//	Note: If weapon hits an invulnerable boss, it will still do badass damage, including to the boss,
 	//	unless this is trapped elsewhere.
 	if ( Weapon_info[weapon->id].damage_radius )
+	{
 		if (boss_invul_flag) {			//don't make badass sound
 			weapon_info *wi = &Weapon_info[weapon->id];
 
@@ -1634,6 +1637,7 @@ void collide_robot_and_weapon( object * robot, object * weapon, vms_vector *coll
 		}
 		else		//normal badass explosion
 			explode_badass_weapon(weapon,collision_point);
+	}
 
 	if ( ((weapon->ctype.laser_info.parent_type==OBJ_PLAYER) || Robots_kill_robots_cheat) && !(robot->flags & OF_EXPLODING) )	{	
 		object *expl_obj=NULL;
@@ -1911,11 +1915,12 @@ void drop_player_eggs(object *playerobj)
 		// drop the other enemies flag if you have it
 
 		if ((Game_mode & GM_CAPTURE) && (Players[pnum].flags & PLAYER_FLAGS_FLAG))
+		{
 		 if ((get_team (pnum)==TEAM_RED))
 			call_object_create_egg(playerobj, 1, OBJ_POWERUP, POW_FLAG_BLUE);
 		 else
 			call_object_create_egg(playerobj, 1, OBJ_POWERUP, POW_FLAG_RED);
-
+		}
 	
 		if (Game_mode & GM_HOARD)
 		{
@@ -2154,10 +2159,12 @@ void collide_player_and_weapon( object * playerobj, object * weapon, vms_vector 
 		damage = fixmul(damage, Weapon_info[weapon->id].multi_damage_scale);
 
 	if (weapon->mtype.phys_info.flags & PF_PERSISTENT)
+	{
 		if (weapon->ctype.laser_info.last_hitobj == playerobj-Objects)
 			return;
 		else
 			weapon->ctype.laser_info.last_hitobj = playerobj-Objects;
+	}
 
 	if (playerobj->id == Player_num)
 	{

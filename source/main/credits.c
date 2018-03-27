@@ -277,10 +277,12 @@ get_line:;
 				if (p[0] == ';')
 					goto get_line;
 				if (p[0] == '%')
+				{
 					if (p[1] == ALLOWED_CHAR)
 						strcpy(p,p+2);
 					else
 						goto get_line;
+				}
 
 				p = strchr(&buffer[buffer_line][0],'\n');
 				if (p) *p = '\0';

@@ -1663,11 +1663,13 @@ void HandleGameKey(int key)
 		case KEY_9 + KEY_SHIFTED:
 		case KEY_0 + KEY_SHIFTED:
 		if (EscortHotKeys)
+		{
 			if (!(Game_mode & GM_MULTI))
 				set_escort_special_goal(key);
 			else
 				HUD_init_message ("No Guide-Bot in Multiplayer!");
 			break;
+		}
 
 		MAC(case KEY_COMMAND+KEY_SHIFTED+KEY_5:)
 		case KEY_F5 + KEY_SHIFTED:

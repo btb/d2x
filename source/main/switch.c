@@ -507,18 +507,22 @@ int check_trigger_sub(int trigger_num, int pnum,int shot)
 	
 		case TT_OPEN_WALL:
 			if (do_change_walls(trigger_num))
+			{
 				if (wall_is_forcefield(trig))
 					print_trigger_message (pnum,trigger_num,shot,"Force field%s deactivated!");
 				else
 					print_trigger_message (pnum,trigger_num,shot,"Wall%s opened!");
+			}
 			break;
 
 		case TT_CLOSE_WALL:
 			if (do_change_walls(trigger_num))
+			{
 				if (wall_is_forcefield(trig))
 					print_trigger_message (pnum,trigger_num,shot,"Force field%s activated!");
 				else
 					print_trigger_message (pnum,trigger_num,shot,"Wall%s closed!");
+			}
 			break;
 
 		case TT_ILLUSORY_WALL:

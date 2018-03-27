@@ -1855,12 +1855,14 @@ void InitMarkerInput ()
 			break;
 
 	if (i==maxdrop)		//no free slot
+	{
 		if (Game_mode & GM_MULTI)
 			i = !LastMarkerDropped;		//in multi, replace older of two
 		else {
 			HUD_init_message("No free marker slots");
 			return;
 		}
+	}
 
 	//got a free slot.  start inputting marker message
 
