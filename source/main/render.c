@@ -1758,7 +1758,7 @@ void build_segment_list(int start_seg_num, int window_num)
 
 				if ( (window_check || !visited[ch]) && (wid & WID_RENDPAST_FLAG) ) {
 					if (behind_check) {
-						byte *sv = Side_to_verts[c];
+						sbyte *sv = Side_to_verts[c];
 						ubyte codes_and=0xff;
 						int i;
 

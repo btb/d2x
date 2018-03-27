@@ -189,7 +189,7 @@ void vga_set_text_50()
 
 ubyte is_graphics_mode()
 {
-	byte tmp;
+	sbyte tmp;
 	tmp = inp( 0x3DA );		// Reset flip-flip
 	outp( 0x3C0, 0x30 );		// Select attr register 10
 	tmp = inp( 0x3C1 );	// Get graphics/text bit

@@ -49,8 +49,8 @@ ubyte AltSounds[MAX_SOUNDS];
 
 #ifdef EDITOR
 int Num_total_object_types;
-byte	ObjType[MAX_OBJTYPE];
-byte	ObjId[MAX_OBJTYPE];
+sbyte ObjType[MAX_OBJTYPE];
+sbyte ObjId[MAX_OBJTYPE];
 fix	ObjStrength[MAX_OBJTYPE];
 #endif
 
@@ -217,9 +217,9 @@ void read_robot_info(CFILE *fp, int inNumRobotsToRead, int inOffset)
 		for (j = 0; j < NDL; j++)
 			Robot_info[i].circle_distance[j] = cfile_read_fix(fp);
 		for (j = 0; j < NDL; j++)
-			cfread(&(Robot_info[i].rapidfire_count[j]), sizeof(byte), 1, fp);
+			cfread(&(Robot_info[i].rapidfire_count[j]), sizeof(sbyte), 1, fp);
 		for (j = 0; j < NDL; j++)
-			cfread(&(Robot_info[i].evade_speed[j]), sizeof(byte), 1, fp);
+			cfread(&(Robot_info[i].evade_speed[j]), sizeof(sbyte), 1, fp);
 		Robot_info[i].cloak_type = cfile_read_byte(fp);
 		Robot_info[i].attack_type = cfile_read_byte(fp);
 
@@ -690,8 +690,8 @@ void bm_read_all(CFILE * fp)
 #endif
 
 //@@	cfread( &Num_total_object_types, sizeof(int), 1, fp );
-//@@	cfread( ObjType, sizeof(byte), Num_total_object_types, fp );
-//@@	cfread( ObjId, sizeof(byte), Num_total_object_types, fp );
+//@@	cfread( ObjType, sizeof(sbyte), Num_total_object_types, fp );
+//@@	cfread( ObjId, sizeof(sbyte), Num_total_object_types, fp );
 //@@	cfread( ObjStrength, sizeof(fix), Num_total_object_types, fp );
 
 	First_multi_bitmap_num = cfile_read_int(fp);

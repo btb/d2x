@@ -1467,7 +1467,7 @@ void clear_stuck_objects(void)
 // -----------------------------------------------------------------------------------
 #define	MAX_BLAST_GLASS_DEPTH	5
 
-void bng_process_segment(object *objp, fix damage, segment *segp, int depth, byte *visited)
+void bng_process_segment(object *objp, fix damage, segment *segp, int depth, sbyte *visited)
 {
 	int	i, sidenum;
 
@@ -1519,7 +1519,7 @@ void bng_process_segment(object *objp, fix damage, segment *segp, int depth, byt
 void blast_nearby_glass(object *objp, fix damage)
 {
 	int		i;
-	byte		visited[MAX_SEGMENTS];
+	sbyte   visited[MAX_SEGMENTS];
 	segment	*cursegp;
 
 	cursegp = &Segments[objp->segnum];

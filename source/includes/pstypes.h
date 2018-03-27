@@ -15,7 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _TYPES_H
 
 //define a byte 
-typedef signed char byte;
+typedef signed char sbyte;
 
 //define unsigned types;
 typedef unsigned char ubyte;

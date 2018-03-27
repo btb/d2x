@@ -135,7 +135,7 @@ extern fix robot_last_send_time[MAX_ROBOTS_CONTROLLED];
 extern fix robot_last_message_time[MAX_ROBOTS_CONTROLLED];
 extern int robot_send_pending[MAX_ROBOTS_CONTROLLED];
 extern int robot_fired[MAX_ROBOTS_CONTROLLED];
-extern byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
+extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 
 #if defined(WINDOWS) || defined(MACINTOSH)
@@ -395,7 +395,7 @@ int file_exists(char *filename)
 //	Imagine if C had a function to copy a file...
 int copy_file(char *old_file, char *new_file)
 {
-	byte	buf[CF_BUF_SIZE];
+	sbyte   buf[CF_BUF_SIZE];
 	FILE	*in_file, *out_file;
 
 	out_file = fopen(new_file, "wb");
@@ -744,8 +744,8 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 	fwrite( &Players[Player_num], sizeof(player), 1, fp );
 
 // Save the current weapon info
-	fwrite( &Primary_weapon, sizeof(byte), 1, fp );
-	fwrite( &Secondary_weapon, sizeof(byte), 1, fp );
+	fwrite( &Primary_weapon, sizeof(sbyte), 1, fp );
+	fwrite( &Secondary_weapon, sizeof(sbyte), 1, fp );
 
 // Save the difficulty level
 	fwrite( &Difficulty_level, sizeof(int), 1, fp );
@@ -1177,8 +1177,8 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
 		Players[Player_num].level = next_level;
 
 // Restore the weapon states
-	fread( &Primary_weapon, sizeof(byte), 1, fp );
-	fread( &Secondary_weapon, sizeof(byte), 1, fp );
+	fread( &Primary_weapon, sizeof(sbyte), 1, fp );
+	fread( &Secondary_weapon, sizeof(sbyte), 1, fp );
 
 	select_weapon(Primary_weapon, 0, 0, 0);
 	select_weapon(Secondary_weapon, 1, 0, 0);

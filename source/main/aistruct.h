@@ -91,10 +91,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define	AIE_HURT		3
 
 //typedef struct opath {
-//	byte			path_index;					// current index of path
-//	byte			path_direction;			// current path direction
-//	byte			path_length;				//	length of current path
-//	byte			nothing;
+//	sbyte           path_index;             // current index of path
+//	sbyte           path_direction;         // current path direction
+//	sbyte           path_length;            // length of current path
+//	sbyte           nothing;
 //	short			path[MAX_SEGMENTS_PER_PATH];
 //	short			always_0xabc;				//	If this is ever not 0xabc, then someone overwrote
 //} opath;
@@ -128,12 +128,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //	This is the stuff that is permanent for an AI object and is therefore saved to disk.
 typedef struct ai_static {
 	ubyte			behavior;					// 
-	byte			flags[MAX_AI_FLAGS];		// various flags, meaning defined by constants
+	sbyte           flags[MAX_AI_FLAGS];        // various flags, meaning defined by constants
 	short			hide_segment;				//	Segment to go to for hiding.
 	short			hide_index;					//	Index in Path_seg_points
 	short			path_length;				//	Length of hide path.
-	byte			cur_path_index;			//	Current index in path.
-	byte			dying_sound_playing;		//	!0 if this robot is playing its dying sound.
+	sbyte           cur_path_index;             // Current index in path.
+	sbyte           dying_sound_playing;        // !0 if this robot is playing its dying sound.
 
 // -- not needed! -- 	short			follow_path_start_seg;	//	Start segment for robot which follows path.
 // -- not needed! -- 	short			follow_path_end_seg;		//	End segment for robot which follows path.
@@ -170,8 +170,8 @@ typedef struct ai_local {
 	fix			time_since_processed;	//	time since this robot last processed in do_ai_frame
 	vms_angvec	goal_angles[MAX_SUBMODELS];	//angles for each subobject
 	vms_angvec	delta_angles[MAX_SUBMODELS];	//angles for each subobject
-	byte			goal_state[MAX_SUBMODELS];	// Goal state for this sub-object
-	byte			achieved_state[MAX_SUBMODELS];	// Last achieved state
+	sbyte       goal_state[MAX_SUBMODELS];      // Goal state for this sub-object
+	sbyte       achieved_state[MAX_SUBMODELS];  // Last achieved state
 } ai_local;
 
 typedef struct {

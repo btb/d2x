@@ -1195,7 +1195,7 @@ int main(int argc,char **argv)
 	#ifdef PASSWORD
 	if ((t = FindArg("-pswd")) != 0) {
 		int	n;
-		byte	*pp = Side_to_verts;
+		sbyte *pp = Side_to_verts;
 		int ch;
 		for (n=0; n<6; n++)
 			for (ch=0; ch<strlen(Args[t+1]); ch++)

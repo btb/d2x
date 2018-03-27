@@ -128,7 +128,7 @@ ushort netmisc_calc_checksum_pc( void * vptr, int len )
 #include "powerup.h"
 #include "error.h"
 
-byte out_buffer[IPX_MAX_DATA_SIZE];		// used for tmp netgame packets as well as sending object data
+sbyte out_buffer[IPX_MAX_DATA_SIZE]; // used for tmp netgame packets as well as sending object data
 
 void receive_netplayer_info(ubyte *data, netplayer_info *info)
 {

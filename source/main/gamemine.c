@@ -68,7 +68,7 @@ typedef struct v16_segment {
 	#endif
 	short		objects;								// pointer to objects in this segment
 	ubyte		special;								// what type of center this is 
-	byte		matcen_num;							//	which center segment is associated with.
+	sbyte   matcen_num;                     // which center segment is associated with.
 	short		value;
 	fix		static_light;						//average static light in segment
 	#ifndef	EDITOR
@@ -164,9 +164,9 @@ static short read_short(CFILE *file)
 	return s;
 }
 
-static byte read_byte(CFILE *file)
+static sbyte read_byte(CFILE *file)
 {
-	byte b;
+	sbyte b;
 
 	if (cfread( &b, sizeof(b), 1, file) != 1)
 		Error( "Error reading byte in gamesave.c" );
@@ -804,7 +804,7 @@ int load_mine_data_compiled(CFILE *LoadFile)
 	int		objects;								// pointer to objects in this segment
 
 			for (j = 0; j < MAX_SIDES_PER_SEGMENT; j++) {
-	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
+	sbyte   type;                              // replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
 	ubyte		pad;									//keep us longword alligned
 	short		wall_num;
 	short		tmap_num;

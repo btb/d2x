@@ -52,8 +52,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 typedef struct trigger {
 	ubyte		type;			//what this trigger does 
 	ubyte		flags;		//currently unused
-	byte	 	num_links;	//how many doors, etc. linked to this
-	byte		pad;			//keep alignment
+	sbyte   num_links;  // how many doors, etc. linked to this
+	sbyte   pad;        // keep alignment
 	fix		value;
 	fix		time;
 	short 	seg[MAX_WALLS_PER_LINK];

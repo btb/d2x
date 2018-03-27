@@ -70,7 +70,7 @@ typedef struct uvl {
 
 #ifdef COMPACT_SEGS
 typedef struct side {
-	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
+	sbyte       type;                               // replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
 	ubyte		pad;									//keep us longword alligned
 	short		wall_num;
 	short		tmap_num;
@@ -80,7 +80,7 @@ typedef struct side {
 } side;
 #else
 typedef struct side {
-	byte		type;									// replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
+	sbyte       type;                               // replaces num_faces and tri_edge, 1 = quad, 2 = 0:2 triangulation, 3 = 1:3 triangulation
 	ubyte		pad;									//keep us longword alligned
 	short		wall_num;
 	short		tmap_num;
@@ -106,7 +106,7 @@ typedef struct segment {
 
 // -- Moved to segment2 to make this struct 512 bytes long --
 //	ubyte		special;								// what type of center this is 
-//	byte		matcen_num;							//	which center segment is associated with.
+//	sbyte       matcen_num;                         // which center segment is associated with.
 //	short		value;
 //	fix		static_light;						//average static light in segment
 //	#ifndef	EDITOR
@@ -119,8 +119,8 @@ typedef struct segment {
 
 typedef struct segment2 {
 	ubyte		special;
-	byte		matcen_num;
-	byte		value;
+	sbyte       matcen_num;
+	sbyte       value;
 	ubyte		s2_flags;
 	fix		static_light;
 } segment2;
@@ -165,7 +165,7 @@ extern	segment2		Segment2s[];
 extern	int			Num_segments;
 extern	int			Num_vertices;
 
-extern	byte		Side_to_verts[MAX_SIDES_PER_SEGMENT][4];	// Side_to_verts[my_side] is list of vertices forming side my_side.
+extern  sbyte   Side_to_verts[MAX_SIDES_PER_SEGMENT][4];        // Side_to_verts[my_side] is list of vertices forming side my_side.
 extern	int		Side_to_verts_int[MAX_SIDES_PER_SEGMENT][4];	// Side_to_verts[my_side] is list of vertices forming side my_side.
 extern	char		Side_opposite[];									// Side_opposite[my_side] returns side opposite cube from my_side.
 
@@ -175,16 +175,16 @@ extern	char		Side_opposite[];									// Side_opposite[my_side] returns side opp
 //	Light cast upon vert_light vertices in segnum:sidenum by some light
 typedef struct {
 	short	segnum;
-	byte	sidenum;
-	byte	dummy;
+	sbyte   sidenum;
+	sbyte   dummy;
 	ubyte	vert_light[4];
 } delta_light;
 
 //	Light at segnum:sidenum casts light on count sides beginning at index (in array Delta_lights)
 typedef struct {
 	short	segnum;
-	byte	sidenum;
-	byte	count;
+	sbyte   sidenum;
+	sbyte   count;
 	short	index;
 } dl_index;
 

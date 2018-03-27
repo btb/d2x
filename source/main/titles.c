@@ -241,8 +241,8 @@ int show_title_screen( char * filename, int allow_keys, int from_hog_only )
 
 typedef struct {
 	char	bs_name[14];						//	filename, eg merc01.  Assumes .lbm suffix.
-	byte	level_num;
-	byte	message_num;
+	sbyte   level_num;
+	sbyte   message_num;
 	short	text_ulx, text_uly;		 	//	upper left x,y of text window
 	short	text_width, text_height; 	//	width and height of text window
 } briefing_screen;
@@ -280,7 +280,7 @@ char	Bitmap_name[32] = "";
 #define	EXIT_DOOR_MAX	14
 #define	OTHER_THING_MAX	10		//	Adam: This is the number of frames in your new animating thing.
 #define	DOOR_DIV_INIT	6
-byte	Door_dir=1, Door_div_count=0, Animating_bitmap_type=0;
+sbyte Door_dir = 1, Door_div_count = 0, Animating_bitmap_type = 0;
 
 //	-----------------------------------------------------------------------------
 void show_bitmap_frame(void)

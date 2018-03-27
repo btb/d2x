@@ -429,7 +429,7 @@ void write_matcen_text(FILE *my_file)
 void write_wall_text(FILE *my_file)
 {
 	int	i, j;
-	byte	wall_flags[MAX_WALLS];
+	sbyte wall_flags[MAX_WALLS];
 
 	fprintf(my_file, "-----------------------------------------------------------------------------\n");
 	fprintf(my_file, "Walls:\n");
@@ -467,11 +467,11 @@ void write_wall_text(FILE *my_file)
 }
 
 //typedef struct trigger {
-//	byte		type;
+//	sbyte   type;
 //	short		flags;
 //	fix		value;
 //	fix		time;
-//	byte		link_num;
+//	sbyte   link_num;
 //	short 	num_links;
 //	short 	seg[MAX_WALLS_PER_LINK];
 //	short		side[MAX_WALLS_PER_LINK];
@@ -631,7 +631,7 @@ void write_game_text_file(char *filename)
 // -- }
 
 // --05/17/95--//	-----------------------------------------------------------------------------
-// --05/17/95--void determine_used_textures_level(int load_level_flag, int shareware_flag, int level_num, int *tmap_buf, int *wall_buf, byte *level_tmap_buf, int max_tmap)
+// --05/17/95--void determine_used_textures_level(int load_level_flag, int shareware_flag, int level_num, int *tmap_buf, int *wall_buf, sbyte *level_tmap_buf, int max_tmap)
 // --05/17/95--{
 // --05/17/95--	int	segnum, sidenum;
 // --05/17/95--	int	i, j;
@@ -741,7 +741,7 @@ extern BitmapFile AllBitmaps[ MAX_BITMAP_FILES ];
 int	Ignore_tmap_num2_error;
 
 //	-----------------------------------------------------------------------------
-void determine_used_textures_level(int load_level_flag, int shareware_flag, int level_num, int *tmap_buf, int *wall_buf, byte *level_tmap_buf, int max_tmap)
+void determine_used_textures_level(int load_level_flag, int shareware_flag, int level_num, int *tmap_buf, int *wall_buf, sbyte *level_tmap_buf, int max_tmap)
 {
 	int	segnum, sidenum, objnum=max_tmap;
 	int	i, j;
@@ -862,7 +862,7 @@ void say_used_tmaps(FILE *my_file, int *tb)
 }
 
 // --05/17/95--//	-----------------------------------------------------------------------------
-// --05/17/95--void say_used_once_tmaps(FILE *my_file, int *tb, byte *tb_lnum)
+// --05/17/95--void say_used_once_tmaps(FILE *my_file, int *tb, sbyte *tb_lnum)
 // --05/17/95--{
 // --05/17/95--	int	i;
 // --05/17/95--	char	*level_name;
@@ -883,7 +883,7 @@ void say_used_tmaps(FILE *my_file, int *tb)
 // --05/17/95--}
 
 //	-----------------------------------------------------------------------------
-void say_used_once_tmaps(FILE *my_file, int *tb, byte *tb_lnum)
+void say_used_once_tmaps(FILE *my_file, int *tb, sbyte *tb_lnum)
 {
 	int	i;
 	char	*level_name;
@@ -1042,7 +1042,7 @@ void dump_used_textures_level(FILE *my_file, int level_num)
 	int	i;
 	int	temp_tmap_buf[MAX_BITMAP_FILES];
 	int	perm_tmap_buf[MAX_BITMAP_FILES];
-	byte	level_tmap_buf[MAX_BITMAP_FILES];
+	sbyte   level_tmap_buf[MAX_BITMAP_FILES];
 	int	temp_wall_buf[MAX_BITMAP_FILES];
 	int	perm_wall_buf[MAX_BITMAP_FILES];
 
@@ -1069,7 +1069,7 @@ void dump_used_textures_all(void)
 	int	i;
 	int	temp_tmap_buf[MAX_BITMAP_FILES];
 	int	perm_tmap_buf[MAX_BITMAP_FILES];
-	byte	level_tmap_buf[MAX_BITMAP_FILES];
+	sbyte   level_tmap_buf[MAX_BITMAP_FILES];
 	int	temp_wall_buf[MAX_BITMAP_FILES];
 	int	perm_wall_buf[MAX_BITMAP_FILES];
 

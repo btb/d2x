@@ -43,7 +43,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define mskHasTransparentColor 2
 
 //Palette entry structure
-typedef struct pal_entry {byte r,g,b;} pal_entry;
+typedef struct pal_entry { sbyte r, g, b; } pal_entry;
 
 //structure of the header in the file
 typedef struct iff_bitmap_header {
@@ -52,9 +52,9 @@ typedef struct iff_bitmap_header {
 	short type;						//see types above
 	short transparentcolor;		//which color is transparent (if any)
 	short pagewidth,pageheight; //width & height of source screen
-	byte nplanes;					//number of planes (8 for 256 color image)
-	byte masking,compression;	//see constants above
-	byte xaspect,yaspect;		//aspect ratio (usually 5/6)
+	sbyte nplanes;              // number of planes (8 for 256 color image)
+	sbyte masking, compression; // see constants above
+	sbyte xaspect, yaspect;     // aspect ratio (usually 5/6)
 	pal_entry palette[256];		//the palette for this bitmap
 	ubyte *raw_data;				//ptr to array of data
 	short row_size;				//offset to next row

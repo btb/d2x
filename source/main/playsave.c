@@ -279,9 +279,9 @@ static short read_short(FILE *file)
 	return s;
 }
 
-static byte read_byte(FILE *file)
+static sbyte read_byte(FILE *file)
 {
-	byte s;
+	sbyte s;
 
 	if (fread( &s, sizeof(s), 1, file) != 1)
 		Error( "Error reading byte in gamesave.c" );
@@ -303,7 +303,7 @@ static void write_short(short s,FILE *file)
 
 }
 
-static void write_byte(byte i,FILE *file)
+static void write_byte(sbyte i, FILE *file)
 {
 	if (fwrite( &i, sizeof(i), 1, file) != 1)
 		Error( "Error writing byte in gamesave.c" );

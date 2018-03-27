@@ -31,11 +31,11 @@ int filelength(int fd)
 	return end_pos;
 }
 
-byte read_byte(CFILE *fp)
+sbyte read_byte(CFILE *fp)
 {
-	byte b;
+	sbyte b;
 	
-	cfread(&b, sizeof(byte), 1, fp);
+	cfread(&b, sizeof(sbyte), 1, fp);
 	return b;
 }
 
@@ -87,9 +87,9 @@ fix read_fix_swap(CFILE *fp)
 	return (fix)swapint((uint)f);
 }
 
-int write_byte(FILE *fp, byte b)
+int write_byte(FILE *fp, sbyte b)
 {
-	return (fwrite(&b, sizeof(byte), 1, fp));
+	return (fwrite(&b, sizeof(sbyte), 1, fp));
 }
 
 int write_short(FILE *fp, short s)

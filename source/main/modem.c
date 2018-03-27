@@ -90,18 +90,18 @@ int default_irq[4] = { 4, 3, 4, 3 };
 
 typedef struct com_sync_pack {
 	char type;
-	byte proto_version;
+	sbyte proto_version;
 	long sync_time;
-	byte level_num;
+	sbyte level_num;
 	char difficulty;
 	char game_mode;
 	char callsign[CALLSIGN_LEN+1];
 	short kills[2];
 	ushort seg_checksum;
-	byte sync_id;
+	sbyte sync_id;
 	char mission_name[9];
 	short killed;
-	byte game_flags;
+	sbyte game_flags;
    
    short DoMegas:1;
    short DoSmarts:1;
@@ -2405,7 +2405,7 @@ com_send_begin_sync(void)
 }
 
 void
-com_process_end_sync(byte *buf)
+com_process_end_sync(sbyte *buf)
 {
 	// Process incoming end-sync packet
 

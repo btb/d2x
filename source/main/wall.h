@@ -98,12 +98,12 @@ typedef struct wall {
 	ubyte	type; 			  	// What kind of special wall.
 	ubyte	flags;				// Flags for the wall.		
 	ubyte	state;				// Opening, closing, etc.
-	byte	trigger;				// Which trigger is associated with the wall.
-	byte	clip_num;			// Which	animation associated with the wall. 
+	sbyte   trigger;                // Which trigger is associated with the wall.
+	sbyte   clip_num;               // Which animation associated with the wall.
 	ubyte	keys;					// which keys are required
-	byte	controlling_trigger;	// which trigger causes something to happen here.  Not like "trigger" above, which is the trigger on this wall.
+	sbyte   controlling_trigger;    // which trigger causes something to happen here.  Not like "trigger" above, which is the trigger on this wall.
 									//	Note: This gets stuffed at load time in gamemine.c.  Don't try to use it in the editor.  You will be sorry!
-	byte	cloak_value;		// if this wall is cloaked, the fade value
+	sbyte   cloak_value;            // if this wall is cloaked, the fade value
 	} wall;
 
 typedef struct active_door {

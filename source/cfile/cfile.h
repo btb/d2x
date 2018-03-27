@@ -57,6 +57,6 @@ void cfile_set_critical_error_counter_ptr(int *ptr);
 // prototypes for reading basic types from cfile
 int cfile_read_int(CFILE *file);
 short cfile_read_short(CFILE *file);
-byte cfile_read_byte(CFILE *file);
+sbyte cfile_read_byte(CFILE *file);
 
 #endif

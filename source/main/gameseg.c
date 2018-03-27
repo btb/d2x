@@ -116,7 +116,7 @@ int get_num_faces(side *sidep)
 void get_side_verts(short *vertlist,int segnum,int sidenum)
 {
 	int	i;
-	byte  *sv = Side_to_verts[sidenum];
+	sbyte   *sv = Side_to_verts[sidenum];
 	short	*vp = Segments[segnum].verts;
 
 	for (i=4; i--;)
@@ -993,7 +993,7 @@ fix find_connected_distance(vms_vector *p0, int seg0, vms_vector *p1, int seg1, 
 	int		sidenum;
 	int		qtail = 0, qhead = 0;
 	int		i;
-	byte		visited[MAX_SEGMENTS];
+	sbyte   visited[MAX_SEGMENTS];
 	seg_seg	seg_queue[MAX_SEGMENTS];
 	short		depth[MAX_SEGMENTS];
 	int		cur_depth;
@@ -1140,7 +1140,7 @@ fcd_done1: ;
 
 }
 
-byte convert_to_byte(fix f)
+sbyte convert_to_byte(fix f)
 {
 	if (f >= 0x00010000)
 		return MATRIX_MAX;
@@ -1159,7 +1159,7 @@ byte convert_to_byte(fix f)
 void create_shortpos(shortpos *spp, object *objp, int swap_bytes)
 {
 	// int	segnum;
-	byte	*sp;
+	sbyte *sp;
 
 	sp = spp->bytemat;
 
@@ -1214,7 +1214,7 @@ void create_shortpos(shortpos *spp, object *objp, int swap_bytes)
 void extract_shortpos(object *objp, shortpos *spp, int swap_bytes)
 {
 	int	segnum;
-	byte	*sp;
+	sbyte *sp;
 
 	sp = spp->bytemat;
 
@@ -1411,7 +1411,7 @@ void get_verts_for_normal(int va, int vb, int vc, int vd, int *v0, int *v1, int 
 void add_side_as_2_triangles(segment *sp, int sidenum)
 {
 	vms_vector	norm;
-	byte			*vs = Side_to_verts[sidenum];
+	sbyte       *vs = Side_to_verts[sidenum];
 	fix			dot;
 	vms_vector	vec_13;		//	vector from vertex 1 to vertex 3
 
@@ -2151,7 +2151,7 @@ fix find_connected_distance_segments( int seg0, int seg1, int depth, int wid_fla
 
 //	-----------------------------------------------------------------------------
 //	Do a bfs from segnum, marking slots in marked_segs if the segment is reachable.
-void ambient_mark_bfs(int segnum, byte *marked_segs, int depth)
+void ambient_mark_bfs(int segnum, sbyte *marked_segs, int depth)
 {
 	int	i;
 
@@ -2175,7 +2175,7 @@ void ambient_mark_bfs(int segnum, byte *marked_segs, int depth)
 void set_ambient_sound_flags_common(int tmi_bit, int s2f_bit)
 {
 	int	i, j;
-	byte	marked_segs[MAX_SEGMENTS];
+	sbyte marked_segs[MAX_SEGMENTS];
 
 	//	Now, all segments containing ambient lava or water sound makers are flagged.
 	//	Additionally flag all segments which are within range of them.

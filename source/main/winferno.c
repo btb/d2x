@@ -95,7 +95,7 @@ static const char desc_id_checksum_str[] = DESC_ID_CHKSUM_TAG "0000";	//4-byte c
 char desc_id_exit_num = 0;
 time_t t_current_time, t_saved_time;
 
-byte CybermouseActive = 0;
+sbyte CybermouseActive = 0;
 
 static 	char 	title_pal[768];
 

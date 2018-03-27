@@ -9,7 +9,7 @@
 #include "3d.h"
 #include "error.h"
 
-byte model_tree[MAX_SUBMODELS][MAX_SUBMODELS+1];
+sbyte model_tree[MAX_SUBMODELS][MAX_SUBMODELS+1];
 g3s_instance_context context_array[MAX_SUBMODELS];
 
 

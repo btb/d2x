@@ -101,7 +101,7 @@ static short 		sound_num;
 static short 		frames;
 static float 		time;
 static int			hit_sound = -1;
-static byte 		bm_flag = BM_NONE;
+static sbyte        bm_flag = BM_NONE;
 static int 			abm_flag = 0;
 static int 			rod_flag = 0;
 static short		wall_open_sound, wall_close_sound,wall_explodes,wall_blastable, wall_hidden;
@@ -750,7 +750,7 @@ void bm_close()
  	}
 }
 
-void set_lighting_flag(byte *bp)
+void set_lighting_flag(sbyte *bp)
 {
 	if (vlighting < 0)
 		*bp |= BM_FLAG_NO_LIGHTING;
@@ -1074,7 +1074,7 @@ void get4fix(fix *fixp)
 }
 
 // ------------------------------------------------------------------------------
-void get4byte(byte *bytep)
+void get4byte(sbyte *bytep)
 {
 	char	*curtext;
 	int	i;
@@ -2379,8 +2379,8 @@ fprintf(tfile,"player_ship size = %d\n",sizeof(player_ship));
 fprintf(tfile,"Num_cockpits = %d, cockpit_bitmaps array = %d\n",Num_cockpits,sizeof(bitmap_index)*Num_cockpits);
 
 //@@	fwrite( &Num_total_object_types, sizeof(int), 1, fp );
-//@@	fwrite( ObjType, sizeof(byte), Num_total_object_types, fp );
-//@@	fwrite( ObjId, sizeof(byte), Num_total_object_types, fp );
+//@@	fwrite( ObjType, sizeof(sbyte), Num_total_object_types, fp );
+//@@	fwrite( ObjId, sizeof(sbyte), Num_total_object_types, fp );
 //@@	fwrite( ObjStrength, sizeof(fix), Num_total_object_types, fp );
 
 fprintf(tfile,"Num_total_object_types = %d, ObjType array = %d, ObjId array = %d, ObjStrength array = %d\n",Num_total_object_types,Num_total_object_types,Num_total_object_types,sizeof(fix)*Num_total_object_types);

@@ -62,19 +62,19 @@ typedef struct robot_info {
 	short 		exp2_vclip_num;
 	short			exp2_sound_num;
 
-	byte			weapon_type;
-	byte			weapon_type2;						//	Secondary weapon number, -1 means none, otherwise gun #0 fires this weapon.
-	byte			n_guns;								// how many different gun positions
-	byte			contains_id;						//	ID of powerup this robot can contain.
+	sbyte       weapon_type;
+	sbyte       weapon_type2;          // Secondary weapon number, -1 means none, otherwise gun #0 fires this weapon.
+	sbyte       n_guns;                // how many different gun positions
+	sbyte       contains_id;           // ID of powerup this robot can contain.
 
-	byte			contains_count;					//	Max number of things this instance can contain.
-	byte			contains_prob;						//	Probability that this instance will contain something in N/16
-	byte			contains_type;						//	Type of thing contained, robot or powerup, in bitmaps.tbl, !0=robot, 0=powerup
-	byte			kamikaze;							//	!0 means commits suicide when hits you, strength thereof. 0 means no.
+	sbyte       contains_count;        // Max number of things this instance can contain.
+	sbyte       contains_prob;         // Probability that this instance will contain something in N/16
+	sbyte       contains_type;         // Type of thing contained, robot or powerup, in bitmaps.tbl, !0=robot, 0=powerup
+	sbyte       kamikaze;              // !0 means commits suicide when hits you, strength thereof. 0 means no.
 
 	short			score_value;						//	Score from this robot.
-	byte			badass;								//	Dies with badass explosion, and strength thereof, 0 means NO.
-	byte			energy_drain;						//	Points of energy drained at each collision.
+	sbyte       badass;                // Dies with badass explosion, and strength thereof, 0 means NO.
+	sbyte       energy_drain;          // Points of energy drained at each collision.
 
 	fix			lighting;							// should this be here or with polygon model?
 	fix			strength;							// Initial shields of robot
@@ -91,25 +91,25 @@ typedef struct robot_info {
 	fix		max_speed[NDL];						//	maximum speed attainable by this robot
 	fix		circle_distance[NDL];				//	distance at which robot circles player
 
-	byte		rapidfire_count[NDL];				//	number of shots fired rapidly
-	byte		evade_speed[NDL];						//	rate at which robot can evade shots, 0=none, 4=very fast
-	byte		cloak_type;								//	0=never, 1=always, 2=except-when-firing
-	byte		attack_type;							//	0=firing, 1=charge (like green guy)
+	sbyte       rapidfire_count[NDL];   // number of shots fired rapidly
+	sbyte       evade_speed[NDL];       // rate at which robot can evade shots, 0=none, 4=very fast
+	sbyte       cloak_type;             // 0=never, 1=always, 2=except-when-firing
+	sbyte       attack_type;            // 0=firing, 1=charge (like green guy)
 
 	ubyte		see_sound;								//	sound robot makes when it first sees the player
 	ubyte		attack_sound;							//	sound robot makes when it attacks the player
 	ubyte		claw_sound;								//	sound robot makes as it claws you (attack_type should be 1)
 	ubyte		taunt_sound;							//	sound robot makes after you die
 
-	byte		boss_flag;								//	0 = not boss, 1 = boss.  Is that surprising?
-	byte		companion;								//	Companion robot, leads you to things.
-	byte		smart_blobs;							//	how many smart blobs are emitted when this guy dies!
-	byte		energy_blobs;							//	how many smart blobs are emitted when this guy gets hit by energy weapon!
+	sbyte       boss_flag;              // 0 = not boss, 1 = boss.  Is that surprising?
+	sbyte       companion;              // Companion robot, leads you to things.
+	sbyte       smart_blobs;            // how many smart blobs are emitted when this guy dies!
+	sbyte       energy_blobs;           // how many smart blobs are emitted when this guy gets hit by energy weapon!
 
-	byte		thief;									//	!0 means this guy can steal when he collides with you!
-	byte		pursuit;									//	!0 means pursues player after he goes around a corner.  4 = 4/2 pursue up to 4/2 seconds after becoming invisible if up to 4 segments away
-	byte		lightcast;								//	Amount of light cast. 1 is default.  10 is very large.
-	byte		death_roll;								//	0 = dies without death roll. !0 means does death roll, larger = faster and louder
+	sbyte       thief;                  // !0 means this guy can steal when he collides with you!
+	sbyte       pursuit;                // !0 means pursues player after he goes around a corner.  4 = 4/2 pursue up to 4/2 seconds after becoming invisible if up to 4 segments away
+	sbyte       lightcast;              // Amount of light cast. 1 is default.  10 is very large.
+	sbyte       death_roll;             // 0 = dies without death roll. !0 means does death roll, larger = faster and louder
 
 	//boss_flag, companion, thief, & pursuit probably should also be bits in the flags byte.
 	ubyte		flags;									// misc properties

@@ -76,7 +76,7 @@ void trigger_init()
 // Executes a link, attached to a trigger.
 // Toggles all walls linked to the switch.
 // Opens doors, Blasts blast walls, turns off illusions.
-void do_link(byte trigger_num)
+void do_link(sbyte trigger_num)
 {
 	int i;
 
@@ -92,7 +92,7 @@ void do_link(byte trigger_num)
 }
 
 //close a door
-void do_close_door(byte trigger_num)
+void do_close_door(sbyte trigger_num)
 {
 	int i;
 
@@ -106,7 +106,7 @@ void do_close_door(byte trigger_num)
 
 //turns lighting on.  returns true if lights were actually turned on. (they
 //would not be if they had previously been shot out).
-int do_light_on(byte trigger_num)
+int do_light_on(sbyte trigger_num)
 {
 	int i,ret=0;
 
@@ -132,7 +132,7 @@ int do_light_on(byte trigger_num)
 
 //turns lighting off.  returns true if lights were actually turned off. (they
 //would not be if they had previously been shot out).
-int do_light_off(byte trigger_num)
+int do_light_off(sbyte trigger_num)
 {
 	int i,ret=0;
 
@@ -157,7 +157,7 @@ int do_light_off(byte trigger_num)
 }
 
 // Unlocks all doors linked to the switch.
-void do_unlock_doors(byte trigger_num)
+void do_unlock_doors(sbyte trigger_num)
 {
 	int i;
 
@@ -200,7 +200,7 @@ void flag_wall_switched_doors(void)
 }
 
 // Locks all doors linked to the switch.
-void do_lock_doors(byte trigger_num)
+void do_lock_doors(sbyte trigger_num)
 {
 	int i;
 
@@ -214,7 +214,7 @@ void do_lock_doors(byte trigger_num)
 }
 
 // Changes walls pointed to by a trigger. returns true if any walls changed
-int do_change_walls(byte trigger_num)
+int do_change_walls(sbyte trigger_num)
 {
 	int i,ret=0;
 
@@ -313,7 +313,7 @@ void print_trigger_message (int pnum,int trig,int shot,char *message)
  }
  
 
-void do_matcen(byte trigger_num)
+void do_matcen(sbyte trigger_num)
 {
 	int i;
 
@@ -329,7 +329,7 @@ void do_matcen(byte trigger_num)
 }
 
 	
-do_il_on(byte trigger_num)
+do_il_on(sbyte trigger_num)
 {
 	int i;
 
@@ -344,7 +344,7 @@ do_il_on(byte trigger_num)
   	}
 }
 
-void do_il_off(byte trigger_num)
+void do_il_off(sbyte trigger_num)
 {
 	int i;
 	
