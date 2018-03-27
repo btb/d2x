@@ -15,8 +15,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifdef NETWORK
 
 #include "desw.h"
-#include "win\comm.h"
-#include "win\xtapi.h"
+#include "comm.h"
+#include "xtapi.h"
 
 #include <stdio.h>
 #include <stdlib.h>

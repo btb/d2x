@@ -32,7 +32,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "args.h"
 
 // Controls
-//#include "win\cyberimp.h"
+//#include "cyberimp.h"
 //#include "spw_inp.h"
 
 #define WIN_TACTILE_ON

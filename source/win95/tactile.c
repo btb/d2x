@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "iforce.h"
 #include "tactile.h"
 
-//@@#include "win\cyberimp.h"
+//@@#include "cyberimp.h"
 
 #include "mono.h"
 #include "vecmat.h"
