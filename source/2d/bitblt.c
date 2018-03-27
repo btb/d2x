@@ -314,21 +314,21 @@ void gr_ubitmap00m( int x, int y, grs_bitmap *bm )
 	}
 }
 
-//"		jmp 	aligned4				"	\
-//"		mov	eax, edi				"	\
-//"		and	eax, 11b				"	\
-//"		jz		aligned4				"	\
-//"		mov	ebx, 4				"	\
-//"		sub	ebx, eax				"	\
-//"		sub	ecx, ebx				"	\
-//"alignstart:						"	\
-//"		mov	al, [esi]			"	\
-//"		add	esi, 4				"	\
-//"		mov	[edi], al			"	\
-//"		inc	edi					"	\
-//"		dec	ebx					"	\
-//"		jne	alignstart			"	\
-//"aligned4:							"	\
+//"		jmp 	aligned4				"
+//"		mov	eax, edi				"
+//"		and	eax, 11b				"
+//"		jz		aligned4				"
+//"		mov	ebx, 4				"
+//"		sub	ebx, eax				"
+//"		sub	ecx, ebx				"
+//"alignstart:						"
+//"		mov	al, [esi]			"
+//"		add	esi, 4				"
+//"		mov	[edi], al			"
+//"		inc	edi					"
+//"		dec	ebx					"
+//"		jne	alignstart			"
+//"aligned4:							"
 
 void modex_copy_scanline( ubyte * src, ubyte * dest, int npixels );
 #ifndef MACINTOSH
