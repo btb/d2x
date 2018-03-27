@@ -212,7 +212,7 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
 
 	memset(&dsbd, 0, sizeof(dsbd));
 	dsbd.dwSize = sizeof(dsbd);
-	dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLDEFAULT;
+	dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
 	dsbd.lpwfxFormat = &wav;
 	dsbd.dwBufferBytes = length;
 	
@@ -245,7 +245,7 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
 		wav.wBitsPerSample = sample->bits_per_sample;
 
 		dsbd.dwSize = sizeof(dsbd);
-		dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLDEFAULT;
+		dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
 		dsbd.lpwfxFormat = &wav;
 		dsbd.dwBufferBytes = auxlength;
 	
