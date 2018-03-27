@@ -7,7 +7,7 @@ set(TARGSYS "WIN32")
 set(win95_SRCS
     palette.c key.c findfile.c timer.c rbaudio.c error.c
     ipx.c joyc.c mouse.c winapp.c mono.c
-    comm.c winregs.c ds.c winmidi.c winckpit.asm
+    comm.c winregs.c ds.c midifile.c winmidi.c winckpit.asm
     gfx.c dd.c ddgr.c direct3d.c
 )
 
