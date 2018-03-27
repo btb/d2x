@@ -606,7 +606,7 @@ void set_robot_location_info(object *objp)
       //the code below to check for object near the center of the screen
       //completely ignores z, which may not be good
 
-      if ((abs(temp.p3_x) < F1_0*4) && (abs(temp.p3_y) < F1_0*4)) {
+      if ((labs(temp.p3_x) < F1_0*4) && (labs(temp.p3_y) < F1_0*4)) {
          objp->ctype.ai_info.danger_laser_num = Player_fired_laser_this_frame;
          objp->ctype.ai_info.danger_laser_signature = Objects[Player_fired_laser_this_frame].signature;
       }

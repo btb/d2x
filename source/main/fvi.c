@@ -1230,8 +1230,8 @@ void find_hitpoint_uv(fix *u,fix *v,fix *l,vms_vector *pnt,segment *seg,int side
    #endif
    biggest = 0;
 
-   if (abs(normal_array.xyz[1]) > abs(normal_array.xyz[biggest])) biggest = 1;
-   if (abs(normal_array.xyz[2]) > abs(normal_array.xyz[biggest])) biggest = 2;
+   if (labs(normal_array.xyz[1]) > labs(normal_array.xyz[biggest])) biggest = 1;
+   if (labs(normal_array.xyz[2]) > labs(normal_array.xyz[biggest])) biggest = 2;
 
    if (biggest == 0) ii=1; else ii=0;
    if (biggest == 2) jj=1; else jj=2;
@@ -1265,7 +1265,7 @@ void find_hitpoint_uv(fix *u,fix *v,fix *l,vms_vector *pnt,segment *seg,int side
    //mprintf(0," checkv = %x,%x\n",checkv.i,checkv.j);
 
    k1 = -fixdiv(cross(&checkp,&vec0) + cross(&vec0,&p1),cross(&vec0,&vec1));
-   if (abs(vec0.i) > abs(vec0.j))
+   if (labs(vec0.i) > labs(vec0.j))
       k0 = fixdiv(fixmul(-k1,vec1.i) + checkp.i - p1.i,vec0.i);
    else
       k0 = fixdiv(fixmul(-k1,vec1.j) + checkp.j - p1.j,vec0.j);

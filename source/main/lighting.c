@@ -125,7 +125,7 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
 
       // for pretty dim sources, only process vertices in object's own segment.
       // 12/04/95, MK, markers only cast light in own segment.
-      if ((abs(obji_64) <= F1_0*8) || (Objects[objnum].type == OBJ_MARKER)) {
+      if ((labs(obji_64) <= F1_0*8) || (Objects[objnum].type == OBJ_MARKER)) {
          short *vp = Segments[obj_seg].verts;
 
          for (vv=0; vv<MAX_VERTICES_PER_SEGMENT; vv++) {
@@ -138,7 +138,7 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
                vertpos = &Vertices[vertnum];
                dist = vm_vec_dist_quick(obj_pos, vertpos);
                dist = fixmul(dist/4, dist/4);
-               if (dist < abs(obji_64)) {
+               if (dist < labs(obji_64)) {
                   if (dist < MIN_LIGHT_DIST)
                      dist = MIN_LIGHT_DIST;
 
@@ -187,7 +187,7 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
                dist = vm_vec_dist_quick(obj_pos, vertpos);
                apply_light = 0;
 
-               if ((dist >> headlight_shift) < abs(obji_64)) {
+               if ((dist >> headlight_shift) < labs(obji_64)) {
 
                   if (dist < MIN_LIGHT_DIST)
                      dist = MIN_LIGHT_DIST;
@@ -323,7 +323,7 @@ fix compute_light_intensity(int objnum)
 
          lightval &= 0xffff;
 
-         lightval = 8 * abs(F1_0/2 - lightval);
+         lightval = 8 * labs(F1_0/2 - lightval);
 
          if (obj->lifeleft < F1_0*1000)
             obj->lifeleft += F1_0;  // Make sure this object doesn't go out.
@@ -632,7 +632,7 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 
       frame_delta = fixmul(LIGHT_RATE,FrameTime);
 
-      if (abs(delta_light) <= frame_delta)
+      if (labs(delta_light) <= frame_delta)
 
          object_light[objnum] = light;    //we've hit the goal
 

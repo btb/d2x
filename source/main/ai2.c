@@ -442,7 +442,7 @@ void do_lunacy_off(void)
 void set_rotvel_and_saturate(fix *dest, fix delta)
 {
    if ((delta ^ *dest) < 0) {
-      if (abs(delta) < F1_0/8) {
+      if (labs(delta) < F1_0/8) {
          // mprintf((0, "D"));
          *dest = delta/4;
       } else
@@ -760,7 +760,7 @@ void ai_frame_animation(object *objp)
       if (delta_to_goal) {
          scaled_delta_angle = fixmul(deltaangp->p, FrameTime) * DELTA_ANG_SCALE;
          curangp->p += scaled_delta_angle;
-         if (abs(delta_to_goal) < abs(scaled_delta_angle))
+         if (labs(delta_to_goal) < labs(scaled_delta_angle))
             curangp->p = goalangp->p;
       }
 
@@ -773,7 +773,7 @@ void ai_frame_animation(object *objp)
       if (delta_to_goal) {
          scaled_delta_angle = fixmul(deltaangp->b, FrameTime) * DELTA_ANG_SCALE;
          curangp->b += scaled_delta_angle;
-         if (abs(delta_to_goal) < abs(scaled_delta_angle))
+         if (labs(delta_to_goal) < labs(scaled_delta_angle))
             curangp->b = goalangp->b;
       }
 
@@ -786,7 +786,7 @@ void ai_frame_animation(object *objp)
       if (delta_to_goal) {
          scaled_delta_angle = fixmul(deltaangp->h, FrameTime) * DELTA_ANG_SCALE;
          curangp->h += scaled_delta_angle;
-         if (abs(delta_to_goal) < abs(scaled_delta_angle))
+         if (labs(delta_to_goal) < labs(scaled_delta_angle))
             curangp->h = goalangp->h;
       }
 
@@ -1060,7 +1060,7 @@ void ai_fire_laser_at_player(object *obj, vms_vector *fire_point, int gun_num, v
    if (Seismic_tremor_magnitude) {
       fix   temp;
 
-      temp = F1_0 - abs(Seismic_tremor_magnitude);
+      temp = F1_0 - labs(Seismic_tremor_magnitude);
       if (temp < F1_0/2)
          temp = F1_0/2;
 
@@ -2495,7 +2495,10 @@ void ai_do_actual_firing_stuff(object *obj, ai_static *aip, ai_local *ailp, robo
                   aip->CURRENT_GUN = 1;
          }
       }
-   } else if (!robptr->attack_type && (Weapon_info[Robot_info[obj->id].weapon_type].homing_flag == 1) || ((Robot_info[obj->id].weapon_type2 != -1) && (Weapon_info[Robot_info[obj->id].weapon_type2].homing_flag == 1))) {
+   } else if ((!robptr->attack_type &&
+               (Weapon_info[Robot_info[obj->id].weapon_type].homing_flag == 1)) ||
+              ((Robot_info[obj->id].weapon_type2 != -1) &&
+               (Weapon_info[Robot_info[obj->id].weapon_type2].homing_flag == 1))) {
       // Robots which fire homing weapons might fire even if they don't have a bead on the player.
       if (((!object_animates) || (ailp->achieved_state[aip->CURRENT_GUN] == AIS_FIRE))
           && (((ailp->next_fire <= 0) && (aip->CURRENT_GUN != 0)) || ((ailp->next_fire2 <= 0) && (aip->CURRENT_GUN == 0)))
