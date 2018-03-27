@@ -28,7 +28,7 @@ typedef struct IForce_Caps {
 int IForce_Init(int port);
 int IForce_Close();
 int IForce_GetCaps(IForce_Caps *caps);
-int IForce_ReadRawValues(int *axis);
+void IForce_ReadRawValues(int *axis);
 
 
 #endif
