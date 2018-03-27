@@ -49,13 +49,13 @@ int vga_installed = 0;
 //extern int gr_palette_realized;
 int vga_prevent_palette_loading = 0;
 
-ubyte * pVideoMode =  (volatile ubyte *)0x449;
-uword * pNumColumns = (volatile uword *)0x44a;
-ubyte * pNumRows = (volatile ubyte *)0x484;
-uword * pCharHeight = (volatile uword *)0x485;
-uword * pCursorPos = (volatile uword *)0x450;
-uword * pCursorType = (volatile uword *)0x460;
-uword * pTextMemory = (volatile uword *)0xb8000;
+volatile ubyte * pVideoMode  = (volatile ubyte *)0x449;
+volatile uword * pNumColumns = (volatile uword *)0x44a;
+volatile ubyte * pNumRows    = (volatile ubyte *)0x484;
+volatile uword * pCharHeight = (volatile uword *)0x485;
+volatile uword * pCursorPos  = (volatile uword *)0x450;
+volatile uword * pCursorType = (volatile uword *)0x460;
+volatile uword * pTextMemory = (volatile uword *)0xb8000;
 
 ubyte saved_video_mode = 0;
 uword saved_num_columns = 0;
