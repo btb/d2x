@@ -60,6 +60,7 @@ set(descent2_SRCS
     multi.c cntrlcen.c credits.c config.c kmatrix.c
     paging.c mission.c songs.c bmread.c
     escort.c gamepal.c multibot.c state.c
+    movie.c
 )
 #    vfx.c vfxread.c #missing
 #    3dmax.c #missing
@@ -114,11 +115,11 @@ set(descent2_OTHERS
 )
 
 if(TARGSYS MATCHES "^WIN32$")
-    list(APPEND descent2_SRCS winferno.c descentw.c winmodem.c joydefsw.c windigi.c cdmix32.c) #winmovie.c
+    list(APPEND descent2_SRCS winferno.c descentw.c joydefsw.c windigi.c cdmix32.c) #winmovie.c winmodem.c
 elseif(TARGSYS MATCHES "^DOS4G$")
-    list(APPEND descent2_SRCS digi.c inferno.c joydefs.c movie.c cdmix32.c) #victor.c iglasses.c modem.c
+    list(APPEND descent2_SRCS digi.c inferno.c joydefs.c cdmix32.c) #victor.c iglasses.c modem.c
 else()
-    list(APPEND descent2_SRCS inferno.c joydefs.c movie.c)
+    list(APPEND descent2_SRCS inferno.c joydefs.c)
 endif()
 
 if(ARCADE)
@@ -166,15 +167,16 @@ find_library(SOS_MIDI_LIBRARIES sosmidi ../../extlib/soslib)
 if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_LIBS
         win95
-        ddraw dsound mvelibw
-        novga tapi32
+        ddraw dsound
+        novga
     )
+    # mvelibw tapi32
 
-    if(NOT TACTILE)
+    if(TACTILE)
         list(APPEND descent2_LIBS iforce)
     endif()
 
-    if(NOT RELEASE_VERSION)
+    if(RELEASE_VERSION)
         list(APPEND descent2_LIBS eregreg2)
     endif()
 
