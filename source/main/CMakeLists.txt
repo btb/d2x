@@ -168,6 +168,9 @@ if(TARGSYS MATCHES "^WIN32$")
         win95
         ddraw dsound
         novga
+        winmm
+        ws2_32
+        dxguid
     )
     # mvelibw tapi32
 
