@@ -24,6 +24,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 #include <errno.h>
 
+#include "minmax.h"
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "vga.h"
 

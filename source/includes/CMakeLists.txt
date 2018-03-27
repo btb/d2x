@@ -4,6 +4,7 @@
 
 set(includes_OTHERS
     makefile
+    minmax.h
     psmacros.inc
     pstypes.h
     pstypes.inc

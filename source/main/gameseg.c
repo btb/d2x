@@ -23,6 +23,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Memory.h>
 #endif
 
+#include "minmax.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "error.h"
