@@ -60,7 +60,7 @@ ubyte Secondary_weapon_to_powerup[MAX_SECONDARY_WEAPONS] = {POW_MISSILE_1,POW_HO
 
 weapon_info Weapon_info[MAX_WEAPON_TYPES];
 int   N_weapon_types=0;
-byte  Primary_weapon, Secondary_weapon;
+sbyte Primary_weapon, Secondary_weapon;
 
 // autoselect ordering
 
@@ -109,7 +109,7 @@ extern ubyte MenuReordering;
 // "Mega\nMissile"
 //};
 
-byte  Weapon_is_energy[MAX_WEAPON_TYPES] = {
+sbyte Weapon_is_energy[MAX_WEAPON_TYPES] = {
    1, 1, 1, 1, 1,
    1, 1, 1, 0, 1,
    1, 0, 1, 1, 1,

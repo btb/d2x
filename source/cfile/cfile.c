@@ -453,9 +453,9 @@ short cfile_read_short(CFILE *file)
    return s;
 }
 
-byte cfile_read_byte(CFILE *file)
+sbyte cfile_read_byte(CFILE *file)
 {
-   byte b;
+   sbyte b;
 
    if (cfread( &b, sizeof(b), 1, file) != 1)
       Error( "Error reading byte in cfile_read_byte()" );

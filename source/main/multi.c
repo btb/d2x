@@ -108,7 +108,8 @@ char multibuf[MAX_MULTI_MESSAGE_LEN+4];                // This is where multipla
 
 short remote_to_local[MAX_NUM_NET_PLAYERS][MAX_OBJECTS];  // Remote object number for each local object
 short local_to_remote[MAX_OBJECTS];
-byte  object_owner[MAX_OBJECTS];   // Who created each object in my universe, -1 = loaded at start
+sbyte object_owner[MAX_OBJECTS]; // Who created each object in my universe,
+                                 //  -1 = loaded at start
 
 int     Net_create_objnums[MAX_NET_CREATE_OBJECTS]; // For tracking object creation that will be sent to remote
 int     Net_create_loc = 0;  // pointer into previous array
@@ -328,7 +329,7 @@ int objnum_remote_to_local(int remote_objnum, int owner)
    return(result);
 }
 
-int objnum_local_to_remote(int local_objnum, byte *owner)
+int objnum_local_to_remote(int local_objnum, sbyte *owner)
 {
    // Map a local object number to a remote + owner
 
@@ -1562,7 +1563,7 @@ multi_do_fire(char *buf)
 {
    ubyte weapon;
    char pnum;
-   byte flags;
+   sbyte flags;
    //static dum=0;
 
    // Act out the actual shooting
@@ -1858,7 +1859,7 @@ multi_do_kill(char *buf)
 
    killer = INTEL_SHORT(*(short *)(buf+count));
    if (killer > 0)
-      killer = objnum_remote_to_local(killer, (byte)buf[count+2]);
+      killer = objnum_remote_to_local(killer, (sbyte)buf[count+2]);
 
 #ifdef SHAREWARE
    if ((Objects[killed].type != OBJ_PLAYER) && (Objects[killed].type != OBJ_GHOST))
@@ -1878,7 +1879,7 @@ multi_do_kill(char *buf)
 // which means not a controlcen object, but contained in another object
 void multi_do_controlcen_destroy(char *buf)
 {
-   byte who;
+   sbyte who;
    short objnum;
 
    objnum = INTEL_SHORT(*(short *)(buf+1));
@@ -1936,7 +1937,7 @@ multi_do_remobj(char *buf)
 {
    short objnum; // which object to remove
    short local_objnum;
-   byte obj_owner; // which remote list is it entered in
+   sbyte obj_owner; // which remote list is it entered in
 
    objnum = INTEL_SHORT(*(short *)(buf+1));
    obj_owner = buf[3];
@@ -2067,7 +2068,7 @@ void
 multi_do_door_open(char *buf)
 {
    int segnum;
-   byte side;
+   sbyte side;
    segment *seg;
    wall *w;
    ubyte flag;
@@ -3084,7 +3085,7 @@ multi_send_kill(int objnum)
    if (killer_objnum > -1) {
       short s;    // do it with variable since INTEL_SHORT won't work on return val from function.
 
-      s = (short)objnum_local_to_remote(killer_objnum, (byte *)&multibuf[count+2]);
+      s = (short)objnum_local_to_remote(killer_objnum, (sbyte *)&multibuf[count+2]);
       *(short *)(multibuf+count) = INTEL_SHORT(s);
    }
    else
@@ -3106,7 +3107,7 @@ multi_send_remobj(int objnum)
 {
    // Tell the other guy to remove an object from his list
 
-   byte obj_owner;
+   sbyte obj_owner;
    short remote_objnum;
 
    if (Objects[objnum].type==OBJ_POWERUP && (Game_mode & GM_NETWORK))
@@ -3193,7 +3194,7 @@ multi_send_door_open(int segnum, int side,ubyte flag)
 
    multibuf[0] = MULTI_DOOR_OPEN;
    *(short *)(multibuf+1) = INTEL_SHORT( (short)segnum );
-   multibuf[3] = (byte)side;
+   multibuf[3] = (sbyte)side;
    multibuf[4] = flag;
 
    multi_send_data(multibuf, 5, 2);
@@ -3209,7 +3210,7 @@ multi_send_door_open_specific(int pnum,int segnum, int side,ubyte flag)
 
    multibuf[0] = MULTI_DOOR_OPEN;
    *(short *)(multibuf+1) = INTEL_SHORT( (short)segnum );
-   multibuf[3] = (byte)side;
+   multibuf[3] = (sbyte)side;
    multibuf[4] = flag;
 
    network_send_naked_packet(multibuf, 5, pnum);
@@ -3229,9 +3230,9 @@ multi_send_create_explosion(int pnum)
    int count = 0;
 
    multibuf[count] = MULTI_CREATE_EXPLOSION;                      count += 1;
-   multibuf[count] = (byte)pnum;                                  count += 1;
-   //                                                                                                      -----------
-   //                                                                                                      Total size = 2
+   multibuf[count] = (sbyte)pnum;                                 count += 1;
+   //                                                             -----------
+   //                                                          Total size = 2
 
    multi_send_data(multibuf, count, 0);
 }
@@ -4946,7 +4947,7 @@ extern fix robot_last_send_time[MAX_ROBOTS_CONTROLLED];
 extern fix robot_last_message_time[MAX_ROBOTS_CONTROLLED];
 extern int robot_send_pending[MAX_ROBOTS_CONTROLLED];
 extern int robot_fired[MAX_ROBOTS_CONTROLLED];
-extern byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
+extern sbyte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 
 
 void multi_send_robot_controls (char pnum)

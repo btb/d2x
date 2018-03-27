@@ -23,36 +23,46 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIF_PLACABLE    1     //can be placed by level designer
 
 typedef struct weapon_info {
-   byte  render_type;            // How to draw 0=laser, 1=blob, 2=object
-   byte  persistent;             // 0 = dies when it hits something, 1 = continues (eg, fusion cannon)
+   sbyte render_type;            // How to draw 0=laser, 1=blob, 2=object
+   sbyte persistent;             // 0 = dies when it hits something,
+                                 //  1 = continues (eg, fusion cannon)
    short model_num;              // Model num if rendertype==2.
    short model_num_inner;        // Model num of inner part if rendertype==2.
 
-   byte  flash_vclip;            // What vclip to use for muzzle flash
-   byte  robot_hit_vclip;        // What vclip for impact with robot
+   sbyte flash_vclip;            // What vclip to use for muzzle flash
+   sbyte robot_hit_vclip;        // What vclip for impact with robot
    short flash_sound;            // What sound to play when fired
 
-   byte  wall_hit_vclip;         // What vclip for impact with wall
-   byte  fire_count;             // Number of bursts fired from EACH GUN per firing.  For weapons which fire from both sides, 3*fire_count shots will be fired.
+   sbyte wall_hit_vclip;         // What vclip for impact with wall
+   sbyte fire_count;             // Number of bursts fired from EACH GUN per
+                                 //  firing.  For weapons which fire from both
+                                 //  sides, 3*fire_count shots will be fired.
    short robot_hit_sound;        // What sound for impact with robot
 
-   byte  ammo_usage;             // How many units of ammunition it uses.
-   byte  weapon_vclip;           // Vclip to render for the weapon, itself.
+   sbyte ammo_usage;             // How many units of ammunition it uses.
+   sbyte weapon_vclip;           // Vclip to render for the weapon, itself.
    short wall_hit_sound;         // What sound for impact with wall
 
-   byte  destroyable;            // If !0, this weapon can be destroyed by another weapon.
-   byte  matter;                 // Flag: set if this object is matter (as opposed to energy)
-   byte  bounce;                 // 1==always bounces, 2=bounces twice
-   byte  homing_flag;            // Set if this weapon can home in on a target.
+   sbyte destroyable;            // If !0, this weapon can be destroyed by
+                                 //  another weapon.
+   sbyte matter;                 // Flag: set if this object is matter
+                                 //  (as opposed to energy)
+   sbyte bounce;                 // 1==always bounces, 2=bounces twice
+   sbyte homing_flag;            // Set if this weapon can home in on a target.
 
-   ubyte speedvar;               // allowed variance in speed below average, /128: 64 = 50% meaning if speed = 100, can be 50..100
+   ubyte speedvar;               // allowed variance in speed below average,
+                                 //  /128: 64 = 50% meaning if speed = 100,
+                                 //  can be 50..100
 
    ubyte flags;                  // see values above
 
-   byte  flash;                  // Flash effect
-   byte  afterburner_size;       // Size of blobs in F1_0/16 units, specify in bitmaps.tbl as floating point.  Player afterburner size = 2.5.
+   sbyte flash;                  // Flash effect
+   sbyte afterburner_size;       // Size of blobs in F1_0/16 units, specify in
+                                 //  bitmaps.tbl as floating point.
+                                 //  Player afterburner size = 2.5.
 
-   byte  children;               // ID of weapon to drop if this contains children.  -1 means no children.
+   sbyte children;               // ID of weapon to drop if this contains
+                                 //  children.  -1 means no children.
 
    fix   energy_usage;           // How much fuel is consumed to fire this weapon.
    fix   fire_wait;              // Time until this weapon can be fired again.
@@ -151,7 +161,7 @@ extern int N_weapon_types;
 extern void do_weapon_select(int weapon_num, int secondary_flag);
 extern void show_weapon_status(void);
 
-extern byte Primary_weapon, Secondary_weapon;
+extern sbyte Primary_weapon, Secondary_weapon;
 
 extern ubyte Primary_weapon_to_weapon_info[MAX_PRIMARY_WEAPONS];
 extern ubyte Secondary_weapon_to_weapon_info[MAX_SECONDARY_WEAPONS];
@@ -178,7 +188,7 @@ extern char *Primary_weapon_names[];
 extern char *Secondary_weapon_names[];
 extern int  Primary_ammo_max[MAX_PRIMARY_WEAPONS];
 extern ubyte   Secondary_ammo_max[MAX_SECONDARY_WEAPONS];
-extern byte Weapon_is_energy[MAX_WEAPON_TYPES];
+extern sbyte Weapon_is_energy[MAX_WEAPON_TYPES];
 
 #define  HAS_WEAPON_FLAG   1
 #define  HAS_ENERGY_FLAG   2

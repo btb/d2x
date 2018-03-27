@@ -51,7 +51,7 @@ void ai_path_garbage_collect(void);
 
 
 // ------------------------------------------------------------------------
-void create_random_xlate(byte *xt)
+void create_random_xlate(sbyte *xt)
 {
    int   i;
 
@@ -60,7 +60,7 @@ void create_random_xlate(byte *xt)
 
    for (i=0; i<MAX_SIDES_PER_SEGMENT; i++) {
       int   j = (rand()*MAX_SIDES_PER_SEGMENT)/(RAND_MAX+1);
-      byte  temp_byte;
+      sbyte temp_byte;
       Assert((j >= 0) && (j < MAX_SIDES_PER_SEGMENT));
 
       temp_byte = xt[j];
@@ -273,11 +273,11 @@ int create_path_points(object *objp, int start_seg, int end_seg, point_seg *pseg
    int      sidenum;
    int      qtail = 0, qhead = 0;
    int      i;
-   byte     visited[MAX_SEGMENTS];
+   sbyte   visited[MAX_SEGMENTS];
    seg_seg  seg_queue[MAX_SEGMENTS];
    short    depth[MAX_SEGMENTS];
    int      cur_depth;
-   byte     random_xlate[MAX_SIDES_PER_SEGMENT];
+   sbyte   random_xlate[MAX_SIDES_PER_SEGMENT];
    point_seg   *original_psegs = psegs;
    int      l_num_points;
 

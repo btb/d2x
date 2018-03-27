@@ -517,7 +517,7 @@ void robotmaker_proc( FuelCenter * robotcen )
          if (RobotCenters[matcen_num].robot_flags[0] != 0 || RobotCenters[matcen_num].robot_flags[1] != 0) {
             int   type;
             uint  flags;
-            byte  legal_types[64];     // 64 bits, the width of robot_flags[].
+            sbyte legal_types[64]; // 64 bits, the width of robot_flags[].
             int   num_types, robot_index, i;
 
             num_types = 0;

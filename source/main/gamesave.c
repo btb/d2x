@@ -79,22 +79,22 @@ char Gamesave_current_filename[128];
 //Start old wall structures
 
 typedef struct v16_wall {
-   byte  type;             // What kind of special wall.
-   byte  flags;            // Flags for the wall.
+   sbyte type;             // What kind of special wall.
+   sbyte flags;            // Flags for the wall.
    fix   hps;              // "Hit points" of the wall.
-   byte  trigger;          // Which trigger is associated with the wall.
-   byte  clip_num;         // Which animation associated with the wall.
-   byte  keys;
+   sbyte trigger;          // Which trigger is associated with the wall.
+   sbyte clip_num;         // Which animation associated with the wall.
+   sbyte keys;
    } v16_wall;
 
 typedef struct v19_wall {
    int   segnum,sidenum;   // Seg & side for this wall
-   byte  type;             // What kind of special wall.
-   byte  flags;            // Flags for the wall.
+   sbyte type;             // What kind of special wall.
+   sbyte flags;            // Flags for the wall.
    fix   hps;              // "Hit points" of the wall.
-   byte  trigger;          // Which trigger is associated with the wall.
-   byte  clip_num;         // Which animation associated with the wall.
-   byte  keys;
+   sbyte trigger;          // Which trigger is associated with the wall.
+   sbyte clip_num;         // Which animation associated with the wall.
+   sbyte keys;
    int   linked_wall;      // number of linked wall
    } v19_wall;
 
@@ -111,11 +111,11 @@ typedef struct v19_door {
 //old trigger structs
 
 typedef struct v29_trigger {
-   byte     type;
+   sbyte    type;
    short    flags;
    fix      value;
    fix      time;
-   byte     link_num;
+   sbyte    link_num;
    short    num_links;
    short    seg[MAX_WALLS_PER_LINK];
    short    side[MAX_WALLS_PER_LINK];
@@ -123,8 +123,8 @@ typedef struct v29_trigger {
 
 typedef struct v30_trigger {
    short    flags;
-   byte     num_links;
-   byte     pad;        //keep alignment
+   sbyte    num_links;
+   sbyte    pad;           // keep alignment
    fix      value;
    fix      time;
    short    seg[MAX_WALLS_PER_LINK];
@@ -465,9 +465,9 @@ static short read_fixang(CFILE *file)
    return f;
 }
 
-static byte read_byte(CFILE *file)
+static sbyte read_byte(CFILE *file)
 {
-   byte b;
+   sbyte b;
 
    if (cfread( &b, sizeof(b), 1, file) != 1)
       Error( "Error reading byte in gamesave.c" );
@@ -531,7 +531,7 @@ static void gs_write_fixang(fixang f,FILE *file)
 
 }
 
-static void gs_write_byte(byte b,FILE *file)
+static void gs_write_byte(sbyte b, FILE *file)
 {
    if (fwrite( &b, sizeof(b), 1, file) != 1)
       Error( "Error reading byte in gamesave.c" );

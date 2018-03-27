@@ -338,7 +338,7 @@ fix weapon_box_fade_values[2];
 #define FADE_SCALE   (2*i2f(GR_FADE_LEVELS)/REARM_TIME)     // fade out and back in REARM_TIME, in fade levels per seconds (int)
 
 typedef struct span {
-   byte l,r;
+   sbyte l, r;
 } span;
 
 //store delta x values from left of box
@@ -2890,7 +2890,7 @@ rgb player_rgb[] = {
 extern ubyte Newdemo_flying_guided;
 extern int max_window_w;
 
-typedef struct {byte x,y;} xy;
+typedef struct { sbyte x, y; } xy;
 
 //offsets for reticle parts: high-big  high-sml  low-big  low-sml
 xy cross_offsets[4] =      { {-8,-5},  {-4,-2}, {-4,-2}, {-2,-1} };

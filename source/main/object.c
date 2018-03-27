@@ -87,7 +87,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
  *  Global variables
  */
 
-extern byte WasRecorded[MAX_OBJECTS];
+extern sbyte WasRecorded[MAX_OBJECTS];
 
 ubyte CollisionResult[MAX_OBJECT_TYPES][MAX_OBJECT_TYPES];
 

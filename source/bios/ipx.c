@@ -67,7 +67,7 @@ typedef struct ecb_header {
 
 typedef struct packet_data {
    int         packetnum;
-   byte        data[IPX_MAX_DATA_SIZE];
+   sbyte       data[IPX_MAX_DATA_SIZE];
 } packet_data;
 
 typedef struct ipx_packet {

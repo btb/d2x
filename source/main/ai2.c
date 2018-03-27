@@ -63,7 +63,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int   Flinch_scale = 4;
 int   Attack_scale = 24;
-byte  Mike_to_matt_xlate[] = {AS_REST, AS_REST, AS_ALERT, AS_ALERT, AS_FLINCH, AS_FIRE, AS_RECOIL, AS_REST};
+sbyte Mike_to_matt_xlate[] = {AS_REST, AS_REST, AS_ALERT, AS_ALERT, AS_FLINCH, AS_FIRE, AS_RECOIL, AS_REST};
 
 // Amount of time since the current robot was last processed for things such as movement.
 // It is not valid to use FrameTime because robots do not get moved every frame.
@@ -271,7 +271,7 @@ if (size_check)
       object      *boss_objp = &Objects[boss_objnum];
       int         head, tail;
       int         seg_queue[QUEUE_SIZE];
-//ALREADY IN RENDER.H      byte        visited[MAX_SEGMENTS];
+//ALREADY IN RENDER.H      sbyte       visited[MAX_SEGMENTS];
       fix         boss_size_save;
 
       boss_size_save = boss_objp->size;
@@ -391,7 +391,7 @@ int   Diff_save = 1;
 
 fix   Firing_wait_copy[MAX_ROBOT_TYPES];
 fix   Firing_wait2_copy[MAX_ROBOT_TYPES];
-byte  Rapidfire_count_copy[MAX_ROBOT_TYPES];
+sbyte Rapidfire_count_copy[MAX_ROBOT_TYPES];
 
 void do_lunacy_on(void)
 {
@@ -2161,7 +2161,9 @@ void start_boss_death_sequence(object *objp)
 // General purpose robot-dies-with-death-roll-and-groan code.
 // Return true if object just died.
 // scale: F1_0*4 for boss, much smaller for much smaller guys
-int do_robot_dying_frame(object *objp, fix start_time, fix roll_duration, byte *dying_sound_playing, int death_sound, fix expl_scale, fix sound_scale)
+int do_robot_dying_frame(object *objp, fix start_time, fix roll_duration,
+                         sbyte *dying_sound_playing, int death_sound,
+                         fix expl_scale, fix sound_scale)
 {
    fix   roll_val, temp;
    fix   sound_duration;
