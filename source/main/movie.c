@@ -1168,7 +1168,9 @@ void init_movie(char *filename, int libnum, int is_robots, int required)
 	if (high_res)
 		strchr(filename,'.')[-1] = 'h';
 
+#ifdef D2_OEM
 try_again:;
+#endif
 
 	if ((movie_libs[libnum] = init_movie_lib(filename)) == NULL) {
 		char name2[100];
