@@ -17,10 +17,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
+#include "dstdlib.h"
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "error.h"
 #include "3d.h"

@@ -12,7 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include <stdlib.h>
 #include <stdio.h>
 #if defined(WINDOWS) || defined(__DOS__)
 #include <malloc.h>	//for stackavail()
@@ -23,6 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Memory.h>
 #endif
 
+#include "dstdlib.h"
 #include "inferno.h"
 #include "game.h"
 #include "error.h"

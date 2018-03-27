@@ -13,8 +13,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #include <stdio.h>
-#include <stdlib.h>
 
+#include "dstdlib.h"
 #include "inferno.h"
 #include "game.h"
 #include "mono.h"

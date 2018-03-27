@@ -12,12 +12,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include<stdlib.h>
 #include<stdio.h>
 #include<fcntl.h> 
 #include<string.h>
 #include<ctype.h>
 
+#include "dstdlib.h"
 #include "fix.h"
 #include "object.h"
 #include "mono.h"

@@ -18,12 +18,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <time.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdarg.h>
 #include <errno.h>
 
+#include "dstdlib.h"
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "vga.h"
 

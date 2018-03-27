@@ -15,9 +15,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #pragma off (unreferenced)	//for all the standard-tempate rountines
 
 #include <string.h>	// for memset
-#include <stdlib.h>
 #include <stdio.h>
 
+#include "dstdlib.h"
 #include "rle.h"
 #include "inferno.h"
 #include "game.h"

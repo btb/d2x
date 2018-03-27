@@ -15,7 +15,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include <stdlib.h>
 #if defined(WINDOWS) || defined(__DOS__)
 #include <malloc.h>
 #endif
@@ -25,6 +24,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <Memory.h>
 #endif
 
+#include "dstdlib.h"
 #include "error.h"
 #include "mono.h"
 

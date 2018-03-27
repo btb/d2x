@@ -16,6 +16,7 @@ set(misc_OTHERS
 	args.h
 	byteswap.h
 	debug.h
+	dstdlib.h
 	errtest.c
 	fileutil.h
 	hash.c

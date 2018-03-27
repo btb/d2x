@@ -12,8 +12,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include <stdlib.h>
-
+#include "dstdlib.h"
 #include "mono.h"
 #include "key.h"
 #include "joy.h"

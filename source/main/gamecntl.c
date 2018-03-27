@@ -19,10 +19,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 
+#include "dstdlib.h"
 #include "inferno.h"
 #include "game.h"
 #include "player.h"
