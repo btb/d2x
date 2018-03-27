@@ -15,6 +15,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>	// for memset()
 
+#include "minmax.h"
+
 #include "inferno.h"
 #include "segment.h"
 #include "error.h"

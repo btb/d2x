@@ -14,6 +14,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 
+#include "minmax.h"
 #include "mono.h"
 #include "key.h"
 #include "joy.h"

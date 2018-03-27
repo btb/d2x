@@ -22,6 +22,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
+#include "minmax.h"
+
 #include "inferno.h"
 #include "error.h"
 #include "mono.h"

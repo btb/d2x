@@ -19,6 +19,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include<ctype.h>
 
 #include "fix.h"
+#include "minmax.h"
+
 #include "object.h"
 #include "mono.h"
 #include "timer.h"

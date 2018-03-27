@@ -22,6 +22,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
+#include "minmax.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "screens.h"

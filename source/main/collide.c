@@ -19,6 +19,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 
 #include "rle.h"
+#include "minmax.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "gr.h"
