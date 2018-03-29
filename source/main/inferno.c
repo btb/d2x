@@ -36,7 +36,9 @@ char copyright[] = "DESCENT II  COPYRIGHT (C) 1994-1996 PARALLAX SOFTWARE CORPOR
 #include "bm.h"
 #include "inferno.h"
 #include "error.h"
+#ifdef __DOS__
 #include "div0.h"
+#endif
 #include "game.h"
 #include "segment.h"    //for Side_to_verts
 #include "mem.h"
@@ -1283,8 +1285,10 @@ int main(int argc,char **argv)
 
    do_joystick_init();
 
+#ifdef __DOS__
    verbose( "\n%s", TXT_VERBOSE_11);
    div0_init(DM_ERROR);
+#endif
 
    //------------ Init sound ---------------
    if (!FindArg( "-disablesound" )) {
