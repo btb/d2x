@@ -42,38 +42,38 @@ ubyte *gr_rle_decode_asm( ubyte * src, ubyte * dest );
 #if !defined(MACINTOSH)
 #pragma aux gr_rle_decode_asm parm [esi] [edi] value [edi] modify exact [eax ebx ecx edx esi edi] = \
 "  cld					"\
-"	xor	ecx, ecx		"\		
-"	cld					"\		
-"	jmp	NextByte		"\																						
-"							"\																				
-"Unique:					"\																				
+"	xor	ecx, ecx		"\
+"	cld					"\
+"	jmp	NextByte		"\
+"							"\
+"Unique:					"\
 "	mov	[edi],al		"\
-"	inc	edi			"\		
-"							"\																				
-"NextByte:				"\																			
-"	mov	al,[esi]		"\		
-"	inc	esi			"\		
-"							"\																		
+"	inc	edi			"\
+"							"\
+"NextByte:				"\
+"	mov	al,[esi]		"\
+"	inc	esi			"\
+"							"\
 "	mov	ah, al		"\
 "	and	ah, 0xE0    "\
 "  cmp	ah, 0xE0		"\
-"	jne   Unique		"\		
-"							"\																		
-"	mov	cl, al		"\		
-"	and	cl, 31  		"\		
+"	jne   Unique		"\
+"							"\
+"	mov	cl, al		"\
+"	and	cl, 31  		"\
 "	je		done			"\
-"							"\												
-"	mov	al,[esi]		"\		
-"	inc	esi			"\		
+"							"\
+"	mov	al,[esi]		"\
+"	inc	esi			"\
 "	mov	ah, al		"\
-"	shr	ecx,1			"\		
-"	rep	stosw			"\		
+"	shr	ecx,1			"\
+"	rep	stosw			"\
 "	jnc	NextByte		"\
 "	mov	[edi],al		"\
-"	inc	edi			"\		
+"	inc	edi			"\
 "							"\
-"	jmp	NextByte		"\	
-"							"\				
+"	jmp	NextByte		"\
+"							"\
 "done:					";
 
 void gr_rle_decode( ubyte * src, ubyte * dest, int dest_len )
