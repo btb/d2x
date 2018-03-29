@@ -36,7 +36,6 @@ set(io_OTHERS
     testj.c
     testm.c
     testms.c
-    testt.c
     timer.h
     x
     x.c
@@ -50,3 +49,6 @@ add_library(io ${io_SRCS} ${io_OTHERS})
 
 add_executable(testk testk.c)
 target_link_libraries(testk io misc)
+
+add_executable(testt testt.c)
+target_link_libraries(testt io)
