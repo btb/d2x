@@ -32,14 +32,12 @@ set(io_OTHERS
     oldkey.asm
     rbaudio.h
     rbaudio.new
-    speaker.c
     swiftcfg.h
     testj.c
     testm.c
     testms.c
     testt.c
     timer.h
-    timerp.c
     x
     x.c
 )
