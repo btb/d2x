@@ -11,17 +11,25 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
+/*
+ *
+ * FIX.H - prototypes and macros for fixed-point functions
+ *
+ * Copyright (c) 1993  Matt Toschlog & Mike Kulas
+ *
+ */
+
 #ifndef _FIX_H
 #define _FIX_H
 
-#include "pstypes.h"
+#include <inttypes.h>
 
-typedef long fix;          //16 bits int, 16 bits frac
-typedef short fixang;      //angles
+typedef int32_t fix;    // 16 bits int, 16 bits frac
+typedef int16_t fixang; // angles
 
 typedef struct quad {
-   ulong low;
-   long high;
+   uint32_t low;
+   int32_t high;
 } quad;
 
 //Convert an int to a fix
@@ -56,51 +64,20 @@ typedef struct quad {
 #define F0_5   f0_5
 #define F0_1   f0_1
 
+//multiply two fixes, return a fix
 fix fixmul(fix a,fix b);
-#pragma aux fixmul parm [eax] [edx] = \
-   "imul edx"           \
-   "shrd eax,edx,16";
 
-
+//divide two fixes, return a fix
 fix fixdiv(fix a,fix b);
-#pragma aux fixdiv parm [eax] [ebx] modify exact [eax edx] = \
-   "mov  edx,eax" \
-   "sar  edx,16"  \
-   "shl  eax,16"  \
-   "idiv ebx";
 
+//multiply two fixes, then divide by a third, return a fix
 fix fixmuldiv(fix a,fix b,fix c);
-#pragma aux fixmuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
-   "imul edx"  \
-   "idiv ebx";
-
-#pragma aux fixmulaccum parm [esi] [eax] [edx] modify exact [eax edx] = \
-   "imul edx"        \
-   "add  [esi],eax"  \
-   "adc  4[esi],edx";
-
-#pragma aux fixquadadjust parm [esi] modify exact [eax edx] = \
-   "mov  eax,[esi]"     \
-   "mov  edx,4[esi]"    \
-   "shrd eax,edx,16";
-
-#pragma aux fixquadnegate parm [eax] modify exact [ebx] = \
-   "mov  ebx,[eax]"     \
-   "neg  ebx"           \
-   "mov  [eax],ebx"     \
-   "mov  ebx,4[eax]"    \
-   "not  ebx"           \
-   "sbb  ebx,-1"        \
-   "mov  4[eax],ebx";
-
-#pragma aux fixdivquadlong parm [eax] [edx] [ebx] modify exact [eax edx] = \
-   "idiv ebx";
 
 //computes the square root of a long, returning a short
-ushort long_sqrt(long a);
+uint16_t long_sqrt(int32_t a);
 
 //computes the square root of a quad, returning a long
-ulong quad_sqrt(long low,long high);
+uint32_t quad_sqrt(uint32_t low, int32_t high);
 
 //computes the square root of a fix, returning a fix
 fix fix_sqrt(fix a);
@@ -112,7 +89,7 @@ void fixmulaccum(quad *q,fix a,fix b);
 fix fixquadadjust(quad *q);
 
 //divide a quad by a long
-long fixdivquadlong(ulong qlow,long qhigh,long d);
+fix fixdivquadlong(uint32_t qlow, uint32_t qhigh, uint32_t d);
 
 //negate a quad
 void fixquadnegate(quad *q);
@@ -133,6 +110,45 @@ fixang fix_acos(fix v);
 //NOTE: this is different from the standard C atan2, since it is left-handed.
 fixang fix_atan2(fix cos,fix sin);
 
+
+#if defined(__WATCOMC__) && defined(USE_INLINE)
+
+#pragma aux fixmul parm [eax] [edx] = \
+   "imul   edx"            \
+   "shrd   eax,edx,16";
+
+#pragma aux fixdiv parm [eax] [ebx] modify exact [eax edx] = \
+   "mov    edx,eax"        \
+   "sar    edx,16"         \
+   "shl    eax,16"         \
+   "idiv   ebx";
+
+#pragma aux fixmuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
+   "imul   edx"            \
+   "idiv   ebx";
+
+#pragma aux fixmulaccum parm [esi] [eax] [edx] modify exact [eax edx] = \
+   "imul   edx"            \
+   "add    [esi],eax"      \
+   "adc    4[esi],edx";
+
+#pragma aux fixquadadjust parm [esi] modify exact [eax edx] = \
+   "mov    eax,[esi]"      \
+   "mov    edx,4[esi]"     \
+   "shrd   eax,edx,16";
+
+#pragma aux fixquadnegate parm [eax] modify exact [ebx] = \
+   "mov    ebx,[eax]"      \
+   "neg    ebx"            \
+   "mov    [eax],ebx"      \
+   "mov    ebx,4[eax]"     \
+   "not    ebx"            \
+   "sbb    ebx,-1"         \
+   "mov    4[eax],ebx";
+
+#pragma aux fixdivquadlong parm [eax] [edx] [ebx] modify exact [eax edx] = \
+   "idiv    ebx";
+
 #pragma aux fix_fastsincos parm [eax] [esi] [edi] modify exact [eax ebx];
 #pragma aux fix_sincos parm [eax] [esi] [edi] modify exact [eax ebx];
 
@@ -143,5 +159,7 @@ fixang fix_atan2(fix cos,fix sin);
 #pragma aux long_sqrt "*" parm [eax] value [ax] modify [];
 #pragma aux fix_sqrt "*" parm [eax] value [eax] modify [];
 #pragma aux quad_sqrt "*" parm [eax] [edx] value [eax] modify [];
+
+#endif
 
 #endif
