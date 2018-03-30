@@ -13,7 +13,6 @@ set(vecmat_OTHERS
     sml9x9.asm
     vecmat.h
     vecmat.inc
-    vecmat.new
     vectest.c
 )
 set_source_files_properties(${vecmat_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
