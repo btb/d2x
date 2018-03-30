@@ -12,17 +12,13 @@ set(vga_SRCS
 
 set(vga_OTHERS
     dd.bat
-    framebuf.jas
     fxdpmi.h
     fxvesa.h
     grx.h
     makefile
     tweak.inc
     vga.h
-    vga.jas
     vgaregs.inc
-    new/palette.c
-    new/vga.c
 )
 set_source_files_properties(${vga_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
