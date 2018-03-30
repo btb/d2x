@@ -30,7 +30,7 @@ vms_vector test_vec[10] = {
 };
 
 
-main()
+void main()
 {
    int i;
    fix d,d2;
