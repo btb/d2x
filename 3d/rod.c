@@ -160,7 +160,7 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int ori
 	blob_vertices[1].x = blob_vertices[2].x = pnt.p3_sx + w;
 	blob_vertices[2].y = pnt.p3_sy + h;
 
-	scale_bitmap(bm,blob_vertices,0);
+	scale_bitmap(bm, blob_vertices, orientation);
 
 	return 0;
 #else
@@ -188,7 +188,7 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int ori
 	blob_vertices[1].x = blob_vertices[2].x = pnt.p3_sx + w;
 	blob_vertices[2].y = pnt.p3_sy + h;
 
-	scale_bitmap(bm, blob_vertices, 0);
+	scale_bitmap(bm, blob_vertices, orientation);
 
 	return 0;
 #endif
