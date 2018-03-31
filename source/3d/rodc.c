@@ -127,7 +127,9 @@ int checkmuldiv(fix *r,fix a,fix b,fix c);
 
 //draws a bitmap with the specified 3d width & height 
 //returns 1 if off screen, 0 if drew
-bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm)
+//orientation: bits set mean: 0=flip in u, 1=flip in v, 2=exchange u, v
+bool g3_draw_bitmap(vms_vector *pos, fix width, fix height, grs_bitmap *bm,
+                    int orientation)
 {
 #ifndef __powerc
 	g3s_point pnt;
@@ -156,7 +158,7 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm)
 	blob_vertices[1].x = blob_vertices[2].x = pnt.p3_sx + w;
 	blob_vertices[2].y = pnt.p3_sy + h;
 
-	scale_bitmap(bm,blob_vertices);
+	scale_bitmap(bm, blob_vertices, orientation);
 
 	return 0;
 #else
@@ -184,7 +186,7 @@ bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm)
 	blob_vertices[1].x = blob_vertices[2].x = pnt.p3_sx + w;
 	blob_vertices[2].y = pnt.p3_sy + h;
 
-	scale_bitmap(bm,blob_vertices);
+	scale_bitmap(bm, blob_vertices, orientation);
 
 	return 0;
 #endif
