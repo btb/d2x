@@ -10,6 +10,11 @@ CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
 AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
+/*
+ *
+ * Header file for 3d library
+ *
+ */
 
 #ifndef _3D_H
 #define _3D_H
@@ -233,6 +238,9 @@ bool g3_draw_morphing_model(void *model_ptr,grs_bitmap **model_bitmaps,vms_angve
 //this remaps the 15bpp colors for the models into a new palette.  It should
 //be called whenever the palette changes
 void g3_remap_interp_colors(void);
+
+// routine to convert little to big endian in polygon model data
+void swap_polygon_model_data(ubyte *data);
 
 //Pragmas
 
