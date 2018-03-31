@@ -30,4 +30,11 @@ set_source_files_properties(${fix_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 add_library(fix ${fix_SRCS} ${fix_OTHERS})
 
 add_executable(fixtest fixtest.c)
-target_link_libraries(fixtest fix io)
+
+set(fixtest_LIBS fix io)
+
+if(NOT TARGSYS MATCHES "^DOS4G$" AND NOT TARGSYS MATCHES "^WIN32")
+    list(REMOVE_ITEM fixtest_LIBS io)
+endif()
+
+target_link_libraries(fixtest ${fixtest_LIBS})

@@ -3,12 +3,14 @@
 //
 
 #include <stdio.h>
+#ifdef __DOS__
 #include <conio.h>
+#include <graph.h>
+#endif
 #include <stdlib.h>
 
 #include "pstypes.h"
 #include "fix.h"
-#include "graph.h"
 
 #define f1_0 0x10000
 #define f0_5 0x8000
@@ -49,6 +51,7 @@ void sincos_test()
 
 void circle_test()
 {
+#ifdef __DOS__
 	int i;
 	fixang f;
 	fix s,c;
@@ -91,6 +94,7 @@ void circle_test()
 	getch();
 
 	_setvideomode(_DEFAULTMODE);
+#endif
 }
 
 void show_sqrt(long v)
