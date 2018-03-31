@@ -233,7 +233,8 @@ fix vm_vec_normalized_dir_quick(vms_vector *dest,vms_vector *end,vms_vector *sta
 
 ////returns dot product of two vectors
 fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
-fix vm_vec_dot(vms_vector *v0,vms_vector *v1);
+//fix vm_vec_dot(vms_vector *v0,vms_vector *v1);
+#define vm_vec_dot(v0, v1) vm_vec_dotprod(v0, v1)
 
 #else
 
@@ -263,7 +264,8 @@ fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
 //computes cross product of two vectors. returns ptr to dest
 //dest CANNOT equal either source
 vms_vector *vm_vec_crossprod(vms_vector *dest,vms_vector *src0,vms_vector *src1);
-vms_vector *vm_vec_cross(vms_vector *dest,vms_vector *src0,vms_vector *src1);
+//vms_vector *vm_vec_cross(vms_vector *dest,vms_vector *src0,vms_vector *src1);
+#define vm_vec_cross(d, s0, s1) vm_vec_crossprod(d, s0, s1)
 
 //computes surface normal from three points. result is normalized
 //returns ptr to dest
