@@ -13,50 +13,51 @@ set(gr_SRCS
     gpixel.c
     gr.c
     ibitblt.c
-    lbitblt.asm
     line.c
-    linear.asm  #DOS/Win
-#    macstubs.c  #Mac
     pcx.c
     pixel.c
     poly.c
     rect.c
     rle.c
     scale.c     #DOS
-    scalea.asm  #DOS
-#    scalemac.c  #Mac
     scanline.c
 )
-#    blit.c     #Mac, missing
-#    roller.c   #missing
 
 set(gr_OTHERS
-    clip.h
-    cursor.c
-    effect2d.h
-    effects.c
-    effects.h
-    gr.h
-    gr.inc
-    grdef.h
-    ibitblt.h
-    makefile
-    makefile.mac
-    mspeed.c
-    nonvesa.c
+    bitblt.c        bitmap.c        box.c
+    canvas.c        circle.c        clip.h          cursor.c
+    dd.bat
+    disc.c
+    effect2d.h      effects.c       effects.h
+    font.c
+    gpixel.c
+    gr.c            gr.h            gr.inc          gr.out          grdef.h
+    ibitblt.c       ibitblt.h       lbitblt.asm
+    line.c          linear.asm
+    macstubs.c
+    makefile        makefile.mac
+    mndebug.bat
+    mspeed.c        nonvesa.c
     paging.asm
-    palette.h
-    pcx.h
+    palette.h       pcx.c           pcx.h
     pflow.asm
-    rle.h
+    pixel.c         poly.c
+    rect.c          rle.c           rle.h
+    scale.c         scalea.asm      scalemac.c
+    scanline.c
     selector.asm
-    tmapbits.c
-    tpoly.c
-    vesalib.c
-    vesatest.c
+    tmapbits.c      tpoly.c
+    vesalib.c       vesatest.c
 )
 add_library(gr ${gr_SRCS} ${gr_OTHERS})
 
+if(TARGSYS MATCHES "^DOS4G$" OR TARGSYS MATCHES "^WIN32")
+    list(APPEND gr_SRCS lbitblt.asm linear.asm scalea.asm)
+elseif(0) #mac
+    list(APPEND gr_SRCS macstubs.c scalemac.c)
+endif()
+
+list(REMOVE_ITEM gr_OTHERS ${gr_SRCS})
 set_source_files_properties(${gr_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 #add_executable(testg testg.c tmapbits.c)
