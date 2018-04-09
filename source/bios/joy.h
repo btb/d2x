@@ -57,7 +57,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // joystick was detected, 1 if everything is ok.
 // joy_init() is called.
 
-#if defined (__NT__)
+#ifdef WINDOWS
 extern int joy_init(int joy, int spjoy);
 extern int joy95_init_stick(int joy, int spjoy);
 #else
