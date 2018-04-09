@@ -3,17 +3,7 @@
 #
 
 set(io_SRCS
-    dpmi.c
     error.c
-    findfile.c  #DOS/Win
-    ipx.c
-    joy.asm
-    joyc.c
-    key.c
-    mono.c
-    mouse.c
-    rbaudio.c
-    timer.asm
 )
 
 set(io_OTHERS
@@ -22,16 +12,11 @@ set(io_OTHERS
     findfile.h
     ipx.h
     joy.h
-    key.asm
     key.h
-    keys.inc
     makefile
     mono.h
-    mouse.asm
     mouse.h
-    oldkey.asm
     rbaudio.h
-    rbaudio.new
     swiftcfg.h
     testj.c
     testm.c
@@ -43,6 +28,12 @@ set(io_OTHERS
 set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(io ${io_SRCS} ${io_OTHERS})
+
+if(TARGSYS MATCHES "^DOS4G$")
+    add_subdirectory(dos)
+elseif(TARGSYS MATCHES "^WIN32")
+    add_subdirectory(win32)
+endif()
 
 #add_executable(demo cdrom.c)
 #target_link_libraries(demo io)
