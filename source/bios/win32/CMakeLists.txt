@@ -1,16 +1,16 @@
 set(io_win32_SRCS
-    findfile.c
-    ipx.c
-    joyc.c
-    key.c
-    mono.c
-    mouse.c
-    rbaudio.c
-    timer.c
+    win32/findfile.c
+    win32/ipx.c
+    win32/joyc.c
+    win32/key.c
+    win32/mono.c
+    win32/mouse.c
+    win32/rbaudio.c
+    win32/timer.c
 )
 
 set(io_win32_OTHERS
-    winmono.c
+    win32/winmono.c
 )
 
 set_source_files_properties(${io_win32_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
