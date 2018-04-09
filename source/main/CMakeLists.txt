@@ -141,6 +141,7 @@ endif()
 #descent2_SRCS_OPT = ## gameseg.c wall.c
 
 set(descent2_LIBS
+    io
     3d gr fix iff vecmat
     misc
     cfile
@@ -185,7 +186,7 @@ if(TARGSYS MATCHES "^WIN32$")
 elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_LIBS
         div0
-        io vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
+        vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
         poly_acc
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
