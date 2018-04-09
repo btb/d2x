@@ -43,7 +43,7 @@ set(SUBSYSTEMS_DOS includes misc mem fix cfile pa_null 2d vga bios iff div
     ui vecmat 3d texmap) # tactile unarj sosdigi sosmidi
 
 # Subdirs to make for the Win95 libraries
-set(SUBSYSTEMS_WIN includes misc mem fix cfile pa_null 2d vga novga bios iff
+set(SUBSYSTEMS_WIN includes misc mem fix cfile pa_null 2d novga bios iff
     vecmat win95 3d texmap) # tactile unarj
 
 # Subdirs to make for the OSX libraries
