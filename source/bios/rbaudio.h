@@ -26,7 +26,7 @@ typedef struct _RBACHANNELCTL {
 } RBACHANNELCTL;
 
 
-#if defined(__NT__)
+#ifdef WINDOWS
    extern void RBAInit(void); //drive a == 0, drive b == 1
 #else
    extern void RBAInit(ubyte cd_drive_num);  //drive a == 0, drive b == 1

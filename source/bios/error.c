@@ -12,7 +12,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#if defined(__NT__)
+#ifdef WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -76,7 +76,7 @@ void set_exit_message(char *fmt,...)
 
 }
 
-#ifdef __NT__
+#ifdef WINDOWS
 void _Assert(int expr, char *expr_text, char *filename, int linenum)
 {
    if (!(expr)) {
@@ -196,7 +196,7 @@ void MacAssert(int expr, char *expr_text, char *filename, int linenum)
 
 #endif
 
-#if defined(__NT__)
+#ifdef WINDOWS
 
 int WinEnableInt3 = 1;
 

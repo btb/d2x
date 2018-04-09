@@ -29,11 +29,11 @@ void Error(char *fmt, ...) __noreturn;                  // exit with error code=
 
 #ifndef MACINTOSH
 
-   #if defined(__NT__)
+   #ifdef WINDOWS
       void WinInt3();
       #define Int3() WinInt3()
       #define Assert(expr) _Assert(expr, #expr, __FILE__, __LINE__)
-   #else // ifdef __NT__
+   #else // ifdef WINDOWS
       void Int3(void);                          //generate int3
       #pragma aux Int3 = "int 3h";
 
@@ -68,7 +68,7 @@ extern int MacEnableInt3;
 
 #else             //macros for real game
 
-#if !defined(__NT__)
+#ifndef WINDOWS
 #pragma aux Error aborts;
 #endif
 
