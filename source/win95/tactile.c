@@ -32,7 +32,7 @@ int Tactile_open (int port)
   switch (TactileStick)
    {
 	 case TACTILE_IMMERSION:
-	#if defined (__NT__) 
+	#ifdef WINDOWS
 		if (!IForce_Init(port)) {
 			TactileStick = 0;
 		}
