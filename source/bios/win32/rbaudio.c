@@ -554,8 +554,8 @@ unsigned long msf_to_lsn(unsigned long msf)
 
 unsigned long msf_add(unsigned long msf1, unsigned long msf2)
 {
-	uint min1, sec1, frame1;
-	uint min2, sec2, frame2;
+	unsigned int min1, sec1, frame1;
+	unsigned int min2, sec2, frame2;
 
 //	we don't take frames into account, which may not be right.
 	min1 = MCI_MSF_MINUTE(msf1);
