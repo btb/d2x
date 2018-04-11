@@ -33,6 +33,7 @@ if(TARGSYS MATCHES "^DOS4G$")
     add_subdirectory(dos)
 elseif(TARGSYS MATCHES "^WIN32")
     add_subdirectory(win32)
+    target_link_libraries(io misc)
     target_link_libraries(io winmm)
 endif()
 
