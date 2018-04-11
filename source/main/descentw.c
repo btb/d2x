@@ -187,7 +187,7 @@ BOOL AppInit(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 		MakeCodeWritable();
 
 #ifndef RELEASE
-	cinit();
+	c_init();
 #endif
 
 	atexit(AppExit);
@@ -251,15 +251,15 @@ void AppExit()
 
 #ifndef RELEASE
 	if (WinErrorTrap) {
-		cprintf("\n\n%s", WinErrorMessage);
-		cgetch();
+		c_printf("\n\n%s", WinErrorMessage);
+		c_getch();
 	}
 	else {
 		CloseWindow(_hAppWnd);
-		cprintf("\n\nDescent II for Win95 done...\n");
-		cgetch();
+		c_printf("\n\nDescent II for Win95 done...\n");
+		c_getch();
 	}
-	cclose();
+	c_close();
 #else 
 	if (WinErrorTrap)
 		MessageBox(NULL, WinErrorMessage, "Descent II error", MB_OK);
@@ -488,11 +488,11 @@ void AppActivate(HWND hWnd, UINT wParam)
 			
 	if (_AppActive) {
 		mprintf((0, "Descent II is gaining Window focus.\n"));
-		cprintf("Descent II is gaining Window focus.\n");
+		c_printf("Descent II is gaining Window focus.\n");
 	}
 	else {
 		mprintf((0, "Descent II is losing Window focus.\n"));
-		cprintf("Descent II is losing Window focus.\n");
+		c_printf("Descent II is losing Window focus.\n");
 	}
 
 // Must now unpause if paused and app is active now.

@@ -21,10 +21,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern void SetLibraryWinInfo(HWND hWnd, HINSTANCE hInstance);
 extern HWND GetLibraryWindow(void);
 
-extern void copen();
-extern void cprintf(char *text, ...);
-extern int cgetch();
-extern void cclose();
+extern void c_init(void);
+extern void c_printf(char *text, ...);
+extern int c_getch();
+extern void c_close();
 
 extern void loginit(char *name);
 extern void logclose();
