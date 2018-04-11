@@ -66,7 +66,7 @@ HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc,
 								    LPSTR lpDeviceName, LPD3DDEVICEDESC lpHWDevDesc, 
 								    LPD3DDEVICEDESC lpHELDevDesc, LPVOID lpUserArg);
 
-int d3d_close();
+void d3d_close(void);
 int d3d_device_close();
 int d3d_enum_devices(GUID *pguid);
 int d3d_enum_texformats();
