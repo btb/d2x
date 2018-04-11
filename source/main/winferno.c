@@ -208,13 +208,13 @@ void InitData()
 
 //print out the banner title
 #ifndef RELEASE
-	cprintf("\nDESCENT II %s v%d.%d",VERSION_TYPE,Version_major,Version_minor);
+	c_printf("\nDESCENT II %s v%d.%d",VERSION_TYPE,Version_major,Version_minor);
 	#ifdef VERSION_NAME
-	cprintf("  %s", VERSION_NAME);
+	c_printf("  %s", VERSION_NAME);
 	#endif
-	cprintf("  %s %s\n", __DATE__,__TIME__);
-	cprintf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);	
-	cprintf("\n\n");
+	c_printf("  %s %s\n", __DATE__,__TIME__);
+	c_printf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);
+	c_printf("\n\n");
 #endif
 
 	check_id_checksum_and_date();
@@ -566,7 +566,7 @@ check_id_checksum_and_date()
 	if (test_checksum != *checksum)
 		desc_id_exit_num = 2;
 
-	cprintf ("%s %s\n", TXT_REGISTRATION, name_copy);
+	c_printf ("%s %s\n", TXT_REGISTRATION, name_copy);
 }
 
 

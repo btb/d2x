@@ -51,7 +51,7 @@ static BOOL ConInit=FALSE;
 static HANDLE ConStdOut;
 static HANDLE ConStdIn;
 
-void cinit()
+void c_init()
 {
 	AllocConsole();
 	ConStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -59,13 +59,13 @@ void cinit()
 	ConInit = TRUE;
 }
 
-void cclose()
+void c_close()
 {
 	ConInit = FALSE;
 }
 
 
-void cprintf(char *text, ...)
+void c_printf(char *text, ...)
 {
 	char buffer[1000];
 	va_list args;
@@ -80,7 +80,7 @@ void cprintf(char *text, ...)
 }
 
 
-int cgetch()
+int c_getch()
 {
 	char buffer[3];
 	DWORD chread;
