@@ -12,6 +12,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include <stdio.h>
+#ifdef __DOS__
+#include <i86.h>
+#endif
 
 #include "timer.h"
 // #include "key.h"
