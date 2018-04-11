@@ -15,6 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include <conio.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <io.h>

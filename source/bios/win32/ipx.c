@@ -23,6 +23,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <conio.h>
+
 
 #include "pstypes.h"
 #include "winapp.h"
