@@ -675,7 +675,7 @@ uint wipx_socket_listen(SOCKET sock_id, tIpxPacket *packet)
       bytes = recvfrom(sock_id, (char *)(&packet->packetnum),
                sizeof(int) + IPX_MAX_DATA_SIZE,
                0,
-               &ipx_addr,
+               (struct sockaddr *)&ipx_addr,
                &length);
       if (bytes == SOCKET_ERROR) {
          wipx_logerror(SOCKET_ERROR, "wipx_socket_listen::recvfrom");
@@ -715,7 +715,7 @@ uint wipx_socket_send(SOCKET sock_id, tIpxPacket *packet)
    bytes = sendto(sock_id, (char *)(&packet->packetnum),
             packet->datalen,
             0,
-            &ipx_addr,
+            (struct sockaddr *)&ipx_addr,
             sizeof(SOCKADDR_IPX));
    packet->in_use = 1;
    if (bytes == SOCKET_ERROR) {
