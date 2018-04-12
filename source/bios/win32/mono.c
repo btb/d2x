@@ -70,6 +70,11 @@ static WINDOW Window[MAX_NUM_WINDOWS];
 
 struct mono_element (*monoscreen)[25][80];
 
+
+// Internal prototypes
+void msetcursor(short row, short col);
+
+
 void mputc( short n, char c )
 {
    if (!OPEN) return;
