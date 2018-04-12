@@ -79,6 +79,10 @@ unsigned char shifted_ascii_table[128] =
   255,255,255,255,255,255,255,255 };
 
 
+//Internal prototypes
+void key_clear_bios_buffer_all(void);
+
+
 //	Initialization and Cleanup Routines
 
 void key_init()

@@ -21,6 +21,7 @@ typedef struct registry_handle {
 	HKEY *hKey;
 } registry_handle;	
 
+void registry_setpath(HKEY hKey);
 registry_handle *registry_open(const char *path);
 int registry_getint(registry_handle *handle, const char *label, int *val);
 int registry_getstring(registry_handle *handle, const char *label, char *str, int bufsize);
