@@ -24,8 +24,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void main (void)
 {
-   fix MyTimer, t, t1, t2, ot, myc;
-   int i,s, b;
+   fix MyTimer, t, t1, t2, ot;
+   int s;
 
    // key_init();
 
