@@ -21,7 +21,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void main (void)
 {
-   int i,c, j;
+   int c;
 
    key_init();
    keyd_buffer_type = 1;
