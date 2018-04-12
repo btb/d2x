@@ -128,6 +128,7 @@ extern void joy_set_slow_reading( int flag );
 
 #ifdef _WIN32
 extern int joy95_init_stick(int joy, int spjoy);
+extern void joy95_get_name(int joyid, char *name, int namesize);
 #endif
 
 
