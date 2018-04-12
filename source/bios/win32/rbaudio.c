@@ -73,7 +73,7 @@ UINT GetCDDiscID();
 void RBClose()
 {
 	if (RedBookInstalled) {
-		mciSendCommand(CDDeviceID, MCI_CLOSE, 0, NULL);
+		mciSendCommand(CDDeviceID, MCI_CLOSE, 0, (ULONG_PTR)NULL);
 		RedBookEnabled = 0;
 		RedBookInstalled = 0;
 	}
@@ -112,7 +112,7 @@ void RBAInit(void)
 //	We need to identify that a cd audio driver exists
 	mciOpenParms.lpstrDeviceType = "cdaudio";
 
-	retval = mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_SHAREABLE, (DWORD)(LPVOID)&mciOpenParms);
+	retval = mciSendCommand((MCIDEVICEID)NULL, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_SHAREABLE, (DWORD)(LPVOID)&mciOpenParms);
 	if (retval) {
 		if (retval == MCIERR_MUST_USE_SHAREABLE) RBCDROM_State = -1;
 		else RBCDROM_State = 0;
@@ -131,7 +131,7 @@ void RBAInit(void)
 		mciSetParms.dwTimeFormat = MCI_FORMAT_MSF;
 		retval = mciSendCommand(CDDeviceID, MCI_SET, MCI_SET_TIME_FORMAT, (DWORD)(LPVOID)&mciSetParms);
 		if (retval) {
-			mciSendCommand(CDDeviceID, MCI_CLOSE, 0, NULL);
+			mciSendCommand(CDDeviceID, MCI_CLOSE, 0, (ULONG_PTR)NULL);
 			mprintf((0, "Error %d.  Unable to set Redbook Format.\n", retval));
 			RedBookEnabled = 0;
 		}
@@ -287,7 +287,7 @@ void RBAStop()
 
 	if (!RedBookEnabled) return;
 	
-	retval = mciSendCommand(CDDeviceID, MCI_STOP,0,NULL);
+	retval = mciSendCommand(CDDeviceID, MCI_STOP, 0, (ULONG_PTR)NULL);
 	if (retval) {
 		mciGetErrorString(retval, MCIErrorMsg, 256);
 		mprintf((1,"RBA MCI:%s.\n", MCIErrorMsg));
@@ -327,7 +327,7 @@ void RBAPause()
 
 	rba_paused_head_loc = RBAGetHeadLoc(&min, &sec, &frame);	
 
-	mciGenParms.dwCallback = GetLibraryWindow();
+	mciGenParms.dwCallback = (DWORD_PTR)GetLibraryWindow();
 	retval = mciSendCommand(CDDeviceID, MCI_PAUSE, MCI_NOTIFY, 
 		(DWORD)(LPVOID)&mciGenParms);
 	if (retval)	{
