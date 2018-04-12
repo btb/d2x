@@ -49,13 +49,13 @@ void gr_modex_uscanline( short x1, short x2, short y, unsigned char color )
 
 int  gr_vesa_setmodea(int mode)
 {
-
+   return 0;
 }
 
 
 int  gr_vesa_checkmode(int mode)
 {
-
+   return 0;
 }
 
 
@@ -85,7 +85,7 @@ void gr_vesa_scanline(short x1, short x2, short y, unsigned char color )
 
 int  gr_vesa_setlogical(int pixels_per_scanline)
 {
-
+   return 0;
 }
 
 
