@@ -27,6 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 #include "dd.h"
 #include "mono.h"
+#include "palette.h"
 
 
 //	Canvas Globals
