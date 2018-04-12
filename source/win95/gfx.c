@@ -40,22 +40,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 static BOOL                gfx_initialized=0;// GFX flag
 static BOOL                d3d_enhanced=0;   //   3D enhanced?
-static FILE                *LogFile=NULL;    // Log File!
 
 
 // Function prototypes
 // ----------------------------------------------------------------------------
-
-#ifdef NDEBUG
-#define WRITELOG(t)
-#define LOGINIT(n)
-#define LOGCLOSE
-#else
-#define WRITELOG(t) if (LogFile) { fprintf t; fflush(LogFile); }
-#define LOGINIT(n) LogFile = fopen(n, "wt");
-#define LOGCLOSE if (LogFile) fclose(LogFile);
-#endif
-
 
 
 /* gfx Philosophy
