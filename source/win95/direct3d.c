@@ -101,7 +101,7 @@ BOOL d3d_init(void)
 	atexit(d3d_close);
 
 //	initialize Direct3d interface
-	res = IDirectDraw_QueryInterface(_lpDD, &IID_IDirect3D, &_lpD3D);
+	res = IDirectDraw_QueryInterface(_lpDD, &IID_IDirect3D, (void **)&_lpD3D);
 	if (res != DD_OK) 
 		return d3d_handle_error(res);
 
@@ -159,7 +159,7 @@ int d3d_init_device(GUID guid)
 	if (!d3d_initialized) return -1;
 
 //	Grab back buffer.
-	res = IDirectDrawSurface_QueryInterface(_lpDDSBack, &_3DGUID, &_lpD3DDev);
+	res = IDirectDrawSurface_QueryInterface(_lpDDSBack, &_3DGUID, (void **)&_lpD3DDev);
 	if (res != DD_OK) {
 		WRITELOG((LogFile, "Unable to retrieve device from back buffer. %x\n",res));
 		return d3d_handle_error(res);
