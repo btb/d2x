@@ -73,6 +73,10 @@ void DDEmulateTest(void);
 #define WRITELOG(t) if (LogFile) { fprintf t; fflush(LogFile);}
 
 
+//Internal prototypes
+BOOL DDEnumerateModes(void);
+BOOL DDInitClipper(void);
+
 
 //	Initialization
 //	----------------------------------------------------------------------------
