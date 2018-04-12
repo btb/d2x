@@ -88,7 +88,7 @@ static mouse_info Mouse;
 
 static int Mouse_installed = 0;
 static HWND _hMouseWnd = 0;
-static Mouse_center = 0;
+static int Mouse_center = 0;
 
 extern int timer_initialized;
 

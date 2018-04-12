@@ -160,7 +160,7 @@ void copy_row(int nwords,short *src, short *dest1, short *dest2 );
 
 void scroll( short n )
 {
-   register row, col;
+   register int row, col;
 
    if (!OPEN) return;
 
@@ -368,7 +368,7 @@ void mopen( short n, short row, short col, short width, short height, char * tit
 int minit()
 {
    short n;
-   static initialized=0;
+   static int initialized = 0;
    //short col, row;
 
    if (!Mono_initialized) {
