@@ -154,7 +154,6 @@ int d3d_enum_devices(GUID *pguid)
 int d3d_init_device(GUID guid)
 {
 	HRESULT res;
-	DDSURFACEDESC ddsd;
 
 	if (!d3d_initialized) return -1;
 
