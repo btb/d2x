@@ -36,7 +36,7 @@ struct SSMixerObject {
 	int ch_num;
 	int ch_cur;
 	SSoundBuffer *ch_list;
-} SSMixer = { NULL, 0, 0, 0, NULL };		
+} SSMixer = { NULL, 0, 0, 0, 0, NULL };
 
 
 long XlatSSToDSPan(unsigned short pan);
