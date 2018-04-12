@@ -579,7 +579,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
 
    memset( &sSOSSampleData, 0, sizeof(_SOS_START_SAMPLE));
 
-   Assert(GameSounds[soundnum].data != -1);
+   Assert(GameSounds[soundnum].data != (ubyte *)-1);
 
    sSOSSampleData.wChannel             = _CENTER_CHANNEL;
    sSOSSampleData.wSampleID            = soundnum;
