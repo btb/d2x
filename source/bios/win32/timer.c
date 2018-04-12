@@ -73,8 +73,6 @@ void timer_close();
 
 void timer_init(int i)
 {
-   TIMECAPS tc;
-
    Assert(GameStartTime == 0);
 
    timer_initialized = 1;
