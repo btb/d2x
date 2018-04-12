@@ -26,6 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "rbaudio.h"
 #include "fix.h"
+#include "timer.h"
 #include "winapp.h"
 
 
