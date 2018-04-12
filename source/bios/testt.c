@@ -12,7 +12,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include <stdio.h>
-#ifdef __DOS__
+#if defined(__DOS__) || defined(WINDOWS)
 #include <i86.h>
 #endif
 
