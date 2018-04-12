@@ -108,6 +108,7 @@ extern BOOL DDInit(int mode);
 extern void DDKill();
 extern BOOL DDCreateScreen();
 extern void DDKillScreen();
+extern BOOL DDRestoreSurface(LPDIRECTDRAWSURFACE lpdds);
 extern ubyte *DDLockSurface(LPDIRECTDRAWSURFACE lpdds, RECT *rect, int *pitch);
 extern void DDUnlockSurface(LPDIRECTDRAWSURFACE lpdds, char *data);
 extern void DDSetDisplayMode(int display_mode,int flags);
@@ -139,6 +140,8 @@ extern void dd_gr_close();
 extern void dd_gr_init_screen();
 extern void dd_gr_screen_lock();
 extern void dd_gr_screen_unlock();
+extern void dd_gr_lock(dd_grs_canvas *canv);
+extern void dd_gr_unlock(dd_grs_canvas *canv);
 extern void dd_gr_flip();
 
 extern dd_grs_canvas *dd_gr_create_canvas(int w, int h);
