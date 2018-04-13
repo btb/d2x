@@ -33,6 +33,7 @@ void Error(char *fmt, ...) __noreturn;                  // exit with error code=
 		void WinInt3();
 		#define Int3() WinInt3()
 		#define Assert(expr) _Assert(expr, #expr, __FILE__, __LINE__)
+		#pragma aux Error aborts;
 	#else // ifdef WINDOWS
 		void Int3(void);									//generate int3
 		#pragma aux Int3 = "int 3h";
