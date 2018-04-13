@@ -15,7 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#if __DOS__
+#if defined(__DOS__) || defined(WINDOWS)
 #include <direct.h>
 #endif
 

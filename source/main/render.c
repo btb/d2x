@@ -1057,7 +1057,7 @@ int Edge_to_sides[8][8][2] = {
 
 
 //given an edge, tell what side is on that edge
-find_seg_side(segment *seg,short *verts,int notside)
+int find_seg_side(segment *seg, short *verts, int notside)
 {
 	int i;
 	int vv0=-1,vv1=-1;
@@ -1110,7 +1110,10 @@ find_seg_side(segment *seg,short *verts,int notside)
 
 //find the two segments that join a given seg though two sides, and
 //the sides of those segments the abut. 
-find_joining_side_norms(vms_vector *norm0_0,vms_vector *norm0_1,vms_vector *norm1_0,vms_vector *norm1_1,vms_vector **pnt0,vms_vector **pnt1,segment *seg,int s0,int s1)
+int find_joining_side_norms(vms_vector *norm0_0, vms_vector *norm0_1,
+                            vms_vector *norm1_0, vms_vector *norm1_1,
+                            vms_vector **pnt0, vms_vector **pnt1,
+                            segment *seg, int s0, int s1)
 {
 	segment *seg0,*seg1;
 	short edge_verts[2];
@@ -1191,7 +1194,7 @@ find_joining_side_norms(vms_vector *norm0_0,vms_vector *norm0_1,vms_vector *norm
 
 //see if the order matters for these two children.
 //returns 0 if order doesn't matter, 1 if c0 before c1, -1 if c1 before c0
-compare_children(segment *seg,short c0,short c1)
+int compare_children(segment *seg, short c0, short c1)
 {
 	vms_vector norm0_0,norm0_1,*pnt0,temp;
 	vms_vector norm1_0,norm1_1,*pnt1;

@@ -162,7 +162,7 @@ vms_angvec anim_angs[N_ANIM_STATES][MAX_SUBMODELS];
 
 //set the animation angles for this robot.  Gun fields of robot info must
 //be filled in.
-robot_set_angles(robot_info *r,polymodel *pm,vms_angvec angs[N_ANIM_STATES][MAX_SUBMODELS]);
+void robot_set_angles(robot_info *r, polymodel *pm, vms_angvec angs[N_ANIM_STATES][MAX_SUBMODELS]);
 #endif
 
 //reads a binary file containing a 3d model

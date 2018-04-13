@@ -372,7 +372,7 @@ extern void EnterSecretLevel(void);
 extern void ExitSecretLevel(void);
 extern int p_secret_level_destroyed(void);
 
-wall_is_forcefield(trigger *trig)
+int wall_is_forcefield(trigger *trig)
 {
 	int i;
 

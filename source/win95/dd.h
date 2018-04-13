@@ -113,6 +113,7 @@ extern ubyte *DDLockSurface(LPDIRECTDRAWSURFACE lpdds, RECT *rect, int *pitch);
 extern void DDUnlockSurface(LPDIRECTDRAWSURFACE lpdds, char *data);
 extern void DDSetDisplayMode(int display_mode,int flags);
 extern void DDSetPalette(LPDIRECTDRAWPALETTE lpDDPal);
+extern void DDClearDisplay(void);
 extern void DDFlip();
 extern LPDIRECTDRAWSURFACE DDCreateSurface(int w, int h, int vram);
 extern LPDIRECTDRAWSURFACE DDCreateSysMemSurface(int width, int height);
@@ -141,8 +142,10 @@ extern void dd_gr_init_screen();
 extern void dd_gr_screen_lock();
 extern void dd_gr_screen_unlock();
 extern void dd_gr_lock(dd_grs_canvas *canv);
+extern void dd_gr_lock_d(dd_grs_canvas *canv, char *filename, int line);
 extern void dd_gr_unlock(dd_grs_canvas *canv);
 extern void dd_gr_flip();
+extern void dd_gr_restore_display(void);
 
 extern dd_grs_canvas *dd_gr_create_canvas(int w, int h);
 extern dd_grs_canvas *dd_gr_create_sub_canvas(dd_grs_canvas *cvs, int x, int y, int w, int h);

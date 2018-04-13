@@ -17,6 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <direct.h>
 
 #include "gr.h"
 #include "gamepal.h"
@@ -106,6 +107,7 @@ char CDROM_dir[30] = "";
 int init_cdrom();
 int InitGraphics(void);
 void DisplayDescentTitle(void);
+void do_register_player(ubyte *title_pal);
 void TestSounds();
 void check_joystick_calibration();
 
@@ -410,7 +412,7 @@ void DisplayDescentTitle(void)
 }
 
 
-do_register_player(ubyte *title_pal)
+void do_register_player(ubyte *title_pal)
 {
 	Players[Player_num].callsign[0] = '\0';
 

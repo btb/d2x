@@ -682,7 +682,7 @@ int check_poke(int objnum,int segnum,int side)
 }
 
 //returns true of door in unobjstructed (& thus can close)
-is_door_free(segment *seg,int side)
+int is_door_free(segment *seg, int side)
 {
 	int Connectside;
 	segment *csegp;
