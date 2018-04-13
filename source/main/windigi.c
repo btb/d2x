@@ -132,6 +132,9 @@ int channels_inited = 0;
 //	----------------------------------------------------------------------------
 int verify_sound_channel_free(int channel);
 
+
+//Internal prototypes
+int digi_init_midi(void);
 void * digi_load_file( char * szFileName, HGLOBAL *hmem, int * length );
 
 

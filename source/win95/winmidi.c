@@ -48,7 +48,6 @@ static BOOL				MidiVolChanges = TRUE;
 
 
 void wmidi_deamp_song(DWORD vol);
-int wmidi_get_tech();
 void CALLBACK wmidi_seq_callback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
 
 
