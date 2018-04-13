@@ -19,7 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #include <limits.h>
 #include <errno.h>
-#ifdef __DOS__
+#if defined(__DOS__) || defined(WINDOWS)
 #include <direct.h>
 #include <dos.h>
 #include <io.h>

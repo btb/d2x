@@ -32,6 +32,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "winapp.h"
 #include "dd.h"
+#include "palette.h"
 
 typedef struct LOGPAL256 {
    WORD ver;

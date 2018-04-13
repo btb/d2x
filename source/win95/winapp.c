@@ -21,6 +21,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "winapp.h"
 #include "dd.h"
+#include "palette.h"
 
 static HWND hWAppWnd = 0;
 static HINSTANCE hWAppInstance = 0;

@@ -25,9 +25,9 @@ typedef struct WMIDISONG {
 } WMIDISONG;
 
 
-int wmidi_open(uint device);
+int wmidi_init(uint mmdev);
 void wmidi_close();
-
+int wmidi_get_tech(void);
 int wmidi_init_song(WMIDISONG *song);
 int wmidi_play();
 int wmidi_stop();
