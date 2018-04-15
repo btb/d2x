@@ -664,7 +664,7 @@ void gr_ubitmapGENERICm(int x, int y, grs_bitmap * bm)
 }
 
 
-
+#ifdef BM_SVGA
 // From linear to SVGA
 void gr_bm_ubitblt02(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest)
 {
@@ -812,6 +812,7 @@ void gr_bm_ubitblt20(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * 
 
 	}
 }
+#endif
 
 //@extern int Interlacing_on;
 
@@ -1266,6 +1267,7 @@ void gr_bm_ubitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * sr
 	 	return;
 	}
 
+#ifdef BM_SVGA
 	if ( (src->bm_type == BM_LINEAR) && (dest->bm_type == BM_SVGA ))
 	{
 		gr_bm_ubitblt02( w, h, dx, dy, sx, sy, src, dest );
@@ -1277,12 +1279,15 @@ void gr_bm_ubitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * sr
 		gr_bm_ubitblt20( w, h, dx, dy, sx, sy, src, dest );
 		return;
 	}
+#endif
 
+#ifdef BM_MODEX
 	if ( (src->bm_type == BM_LINEAR) && (dest->bm_type == BM_MODEX ))
 	{
 		gr_bm_ubitblt01( w, h, dx+XOFFSET, dy+YOFFSET, sx, sy, src, dest );
 		return;
 	}
+#endif
 
 #if defined(POLY_ACC)
     if ( (src->bm_type == BM_LINEAR) && (dest->bm_type == BM_LINEAR15 ))
@@ -1365,15 +1370,19 @@ void gr_ubitmap( int x, int y, grs_bitmap *bm )
 			else
 				gr_ubitmap00( x, y, bm );
 			return;
+#ifdef BM_SVGA
 		case BM_SVGA:
 			if ( bm->bm_flags & BM_FLAG_RLE )
 				gr_bm_ubitblt0x_rle(bm->bm_w, bm->bm_h, x, y, 0, 0, bm, &grd_curcanv->cv_bitmap );
 			else
 				gr_vesa_bitmap( bm, &grd_curcanv->cv_bitmap, x, y );
 			return;
+#endif
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_bm_ubitblt01(bm->bm_w, bm->bm_h, x+XOFFSET, y+YOFFSET, 0, 0, bm, &grd_curcanv->cv_bitmap);
 			return;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             if ( bm->bm_flags & BM_FLAG_RLE )
@@ -1417,6 +1426,7 @@ void gr_ubitmapm( int x, int y, grs_bitmap *bm )
 			else
 				gr_ubitmap00m( x, y, bm );
 			return;
+#ifdef BM_SVGA
 		case BM_SVGA:
 			if (bm->bm_flags & BM_FLAG_RLE)
 				gr_bm_ubitblt02m_rle(bm->bm_w, bm->bm_h, x, y, 0, 0, bm, &grd_curcanv->cv_bitmap);
@@ -1425,9 +1435,12 @@ void gr_ubitmapm( int x, int y, grs_bitmap *bm )
 				gr_bm_ubitblt02m(bm->bm_w, bm->bm_h, x, y, 0, 0, bm, &grd_curcanv->cv_bitmap);
 			//gr_ubitmapGENERICm(x, y, bm);
 			return;
+#endif
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_bm_ubitblt01m(bm->bm_w, bm->bm_h, x+XOFFSET, y+YOFFSET, 0, 0, bm, &grd_curcanv->cv_bitmap);
 			return;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             if ( bm->bm_flags & BM_FLAG_RLE )
@@ -1470,11 +1483,13 @@ void gr_bitmapm( int x, int y, grs_bitmap *bm )
 			gr_bm_ubitblt00m(dx2-dx1+1,dy2-dy1+1, dx1, dy1, sx, sy, bm, &grd_curcanv->cv_bitmap );
 		return;
 	}
+#ifdef BM_SVGA
 	else if ( (bm->bm_type == BM_LINEAR) && (grd_curcanv->cv_bitmap.bm_type == BM_SVGA ))
 	{
 		gr_bm_ubitblt02m(dx2-dx1+1,dy2-dy1+1, dx1, dy1, sx, sy, bm, &grd_curcanv->cv_bitmap );
 		return;
 	}
+#endif
 
 	gr_bm_ubitbltm(dx2-dx1+1,dy2-dy1+1, dx1, dy1, sx, sy, bm, &grd_curcanv->cv_bitmap );
 

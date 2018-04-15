@@ -290,6 +290,7 @@ int gr_ibitblt_find_code_size_sub( grs_bitmap * mask_bmp, int sx, int sy, int sw
 
 	Code_counter = 0;
 
+#ifdef BM_SVGA
 	if ( dest_type == BM_SVGA )	{
 		Code_counter += 1+4;		// move ebx, gr_vesa_set_page
 		Code_counter += 1+4;		// move eax, 0
@@ -297,7 +298,9 @@ int gr_ibitblt_find_code_size_sub( grs_bitmap * mask_bmp, int sx, int sy, int sw
 		ibitblt_svga_page = 0;
 		linear_address = 0;
 		is_svga = 1;
-	} else {
+	} else
+#endif
+	{
 		is_svga = 0;
 	}
 
@@ -359,10 +362,12 @@ int gr_ibitblt_find_code_size( grs_bitmap * mask_bmp, int sx, int sy, int sw, in
 	return gr_ibitblt_find_code_size_sub( mask_bmp, sx, sy, sw, sh, srowsize, BM_LINEAR );
 }
 
+#ifdef BM_SVGA
 int gr_ibitblt_find_code_size_svga( grs_bitmap * mask_bmp, int sx, int sy, int sw, int sh, int srowsize )
 {
 	return gr_ibitblt_find_code_size_sub( mask_bmp, sx, sy, sw, sh, srowsize, BM_SVGA );
 }
+#endif
 
 //-----------------------------------------------------------------------------------------
 // Given bitmap, bmp, create code that transfers a bitmap of size sw*sh to position
@@ -379,13 +384,14 @@ ubyte	*gr_ibitblt_create_mask_sub( grs_bitmap * mask_bmp, int sx, int sy, int sw
 	int esi, edi;
 	int code_size;
 	ubyte *code;
-	uint temp;
 
 	Assert( (!(mask_bmp->bm_flags&BM_FLAG_RLE)) );
 
+#ifdef BM_SVGA
 	if ( dest_type == BM_SVGA )
 		code_size = gr_ibitblt_find_code_size_svga( mask_bmp, sx, sy, sw, sh, srowsize );
 	else
+#endif
 		code_size = gr_ibitblt_find_code_size( mask_bmp, sx, sy, sw, sh, srowsize );
 
 	code = malloc( code_size );
@@ -394,7 +400,10 @@ ubyte	*gr_ibitblt_create_mask_sub( grs_bitmap * mask_bmp, int sx, int sy, int sw
 
 	Code_pointer = code;
 
+#ifdef BM_SVGA
 	if ( dest_type == BM_SVGA )	{
+		uint temp;
+
 		// MOV EBX, gr_vesa_setpage
 		*Code_pointer++ = OPCODE_MOV_EBX;
 		temp = (uint)gr_vesa_setpage;
@@ -412,7 +421,9 @@ ubyte	*gr_ibitblt_create_mask_sub( grs_bitmap * mask_bmp, int sx, int sy, int sw
 		ibitblt_svga_page = 0;
 		is_svga = 1;
 		linear_address = 0;
-	} else {
+	} else
+#endif
+	{
 		is_svga = 0;
 	}
 	esi = source_offset = 0;
@@ -526,8 +537,9 @@ ubyte   *gr_ibitblt_create_mask_pa( grs_bitmap * mask_bmp, int sx, int sy, int s
     }
     return (ubyte *)ret;
 }
+#endif
 
-#else
+#ifdef BM_SVGA
 ubyte   *gr_ibitblt_create_mask_svga( grs_bitmap * mask_bmp, int sx, int sy, int sw, int sh, int srowsize )
 {
 	return gr_ibitblt_create_mask_sub( mask_bmp, sx, sy, sw, sh, srowsize, BM_SVGA );

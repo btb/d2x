@@ -60,8 +60,10 @@ typedef struct _grs_font {
 } grs_font;
 
 #define BM_LINEAR   0
+#ifdef __DOS__
 #define BM_MODEX    1
 #define BM_SVGA     2
+#endif
 #define BM_RGB15    3   //5 bits each r,g,b stored at 16 bits
 #define BM_SVGA15   4
 

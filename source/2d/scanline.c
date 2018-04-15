@@ -114,12 +114,16 @@ void gr_uscanline( int x1, int x2, int y )
 		case BM_LINEAR:
 			gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
 			break;
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
+#ifdef BM_SVGA
 		case BM_SVGA:
 			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             gr_linear15_stosd( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), COLOR, x2-x1+1);
@@ -132,9 +136,12 @@ void gr_uscanline( int x1, int x2, int y )
 		case BM_LINEAR:
 			gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
 			break;
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
+#ifdef BM_SVGA
 		case BM_SVGA:
 			{
 				ubyte * vram = (ubyte *)0xA0000;
@@ -156,6 +163,7 @@ void gr_uscanline( int x1, int x2, int y )
 				}
 			}
 			break;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             gr_linear15_darken( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
@@ -183,12 +191,16 @@ void gr_scanline( int x1, int x2, int y )
 		case BM_LINEAR:
 			gr_linear_stosd( DATA + ROWSIZE*y + x1, COLOR, x2-x1+1);
 			break;
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
+#ifdef BM_SVGA
 		case BM_SVGA:
 			gr_vesa_scanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             gr_linear15_stosd( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), COLOR, x2-x1+1);
@@ -201,9 +213,12 @@ void gr_scanline( int x1, int x2, int y )
 		case BM_LINEAR:
 			gr_linear_darken( DATA + ROWSIZE*y + x1, Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
 			break;
+#ifdef BM_MODEX
 		case BM_MODEX:
 			gr_modex_uscanline( x1+XOFFSET, x2+XOFFSET, y+YOFFSET, COLOR );
 			break;
+#endif
+#ifdef BM_SVGA
 		case BM_SVGA:
 			{
 				ubyte * vram = (ubyte *)0xA0000;
@@ -225,6 +240,7 @@ void gr_scanline( int x1, int x2, int y )
 				}
 			}
 			break;
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
             gr_linear15_darken( (short *)(DATA + ROWSIZE*y + x1 * PA_BPP), Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);

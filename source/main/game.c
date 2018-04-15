@@ -1474,7 +1474,11 @@ void save_screen_shot(int automap_flag)
 
 	if (!automap_flag)		//if from automap, curcanv is already visible canv
 		gr_set_current_canvas(NULL);
+#ifdef BM_MODEX
 	modex_flag = (grd_curcanv->cv_bitmap.bm_type==BM_MODEX);
+#else
+	modex_flag = 0;
+#endif
 	if (!automap_flag && modex_flag)
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 
@@ -1512,7 +1516,7 @@ void save_screen_shot(int automap_flag)
 
 	gr_set_current_canvas(screen_canv);
 
-	if (grd_curcanv->cv_bitmap.bm_type!=BM_MODEX && !stereo)
+	if (!modex_flag && !stereo)
 		gr_ubitmap(0,0,&temp_canv->cv_bitmap);
 
 	gr_free_canvas(temp_canv);

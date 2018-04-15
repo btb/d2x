@@ -277,6 +277,7 @@ int gr_uline(fix _a1, fix _b1, fix _a2, fix _b2)
 		gr_universal_uline( a1, b1, a2, b2 );
 #endif
 		return 0;
+#ifdef BM_MODEX
 	case BM_MODEX:
 		modex_line_x1 = a1+XOFFSET;		
 		modex_line_y1 = b1+YOFFSET;		
@@ -285,6 +286,7 @@ int gr_uline(fix _a1, fix _b1, fix _a2, fix _b2)
 		modex_line_Color = grd_curcanv->cv_color;
 		gr_modex_line();
 		return 0;
+#endif
 	default:
 		gr_universal_uline( a1, b1, a2, b2 );
 		return 0;

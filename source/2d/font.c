@@ -1116,11 +1116,13 @@ int gr_ustring(int x, int y, char *s )
 				return gr_internal_string0m(x,y,s);
 			else
 				return gr_internal_string0(x,y,s);
+#ifdef BM_SVGA
 		case BM_SVGA:
 			if ( BG_COLOR == -1)
 				return gr_internal_string2m(x,y,s);
 			else
 				return gr_internal_string2(x,y,s);
+#endif
 #if defined(POLY_ACC)
         case BM_LINEAR15:
 			if ( BG_COLOR == -1)
