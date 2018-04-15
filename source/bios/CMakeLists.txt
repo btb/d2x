@@ -28,6 +28,7 @@ set(io_OTHERS
     mono.h
     mouse.h
     rbaudio.h
+    stub/rbaudio.c
     swiftcfg.h
     testj.c
     testm.c
@@ -72,6 +73,12 @@ elseif(TARGSYS MATCHES "^WIN32")
     )
     target_link_libraries(io misc)
     target_link_libraries(io winmm)
+
+else()
+    list(APPEND io_SRCS
+        stub/rbaudio.c
+    )
+
 endif()
 
 list(REMOVE_ITEM io_OTHERS ${io_SRCS})
