@@ -19,7 +19,6 @@ set(gr_SRCS
     poly.c
     rect.c
     rle.c
-    scale.c     #DOS
     scanline.c
 )
 
@@ -51,10 +50,10 @@ set(gr_OTHERS
 )
 add_library(gr ${gr_SRCS} ${gr_OTHERS})
 
-if(TARGSYS MATCHES "^DOS4G$" OR TARGSYS MATCHES "^WIN32")
-    list(APPEND gr_SRCS lbitblt.asm linear.asm scalea.asm)
-elseif(0) #mac
-    list(APPEND gr_SRCS macstubs.c scalemac.c)
+if(NOT GR_NO_ASM)
+    list(APPEND gr_SRCS lbitblt.asm linear.asm scale.c scalea.asm)
+else()
+    list(APPEND gr_SRCS scalemac.c) #macstubs.c
 endif()
 
 list(REMOVE_ITEM gr_OTHERS ${gr_SRCS})

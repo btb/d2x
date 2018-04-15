@@ -232,7 +232,7 @@ void gr_bm_bitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap *src,
 void gr_bm_ubitblt( int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 void gr_bm_ubitbltm(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest);
 
-#ifdef MACINTOSH
+#if !defined(__DOS__) || defined(GR_NO_ASM)
 void gr_bm_ubitblt_double(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap *src, grs_bitmap *dest);
 void gr_linear_movsd_double(ubyte *src, ubyte *dest, int num_pixels);
 #endif

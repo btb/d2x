@@ -12,7 +12,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#ifndef MACINTOSH
+#if defined(__DOS__) && !defined(GR_NO_ASM)
 
 
 #include <stdio.h>
@@ -610,12 +610,13 @@ void	gr_ibitblt_find_hole_size( grs_bitmap * mask_bmp, int *minx, int *miny, int
 	}
 }
 
-#else		// ifdef MACINTOSH
+#else // ifdef GR_NO_ASM
 
 #include "pa_enabl.h"
 #include "pstypes.h"
 #include "gr.h"
 #include "ibitblt.h"
+#include "grdef.h"
 #include "error.h"
 #include "mem.h"
 
@@ -642,8 +643,10 @@ void gr_ibitblt(grs_bitmap *src_bmp, grs_bitmap *dest_bmp, ubyte pixel_double)
 
 // variable setup
 
+#ifdef MACINTOSH
 	if ( PAEnabled )
 		return;
+#endif
 
 	sw = src_bmp->bm_w;
 	sh = src_bmp->bm_h;
@@ -872,4 +875,4 @@ void gr_ibitblt_find_hole_size(grs_bitmap *mask_bmp, int *minx, int *miny, int *
 	Assert (count);
 }
 
-#endif		// ifdef MACINTOSH
+#endif // ifdef GR_NO_ASM

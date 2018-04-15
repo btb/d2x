@@ -39,7 +39,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 ubyte *gr_rle_decode_asm( ubyte * src, ubyte * dest );
 
-#if !defined(MACINTOSH)
+#ifndef GR_NO_ASM
 #pragma aux gr_rle_decode_asm parm [esi] [edi] value [edi] modify exact [eax ebx ecx edx esi edi] = \
 "  cld					"\
 "	xor	ecx, ecx		"\
@@ -110,7 +110,7 @@ void gr_rle_decode( ubyte * src, ubyte * dest )
 
 void rle_stosb(char *dest, int len, int color);
 
-#if !defined(MACINTOSH)
+#ifndef GR_NO_ASM
 
 #pragma aux rle_stosb = "cld rep	stosb" parm [edi] [ecx] [eax] modify exact [edi ecx];
 
@@ -453,14 +453,14 @@ void rle_expand_texture_sub( grs_bitmap * bmp, grs_bitmap * rle_temp_bitmap_1 )
 	rle_temp_bitmap_1->bm_flags = bmp->bm_flags & (~BM_FLAG_RLE);
 
 	for (i=0; i < bmp->bm_h; i++ )    {
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
 		dbits1=(unsigned char *)gr_rle_decode_asm( sbits, dbits );
 #else
 		gr_rle_decode( sbits, dbits );
 #endif
 		sbits += (int)bmp->bm_data[4+i];
 		dbits += bmp->bm_w;
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
 		Assert( dbits == dbits1 );		// Get John, bogus rle data!
 #endif
 	}
