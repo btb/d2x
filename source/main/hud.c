@@ -230,7 +230,7 @@ void HUD_render_message_frame()
             gr_get_string_size(message, &w, &h, &aw );
             clear_background_messages();
 
-
+#ifdef BM_MODEX
             if (grd_curcanv->cv_bitmap.bm_type == BM_MODEX) {
                WIN(Int3());               // No no no no ....
                ycrd -= h;
@@ -241,7 +241,9 @@ void HUD_render_message_frame()
                   Displayed_background_message[VR_current_page][0] = '!';
                } else
                   strcpy(Displayed_background_message[VR_current_page], message);
-            } else {
+            } else
+#endif
+            {
             WIN(DDGRLOCK(dd_grd_curcanv));
                gr_set_fontcolor( HUD_color, -1);
                PA_DFX (pa_set_frontbuffer_current());
@@ -302,6 +304,7 @@ void HUD_render_message_frame()
       }
    }
    #ifndef WINDOWS
+#ifdef BM_MODEX
    else if (get_current_game_screen()->cv_bitmap.bm_type == BM_MODEX) {
       if (Modex_hud_msg_count) {
          int   temp = Last_msg_ycrd;
@@ -310,6 +313,7 @@ void HUD_render_message_frame()
          Last_msg_ycrd = temp;
       }
    }
+#endif
    #endif
 
    gr_set_curfont( GAME_FONT );

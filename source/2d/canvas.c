@@ -128,17 +128,20 @@ void gr_init_canvas(grs_canvas *canv, unsigned char * pixdata, int pixtype, int 
 
    canv->cv_bitmap.bm_x = 0;
    canv->cv_bitmap.bm_y = 0;
+#ifdef BM_MODEX
    if (pixtype==BM_MODEX)
       canv->cv_bitmap.bm_rowsize = w / 4;
+   else
+#endif
 #if defined(POLY_ACC)
-    else if(pixtype==BM_LINEAR15)
+    if (pixtype == BM_LINEAR15)
 #ifdef PA_3DFX_VOODOO
       canv->cv_bitmap.bm_rowsize = 2048;
 #else
       canv->cv_bitmap.bm_rowsize = w*PA_BPP;
 #endif
+   else
 #endif
-    else
       canv->cv_bitmap.bm_rowsize = w;
 
     canv->cv_bitmap.bm_w = w;
@@ -207,17 +210,22 @@ int gr_wait_for_retrace = 1;
 
 void gr_show_canvas( grs_canvas *canv )
 {
+#ifdef BM_MODEX
    if (canv->cv_bitmap.bm_type == BM_MODEX )
       gr_modex_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y, gr_wait_for_retrace );
+#endif
 
-   else if (canv->cv_bitmap.bm_type == BM_SVGA )
+#ifdef BM_SVGA
+   if (canv->cv_bitmap.bm_type == BM_SVGA )
       gr_vesa_setstart( canv->cv_bitmap.bm_x, canv->cv_bitmap.bm_y );
+#endif
 
       // else if (canv->cv_bitmap.bm_type == BM_LINEAR )
       // Int3();     // Get JOHN!
       //gr_linear_movsd( canv->cv_bitmap.bm_data, (void *)0xA0000, 320*200);
+
 #if defined(POLY_ACC)
-    else if (canv->cv_bitmap.bm_type == BM_LINEAR15)
+    if (canv->cv_bitmap.bm_type == BM_LINEAR15)
         Int3();     // hurray, this got called, now write some code to support it.
 #endif
 }

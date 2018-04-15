@@ -28,11 +28,14 @@ unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
    {
    case BM_LINEAR:
       return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
+#ifdef BM_MODEX
    case BM_MODEX:
       x += bitmap->bm_x;
       y += bitmap->bm_y;
       gr_modex_setplane( x & 3 );
       return gr_video_memory[(bitmap->bm_rowsize * y) + (x/4)];
+#endif
+#ifdef BM_SVGA
    case BM_SVGA:
       {
       unsigned int offset;
@@ -40,6 +43,7 @@ unsigned char gr_ugpixel( grs_bitmap * bitmap, int x, int y )
       gr_vesa_setpage( offset >> 16 );
       return gr_video_memory[offset & 0xFFFF];
       }
+#endif
 #if defined(POLY_ACC)
     case BM_LINEAR15:
     {
@@ -63,11 +67,14 @@ unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y )
    {
    case BM_LINEAR:
       return bitmap->bm_data[ bitmap->bm_rowsize*y + x ];
+#ifdef BM_MODEX
    case BM_MODEX:
       x += bitmap->bm_x;
       y += bitmap->bm_y;
       gr_modex_setplane( x & 3 );
       return gr_video_memory[(bitmap->bm_rowsize * y) + (x/4)];
+#endif
+#ifdef BM_SVGA
    case BM_SVGA:
       {
       unsigned int offset;
@@ -75,6 +82,7 @@ unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y )
       gr_vesa_setpage( offset >> 16 );
       return gr_video_memory[offset & 0xFFFF];
       }
+#endif
 #if defined(POLY_ACC)
     case BM_LINEAR15:
     {

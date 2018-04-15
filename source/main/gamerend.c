@@ -756,6 +756,7 @@ void game_render_frame_stereo()
          gr_wait_for_retrace = 0;
 
 // Added by Samir from John's code
+#ifdef BM_MODEX
       if ( (VR_screen_pages[VR_current_page].cv_bitmap.bm_type == BM_MODEX) && (Game_3dmax_flag==3) ) {
          int old_x, old_y, new_x;
          old_x = VR_screen_pages[VR_current_page].cv_bitmap.bm_x;
@@ -769,7 +770,9 @@ void game_render_frame_stereo()
          VR_screen_pages[VR_current_page].cv_bitmap.bm_type = BM_MODEX;
          VR_screen_pages[VR_current_page].cv_bitmap.bm_x = old_x;
          VR_screen_pages[VR_current_page].cv_bitmap.bm_y = old_y;
-      } else {
+      } else
+#endif
+      {
          gr_show_canvas( &VR_screen_pages[VR_current_page] );
       }
       gr_wait_for_retrace = 1;
@@ -1754,11 +1757,13 @@ void update_cockpits(int force_redraw)
                gr_clear_canvas( BM_XRGB(0,0,0) ) );
 
       // In a modex mode, clear the other buffer.
+#ifdef BM_MODEX
       if (grd_curcanv->cv_bitmap.bm_type == BM_MODEX) {
          gr_set_current_canvas(&VR_screen_pages[VR_current_page^1]);
          gr_clear_canvas( BM_XRGB(0,0,0) );
          gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
       }
+#endif
       break;
 
    }
