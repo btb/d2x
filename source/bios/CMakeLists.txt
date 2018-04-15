@@ -7,6 +7,17 @@ set(io_SRCS
 )
 
 set(io_OTHERS
+    dos/dpmi.c
+    dos/findfile.c
+    dos/ipx.c
+    dos/joy.asm         dos/joyc.c
+    dos/key.asm         dos/key.c           dos/keys.inc        dos/oldkey.asm
+    dos/mono.c
+    dos/mouse.c
+    dos/rbaudio.c
+    dos/timer.asm
+    dos/mouse.asm
+    dos/rbaudio.new
     dpmi.h
     error.h
     findfile.h
@@ -22,20 +33,51 @@ set(io_OTHERS
     testm.c
     testms.c
     timer.h
+    win32/findfile.c
+    win32/ipx.c
+    win32/joyc.c
+    win32/key.c
+    win32/mono.c
+    win32/mouse.c
+    win32/rbaudio.c
+    win32/timer.c
+    win32/winmono.c
     x
     x.c
 )
-set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
-
-add_library(io ${io_SRCS} ${io_OTHERS})
 
 if(TARGSYS MATCHES "^DOS4G$")
-    add_subdirectory(dos)
+    list(APPEND io_SRCS
+        dos/dpmi.c
+        dos/findfile.c
+        dos/ipx.c
+        dos/joy.asm         dos/joyc.c
+        dos/key.c
+        dos/mono.c
+        dos/mouse.c
+        dos/rbaudio.c
+        dos/timer.asm
+    )
+
 elseif(TARGSYS MATCHES "^WIN32")
-    add_subdirectory(win32)
+    list(APPEND io_SRCS
+        win32/findfile.c
+        win32/ipx.c
+        win32/joyc.c
+        win32/key.c
+        win32/mono.c
+        win32/mouse.c
+        win32/rbaudio.c
+        win32/timer.c
+    )
     target_link_libraries(io misc)
     target_link_libraries(io winmm)
 endif()
+
+list(REMOVE_ITEM io_OTHERS ${io_SRCS})
+set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+add_library(io ${io_SRCS} ${io_OTHERS})
 
 #add_executable(demo cdrom.c)
 #target_link_libraries(demo io)
