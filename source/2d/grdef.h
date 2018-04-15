@@ -39,7 +39,7 @@ extern unsigned char * gr_var_bitmap;
 
 void gr_linear_movsd( ubyte * source, ubyte * dest, int nbytes);
 
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
 #pragma aux gr_linear_movsd parm [esi] [edi] [ecx] modify exact [ecx esi edi eax ebx] = \
 " cld "              \
 " mov    ebx, ecx "  \
@@ -57,7 +57,7 @@ void gr_linear_movsd( ubyte * source, ubyte * dest, int nbytes);
 " mov    ecx, ebx"   \
 " and    ecx, 11b"   \
 " rep    movsb";
-#endif      // ifdef MACINTOSH
+#endif // ifdef GR_NO_ASM
 
 void gr_linear_line( int x0, int y0, int x1, int y1);
 

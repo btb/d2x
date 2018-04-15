@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int Gr_scanline_darkening_level = GR_FADE_LEVELS;
 
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
 void gr_linear_darken( ubyte * dest, int darkening_level, int count, ubyte * fade_table );
 #pragma aux gr_linear_darken parm [edi] [eax] [ecx] [edx] modify exact [eax ebx ecx edx edi] = \
 "              xor   ebx, ebx             "  \

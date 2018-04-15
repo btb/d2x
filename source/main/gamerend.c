@@ -937,7 +937,7 @@ void show_extra_views()
 
 int BigWindowSwitch=0;
 extern int force_cockpit_redraw;
-#ifndef MACINTOSH
+#if defined(__DOS__) && !defined(GR_NO_ASM)
 extern ubyte * Game_cockpit_copy_code;
 #else
 extern ubyte Game_cockpit_copy_code;
@@ -1376,11 +1376,12 @@ void game_render_frame_mono(void)
 
          }
       } else   {
-         #ifdef MACINTOSH
+         #ifndef WINDOWS
+         #ifdef GR_NO_ASM
             gr_ibitblt( &VR_render_sub_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap, Scanline_double );
          #else
-         #ifndef WINDOWS
             gr_ibitblt( &VR_render_buffer[0].cv_bitmap, &VR_screen_pages[0].cv_bitmap, Game_cockpit_copy_code );
+         #endif
          #else
             win_do_emul_ibitblt( &dd_VR_render_sub_buffer[0], dd_grd_screencanv);
             DDGRRESTORE;
@@ -1389,7 +1390,6 @@ void game_render_frame_mono(void)
                //@@dd_gr_flip();
                win_flip = 1;
             }
-         #endif
          #endif
       }
    }

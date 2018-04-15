@@ -167,11 +167,13 @@ int stop_count,start_count;
 int time_stopped,time_started;
 #endif
 
-#ifndef MACINTOSH
+#if defined(__DOS__) && !defined(GR_NO_ASM)
 ubyte * Game_cockpit_copy_code = NULL;
 #else
 ubyte Game_cockpit_copy_code = 0;
+# ifdef MACINTOSH
 ubyte Scanline_double = 1;
+# endif
 #endif
 
 int         VR_screen_mode       = 0;
@@ -491,7 +493,7 @@ void init_cockpit()
  );
    gr_set_curfont( GAME_FONT );
 
-#if !defined(MACINTOSH) && !defined(WINDOWS)
+#if defined(__DOS__) && !defined(GR_NO_ASM)
    if (Game_cockpit_copy_code)
       free(Game_cockpit_copy_code);
    Game_cockpit_copy_code  = NULL;
@@ -533,14 +535,15 @@ void init_cockpit()
          DDGRUNLOCK(dd_grd_curcanv)
    );
 
-#ifndef WINDOWS
+#if !defined(__DOS__) || defined(GR_NO_ASM)
    #ifdef MACINTOSH
       if ( !PAEnabled )
          gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize);
       else
          gr_ibitblt_create_mask_pa( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
+   #endif
       Game_cockpit_copy_code = 1;
-   #else
+#else //__DOS__
       if ( Current_display_mode )
       {
       #if defined(POLY_ACC)
@@ -551,12 +554,8 @@ void init_cockpit()
       #endif
       } else
          Game_cockpit_copy_code  = gr_ibitblt_create_mask( bm, minx, miny, maxx-minx+1, maxy-miny+1, VR_offscreen_buffer->cv_bitmap.bm_rowsize );
-   #endif
-      bm->bm_flags = 0;    // Clear all flags for offscreen canvas
-#else
-      Game_cockpit_copy_code  = (ubyte *)(1);
-      bm->bm_flags = 0;    // Clear all flags for offscreen canvas
 #endif
+      bm->bm_flags = 0;    // Clear all flags for offscreen canvas
       game_init_render_sub_buffers( 0, 0, maxx-minx+1, maxy-miny+1 );
       break;
       }
@@ -2360,7 +2359,7 @@ void close_game()
 
    restore_effect_bitmap_icons();
 
-#if !defined(MACINTOSH) && !defined(WINDOWS)
+#if defined(__DOS__) && !defined(GR_NO_ASM)
    if (Game_cockpit_copy_code)   {
       free(Game_cockpit_copy_code);
       Game_cockpit_copy_code = NULL;

@@ -749,6 +749,7 @@ extern void rls_stretch_scanline_asm();
 
 void MakeCodeWritable(void)
 {
+#ifndef GR_NO_ASM
    typedef DWORD __stdcall translator(DWORD);
 
    HMODULE  modCode;
@@ -789,6 +790,7 @@ void MakeCodeWritable(void)
 //    wsprintf(buf, "Start:%x FN1:%x",(DWORD)pImageBase+pHeader->BaseOfCode, (DWORD)rls_stretch_scanline_asm);
 //    MessageBox(NULL, buf, "Info", MB_OK);
    }
+#endif
 }
 
 

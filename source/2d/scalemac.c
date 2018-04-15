@@ -1,6 +1,7 @@
 #include "gr.h"
 #include "grdef.h"
 #include "error.h"
+#include "rle.h"
 
 // John's new stuff below here....
 

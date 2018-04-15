@@ -28,6 +28,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 grs_canvas * grd_curcanv=NULL;    //active canvas
 grs_screen * grd_curscreen=NULL;  //active screen
 
+#if defined(__DOS__) && defined(GR_NO_ASM)
+unsigned int gr_var_color, gr_var_bwidth; // temp defs because asm file defines these
+unsigned char *gr_var_bitmap;
+#endif
+
 grs_canvas *gr_create_canvas(int w, int h)
 {
    unsigned char * data;
@@ -237,7 +242,7 @@ void gr_set_current_canvas( grs_canvas *canv )
    else
       grd_curcanv = canv;
 
-#ifndef MACINTOSH       // these variables are undefined on mac -- not used.
+#ifndef GR_NO_ASM // these variables are undefined on mac -- not used.
 
    if ( (grd_curcanv->cv_color >= 0) && (grd_curcanv->cv_color <= 255) )   {
       gr_var_color = grd_curcanv->cv_color;
@@ -259,7 +264,7 @@ void gr_setcolor(int color)
 {
    grd_curcanv->cv_color=color;
 
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
    gr_var_color = color;
 #endif
 }

@@ -208,7 +208,7 @@ grs_bitmap * texmerge_get_cached_bitmap( int tmap_bottom, int tmap_top )
 
 void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp, ubyte * dest_data )
 {
-#ifdef MACINTOSH
+#ifdef GR_NO_ASM
    ubyte c;
    int x,y;
 #endif
@@ -233,7 +233,7 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
       case 0:
          // Normal
 
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
          gr_merge_textures( bottom_data, top_data, dest_data );
 #else
          for (y=0; y<64; y++ )
@@ -246,7 +246,7 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
 #endif
          break;
       case 1:
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
          gr_merge_textures_1( bottom_data, top_data, dest_data );
 #else
          for (y=0; y<64; y++ )
@@ -259,7 +259,7 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
 #endif
          break;
       case 2:
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
          gr_merge_textures_2( bottom_data, top_data, dest_data );
 #else
          for (y=0; y<64; y++ )
@@ -272,7 +272,7 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
 #endif
          break;
       case 3:
-#ifndef MACINTOSH
+#ifndef GR_NO_ASM
          gr_merge_textures_3( bottom_data, top_data, dest_data );
 #else
          for (y=0; y<64; y++ )

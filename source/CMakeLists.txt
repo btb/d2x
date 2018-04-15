@@ -47,6 +47,11 @@ if(ARCADE)
     add_definitions(-DARCADE)
 endif()
 
+option(GR_NO_ASM        "Build with only C code?" OFF)
+if(GR_NO_ASM)
+	add_definitions(-DGR_NO_ASM)
+endif()
+
 # Subdirs to make for the DOS libraries
 set(SUBSYSTEMS_DOS includes misc mem fix cfile pa_null 2d vga bios iff div
     ui vecmat 3d texmap) # tactile unarj sosdigi sosmidi
