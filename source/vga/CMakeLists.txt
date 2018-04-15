@@ -14,7 +14,6 @@ set(vga_OTHERS
     dd.bat
     fxdpmi.h
     fxvesa.h
-    grx.h
     makefile
     tweak.inc
     vga.h
