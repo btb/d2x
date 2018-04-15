@@ -71,8 +71,6 @@ elseif(TARGSYS MATCHES "^WIN32")
         win32/rbaudio.c
         win32/timer.c
     )
-    target_link_libraries(io misc)
-    target_link_libraries(io winmm)
 
 else()
     list(APPEND io_SRCS
@@ -85,6 +83,11 @@ list(REMOVE_ITEM io_OTHERS ${io_SRCS})
 set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(io ${io_SRCS} ${io_OTHERS})
+
+if(TARGSYS MATCHES "^WIN32")
+    target_link_libraries(io misc)
+    target_link_libraries(io winmm)
+endif()
 
 #add_executable(demo cdrom.c)
 #target_link_libraries(demo io)
