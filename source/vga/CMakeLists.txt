@@ -5,7 +5,6 @@
 set(vga_SRCS
     framebuf.c
     modex.asm
-    palette.c
     vesa.asm
     vga.c
 )

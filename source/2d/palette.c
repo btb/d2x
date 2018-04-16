@@ -34,6 +34,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "poly_acc.h"
 #endif
 
+// Special --------------------------------------------------------------------
 extern int gr_installed;
 
 #define SQUARE(x) ((x)*(x))
@@ -48,9 +49,11 @@ typedef struct {
 
 color_record Computed_colors[MAX_COMPUTED_COLORS];
 
-ubyte gr_palette[256*3];
-ubyte gr_current_pal[256*3];
-ubyte gr_fade_table[256*34];
+// Globals --------------------------------------------------------------------
+
+ubyte gr_palette[256*3];                // Main Palette in RGB
+ubyte gr_current_pal[256*3];            // Current Valid Palette in RGB
+ubyte gr_fade_table[256*34];            // Fade Palette Table in RGB
 
 // ushort gr_palette_selector;
 // ushort gr_fade_table_selector;
@@ -59,8 +62,7 @@ ubyte gr_palette_gamma = 0;
 int gr_palette_gamma_param = 0;
 ubyte gr_palette_faded_out = 1;
 
-//to speed up development
-int grd_fades_disabled=0;
+int grd_fades_disabled = 0;             // Used to skip fading for development
 
 void gr_palette_set_gamma( int gamma )
 {
@@ -109,9 +111,11 @@ void gr_use_palette_table( char * filename )
       gr_fade_table[i*256+255] = 255;
    }
 
+#ifndef WINDOWS
    Num_computed_colors = 0;   // Flush palette cache.
 #if defined(POLY_ACC)
     pa_update_clut(gr_palette, 0, 256, 0);
+#endif
 #endif
 }
 
@@ -231,6 +235,7 @@ int gr_find_closest_color_current( int r, int g, int b )
 
 static int last_r=0, last_g=0, last_b=0;
 
+#ifndef WINDOWS
 void gr_palette_step_up( int r, int g, int b )
 {
    int i;
@@ -271,6 +276,7 @@ void gr_palette_step_up( int r, int g, int b )
       outp( 0x3c9, temp );
    }
 }
+#endif
 
 // This steps up all gun values, leaving black and white to always be black and white.
 void gr_palette_step_up_vr( int r, int g, int b, int white_index, int black_index )
@@ -315,7 +321,7 @@ void gr_palette_step_up_vr( int r, int g, int b, int white_index, int black_inde
    }
 }
 
-
+#ifndef WINDOWS
 void gr_palette_clear()
 {
    int i;
@@ -446,6 +452,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
    gr_palette_faded_out = 0;
    return 0;
 }
+#endif
 
 void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b )
 {
@@ -463,6 +470,7 @@ void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b )
    }
 }
 
+#ifndef WINDOWS
 void gr_palette_read(ubyte * palette)
 {
    int i;
@@ -483,4 +491,4 @@ void gr_palette_read(ubyte * palette)
 #endif
 
 }
-
+#endif

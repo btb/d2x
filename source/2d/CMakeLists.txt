@@ -14,6 +14,7 @@ set(gr_SRCS
     gr.c
     ibitblt.c
     line.c
+    palette.c
     pcx.c
     pixel.c
     poly.c
