@@ -483,7 +483,9 @@ void draw_polygon_object(object *obj)
 	}
 
 	if (obj->rtype.pobj_info.tmap_override != -1) {
+#ifndef NDEBUG
 		polymodel *pm = &Polygon_models[obj->rtype.pobj_info.model_num];
+#endif
 		bitmap_index bm_ptrs[12];
 
 		int i;

@@ -441,7 +441,9 @@ int ReadConfigFile()
 int WriteConfigFile()
 {
 	FILE *infile;
+#ifdef WINDOWS
    int i;
+#endif
 	char str[256];
 	int joy_axis_min[7];
 	int joy_axis_center[7];
@@ -523,8 +525,6 @@ int WriteConfigFile()
 #ifdef WINDOWS
 {
 //	Save Windows Config File
-	char joyname[256];
-						
 
 	joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 	

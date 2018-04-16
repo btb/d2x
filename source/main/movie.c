@@ -304,9 +304,12 @@ int open_movie_file(char *filename,int must_have);
 int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 {
 	int filehndl;
-	int result,aborted=0;
+	int aborted = 0;
+#ifdef MVE
+	int result;
 	int track = 0;
 	int frame_num;
+#endif
 
 	// Open Movie file.  If it doesn't exist, no movie, just return.
 
@@ -545,7 +548,9 @@ void ShowRobotBuffer ()
 //returns 1 if frame updated ok
 int RotateRobot ()
 {
+#ifdef MVE
 	int err;
+#endif
 
 	if (!Digi_initialized) 			//we should fix this for full version
 		return 0;

@@ -51,6 +51,7 @@ void SetRedSBPro(short aport, short dport, char vol);
 
 int CD_blast_mixer ()
  {
+#ifndef WINDOWS
   FILE *InFile;
   char line[100],nosbcard=1;
   char *ptr,*token,*value;
@@ -59,8 +60,6 @@ int CD_blast_mixer ()
   short int DataPort=0,AddressPort=0;
   char redvol=0;
 
-
-#ifndef WINDOWS
   InFile = fopen("descent.cfg", "rt");
   if (InFile == NULL) 
 	  return 0;

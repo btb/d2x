@@ -165,7 +165,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 void rls_stretch_scanline( )
 {
 	ubyte	c, *src_ptr, *dest_ptr;
-	int i, j, len, x, ErrorTerm, initial_count, final_count;
+	int i, j, len, ErrorTerm, initial_count, final_count;
 
 	// Draw the first, partial run of pixels
 

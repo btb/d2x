@@ -666,8 +666,6 @@ void gr_ibitblt(grs_bitmap *src_bmp, grs_bitmap *dest_bmp, ubyte pixel_double)
 
 		dy = sy;
 		for (y = sy; y < sy + sh; y++) {
-			int i, j;
-
 			gr_linear_movsd_double(src, scan, sw*2);
 			current_hole = start_points[dy];
 			current_hole_length = hole_length[dy];
@@ -768,8 +766,8 @@ void gr_ibitblt_create_mask_pa( grs_bitmap * mask_bmp, int sx, int sy, int sw, i
 
 void gr_ibitblt_create_mask(grs_bitmap *mask_bmp, int sx, int sy, int sw, int sh, int srowsize)
 {
-	int x, y, dest_offset;
-	ubyte pixel, mode;
+	int x, y;
+	ubyte mode;
 	int count = 0;
 
 	Assert( (!(mask_bmp->bm_flags&BM_FLAG_RLE)) );

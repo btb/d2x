@@ -254,7 +254,7 @@ void bump_this_object(object *objp, object *other_objp, vms_vector *force, int d
 //the collision.
 void bump_two_objects(object *obj0,object *obj1,int damage_flag)
 {
-	vms_vector	dv, force;
+	vms_vector force;
 	object		*t=NULL;
 
 	if (obj0->movement_type != MT_PHYSICS)
@@ -333,9 +333,9 @@ void collide_player_and_wall( object * playerobj, fix hitspeed, short hitseg, sh
 		ForceFieldHit=1;
 	} 
 	else {
+	#ifdef TACTILE
 		vms_vector force;
 
-	#ifdef TACTILE
 		if (TactileStick) {
 			force.x = -playerobj->mtype.phys_info.velocity.x;
 			force.y = -playerobj->mtype.phys_info.velocity.y;
@@ -1074,8 +1074,6 @@ void collide_robot_and_player( object * robot, object * playerobj, vms_vector *c
 void net_destroy_controlcen(object *controlcen)
 {
 	if (Control_center_destroyed != 1) {
-		int i;
-
 		do_controlcen_destroyed_stuff(controlcen);
 
 		if ((controlcen != NULL) && !(controlcen->flags&(OF_EXPLODING|OF_DESTROYED))) {
@@ -1123,8 +1121,6 @@ void apply_damage_to_controlcen(object *controlcen, fix damage, short who)
 		controlcen->shields -= damage;
 
 	if ( (controlcen->shields < 0) && !(controlcen->flags&(OF_EXPLODING|OF_DESTROYED)) ) {
-		int i;
-
 		do_controlcen_destroyed_stuff(controlcen);
 
 		#ifdef NETWORK
@@ -1285,8 +1281,6 @@ fix	Final_boss_countdown_time = 0;
 //	------------------------------------------------------------------------------------------------------
 void do_final_boss_frame(void)
 {
-	int	addval;
-
 	if (!Final_boss_is_dead)
 		return;
 
@@ -1834,7 +1828,6 @@ void drop_player_eggs(object *playerobj)
 
 	if ((playerobj->type == OBJ_PLAYER) || (playerobj->type == OBJ_GHOST)) {
 		int	rthresh;
-		int	num_missiles = 1;
 		int	pnum = playerobj->id;
 		int	objnum;
 		int	vulcan_ammo=0;

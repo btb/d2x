@@ -1091,7 +1091,9 @@ void pa_mac_game_render_frame( void )
 //			which all leads to the dd_VR_offscreen_buffer
 void game_render_frame_mono(void)
 {
+#ifdef WINDOWS
 	int win_flip = 0;
+#endif
 
 	WINDOS (
 		dd_grs_canvas Screen_3d_window,

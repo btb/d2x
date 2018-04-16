@@ -445,7 +445,9 @@ void rle_expand_texture_sub( grs_bitmap * bmp, grs_bitmap * rle_temp_bitmap_1 )
 	unsigned char * dbits;
 	unsigned char * sbits;
 	int i;
+#ifndef GR_NO_ASM
 	unsigned char * dbits1;
+#endif
 
 	sbits = &bmp->bm_data[4 + bmp->bm_h];
 	dbits = rle_temp_bitmap_1->bm_data;

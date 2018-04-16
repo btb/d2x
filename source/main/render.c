@@ -1927,7 +1927,9 @@ done_list:
 //renders onto current canvas
 void render_mine(int start_seg_num,fix eye_offset, int window_num)
 {
+#ifndef NDEBUG
 	int		i;
+#endif
 	int		nn;
 
 	//	Initialize number of objects (actually, robots!) rendered this frame.
