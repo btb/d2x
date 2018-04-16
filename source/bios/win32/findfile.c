@@ -85,3 +85,23 @@ int SetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
    if (retval) return 0;
    else return 1;
 }
+
+
+// Disk stuff
+
+unsigned int GetFreeDiskSpace()
+{
+   DWORD sec_per_cluster,
+         bytes_per_sec,
+         free_clusters,
+         total_clusters;
+
+   if (!GetDiskFreeSpace(NULL,
+                         &sec_per_cluster,
+                         &bytes_per_sec,
+                         &free_clusters,
+                         &total_clusters))
+      return 0x7fffffff;
+
+   return (unsigned int)(free_clusters * sec_per_cluster * bytes_per_sec);
+}

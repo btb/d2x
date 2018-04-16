@@ -138,26 +138,6 @@ void logentry(char *format, ...)
 }
 
 
-// Disk stuff
-
-unsigned int GetFreeDiskSpace()
-{
-   DWORD sec_per_cluster,
-         bytes_per_sec,
-         free_clusters,
-         total_clusters;
-
-   if (!GetDiskFreeSpace(
-      NULL,
-      &sec_per_cluster,
-      &bytes_per_sec,
-      &free_clusters,
-      &total_clusters)) return 0x7fffffff;
-
-   return (uint)(free_clusters * sec_per_cluster * bytes_per_sec);
-}
-
-
 // Clipboarding functions
 
 HBITMAP win95_screen_shot()

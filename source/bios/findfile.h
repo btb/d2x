@@ -34,6 +34,10 @@ typedef struct FILETIMESTRUCT {
 int GetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct);
 int SetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct);
 
+#ifdef WINDOWS
+unsigned int GetFreeDiskSpace(void);
+#else
 int GetDiskFree(void);
+#endif
 
 #endif
