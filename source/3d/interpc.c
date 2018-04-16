@@ -189,7 +189,6 @@ void swap_polygon_model_data(ubyte *data)
 bool g3_draw_polygon_model(void *model_ptr,grs_bitmap **model_bitmaps,vms_angvec *anim_angles,fix model_light,fix *glow_values)
 {
    ubyte *p = model_ptr;
-   int current_poly = 0;
 
    glow_num = -1;    //glow off by default
 
@@ -544,7 +543,7 @@ void init_model_sub(ubyte *p)
          }
 
          case OP_FLATPOLY: {
-            int i, nv = w(p+2);
+            int nv = w(p+2);
 
             Assert(nv > 2);      //must have 3 or more points
 

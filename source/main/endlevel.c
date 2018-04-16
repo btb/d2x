@@ -293,14 +293,14 @@ void start_endlevel_sequence()
 {
    int   i;
    int movie_played;
+#if defined(MACINTOSH) && defined(SHAREWARE)
    static int inited = 0;
 
-   #if defined(MACINTOSH) && defined(SHAREWARE)
    if (!inited) {
       load_exit_models();
       inited = 1;
    }
-   #endif
+#endif
 
    if (Newdemo_state == ND_STATE_RECORDING)     // stop demo recording
       Newdemo_state = ND_STATE_PAUSED;

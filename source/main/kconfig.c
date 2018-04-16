@@ -1832,10 +1832,11 @@ void read_head_tracker()
 #ifndef WINDOWS
 
    fix yaw, pitch, roll;
-   int buttons;
 
 //------ read vfx1 helmet --------
 #ifdef VFX
+   int buttons;
+
    if (vfx1_installed) {
       vfx_get_data(&yaw,&pitch,&roll,&buttons);
    } else

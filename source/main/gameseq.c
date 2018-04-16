@@ -562,8 +562,6 @@ void DoGameOver()
 
 }
 
-extern do_save_game_menu();
-
 //update various information about the player
 void update_player_stats()
 {

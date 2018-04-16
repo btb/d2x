@@ -730,7 +730,10 @@ void do_show_netgame_help()
  {
    newmenu_item m[30];
    char mtext[30][50];
-   int i,num=0,pl,eff;
+   int i, num = 0, eff;
+#ifndef RELEASE
+   int pl;
+#endif
    char *eff_strings[]={"trashing","really hurting","seriously effecting","hurting",
                         "effecting","tarnishing"};
 

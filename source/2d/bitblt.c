@@ -998,7 +998,7 @@ void gr_bm_ubitblt_double_slow(int w, int h, int dx, int dy, int sx, int sy, grs
 {
    ubyte * dbits;
    ubyte * sbits;
-   int dstep, i, j;
+   int dstep, i;
 
    sbits = src->bm_data  + (src->bm_rowsize * sy) + sx;
    dbits = dest->bm_data + (dest->bm_rowsize * dy) + dx;

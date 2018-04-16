@@ -912,7 +912,9 @@ void do_screen_res_menu()
    int citem;
    int i;
    int n_items;
+#ifdef WINDOWS
    int result;
+#endif
 
    if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE)) {           //special VR mode
       nm_messagebox(TXT_SORRY, 1, TXT_OK,

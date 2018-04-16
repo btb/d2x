@@ -722,7 +722,9 @@ void draw_model_picture(int mn,vms_angvec *orient_angles)
    vms_vector  temp_pos=ZERO_VECTOR;
    vms_matrix  temp_orient = IDENTITY_MATRIX;
    grs_canvas  *save_canv = grd_curcanv,*temp_canv;
+#ifdef PA_3DFX_VOODOO
    int   save_light;
+#endif
 
    Assert(mn>=0 && mn<N_polygon_models);
 
