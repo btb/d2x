@@ -68,11 +68,13 @@ Cache_lookups++;
 		int			apply_light=0;
 		fvi_query	fq;
 		fvi_info		hit_data;
-		int			segnum, hit_type;
+		int         hit_type;
 
 		#ifndef NDEBUG
-		segnum = find_point_seg(obj_pos, obj_seg);
-		if (segnum == -1) {
+		int found_seg;
+
+		found_seg = find_point_seg(obj_pos, obj_seg);
+		if (found_seg == -1) {
 			Int3();		//	Obj_pos is not in obj_seg!
 			return 0;		//	Done processing this object.
 		}
