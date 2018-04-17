@@ -2597,7 +2597,7 @@ void GameLoop(int RenderFlag, int ReadControlsFlag )
             _ctime(&t_current_time, time_str2);
 
             Error ("EXPIRES %s.  YOUR TIME %s.\n", time_str, time_str2);
-            Error ("Loading overlay -- error number: %d\n", (int)desc_id_exit_num);
+            //Error ("Loading overlay -- error number: %d\n", (int)desc_id_exit_num);
          }
       }
    }
