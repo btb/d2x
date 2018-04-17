@@ -69,7 +69,7 @@ extern int MacEnableInt3;
 
 #else					//macros for real game
 
-#ifndef WINDOWS
+#ifdef __WATCOMC__
 #pragma aux Error aborts;
 #endif
 
