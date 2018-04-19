@@ -12,10 +12,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
+#ifdef __DOS__
 #include <conio.h>
+#include <io.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>
 #include <string.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
@@ -233,9 +235,9 @@ int gr_find_closest_color_current( int r, int g, int b )
 }
 
 
+#ifdef __DOS__
 static int last_r=0, last_g=0, last_b=0;
 
-#ifndef WINDOWS
 void gr_palette_step_up( int r, int g, int b )
 {
    int i;
@@ -276,7 +278,6 @@ void gr_palette_step_up( int r, int g, int b )
       outp( 0x3c9, temp );
    }
 }
-#endif
 
 // This steps up all gun values, leaving black and white to always be black and white.
 void gr_palette_step_up_vr( int r, int g, int b, int white_index, int black_index )
@@ -321,7 +322,6 @@ void gr_palette_step_up_vr( int r, int g, int b, int white_index, int black_inde
    }
 }
 
-#ifndef WINDOWS
 void gr_palette_clear()
 {
    int i;
@@ -470,7 +470,7 @@ void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b )
    }
 }
 
-#ifndef WINDOWS
+#ifdef __DOS__
 void gr_palette_read(ubyte * palette)
 {
    int i;
