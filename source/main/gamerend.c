@@ -852,7 +852,7 @@ void show_extra_views()
 		}
 
 		if (Missile_viewer) {		//do missile view
-			static mv_sig=-1;
+			static int mv_sig=-1;
 			if (mv_sig == -1)
 				mv_sig = Missile_viewer->signature;
 			if (Missile_view_enabled && Missile_viewer->type!=OBJ_NONE && Missile_viewer->signature == mv_sig) {

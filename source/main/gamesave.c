@@ -953,7 +953,7 @@ extern int remove_trigger_num(int trigger_num);
 // If level != -1, it loads the filename with extension changed to .min
 // Otherwise it loads the appropriate level mine.
 // returns 0=everything ok, 1=old version, -1=error
-load_game_data(CFILE *LoadFile)
+int load_game_data(CFILE *LoadFile)
 {
 	int i,j;
 	int start_offset;

@@ -2944,7 +2944,7 @@ int opt_refuse,opt_capture;
 #pragma off (unreferenced)
 void network_game_param_poll( int nitems, newmenu_item * menus, int * key, int citem )
 {
-	static oldmaxnet=0;
+	static int oldmaxnet = 0;
 
 	if (((HoardEquipped() && menus[opt_team_hoard].value) || (menus[opt_team_anarchy].value || menus[opt_capture].value)) && !menus[opt_closed].value && !menus[opt_refuse].value) { 
 		menus[opt_refuse].value = 1;
@@ -6448,7 +6448,7 @@ extern int file_exists (char *);
 
 int HoardEquipped ()
 {
-	static checked=-1;
+	static int checked = -1;
 	
 	#ifdef WINDOWS
 		return 0;
