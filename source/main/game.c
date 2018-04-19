@@ -1097,7 +1097,7 @@ WIN(static int saved_window_h);
    return 1;
 }
 
-static timer_paused=0;
+static int timer_paused = 0;
 
 void stop_time()
 {
@@ -1419,8 +1419,8 @@ void save_screen_shot(int automap_flag)
    char message[100];
    grs_canvas *screen_canv=&grd_curscreen->sc_canvas;
    grs_font *save_font;
-   static savenum=0;
-   static stereo_savenum=0;
+   static int savenum = 0;
+   static int stereo_savenum = 0;
    grs_canvas *temp_canv,*temp_canv2,*save_canv;
         char savename[FILENAME_LEN],savename2[FILENAME_LEN];
    ubyte pal[768];

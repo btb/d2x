@@ -1250,7 +1250,7 @@ extern fix StartingShields;
 fix PingLaunchTime,PingReturnTime;
 
 extern void network_send_ping (ubyte);
-extern network_dump_player(ubyte * server, ubyte *node, int why);
+extern void network_dump_player(ubyte *server, ubyte *node, int why);
 extern int network_who_is_master();
 extern void network_send_netgame_update();
 extern char NameReturning;
@@ -4124,7 +4124,7 @@ void multi_do_guided (char *buf)
 {
    char pnum=buf[1];
    int count=3;
-   static fun=200;
+   static int fun = 200;
 #ifdef MACINTOSH
    shortpos sp;
 #endif

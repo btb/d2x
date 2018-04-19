@@ -230,7 +230,7 @@ char *get_parm_value(char *parm,CFILE *f)
       return NULL;
 }
 
-ml_sort_func(mle *e0,mle *e1)
+int ml_sort_func(mle *e0,mle *e1)
 {
    return stricmp(e0->mission_name,e1->mission_name);
 
@@ -242,7 +242,7 @@ extern int HoardEquipped();
 #define BUILTIN_MISSION "d2.mn2"
 
 //returns 1 if file read ok, else 0
-read_mission_file(char *filename,int count,int location)
+int read_mission_file(char *filename,int count,int location)
 {
    char filename2[100];
    CFILE *mfile;
@@ -401,7 +401,7 @@ int build_mission_list(int anarchy_mode)
    return count;
 }
 
-init_extra_robot_movie(char *filename);
+void init_extra_robot_movie(char *filename);
 
 //values for built-in mission
 

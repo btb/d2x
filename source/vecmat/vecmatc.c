@@ -407,7 +407,7 @@ vms_vector *vm_vec_normal(vms_vector *dest,vms_vector *p0,vms_vector *p1,vms_vec
 }
 
 //make sure a vector is reasonably sized to go into a cross product
-check_vec(vms_vector *v)
+void check_vec(vms_vector *v)
 {
    fix check;
    int cnt = 0;

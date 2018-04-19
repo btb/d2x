@@ -728,7 +728,7 @@ try_again:
 #endif
 
 //Inputs the player's name, without putting up the background screen
-RegisterPlayer()
+int RegisterPlayer()
 {
    int i,j;
    char filename[14];
