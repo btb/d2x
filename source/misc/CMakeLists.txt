@@ -5,19 +5,19 @@
 
 set(misc_SRCS
     args.c
-#   byteswap.c  #Mac
     error.c
-#   fileutil.c  #Mac
     hash.c
 )
 
 set(misc_OTHERS
 	args.c
 	args.h
+	byteswap.c  #Mac
 	byteswap.h
 	debug.h
 	error.h
 	errtest.c
+	fileutil.c  #Mac
 	fileutil.h
 	hash.c
 	hash.h
