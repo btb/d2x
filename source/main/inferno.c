@@ -1087,13 +1087,13 @@ int main(int argc,char **argv)
 	if ( FindArg( "-verbose" ) )
 		Inferno_verbose = 1;
 
+#ifdef __DOS__
 	// Initialize DPMI before anything else!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// (To check memory size and availbabitliy and allocate some low DOS memory)
 	verbose( "%s... ", TXT_INITIALIZING_DPMI);
 	dpmi_init(Inferno_verbose);		// Before anything
 	verbose( "\n" );
 
-#ifdef __DOS__
 	if (!dpmi_lock_region((void near *)descent_critical_error_handler,(char *)chandler_end - (char near *)descent_critical_error_handler))	{
 		Error( "Unable to lock critial error handler" );
 	}
