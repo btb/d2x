@@ -31,7 +31,7 @@ set(misc_OTHERS
 )
 
 if(TARGSYS MATCHES "^OSX$")
-    list(APPEND misc_SRCS strutil.c)
+    list(APPEND misc_SRCS fileutil.c strutil.c)
 endif()
 
 list(REMOVE_ITEM misc_OTHERS ${misc_SRCS})
