@@ -39,10 +39,10 @@ int main()
 	for (i=0;i<6;i++) {
 
 		d = vm_vec_normalized_dir(&t,&test_vec[i],&test_vec[(i+1)%5]);
-		printf("\n%8lx %8lx %8lx, mag=%x\n",t.x,t.y,t.z,d);
+		printf("\n%8x %8x %8x, mag=%x\n", t.x, t.y, t.z, d);
 
 		d2 = vm_vec_normalized_dir_quick(&t,&test_vec[i],&test_vec[(i+1)%5]);
-		printf("%8lx %8lx %8lx, mag=%x (%f)\n",t.x,t.y,t.z,d2,f2fl(fixdiv(d,d2)));
+		printf("%8x %8x %8x, mag=%x (%f)\n", t.x, t.y, t.z, d2, f2fl(fixdiv(d, d2)));
 
 	}
 
