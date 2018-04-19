@@ -6,16 +6,17 @@
 set(misc_SRCS
     args.c
 #   byteswap.c  #Mac
+    error.c
 #   fileutil.c  #Mac
     hash.c
 )
-#    error.c     #Mac, missing
 
 set(misc_OTHERS
 	args.c
 	args.h
 	byteswap.h
 	debug.h
+	error.h
 	errtest.c
 	fileutil.h
 	hash.c
