@@ -1553,8 +1553,6 @@ multi_do_death(int objnum)
 {
    // Do any miscellaneous stuff for a new network player after death
 
-   objnum = objnum;
-
    if (!(Game_mode & GM_MULTI_COOP))
    {
       mprintf((0, "Setting all keys for player %d.\n", Player_num));
@@ -2468,7 +2466,6 @@ multi_process_data(char *buf, int len)
    // if necessary) and act on it.
 
    int type;
-   len = len;
 
    type = buf[0];
 
@@ -4271,7 +4268,6 @@ void multi_do_wall_status (char *buf)
 
 void multi_send_jason_cheat (int num)
 {
-   num=num;
    return;
 }
 

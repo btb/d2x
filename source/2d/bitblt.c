@@ -227,11 +227,6 @@ void modex_copy_column(ubyte * src, ubyte * dest, int num_pixels, int src_rowsiz
 #else
 void modex_copy_column(ubyte * src, ubyte * dest, int num_pixels, int src_rowsize, int dest_rowsize )
 {
-   src = src;
-   dest = dest;
-   num_pixels = num_pixels;
-   src_rowsize = src_rowsize;
-   dest_rowsize = dest_rowsize;
    Int3();
 }
 #endif
@@ -254,11 +249,6 @@ void modex_copy_column_m(ubyte * src, ubyte * dest, int num_pixels, int src_rows
 #else
 void modex_copy_column_m(ubyte * src, ubyte * dest, int num_pixels, int src_rowsize, int dest_rowsize )
 {
-   src = src;
-   dest = dest;
-   num_pixels = num_pixels;
-   src_rowsize = src_rowsize;
-   dest_rowsize = dest_rowsize;
    Int3();
 }
 #endif
@@ -363,9 +353,6 @@ void modex_copy_scanline( ubyte * src, ubyte * dest, int npixels );
 #else
 void modex_copy_scanline( ubyte * src, ubyte * dest, int npixels )
 {
-   src = src;
-   dest = dest;
-   npixels = npixels;
    Int3();
 }
 #endif
@@ -404,9 +391,6 @@ void modex_copy_scanline_2x( ubyte * src, ubyte * dest, int npixels );
 #else
 void modex_copy_scanline_2x( ubyte * src, ubyte * dest, int npixels )
 {
-   src = src;
-   dest = dest;
-   npixels = npixels;
    Int3();
 }
 #endif

@@ -150,9 +150,6 @@ void compute_all_static_light(void);
 //-------------------------------------------------------------------
 void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 {
-   nitems = nitems;
-   last_key = last_key;
-
 // if ( sc_last_item != citem )  {
 //    sc_last_item = citem;
       if ( citem > 0 )  {
