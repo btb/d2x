@@ -158,6 +158,8 @@ extern void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src,
                                  int x, int y, int w, int h);
 extern void dd_gr_clear_canvas(int color);
 extern void dd_gr_reinit_canvas(dd_grs_canvas *canv);
+extern void dd_gr_dup_hack(dd_grs_canvas *hacked, dd_grs_canvas *src);
+extern void dd_gr_dup_unhack(dd_grs_canvas *hacked);
 
 
 // dd_gr_blt functions

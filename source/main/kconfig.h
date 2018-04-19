@@ -179,7 +179,11 @@ typedef struct advanced_ext_control_info {
 
 extern ubyte ExtGameStatus;
 extern control_info Controls;
+#ifdef WINDOWS
+extern void controls_read_all_win(void);
+#else
 extern void controls_read_all();
+#endif
 extern void kconfig(int n, char * title );
 
 #define NUM_KEY_CONTROLS 57

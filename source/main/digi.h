@@ -37,6 +37,8 @@ extern int digi_sample_rate;
 
 extern int digi_get_settings();
 extern int digi_init();
+extern int digi_init_digi(void);
+extern int digi_init_midi(void);
 extern void digi_init_timer();
 extern void digi_reset();
 extern void digi_close();
