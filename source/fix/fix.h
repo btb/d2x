@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _FIX_H
 #define _FIX_H
 
-#include <inttypes.h>
+#include "pstypes.h"
 
 typedef int32_t fix;    // 16 bits int, 16 bits frac
 typedef int16_t fixang; // angles
