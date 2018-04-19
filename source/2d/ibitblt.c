@@ -612,6 +612,8 @@ void	gr_ibitblt_find_hole_size( grs_bitmap * mask_bmp, int *minx, int *miny, int
 
 #else // ifdef GR_NO_ASM
 
+#include <stdlib.h>
+
 #include "pa_enabl.h"
 #include "pstypes.h"
 #include "gr.h"

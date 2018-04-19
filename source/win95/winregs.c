@@ -17,6 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "error.h"
 #include "mono.h"

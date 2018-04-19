@@ -22,5 +22,9 @@ extern int joydefs_calibrate_flag;
 extern void joydefs_set_type(ubyte type);
 #endif
 
+#ifdef WINDOWS
+extern int win95_controls_init(void);
+#endif
+
 #endif
 

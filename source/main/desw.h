@@ -129,6 +129,7 @@ extern void SOSUnInit();
 #define MOUSE_DEFAULT_CURSOR 1
 #define MOUSE_WAIT_CURSOR 2
 
+extern int DoMessageStuff(MSG *msg);
 extern void LoadCursorWin(int cursor);
 extern void ShowCursorW();
 extern void HideCursorW();

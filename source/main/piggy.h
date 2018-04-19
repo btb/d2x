@@ -55,6 +55,10 @@ do { 																\
 
 	extern void piggy_bitmap_page_in( bitmap_index bmp );
 	extern void piggy_bitmap_page_out_all();
+# ifdef WINDOWS
+	extern void piggy_bitmap_page_in_w(bitmap_index bitmap, int ddraw);
+	extern void piggy_bitmap_page_out_all_w(void);
+# endif
 	extern int piggy_page_flushed;
 #else
 	#define PIGGY_PAGE_IN(bmp) 
