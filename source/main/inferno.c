@@ -115,6 +115,7 @@ extern int Current_display_mode;        //$$ there's got to be a better way than
 #endif
 
 #if !defined(__DOS__) && !defined(WINDOWS)
+#include "fileutil.h"
 #include "strutil.h"
 #endif
 

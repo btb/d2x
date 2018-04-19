@@ -46,6 +46,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "text.h"
 
 #if !defined(__DOS__) && !defined(WINDOWS)
+#include "fileutil.h"
 #include "strutil.h"
 #endif
 
