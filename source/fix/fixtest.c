@@ -234,7 +234,7 @@ void atan2_test()
 
 }
 
-void main()
+int main()
 {
 
    atan2_test();
@@ -255,4 +255,5 @@ void main()
 
 // quad_sqrt_time();    //timing test
 
+   return 0;
 }
