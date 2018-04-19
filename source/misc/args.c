@@ -15,7 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef MACINTOSH
+#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"
 #endif
 
