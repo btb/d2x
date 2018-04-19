@@ -19,6 +19,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>	// for memset
 #include <stdio.h>
 
+#include "minmax.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "gr.h"

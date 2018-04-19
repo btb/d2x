@@ -12,11 +12,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "pa_enabl.h"                   //$$POLY_ACC
+#include "minmax.h"
+
 #include "inferno.h"
 #include "segment.h"
 #include "error.h"
