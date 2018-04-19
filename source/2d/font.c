@@ -1371,7 +1371,7 @@ grs_font * gr_init_font( char * fontname )
       }
 #endif
 
-      build_colormap_good( &palette, colormap, freq );
+      build_colormap_good(palette, colormap, freq);
 
       colormap[TRANSPARENCY_COLOR] = TRANSPARENCY_COLOR;    // chaged from colormap[255] = 255 to this for macintosh
 
@@ -1468,7 +1468,7 @@ void gr_remap_font( grs_font *font, char * fontname )
       }
 #endif
 
-      build_colormap_good( &palette, colormap, freq );
+      build_colormap_good(palette, colormap, freq);
 
       colormap[TRANSPARENCY_COLOR] = TRANSPARENCY_COLOR; // changed from      colormap[255] = 255;
 

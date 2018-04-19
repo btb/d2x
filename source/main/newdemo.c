@@ -3150,7 +3150,7 @@ void newdemo_start_playback(char * filename)
       if( !FileFindFirst( "demos\\*.DEM", &find ) )   {
          do {
             if ( NumFiles==RandFileNum )  {
-               filename = &find.name;
+               filename = find.name;
                break;
             }
             NumFiles++;
