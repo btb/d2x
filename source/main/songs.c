@@ -17,6 +17,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <ctype.h>
 #if defined(__DOS__) || defined(WINDOWS)
 #include <direct.h>
+#else
+#include <unistd.h>
 #endif
 
 #include "inferno.h"
