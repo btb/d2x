@@ -11,8 +11,6 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-
-#if defined(POLY_ACC)
 #if !defined(POLY_ACC_H)
 #define POLY_ACC_H
 
@@ -72,5 +70,4 @@ void pa_about_to_flip();               // used in Rendition version, but not in 
 void pa_set_write_mode (int mode);     // used by 3Dfx
 void pa_set_frontbuffer_current(void); // used by 3Dfx
 
-#endif
 #endif

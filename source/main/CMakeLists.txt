@@ -183,11 +183,14 @@ if(TARGSYS MATCHES "^WIN32$")
         list(APPEND descent2_LIBS eregreg2)
     endif()
 
+    if(PA_NULL)
+        list(APPEND descent2_LIBS poly_acc)
+    endif()
+
 elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_LIBS
         div0
         vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
-        poly_acc
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
 elseif(TARGSYS MATCHES "^OSX$")
