@@ -334,7 +334,7 @@ void DoRefuseStuff(sequence_packet *their);
 int GetNewPlayerNumber(sequence_packet *their);
 void network_send_extras(void);
 int network_choose_connect(void);
-void ClipRank(signed char *rank);
+void ClipRank(ubyte *rank);
 void network_check_for_old_version(char pnum);
 void network_process_names_return(char *data);
 void network_send_player_names(sequence_packet *their);
@@ -6286,12 +6286,11 @@ int GetMyNetRanking ()
    return (rank+1);
 }
 
-void ClipRank (signed char *rank)
+void ClipRank(ubyte *rank)
 {
    // This function insures no crashes when dealing with D2 1.0
 
-
-   if (*rank<0 || *rank>9)
+   if (*rank > 9)
       *rank=0;
 }
 void network_check_for_old_version (char pnum)

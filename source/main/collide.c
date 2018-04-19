@@ -1332,7 +1332,7 @@ void multi_send_finish_game ();
 int apply_damage_to_robot(object *robot, fix damage, int killer_objnum)
 {
    char isthief;
-   char i,temp_stolen[MAX_STOLEN_ITEMS];
+   ubyte i, temp_stolen[MAX_STOLEN_ITEMS];
 
    if ( robot->flags&OF_EXPLODING) return 0;
 
