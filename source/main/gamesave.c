@@ -1238,7 +1238,7 @@ int load_game_data(CFILE *LoadFile)
 			for (i=0;i<game_fileinfo.triggers_howmany;i++)
 				if (game_top_fileinfo.fileinfo_version < 31) {
 					v30_trigger trig;
-					int t,type;
+					int t, type = (ubyte)-1;
 
 					if (game_top_fileinfo.fileinfo_version < 30) {
 						v29_trigger trig29;
