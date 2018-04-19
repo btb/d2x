@@ -23,8 +23,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pa_enabl.h"        // needs to occur early.
 
-#if defined(POLY_ACC)
-
 #include "pstypes.h"
 #include "fix.h"
 #include "3d.h"
@@ -318,6 +316,3 @@ void pa_set_write_mode (int mode)
 void pa_set_frontbuffer_current(void)
 {
 }
-
-#endif      // defined POLY_ACC
-

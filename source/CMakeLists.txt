@@ -52,9 +52,16 @@ if(GR_NO_ASM)
 	add_definitions(-DGR_NO_ASM)
 endif()
 
-set(SUBSYSTEMS includes misc mem fix cfile pa_null 2d iff vecmat 3d texmap)
+set(SUBSYSTEMS includes misc mem fix cfile 2d iff vecmat 3d texmap)
 
 set(SUBSYSTEMS_OTHERS vga div ui win95 novga) # tactile unarj sosdigi sosmidi
+
+option(PA_NULL          "Build Polygon Accelleration library" OFF)
+if(PA_NULL)
+    add_definitions(-DPOLY_ACC)
+    list(APPEND SUBSYSTEMS pa_null)
+endif()
+include_directories(pa_null)
 
 if(TARGSYS MATCHES "^DOS4G$")
     list(APPEND SUBSYSTEMS bios vga div ui) # tactile unarj sosdigi sosmidi
