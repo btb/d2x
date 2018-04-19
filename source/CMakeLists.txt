@@ -52,54 +52,31 @@ if(GR_NO_ASM)
 	add_definitions(-DGR_NO_ASM)
 endif()
 
-# Subdirs to make for the DOS libraries
-set(SUBSYSTEMS_DOS includes misc mem fix cfile pa_null 2d vga bios iff div
-    ui vecmat 3d texmap) # tactile unarj sosdigi sosmidi
+set(SUBSYSTEMS includes misc mem fix cfile pa_null 2d iff vecmat 3d texmap)
 
-# Subdirs to make for the Win95 libraries
-set(SUBSYSTEMS_WIN includes misc mem fix cfile pa_null 2d novga bios iff
-    vecmat win95 3d texmap) # tactile unarj
-
-# Subdirs to make for the OSX libraries
-set(SUBSYSTEMS_OSX includes misc mem fix cfile pa_null 2d novga iff
-    vecmat 3d texmap)
-
-# All subdirs.  Needed for clean to work
-set(SUBSYSTEMS_OTHERS includes misc mem fix cfile pa_null 2d vga bios iff div
-    ui vecmat 3d texmap win95 novga) # tactile unarj sosdigi sosmidi
+set(SUBSYSTEMS_OTHERS vga div ui win95 novga) # tactile unarj sosdigi sosmidi
 
 if(TARGSYS MATCHES "^DOS4G$")
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_DOS)
-        include_directories(${SUBSYSTEM})
-    endforeach()
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_DOS)
-        add_subdirectory(${SUBSYSTEM})
-    endforeach()
-    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_DOS})
+    list(APPEND SUBSYSTEMS bios vga div ui) # tactile unarj sosdigi sosmidi
 
 elseif(TARGSYS MATCHES "^WIN32$")
     add_definitions(-DWINDOWS)
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_WIN)
-        include_directories(${SUBSYSTEM})
-    endforeach()
     include_directories(vga)
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_WIN)
-        add_subdirectory(${SUBSYSTEM})
-    endforeach()
-    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_WIN})
+    list(APPEND SUBSYSTEMS bios novga win95) # tactile unarj
 
 elseif(TARGSYS MATCHES "^OSX$")
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OSX)
-        include_directories(${SUBSYSTEM})
-    endforeach()
     include_directories(bios vga)
-    foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OSX)
-        add_subdirectory(${SUBSYSTEM})
-    endforeach()
-    list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS_OSX})
+    list(APPEND SUBSYSTEMS novga)
 
 endif()
 
+include_directories(${SUBSYSTEMS})
+
+foreach(SUBSYSTEM IN LISTS SUBSYSTEMS)
+    add_subdirectory(${SUBSYSTEM})
+endforeach()
+
+list(REMOVE_ITEM SUBSYSTEMS_OTHERS ${SUBSYSTEMS})
 foreach(SUBSYSTEM IN LISTS SUBSYSTEMS_OTHERS)
     add_subdirectory(${SUBSYSTEM} EXCLUDE_FROM_ALL)
 endforeach()
