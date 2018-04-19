@@ -104,10 +104,10 @@ void show_sqrt(long v)
        e1=labs(v-(r-1)*(r-1)),
        e2=labs(v-(r+1)*(r+1));
 
-   printf("sqrt(%d) = %d",v,r);
+   printf("sqrt(%ld) = %ld", v, r);
 
-   if (e1 < e) printf("  ERROR: %d is closer",r-1);
-   if (e2 < e) printf("  ERROR: %d is closer",r+1);
+   if (e1 < e) printf("  ERROR: %ld is closer", r-1);
+   if (e2 < e) printf("  ERROR: %ld is closer", r+1);
 
    printf("\n");
 
@@ -117,7 +117,7 @@ void quad_show_sqrt(long low,long high)
 {
    long r=quad_sqrt(low,high);
 
-   printf("sqrt(%x%08x) = %x",high,low,r);
+   printf("sqrt(%lx%08lx) = %lx", high, low, r);
 
    printf("\n");
 
@@ -130,8 +130,14 @@ void test_sqrt(long v)
        e1=labs(v-(r-1)*(r-1)),
        e2=labs(v-(r+1)*(r+1));
 
-   if (e1 < e) {printf("ERROR: sqrt(%d) returned %d, but %d is closer\n",v,r,r-1); exit(100);}
-   if (e2 < e) {printf("ERROR: sqrt(%d) returned %d, but %d is closer\n",v,r,r+1); exit(100);}
+   if (e1 < e) {
+      printf("ERROR: sqrt(%ld) returned %ld, but %ld is closer\n", v, r, r-1);
+      exit(100);
+   }
+   if (e2 < e) {
+      printf("ERROR: sqrt(%ld) returned %ld, but %ld is closer\n", v, r, r+1);
+      exit(100);
+   }
 
 }
 
@@ -206,7 +212,7 @@ void acos_test()
    for (i=0,t=0;i<150;i++,t+=f1_0/150) {
       fix_sincos(t,&s,&c);
       check = fix_acos(c);
-      printf("%x  %x  %x  %x\n",(unsigned) t,c,check,labs(labs(t)-check));
+      printf("%x  %x  %x  %lx\n", (unsigned) t, c, check, labs(labs(t)-check));
    }
 
 
