@@ -26,11 +26,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //#define USE_ISQRT 1
 
-#if !defined(__DOS__) && !defined(WINDOWS)
-#define Int3()
-#define Assert(x)
-#endif
-
 vms_vector vmd_zero_vector = {0,0,0};
 vms_matrix vmd_identity_matrix = {  f1_0,0,0,
                                     0,f1_0,0,
