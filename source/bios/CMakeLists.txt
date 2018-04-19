@@ -3,7 +3,6 @@
 #
 
 set(io_SRCS
-    error.c
 )
 
 set(io_OTHERS
@@ -19,7 +18,6 @@ set(io_OTHERS
     dos/mouse.asm
     dos/rbaudio.new
     dpmi.h
-    error.h
     findfile.h
     ipx.h
     joy.h
