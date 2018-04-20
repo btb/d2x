@@ -247,8 +247,8 @@ void kmatrix_draw_deaths(int *sorted)
    kmatrix_reactor(TXT_REACTOR_EXPLODED);
   else
    {
-     sprintf(&reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
-     kmatrix_reactor (&reactor_message);
+      sprintf(reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
+      kmatrix_reactor(reactor_message);
    }
 
   if (Game_mode & GM_HOARD)
@@ -317,8 +317,8 @@ void kmatrix_draw_coop_deaths(int *sorted)
    kmatrix_reactor(TXT_REACTOR_EXPLODED);
   else
    {
-     sprintf(&reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
-     kmatrix_reactor (&reactor_message);
+      sprintf(reactor_message, "%s: %d %s  ", TXT_TIME_REMAINING, Countdown_seconds_left, TXT_SECONDS);
+      kmatrix_reactor(reactor_message);
    }
 
 }
@@ -343,7 +343,7 @@ void kmatrix_reactor (char *message)
   gr_get_string_size(message, &sw, &sh, &aw);
   gr_printf( CENTERSCREEN-(sw/2), LHY(55+72+12), message);
 
-  strcpy (&oldmessage,message);
+  strcpy(oldmessage, message);
  }
 
 extern int PhallicLimit,PhallicMan;

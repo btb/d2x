@@ -739,7 +739,7 @@ void do_show_netgame_help()
 
    for (i=0;i<30;i++)
    {
-    m[i].text=&mtext[i];
+      m[i].text = mtext[i];
     m[i].type=NM_TYPE_TEXT;
    }
 
