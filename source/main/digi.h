@@ -42,6 +42,8 @@ extern int digi_init_midi(void);
 extern void digi_init_timer();
 extern void digi_reset();
 extern void digi_close(void);
+extern void digi_close_digi(void);
+extern void digi_close_midi(void);
 
 
 // Volume is max at F1_0.
