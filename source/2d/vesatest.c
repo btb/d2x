@@ -50,7 +50,7 @@ void CreatePalette( )
    }
 }
 
-main()
+int main()
 {
    int i;
 
@@ -113,6 +113,7 @@ main()
 
    getch();
 
+   return 0;
 }
 
 

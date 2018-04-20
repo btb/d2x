@@ -26,7 +26,7 @@ void wait()
 
 }
 
-void main (void)
+int main(void)
 {
    unsigned int t1, t2;
    int i, start, stop, frames;
@@ -107,5 +107,5 @@ void main (void)
 
    printf( "~ %d \xE6sec per reading using BIOS ticker as a stopwatch.\n", USECS_PER_READING( start, stop, frames ) );
 
-
+   return 0;
 }

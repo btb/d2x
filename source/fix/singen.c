@@ -3,7 +3,7 @@
 
 #define PI 3.1415926
 
-main()
+int main()
 {
    int i,c;
    double t,s;
@@ -15,5 +15,5 @@ main()
       //if (c++<45) printf(","); else {printf("\n"); c=0;}
    }
 
-
+   return 0;
 }

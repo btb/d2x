@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mouse.h"
 #include "mono.h"
 
-void main (void)
+int main(void)
 {
    int i,c, j, j1;
 
@@ -119,4 +119,5 @@ void main (void)
 
    mclose(0);
 
+   return 0;
 }

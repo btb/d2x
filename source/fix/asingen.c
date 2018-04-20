@@ -4,7 +4,7 @@
 
 #define PI 3.1415926
 
-main()
+int main()
 {
    int i;
    double t,s;
@@ -27,5 +27,5 @@ main()
       printf(" dw %d\n",(int) (32768*(s/PI) + (s<0?-0.5:0.5) ),t);
    }
 
-
+   return 0;
 }

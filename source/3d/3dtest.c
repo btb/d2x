@@ -172,7 +172,7 @@ void draw_segment(segment *s)
 
 }
 
-main()
+int main()
 {
    minit();
 
@@ -204,7 +204,7 @@ gr_pal_fade_in(&grd_curscreen->pal);
    gr_close();             //goodbye to the 2d
 
 
-
+   return 0;
 }
 
 

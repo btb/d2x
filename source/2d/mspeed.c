@@ -39,7 +39,7 @@ char * System2;
 char * System4;
 
 
-main()
+int main()
 {
    unsigned int t1, t2, fastest;
    unsigned int timeb1v, timeb2v, timeb4v, timeb1s, timeb2s, timeb4s;
@@ -238,5 +238,5 @@ main()
 
    printf( "\nA 1.00 corresponds to %d microseconds to move 320x200 unsigned chars.\n", fastest );
 
-   return;
+   return 0;
 }
