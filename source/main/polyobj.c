@@ -580,7 +580,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 
 }
 
-void free_polygon_models()
+void free_polygon_models(void)
 {
 	int i;
 

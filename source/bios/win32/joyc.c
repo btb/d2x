@@ -167,7 +167,7 @@ int joy_init(int joy, int spjoy)
 //	joy_close
 //		closes to joystick by releasing it from the application window
 
-void joy_close()
+void joy_close(void)
 {
 	if (joy_installed) {
 	

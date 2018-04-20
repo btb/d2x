@@ -283,7 +283,7 @@ void ipx_get_local_target( ubyte * server, ubyte * node, ubyte * local_target )
 	memcpy( local_target, info->local_target, 6 );
 }
 
-void ipx_close()
+void ipx_close(void)
 {
 	dpmi_real_regs rregs;
 	if ( ipx_installed )	{

@@ -51,7 +51,7 @@ void gamefont_init()
 }
 
 
-void gamefont_close()
+void gamefont_close(void)
 {
 	int i;
 

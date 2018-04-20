@@ -270,7 +270,7 @@ void dd_gr_init()
 
 //	dd_gr_close
 //	----------------------------------------------------------------------------
-void dd_gr_close()
+void dd_gr_close(void)
 {
 	Assert(dd_gr_initialized);
 

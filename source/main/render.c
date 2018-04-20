@@ -156,7 +156,7 @@ void draw_outline(int nverts,g3s_point **pointlist)
 
 grs_canvas * reticle_canvas = NULL;
 
-void free_reticle_canvas()
+void free_reticle_canvas(void)
 {
 	if (reticle_canvas)	{
 		free( reticle_canvas->cv_bitmap.bm_data );

@@ -63,7 +63,7 @@ extern int joy95_init_stick(int joy, int spjoy);
 #else
 extern int joy_init();
 #endif
-extern void joy_close();
+extern void joy_close(void);
 
 extern char joy_installed;
 extern char joy_present;

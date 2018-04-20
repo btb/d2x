@@ -69,7 +69,7 @@ void timer_normalize()
 }
 
 
-void timer_close();
+void timer_close(void);
 
 void timer_init(int i)
 {
@@ -84,7 +84,7 @@ void timer_init(int i)
 }
 
 
-void timer_close()
+void timer_close(void)
 {
 	Assert(GameStartTime > 0);
 

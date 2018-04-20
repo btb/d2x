@@ -44,7 +44,7 @@ int gr_close_screen(void);
 
 //	Functions for GR.C
 
-void gr_close()
+void gr_close(void)
 {
 	gr_close_screen();
 	gr_installed = 0;

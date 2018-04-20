@@ -178,7 +178,7 @@ void digi_close_digi()
 	}
 }
 
-void digi_close()
+void digi_close(void)
 {
 	if (!Digi_initialized) return;
 	Digi_initialized = 0;

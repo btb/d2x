@@ -1625,7 +1625,7 @@ void piggy_dump_all()
 
 #endif
 
-void piggy_close()
+void piggy_close(void)
 {
 	piggy_close_file();
 

@@ -94,7 +94,7 @@ void _Assert(int expr,char *expr_text,char *filename,int linenum)
 }
 #endif
 
-void print_exit_message()
+void print_exit_message(void)
 {
 	if (*exit_message)
 	{
