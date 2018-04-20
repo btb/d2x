@@ -22,7 +22,6 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //draw a horizon
 void g3_draw_horizon(int sky_color,int ground_color)
 {
-#pragma unused(sky_color, ground_color)
 }
 
 

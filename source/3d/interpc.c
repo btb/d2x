@@ -347,8 +347,6 @@ extern int gr_find_closest_color_15bpp( int rgb );
 int nest_count;
 #endif
 
-#pragma off (unreferenced)
-
 //alternate interpreter for morphing object
 bool g3_draw_morphing_model(void *model_ptr,grs_bitmap **model_bitmaps,vms_angvec *anim_angles,fix model_light,vms_vector *new_points)
 {
