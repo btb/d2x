@@ -22,7 +22,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include<dos.h>
 #include<fcntl.h> 
 #include<malloc.h> 
-#include<bios.h>
 #include<io.h>
 #include<string.h>
 #include<ctype.h>
