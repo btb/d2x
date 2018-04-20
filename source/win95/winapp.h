@@ -35,9 +35,13 @@ extern void logentry(char *format, ...);
 extern HBITMAP win95_screen_shot();
 
 extern void gr_winckpit_blt_span(int xmin, int xmax, char *src, char *dest);
+#ifdef __WATCOMC__
 #pragma aux gr_winckpit_blt_span "*" parm [ebx] [ecx] [esi] [edi] modify [eax ebx ecx esi edi];
+#endif
 
 extern void gr_winckpit_blt_span_long (int xmin, int xmax, char *src, char *dest);
+#ifdef __WATCOMC__
 #pragma aux gr_winckpit_blt_span_long "*" parm [ebx] [ecx] [esi] [edi] modify [eax edx ebx ecx esi edi];
+#endif
 
 #endif

@@ -331,8 +331,9 @@ unsigned int key_up_count(int scancode)   {
 // Use intrinsic forms so that we stay in the locked interrup code.
 
 void Int5();
+#ifdef __WATCOMC__
 #pragma aux Int5 = "int 5";
-
+#endif
 
 
 // Send keyboard message to Descent keyboard system.

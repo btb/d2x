@@ -62,17 +62,21 @@ typedef struct vms_matrix {
 
 vms_vector *vm_vec_make(vms_vector *v,fix x,fix y,fix z);
 
+#ifdef __WATCOMC__
 #pragma aux vm_vec_make "*_" parm [eax] [edx] [ebx] [ecx] value [eax] modify exact [] = \
    "mov 0[eax],edx"  \
    "mov 4[eax],ebx"  \
    "mov 8[eax],ecx";
+#endif
 
 vms_angvec *vm_angvec_make(vms_angvec *v,fixang p,fixang b,fixang h);
 
+#ifdef __WATCOMC__
 #pragma aux vm_angvec_make "*_" parm [eax] [dx] [bx] [cx] value [eax] modify exact [] = \
    "mov 0[eax],dx"   \
    "mov 2[eax],bx"   \
    "mov 4[eax],cx";
+#endif
 
 //Global constants
 
@@ -335,6 +339,7 @@ fix vm_dist_to_plane(vms_vector *checkp,vms_vector *norm,vms_vector *planep);
 
 //Pragmas for functions
 
+#ifdef __WATCOMC__
 #ifndef INLINE
 #pragma aux vm_vec_add "*" parm [eax] [esi] [edi] value [eax] modify exact [];
 #pragma aux vm_vec_sub "*" parm [eax] [esi] [edi] value [eax] modify exact [];
@@ -384,6 +389,7 @@ fix vm_dist_to_plane(vms_vector *checkp,vms_vector *norm,vms_vector *planep);
 
 #pragma aux vm_extract_angles_vector "*" parm [edi] [esi] value [edi] modify exact [esi];
 #pragma aux vm_extract_angles_vector_normalized "*" parm [edi] [esi] value [edi] modify exact [];
+#endif
 
 /*
    Questions:

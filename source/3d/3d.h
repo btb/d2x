@@ -26,7 +26,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern int g3d_interp_outline;      //if on, polygon models outlined in white
 
 extern vms_vector Matrix_scale;     //how the matrix is currently scaled
+#ifdef __WATCOMC__
 #pragma aux Matrix_scale "*";
+#endif
 
 //Structure for storing u,v,light values.  This structure doesn't have a
 //prefix because it was defined somewhere else before it was moved here
@@ -244,6 +246,7 @@ void swap_polygon_model_data(ubyte *data);
 
 //Pragmas
 
+#ifdef __WATCOMC__
 #pragma aux g3_init "*" modify exact [eax edx];
 #pragma aux g3_close "*" parm [] modify exact [];
 #pragma aux g3_start_frame "*" parm [] modify exact [];
@@ -300,6 +303,7 @@ void swap_polygon_model_data(ubyte *data);
 #pragma aux g3_remap_interp_colors "*" modify exact [];
 
 #pragma aux g3_set_special_render "*" parm [eax] [edx] [ebx] modify exact [eax edx ebx];
+#endif
 
 #endif
 
