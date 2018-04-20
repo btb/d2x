@@ -20,7 +20,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <conio.h>
 #include <string.h>
+#ifdef __WATCOMC__
 #include <i86.h>
+#endif
 
 #include "error.h"
 #include "fix.h"
