@@ -32,6 +32,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "midifile.h"
 #include "midiseq.h"
 #include "winmidi.h"
+#include "strutil.h"
 
 
 //	----------------------------------------------------------------------------

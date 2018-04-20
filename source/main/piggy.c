@@ -59,9 +59,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 	#include <unistd.h>
 #endif
 
-#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"
-#endif
 
 //#define NO_DUMP_SOUNDS        1               //if set, dump bitmaps but not sounds
 

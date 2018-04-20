@@ -44,6 +44,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "playsave.h"
 #include "screens.h"
 #include "config.h"
+#include "strutil.h"
 
 //	Extra control stuff
 

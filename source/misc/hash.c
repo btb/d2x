@@ -18,10 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "error.h"
 #include "hash.h"
-
-#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"
-#endif
 
 int hashtable_init( hashtable *ht, int size )	{
 	int i;

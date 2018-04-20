@@ -29,7 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "tactile.h"
 #include "winregs.h"
-
+#include "strutil.h"
 #include "args.h"
 
 //	Controls

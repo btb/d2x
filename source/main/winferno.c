@@ -55,6 +55,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "modem.h"
 #include "joy.h"
 #include "movie.h"
+#include "strutil.h"
 
 #ifdef _3DFX
 #include "3dfx_des.h"
