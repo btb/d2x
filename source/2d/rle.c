@@ -108,7 +108,7 @@ void gr_rle_decode( ubyte * src, ubyte * dest )
 
 #endif
 
-void rle_stosb(char *dest, int len, int color);
+void rle_stosb(ubyte *dest, int len, int color);
 
 #ifndef GR_NO_ASM
 
@@ -116,7 +116,7 @@ void rle_stosb(char *dest, int len, int color);
 
 #else
 
-void rle_stosb(char *dest, int len, int color)
+void rle_stosb(ubyte *dest, int len, int color)
 {
    int i;
    for (i=0; i<len; i++ )
