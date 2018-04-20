@@ -50,7 +50,8 @@ void c_tmap_scanline_shaded()
 
    fade = tmap_flat_shade_value<<8;
    for (x=loop_count; x >= 0; x-- ) {
-      *dest++ = gr_fade_table[ fade |(*dest)];
+      *dest = gr_fade_table[ fade | (*dest) ];
+      dest++;
    }
 }
 
