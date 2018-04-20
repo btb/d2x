@@ -24,7 +24,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 
 void mono_int_3();
+#ifdef __WATCOMC__
 #pragma aux mono_int_3 = "int 3";
+#endif
 
 #define MAX_NUM_WINDOWS 2
 
@@ -137,6 +139,7 @@ void mputc_at( short n, short row, short col, char c )
 
 
 void copy_row(int nwords,short *src, short *dest1, short *dest2 );
+#ifdef __WATCOMC__
 #pragma aux copy_row parm [ecx] [esi] [ebx] [edx] modify exact [eax ebx ecx edx esi] = \
 "				shr		ecx, 1"	 			\
 "				jnc		even_num"			\
@@ -156,6 +159,7 @@ void copy_row(int nwords,short *src, short *dest1, short *dest2 );
 "				add		ebx, 4"				\
 "				loop		rowloop"				\
 "done:	"
+#endif
 
 
 void scroll( short n )
@@ -353,6 +357,7 @@ void mopen( short n, short row, short col, short width, short height, char * tit
 
 }
 
+#ifdef __WATCOMC__
 #pragma aux mono_present value [eax] modify [bx] = \
 	"mov	ax,1a00h"	\
 	"int	10h"        \
@@ -363,6 +368,7 @@ void mopen( short n, short row, short col, short width, short height, char * tit
 	"je	got_it"		\
 	"xor	eax,eax"    \
 "got_it:";
+#endif
 
 
 int minit()
