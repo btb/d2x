@@ -23,7 +23,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdarg.h>
 #include <errno.h>
 #include <time.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "inferno.h"
