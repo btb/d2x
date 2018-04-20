@@ -25,7 +25,7 @@ set(3d_OTHERS
     vecview.c       vecview2.c
 )
 
-if(TARGSYS MATCHES "^DOS4G$" OR TARGSYS MATCHES "^WIN32")
+if(NOT 3D_NO_ASM)
     list(APPEND 3d_SRCS
         clipper.asm
         draw.asm
