@@ -215,9 +215,13 @@ bool g3_draw_rod_tmap(grs_bitmap *bitmap,g3s_point *bot_point,fix bot_width,g3s_
 //returns 1 if off screen, 0 if drew
 bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int orientation);
 
+typedef void tmap_drawer_t(grs_bitmap *bm, int nv, g3s_point **vertlist);
+typedef void flat_drawer_t(int nv, int *vertlist);
+typedef int line_drawer_t(fix x0, fix y0, fix x1, fix y1);
+
 //specifies 2d drawing routines to use instead of defaults.  Passing
 //NULL for either or both restores defaults
-void g3_set_special_render(void (*tmap_drawer)(),void (*flat_drawer)(),int (*line_drawer)());
+void g3_set_special_render(tmap_drawer_t *tmap_drawer, flat_drawer_t *flat_drawer, line_drawer_t *line_drawer);
 
 //Object functions:
 
