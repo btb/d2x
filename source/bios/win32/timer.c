@@ -20,7 +20,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "timer.h"
 
-#define _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include<windows.h>
 #include<mmsystem.h>
