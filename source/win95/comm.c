@@ -15,7 +15,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #define WIN32_LEAN_AND_MEAN
 #define WIN95
-#define _WIN32
 #include <windows.h>
 #include <mmsystem.h>
 #include <string.h>
