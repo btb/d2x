@@ -461,7 +461,7 @@ void joydefs_config()
    //##joydefs_calibrate_flag = 0;
 
    joy95_get_name(JOYSTICKID1, xtext, 127);
-   if (!strcmpi(xtext, "NO JOYSTICK DETECTED") && (Config_control_type == CONTROL_WINJOYSTICK)) {
+   if (!stricmp(xtext, "NO JOYSTICK DETECTED") && (Config_control_type == CONTROL_WINJOYSTICK)) {
       Config_control_type = CONTROL_NONE;
       no_joystick_option = 1;
    }

@@ -481,7 +481,7 @@ int find_descent_cd()
          cdrom_drive = -3;
          GetVolumeInformation(path, volume, 256, NULL, NULL, NULL, NULL, 0);
          mprintf((0, "CD volume: %s\n", volume));
-         if (!strcmpi(volume, "DESCENT_II") || !strcmpi(volume, "DESCENT.II")) {
+         if (!stricmp(volume, "DESCENT_II") || !stricmp(volume, "DESCENT.II")) {
             if (!chdir(path))
                if (!chdir("\\d2data")) {
                   cdrom_drive = i;
