@@ -709,7 +709,7 @@ int joy95_init_stick(int joy, int spjoy)
 		joystick.present_mask |= JOY_1_V_AXIS;
 
 	joy95_get_name(JOYSTICKID1, joyname, 255);
-	if (!strcmpi(joyname, "CH Flightstick Pro") || FindArg("-ordinaljoy")) {
+	if (!stricmp(joyname, "CH Flightstick Pro") || FindArg("-ordinaljoy")) {
 		CHStickHack = 1;
 	}
 	else CHStickHack = 0;
