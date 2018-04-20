@@ -25,10 +25,10 @@ grs_point blob_vertices[4];
 g3s_point rod_points[4];
 g3s_point *rod_point_list[] = {&rod_points[0],&rod_points[1],&rod_points[2],&rod_points[3]};
 
-g3s_uvl uvl_list[4] = { 0x0200,0x0200,0,
-                        0xfe00,0x0200,0,
-                        0xfe00,0xfe00,0,
-                        0x0200,0xfe00,0};
+g3s_uvl uvl_list[4] = { {0x0200, 0x0200, 0},
+                        {0xfe00, 0x0200, 0},
+                        {0xfe00, 0xfe00, 0},
+                        {0x0200, 0xfe00, 0} };
 
 //compute the corners of a rod.  fills in vertbuf.
 int calc_rod_corners(g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width)
