@@ -25,6 +25,8 @@ if(WATCOM)
         set(CMAKE_C_FLAGS "-bt=nt /w2 -zp1" CACHE STRING "" FORCE)
         set(CMAKE_CREATE_CONSOLE_EXE "system win95")
     endif()
+elseif(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
 option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
