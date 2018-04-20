@@ -1318,8 +1318,10 @@ void hud_show_orbs (void)
 			if (FontHires)
 				y += Line_spacing;
 		}
-		else
+		else {
 			Int3();		//what sort of cockpit?
+			return;
+		}
 
 		bm = &Orb_icons[FontHires];
 		gr_ubitmapm(x,y,bm);
@@ -1349,9 +1351,10 @@ void hud_show_flag(void)
 			if (FontHires)
 				y += Line_spacing;
 		}
-		else
+		else {
 			Int3();		//what sort of cockpit?
-
+			return;
+		}
 
 		icon = (get_team(Player_num) == TEAM_BLUE)?FLAG_ICON_RED:FLAG_ICON_BLUE;
 
