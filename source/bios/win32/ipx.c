@@ -124,7 +124,7 @@ uint wipx_logerror(uint ipx_result, char *text);
 
 void got_new_packet( tIpxPacket *packet );
 void free_packet( int id );
-void ipx_close();
+void ipx_close(void);
 
 ubyte *ipx_get_my_local_address() {
    return (ubyte *)&ThisIPXNode;
@@ -214,7 +214,7 @@ int ipx_init(int socket_number, int show_address)
 }
 
 
-void ipx_close()
+void ipx_close(void)
 {
    if (WinSocket) {
       wipx_close_socket(WinSocket);

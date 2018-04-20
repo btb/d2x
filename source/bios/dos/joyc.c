@@ -343,7 +343,7 @@ int joy_init()
    return joy_present;
 }
 
-void joy_close()
+void joy_close(void)
 {
    if (!joy_installed) return;
    joy_installed = 0;

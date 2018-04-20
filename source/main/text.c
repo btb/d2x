@@ -30,7 +30,7 @@ char *text;
 
 char *Text_string[N_TEXT_STRINGS];
 
-void free_text()
+void free_text(void)
 {
    free(text);
 }

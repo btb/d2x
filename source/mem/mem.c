@@ -85,7 +85,7 @@ static int LargestIndex = 0;
 
 int out_of_memory = 0;
 
-void mem_display_blocks();
+void mem_display_blocks(void);
 
 void mem_init()
 {
@@ -363,7 +363,7 @@ void mem_free( void * buffer )
    free_list[ --num_blocks ] = id;
 }
 
-void mem_display_blocks()
+void mem_display_blocks(void)
 {
    int i, numleft;
 
@@ -446,7 +446,7 @@ static unsigned int SmallestAddress = 0xFFFFFFF;
 static unsigned int LargestAddress = 0x0;
 static unsigned int BytesMalloced = 0;
 
-void mem_display_blocks();
+void mem_display_blocks(void);
 
 #define CHECKSIZE 16
 #define CHECKBYTE 0xFC
@@ -600,7 +600,7 @@ void mem_free( void * buffer )
 #endif
 }
 
-void mem_display_blocks()
+void mem_display_blocks(void)
 {
    if (Initialized==0) return;
 

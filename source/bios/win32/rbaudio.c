@@ -71,7 +71,7 @@ UINT GetCDDiscID();
 
 // Functions
 
-void RBClose()
+void RBClose(void)
 {
    if (RedBookInstalled) {
       mciSendCommand(CDDeviceID, MCI_CLOSE, 0, (ULONG_PTR)NULL);

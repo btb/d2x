@@ -105,7 +105,7 @@ extern int        W95DisplayMode;            // Current Display Mode
 
 
 extern BOOL DDInit(int mode);
-extern void DDKill();
+extern void DDKill(void);
 extern BOOL DDCreateScreen();
 extern void DDKillScreen();
 extern BOOL DDRestoreSurface(LPDIRECTDRAWSURFACE lpdds);
@@ -137,7 +137,7 @@ extern dd_grs_canvas *dd_grd_curcanv;        // Current Canvas
 extern dd_caps ddDriverCaps;                 // Direct Draw Caps
 
 extern void dd_gr_init();
-extern void dd_gr_close();
+extern void dd_gr_close(void);
 extern void dd_gr_init_screen();
 extern void dd_gr_screen_lock();
 extern void dd_gr_screen_unlock();

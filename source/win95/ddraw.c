@@ -319,7 +319,7 @@ BOOL DDInit(int mode)
 // Direct Draw Destruction
 // ----------------------------------------------------------------------------
 
-void DDKill()
+void DDKill(void)
 {
 // Perform cleanup for full screen case and window case
    DDKillScreen();

@@ -407,7 +407,7 @@ rle_cache_element rle_cache[MAX_CACHE_BITMAPS];
 int rle_hits = 0;
 int rle_misses = 0;
 
-void rle_cache_close()
+void rle_cache_close(void)
 {
    if (rle_cache_initialized) {
       int i;
