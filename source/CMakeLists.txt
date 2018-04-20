@@ -60,7 +60,7 @@ if(NOT FIX_NO_ASM)
 	add_definitions(-DUSE_INLINE)
 endif()
 
-set(SUBSYSTEMS includes misc mem fix cfile 2d iff vecmat 3d texmap)
+set(SUBSYSTEMS includes misc mem fix cfile 2d bios iff vecmat 3d texmap)
 
 set(SUBSYSTEMS_OTHERS vga div ui win95 novga) # tactile unarj sosdigi sosmidi
 
@@ -72,15 +72,15 @@ endif()
 include_directories(pa_null)
 
 if(TARGSYS MATCHES "^DOS4G$")
-    list(APPEND SUBSYSTEMS bios vga div ui) # tactile unarj sosdigi sosmidi
+    list(APPEND SUBSYSTEMS vga div ui) # tactile unarj sosdigi sosmidi
 
 elseif(TARGSYS MATCHES "^WIN32$")
     add_definitions(-DWINDOWS)
     include_directories(vga)
-    list(APPEND SUBSYSTEMS bios novga win95) # tactile unarj
+    list(APPEND SUBSYSTEMS novga win95) # tactile unarj
 
 elseif(TARGSYS MATCHES "^OSX$")
-    include_directories(bios vga)
+    include_directories(vga)
     list(APPEND SUBSYSTEMS novga)
 
 endif()
