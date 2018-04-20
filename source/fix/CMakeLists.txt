@@ -18,7 +18,7 @@ set(fix_OTHERS
     test.asm
 )
 
-if(TARGSYS MATCHES "^DOS4G$" OR TARGSYS MATCHES "^WIN32")
+if(NOT FIX_NO_ASM)
     list(APPEND fix_SRCS fix.asm)
 else()
     list(APPEND fix_SRCS fixc.c tables.c)
