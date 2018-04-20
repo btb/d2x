@@ -14,6 +14,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _STRUTILS_
 #define _STRUTILS_
 
+#if defined(__DOS__) || defined(WINDOWS)
+
+#define stricmp     _stricmp
+#define strnicmp    _strnicmp
+#define strdup      _strdup
+#define strlwr      _strlwr
+
+#else
+
 #ifdef MACINTOSH
 extern char *strdup(char *s);
 #endif
@@ -31,5 +40,7 @@ void strrev( char *s1 );
 #define _MAX_EXT    256 /* maximum length of extension component */
 
 void _splitpath(char *name, char *drive, char *path, char *base, char *ext);
+
+#endif
 
 #endif

@@ -57,9 +57,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "multi.h"
 #include "physics.h"
 
-#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"    // because my compiler doesn't have strupr
-#endif
 
 char Gamesave_current_filename[128];
 

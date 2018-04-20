@@ -66,9 +66,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "appltalk.h"
 #endif
 
-#if !defined(__DOS__) && !defined(WINDOWS)
 #include "strutil.h"
-#endif
 
 #define LHX(x)          ((x)*(MenuHires?2:1))
 #define LHY(y)          ((y)*(MenuHires?2.4:1))
