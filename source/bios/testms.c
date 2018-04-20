@@ -28,7 +28,7 @@ void John( mouse_event * evt )
 	i_happend = 1;
 }
 
-void main (void)
+int main(void)
 {
 	short x, y, dx, dy, i, b;
 
@@ -74,4 +74,6 @@ void main (void)
 
 	mouse_close();
 	key_close();
+
+	return 0;
 }

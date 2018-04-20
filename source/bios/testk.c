@@ -19,7 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "error.h"
 
-void main (void)
+int main(void)
 {
 	int c;
 
@@ -100,4 +100,5 @@ void main (void)
 
 	key_close();
 
+	return 0;
 }

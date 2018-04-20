@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define TICKER (*(volatile unsigned int *)0x46C)
 
-void main (void)
+int main(void)
 {
 	fix MyTimer, t, t1, t2, ot;
 	int s;
@@ -60,4 +60,5 @@ void main (void)
 
 	timer_close();
 
+	return 0;
 }

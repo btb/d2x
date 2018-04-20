@@ -136,7 +136,7 @@ void _splitpath(char *name, char *drive, char *path, char *base, char *ext)
 }
 
 #if 0
-void main()
+int main()
 {
 	char drive[10], path[50], name[16], ext[5];
 	
@@ -150,5 +150,7 @@ void main()
 	_splitpath("tmp\\*.dem", drive, path, NULL, NULL);
 	drive[0] = path[0] = name[0] = ext[0] = '\0';
 	_splitpath(".\\tmp\\*.dem", drive, path, NULL, NULL);
+
+	return 0;
 }
 #endif

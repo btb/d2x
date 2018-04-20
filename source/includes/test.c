@@ -3,11 +3,12 @@
 
 void macro_test(void);
 
-main()
+int main()
 {
 	minit();
 	mclear(0);
 
 	macro_test();
 
+	return 0;
 }

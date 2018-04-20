@@ -50,7 +50,7 @@ double approx_mag2(double a,double b,double c)
 
 #define DEFAULT_N_TESTS 100000
 
-void main(int argc,char **argv)
+int main(int argc,char **argv)
 {
 	double a,b,c;
 	double mag,m1,m2;
@@ -123,5 +123,5 @@ void main(int argc,char **argv)
 	printf("Worst values:   (%lf,%lf,%lf)   (%lf,%lf,%lf)\n",worst_error1_mag,worst_error1_m1,worst_error1_m2,
 																				worst_error2_mag,worst_error2_m1,worst_error2_m2);
 
-
+	return 0;
 }
