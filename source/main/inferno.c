@@ -561,7 +561,9 @@ void print_commandline_help()
 void do_joystick_init()
 {
  
+#ifdef __DOS__
 	joy_set_timer_rate( digi_timer_rate );	 	// Tell joystick how fast timer is going
+#endif
 
 #ifdef TACTILE
 	{
@@ -1259,7 +1261,9 @@ int main(int argc,char **argv)
 
 	verbose( "\n%s", TXT_VERBOSE_2);
 	timer_init();
+#ifdef __DOS__
 	timer_set_rate( digi_timer_rate );			// Tell our timer how fast to go (120 Hz)
+#endif
 
 	verbose( "\n%s", TXT_VERBOSE_3);
 	key_init();
