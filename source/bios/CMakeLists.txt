@@ -71,7 +71,10 @@ elseif(TARGSYS MATCHES "^WIN32")
     )
 
 else()
+    find_package(SDL2 REQUIRED)
+
     list(APPEND io_SRCS
+        sdl/timer.c
         stub/rbaudio.c
     )
 
@@ -85,6 +88,11 @@ add_library(io ${io_SRCS} ${io_OTHERS})
 if(TARGSYS MATCHES "^WIN32")
     target_link_libraries(io misc)
     target_link_libraries(io winmm)
+endif()
+
+if(SDL2_CONFIG)
+    include_directories(${SDL2_INCLUDE_DIRS})
+    target_link_libraries(io PUBLIC ${SDL2_LIBRARIES})
 endif()
 
 #add_executable(demo cdrom.c)
