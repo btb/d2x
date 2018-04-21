@@ -77,7 +77,7 @@ void songs_init()
    if ( Songs_initialized ) return;
 
 
-   #if !defined(MACINTOSH) && !defined(WINDOWS)    // don't crank it if on a macintosh!!!!!
+   #ifdef __DOS__ // don't crank it if on a macintosh!!!!!
       if (!FindArg("-nomixer"))
          CD_blast_mixer();   // Crank it!
    #endif
