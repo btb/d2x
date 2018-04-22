@@ -138,7 +138,7 @@ if(NOT RELEASE_VERSION)
 endif()
 
 if(SHAREWARE)
-    list(APPEND descent terrain.c)
+    list(APPEND descent2_SRCS terrain.c)
 endif()
 
 # These sources are always built optimized
