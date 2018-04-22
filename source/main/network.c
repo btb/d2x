@@ -12,8 +12,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 
-#ifdef NETWORK
-
 #define PATCH12
 
 #include <stdio.h>
@@ -6460,13 +6458,3 @@ int HoardEquipped ()
    }
    return (checked);
 }
-
-#endif
-
-
-
-
-
-
-
-
