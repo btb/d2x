@@ -53,10 +53,10 @@ set(descent2_SRCS
     gameseg.c wall.c collide.c lighting.c
     robot.c morph.c vclip.c weapon.c fvi.c newdemo.c titles.c
     gameseq.c controls.c automap.c text.c
-    network.c newmenu.c netmisc.c
+    newmenu.c netmisc.c
     gamefont.c hud.c playsave.c
     endlevel.c kconfig.c crypt.c
-    multi.c cntrlcen.c credits.c config.c kmatrix.c
+    cntrlcen.c credits.c config.c kmatrix.c
     paging.c mission.c songs.c bmread.c
     escort.c gamepal.c multibot.c state.c
     movie.c
@@ -112,6 +112,10 @@ set(descent2_OTHERS
     vers_id.h.in            vers_id.h.orig
     editor/editor.h         editor/kdefs.h          editor/texpage.h
 )
+
+if(NOT NO_MULTIPLAYER)
+    list(APPEND descent2_SRCS network.c multi.c)
+endif()
 
 if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_SRCS winferno.c descentw.c joydefsw.c windigi.c cdmix32.c) #winmovie.c winmodem.c
