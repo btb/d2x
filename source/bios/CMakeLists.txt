@@ -71,8 +71,6 @@ elseif(TARGSYS MATCHES "^WIN32")
     )
 
 else()
-    find_package(SDL2 REQUIRED)
-
     list(APPEND io_SRCS
         sdl/timer.c
         stub/rbaudio.c

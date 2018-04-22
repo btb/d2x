@@ -118,7 +118,7 @@ if(TARGSYS MATCHES "^WIN32$")
 elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_SRCS digi.c inferno.c joydefs.c cdmix32.c) #victor.c iglasses.c modem.c
 else()
-    list(APPEND descent2_SRCS inferno.c joydefs.c)
+    list(APPEND descent2_SRCS sdldigi.c inferno.c joydefs.c)
 endif()
 
 if(ARCADE)
@@ -193,11 +193,10 @@ elseif(TARGSYS MATCHES "^DOS4G$")
         vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
-elseif(TARGSYS MATCHES "^OSX$")
+else()
     list(APPEND descent2_LIBS
         novga
     )
-    # gclfr32 mvelb32s s3dtkwdr vlib spd3d
 endif()
 
 set(descent2_DIRS editor)
@@ -273,7 +272,10 @@ endif()
 if(SOS_MIDI_INCLUDE_DIR)
     include_directories(${SOS_MIDI_INCLUDE_DIR})
 endif()
-
+if(SDL2_MIXER_INCLUDE_DIRS)
+    include_directories(${SDL2_MIXER_INCLUDE_DIRS})
+    target_link_libraries(${PROGS} ${SDL2_MIXER_LDFLAGS})
+endif()
 
 # Check various settings for conflicts
 if(BUILD_EDITOR AND NDEBUG)
