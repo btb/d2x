@@ -79,9 +79,13 @@ elseif(TARGSYS MATCHES "^WIN32$")
     include_directories(vga)
     list(APPEND SUBSYSTEMS novga win95) # tactile unarj
 
-elseif(TARGSYS MATCHES "^OSX$")
+else()
     include_directories(vga)
     list(APPEND SUBSYSTEMS novga)
+
+    find_package(SDL2 REQUIRED)
+    include(FindPkgConfig)
+    pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
 
 endif()
 
