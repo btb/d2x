@@ -3229,7 +3229,7 @@ void show_extra_netgame_info(int choice)
 	
    for (i=0;i<5;i++)
 	{
-	 m[i].text=&mtext[i];
+		m[i].text = mtext[i];
     m[i].type=NM_TYPE_TEXT;		
 	}
 

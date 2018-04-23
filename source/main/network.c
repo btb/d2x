@@ -6332,7 +6332,7 @@ void network_process_names_return (char *data)
 	
    for (i=0;i<12;i++)
 	{
-	 m[i].text=&mtext[i];
+		m[i].text = mtext[i];
     m[i].type=NM_TYPE_TEXT;		
 	}
 
