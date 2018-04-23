@@ -10,13 +10,10 @@ set(vga_SRCS
 )
 
 set(vga_OTHERS
-    dd.bat
-    fxdpmi.h
-    fxvesa.h
+    fxdpmi.h            fxvesa.h
     makefile
     tweak.inc
-    vga.h
-    vgaregs.inc
+    vga.h               vgaregs.inc
 )
 set_source_files_properties(${vga_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

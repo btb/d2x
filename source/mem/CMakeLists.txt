@@ -3,15 +3,13 @@
 #
 
 set(mem_SRCS
-	mem.c
+    mem.c
 )
 
 set(mem_OTHERS
-	1
-	2
-	makefile
-	makefile.mac
-	mem.h
+    1                   2
+    makefile            makefile.mac
+    mem.h
 )
 set_source_files_properties(${mem_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

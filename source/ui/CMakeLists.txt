@@ -3,11 +3,20 @@
 #
 
 set(ui_SRCS
-    ui.c mouse.c window.c uidraw.c button.c
-    gadget.c listbox.c message.c popup.c scroll.c
-    radio.c checkbox.c inputbox.c userbox.c menu.c
-    harderr.c file.c keytrap.c icon.c keypress.c
-    menubar.c keypad.c func.c
+    button.c
+    checkbox.c
+    file.c              func.c
+    gadget.c
+    harderr.c
+    icon.c              inputbox.c
+    keypad.c            keypress.c          keytrap.c
+    listbox.c
+    menu.c              menubar.c           message.c           mouse.c
+    popup.c
+    radio.c
+    scroll.c
+    ui.c                uidraw.c            userbox.c
+    window.c
 )
 
 set(ui_OTHERS

@@ -6,13 +6,9 @@ set(fix_SRCS)
 
 set(fix_OTHERS
     asingen.c
-    fix.asm
-    fix.h
-    fix.inc
-    fixc.c
+    fix.asm             fix.h               fix.inc             fixc.c
     fixppc.a
-    makefile
-    makefile.mac
+    makefile            makefile.mac
     singen.c
     tables.c
     test.asm

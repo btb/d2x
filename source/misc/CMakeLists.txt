@@ -10,24 +10,15 @@ set(misc_SRCS
 )
 
 set(misc_OTHERS
-	args.c
-	args.h
-	byteswap.c  #Mac
-	byteswap.h
-	debug.h
-	error.h
-	errtest.c
-	fileutil.c  #Mac
-	fileutil.h
-	hash.c
-	hash.h
-	makefile
-	makefile.mac
-	parsarg.c   #DOS/Win
-	parsarg.h
-	parstest.c
-	strutil.c   #Mac
-	strutil.h
+    args.h
+    byteswap.c			byteswap.h
+    debug.h
+    error.h             errtest.c
+    fileutil.c          fileutil.h
+    hash.h
+    makefile            makefile.mac
+    parsarg.c           parsarg.h           parstest.c
+    strutil.c           strutil.h
 )
 
 if(TARGSYS MATCHES "^OSX$")

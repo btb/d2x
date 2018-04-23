@@ -2,8 +2,7 @@
 # Makefile for bios functions
 #
 
-set(io_SRCS
-)
+set(io_SRCS)
 
 set(io_OTHERS
     dos/dpmi.c
@@ -12,11 +11,9 @@ set(io_OTHERS
     dos/joy.asm         dos/joyc.c
     dos/key.asm         dos/key.c           dos/keys.inc        dos/oldkey.asm
     dos/mono.c
-    dos/mouse.c
-    dos/rbaudio.c
+    dos/mouse.asm       dos/mouse.c
+    dos/rbaudio.c       dos/rbaudio.new
     dos/timer.asm
-    dos/mouse.asm
-    dos/rbaudio.new
     dpmi.h
     findfile.h
     ipx.h
@@ -29,21 +26,17 @@ set(io_OTHERS
     rbaudio.h
     stub/rbaudio.c
     swiftcfg.h
-    testj.c
-    testm.c
-    testms.c
+    testj.c             testm.c             testms.c
     timer.h
     win32/findfile.c
     win32/ipx.c
     win32/joyc.c
     win32/key.c
-    win32/mono.c
+    win32/mono.c        win32/winmono.c
     win32/mouse.c
     win32/rbaudio.c
     win32/timer.c
-    win32/winmono.c
-    x
-    x.c
+    x                   x.c
 )
 
 if(TARGSYS MATCHES "^DOS4G$")

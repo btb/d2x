@@ -7,10 +7,8 @@ set(cfile_SRCS
 )
 
 set(cfile_OTHERS
-    cfile.h
-    makefile
-    makefile.mac
-    nocfile.h
+    cfile.h             nocfile.h
+    makefile            makefile.mac
 )
 set_source_files_properties(${cfile_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 

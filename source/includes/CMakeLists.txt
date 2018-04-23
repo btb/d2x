@@ -6,8 +6,7 @@ set(includes_OTHERS
     makefile
     minmax.h
     psmacros.inc
-    pstypes.h
-    pstypes.inc
+    pstypes.h           pstypes.inc
     test.c
 )
 set_source_files_properties(${includes_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)

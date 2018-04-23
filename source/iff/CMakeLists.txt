@@ -3,20 +3,15 @@
 #
 
 set(iff_SRCS
-	iff.c
+    iff.c
 )
 
 set(iff_OTHERS
-	archive
-	iff.h
-	ifftest.c
-	ifftestv.bak
-	ifftestv.c
-	makefile
-	vesa.h
-	archive/iff8bpp.c
-	archive/iff15bpp.c
-	archive/iffmike.c
+    iff.h
+    ifftest.c           ifftestv.c
+    makefile
+    vesa.h
+    archive/iff8bpp.c   archive/iff15bpp.c  archive/iffmike.c
 )
 set_source_files_properties(${iff_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
