@@ -86,6 +86,7 @@ else()
     find_package(SDL2 REQUIRED)
     include(FindPkgConfig)
     pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
+    pkg_check_modules(SDL2_NET REQUIRED SDL2_net)
 
 endif()
 
