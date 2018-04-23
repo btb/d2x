@@ -360,6 +360,8 @@ void draw_cloaked_object(object *obj,fix light,fix *glow,fix cloak_start_time,fi
          break;
       default:
          Int3();     // Contact Mike: Unexpected object type in draw_cloaked_object.
+         Cloak_fadein_duration = F1_0;
+         Cloak_fadeout_duration = F1_0;
    }
 
    cloak_delta_time = GameTime - cloak_start_time;
