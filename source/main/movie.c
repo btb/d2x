@@ -62,8 +62,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "strutil.h"
 
 extern char *Args[100];                                 // Arguments from args.c for
-char *FirstVid,*SecondVid;
-char *RoboBuffer[50];
+unsigned char *FirstVid, *SecondVid;
+unsigned char *RoboBuffer[50];
 char RobBufCount=0,PlayingBuf=0,RobBufLimit=0;
 
 unsigned RobSX=75,RobSY=50,RobDX=100,RobDY=100;
