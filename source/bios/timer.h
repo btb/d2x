@@ -36,6 +36,7 @@ extern void timer_init();
 extern void timer_close(void);
 extern void timer_set_rate(int count_val);
 extern void timer_set_function( void _far * function );
+extern void delay(unsigned int milliseconds);
 
 //==========================================================================
 // These functions return the time since the timer was initialized in
