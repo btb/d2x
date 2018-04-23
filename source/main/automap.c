@@ -1833,7 +1833,7 @@ void automap_build_edge_list()
 
 }
 
-char Marker_input [40];
+char Marker_input[MARKER_MESSAGE_LEN];
 int Marker_index=0;
 ubyte DefiningMarkerMessage=0;
 ubyte MarkerBeingDefined;
