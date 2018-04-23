@@ -771,10 +771,10 @@ int InitRobotMovie (char *filename)
  *    Subtitle system code
  */
 
-ubyte *subtitle_raw_data;
+char *subtitle_raw_data;
 
 //search for next field following whitespace
-ubyte *next_field(ubyte *p)
+char *next_field(char *p)
 {
    while (*p && !isspace(*p))
       p++;
@@ -798,7 +798,7 @@ int init_subtitles(char *filename)
 {
    CFILE *ifile;
    int size,read_count;
-   ubyte *p;
+   char *p;
    int have_binary = 0;
 
    Num_subtitles = 0;
@@ -819,7 +819,7 @@ int init_subtitles(char *filename)
 
    size = cfilelength(ifile);
 
-   MALLOC (subtitle_raw_data, ubyte, size+1);
+   MALLOC (subtitle_raw_data, char, size+1);
 
    read_count = cfread(subtitle_raw_data, 1, size, ifile);
 
