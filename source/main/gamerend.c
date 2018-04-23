@@ -126,7 +126,7 @@ extern char Marker_input[];
 
 void game_draw_marker_message()
 {
-	char temp_string[MAX_MULTI_MESSAGE_LEN+25];
+	char temp_string[MARKER_MESSAGE_LEN+25];
 
         if ( DefiningMarkerMessage)
           {
