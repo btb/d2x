@@ -1826,11 +1826,9 @@ extern int        VR_sensitivity;
 
 int VR_sense_range[3] = { 25, 50, 75 };
 
-#ifndef MACINTOSH
 void read_head_tracker()
 {
-#ifndef WINDOWS
-
+#ifdef __DOS__
    fix yaw, pitch, roll;
 
 //------ read vfx1 helmet --------
@@ -1875,7 +1873,6 @@ void read_head_tracker()
    Last_angles_b = roll;
 #endif
 }
-#endif
 
 #define  PH_SCALE 8
 
@@ -1899,6 +1896,7 @@ extern int Automap_active;
 
 void kconfig_init_external_controls(int intno, int address)
 {
+#ifdef __DOS__
    int i;
    kc_external_intno = intno;
    kc_external_control  = (ext_control_info *)address;
@@ -1920,7 +1918,7 @@ void kconfig_init_external_controls(int intno, int address)
       kc_external_version = atoi(Args[i+1]);
 
    printf( "%s int: 0x%x, data: %p, ver:%d\n", kc_external_name, kc_external_intno, kc_external_control, kc_external_version );
-
+#endif
 }
 
 #if !defined(MACINTOSH)
@@ -3323,13 +3321,11 @@ void controls_read_all()
          Controls.forward_thrust_time = fixmul(Cruise_speed,FrameTime)/100;
    }
 
-#if !defined(MACINTOSH)
    read_head_tracker();
 
    // Read external controls
    if (kc_use_external_control || CybermouseActive)
       kconfig_read_external_controls();
-#endif
 
 //----------- Clamp values between -FrameTime and FrameTime
    if (FrameTime > F1_0 )
@@ -3470,15 +3466,12 @@ char GetKeyValue (char key)
    return (kc_keyboard[key].value);
   }
 
-#if !defined(MACINTOSH)
-
 
 extern object *obj_find_first_of_type (int);
 void kconfig_read_external_controls()
 {
 #ifdef __DOS__
    union REGS r;
-#endif
    int i;
 
    if ( !kc_enable_external_control ) return;
@@ -3543,11 +3536,9 @@ void kconfig_read_external_controls()
 
    if ( Automap_active )         // (If in automap...)
       kc_external_control->automap_state = 1;
-#ifdef __DOS__
    memset(&r,0,sizeof(r));
 
    int386 ( kc_external_intno, &r, &r);      // Read external info...
-#endif
 
    if ( Player_num > -1 )  {
       Objects[Players[Player_num].objnum].mtype.phys_info.flags &= (~PF_TURNROLL);  // Turn off roll when turning
@@ -3621,7 +3612,6 @@ void kconfig_read_external_controls()
           do_controlcen_destroyed_stuff(obj_find_first_of_type (OBJ_CNTRLCEN));
       }
     }
-
-}
 #endif
+}
 
