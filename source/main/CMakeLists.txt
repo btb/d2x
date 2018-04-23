@@ -67,50 +67,37 @@ set(descent2_SRCS
 
 set(descent2_OTHERS
     3dfx.c      3dfx_des.h
-    ai.c        ai.h        ai2.c       aipath.c    aistruct.h
-    arcade.c    arcade.h    automap.c   automap.h
-    bm.c        bm.h        bmread.c    bmread.h
-    cdmix32.c   cdrom.c     cdrom.h
-    cntrlcen.c  cntrlcen.h  coindev.c   coindev.h   collide.c   collide.h
-    compbit.h   config.c    config.h    controls.c  controls.h
-    credits.c   credits.h   crypt.c
-    desc_id.h   descentw.c  desw.h      digi.c      digi.h      digiobj.c
-    dumpmine.c
-    effects.c   effects.h   endlevel.c  endlevel.h  escort.c
-    files.h     fireball.c  fireball.h  fuelcen.c   fuelcen.h
-    fvi.c       fvi.h
-    game.c      game.h      gamecntl.c  gamefont.c  gamefont.h
-    gamemine.c  gamemine.h  gamepal.c   gamepal.h   gamerend.c
-    gamesave.c  gamesave.h  gameseg.c   gameseg.h   gameseq.c   gameseq.h
-    gamestat.h  gauges.c    gauges.h
-    hostage.c   hostage.h   hud.c
-    iglasses.c  iglasses.h
-    inferno.c   inferno.h   inferno.ini
+    ai.h        aistruct.h  arcade.c    arcade.h    automap.h
+    bm.h        bmread.h
+    cdmix32.c   cdrom.c     cdrom.h     cntrlcen.h  coindev.c   coindev.h
+    collide.h   compbit.h   config.h    controls.h  credits.h
+    desc_id.h   descentw.c  desw.h      digi.c      digi.h      dumpmine.c
+    effects.h   endlevel.h
+    files.h     fireball.h  fuelcen.h   fvi.h
+    game.h      gamefont.h  gamemine.h  gamepal.h   gamesave.h  gameseg.h
+    gameseq.h   gamestat.h  gauges.h
+    hostage.h
+    iglasses.c  iglasses.h  inferno.c   inferno.h
     joydefs.c   joydefs.h   joydefsw.c
-    kconfig.c   kconfig.h   kmatrix.c   kmatrix.h
-    laser.c     laser.h     lighting.c  lighting.h
+    kconfig.h   kmatrix.h
+    laser.h     lighting.h
     makefile
-    menu.c      menu.h      mglobal.c
-    mission.c   mission.h   modem.c     modem.h     morph.c     morph.h
-    movie.c     movie.h     multi.c     multi.h     multibot.c  multibot.h
-    netmisc.c   netmisc.h   network.c   network.h   newdemo.c   newdemo.h
-    newmenu.c   newmenu.h   newmodel.c
-    object.c    object.h
-    paging.c    paging.h    physics.c   physics.h   piggy.c     piggy.h
-    player.h    playsave.c  playsave.h  polyobj.c   polyobj.h
-    powerup.c   powerup.h
-    rbtest.c    render.c    render.h    robot.c     robot.h
-    scores.c    scores.h    screens.h   segment.h   segpoint.h
-    slew.c      slew.h      songs.c     songs.h     sounds.h
-    state.c     state.h     switch.c    switch.h
-    terrain.c   terrain.h   texmerge.c  texmerge.h  text.c      text.h
-    textures.h  titles.c    titles.h
-    vclip.c     vclip.h
-    wall.c      wall.h      weapon.c    weapon.h
-    windigi.c   winferno.c  winmodem.c  winvideo.c
+    menu.h      mission.h   modem.c     modem.h     morph.h     movie.h
+    multi.c     multi.h     multibot.h
+    netmisc.h   network.c   network.h   newdemo.h   newmenu.h   newmodel.c
+    object.h
+    paging.h    physics.h   piggy.h     player.h    playsave.h  polyobj.h
+    powerup.h
+    rbtest.c    render.h    robot.h
+    scores.h    screens.h   segment.h   segpoint.h  slew.c      slew.h
+    songs.h     sounds.h    state.h     switch.h
+    terrain.c   terrain.h   texmerge.h  text.h      textures.h  titles.h
+    vclip.h
+    wall.h      weapon.h    windigi.c   winferno.c  winmodem.c  winvideo.c
+    editor/editor.h         editor/kdefs.h          editor/texpage.h
+    inferno.ini
     settings.h.in           settings.h.orig
     vers_id.h.in            vers_id.h.orig
-    editor/editor.h         editor/kdefs.h          editor/texpage.h
 )
 
 if(NOT NO_MULTIPLAYER)

@@ -9,12 +9,8 @@ set(vecmat_OTHERS
     disttest.c
     makefile
     sml9x9.asm
-    vecmat.asm
-    vecmat.h
-    vecmat.inc
-    vecmatc.c
-    vecmatppc.a
-    vecmat68k.inc
+    vecmat.asm          vecmat.h            vecmat.inc
+    vecmatc.c           vecmatppc.a         vecmat68k.inc
 )
 
 if(TARGSYS MATCHES "^DOS4G$" OR TARGSYS MATCHES "^WIN32")

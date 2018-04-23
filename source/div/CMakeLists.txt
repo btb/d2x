@@ -7,8 +7,7 @@ set(div0_SRCS
 )
 
 set(div0_OTHERS
-    div0.h
-    div0.inc
+    div0.h              div0.inc
     makefile
 )
 set_source_files_properties(${div0_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)

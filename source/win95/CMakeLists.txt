@@ -5,15 +5,17 @@
 set(TARGSYS "WIN32")
 
 set(win95_SRCS
+    comm.c
+    dd.c                ddgr.c              direct3d.c          ds.c
+    gfx.c
+    midifile.c
     palette.c
-    winapp.c
-    comm.c winregs.c ds.c midifile.c winmidi.c winckpit.asm
-    gfx.c dd.c ddgr.c direct3d.c
+    winapp.c            winckpit.asm        winmidi.c           winregs.c
 )
 
 list(APPEND win95_OTHERS
     comm.c          comm.h
-    dd.bat          dd.c            dd.h
+    dd.c            dd.h
     ddgfx.c         ddgr.c          ddraw.c
     direct3d.c      direct3d.h
     ds.c            ds.h

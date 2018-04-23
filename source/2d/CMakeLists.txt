@@ -24,27 +24,20 @@ set(gr_SRCS
 )
 
 set(gr_OTHERS
-    bitblt.c        bitmap.c        box.c
-    canvas.c        circle.c        clip.h          cursor.c
-    dd.bat
-    disc.c
+    clip.h          cursor.c
     effect2d.h      effects.c       effects.h
-    font.c
     gpixel.c
-    gr.c            gr.h            gr.inc          gr.out          grdef.h
-    ibitblt.c       ibitblt.h       lbitblt.asm
-    line.c          linear.asm
+    gr.h            gr.inc          grdef.h
+    ibitblt.h       lbitblt.asm
+    linear.asm
     macstubs.c
     makefile        makefile.mac
-    mndebug.bat
     mspeed.c        nonvesa.c
     paging.asm
-    palette.h       pcx.c           pcx.h
+    palette.h       pcx.h
     pflow.asm
-    pixel.c         poly.c
-    rect.c          rle.c           rle.h
+    rle.h
     scale.c         scalea.asm      scalemac.c
-    scanline.c
     selector.asm
     tmapbits.c      tpoly.c
     vesalib.c       vesatest.c

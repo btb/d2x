@@ -6,21 +6,20 @@ set(3d_SRCS)
 
 set(3d_OTHERS
     3d.h            3d.inc
-    3dtest.c        3dtest.lnk
+    3dtest.c
     clipper.asm     clipper.h       clipperc.c
-    d.bat           dd.bat
     draw.asm        draw_seg.c      drawc.c
     globvars.asm    globvars.h      globvarsc.c
     horizon.asm     horizonc.c
     instance.asm    instancec.c
     interp.asm      interpc.c
-    m.bat           makefile        makefile.mac
+    makefile        makefile.mac
     matrix.asm      matrixc.c
     objects.asm     out.c
     points.asm      pointsc.c
     rod.asm         rodc.c
     segment.c       setup.asm       setupc.c
-    t.bat           trakball.c
+    trakball.c
     upvecs.c        upvecs2.c
     vecview.c       vecview2.c
 )
