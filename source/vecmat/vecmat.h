@@ -67,6 +67,8 @@ vms_vector *vm_vec_make(vms_vector *v,fix x,fix y,fix z);
 	"mov 0[eax],edx"	\
 	"mov 4[eax],ebx"	\
 	"mov 8[eax],ecx";
+#else
+#define vm_vec_make(v,_x,_y,_z) (((v)->x=(_x), (v)->y=(_y), (v)->z=(_z)), (v))
 #endif
 
 vms_angvec *vm_angvec_make(vms_angvec *v,fixang p,fixang b,fixang h);
@@ -87,8 +89,6 @@ extern vms_matrix vmd_identity_matrix;
 
 #define ZERO_VECTOR {0,0,0}
 #define IDENTITY_MATRIX { {f1_0, 0, 0}, {0, f1_0, 0}, {0, 0, f1_0} }
-
-//#define vm_vec_make(v,_x,_y,_z) (((v)->x=(_x), (v)->y=(_y), (v)->z=(_z)), (v))
 
 //#pragma off (unreferenced)
 ////make this local, so compiler can in-line it
