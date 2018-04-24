@@ -7,6 +7,7 @@ set(vid_SRCS)
 set(vid_OTHERS
     makefile
     stub/makefile
+    stub/macstubs.c
     stub/novesa.c
     vga/framebuf.c
     vga/fxdpmi.h        vga/fxvesa.h

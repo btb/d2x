@@ -30,7 +30,6 @@ set(gr_OTHERS
     gr.h            gr.inc          grdef.h
     ibitblt.h       lbitblt.asm
     linear.asm
-    macstubs.c
     makefile        makefile.mac
     mspeed.c        nonvesa.c
     paging.asm
@@ -47,7 +46,7 @@ add_library(gr ${gr_SRCS} ${gr_OTHERS})
 if(NOT GR_NO_ASM)
     list(APPEND gr_SRCS lbitblt.asm linear.asm scale.c scalea.asm)
 else()
-    list(APPEND gr_SRCS scalemac.c) #macstubs.c
+    list(APPEND gr_SRCS scalemac.c)
 endif()
 
 list(REMOVE_ITEM gr_OTHERS ${gr_SRCS})
