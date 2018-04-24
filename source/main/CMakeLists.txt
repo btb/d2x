@@ -137,6 +137,7 @@ set(descent2_LIBS
     misc
     cfile
     texmap
+    vid
 )
 #   iglasses loadpats vidlib unarj
 #   lzw sosdwxcr sosmwxcr 
@@ -159,7 +160,6 @@ if(TARGSYS MATCHES "^WIN32$")
     list(APPEND descent2_LIBS
         win95
         ddraw dsound
-        novga
         winmm
         ws2_32
         dxguid
@@ -181,15 +181,11 @@ if(TARGSYS MATCHES "^WIN32$")
 elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_LIBS
         div0
-        vid
         ${SOS_DIGI_LIBRARIES}
         ${SOS_MIDI_LIBRARIES}
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
-else()
-    list(APPEND descent2_LIBS
-        novga
-    )
+
 endif()
 
 set(descent2_DIRS editor)

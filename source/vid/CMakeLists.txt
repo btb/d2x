@@ -2,23 +2,41 @@
 # Makefile for VGA library
 #
 
-set(vid_SRCS
-    vga/framebuf.c
-    vga/modex.asm
-    vga/vesa.asm
-    vga/vga.c
-)
+set(vid_SRCS)
 
 set(vid_OTHERS
     makefile
+    stub/makefile
+    stub/novesa.c
+    vga/framebuf.c
     vga/fxdpmi.h        vga/fxvesa.h
+    vga/modex.asm
     vga/tweak.inc
+    vga/vesa.asm
+    vga/vga.c
     vga/vgaregs.inc
     vga.h
+)
+
+if(TARGSYS MATCHES "^DOS4G$")
+    list(APPEND vid_SRCS
+        vga/framebuf.c
+        vga/modex.asm
+        vga/vesa.asm
+        vga/vga.c
     )
+
+    find_path(3DFX_INCLUDE_DIR 3dfx.h ../../extlib/glide/dos/include/)
+    include_directories(${3DFX_INCLUDE_DIR})
+
+else()
+    list(APPEND vid_SRCS
+        stub/novesa.c
+    )
+
+endif()
+
+list(REMOVE_ITEM vid_OTHERS ${vid_SRCS})
 set_source_files_properties(${vid_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(vid ${vid_SRCS} ${vid_OTHERS})
-
-find_path(3DFX_INCLUDE_DIR 3dfx.h ../../extlib/glide/dos/include/)
-include_directories(${3DFX_INCLUDE_DIR})
