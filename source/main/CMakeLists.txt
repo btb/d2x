@@ -181,7 +181,9 @@ if(TARGSYS MATCHES "^WIN32$")
 elseif(TARGSYS MATCHES "^DOS4G$")
     list(APPEND descent2_LIBS
         div0
-        vga ${SOS_DIGI_LIBRARIES} ${SOS_MIDI_LIBRARIES}
+        vid
+        ${SOS_DIGI_LIBRARIES}
+        ${SOS_MIDI_LIBRARIES}
     )
     # gclfr32 mvelb32s s3dtkwdr vlib spd3d
 else()
