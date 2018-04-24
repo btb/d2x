@@ -55,7 +55,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 ubyte Config_digi_volume = 8;
 ubyte Config_midi_volume = 8;
 ubyte Config_redbook_volume = 8;
-ubyte Config_control_type = 0;
+ubyte Config_control_type = CONTROL_NONE;
 ubyte Config_channels_reversed = 0;
 ubyte Config_joystick_sensitivity = 8;
 
@@ -221,7 +221,7 @@ int ReadConfigFile()
 	Config_digi_volume = 8;
 	Config_midi_volume = 8;
 	Config_redbook_volume = 8;
-	Config_control_type = 0;
+	Config_control_type = CONTROL_NONE;
 	Config_channels_reversed = 0;
 
 	//set these here in case no cfg file

@@ -1744,10 +1744,14 @@ void kconfig(int n, char * title)
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )	
 		kconfig_settings[0][i] = kc_keyboard[i].value;
 
-	if ( (Config_control_type>0) && (Config_control_type<5)) { 
+	if (Config_control_type == CONTROL_JOYSTICK ||
+	    Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+	    Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+	    Config_control_type == CONTROL_GRAVIS_GAMEPAD) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
 			kconfig_settings[Config_control_type][i] = kc_joystick[i].value;
-	} else if (Config_control_type>4 && Config_control_type<CONTROL_WINJOYSTICK) {
+	} else if (Config_control_type == CONTROL_MOUSE ||
+	           Config_control_type == CONTROL_CYBERMAN) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	
 			kconfig_settings[Config_control_type][i] = kc_mouse[i].value;
 	}
@@ -2094,7 +2098,7 @@ void controls_read_all_win()
 
 //	DO MOUSE 
 //	----------------------------------------------------------------------------
-	if (Config_control_type==5) {
+	if (Config_control_type == CONTROL_MOUSE) {
 		mouse_get_delta( &dx, &dy );
 		mouse_axis[0] = (dx*FrameTime)/35;
 		mouse_axis[1] = (dy*FrameTime)/25;
@@ -2716,7 +2720,10 @@ void controls_read_all()
 		if ((ctime < 0) && (LastReadTime > 0))
 			LastReadTime = ctime;
 		use_joystick=1;
-	} else if ((Config_control_type>0) && (Config_control_type<5) ) {
+	} else if (Config_control_type == CONTROL_JOYSTICK ||
+	           Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+	           Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+	           Config_control_type == CONTROL_GRAVIS_GAMEPAD) {
 		LastReadTime = ctime;
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
 		
@@ -2752,7 +2759,10 @@ void controls_read_all()
 	}
 #else
 	//---------  Read Joystick -----------
-	if ((Config_control_type>0) && (Config_control_type<5) ) {
+	if (Config_control_type == CONTROL_JOYSTICK ||
+	    Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+	    Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+	    Config_control_type == CONTROL_GRAVIS_GAMEPAD) {
 		channel_masks = joystick_read_raw_axis( JOY_ALL_AXIS, raw_joy_axis );
 		for (i=0; i<4; i++ )	{
 			if (channel_masks&(1<<i))	{
@@ -2782,7 +2792,7 @@ void controls_read_all()
 	}
 #endif		// ifndef MACINTOSH
 
-	if (Config_control_type==5 && !CybermouseActive) {
+	if (Config_control_type == CONTROL_MOUSE && !CybermouseActive) {
 		//---------  Read Mouse -----------
 		mouse_get_delta( &dx, &dy );
 		mouse_axis[0] = (dx*FrameTime)/35;
@@ -2790,7 +2800,7 @@ void controls_read_all()
 		mouse_buttons = mouse_get_btns();
 		//mprintf(( 0, "Mouse %d,%d b:%d, 0x%x\n", mouse_axis[0], mouse_axis[1], mouse_buttons, FrameTime ));
 		use_mouse=1;
-	} else if (Config_control_type==6 && !CybermouseActive) {
+	} else if (Config_control_type == CONTROL_CYBERMAN && !CybermouseActive) {
 		//---------  Read Cyberman -----------
 		mouse_get_cyberman_pos(&idx,&idy );
 		mouse_axis[0] = (idx*FrameTime)/128;
@@ -3370,7 +3380,10 @@ void kc_set_controls()
 	for (i=0; i<NUM_KEY_CONTROLS; i++ )	
 		kc_keyboard[i].value = kconfig_settings[0][i];
 
-	if ( (Config_control_type>0) && (Config_control_type<5)) {
+	if (Config_control_type == CONTROL_JOYSTICK ||
+	    Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+	    Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+	    Config_control_type == CONTROL_GRAVIS_GAMEPAD) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ ) {
 			kc_joystick[i].value = kconfig_settings[Config_control_type][i];
 			if (kc_joystick[i].type == BT_INVERT )	{
@@ -3379,7 +3392,8 @@ void kc_set_controls()
 				kconfig_settings[Config_control_type][i] = kc_joystick[i].value;
 			}
 		}
-	} else if (Config_control_type>4 && Config_control_type<CONTROL_WINJOYSTICK) {
+	} else if (Config_control_type == CONTROL_MOUSE ||
+	           Config_control_type == CONTROL_CYBERMAN) {
 		for (i=0; i<NUM_OTHER_CONTROLS; i++ )	{
 			kc_mouse[i].value = kconfig_settings[Config_control_type][i];
 			if (kc_mouse[i].type == BT_INVERT )	{

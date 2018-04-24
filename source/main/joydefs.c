@@ -748,9 +748,12 @@ void joydefs_config()
 					if (kconfig_is_axes_used(i))
 						old_masks |= (1<<i);
 				}
-				if ( Config_control_type==0 )
+				if (Config_control_type == CONTROL_NONE)
 					kconfig(0, TXT_KEYBOARD); 
-				else if ( Config_control_type<5 ) 
+				else if (Config_control_type == CONTROL_JOYSTICK ||
+				         Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+				         Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+				         Config_control_type == CONTROL_GRAVIS_GAMEPAD)
 					kconfig(1, CONTROL_TEXT(Config_control_type) ); 
 				else 
 					kconfig(2, CONTROL_TEXT(Config_control_type) ); 
