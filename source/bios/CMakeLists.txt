@@ -24,6 +24,11 @@ set(io_OTHERS
     mouse.h
     posix/findfile.c
     rbaudio.h
+    sdl/ipx.c
+    sdl/joyc.c
+    sdl/key.c
+    sdl/mouse.c
+    sdl/timer.c
     stub/rbaudio.c
     swiftcfg.h
     testj.c             testm.c             testms.c
@@ -67,6 +72,10 @@ elseif(TARGSYS MATCHES "^WIN32")
 else()
     list(APPEND io_SRCS
         posix/findfile.c
+        sdl/ipx.c
+        sdl/joyc.c
+        sdl/key.c
+        sdl/mouse.c
         sdl/timer.c
         stub/rbaudio.c
     )
