@@ -5128,7 +5128,7 @@ void multi_add_lifetime_kills ()
 
    int oldrank;
 
-   if (!Game_mode & GM_NETWORK)
+   if (!(Game_mode & GM_NETWORK))
       return;
 
    oldrank=GetMyNetRanking();
@@ -5155,7 +5155,7 @@ void multi_add_lifetime_killed ()
 
    int oldrank;
 
-   if (!Game_mode & GM_NETWORK)
+   if (!(Game_mode & GM_NETWORK))
       return;
 
    oldrank=GetMyNetRanking();
