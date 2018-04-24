@@ -197,7 +197,10 @@ RetrySelection:
       if (i==0) goto RetrySelection;
    }
 
-   if ( (Config_control_type>0) &&  (Config_control_type<5))   {
+   if (Config_control_type == CONTROL_JOYSTICK ||
+       Config_control_type == CONTROL_FLIGHTSTICK_PRO ||
+       Config_control_type == CONTROL_THRUSTMASTER_FCS ||
+       Config_control_type == CONTROL_GRAVIS_GAMEPAD) {
       joydefs_calibrate();
    }
    #else    // some macintosh only stuff here
