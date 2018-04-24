@@ -3474,7 +3474,7 @@ void CybermouseAdjust ()
 // 	Controls.automap_state |= kc_external_control->automap_state;
   } 
 
-char GetKeyValue (char key)
+ubyte GetKeyValue(char key)
   {
 	mprintf ((0,"Returning %c!\n",kc_keyboard[key].value));
    return (kc_keyboard[key].value);
