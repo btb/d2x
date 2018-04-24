@@ -2691,7 +2691,7 @@ void controls_read_all()
 	fix k0, k1, k2, k3, kp;
 	fix k4, k5, k6, k7, kh;
 	ubyte channel_masks;
-	int use_mouse, use_joystick;
+	int use_mouse = 0, use_joystick = 0;
 	int speed_factor=1;
 
 	if (Game_turbo_mode)
