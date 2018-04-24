@@ -67,6 +67,10 @@ elseif(TARGSYS MATCHES "^WIN32")
 else()
     list(APPEND io_SRCS
         posix/findfile.c
+        sdl/ipx.c
+        sdl/joyc.c
+        sdl/key.c
+        sdl/mouse.c
         sdl/timer.c
         stub/rbaudio.c
     )
