@@ -328,6 +328,7 @@ void show_bitmap_frame(void)
 
          // Adam: Change here for your new animating bitmap thing. 94, 94 are bitmap size.
          default: Int3();  // Impossible, illegal value for Animating_bitmap_type
+            return;
       }
 
       WINDOS(
