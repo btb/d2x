@@ -563,6 +563,10 @@ void start_wall_decloak(segment *seg, int side)
    if (w->type == WALL_CLOSED || w->state == WALL_DOOR_DECLOAKING)      //already closed or decloaking
       return;
 
+   csegp = &Segments[seg->children[side]];
+   Connectside = find_connect_side(seg, csegp);
+   Assert(Connectside != -1);
+
    if (w->state == WALL_DOOR_CLOAKING) {  //cloaking, so reuse door
 
       int i;
@@ -600,12 +604,6 @@ void start_wall_decloak(segment *seg, int side)
    }
 
    w->state = WALL_DOOR_DECLOAKING;
-
-   // So that door can't be shot while opening
-   csegp = &Segments[seg->children[side]];
-   Connectside = find_connect_side(seg, csegp);
-   Assert(Connectside != -1);
-
    Walls[csegp->sides[Connectside].wall_num].state = WALL_DOOR_DECLOAKING;
 
    d->front_wallnum = seg->sides[side].wall_num;
