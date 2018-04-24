@@ -60,9 +60,9 @@ if(NOT FIX_NO_ASM)
 	add_definitions(-DUSE_INLINE)
 endif()
 
-set(SUBSYSTEMS includes misc mem fix cfile 2d bios iff vecmat 3d texmap)
+set(SUBSYSTEMS includes misc mem fix cfile 2d bios iff vecmat 3d texmap vid)
 
-set(SUBSYSTEMS_OTHERS div ui vid win95 novga) # tactile unarj sosdigi sosmidi
+set(SUBSYSTEMS_OTHERS div ui win95) # tactile unarj sosdigi sosmidi
 
 option(PA_NULL          "Build Polygon Accelleration library" OFF)
 if(PA_NULL)
@@ -72,17 +72,13 @@ endif()
 include_directories(pa_null)
 
 if(TARGSYS MATCHES "^DOS4G$")
-    list(APPEND SUBSYSTEMS div ui vid) # tactile unarj sosdigi sosmidi
+    list(APPEND SUBSYSTEMS div ui) # tactile unarj sosdigi sosmidi
 
 elseif(TARGSYS MATCHES "^WIN32$")
     add_definitions(-DWINDOWS)
-    include_directories(vid)
-    list(APPEND SUBSYSTEMS novga win95) # tactile unarj
+    list(APPEND SUBSYSTEMS win95) # tactile unarj
 
 else()
-    include_directories(vid)
-    list(APPEND SUBSYSTEMS novga)
-
     find_package(SDL2 REQUIRED)
     include(FindPkgConfig)
     pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
