@@ -605,3 +605,26 @@ void g3_init_polygon_model(void *model_ptr)
    init_model_sub((ubyte *) model_ptr);
 }
 
+//this remaps the 15bpp colors for the models into a new palette.  It should
+//be called whenever the palette changes
+void g3_remap_interp_colors(void)
+{
+/*
+pushm eax,ebx
+
+xor   ebx,ebx  ;index
+remap_loop: cmp   ebx,n_interp_colors
+je done_remap
+
+xor   eax,eax
+mov   ax,interp_color_table+2[ebx*4]   ;get rgb15
+call  gr_find_closest_color_15bpp_
+mov   interp_color_table[ebx*4],ax     ;store pal entry
+
+inc   ebx
+jmp   remap_loop
+
+done_remap: popm  eax,ebx
+ret
+ */
+}
