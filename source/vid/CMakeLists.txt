@@ -6,6 +6,7 @@ set(vid_SRCS)
 
 set(vid_OTHERS
     makefile
+    sdl/palette.c
     sdl/vga.c
     stub/makefile
     stub/macstubs.c
@@ -38,6 +39,7 @@ elseif(TARGSYS MATCHES "^WIN32$")
 
 else()
     list(APPEND vid_SRCS
+        sdl/palette.c
         sdl/vga.c
     )
 
