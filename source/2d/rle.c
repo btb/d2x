@@ -663,6 +663,7 @@ void gr_rle_expand_scanline_generic_masked( grs_bitmap * dest, int dx, int dy, u
    }
 }
 
+#ifdef BM_SVGA
 
 void gr_rle_expand_scanline_svga_masked( grs_bitmap * dest, int dx, int dy, ubyte *src, int x1, int x2  )
 {
@@ -791,3 +792,4 @@ void gr_rle_expand_scanline_svga_masked( grs_bitmap * dest, int dx, int dy, ubyt
    }
 }
 
+#endif
