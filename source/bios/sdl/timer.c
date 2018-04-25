@@ -8,10 +8,12 @@
 
 #include "fix.h"
 #include "timer.h"
+#include "error.h"
 
 
 void timer_close(void)
 {
+   Int3();
    if (!SDL_WasInit(SDL_INIT_TIMER))
       return;
 
@@ -20,6 +22,7 @@ void timer_close(void)
 
 void timer_init(void)
 {
+   Int3();
    if (SDL_WasInit(SDL_INIT_TIMER))
       return;
 
@@ -28,6 +31,7 @@ void timer_init(void)
 
 fix timer_get_fixed_seconds(void)
 {
+   Int3();
    fix val;
    Uint32 time;
 
@@ -40,6 +44,7 @@ fix timer_get_fixed_seconds(void)
 
 fix timer_get_fixed_secondsX(void)
 {
+   Int3();
    fix val;
    Uint32 time;
 
@@ -52,6 +57,7 @@ fix timer_get_fixed_secondsX(void)
 
 fix timer_get_approx_seconds(void)
 {
+   Int3();
    fix val;
    Uint32 time;
 
@@ -64,6 +70,7 @@ fix timer_get_approx_seconds(void)
 
 void timer_delay(fix seconds)
 {
+   Int3();
    Uint32 numticks = f2i(fixmul(seconds, i2f(1000)));
 
    SDL_Delay(numticks);
@@ -71,5 +78,6 @@ void timer_delay(fix seconds)
 
 void delay(unsigned int milliseconds)
 {
+   Int3();
    SDL_Delay(milliseconds);
 }
