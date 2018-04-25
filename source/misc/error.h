@@ -27,7 +27,7 @@ void Error(char *fmt, ...) __noreturn;                  // exit with error code=
 
 #ifndef NDEBUG		//macros for debugging
 
-#ifndef MACINTOSH
+#ifdef __WATCOMC__
 
 	#ifdef WINDOWS
 		void WinInt3();
@@ -58,14 +58,19 @@ void Error(char *fmt, ...) __noreturn;                  // exit with error code=
 			"call _Assert";
 	#endif	
 
-#else		// ifndef MACINTOSH
+#elif defined(__clang__)
+
+#define Int3() __builtin_debugtrap()
+#define Assert(expr) _Assert(expr,#expr,__FILE__,__LINE__)
+
+#elif defined(MACINTOSH)
 
 extern int MacEnableInt3;
 
 #define Int3() do { key_close(); if (MacEnableInt3) Debugger(); } while(0)
 #define Assert(expr) MacAssert(expr,#expr,__FILE__,__LINE__)
 
-#endif		// ifndef MACINTOSH
+#endif
 
 #else					//macros for real game
 
