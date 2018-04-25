@@ -1831,7 +1831,7 @@ extern void gr_palette_step_up_vr( int r, int g, int b, int white, int black );
 void game_palette_step_up( int r, int g, int b )
 {
    if ( VR_use_reg_code )  {
-   #ifndef WINDOWS
+   #ifdef __DOS__
       gr_palette_step_up_vr( r, g, b, VR_WHITE_INDEX, VR_BLACK_INDEX );
    #endif
    } else {
