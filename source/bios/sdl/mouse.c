@@ -11,6 +11,7 @@
 #include "timer.h"
 #include "mouse.h"
 #include "key.h"
+#include "error.h"
 
 
 #define MOUSE_MAX_BUTTONS       11
@@ -35,17 +36,20 @@ static mouse_info Mouse;
 // else number of buttons
 int mouse_init(int enable_cyberman)
 {
+	Int3();
     return 2;
 }
 
 void mouse_get_delta( int *dx, int *dy )
 {
+	Int3();
 	*dx = 0;
 	*dy = 0;
 }
 
 int mouse_get_btns()
 {
+	Int3();
 	int i;
 	uint flag=1;
 	int status = 0;
@@ -60,6 +64,7 @@ int mouse_get_btns()
 
 void mouse_flush()
 {
+	Int3();
 	int i;
 	fix CurTime;
 
@@ -77,6 +82,7 @@ void mouse_flush()
 // Returns how many times this button has went down since last call.
 int mouse_button_down_count(int button) 
 {
+	Int3();
 	int count;
 
 	count = Mouse.num_downs[button];
@@ -88,6 +94,7 @@ int mouse_button_down_count(int button)
 // Returns 1 if this button is currently down
 int mouse_button_state(int button)      
 {
+	Int3();
 	int state;
 
 	state = Mouse.pressed[button];
@@ -98,6 +105,7 @@ int mouse_button_state(int button)
 // Returns how long this button has been down since last call.
 fix mouse_button_down_time(int button)  
 {
+	Int3();
 	fix time_down, time;
 
 	if ( !Mouse.pressed[button] ) {
