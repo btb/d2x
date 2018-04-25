@@ -320,6 +320,8 @@ void gr_ubitmap00m( int x, int y, grs_bitmap *bm )
 //"		jne	alignstart			"
 //"aligned4:							"
 
+#ifdef BM_MODEX
+
 void modex_copy_scanline( ubyte * src, ubyte * dest, int npixels );
 #ifndef GR_NO_ASM
 #pragma aux modex_copy_scanline parm [esi] [edi] [ecx] modify exact [ecx esi edi eax ebx edx] = \
@@ -473,7 +475,7 @@ void gr_bm_ubitblt01m(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap *
 	}
 }
 
-
+#endif
 
 
 void gr_ubitmap012( int x, int y, grs_bitmap *bm )
@@ -1208,6 +1210,7 @@ void gr_bm_ubitblt0xm_rle(int w, int h, int dx, int dy, int sx, int sy, grs_bitm
 
 }
 
+#ifdef BM_SVGA
 
 void gr_bm_ubitblt02m_rle(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest)
 {
@@ -1234,6 +1237,7 @@ void gr_bm_ubitblt02m_rle(int w, int h, int dx, int dy, int sx, int sy, grs_bitm
 	}
 }
 
+#endif
 
 void gr_bm_ubitblt(int w, int h, int dx, int dy, int sx, int sy, grs_bitmap * src, grs_bitmap * dest)
 {

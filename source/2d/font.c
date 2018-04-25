@@ -358,6 +358,7 @@ int gr_internal_string0m(int x, int y, char *s )
 	return 0;
 }
 
+#ifdef BM_SVGA
 
 int gr_internal_string2(int x, int y, char *s )
 {
@@ -748,6 +749,8 @@ int gr_internal_string2m(int x, int y, char *s )
 	}
 	return 0;
 }
+
+#endif
 
 #if defined(POLY_ACC)
 int gr_internal_string5(int x, int y, char *s )
