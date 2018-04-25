@@ -763,7 +763,7 @@ save_p1 = *fq.p1;
 
                   #ifdef EXTRA_DEBUG
                   if (obj == debug_obj) {
-                     printf("   sliding - wall_norm %x %x\n",wall_part,XYZ(&hit_info.hit_wallnorm));
+                     printf("   sliding - wall_norm %x %x %x\n", XYZ(&hit_info.hit_wallnorm));
                      printf("   wall_part %x, new velocity = %x %x %x\n",wall_part,XYZ(&obj->mtype.phys_info.velocity));
                   }
                   #endif
