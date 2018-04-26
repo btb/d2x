@@ -16,6 +16,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
+#include "d_rand.h"
+
 #include "game.h"
 #include "laser.h"
 #include "weapon.h"
@@ -814,7 +816,7 @@ void rock_the_mine_frame(void)
          if (!Seismic_sound_playing) {
             digi_play_sample_looping(Seismic_sound, F1_0, -1, -1);
             Seismic_sound_playing = 1;
-            Next_seismic_sound_time = GameTime + rand()/2;
+            Next_seismic_sound_time = GameTime + d_rand()/2;
          }
 
          if (delta_time < SMEGA_SHAKE_TIME) {
@@ -833,8 +835,8 @@ void rock_the_mine_frame(void)
 
             Seismic_tremor_volume += fc;
 
-            rx = fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-            rz = fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+            rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+            rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
 
             ConsoleObject->mtype.phys_info.rotvel.x += rx;
             ConsoleObject->mtype.phys_info.rotvel.z += rz;
@@ -884,7 +886,7 @@ int start_seismic_disturbance(void)
    if (Level_shake_duration < 1)
       return 0;
 
-   rval =  (2 * fixmul(rand(), Level_shake_frequency)) < FrameTime;
+   rval =  (2 * fixmul(d_rand(), Level_shake_frequency)) < FrameTime;
 
    if (rval) {
       Seismic_disturbance_start_time = GameTime;
@@ -892,7 +894,7 @@ int start_seismic_disturbance(void)
       if (!Seismic_sound_playing) {
          digi_play_sample_looping(Seismic_sound, F1_0, -1, -1);
          Seismic_sound_playing = 1;
-         Next_seismic_sound_time = GameTime + rand()/2;
+         Next_seismic_sound_time = GameTime + d_rand()/2;
       }
 
       if (Game_mode & GM_MULTI)
@@ -921,8 +923,8 @@ void seismic_disturbance_frame(void)
 
          Seismic_tremor_volume += fc;
 
-         rx = fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
-         rz = fixmul(rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+         rx = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
+         rz = fixmul(d_rand() - 16384, 3*F1_0/16 + (F1_0*(16-fc))/32);
 
          ConsoleObject->mtype.phys_info.rotvel.x += rx;
          ConsoleObject->mtype.phys_info.rotvel.z += rz;
@@ -1047,9 +1049,9 @@ int spit_powerup(object *spitter, int id,int seed)
 
    vm_vec_scale_add(&new_velocity,&spitter->mtype.phys_info.velocity,&spitter->orient.fvec,i2f(SPIT_SPEED));
 
-   new_velocity.x += (rand() - 16384) * SPIT_SPEED * 2;
-   new_velocity.y += (rand() - 16384) * SPIT_SPEED * 2;
-   new_velocity.z += (rand() - 16384) * SPIT_SPEED * 2;
+   new_velocity.x += (d_rand() - 16384) * SPIT_SPEED * 2;
+   new_velocity.y += (d_rand() - 16384) * SPIT_SPEED * 2;
+   new_velocity.z += (d_rand() - 16384) * SPIT_SPEED * 2;
 
    // Give keys zero velocity so they can be tracked better in multi
 
@@ -1100,13 +1102,13 @@ int spit_powerup(object *spitter, int id,int seed)
       case POW_MISSILE_4:
       case POW_SHIELD_BOOST:
       case POW_ENERGY:
-         obj->lifeleft = (rand() + F1_0*3) * 64;      // Lives for 3 to 3.5 binary minutes (a binary minute is 64 seconds)
+         obj->lifeleft = (d_rand() + F1_0*3) * 64;       // Lives for 3 to 3.5 binary minutes (a binary minute is 64 seconds)
          if (Game_mode & GM_MULTI)
             obj->lifeleft /= 2;
          break;
       default:
          //if (Game_mode & GM_MULTI)
-         // obj->lifeleft = (rand() + F1_0*3) * 64;      // Lives for 5 to 5.5 binary minutes (a binary minute is 64 seconds)
+         // obj->lifeleft = (d_rand() + F1_0*3) * 64;   // Lives for 5 to 5.5 binary minutes (a binary minute is 64 seconds)
          break;
    }
 
@@ -1126,7 +1128,7 @@ void DropCurrentWeapon ()
    HUD_init_message("%s dropped!",PRIMARY_WEAPON_NAMES(Primary_weapon));
    digi_play_sample (SOUND_DROP_WEAPON,F1_0);
 
-   seed = rand();
+   seed = d_rand();
 
    objnum = spit_powerup(ConsoleObject,Primary_weapon_to_powerup[Primary_weapon],seed);
 
@@ -1185,7 +1187,7 @@ void DropSecondaryWeapon ()
    HUD_init_message("%s dropped!",SECONDARY_WEAPON_NAMES(Secondary_weapon));
    digi_play_sample (SOUND_DROP_WEAPON,F1_0);
 
-   seed = rand();
+   seed = d_rand();
 
    objnum = spit_powerup(ConsoleObject,Secondary_weapon_to_powerup[Secondary_weapon],seed);
 
@@ -1235,7 +1237,7 @@ void do_seismic_stuff(void)
          if (volume > F1_0)
             volume = F1_0;
          digi_change_looping_volume(volume);
-         Next_seismic_sound_time = GameTime + rand()/4 + 8192;
+         Next_seismic_sound_time = GameTime + d_rand()/4 + 8192;
       }
    }
 

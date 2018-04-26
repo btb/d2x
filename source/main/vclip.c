@@ -15,6 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "error.h"
+#include "d_rand.h"
 
 #include "inferno.h"
 #include "vclip.h"
@@ -71,7 +72,7 @@ void draw_weapon_vclip(object *obj)
 
    // Should cause Omega blobs (which live for one frame) to not always be the same.
    if (modtime == ONE_FRAME_TIME)
-      modtime = rand();
+      modtime = d_rand();
 
    if (obj->id == PROXIMITY_ID) {      //make prox bombs spin out of sync
       int objnum = obj-Objects;

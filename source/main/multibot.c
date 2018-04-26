@@ -16,6 +16,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdlib.h>
 
 #include "vecmat.h"
+#include "d_rand.h"
+
 #include "multibot.h"
 #include "game.h"
 #include "modem.h"
@@ -1233,8 +1235,8 @@ multi_drop_robot_powerups(int objnum)
 
    else if (robptr->contains_count) {
       srand(timer_get_approx_seconds());
-      if (((rand() * 16) >> 15) < robptr->contains_prob) {
-         del_obj->contains_count = ((rand() * robptr->contains_count) >> 15) + 1;
+      if (((d_rand() * 16) >> 15) < robptr->contains_prob) {
+         del_obj->contains_count = ((d_rand() * robptr->contains_count) >> 15) + 1;
          del_obj->contains_type = robptr->contains_type;
          del_obj->contains_id = robptr->contains_id;
          if (del_obj->contains_type == OBJ_POWERUP)
@@ -1287,7 +1289,9 @@ void multi_robot_request_change(object *robot, int player_num)
    mprintf((0, "request_change(): my pri %d, player %d's pri %d.\n", MULTI_ROBOT_PRIORITY(remote_objnum, Player_num),
            player_num, MULTI_ROBOT_PRIORITY(remote_objnum, player_num)));
 
-   if ( (robot_agitation[slot] < 70) || (MULTI_ROBOT_PRIORITY(remote_objnum, player_num) > MULTI_ROBOT_PRIORITY(remote_objnum, Player_num)) || (rand() > 0x4400))
+   if ((robot_agitation[slot] < 70) ||
+       (MULTI_ROBOT_PRIORITY(remote_objnum, player_num) > MULTI_ROBOT_PRIORITY(remote_objnum, Player_num)) ||
+       (d_rand() > 0x4400))
    {
       mprintf((0, "Robot %d (%d) released because it got hit by Player %d.\n", robot-Objects, remote_objnum, player_num));
       if (robot_send_pending[slot])

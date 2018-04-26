@@ -2,6 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "d_rand.h"
+
 double real_mag(double a,double b,double c)
 {
    return sqrt(a*a + b*b + c*c);
@@ -72,9 +74,9 @@ int main(int argc,char **argv)
 
       do {
 
-         a = (double) rand() * TEST_RANGE / (double) RAND_MAX;
-         b = (double) rand() * TEST_RANGE / (double) RAND_MAX;
-         c = (double) rand() * TEST_RANGE / (double) RAND_MAX;
+         a = (double) d_rand() * TEST_RANGE / (double) D_RAND_MAX;
+         b = (double) d_rand() * TEST_RANGE / (double) D_RAND_MAX;
+         c = (double) d_rand() * TEST_RANGE / (double) D_RAND_MAX;
 
          //printf("%lf %lf %lf \n",a,b,c);
 

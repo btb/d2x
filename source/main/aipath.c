@@ -13,8 +13,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 #include <stdio.h>      // for printf()
-#include <stdlib.h>     // for rand() and qsort()
+#include <stdlib.h>     // for qsort()
 #include <string.h>     // for memset()
+
+#include "d_rand.h"
 
 #include "inferno.h"
 #include "mono.h"
@@ -59,7 +61,7 @@ void create_random_xlate(sbyte *xt)
       xt[i] = i;
 
    for (i=0; i<MAX_SIDES_PER_SEGMENT; i++) {
-      int   j = (rand()*MAX_SIDES_PER_SEGMENT)/(RAND_MAX+1);
+      int j = (d_rand()*MAX_SIDES_PER_SEGMENT)/(D_RAND_MAX+1);
       sbyte temp_byte;
       Assert((j >= 0) && (j < MAX_SIDES_PER_SEGMENT));
 
@@ -169,8 +171,8 @@ void move_towards_outside(point_seg *psegs, int *num_points, object *objp, int r
       if (labs(vm_vec_dot(&a, &b)) > 3*F1_0/4 ) {
          if (labs(a.z) < F1_0/2) {
             if (rand_flag) {
-               e.x = (rand()-16384)/2;
-               e.y = (rand()-16384)/2;
+               e.x = (d_rand()-16384)/2;
+               e.y = (d_rand()-16384)/2;
                e.z = labs(e.x) + labs(e.y) + 1;
                vm_vec_normalize_quick(&e);
             } else {
@@ -180,8 +182,8 @@ void move_towards_outside(point_seg *psegs, int *num_points, object *objp, int r
             }
          } else {
             if (rand_flag) {
-               e.y = (rand()-16384)/2;
-               e.z = (rand()-16384)/2;
+               e.y = (d_rand()-16384)/2;
+               e.z = (d_rand()-16384)/2;
                e.x = labs(e.y) + labs(e.z) + 1;
                vm_vec_normalize_quick(&e);
             } else {
@@ -327,7 +329,7 @@ if ((objp->type == OBJ_ROBOT) && (objp->ctype.ai_info.behavior == AIB_RUN_FROM))
       segment  *segp = &Segments[cur_seg];
 
       if (random_flag)
-         if (rand() < 8192)
+         if (d_rand() < 8192)
             create_random_xlate(random_xlate);
 
       // mprintf((0, "\n"));
@@ -1067,7 +1069,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
             } else {
                fix   prob = fixdiv(distance_travellable, dist_to_goal);
 
-               int   rand_num = rand();
+               int rand_num = d_rand();
                if ( (rand_num >> 1) < prob) {
                   move_object_to_goal(objp, &goal_point, goal_seg);
                }
@@ -1163,7 +1165,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
             if (Escort_special_goal == ESCORT_GOAL_SCRAM)
             {
                if (player_visibility) {
-                  create_n_segment_path(objp, 16 + rand() * 16, -1);
+                  create_n_segment_path(objp, 16 + d_rand() * 16, -1);
                   aip->path_length = polish_path(objp, &Point_segs[aip->hide_index], aip->path_length);
                   Assert(aip->path_length != 0);
                   // -- mprintf((0, "Buddy: Creating new path!\n"));
@@ -1504,7 +1506,7 @@ void attempt_to_resume_path(object *objp)
    // mprintf((0, "Object %i trying to resume path at index %i\n", objp-Objects, aip->cur_path_index));
 
    if ((aip->behavior == AIB_STATION) && (Robot_info[objp->id].companion != 1))
-      if (rand() > 8192) {
+      if (d_rand() > 8192) {
          ai_local       *ailp = &Ai_local_info[objp-Objects];
 
          aip->hide_segment = objp->segnum;
@@ -1549,8 +1551,8 @@ void test_create_path_many(void)
    int         i;
 
    for (i=0; i<Test_size; i++) {
-      Cursegp = &Segments[(rand() * (Highest_segment_index + 1)) / RAND_MAX];
-      Markedsegp = &Segments[(rand() * (Highest_segment_index + 1)) / RAND_MAX];
+      Cursegp = &Segments[(d_rand() * (Highest_segment_index + 1)) / D_RAND_MAX];
+      Markedsegp = &Segments[(d_rand() * (Highest_segment_index + 1)) / D_RAND_MAX];
       create_path_points(&Objects[0], Cursegp-Segments, Markedsegp-Segments, point_segs, &num_points, -1, 0, 0, -1);
    }
 

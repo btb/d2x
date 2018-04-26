@@ -25,6 +25,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pa_enabl.h"       //$$POLY_ACC
 #include "fast.h" // Commlib stuff
+#include "d_rand.h"
+
 #include "game.h"
 #include "scores.h"
 #include "modem.h"
@@ -2242,7 +2244,7 @@ void serial_link_start(void)
    synccnt = 0;
 
    srand(clock());
-   my_sync.sync_time = rand();
+   my_sync.sync_time = d_rand();
    mprintf((0, "My rand set to %d.\n", my_sync.sync_time));
 
    if (!com_connect())
@@ -2301,7 +2303,7 @@ com_level_sync(void)
    if (Game_mode & GM_MULTI_COOP)
       my_sync.difficulty = Player_num;
    else
-      my_sync.difficulty = rand()%MAX_NUM_NET_PLAYERS; // My starting position
+      my_sync.difficulty = d_rand()%MAX_NUM_NET_PLAYERS; // My starting position
 
    if (com_sync(Current_level_num))
    {

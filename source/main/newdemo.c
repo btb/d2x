@@ -25,6 +25,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <io.h>
 #endif
 
+#include "d_rand.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "gr.h"
@@ -3149,7 +3151,7 @@ void newdemo_start_playback(char * filename)
       if ( NumFiles == 0 ) {
          return;     // No files found!
       }
-      RandFileNum = rand() % NumFiles;
+      RandFileNum = d_rand() % NumFiles;
       NumFiles = 0;
       if( !FileFindFirst( "demos\\*.DEM", &find ) )   {
          do {
