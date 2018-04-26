@@ -29,6 +29,7 @@ set(io_OTHERS
     sdl/key.c
     sdl/mouse.c
     sdl/timer.c
+    stub/mono.c
     stub/rbaudio.c
     swiftcfg.h
     testj.c             testm.c             testms.c
@@ -77,6 +78,7 @@ else()
         sdl/key.c
         sdl/mouse.c
         sdl/timer.c
+        stub/mono.c
         stub/rbaudio.c
     )
 
