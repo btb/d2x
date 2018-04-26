@@ -14,6 +14,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <stdlib.h>
 
+#include "d_rand.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "bm.h"
@@ -765,7 +767,7 @@ int Laser_create_new( vms_vector * direction, vms_vector * position, int segnum,
 		fix	randval;
 
 		//	Get a scale factor between speedvar% and 1.0.
-		randval = F1_0 - ((rand() * Weapon_info[obj->id].speedvar) >> 6);
+		randval = F1_0 - ((d_rand() * Weapon_info[obj->id].speedvar) >> 6);
 		weapon_speed = fixmul(weapon_speed, randval);
 	}
 
@@ -785,7 +787,7 @@ int Laser_create_new( vms_vector * direction, vms_vector * position, int segnum,
 	}
 
 	if ((obj->type == OBJ_WEAPON) && (obj->id == FLARE_ID))
-		obj->lifeleft += (rand()-16384) << 2;		//	add in -2..2 seconds
+		obj->lifeleft += (d_rand()-16384) << 2; // add in -2..2 seconds
 
 	//	mprintf( 0, "Weapon speed = %.1f (%.1f)\n", f2fl(Weapon_info[obj->id].speed[Difficulty_level] + parent_speed), f2fl(parent_speed) );
 
@@ -1828,7 +1830,7 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 		case LASER_INDEX: {
 			int weapon_num;
 
-			Laser_offset = ((F1_0*2)*(rand()%8))/8;
+			Laser_offset = ((F1_0*2)*(d_rand()%8))/8;
 
 			if (level <= MAX_LASER_LEVEL)
 				weapon_num = LASER_ID + level;
@@ -1848,13 +1850,13 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 		case VULCAN_INDEX: {
 			//	Only make sound for 1/4 of vulcan bullets.
 			int	make_sound = 1;
-			//if (rand() > 24576)
+			//if (d_rand() > 24576)
 			//	make_sound = 1;
-			Laser_player_fire_spread( objp, VULCAN_ID, 6, rand()/8 - 32767/16, rand()/8 - 32767/16, make_sound, 0);
+			Laser_player_fire_spread( objp, VULCAN_ID, 6, d_rand()/8 - 32767/16, d_rand()/8 - 32767/16, make_sound, 0);
 			if (nfires > 1) {
-				Laser_player_fire_spread( objp, VULCAN_ID, 6, rand()/8 - 32767/16, rand()/8 - 32767/16, 0, 0);
+				Laser_player_fire_spread( objp, VULCAN_ID, 6, d_rand()/8 - 32767/16, d_rand()/8 - 32767/16, 0, 0);
 				if (nfires > 2) {
-					Laser_player_fire_spread( objp, VULCAN_ID, 6, rand()/8 - 32767/16, rand()/8 - 32767/16, 0, 0);
+					Laser_player_fire_spread( objp, VULCAN_ID, 6, d_rand()/8 - 32767/16, d_rand()/8 - 32767/16, 0, 0);
 				}
 			}
 			break;
@@ -1897,9 +1899,9 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 			force_vec.z = -(objp->orient.fvec.z << 7);
 			phys_apply_force(objp, &force_vec);
 
-			force_vec.x = (force_vec.x >> 4) + rand() - 16384;
-			force_vec.y = (force_vec.y >> 4) + rand() - 16384;
-			force_vec.z = (force_vec.z >> 4) + rand() - 16384;
+			force_vec.x = (force_vec.x >> 4) + d_rand() - 16384;
+			force_vec.y = (force_vec.y >> 4) + d_rand() - 16384;
+			force_vec.z = (force_vec.z >> 4) + d_rand() - 16384;
 			phys_apply_rot(objp, &force_vec);
 
 		}
@@ -1919,14 +1921,14 @@ int do_laser_firing(int objnum, int weapon_num, int level, int flags, int nfires
 		case GAUSS_INDEX: {
 			//	Only make sound for 1/4 of vulcan bullets.
 			int	make_sound = 1;
-			//if (rand() > 24576)
+			//if (d_rand() > 24576)
 			//	make_sound = 1;
 			
-			Laser_player_fire_spread( objp, GAUSS_ID, 6, (rand()/8 - 32767/16)/5, (rand()/8 - 32767/16)/5, make_sound, 0);
+			Laser_player_fire_spread( objp, GAUSS_ID, 6, (d_rand()/8 - 32767/16)/5, (d_rand()/8 - 32767/16)/5, make_sound, 0);
 			if (nfires > 1) {
-				Laser_player_fire_spread( objp, GAUSS_ID, 6, (rand()/8 - 32767/16)/5, (rand()/8 - 32767/16)/5, 0, 0);
+				Laser_player_fire_spread( objp, GAUSS_ID, 6, (d_rand()/8 - 32767/16)/5, (d_rand()/8 - 32767/16)/5, 0, 0);
 				if (nfires > 2) {
-					Laser_player_fire_spread( objp, GAUSS_ID, 6, (rand()/8 - 32767/16)/5, (rand()/8 - 32767/16)/5, 0, 0);
+					Laser_player_fire_spread( objp, GAUSS_ID, 6, (d_rand()/8 - 32767/16)/5, (d_rand()/8 - 32767/16)/5, 0, 0);
 				}
 			}
 			break;
@@ -2153,7 +2155,7 @@ void create_smart_children(object *objp, int num_smart_children)
 		make_sound = 1;
 		for (i=0; i<num_smart_children; i++) {
 			int objnum;
-			objnum = (numobjs==0)?-1:objlist[(rand() * numobjs) >> 15];
+			objnum = (numobjs==0) ? -1 : objlist[(d_rand() * numobjs) >> 15];
 			create_homing_missile(objp, objnum, blob_id, make_sound);
 			make_sound = 0;
 		}
@@ -2243,9 +2245,9 @@ void do_missile_firing(int do_autoselect)
 			force_vec.z = -(ConsoleObject->orient.fvec.z << 7);
 			phys_apply_force(ConsoleObject, &force_vec);
 	
-			force_vec.x = (force_vec.x >> 4) + rand() - 16384;
-			force_vec.y = (force_vec.y >> 4) + rand() - 16384;
-			force_vec.z = (force_vec.z >> 4) + rand() - 16384;
+			force_vec.x = (force_vec.x >> 4) + d_rand() - 16384;
+			force_vec.y = (force_vec.y >> 4) + d_rand() - 16384;
+			force_vec.z = (force_vec.z >> 4) + d_rand() - 16384;
 			phys_apply_rot(ConsoleObject, &force_vec);
 		}
 

@@ -27,6 +27,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "minmax.h"
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "vga.h"
+#include "d_rand.h"
 
 #include "menu.h"
 #include "inferno.h"
@@ -222,7 +223,7 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 
 try_again:;
 
-			if ((rand() % (n_demos+1)) == 0)
+			if ((d_rand() % (n_demos+1)) == 0)
 			{
 				#ifndef SHAREWARE
 					#ifdef WINDOWS

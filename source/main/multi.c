@@ -23,6 +23,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <time.h>
 #include <ctype.h>
 
+#include "d_rand.h"
+
 #include "game.h"
 #include "modem.h"
 #include "network.h"
@@ -4811,7 +4813,7 @@ void DropOrb ()
 		return;
 	}
 
-	seed = rand();
+	seed = d_rand();
 
    objnum = spit_powerup(ConsoleObject,POW_HOARD_ORB,seed);
  	 
@@ -4853,7 +4855,7 @@ void DropFlag ()
 	HUD_init_message("Flag dropped!");
 	digi_play_sample (SOUND_DROP_WEAPON,F1_0);
 
-	seed = rand();
+	seed = d_rand();
 
    if (get_team (Player_num)==TEAM_RED)
 	 objnum = spit_powerup(ConsoleObject,POW_FLAG_BLUE,seed);

@@ -23,6 +23,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "timer.h"
 #include "mono.h"
 #include "ipx.h"
+#include "d_rand.h"
+
 #include "newmenu.h"
 #include "key.h"
 #include "gauges.h"
@@ -3449,7 +3451,7 @@ network_send_sync(void)
 		else {
 			do 
 			{
-				np = rand() % NumNetPlayerPositions;
+				np = d_rand() % NumNetPlayerPositions;
 				for (j=0; j<i; j++ )    
 				{
 					if (Netgame.locations[j]==np)   
@@ -3832,7 +3834,7 @@ network_start_game()
 	network_set_game_mode(Netgame.gamemode);
 
    srand( timer_get_fixed_seconds() );
-   Netgame.Security=rand();  // For syncing Netgames with player packets
+   Netgame.Security = d_rand(); // For syncing Netgames with player packets
 
 	if(network_select_players())
 	{

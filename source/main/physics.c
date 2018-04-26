@@ -19,6 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "joy.h"
 #include "mono.h"
 #include "error.h"
+#include "d_rand.h"
 
 #include "inferno.h"
 #include "segment.h"
@@ -1109,7 +1110,7 @@ void phys_apply_rot(object *obj,vms_vector *force_vec)
 
 					addval = f2i(tval);
 
-					if ( (rand() * 2) < (tval & 0xffff))
+					if ( (d_rand() * 2) < (tval & 0xffff))
 						addval++;
 					obj->ctype.ai_info.SKIP_AI_COUNT += addval;
 					// -- mk: too much stuff making hard to see my debug messages...mprintf((0, "FrameTime = %7.3f, addval = %i\n", f2fl(FrameTime), addval));

@@ -28,6 +28,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "pa_enabl.h"                   //$$POLY_ACC
+#include "d_rand.h"
+
 #include "inferno.h"
 #include "game.h"
 #include "player.h"
@@ -2204,7 +2206,7 @@ void InitPlayerPosition(int random_flag)
 			}
 			trys++;
 
-			NewPlayer = rand() % NumNetPlayerPositions;
+			NewPlayer = d_rand() % NumNetPlayerPositions;
 
 			closest = -1;
 			closest_dist = 0x7fffffff;

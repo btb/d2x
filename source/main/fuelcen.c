@@ -17,6 +17,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <math.h>
 #include <string.h>
 
+#include "d_rand.h"
+
 #include "fuelcen.h"
 #include "gameseg.h"
 #include "game.h"		// For FrameTime
@@ -443,11 +445,11 @@ void robotmaker_proc( FuelCenter * robotcen )
 		else 
 		{
 			dist_to_player = vm_vec_dist_quick( &ConsoleObject->pos, &robotcen->Center );
-			top_time = dist_to_player/64 + rand() * 2 + F1_0*2;
+			top_time = dist_to_player/64 + d_rand() * 2 + F1_0*2;
 			if ( top_time > ROBOT_GEN_TIME )
-				top_time = ROBOT_GEN_TIME + rand();
+				top_time = ROBOT_GEN_TIME + d_rand();
 			if ( top_time < F1_0*2 )
-				top_time = F1_0*3/2 + rand()*2;
+				top_time = F1_0*3/2 + d_rand()*2;
 		}
 
  		// mprintf( (0, "Time between morphs %d seconds, dist_to_player = %7.3f\n", f2i(top_time), f2fl(dist_to_player) ));
@@ -540,7 +542,7 @@ void robotmaker_proc( FuelCenter * robotcen )
 				if (num_types == 1)
 					type = legal_types[0];
 				else
-					type = legal_types[(rand() * num_types) / 32768];
+					type = legal_types[(d_rand() * num_types) / 32768];
 
 				mprintf((0, "Morph: (type = %i) (seg = %i) (capacity = %08x)\n", type, robotcen->segnum, robotcen->Capacity));
 				obj = create_morph_robot(&Segments[robotcen->segnum], &cur_object_loc, type );

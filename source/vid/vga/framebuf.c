@@ -18,6 +18,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <i86.h>
 #include <dos.h>
+
+#include "d_rand.h"
 #include "mono.h"
 
 
@@ -79,7 +81,7 @@ void VesaMain()
    {
 		char *MyPtr;
 		MyPtr=(char *)VesaGetPtr();	
-		  memset( (MyPtr+((rand()%0x10000)<<4)+rand()%0x10000),rand()%256, 1 );
+		memset((MyPtr + ((d_rand()%0x10000)<<4) + rand()%0x10000), rand()%256, 1);
    }
 
    VesaEnd();

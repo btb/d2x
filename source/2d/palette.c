@@ -30,6 +30,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "fix.h"
 #include "key.h"
+#include "d_rand.h"
+
 #include "palette.h"
 
 #if defined(POLY_ACC)
@@ -132,7 +134,7 @@ void add_computed_color(int r, int g, int b, int color_num)
 		add_index = Num_computed_colors;
 		Num_computed_colors++;
 	} else
-		add_index = (rand() * MAX_COMPUTED_COLORS) >> 15;
+		add_index = (d_rand() * MAX_COMPUTED_COLORS) >> 15;
 
 	Computed_colors[add_index].r = r;
 	Computed_colors[add_index].g = g;
