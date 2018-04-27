@@ -1386,6 +1386,9 @@ grs_font * gr_init_font( char * fontname )
 
    cfclose(fontfile);
 
+   if (!grd_curcanv)
+      return font;
+
    //set curcanv vars
 
    FONT        = font;
