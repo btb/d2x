@@ -1157,6 +1157,11 @@ int robot_movies=0;  //0 means none, 1 means lowres, 2 means hires
 void init_movie(char *filename, int libnum, int is_robots, int required)
 {
    int high_res;
+   char temp[13];
+
+   // make writable copy of filename
+   strcpy(temp, filename);
+   filename = temp;
 
    #ifndef RELEASE
    if (FindArg("-nomovies")) {
