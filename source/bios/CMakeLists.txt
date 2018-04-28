@@ -23,6 +23,7 @@ set(io_OTHERS
     mono.h
     mouse.h
     posix/findfile.c
+    posix/terminal.c
     rbaudio.h
     sdl/ipx.c
     sdl/joyc.c
@@ -73,6 +74,7 @@ elseif(TARGSYS MATCHES "^WIN32")
 else()
     list(APPEND io_SRCS
         posix/findfile.c
+        posix/terminal.c
         sdl/ipx.c
         sdl/joyc.c
         sdl/key.c
