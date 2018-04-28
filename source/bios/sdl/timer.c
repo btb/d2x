@@ -13,7 +13,6 @@
 
 void timer_close(void)
 {
-   Int3();
    if (!SDL_WasInit(SDL_INIT_TIMER))
       return;
 
@@ -22,7 +21,6 @@ void timer_close(void)
 
 void timer_init(void)
 {
-   Int3();
    if (SDL_WasInit(SDL_INIT_TIMER))
       return;
 
@@ -31,7 +29,6 @@ void timer_init(void)
 
 fix timer_get_fixed_seconds(void)
 {
-   Int3();
    fix val;
    Uint32 time;
 
@@ -44,7 +41,6 @@ fix timer_get_fixed_seconds(void)
 
 fix timer_get_fixed_secondsX(void)
 {
-   Int3();
    fix val;
    Uint32 time;
 

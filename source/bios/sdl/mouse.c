@@ -31,13 +31,30 @@ typedef struct mouse_info {
 
 static mouse_info Mouse;
 
+static int Mouse_installed = 0;
+
 //--------------------------------------------------------
 // returns 0 if no mouse
 // else number of buttons
 int mouse_init(int enable_cyberman)
 {
-   Int3();
-   return 2;
+   if (Mouse_installed)
+      return 2;
+
+   Mouse_installed = 1;
+
+   atexit(mouse_close);
+
+   mouse_flush();
+
+    return 2;
+}
+
+void mouse_close()
+{
+   if (Mouse_installed) {
+      Mouse_installed = 0;
+   }
 }
 
 void mouse_get_delta(int *dx, int *dy)
@@ -64,7 +81,6 @@ int mouse_get_btns(void)
 
 void mouse_flush(void)
 {
-   Int3();
    int i;
    fix CurTime;
 

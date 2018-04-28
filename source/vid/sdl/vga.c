@@ -24,7 +24,6 @@ static int sdl_video_flags = SDL_SWSURFACE;
 
 void vga_close(void)
 {
-   Int3();
    if (!SDL_WasInit(SDL_INIT_VIDEO))
       return;
 
@@ -33,7 +32,6 @@ void vga_close(void)
 
 short vga_init(void)
 {
-   Int3();
    if (SDL_WasInit(SDL_INIT_VIDEO))
       return 1;
 
@@ -76,7 +74,6 @@ short vga_set_mode(short mode)
 
 short vga_check_mode(short mode)
 {
-   Int3();
    switch(mode) {
       case SM_320x200C:
       case SM_640x480V:
