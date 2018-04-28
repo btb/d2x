@@ -47,6 +47,7 @@ endif()
 
 list(REMOVE_ITEM vid_OTHERS ${vid_SRCS})
 set_source_files_properties(${vid_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${vid_SRCS} ${vid_OTHERS})
 
 add_library(vid ${vid_SRCS} ${vid_OTHERS})
 

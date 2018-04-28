@@ -88,6 +88,7 @@ endif()
 
 list(REMOVE_ITEM io_OTHERS ${io_SRCS})
 set_source_files_properties(${io_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${io_SRCS} ${io_OTHERS})
 
 add_library(io ${io_SRCS} ${io_OTHERS})
 

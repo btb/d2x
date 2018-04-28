@@ -250,6 +250,7 @@ set(d2share_DATA   ${descent2_DATA})
 list(REMOVE_ITEM descent2_OTHERS ${descent2_SRCS})
 
 set_source_files_properties(${descent2_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${descent2_SRCS} ${descent2_OTHERS})
 
 add_executable(${PROGS} ${descent2_SRCS} ${descent2_OTHERS})
 
