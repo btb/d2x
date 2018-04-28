@@ -19,6 +19,9 @@ int VGA_current_mode = SM_ORIGINAL;
 
 static int sdl_video_flags = SDL_SWSURFACE;
 
+SDL_Surface *screen;
+SDL_Texture *texture;
+
 
 // VGA Functions --------------------------------------------------------------
 
@@ -44,7 +47,6 @@ short vga_init(void)
 
 short vga_set_mode(short mode)
 {
-   Int3();
    unsigned int w, h;
 
    if (!SDL_WasInit(SDL_INIT_VIDEO))
@@ -64,11 +66,21 @@ short vga_set_mode(short mode)
 
    VGA_current_mode = mode;
 
-   gr_palette_clear();
+   if (screen != NULL)
+      gr_palette_clear();
 
-// screen = SDL_SetVideoMode(w, h, 8, sdl_video_flags);
+   SDL_Window *window = SDL_CreateWindow("Descent II",
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED,
+                             w, h,
+                             sdl_video_flags);
+   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
-// return gr_init_screen(BM_LINEAR, w, h, 0, 0, w, screen->pixels);
+   screen = SDL_CreateRGBSurfaceWithFormat(0, w, h, 8, SDL_PIXELFORMAT_INDEX8);
+   texture = SDL_CreateTextureFromSurface(renderer, screen);
+
+   return gr_init_screen(BM_LINEAR, w, h, 0, 0, w, screen->pixels);
+
    return 1;
 }
 
