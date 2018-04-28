@@ -18,6 +18,6 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "3d.h"
 
-extern	g3s_point	Segment_points[];
+extern   g3s_point   Segment_points[];
 
 #endif

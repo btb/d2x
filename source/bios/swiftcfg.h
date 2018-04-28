@@ -15,8 +15,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _SWIFTCFG_H
 #define _SWIFTCFG_H
 
-/* SWIFT configuration parameters			*/
-/* used to control compilation of SWIFT.C		*/
+/* SWIFT configuration parameters         */
+/* used to control compilation of SWIFT.C    */
 
 // Standard configurations, for which we automatically configure.
 // WATCOM C 9.0, target: 32-bit code, Rational DOS/4GW extender

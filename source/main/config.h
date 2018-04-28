@@ -30,16 +30,16 @@ extern ubyte Config_midi_volume;
 #ifdef MACINTOSH
 typedef struct ConfigInfoStruct
 {
-	ubyte	mDoNotDisplayOptions;
-	ubyte	mUse11kSounds;
-	ubyte	mDisableSound;
-	ubyte	mDisableMIDIMusic;
-	ubyte	mChangeResolution;
-	ubyte	mDoNotPlayMovies;
-	ubyte	mUserChoseQuit;
-	ubyte	mGameMonitor;
-	ubyte	mAcceleration;				// allow RAVE level acceleration
-	ubyte	mInputSprockets;			// allow use of Input Sprocket devices 
+   ubyte mDoNotDisplayOptions;
+   ubyte mUse11kSounds;
+   ubyte mDisableSound;
+   ubyte mDisableMIDIMusic;
+   ubyte mChangeResolution;
+   ubyte mDoNotPlayMovies;
+   ubyte mUserChoseQuit;
+   ubyte mGameMonitor;
+   ubyte mAcceleration;          // allow RAVE level acceleration
+   ubyte mInputSprockets;        // allow use of Input Sprocket devices 
 } ConfigInfo;
 
 extern ConfigInfo gConfigInfo;

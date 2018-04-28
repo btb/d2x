@@ -19,9 +19,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 typedef struct WMIDISONG {
-	ubyte *data;
-	uint length;
-	uint looping;
+   ubyte *data;
+   uint length;
+   uint looping;
 } WMIDISONG;
 
 

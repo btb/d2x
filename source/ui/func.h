@@ -17,9 +17,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _FUNC_H
 
 typedef struct {
-	char *  name;
-	int     nparams;
-	int  (*cfunction)(void);
+   char *  name;
+   int     nparams;
+   int  (*cfunction)(void);
 } FUNCTION;
 
 void func_init( FUNCTION * funtable, int size );

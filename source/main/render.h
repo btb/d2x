@@ -18,13 +18,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "object.h"
 
-#define MAX_RENDER_SEGS		500
-#define OBJS_PER_SEG 		5
-#define N_EXTRA_OBJ_LISTS	50
+#define MAX_RENDER_SEGS    500
+#define OBJS_PER_SEG       5
+#define N_EXTRA_OBJ_LISTS  50
 
-extern int	Clear_window;			//	1 = Clear whole background window, 2 = clear view portals into rest of world, 0 = no clear
+extern int  Clear_window;        // 1 = Clear whole background window, 2 = clear view portals into rest of world, 0 = no clear
 
-void render_frame(fix eye_offset, int window_num);		//draws the world into the current canvas
+void render_frame(fix eye_offset, int window_num);    //draws the world into the current canvas
 
 //cycle the flashing light for when mine destroyed
 void flash_frame();
@@ -50,7 +50,7 @@ int toggle_show_only_curside(void);
 
 // When any render function needs to know what's looking at it, it should access
 // Render_viewer_object members.
-extern fix Render_zoom;		//the player's zoom factor
+extern fix Render_zoom;    //the player's zoom factor
 
 //This is used internally to render_frame(), but is included here so AI
 //can use it for its own purposes.
@@ -71,7 +71,7 @@ extern int Use_player_head_angles;
 extern vms_angvec Player_head_angles;
 
 //
-//	Routines for conditionally rotating & projecting points
+// Routines for conditionally rotating & projecting points
 //
 
 //This must be called at the start of the frame if rotate_list() will be used

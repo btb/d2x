@@ -25,17 +25,17 @@ static char rcsid[] = "$Id: gamefont.c 2.3 1996/01/12 16:03:16 matt Exp $";
 //if 1, use high-res versions of fonts
 int FontHires=0;
 
-char * Gamefont_filenames[] = {	"font1-1.fnt",			// Font 0
-										 	"font1-1h.fnt",		// Font 0 High-res
-											"font2-1.fnt",			// Font 1
-											"font2-1h.fnt",		// Font 1 High-res
-											"font2-2.fnt",			// Font 2
-											"font2-2h.fnt",		// Font 2 High-res
-											"font2-3.fnt",			// Font 3
-											"font2-3h.fnt",		// Font 3 High-res
-											"font3-1.fnt",			// Font 4
-											"font3-1h.fnt",		// Font 4 High-res
-										};
+char * Gamefont_filenames[] = {  "font1-1.fnt",       // Font 0
+                                 "font1-1h.fnt",      // Font 0 High-res
+                                 "font2-1.fnt",       // Font 1
+                                 "font2-1h.fnt",      // Font 1 High-res
+                                 "font2-2.fnt",       // Font 2
+                                 "font2-2h.fnt",      // Font 2 High-res
+                                 "font2-3.fnt",       // Font 3
+                                 "font2-3h.fnt",      // Font 3 High-res
+                                 "font3-1.fnt",       // Font 4
+                                 "font3-1h.fnt",      // Font 4 High-res
+                              };
 
 grs_font *Gamefonts[MAX_FONTS];
 
@@ -43,28 +43,28 @@ int Gamefont_installed=0;
 
 void gamefont_init()
 {
-	int i;
+   int i;
 
-	if (Gamefont_installed) return;
-	Gamefont_installed = 1;
+   if (Gamefont_installed) return;
+   Gamefont_installed = 1;
 
-	for (i=0; i<MAX_FONTS; i++ )
-		Gamefonts[i] = gr_init_font(Gamefont_filenames[i]);
+   for (i=0; i<MAX_FONTS; i++ )
+      Gamefonts[i] = gr_init_font(Gamefont_filenames[i]);
 
-	atexit( gamefont_close );
+   atexit( gamefont_close );
 }
 
 
 void gamefont_close()
 {
-	int i;
+   int i;
 
-	if (!Gamefont_installed) return;
-	Gamefont_installed = 0;
+   if (!Gamefont_installed) return;
+   Gamefont_installed = 0;
 
-	for (i=0; i<MAX_FONTS; i++ )	{
-		gr_close_font( Gamefonts[i] );
-		Gamefonts[i] = NULL;
-	}
+   for (i=0; i<MAX_FONTS; i++ )  {
+      gr_close_font( Gamefonts[i] );
+      Gamefonts[i] = NULL;
+   }
 
 }

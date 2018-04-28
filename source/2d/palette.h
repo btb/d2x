@@ -27,7 +27,7 @@ extern void gr_make_cthru_table(ubyte * table, ubyte r, ubyte g, ubyte b );
 extern int gr_find_closest_color_current( int r, int g, int b );
 extern void gr_palette_read(ubyte * palette);
 
-//	Replacing memcpy in main with this to guarantee flushing of cache.
+// Replacing memcpy in main with this to guarantee flushing of cache.
 extern void gr_copy_palette(ubyte *gr_palette, ubyte *pal, int size);
 
 #endif

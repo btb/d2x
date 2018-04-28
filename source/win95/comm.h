@@ -17,35 +17,35 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _COMM_H
 
 
-#define COMM_BUF_EMPTY			-1
+#define COMM_BUF_EMPTY        -1
 
-#define COMM_STATUS_BREAK		1
-#define COMM_STATUS_FRAME		2
-#define COMM_STATUS_OVERRUN	4
-#define COMM_STATUS_RXPARITY	8
+#define COMM_STATUS_BREAK     1
+#define COMM_STATUS_FRAME     2
+#define COMM_STATUS_OVERRUN   4
+#define COMM_STATUS_RXPARITY  8
 
 
-#define COMM_DEVICE_MODEM1		1	// OBSOLETE!! use XTAPI
-#define COMM_DEVICE_MODEM0		0	// OBSOLETE!! use XTAPI
+#define COMM_DEVICE_MODEM1    1  // OBSOLETE!! use XTAPI
+#define COMM_DEVICE_MODEM0    0  // OBSOLETE!! use XTAPI
 
-#define COMM_DEVICE_COM1		-1
-#define COMM_DEVICE_COM2		-2
-#define COMM_DEVICE_COM3		-3
-#define COMM_DEVICE_COM4		-4
+#define COMM_DEVICE_COM1      -1
+#define COMM_DEVICE_COM2      -2
+#define COMM_DEVICE_COM3      -3
+#define COMM_DEVICE_COM4      -4
 
-typedef struct COMM_OBJ	{
-	HANDLE handle;
-	BOOL connect;
-	HANDLE hThread;
-	DWORD threadID;
-	OVERLAPPED rov, wov;
-	DCB dcb;
-	unsigned count;
-	char name[32];	 					// OBSOLETE!! use XTAPI
-	char port;
-	int type;
-	int baud;
-	char cmd[8][32];					// OBSOLETE!! use XTAPI
+typedef struct COMM_OBJ {
+   HANDLE handle;
+   BOOL connect;
+   HANDLE hThread;
+   DWORD threadID;
+   OVERLAPPED rov, wov;
+   DCB dcb;
+   unsigned count;
+   char name[32];                // OBSOLETE!! use XTAPI
+   char port;
+   int type;
+   int baud;
+   char cmd[8][32];              // OBSOLETE!! use XTAPI
 } COMM_OBJ;
 
 
@@ -68,11 +68,11 @@ int comm_wait(COMM_OBJ *obj, int msecs);
 
 /* OBSOLETE.  Use XTAPI calls to do the same job much better */
 
-#define COMM_PREFIX_CMD			0
-#define COMM_RESET_CMD			1
-#define COMM_DIALPREF_CMD		2
-#define COMM_ANSWER_CMD			3
-#define COMM_HANGUP_CMD			4
+#define COMM_PREFIX_CMD       0
+#define COMM_RESET_CMD        1
+#define COMM_DIALPREF_CMD     2
+#define COMM_ANSWER_CMD       3
+#define COMM_HANGUP_CMD       4
 
 
 int comm_get_modem_info(int modem, COMM_OBJ *obj);

@@ -34,31 +34,31 @@ static char rcsid[] = "$Id: hostage.c 2.2 1995/12/18 11:10:34 champaign Exp $";
 
 //------------- Globaly used hostage variables --------------------------------------------------
 
-int N_hostage_types = 0;		  				// Number of hostage types
-int Hostage_vclip_num[MAX_HOSTAGE_TYPES];	//vclip num for each tpye of hostage
+int N_hostage_types = 0;                  // Number of hostage types
+int Hostage_vclip_num[MAX_HOSTAGE_TYPES]; //vclip num for each tpye of hostage
 
 
 //-------------- Renders a hostage ----------------------------------------------------------------
 void draw_hostage(object *obj)
 {
-	draw_object_tmap_rod(obj,Vclip[obj->rtype.vclip_info.vclip_num].frames[obj->rtype.vclip_info.framenum],1);
+   draw_object_tmap_rod(obj,Vclip[obj->rtype.vclip_info.vclip_num].frames[obj->rtype.vclip_info.framenum],1);
 }
 
 
 //------------- Called once when a hostage is rescued ------------------------------------------
 void hostage_rescue()
 {
-	//mprintf( (0, "Rescued hostage %d", hostage_number ));
+   //mprintf( (0, "Rescued hostage %d", hostage_number ));
 
-	PALETTE_FLASH_ADD(0,0,25);		//small blue flash
+   PALETTE_FLASH_ADD(0,0,25);    //small blue flash
 
-	Players[Player_num].hostages_on_board++;
+   Players[Player_num].hostages_on_board++;
 
-	// Do an audio effect
-	if ( Newdemo_state != ND_STATE_PLAYBACK )
-		digi_play_sample( SOUND_HOSTAGE_RESCUED, F1_0 );
+   // Do an audio effect
+   if ( Newdemo_state != ND_STATE_PLAYBACK )
+      digi_play_sample( SOUND_HOSTAGE_RESCUED, F1_0 );
 
-	HUD_init_message(TXT_HOSTAGE_RESCUED);
+   HUD_init_message(TXT_HOSTAGE_RESCUED);
 }
 
 

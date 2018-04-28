@@ -30,7 +30,7 @@ typedef struct
   char *name;
  } DigiDevices;
 
-#define _AWE32_8_ST				0xe208
+#define _AWE32_8_ST           0xe208
 
 #define NUM_OF_CARDS 4
 
@@ -39,7 +39,7 @@ DigiDevices SBCards[NUM_OF_CARDS]={
   {_SOUND_BLASTER_8_MONO      , "Sound Blaster" },
   {_SOUND_BLASTER_8_ST        , "Sound Blaster Pro" },
   {_SB16_8_ST                 , "Sound Blaster 16/AWE32" },
-  {_AWE32_8_ST				 		,  "Sound Blaster AWE32"} 
+  {_AWE32_8_ST                ,  "Sound Blaster AWE32"} 
  };
 #endif
 
@@ -57,29 +57,29 @@ int CD_blast_mixer ()
 #ifndef WINDOWS
   InFile = fopen("descent.cfg", "rt");
   if (InFile == NULL) 
-	 return (NULL);
+    return (NULL);
 
   while (!feof(InFile)) {
-		memset(line, 0, 80);
-		fgets(line, 80, InFile);
-		ptr = &(line[0]);
-		while (isspace(*ptr))
-			ptr++;
-		if (*ptr != '\0') {
-			token = strtok(ptr, "=");
-			value = strtok(NULL, "=");
-	 		if (value[strlen(value)-1] == '\n')
-   			value[strlen(value)-1] = 0;
-			if (!strcmp(token, "DigiDeviceID8"))
-				digiboard = strtol(value, NULL, 16);
-			else if (!strncmp(token, "DigiPort",8))
-			 {
-				digiport = strtol(value, NULL, 16);
-			 }
-			else if (!strcmp(token, "RedbookVolume"))
-				redvol = strtol(value, NULL, 10);
-		}
-	}
+      memset(line, 0, 80);
+      fgets(line, 80, InFile);
+      ptr = &(line[0]);
+      while (isspace(*ptr))
+         ptr++;
+      if (*ptr != '\0') {
+         token = strtok(ptr, "=");
+         value = strtok(NULL, "=");
+         if (value[strlen(value)-1] == '\n')
+            value[strlen(value)-1] = 0;
+         if (!strcmp(token, "DigiDeviceID8"))
+            digiboard = strtol(value, NULL, 16);
+         else if (!strncmp(token, "DigiPort",8))
+          {
+            digiport = strtol(value, NULL, 16);
+          }
+         else if (!strcmp(token, "RedbookVolume"))
+            redvol = strtol(value, NULL, 10);
+      }
+   }
 
   mprintf ((0,"Digiport=0x%x\n",digiport));
   mprintf ((0,"Digiboard=0x%x\n",digiboard));
@@ -87,33 +87,33 @@ int CD_blast_mixer ()
   for (nosbcard=1,i=0;i<NUM_OF_CARDS;i++)
    {
     if (SBCards[i].id==digiboard)
-		{
-       mprintf ((0,"Sound board=%s\n",SBCards[i].name));	
-		 digiboard=i;
-		 nosbcard=0;
-		 break;
-		}
-	}
- 	  
+      {
+       mprintf ((0,"Sound board=%s\n",SBCards[i].name)); 
+       digiboard=i;
+       nosbcard=0;
+       break;
+      }
+   }
+     
   fclose (InFile);
  
   if (nosbcard)
-	{
-	 mprintf ((0,"No Soundblaster type card was found!"));
+   {
+    mprintf ((0,"No Soundblaster type card was found!"));
     return (0);
-	}
+   }
 
   AddressPort=digiport+4;
   DataPort=digiport+5;
 
-  if (digiboard==0)	// Plain SB
-	SetRedSB(AddressPort,DataPort,redvol);
-  else if (digiboard==1)	// SB Pro
-	SetRedSBPro(AddressPort,DataPort,redvol);
+  if (digiboard==0)  // Plain SB
+   SetRedSB(AddressPort,DataPort,redvol);
+  else if (digiboard==1)   // SB Pro
+   SetRedSBPro(AddressPort,DataPort,redvol);
   else if (digiboard==2 || digiboard==3) // Sound blaster 16/AWE 32
    SetRedSB16 (AddressPort,DataPort,redvol);
   else
-	Int3(); // What? Get Jason, this shouldn't have happened
+   Int3(); // What? Get Jason, this shouldn't have happened
 
 #endif
 
@@ -132,17 +132,17 @@ void SetRedSB16 (short aport,short dport,char vol)
 
   if ((val>>3)==0)
    {
-	  val|=(25<<3);
-	  outp (dport,val);
-	}
+     val|=(25<<3);
+     outp (dport,val);
+   }
 
   outp (aport,0x37);
   val=inp (dport);
   if ((val>>3)==0)
    {
-	  val|=(25<<3);
-	  outp (dport,val);
-	}
+     val|=(25<<3);
+     outp (dport,val);
+   }
  }
 void SetRedSB (short aport,short dport,char vol)
  {
@@ -156,10 +156,10 @@ void SetRedSB (short aport,short dport,char vol)
   outp (aport,0x08);
   val=inp (dport);
   if ((val & 7)==0)
-	{
-	 val|=0x05;
-	 outp (dport,val);
-	}
+   {
+    val|=0x05;
+    outp (dport,val);
+   }
  }
 void SetRedSBPro (short aport,short dport,char vol)
  {
@@ -173,10 +173,10 @@ void SetRedSBPro (short aport,short dport,char vol)
   outp (aport,0x28);
   val=inp (dport);
   if ((val & 7)==0)
-	{
-	  val|=0x55;
-	  outp (dport,val);
-	}
+   {
+     val|=0x55;
+     outp (dport,val);
+   }
  }
 
 

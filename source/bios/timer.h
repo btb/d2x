@@ -41,15 +41,15 @@ extern void timer_set_function( void _far * function );
 // and microseconds.  They time out after 1000 hrs, 100 hrs, 10 hrs, and
 // 1 hr, respectively.
 
-extern fix timer_get_fixed_seconds();	// Rolls about every 9 hours...
+extern fix timer_get_fixed_seconds();  // Rolls about every 9 hours...
 extern fix timer_get_fixed_secondsX(); // Assume interrupts already disabled
-extern fix timer_get_approx_seconds();		// Returns time since program started... accurate to 1/120th of a second
+extern fix timer_get_approx_seconds();    // Returns time since program started... accurate to 1/120th of a second
 
 //NOT_USED extern unsigned int timer_get_microseconds();
 //NOT_USED extern unsigned int timer_get_milliseconds100();
 //NOT_USED extern unsigned int timer_get_milliseconds10();
 //NOT_USED extern unsigned int timer_get_milliseconds();
-//NOT_USED extern unsigned int timer_get_millisecondsX();	// Assume interrupts disabled
+//NOT_USED extern unsigned int timer_get_millisecondsX();   // Assume interrupts disabled
 
 //==========================================================================
 // Use to access the BIOS ticker... ie...   i = TICKER

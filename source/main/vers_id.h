@@ -4,4 +4,4 @@
 // 
 
 
-#define VERSION_TYPE	"Full Version" 
+#define VERSION_TYPE "Full Version" 

@@ -17,8 +17,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _FINDFILE_H
 
 typedef struct FILEFINDSTRUCT {
-	unsigned long size;
-	char name[256];
+   unsigned long size;
+   char name[256];
 } FILEFINDSTRUCT;
 
 
@@ -27,7 +27,7 @@ int FileFindNext(FILEFINDSTRUCT *ffstruct);
 int FileFindClose(void);
 
 typedef struct FILETIMESTRUCT {
-	unsigned short date,time;
+   unsigned short date,time;
 } FILETIMESTRUCT;
 
 //the both return 0 if no error

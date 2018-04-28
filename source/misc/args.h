@@ -16,9 +16,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _ARGS_H
 #define _ARGS_H
 
-extern int Num_args;						
-extern char * Args[];						
-extern int FindArg( char * s );		
+extern int Num_args;                
+extern char * Args[];                  
+extern int FindArg( char * s );     
 extern void InitArgs( int argc, char **argv );
 
 #endif

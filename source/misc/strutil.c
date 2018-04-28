@@ -23,130 +23,130 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 char *strdup(char *s)
 {
-	char *new_s;
-	
-	new_s = malloc(strlen(s)+1);
-	strcpy(new_s, s);
-	return new_s;
+   char *new_s;
+   
+   new_s = malloc(strlen(s)+1);
+   strcpy(new_s, s);
+   return new_s;
 }
 
 int stricmp( char *s1, char *s2 )
 {
-	while( *s1 && *s2 )	{
-		if ( tolower(*s1) != tolower(*s2) )	return 1;
-		s1++;
-		s2++;
-	}
-	if ( *s1 || *s2 ) return 1;
-	return 0;
+   while( *s1 && *s2 )  {
+      if ( tolower(*s1) != tolower(*s2) ) return 1;
+      s1++;
+      s2++;
+   }
+   if ( *s1 || *s2 ) return 1;
+   return 0;
 }
 
 int strnicmp( char *s1, char *s2, int n )
 {
-	while( *s1 && *s2 && n)	{
-		if ( tolower(*s1) != tolower(*s2) )	return 1;
-		s1++;
-		s2++;
-		n--;
-	}
-	if (n) return 1;
-	return 0;
+   while( *s1 && *s2 && n) {
+      if ( tolower(*s1) != tolower(*s2) ) return 1;
+      s1++;
+      s2++;
+      n--;
+   }
+   if (n) return 1;
+   return 0;
 }
 
 void strlwr( char *s1 )
 {
-	while( *s1 )	{
-		*s1 = tolower(*s1);
-		s1++;
-	}
+   while( *s1 )   {
+      *s1 = tolower(*s1);
+      s1++;
+   }
 }
 
 void strupr( char *s1 )
 {
-	while( *s1 )	{
-		*s1 = toupper(*s1);
-		s1++;
-	}
+   while( *s1 )   {
+      *s1 = toupper(*s1);
+      s1++;
+   }
 }
 
 void strrev( char *s1 )
 {
-	int i,l;
-	char *s2;
-	
-	s2 = (char *)malloc(strlen(s1) + 1);
-	strcpy(s2, s1);
-	l = strlen(s2);
-	for (i = 0; i < l; i++)
-		s1[l-1-i] = s2[i];
-	free(s2);
+   int i,l;
+   char *s2;
+   
+   s2 = (char *)malloc(strlen(s1) + 1);
+   strcpy(s2, s1);
+   l = strlen(s2);
+   for (i = 0; i < l; i++)
+      s1[l-1-i] = s2[i];
+   free(s2);
 }
 
 void _splitpath(char *name, char *drive, char *path, char *base, char *ext)
 {
-	char *s, *p;
+   char *s, *p;
 
-	p = name;
-	s = strchr(p, ':');
-	if ( s != NULL ) {
-		if (drive) {
-			*s = '\0';
-			strcpy(drive, p);
-			*s = ':';
-		}
-		p = s+1;
-		if (!p)
-			return;
-	} else if (drive)
-		*drive = '\0';
-	
-	s = strrchr(p, '\\');
-	if ( s != NULL) {
-		if (path) {
-			char c;
-			
-			c = *(s+1);
-			*(s+1) = '\0';
-			strcpy(path, p);
-			*(s+1) = c;
-		}
-		p = s+1;
-		if (!p)
-			return;
-	} else if (path)
-		*path = '\0';
+   p = name;
+   s = strchr(p, ':');
+   if ( s != NULL ) {
+      if (drive) {
+         *s = '\0';
+         strcpy(drive, p);
+         *s = ':';
+      }
+      p = s+1;
+      if (!p)
+         return;
+   } else if (drive)
+      *drive = '\0';
+   
+   s = strrchr(p, '\\');
+   if ( s != NULL) {
+      if (path) {
+         char c;
+         
+         c = *(s+1);
+         *(s+1) = '\0';
+         strcpy(path, p);
+         *(s+1) = c;
+      }
+      p = s+1;
+      if (!p)
+         return;
+   } else if (path)
+      *path = '\0';
 
-	s = strchr(p, '.');
-	if ( s != NULL) {
-		if (base) {
-			*s = '\0';
-			strcpy(base, p);
-			*s = '.';
-		}
-		p = s+1;
-		if (!p)
-			return;
-	} else if (base)
-		*base = '\0';
-		
-	if (ext)
-		strcpy(ext, p);		
+   s = strchr(p, '.');
+   if ( s != NULL) {
+      if (base) {
+         *s = '\0';
+         strcpy(base, p);
+         *s = '.';
+      }
+      p = s+1;
+      if (!p)
+         return;
+   } else if (base)
+      *base = '\0';
+      
+   if (ext)
+      strcpy(ext, p);      
 }
 
 #if 0
 void main()
 {
-	char drive[10], path[50], name[16], ext[5];
-	
-	drive[0] = path[0] = name[0] = ext[0] = '\0';
-	_splitpath("f:\\tmp\\x.out", drive, path, name, ext);
-	drive[0] = path[0] = name[0] = ext[0] = '\0';
-	_splitpath("tmp\\x.out", drive, path, name, ext);
-	drive[0] = path[0] = name[0] = ext[0] = '\0';
-	_splitpath("f:\\tmp\\a.out", NULL, NULL, name, NULL);
-	drive[0] = path[0] = name[0] = ext[0] = '\0';
-	_splitpath("tmp\\*.dem", drive, path, NULL, NULL);
-	drive[0] = path[0] = name[0] = ext[0] = '\0';
-	_splitpath(".\\tmp\\*.dem", drive, path, NULL, NULL);
+   char drive[10], path[50], name[16], ext[5];
+   
+   drive[0] = path[0] = name[0] = ext[0] = '\0';
+   _splitpath("f:\\tmp\\x.out", drive, path, name, ext);
+   drive[0] = path[0] = name[0] = ext[0] = '\0';
+   _splitpath("tmp\\x.out", drive, path, name, ext);
+   drive[0] = path[0] = name[0] = ext[0] = '\0';
+   _splitpath("f:\\tmp\\a.out", NULL, NULL, name, NULL);
+   drive[0] = path[0] = name[0] = ext[0] = '\0';
+   _splitpath("tmp\\*.dem", drive, path, NULL, NULL);
+   drive[0] = path[0] = name[0] = ext[0] = '\0';
+   _splitpath(".\\tmp\\*.dem", drive, path, NULL, NULL);
 }
 #endif

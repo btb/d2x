@@ -42,32 +42,32 @@ static UINT GameStartTime = 0;
 void timer_normalize();
 
 //@@ void PASCAL timer_callback(UINT wTimerID, UINT msg, DWORD dwUser, 
-//@@					DWORD dw1, DWORD dw2) 
+//@@              DWORD dw1, DWORD dw2) 
 //@@{
-//@@	static int last_time = 0;
-//@@	UINT time;
-//@@	
-//@@	
-//@@	time = timeGetTime()-GameStartTime;
+//@@  static int last_time = 0;
+//@@  UINT time;
+//@@  
+//@@  
+//@@  time = timeGetTime()-GameStartTime;
 //@@
-//@@	if (timeGetTime() < GameStartTime) 
-//@@		GameStartTime = GameStartTime - timeGetTime();
+//@@  if (timeGetTime() < GameStartTime) 
+//@@     GameStartTime = GameStartTime - timeGetTime();
 //@@
 //@@}
 
 void timer_normalize()
 {
-	DWORD new_time;
+   DWORD new_time;
 
-	new_time = timeGetTime();
+   new_time = timeGetTime();
 
-	if (new_time < GameStartTime) {
-		GameStartTime = new_time;
-		return;
-	}
-	
-	if ((new_time - GameStartTime) > 0x01808580)  	// 7 hours
-		GameStartTime = new_time;
+   if (new_time < GameStartTime) {
+      GameStartTime = new_time;
+      return;
+   }
+   
+   if ((new_time - GameStartTime) > 0x01808580)    // 7 hours
+      GameStartTime = new_time;
 }
 
 
@@ -75,70 +75,70 @@ void timer_close();
 
 void timer_init(int i)
 {
-	TIMECAPS tc;
+   TIMECAPS tc;
 
-	Assert(GameStartTime == 0);
+   Assert(GameStartTime == 0);
 
-	timer_initialized = 1;
+   timer_initialized = 1;
 
-	GameSystemTime = 0;
-	GameStartTime = timeGetTime();
+   GameSystemTime = 0;
+   GameStartTime = timeGetTime();
 
-	atexit(timer_close);
+   atexit(timer_close);
 }
 
 
 void timer_close()
 {
-	Assert(GameStartTime > 0);
+   Assert(GameStartTime > 0);
 
-	timer_initialized = 0;
+   timer_initialized = 0;
 
-	GameSystemTime = 0;
-	GameStartTime= 0;
+   GameSystemTime = 0;
+   GameStartTime= 0;
 }
 
 
 fix timer_get_fixed_seconds()
 {
-	fix val;
-	DWORD time;
+   fix val;
+   DWORD time;
 
-	timer_normalize();
+   timer_normalize();
 
-	time = timeGetTime() - GameStartTime;
+   time = timeGetTime() - GameStartTime;
 
-	val = fixdiv(time,1000);
+   val = fixdiv(time,1000);
 
-	return val;
+   return val;
 }
 
 fix timer_get_fixed_secondsX()
 {
-	fix val;
-	DWORD time;
+   fix val;
+   DWORD time;
 
-	timer_normalize();
+   timer_normalize();
 
-	time = timeGetTime() - GameStartTime;
+   time = timeGetTime() - GameStartTime;
 
-	val = fixdiv(time,1000);
+   val = fixdiv(time,1000);
 
-	return val;
+   return val;
 }
 
 fix timer_get_approx_seconds()
 {
-	fix val;
-	DWORD time;
+   fix val;
+   DWORD time;
 
-	timer_normalize();
+   timer_normalize();
 
-	time = timeGetTime() - GameStartTime;
+   time = timeGetTime() - GameStartTime;
 
-	val = fixdiv(time,1000);
+   val = fixdiv(time,1000);
 
-	return val;
+   return val;
 }
 
 void timer_set_function( void _far * function ) {}
@@ -146,7 +146,7 @@ void timer_set_function( void _far * function ) {}
 
 void timer_delay(fix seconds)
 {
-	unsigned int numticks = timeGetTime() + (seconds>>16)*1000 + 
-					(((seconds & 0x0000ffff)*1000)/65535);
-	while (GetTickCount() < numticks);
+   unsigned int numticks = timeGetTime() + (seconds>>16)*1000 + 
+               (((seconds & 0x0000ffff)*1000)/65535);
+   while (GetTickCount() < numticks);
 }

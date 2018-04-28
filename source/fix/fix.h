@@ -16,12 +16,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pstypes.h"
 
-typedef long fix;				//16 bits int, 16 bits frac
-typedef short fixang;		//angles
+typedef long fix;          //16 bits int, 16 bits frac
+typedef short fixang;      //angles
 
 typedef struct quad {
-	ulong low;
-	long high;
+   ulong low;
+   long high;
 } quad;
 
 //Convert an int to a fix
@@ -38,63 +38,63 @@ typedef struct quad {
 #define fl2f(f) ((fix) ((f) * 65536))
 
 //Some handy constants
-#define f0_0	0
-#define f1_0	0x10000
-#define f2_0	0x20000
-#define f3_0	0x30000
-#define f10_0	0xa0000
+#define f0_0   0
+#define f1_0   0x10000
+#define f2_0   0x20000
+#define f3_0   0x30000
+#define f10_0  0xa0000
 
 #define f0_5 0x8000
 #define f0_1 0x199a
 
-#define F0_0	f0_0
-#define F1_0	f1_0
-#define F2_0	f2_0
-#define F3_0	f3_0
-#define F10_0	f10_0
+#define F0_0   f0_0
+#define F1_0   f1_0
+#define F2_0   f2_0
+#define F3_0   f3_0
+#define F10_0  f10_0
 
-#define F0_5 	f0_5
-#define F0_1 	f0_1
+#define F0_5   f0_5
+#define F0_1   f0_1
 
 fix fixmul(fix a,fix b);
 #pragma aux fixmul parm [eax] [edx] = \
-	"imul	edx"				\
-	"shrd	eax,edx,16";
+   "imul edx"           \
+   "shrd eax,edx,16";
 
 
 fix fixdiv(fix a,fix b);
 #pragma aux fixdiv parm [eax] [ebx] modify exact [eax edx] = \
-	"mov	edx,eax"	\
-	"sar	edx,16"	\
-	"shl	eax,16"	\
-	"idiv	ebx";
+   "mov  edx,eax" \
+   "sar  edx,16"  \
+   "shl  eax,16"  \
+   "idiv ebx";
 
 fix fixmuldiv(fix a,fix b,fix c);
 #pragma aux fixmuldiv parm [eax] [edx] [ebx] modify exact [eax edx] = \
-	"imul	edx"	\
-	"idiv	ebx";
+   "imul edx"  \
+   "idiv ebx";
 
 #pragma aux fixmulaccum parm [esi] [eax] [edx] modify exact [eax edx] = \
-	"imul	edx"			\
-	"add  [esi],eax"	\
-	"adc	4[esi],edx";
+   "imul edx"        \
+   "add  [esi],eax"  \
+   "adc  4[esi],edx";
 
 #pragma aux fixquadadjust parm [esi] modify exact [eax edx] = \
-	"mov  eax,[esi]"		\
-	"mov  edx,4[esi]"		\
-	"shrd	eax,edx,16";
+   "mov  eax,[esi]"     \
+   "mov  edx,4[esi]"    \
+   "shrd eax,edx,16";
 
 #pragma aux fixquadnegate parm [eax] modify exact [ebx] = \
-	"mov	ebx,[eax]"		\
-	"neg	ebx"				\
-	"mov	[eax],ebx"		\
-	"mov	ebx,4[eax]"		\
-	"not	ebx"				\
-	"sbb	ebx,-1"			\
-	"mov	4[eax],ebx";
+   "mov  ebx,[eax]"     \
+   "neg  ebx"           \
+   "mov  [eax],ebx"     \
+   "mov  ebx,4[eax]"    \
+   "not  ebx"           \
+   "sbb  ebx,-1"        \
+   "mov  4[eax],ebx";
 
 #pragma aux fixdivquadlong parm [eax] [edx] [ebx] modify exact [eax edx] = \
-	"idiv	ebx";
+   "idiv ebx";
 
 //computes the square root of a long, returning a short
 ushort long_sqrt(long a);
@@ -119,8 +119,8 @@ void fixquadnegate(quad *q);
 
 //compute sine and cosine of an angle, filling in the variables
 //either of the pointers can be NULL
-void fix_sincos(fix a,fix *s,fix *c);		//with interpolation
-void fix_fastsincos(fix a,fix *s,fix *c);	//no interpolation
+void fix_sincos(fix a,fix *s,fix *c);     //with interpolation
+void fix_fastsincos(fix a,fix *s,fix *c); //no interpolation
 
 //compute inverse sine & cosine
 fixang fix_asin(fix v); 

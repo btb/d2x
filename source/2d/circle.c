@@ -23,88 +23,88 @@ static char rcsid[] = "$Id: circle.c 1.3 1994/11/18 22:51:01 john Exp $";
 
 int gr_circle(fix xc1,fix yc1,fix r1)
 {
-	int p,x, y, xc, yc, r;
+   int p,x, y, xc, yc, r;
 
-	r = f2i(r1);
-	xc = f2i(xc1);
-	yc = f2i(yc1);
-	p=3-(r*2);
-	x=0;
-	y=r;
+   r = f2i(r1);
+   xc = f2i(xc1);
+   yc = f2i(yc1);
+   p=3-(r*2);
+   x=0;
+   y=r;
 
-	// Big clip
-	if ( (xc+r) < 0 ) return 1;
-	if ( (xc-r) > WIDTH ) return 1;
-	if ( (yc+r) < 0 ) return 1;
-	if ( (yc-r) > HEIGHT ) return 1;
+   // Big clip
+   if ( (xc+r) < 0 ) return 1;
+   if ( (xc-r) > WIDTH ) return 1;
+   if ( (yc+r) < 0 ) return 1;
+   if ( (yc-r) > HEIGHT ) return 1;
 
-	while(x<y)
-	{
-		// Draw the first octant
-		gr_pixel( xc-y, yc-x );
-		gr_pixel( xc+y, yc-x );
-		gr_pixel( xc-y, yc+x );
-		gr_pixel( xc+y, yc+x );
+   while(x<y)
+   {
+      // Draw the first octant
+      gr_pixel( xc-y, yc-x );
+      gr_pixel( xc+y, yc-x );
+      gr_pixel( xc-y, yc+x );
+      gr_pixel( xc+y, yc+x );
 
-		if (p<0) 
-			p=p+(x<<2)+6;
-		else	{
-			// Draw the second octant
-			gr_pixel( xc-x, yc-y );
-			gr_pixel( xc+x, yc-y );
-			gr_pixel( xc-x, yc+y );
-			gr_pixel( xc+x, yc+y );
-			p=p+((x-y)<<2)+10;
-			y--;
-		}
-		x++;
-	}
-	if(x==y)	{
-		gr_pixel( xc-x, yc-y );
-		gr_pixel( xc+x, yc-y );
-		gr_pixel( xc-x, yc+y );
-		gr_pixel( xc+x, yc+y );
-	}
-	return 0;
+      if (p<0) 
+         p=p+(x<<2)+6;
+      else  {
+         // Draw the second octant
+         gr_pixel( xc-x, yc-y );
+         gr_pixel( xc+x, yc-y );
+         gr_pixel( xc-x, yc+y );
+         gr_pixel( xc+x, yc+y );
+         p=p+((x-y)<<2)+10;
+         y--;
+      }
+      x++;
+   }
+   if(x==y) {
+      gr_pixel( xc-x, yc-y );
+      gr_pixel( xc+x, yc-y );
+      gr_pixel( xc-x, yc+y );
+      gr_pixel( xc+x, yc+y );
+   }
+   return 0;
 }
 
 int gr_ucircle(fix xc1,fix yc1,fix r1)
 {
-	int p,x, y, xc, yc, r;
+   int p,x, y, xc, yc, r;
 
-	r = f2i(r1);
-	xc = f2i(xc1);
-	yc = f2i(yc1);
-	p=3-(r*2);
-	x=0;
-	y=r;
+   r = f2i(r1);
+   xc = f2i(xc1);
+   yc = f2i(yc1);
+   p=3-(r*2);
+   x=0;
+   y=r;
 
-	while(x<y)
-	{
-		// Draw the first octant
-		gr_upixel( xc-y, yc-x );
-		gr_upixel( xc+y, yc-x );
-		gr_upixel( xc-y, yc+x );
-		gr_upixel( xc+y, yc+x );
+   while(x<y)
+   {
+      // Draw the first octant
+      gr_upixel( xc-y, yc-x );
+      gr_upixel( xc+y, yc-x );
+      gr_upixel( xc-y, yc+x );
+      gr_upixel( xc+y, yc+x );
 
-		if (p<0) 
-			p=p+(x<<2)+6;
-		else	{
-			// Draw the second octant
-			gr_upixel( xc-x, yc-y );
-			gr_upixel( xc+x, yc-y );
-			gr_upixel( xc-x, yc+y );
-			gr_upixel( xc+x, yc+y );
-			p=p+((x-y)<<2)+10;
-			y--;
-		}
-		x++;
-	}
-	if(x==y)	{
-		gr_upixel( xc-x, yc-y );
-		gr_upixel( xc+x, yc-y );
-		gr_upixel( xc-x, yc+y );
-		gr_upixel( xc+x, yc+y );
-	}
-	return 0;
+      if (p<0) 
+         p=p+(x<<2)+6;
+      else  {
+         // Draw the second octant
+         gr_upixel( xc-x, yc-y );
+         gr_upixel( xc+x, yc-y );
+         gr_upixel( xc-x, yc+y );
+         gr_upixel( xc+x, yc+y );
+         p=p+((x-y)<<2)+10;
+         y--;
+      }
+      x++;
+   }
+   if(x==y) {
+      gr_upixel( xc-x, yc-y );
+      gr_upixel( xc+x, yc-y );
+      gr_upixel( xc-x, yc+y );
+      gr_upixel( xc+x, yc+y );
+   }
+   return 0;
 }

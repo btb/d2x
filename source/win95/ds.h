@@ -21,24 +21,24 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 typedef struct tagSSCaps {
-	unsigned sample_rate;
-	unsigned bits_per_sample;
+   unsigned sample_rate;
+   unsigned bits_per_sample;
 } SSCaps;
 
 
 typedef struct tagSSoundBuffer {
-	char *data;
-	long length;
-	LPDIRECTSOUNDBUFFER obj; 
-	LPDIRECTSOUNDBUFFER auxobj;
-	LPDIRECTSOUNDBUFFER auxobj2;	
-	unsigned vol;
-	unsigned rate;
-	unsigned short pan;
-	unsigned short channels;
-	unsigned short bits_per_sample;
-	unsigned	short looping;
-	int loop_start, loop_end, loop_length;
+   char *data;
+   long length;
+   LPDIRECTSOUNDBUFFER obj; 
+   LPDIRECTSOUNDBUFFER auxobj;
+   LPDIRECTSOUNDBUFFER auxobj2;  
+   unsigned vol;
+   unsigned rate;
+   unsigned short pan;
+   unsigned short channels;
+   unsigned short bits_per_sample;
+   unsigned short looping;
+   int loop_start, loop_end, loop_length;
 } SSoundBuffer;
 
 typedef int SSChannel;
@@ -55,6 +55,6 @@ SSChannel SSInitChannel(SSoundBuffer *sample);
 BOOL SSChannelPlaying(SSChannel channel);
 BOOL SSStopChannel(SSChannel channel);
 BOOL SSSetChannelPan(SSChannel channel, unsigned short pan);
-BOOL SSSetChannelVolume(SSChannel channel, unsigned short vol);	
+BOOL SSSetChannelVolume(SSChannel channel, unsigned short vol);   
 
 #endif

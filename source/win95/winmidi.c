@@ -41,17 +41,17 @@ static char rcsid[] = "$Id: winmidi.c 1.12 1996/10/04 17:13:54 samir Exp $";
 #include "winmidi.h"
 
 
-//	----------------------------------------------------------------------------
-//	Data
-//	----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Data
+// ----------------------------------------------------------------------------
 
-BOOL 	WMidi_NewStream = 0;
+BOOL  WMidi_NewStream = 0;
 
-static BOOL				WMidi_initialized = FALSE;
-static SEQ				MSeq;
-static DWORD			wmidi_volume = 0x80008000;
-static BOOL				LoopSong = FALSE;
-static BOOL				MidiVolChanges = TRUE;
+static BOOL          WMidi_initialized = FALSE;
+static SEQ           MSeq;
+static DWORD         wmidi_volume = 0x80008000;
+static BOOL          LoopSong = FALSE;
+static BOOL          MidiVolChanges = TRUE;
 
 
 void wmidi_deamp_song(DWORD vol);
@@ -59,302 +59,302 @@ int wmidi_get_tech();
 void CALLBACK wmidi_seq_callback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
 
 
-//	----------------------------------------------------------------------------
-//	Sequencer Initialization and destruction
-//	----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Sequencer Initialization and destruction
+// ----------------------------------------------------------------------------
 
 int wmidi_init(uint mmdev)
 {
-	MIDIOUTCAPS midicaps;
-	//BYTE *hdr;
-	//DWORD bufsize;
-	//int i;
-	UINT ui;
-	
-	memset(&MSeq, 0, sizeof(SEQ));
+   MIDIOUTCAPS midicaps;
+   //BYTE *hdr;
+   //DWORD bufsize;
+   //int i;
+   UINT ui;
+   
+   memset(&MSeq, 0, sizeof(SEQ));
 
-	WMidi_initialized = TRUE;
+   WMidi_initialized = TRUE;
 
-//	Initialize stream buffers
-	MSeq.uState = SEQ_S_NOFILE;
-	MSeq.lpmhFree = NULL;
-	MSeq.lpbAlloc = NULL;
-	MSeq.hmidi = NULL;
+// Initialize stream buffers
+   MSeq.uState = SEQ_S_NOFILE;
+   MSeq.lpmhFree = NULL;
+   MSeq.lpbAlloc = NULL;
+   MSeq.hmidi = NULL;
 
-	MSeq.cBuffer = 4;
-	MSeq.cbBuffer = 512;
+   MSeq.cBuffer = 4;
+   MSeq.cbBuffer = 512;
 
-	if (seqAllocBuffers(&MSeq) != MMSYSERR_NOERROR)
-    	return FALSE;
+   if (seqAllocBuffers(&MSeq) != MMSYSERR_NOERROR)
+      return FALSE;
 
-//	Setup sequencer some more
-	ui = midiOutGetDevCaps(mmdev, &midicaps, sizeof(midicaps));
-	if ( ui != MMSYSERR_NOERROR) {
-		mprintf((1, "WMIDI:(%x) Unable to find requested device.\n", MSeq.mmrcLastErr));
-		return 0;
-	}
-	
-	if ((midicaps.dwSupport & MIDICAPS_VOLUME) || (midicaps.dwSupport & MIDICAPS_LRVOLUME)) 
-		MidiVolChanges = TRUE;
-	else MidiVolChanges = FALSE;
+// Setup sequencer some more
+   ui = midiOutGetDevCaps(mmdev, &midicaps, sizeof(midicaps));
+   if ( ui != MMSYSERR_NOERROR) {
+      mprintf((1, "WMIDI:(%x) Unable to find requested device.\n", MSeq.mmrcLastErr));
+      return 0;
+   }
+   
+   if ((midicaps.dwSupport & MIDICAPS_VOLUME) || (midicaps.dwSupport & MIDICAPS_LRVOLUME)) 
+      MidiVolChanges = TRUE;
+   else MidiVolChanges = FALSE;
 
-	MSeq.uDeviceID = mmdev;
+   MSeq.uDeviceID = mmdev;
 
-//	Now we must do a stupid Microsoft trick to determine whether we are
-//	using WAVE TABLE volume or OPL volume.
-	MSeq.uMCIDeviceID = wmidi_get_tech();
+// Now we must do a stupid Microsoft trick to determine whether we are
+// using WAVE TABLE volume or OPL volume.
+   MSeq.uMCIDeviceID = wmidi_get_tech();
 
-	logentry("MIDI technology: %d.\n", MSeq.uMCIDeviceID);
-	
-	return 1;
+   logentry("MIDI technology: %d.\n", MSeq.uMCIDeviceID);
+   
+   return 1;
 }
-				
+            
 
 void wmidi_close()
 {
-	//MIDIHDR *hdr;
+   //MIDIHDR *hdr;
 
-	Assert(WMidi_initialized == TRUE);
+   Assert(WMidi_initialized == TRUE);
 
-	seqFreeBuffers(&MSeq);
-	
-	WMidi_initialized = FALSE;
+   seqFreeBuffers(&MSeq);
+   
+   WMidi_initialized = FALSE;
 }
 
 
 int wmidi_get_tech()
 {
-	HKEY hKey;
-	long lres;
-	char key[32];	
-	char buf[256];
-	char *pstr;
-	DWORD len,type;
+   HKEY hKey;
+   long lres;
+   char key[32];  
+   char buf[256];
+   char *pstr;
+   DWORD len,type;
 
 
-	lres = RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Multimedia\\MIDIMap",
-					0, KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_EXECUTE,
-					&hKey);
-	if (lres != ERROR_SUCCESS) return 0;
+   lres = RegOpenKeyEx(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Multimedia\\MIDIMap",
+               0, KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_EXECUTE,
+               &hKey);
+   if (lres != ERROR_SUCCESS) return 0;
 
-	len = 32;
-	lres = RegQueryValueEx(hKey, "CurrentInstrument", NULL, &type, key, &len);
-	if (lres != ERROR_SUCCESS) {
-		RegCloseKey(hKey);
-		return 0;
-	}
+   len = 32;
+   lres = RegQueryValueEx(hKey, "CurrentInstrument", NULL, &type, key, &len);
+   if (lres != ERROR_SUCCESS) {
+      RegCloseKey(hKey);
+      return 0;
+   }
 
-	RegCloseKey(hKey);
+   RegCloseKey(hKey);
 
-	strcpy(buf, "System\\CurrentControlSet\\control\\MediaResources\\midi\\");
-	strcat(buf, key);
-	lres = RegOpenKeyEx(HKEY_LOCAL_MACHINE, buf, 
-					0, KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_EXECUTE,
-					&hKey);
-	if (lres != ERROR_SUCCESS) return 0;
-	
- 	len =128;
-	lres = RegQueryValueEx(hKey, "Description", NULL, &type, buf, &len);
-	if (lres != ERROR_SUCCESS) {
-		RegCloseKey(hKey);
-		return 0;
-	}
-	RegCloseKey(hKey);
+   strcpy(buf, "System\\CurrentControlSet\\control\\MediaResources\\midi\\");
+   strcat(buf, key);
+   lres = RegOpenKeyEx(HKEY_LOCAL_MACHINE, buf, 
+               0, KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE | KEY_EXECUTE,
+               &hKey);
+   if (lres != ERROR_SUCCESS) return 0;
+   
+   len =128;
+   lres = RegQueryValueEx(hKey, "Description", NULL, &type, buf, &len);
+   if (lres != ERROR_SUCCESS) {
+      RegCloseKey(hKey);
+      return 0;
+   }
+   RegCloseKey(hKey);
 
-//	Okay, look for 'wave' or 'fm' or 'opl'
-	pstr = strlwr(buf);	
-	if (strstr(pstr, "wave")) return 1;
+// Okay, look for 'wave' or 'fm' or 'opl'
+   pstr = strlwr(buf);  
+   if (strstr(pstr, "wave")) return 1;
 
-	return 0;
+   return 0;
 }
 
 
 int wmidi_support_volchange() {
-	return (int)MidiVolChanges;
+   return (int)MidiVolChanges;
 }
 
 
-//	----------------------------------------------------------------------------
-//	High level midi song play/stop/pause interface
-//	----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// High level midi song play/stop/pause interface
+// ----------------------------------------------------------------------------
 
 int wmidi_init_song(WMIDISONG *song)
 {
-	DWORD bufsize;
-	SMF *smf;
-	MMRESULT mmrc;
+   DWORD bufsize;
+   SMF *smf;
+   MMRESULT mmrc;
 
-	if (MSeq.uState != SEQ_S_NOFILE) return 0;
+   if (MSeq.uState != SEQ_S_NOFILE) return 0;
 
-	Assert (song->data != NULL);
+   Assert (song->data != NULL);
 
    mmrc = seqStop(&MSeq);
-	if (mmrc != MMSYSERR_NOERROR)
-	{
-		mprintf((1, "WMIDI: Stop song failed.\n"));;
-		return 0;
-	}
+   if (mmrc != MMSYSERR_NOERROR)
+   {
+      mprintf((1, "WMIDI: Stop song failed.\n"));;
+      return 0;
+   }
 
-	wmidi_close_song();
+   wmidi_close_song();
 
-	if (song->looping) LoopSong = TRUE;
-	else LoopSong = FALSE;
+   if (song->looping) LoopSong = TRUE;
+   else LoopSong = FALSE;
 
-	if (smfOpenFile(song->data, song->length, (HSMF *)&smf) != SMF_SUCCESS) return 0;
+   if (smfOpenFile(song->data, song->length, (HSMF *)&smf) != SMF_SUCCESS) return 0;
 
-//	song is confirmed to be a MIDI v1.0 compatible file
-	MSeq.hSmf = smf;
-	MSeq.dwTimeDivision = smf->dwTimeDivision;
-	MSeq.tkLength = smf->tkLength;
-	MSeq.cTrk = smf->dwTracks;
+// song is confirmed to be a MIDI v1.0 compatible file
+   MSeq.hSmf = smf;
+   MSeq.dwTimeDivision = smf->dwTimeDivision;
+   MSeq.tkLength = smf->tkLength;
+   MSeq.cTrk = smf->dwTracks;
 
-	bufsize = min(MSeq.cbBuffer, smfGetStateMaxSize());
+   bufsize = min(MSeq.cbBuffer, smfGetStateMaxSize());
 
-	MSeq.uState = SEQ_S_OPENED;
-	
-	return 1;
+   MSeq.uState = SEQ_S_OPENED;
+   
+   return 1;
 }
 
 
 int wmidi_play()
 {
-	PREROLL		preroll;
-	MMRESULT 	mmrc;
-	DWORD 		vol;
+   PREROLL     preroll;
+   MMRESULT    mmrc;
+   DWORD       vol;
 
-	preroll.tkBase = 0;
-	preroll.tkEnd = MSeq.tkLength;
+   preroll.tkBase = 0;
+   preroll.tkEnd = MSeq.tkLength;
 
-	mprintf((1, "wmidi_play: beginning playback.\n"));
+   mprintf((1, "wmidi_play: beginning playback.\n"));
 
-	if ((mmrc = seqPreroll(&MSeq, &preroll)) != MMSYSERR_NOERROR) {
-		mprintf((1, "wmidi_play: preroll failed! (%x)\n", mmrc));
-		return 0;
-	}
+   if ((mmrc = seqPreroll(&MSeq, &preroll)) != MMSYSERR_NOERROR) {
+      mprintf((1, "wmidi_play: preroll failed! (%x)\n", mmrc));
+      return 0;
+   }
 
-	
-	Assert(MSeq.hmidi != NULL);
+   
+   Assert(MSeq.hmidi != NULL);
 
-//	wmidi_deamp_song(wmidi_volume);
+// wmidi_deamp_song(wmidi_volume);
 
-	mmrc = midiOutSetVolume((HMIDIOUT)MSeq.hmidi, wmidi_volume);	
-	if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
-	midiOutGetVolume((HMIDIOUT)MSeq.hmidi, &vol);
+   mmrc = midiOutSetVolume((HMIDIOUT)MSeq.hmidi, wmidi_volume);   
+   if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
+   midiOutGetVolume((HMIDIOUT)MSeq.hmidi, &vol);
 
-	if (seqStart(&MSeq) != MMSYSERR_NOERROR) return 0; 
+   if (seqStart(&MSeq) != MMSYSERR_NOERROR) return 0; 
 
-	return 1;
+   return 1;
 }
 
 
 int wmidi_stop()
 {
-	if (seqStop(&MSeq) != MMSYSERR_NOERROR) return 0;
-	return 1;
+   if (seqStop(&MSeq) != MMSYSERR_NOERROR) return 0;
+   return 1;
 }
 
 
 int wmidi_pause()
 {
-	if (MSeq.uState != SEQ_S_PAUSED) {
-		if (seqPause(&MSeq) != MMSYSERR_NOERROR) return 0;
-	}
-	return 1;
+   if (MSeq.uState != SEQ_S_PAUSED) {
+      if (seqPause(&MSeq) != MMSYSERR_NOERROR) return 0;
+   }
+   return 1;
 }
-		
+      
 int wmidi_resume()
 {
-	if (MSeq.uState == SEQ_S_PAUSED) {
-		if (seqRestart(&MSeq) != MMSYSERR_NOERROR) return 0;
-	}
-	return 1;
+   if (MSeq.uState == SEQ_S_PAUSED) {
+      if (seqRestart(&MSeq) != MMSYSERR_NOERROR) return 0;
+   }
+   return 1;
 }
-		
+      
 
 int wmidi_close_song()
 {
 
-	LPMIDIHDR               lpmh;
+   LPMIDIHDR               lpmh;
     
-	if (SEQ_S_OPENED != MSeq.uState)
-		return MCIERR_UNSUPPORTED_FUNCTION;
+   if (SEQ_S_OPENED != MSeq.uState)
+      return MCIERR_UNSUPPORTED_FUNCTION;
 
-	LoopSong = FALSE;
+   LoopSong = FALSE;
     
-	if ((HSMF)NULL != MSeq.hSmf)
- 	{
-		smfCloseFile(MSeq.hSmf);
-		MSeq.hSmf = (HSMF)NULL;
+   if ((HSMF)NULL != MSeq.hSmf)
+   {
+      smfCloseFile(MSeq.hSmf);
+      MSeq.hSmf = (HSMF)NULL;
    }
 
 /* take care of any stream buffers or MIDI resources left open by
-	the sequencer */
+   the sequencer */
 
-	if (MSeq.hmidi) {
+   if (MSeq.hmidi) {
 
-		for (lpmh = MSeq.lpmhFree; lpmh; lpmh = lpmh->lpNext)
-			midiOutUnprepareHeader(MSeq.hmidi, lpmh, sizeof(MIDIHDR));
+      for (lpmh = MSeq.lpmhFree; lpmh; lpmh = lpmh->lpNext)
+         midiOutUnprepareHeader(MSeq.hmidi, lpmh, sizeof(MIDIHDR));
 
-		if (MSeq.lpmhPreroll) 
-			midiOutUnprepareHeader(MSeq.hmidi, MSeq.lpmhPreroll, sizeof(MIDIHDR));
+      if (MSeq.lpmhPreroll) 
+         midiOutUnprepareHeader(MSeq.hmidi, MSeq.lpmhPreroll, sizeof(MIDIHDR));
 
-		midiStreamClose(MSeq.hmidi);
-		MSeq.hmidi = NULL;
-	}
+      midiStreamClose(MSeq.hmidi);
+      MSeq.hmidi = NULL;
+   }
 
-	MSeq.uState = SEQ_S_NOFILE;
-	
-	return 1;
+   MSeq.uState = SEQ_S_NOFILE;
+   
+   return 1;
 }
 
 
 static uint funky_vol_log_table [] = {
-	0x00000,				// 0
-	0x0b000,				// 1
-	0x0c000,				// 2
-	0x0c800,				// 3
-	0x0e000,		 		// 4
-	0x0e800,				// 5
-	0x0f000,				//	6
-	0x0f800,				//	7
-	0x0ffff				// 8
+   0x00000,          // 0
+   0x0b000,          // 1
+   0x0c000,          // 2
+   0x0c800,          // 3
+   0x0e000,          // 4
+   0x0e800,          // 5
+   0x0f000,          // 6
+   0x0f800,          // 7
+   0x0ffff           // 8
 };
 
 
 
 int wmidi_set_volume(uint volume)
 {
-	DWORD vol;
-	//int i;
-	MMRESULT mmrc;
-	
+   DWORD vol;
+   //int i;
+   MMRESULT mmrc;
+   
 
-	Assert(volume < 128);
-	if (volume == 127) volume++;
+   Assert(volume < 128);
+   if (volume == 127) volume++;
 
-	volume = volume /16;
+   volume = volume /16;
 
-	if (!volume) vol = 0;
-	else if (MSeq.uMCIDeviceID == 1)				// WAVETABLE 
-		vol = funky_vol_log_table[volume]|0x00ff;
-	else {												// OPL2/OPL3 and others
-		vol = volume * 0x2000;				
-		if (vol > 0) vol--;
-	}
+   if (!volume) vol = 0;
+   else if (MSeq.uMCIDeviceID == 1)          // WAVETABLE 
+      vol = funky_vol_log_table[volume]|0x00ff;
+   else {                                    // OPL2/OPL3 and others
+      vol = volume * 0x2000;           
+      if (vol > 0) vol--;
+   }
 
-	vol = (vol<<16)+vol;
+   vol = (vol<<16)+vol;
 
-	wmidi_volume = vol;
+   wmidi_volume = vol;
 
 
-	if (MSeq.hmidi) {
-//		wmidi_deamp_song(wmidi_volume);
-		mmrc = midiOutSetVolume((HMIDIOUT)MSeq.hmidi, wmidi_volume);	
-		if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
-		midiOutGetVolume((HMIDIOUT)MSeq.hmidi, &vol);
-	}
+   if (MSeq.hmidi) {
+//    wmidi_deamp_song(wmidi_volume);
+      mmrc = midiOutSetVolume((HMIDIOUT)MSeq.hmidi, wmidi_volume);   
+      if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
+      midiOutGetVolume((HMIDIOUT)MSeq.hmidi, &vol);
+   }
 
-	return 1;
+   return 1;
 }
 
 
@@ -364,32 +364,32 @@ int wmidi_set_volume(uint volume)
 
 void wmidi_deamp_song(DWORD vol)
 {
-	float ptvol;
-	DWORD ptdvol;
-	DWORD dwvol, dwstatus, dwevent;
-	MMRESULT mmrc;
-	int i;	
+   float ptvol;
+   DWORD ptdvol;
+   DWORD dwvol, dwstatus, dwevent;
+   MMRESULT mmrc;
+   int i;   
 
 
-	vol = vol & 0x0000ffff;
+   vol = vol & 0x0000ffff;
 
-	ptvol = (float)(vol)*100.0/65536.0;
-	ptdvol = (DWORD)(ptvol);
+   ptvol = (float)(vol)*100.0/65536.0;
+   ptdvol = (DWORD)(ptvol);
 
-	mprintf((0, "Deamp = %d percent.\n", ptdvol));
+   mprintf((0, "Deamp = %d percent.\n", ptdvol));
 
-	for (i = 0, dwstatus = MIDI_CTRLCHANGE; i < 16; i++, dwstatus++)
-	{
-		dwvol = ( 100 * ptdvol ) / 1000;
-	   dwevent = dwstatus | ((DWORD)MIDICTRL_VOLUME << 8)
+   for (i = 0, dwstatus = MIDI_CTRLCHANGE; i < 16; i++, dwstatus++)
+   {
+      dwvol = ( 100 * ptdvol ) / 1000;
+      dwevent = dwstatus | ((DWORD)MIDICTRL_VOLUME << 8)
             | ((DWORD)dwvol << 16);
-	  	if(( mmrc= midiOutShortMsg( (HMIDIOUT)MSeq.hmidi, dwevent ))
+      if(( mmrc= midiOutShortMsg( (HMIDIOUT)MSeq.hmidi, dwevent ))
                             != MMSYSERR_NOERROR )
       {
-			mprintf((1, "WINMIDI::BAD MIDI VOLUME CHANGE!\n"));
-        	return;
+         mprintf((1, "WINMIDI::BAD MIDI VOLUME CHANGE!\n"));
+         return;
       }
-	}
+   }
 }
 
 
@@ -514,8 +514,8 @@ MMRESULT FNLOCAL seqPreroll(
         pSeq->uState != SEQ_S_PREROLLED)
         return MCIERR_UNSUPPORTED_FUNCTION;
 
-	pSeq->tkBase = lpPreroll->tkBase;
-	pSeq->tkEnd = lpPreroll->tkEnd;
+   pSeq->tkBase = lpPreroll->tkBase;
+   pSeq->tkEnd = lpPreroll->tkEnd;
 
     if (pSeq->hmidi)
     {
@@ -524,8 +524,8 @@ MMRESULT FNLOCAL seqPreroll(
         pSeq->uState = SEQ_S_RESET;
         midiOutReset(pSeq->hmidi);
 
-		while (pSeq->uBuffersInMMSYSTEM)
-			Sleep(0);
+      while (pSeq->uBuffersInMMSYSTEM)
+         Sleep(0);
     }
     
     pSeq->uBuffersInMMSYSTEM = 0;
@@ -790,8 +790,8 @@ MMRESULT FNLOCAL seqStop(
         return MCIERR_DEVICE_NOT_READY;
     }
 
-	while (pSeq->uBuffersInMMSYSTEM)
-		Sleep(0);
+   while (pSeq->uBuffersInMMSYSTEM)
+      Sleep(0);
     
     return MMSYSERR_NOERROR;
 }
@@ -883,16 +883,16 @@ DWORD FNLOCAL seqTicksToMillisecs(
 
 PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 {
-	LPMIDIHDR					lpmh		= (LPMIDIHDR)dw1;
+   LPMIDIHDR               lpmh     = (LPMIDIHDR)dw1;
     PSEQ                    pSeq;
     MMRESULT                mmrc;
     SMFRESULT               smfrc;
-	//DWORD vol;
+   //DWORD vol;
 
-	if (uMsg != MOM_DONE)
-		return;
+   if (uMsg != MOM_DONE)
+      return;
 
-	Assert(NULL != lpmh);
+   Assert(NULL != lpmh);
 
     pSeq = (PSEQ)(lpmh->dwUser);
 
@@ -900,18 +900,18 @@ PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, 
 
     --pSeq->uBuffersInMMSYSTEM;
     
-	if (pSeq->uState == SEQ_S_NOFILE) 
-		mprintf((1, "seqCallback: No file!!\n"));
+   if (pSeq->uState == SEQ_S_NOFILE) 
+      mprintf((1, "seqCallback: No file!!\n"));
 
     if (SEQ_S_RESET == pSeq->uState)
     {
         // We're recollecting buffers from MMSYSTEM
         //
-		if (lpmh != pSeq->lpmhPreroll)
-		{
-        	lpmh->lpNext   = pSeq->lpmhFree;
-        	pSeq->lpmhFree = lpmh;
-		}
+      if (lpmh != pSeq->lpmhPreroll)
+      {
+         lpmh->lpNext   = pSeq->lpmhFree;
+         pSeq->lpmhFree = lpmh;
+      }
 
         return;
     }
@@ -923,13 +923,13 @@ PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, 
         ** Reached EOF, just put the buffer back on the free
         ** list 
         */
-		if (lpmh != pSeq->lpmhPreroll)
-		{
-        	lpmh->lpNext   = pSeq->lpmhFree;
-        	pSeq->lpmhFree = lpmh;
-		}
-			if (!pSeq->hmidi) 
-				mprintf((1, "seqCallback: NULL MIDI HANDLE.\n"));
+      if (lpmh != pSeq->lpmhPreroll)
+      {
+         lpmh->lpNext   = pSeq->lpmhFree;
+         pSeq->lpmhFree = lpmh;
+      }
+         if (!pSeq->hmidi) 
+            mprintf((1, "seqCallback: NULL MIDI HANDLE.\n"));
 
         if (MMSYSERR_NOERROR != (mmrc = midiOutUnprepareHeader(pSeq->hmidi, lpmh, sizeof(*lpmh))))
         {
@@ -938,24 +938,24 @@ PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, 
 
         if (0 == pSeq->uBuffersInMMSYSTEM)
         {
-				int stop_loop=0;
+            int stop_loop=0;
             mprintf((1, "seqBufferDone: normal sequencer shutdown.\n"));
             
             /* Totally done! Free device and notify.
             */
             midiStreamClose(pSeq->hmidi);
             
-				if ((SEQ_S_STOPPING == pSeq->uState) && (pSeq->fdwSeq & SEQ_F_EOF) && LoopSong) {
-					stop_loop = 1;
-					mprintf((1, "seqMIDICallback: cancelling loop.\n"));
-				}
+            if ((SEQ_S_STOPPING == pSeq->uState) && (pSeq->fdwSeq & SEQ_F_EOF) && LoopSong) {
+               stop_loop = 1;
+               mprintf((1, "seqMIDICallback: cancelling loop.\n"));
+            }
             pSeq->hmidi = NULL;
             pSeq->uState = SEQ_S_OPENED;
             pSeq->mmrcLastErr = MMSYSERR_NOERROR;
             pSeq->fdwSeq &= ~SEQ_F_WAITING;
 
-				if ((pSeq->fdwSeq & SEQ_F_EOF) && LoopSong && !stop_loop)
-					wmidi_play(); 
+            if ((pSeq->fdwSeq & SEQ_F_EOF) && LoopSong && !stop_loop)
+               wmidi_play(); 
         }
     }
     else
@@ -963,7 +963,7 @@ PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, 
         /*
         ** Not EOF yet; attempt to fill another buffer
         */
-		  DWORD vol;
+        DWORD vol;
 
         smfrc = smfReadEvents(pSeq->hSmf, lpmh, pSeq->tkEnd);
         
@@ -987,15 +987,15 @@ PRIVATE void FAR PASCAL seqMIDICallback(HMIDISTRM hms, UINT uMsg, DWORD dwUser, 
         {
             ++pSeq->uBuffersInMMSYSTEM;
 
-				Assert(pSeq->hmidi != NULL);
+            Assert(pSeq->hmidi != NULL);
 
-//				wmidi_deamp_song(wmidi_volume);
-				mmrc = midiOutSetVolume((HMIDIOUT)MIDI_MAPPER, wmidi_volume);	
-				if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
-				midiOutGetVolume((HMIDIOUT)MIDI_MAPPER, &vol);
+//          wmidi_deamp_song(wmidi_volume);
+            mmrc = midiOutSetVolume((HMIDIOUT)MIDI_MAPPER, wmidi_volume);  
+            if (mmrc != MMSYSERR_NOERROR) mprintf((1, "MIDI VOL ERR: %d\n", mmrc));
+            midiOutGetVolume((HMIDIOUT)MIDI_MAPPER, &vol);
 
             mmrc = midiStreamOut(pSeq->hmidi, lpmh, sizeof(*lpmh));
-				WMidi_NewStream++;
+            WMidi_NewStream++;
             if (MMSYSERR_NOERROR != mmrc)
             {
                 mprintf((1, "seqBufferDone(): midiStreamOut() returned %lu!\n", (DWORD)mmrc));

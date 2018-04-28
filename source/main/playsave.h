@@ -14,8 +14,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _PLAYSAVE_H
 #define _PLAYSAVE_H
 
-#define N_SAVE_SLOTS		10
-#define GAME_NAME_LEN	25		//+1 for terminating zero = 26
+#define N_SAVE_SLOTS    10
+#define GAME_NAME_LEN   25    //+1 for terminating zero = 26
 
 #ifndef EZERO
 #define EZERO 0

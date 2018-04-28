@@ -20,7 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "palette.h"
 #include "mem.h"
 
-//#define ANIM_TEST 1		//if defined, read in anim brush
+//#define ANIM_TEST 1      //if defined, read in anim brush
 
 rle_span(ubyte *dest,ubyte *src,int len);
 
@@ -32,74 +32,74 @@ extern void gr_pal_setblock( int start, int number, unsigned char * pal );
 
 main(int argc,char **argv)
 {
-	int ret;
-	grs_bitmap my_bitmap;
-	ubyte my_palette[256*3];
-	grs_bitmap *bm_list[100];
-	int n_bitmaps;
-	char key;
+   int ret;
+   grs_bitmap my_bitmap;
+   ubyte my_palette[256*3];
+   grs_bitmap *bm_list[100];
+   int n_bitmaps;
+   char key;
 
 #if 0
-	{
-		int new_len,i;
-		new_len=rle_span(new_span,test_span,sizeof(test_span));
-		printf("old span (%d): ",sizeof(test_span));
-		for (i=0;i<sizeof(test_span);i++) printf("%d ",test_span[i]);
-		printf("\nnew span (%d): ",new_len);
-		for (i=0;i<new_len;i++) printf("%d ",new_span[i]);
-		exit(0);
-	}
+   {
+      int new_len,i;
+      new_len=rle_span(new_span,test_span,sizeof(test_span));
+      printf("old span (%d): ",sizeof(test_span));
+      for (i=0;i<sizeof(test_span);i++) printf("%d ",test_span[i]);
+      printf("\nnew span (%d): ",new_len);
+      for (i=0;i<new_len;i++) printf("%d ",new_span[i]);
+      exit(0);
+   }
 #endif
 
 #ifdef ANIM_TEST
-	ret = iff_read_animbrush(argv[1],bm_list,100,&n_bitmaps,&my_palette);
+   ret = iff_read_animbrush(argv[1],bm_list,100,&n_bitmaps,&my_palette);
 #else
-	ret = iff_read_bitmap(argv[1],&my_bitmap,BM_LINEAR,&my_palette);
-	bm_list[0] = &my_bitmap;
-	n_bitmaps = 1;
+   ret = iff_read_bitmap(argv[1],&my_bitmap,BM_LINEAR,&my_palette);
+   bm_list[0] = &my_bitmap;
+   n_bitmaps = 1;
 #endif
 
-	printf("ret = %d\n",ret);
-	printf("error message = <%s>",iff_errormsg(ret));
+   printf("ret = %d\n",ret);
+   printf("error message = <%s>",iff_errormsg(ret));
 
-	if (ret == IFF_NO_ERROR) {
-		int i;
+   if (ret == IFF_NO_ERROR) {
+      int i;
 
-		vga_init();
-		gr_init();
-		vga_set_mode(SM_320x200C);
+      vga_init();
+      gr_init();
+      vga_set_mode(SM_320x200C);
 
-		for (i=0;i<n_bitmaps;) {
+      for (i=0;i<n_bitmaps;) {
 
-			if (argc>2) {
-				ret = iff_write_bitmap(argv[2],bm_list[i],&my_palette);
-				printf("ret = %d\n",ret);
-			}
+         if (argc>2) {
+            ret = iff_write_bitmap(argv[2],bm_list[i],&my_palette);
+            printf("ret = %d\n",ret);
+         }
 
-			//gr_pal_setblock(0,256,&my_palette);
-			gr_palette_load(&my_palette);
-			//gr_pal_fade_in(grd_curscreen->pal);	//in case palette is blacked
+         //gr_pal_setblock(0,256,&my_palette);
+         gr_palette_load(&my_palette);
+         //gr_pal_fade_in(grd_curscreen->pal);  //in case palette is blacked
 
-			gr_ubitmap(0,0,bm_list[i]);
+         gr_ubitmap(0,0,bm_list[i]);
 
-			key = getch();
+         key = getch();
 
-			if (key=='-') {if (i) i--;}
-			else i++;
+         if (key=='-') {if (i) i--;}
+         else i++;
 
-		}
+      }
 
-		gr_close();
+      gr_close();
 
-		for (i=0;i<n_bitmaps;i++) {
-			free(bm_list[i]->bm_data);
+      for (i=0;i<n_bitmaps;i++) {
+         free(bm_list[i]->bm_data);
 
-			#ifdef ANIM_TEST
-				free(bm_list[i]);
-			#endif
+         #ifdef ANIM_TEST
+            free(bm_list[i]);
+         #endif
 
-		}
-	}
+      }
+   }
 
 }
 

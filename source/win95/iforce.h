@@ -18,12 +18,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 
 typedef struct IForce_Caps {
-	int axis_min[7], axis_cen[7], axis_max[7];
-	int has_pov;
-	unsigned button_mask;
-	unsigned axes_mask;
+   int axis_min[7], axis_cen[7], axis_max[7];
+   int has_pov;
+   unsigned button_mask;
+   unsigned axes_mask;
 } IForce_Caps;
-			
+         
 
 int IForce_Init(int port);
 int IForce_Close();

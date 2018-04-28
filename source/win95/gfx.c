@@ -42,16 +42,16 @@ static char rcsid[] = "$Id: gfx.c 1.4 1996/12/04 19:21:35 matt Exp $";
 
 
 
-//	Globals
-//	----------------------------------------------------------------------------
+// Globals
+// ----------------------------------------------------------------------------
 
-static BOOL						gfx_initialized=0;// GFX flag
-static BOOL						d3d_enhanced=0;	//   3D enhanced?
-static FILE 					*LogFile=NULL;		// Log File!
+static BOOL                gfx_initialized=0;// GFX flag
+static BOOL                d3d_enhanced=0;   //   3D enhanced?
+static FILE                *LogFile=NULL;    // Log File!
 
 
-//	Function prototypes
-//	----------------------------------------------------------------------------
+// Function prototypes
+// ----------------------------------------------------------------------------
 
 #ifdef NDEBUG
 #define WRITELOG(t)
@@ -66,58 +66,58 @@ static FILE 					*LogFile=NULL;		// Log File!
 
 
 /* gfx Philosophy
-	
-	The GFX system is a higher level abstraction that is independent of the
-	DD-DDGR interface.   gfx uses the DD-DDGR interface, but not the other way
-	around.   You may use GFX calls and DD-DDGR calls interchangably with older
-	functions.  Any newer graphic functionality for Descent 2 will use
-	GFX calls
+   
+   The GFX system is a higher level abstraction that is independent of the
+   DD-DDGR interface.   gfx uses the DD-DDGR interface, but not the other way
+   around.   You may use GFX calls and DD-DDGR calls interchangably with older
+   functions.  Any newer graphic functionality for Descent 2 will use
+   GFX calls
 */
 
 
-//	Initialization
-//	----------------------------------------------------------------------------
+// Initialization
+// ----------------------------------------------------------------------------
 
 /* gfxInit
-		
-		When called at game initialization, this will initialize the DirectDraw
-		system.  Then we initialize other graphic components if called for.
-	
+      
+      When called at game initialization, this will initialize the DirectDraw
+      system.  Then we initialize other graphic components if called for.
+   
 */
 
 BOOL gfxInit(int hw_acc)
 {
-//	Initialize Direct Draw and DDGR system.
+// Initialize Direct Draw and DDGR system.
 
-	if (gfx_initialized) return TRUE;
+   if (gfx_initialized) return TRUE;
 
-	if (!DDInit(DDGR_FULLSCREEN)) 
-		return FALSE;
+   if (!DDInit(DDGR_FULLSCREEN)) 
+      return FALSE;
 
-	grd_curscreen = (grs_screen *)malloc(sizeof(grs_screen));
-	W95DisplayMode = SM95_640x480x8;
+   grd_curscreen = (grs_screen *)malloc(sizeof(grs_screen));
+   W95DisplayMode = SM95_640x480x8;
 
-	gr_init();
-	dd_gr_init();
-	dd_gr_init_screen();
+   gr_init();
+   dd_gr_init();
+   dd_gr_init_screen();
 
-//	Initialize 3D system if available.
-	if (hw_acc) 
-	{
-		if (!d3d_init()) 
-			Error("Unable to initialize 3D Hardware.");
-		d3d_enhanced = 1;
-	}
-	else d3d_enhanced = 0;
+// Initialize 3D system if available.
+   if (hw_acc) 
+   {
+      if (!d3d_init()) 
+         Error("Unable to initialize 3D Hardware.");
+      d3d_enhanced = 1;
+   }
+   else d3d_enhanced = 0;
 
-	gfx_initialized = 1;
+   gfx_initialized = 1;
 
-	return TRUE;
+   return TRUE;
 }
 
 
 void gfxClose(void)
 {
-	if (!gfx_initialized) return;
-	gfx_initialized = 0;	
+   if (!gfx_initialized) return;
+   gfx_initialized = 0; 
 }

@@ -22,29 +22,29 @@ extern void do_options_menu();
 extern int MenuHires;
 
 #ifdef SHAREWARE
-	#ifdef RELEASE
-		#ifdef MACINTOSH
-			#define Menu_pcx_name "\x01menub.pcx"	//read only from hog file
-		#else
-			#define Menu_pcx_name "\x01menud.pcx"	//read only from hog file
-		#endif
-	#else
-		#define Menu_pcx_name (MenuHires?"menub.pcx":"menud.pcx")	//name of background bitmap
-	#endif
+   #ifdef RELEASE
+      #ifdef MACINTOSH
+         #define Menu_pcx_name "\x01menub.pcx"  //read only from hog file
+      #else
+         #define Menu_pcx_name "\x01menud.pcx"  //read only from hog file
+      #endif
+   #else
+      #define Menu_pcx_name (MenuHires?"menub.pcx":"menud.pcx")   //name of background bitmap
+   #endif
 #else
-	#ifdef D2_OEM
-		#ifdef RELEASE
-			#define Menu_pcx_name (MenuHires?"\x01menuob.pcx":"\x01menuo.pcx")	//read only from hog file
-		#else
-			#define Menu_pcx_name (MenuHires?"menuob.pcx":"menuo.pcx")		//name of background bitmap
-		#endif
-	#else	//Full version
-		#ifdef RELEASE
-			#define Menu_pcx_name (MenuHires?"\x01menub.pcx":"\x01menu.pcx")	//read only from hog file
-		#else
-			#define Menu_pcx_name (MenuHires?"menub.pcx":"menu.pcx")		//name of background bitmap
-		#endif
-	#endif
+   #ifdef D2_OEM
+      #ifdef RELEASE
+         #define Menu_pcx_name (MenuHires?"\x01menuob.pcx":"\x01menuo.pcx")   //read only from hog file
+      #else
+         #define Menu_pcx_name (MenuHires?"menuob.pcx":"menuo.pcx")     //name of background bitmap
+      #endif
+   #else //Full version
+      #ifdef RELEASE
+         #define Menu_pcx_name (MenuHires?"\x01menub.pcx":"\x01menu.pcx")  //read only from hog file
+      #else
+         #define Menu_pcx_name (MenuHires?"menub.pcx":"menu.pcx")    //name of background bitmap
+      #endif
+   #endif
 #endif
 
 extern void set_detail_level_parameters(int detail_level);

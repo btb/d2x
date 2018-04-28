@@ -30,9 +30,9 @@ extern char Gamesave_current_filename[];
 
 extern int Gamesave_num_org_robots;
 
-//	In dumpmine.c
+// In dumpmine.c
 extern void write_game_text_file(char *filename);
 
-extern	int	Errors_in_mine;
+extern   int   Errors_in_mine;
 
 #endif

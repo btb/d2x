@@ -30,13 +30,13 @@ static char rcsid[] = "$Id: iforce.c 1.4 1996/09/20 22:11:29 samir Exp $";
 #include "winapp.h"
 #include "iforce.h"
 
-static JoystickRecord 	iForceCaps;
-static int					iForceInit=FALSE;
+static JoystickRecord   iForceCaps;
+static int              iForceInit=FALSE;
 
 
 #define WIN_TACTILE_ON
 
-//	----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 #ifdef WIN_TACTILE_ON
 
@@ -44,82 +44,82 @@ extern Bool _cdecl InitStick(JoystickRecord*);
 
 int IForce_Init(int port)
 {
-	Bool result;
+   Bool result;
 
-	if (iForceInit) return 1;
+   if (iForceInit) return 1;
 
-	if (port < 1 || port > 4) return 0;
+   if (port < 1 || port > 4) return 0;
 
-	SetJoystickPort(port);	
-	result = InitStick(&iForceCaps);
-	if (!result) {
-		logentry( "IFORCE: Initialization failed!.\n");
-		return 0;
-	}
-	
-	if (!EnableForces()) {
-		logentry("IFORCE: Unable to enable forces.\n");
-		return 0;
-	}
+   SetJoystickPort(port);  
+   result = InitStick(&iForceCaps);
+   if (!result) {
+      logentry( "IFORCE: Initialization failed!.\n");
+      return 0;
+   }
+   
+   if (!EnableForces()) {
+      logentry("IFORCE: Unable to enable forces.\n");
+      return 0;
+   }
 
-	ClearForces();
+   ClearForces();
 
-	iForceInit = TRUE;
+   iForceInit = TRUE;
 
-	logentry("IFORCE: Initialization complete.\n");
+   logentry("IFORCE: Initialization complete.\n");
 
-	return 1;
+   return 1;
 }
 
 
 int IForce_Close()
 {
-	int i = 0;
+   int i = 0;
 
-	if (!iForceInit) return 1;
+   if (!iForceInit) return 1;
 
-	while (i < 5) {
-		CloseStick();
-		i++;
-	}
-	return 1;
-}	
+   while (i < 5) {
+      CloseStick();
+      i++;
+   }
+   return 1;
+}  
 
 
 int IForce_GetCaps(IForce_Caps *caps)
 {
-	if (!iForceInit) return 0;
+   if (!iForceInit) return 0;
 
-	if (iForceCaps.PositionAxes >= 2) {
-		caps->axes_mask = JOY_1_X_AXIS;
-		caps->axes_mask &= JOY_1_Y_AXIS;
-	}
-	if (iForceCaps.PositionAxes == 4) {
-		caps->axes_mask &= JOY_1_POV;
-		caps->has_pov = 1;
-	}
-	return 1;
-}		
+   if (iForceCaps.PositionAxes >= 2) {
+      caps->axes_mask = JOY_1_X_AXIS;
+      caps->axes_mask &= JOY_1_Y_AXIS;
+   }
+   if (iForceCaps.PositionAxes == 4) {
+      caps->axes_mask &= JOY_1_POV;
+      caps->has_pov = 1;
+   }
+   return 1;
+}     
 
 
 void IForce_ReadRawValues(int *axis)
 {
-	JOYINFOEX	joy;
+   JOYINFOEX   joy;
 
-	if (!iForceInit) return;
-	
-	memset(&joy, 0, sizeof(joy));
-	joy.dwSize = sizeof(joy);
-	joy.dwFlags = JOY_RETURNALL | JOY_USEDEADZONE;
-	joyGetPosEx(JOYSTICKID1, &joy);
+   if (!iForceInit) return;
+   
+   memset(&joy, 0, sizeof(joy));
+   joy.dwSize = sizeof(joy);
+   joy.dwFlags = JOY_RETURNALL | JOY_USEDEADZONE;
+   joyGetPosEx(JOYSTICKID1, &joy);
 
-	axis[0] = joy.dwXpos;
-	axis[1] = joy.dwYpos;
-	axis[2] = joy.dwZpos;
-	axis[4] = joy.dwRpos;
-	axis[5] = joy.dwUpos;
-	axis[6] = joy.dwVpos;
-	axis[3] = joy.dwPOV;
+   axis[0] = joy.dwXpos;
+   axis[1] = joy.dwYpos;
+   axis[2] = joy.dwZpos;
+   axis[4] = joy.dwRpos;
+   axis[5] = joy.dwUpos;
+   axis[6] = joy.dwVpos;
+   axis[3] = joy.dwPOV;
 }
 
 #endif

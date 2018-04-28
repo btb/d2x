@@ -22,105 +22,105 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int filelength(int fd)
 {
-	int cur_pos, end_pos;
-	
-	cur_pos = lseek(fd, 0, SEEK_CUR);
-	lseek(fd, 0, SEEK_END);
-	end_pos = lseek(fd, 0, SEEK_CUR);
-	lseek(fd, cur_pos, SEEK_SET);
-	return end_pos;
+   int cur_pos, end_pos;
+   
+   cur_pos = lseek(fd, 0, SEEK_CUR);
+   lseek(fd, 0, SEEK_END);
+   end_pos = lseek(fd, 0, SEEK_CUR);
+   lseek(fd, cur_pos, SEEK_SET);
+   return end_pos;
 }
 
 byte read_byte(CFILE *fp)
 {
-	byte b;
-	
-	cfread(&b, sizeof(byte), 1, fp);
-	return b;
+   byte b;
+   
+   cfread(&b, sizeof(byte), 1, fp);
+   return b;
 }
 
 short read_short(CFILE *fp)
 {
-	short s;
-	
-	cfread(&s, sizeof(short), 1, fp);
-	return (s);
+   short s;
+   
+   cfread(&s, sizeof(short), 1, fp);
+   return (s);
 }
 
 short read_short_swap(CFILE *fp)
 {
-	short s;
-	
-	cfread(&s, sizeof(short), 1, fp);
-	return swapshort(s);
+   short s;
+   
+   cfread(&s, sizeof(short), 1, fp);
+   return swapshort(s);
 }
 
 int read_int(CFILE *fp)
 {
-	uint i;
-	
-	cfread(&i, sizeof(uint), 1, fp);
-	return i;
+   uint i;
+   
+   cfread(&i, sizeof(uint), 1, fp);
+   return i;
 }
 
 int read_int_swap(CFILE *fp)
 {
-	uint i;
-	
-	cfread(&i, sizeof(uint), 1, fp);
-	return swapint(i);
+   uint i;
+   
+   cfread(&i, sizeof(uint), 1, fp);
+   return swapint(i);
 }
 
 fix read_fix(CFILE *fp)
 {
-	fix f;
-	
-	cfread(&f, sizeof(fix), 1, fp);
-	return f;
+   fix f;
+   
+   cfread(&f, sizeof(fix), 1, fp);
+   return f;
 }
 
 fix read_fix_swap(CFILE *fp)
 {
-	fix f;
-	
-	cfread(&f, sizeof(fix), 1, fp);
-	return (fix)swapint((uint)f);
+   fix f;
+   
+   cfread(&f, sizeof(fix), 1, fp);
+   return (fix)swapint((uint)f);
 }
 
 int write_byte(FILE *fp, byte b)
 {
-	return (fwrite(&b, sizeof(byte), 1, fp));
+   return (fwrite(&b, sizeof(byte), 1, fp));
 }
 
 int write_short(FILE *fp, short s)
 {
-	return (fwrite(&s, sizeof(short), 1, fp));
+   return (fwrite(&s, sizeof(short), 1, fp));
 }
 
 int write_short_swap(FILE *fp, short s)
 {
-	s = swapshort(s);
-	return (fwrite(&s, sizeof(short), 1, fp));
+   s = swapshort(s);
+   return (fwrite(&s, sizeof(short), 1, fp));
 }
 
 int write_int(FILE *fp, int i)
 {
-	return (fwrite(&i,sizeof(int), 1, fp));
+   return (fwrite(&i,sizeof(int), 1, fp));
 }
 
 int write_int_swap(FILE *fp, int i)
 {
-	i = swapint(i);
-	return (fwrite(&i,sizeof(int), 1, fp));
+   i = swapint(i);
+   return (fwrite(&i,sizeof(int), 1, fp));
 }
 
 int write_fix(FILE *fp, fix f)
 {
-	return (fwrite(&f, sizeof(fix), 1, fp));
+   return (fwrite(&f, sizeof(fix), 1, fp));
 }
 
 int write_fix_swap(FILE *fp, fix f)
 {
-	f = (fix)swapint((int)f);
-	return (fwrite(&f, sizeof(fix), 1, fp));
+   f = (fix)swapint((int)f);
+   return (fwrite(&f, sizeof(fix), 1, fp));
 }

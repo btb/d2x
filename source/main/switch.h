@@ -17,48 +17,48 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "inferno.h"
 #include "segment.h"
 
-#define	MAX_TRIGGERS				100
-#define	MAX_WALLS_PER_LINK		10
+#define  MAX_TRIGGERS            100
+#define  MAX_WALLS_PER_LINK      10
 
 // Trigger types
 
-#define TT_OPEN_DOOR				0		// Open a door
-#define TT_CLOSE_DOOR			1		// Close a door
-#define TT_MATCEN					2		// Activate a matcen
-#define TT_EXIT					3		// End the level
-#define TT_SECRET_EXIT			4		// Go to secret level
-#define TT_ILLUSION_OFF			5		// Turn an illusion off
-#define TT_ILLUSION_ON			6		// Turn an illusion on
-#define TT_UNLOCK_DOOR			7		// Unlock a door
-#define TT_LOCK_DOOR				8		// Lock a door
-#define TT_OPEN_WALL				9		// Makes a wall open
-#define TT_CLOSE_WALL			10		//	Makes a wall closed
-#define TT_ILLUSORY_WALL		11		// Makes a wall illusory
-#define TT_LIGHT_OFF				12		// Turn a light off
-#define TT_LIGHT_ON				13		// Turn s light on
-#define NUM_TRIGGER_TYPES		14
+#define TT_OPEN_DOOR          0     // Open a door
+#define TT_CLOSE_DOOR         1     // Close a door
+#define TT_MATCEN             2     // Activate a matcen
+#define TT_EXIT               3     // End the level
+#define TT_SECRET_EXIT        4     // Go to secret level
+#define TT_ILLUSION_OFF       5     // Turn an illusion off
+#define TT_ILLUSION_ON        6     // Turn an illusion on
+#define TT_UNLOCK_DOOR        7     // Unlock a door
+#define TT_LOCK_DOOR          8     // Lock a door
+#define TT_OPEN_WALL          9     // Makes a wall open
+#define TT_CLOSE_WALL         10    // Makes a wall closed
+#define TT_ILLUSORY_WALL      11    // Makes a wall illusory
+#define TT_LIGHT_OFF          12    // Turn a light off
+#define TT_LIGHT_ON           13    // Turn s light on
+#define NUM_TRIGGER_TYPES     14
 
-// Trigger flags	  
+// Trigger flags    
 
 //could also use flags for one-shots
 
-#define TF_NO_MESSAGE			1		// Don't show a message when triggered
-#define TF_ONE_SHOT				2		// Only trigger once
-#define TF_DISABLED				4		// Set after one-shot fires
+#define TF_NO_MESSAGE         1     // Don't show a message when triggered
+#define TF_ONE_SHOT           2     // Only trigger once
+#define TF_DISABLED           4     // Set after one-shot fires
 
 
 //the trigger really should have both a type & a flags, since most of the
 //flags bits are exclusive of the others.
 typedef struct trigger {
-	ubyte		type;			//what this trigger does 
-	ubyte		flags;		//currently unused
-	byte	 	num_links;	//how many doors, etc. linked to this
-	byte		pad;			//keep alignment
-	fix		value;
-	fix		time;
-	short 	seg[MAX_WALLS_PER_LINK];
-	short		side[MAX_WALLS_PER_LINK];
-	} trigger;
+   ubyte    type;       //what this trigger does 
+   ubyte    flags;      //currently unused
+   byte     num_links;  //how many doors, etc. linked to this
+   byte     pad;        //keep alignment
+   fix      value;
+   fix      time;
+   short    seg[MAX_WALLS_PER_LINK];
+   short    side[MAX_WALLS_PER_LINK];
+   } trigger;
 
 extern trigger Triggers[MAX_TRIGGERS];
 

@@ -19,11 +19,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 typedef struct _d3d_caps 
 {
-	BOOL hw_acc;
-	BOOL tmap_acc;
-	UINT tmap_formats;
+   BOOL hw_acc;
+   BOOL tmap_acc;
+   UINT tmap_formats;
 
-	char devname[256];
+   char devname[256];
 
 } d3d_caps;
 

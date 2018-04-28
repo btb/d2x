@@ -26,75 +26,75 @@ static char rcsid[] = "$Id: vclip.c 2.3 1996/01/17 17:51:29 champaign Exp $";
 #include "laser.h"
 
 //----------------- Variables for video clips -------------------
-int 					Num_vclips = 0;
-vclip 				Vclip[VCLIP_MAXNUM];		// General purpose vclips.
+int               Num_vclips = 0;
+vclip             Vclip[VCLIP_MAXNUM];    // General purpose vclips.
 
 //draw an object which renders as a vclip
 draw_vclip_object(object *obj,fix timeleft,int lighted, int vclip_num)
 {
-	int nf,bitmapnum;
+   int nf,bitmapnum;
 
-	nf = Vclip[vclip_num].num_frames;
+   nf = Vclip[vclip_num].num_frames;
 
-	bitmapnum =  (nf - f2i(fixdiv( (nf-1)*timeleft,Vclip[vclip_num].play_time))) - 1;
+   bitmapnum =  (nf - f2i(fixdiv( (nf-1)*timeleft,Vclip[vclip_num].play_time))) - 1;
 
-	if (bitmapnum >= Vclip[vclip_num].num_frames)
-		bitmapnum=Vclip[vclip_num].num_frames-1;
+   if (bitmapnum >= Vclip[vclip_num].num_frames)
+      bitmapnum=Vclip[vclip_num].num_frames-1;
 
-	if (bitmapnum >= 0 )	{
+   if (bitmapnum >= 0 ) {
 
-		if (Vclip[vclip_num].flags & VF_ROD)
-			draw_object_tmap_rod(obj, Vclip[vclip_num].frames[bitmapnum],lighted);
-		else {
-			Assert(lighted==0);		//blob cannot now be lighted
+      if (Vclip[vclip_num].flags & VF_ROD)
+         draw_object_tmap_rod(obj, Vclip[vclip_num].frames[bitmapnum],lighted);
+      else {
+         Assert(lighted==0);     //blob cannot now be lighted
 
-			draw_object_blob(obj, Vclip[vclip_num].frames[bitmapnum] );
-		}
-	}
+         draw_object_blob(obj, Vclip[vclip_num].frames[bitmapnum] );
+      }
+   }
 
 }
 
 
 void draw_weapon_vclip(object *obj)
 {
-	int	vclip_num;
-	fix	modtime,play_time;
+   int   vclip_num;
+   fix   modtime,play_time;
 
-	//mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", obj-Objects, Weapon_info[obj->id].weapon_vclip, obj->size );
+   //mprintf( 0, "[Drawing obj %d type %d fireball size %x]\n", obj-Objects, Weapon_info[obj->id].weapon_vclip, obj->size );
 
-	Assert(obj->type == OBJ_WEAPON);
+   Assert(obj->type == OBJ_WEAPON);
 
-	vclip_num = Weapon_info[obj->id].weapon_vclip;
+   vclip_num = Weapon_info[obj->id].weapon_vclip;
 
-	modtime = obj->lifeleft;
-	play_time = Vclip[vclip_num].play_time;
+   modtime = obj->lifeleft;
+   play_time = Vclip[vclip_num].play_time;
 
-	//	Special values for modtime were causing enormous slowdown for omega blobs.
-	if (modtime == IMMORTAL_TIME)
-		modtime = play_time;
+   // Special values for modtime were causing enormous slowdown for omega blobs.
+   if (modtime == IMMORTAL_TIME)
+      modtime = play_time;
 
-	//	Should cause Omega blobs (which live for one frame) to not always be the same.
-	if (modtime == ONE_FRAME_TIME)
-		modtime = rand();
+   // Should cause Omega blobs (which live for one frame) to not always be the same.
+   if (modtime == ONE_FRAME_TIME)
+      modtime = rand();
 
-	if (obj->id == PROXIMITY_ID) {		//make prox bombs spin out of sync
-		int objnum = obj-Objects;
+   if (obj->id == PROXIMITY_ID) {      //make prox bombs spin out of sync
+      int objnum = obj-Objects;
 
-		modtime += (modtime * (objnum&7)) / 16;	//add variance to spin rate
+      modtime += (modtime * (objnum&7)) / 16;   //add variance to spin rate
 
-		while (modtime > play_time)
-			modtime -= play_time;
+      while (modtime > play_time)
+         modtime -= play_time;
 
-		if ((objnum&1) ^ ((objnum>>1)&1))			//make some spin other way
-			modtime = play_time - modtime;
+      if ((objnum&1) ^ ((objnum>>1)&1))         //make some spin other way
+         modtime = play_time - modtime;
 
-	}
-	else {
-		while (modtime > play_time)
-			modtime -= play_time;
-	}
+   }
+   else {
+      while (modtime > play_time)
+         modtime -= play_time;
+   }
 
-	draw_vclip_object(obj, modtime, 0, vclip_num);
+   draw_vclip_object(obj, modtime, 0, vclip_num);
 
 }
 

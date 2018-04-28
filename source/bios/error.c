@@ -30,11 +30,11 @@ static char rcsid[] = "$Id: error.c 1.24 1996/10/04 16:50:37 samir Exp $";
 #include "args.h"
 
 #ifdef MACINTOSH
-	#include <Types.h>
-	#include <Strings.h>
-	#include <LowMem.h>
-	
-	#include "resource.h"
+   #include <Types.h>
+   #include <Strings.h>
+   #include <LowMem.h>
+   
+   #include "resource.h"
 #endif
 
 #define MAX_MSG_LEN 256
@@ -49,7 +49,7 @@ char warn_message[MAX_MSG_LEN];
 //takes string in register, calls printf with string on stack
 void warn_printf(char *s)
 {
-	printf("%s\n",s);
+   printf("%s\n",s);
 }
 
 void (*warn_func)(char *s)=warn_printf;
@@ -57,132 +57,132 @@ void (*warn_func)(char *s)=warn_printf;
 //provides a function to call with warning messages
 void set_warn_func(void (*f)(char *s))
 {
-	warn_func = f;
+   warn_func = f;
 }
 
 //uninstall warning function - install default printf
 void clear_warn_func(void (*f)(char *s))
 {
-	warn_func = warn_printf;
+   warn_func = warn_printf;
 }
 
 void set_exit_message(char *fmt,...)
 {
-	va_list arglist;
-	int len;
+   va_list arglist;
+   int len;
 
-	va_start(arglist,fmt);
-	len = vsprintf(exit_message,fmt,arglist);
-	va_end(arglist);
+   va_start(arglist,fmt);
+   len = vsprintf(exit_message,fmt,arglist);
+   va_end(arglist);
 
-	if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in set_exit_message (len=%d, max=%d)",len,MAX_MSG_LEN);
+   if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in set_exit_message (len=%d, max=%d)",len,MAX_MSG_LEN);
 
 }
 
 #ifdef __NT__
 void _Assert(int expr, char *expr_text, char *filename, int linenum)
 {
-	if (!(expr)) {
-	#ifndef NDEBUG
-		if (FindArg("-debugmode")) DebugBreak();
-	#endif
-		Error("Assertion failed: %s, file %s, line %d", expr_text, filename, linenum);
-	}
+   if (!(expr)) {
+   #ifndef NDEBUG
+      if (FindArg("-debugmode")) DebugBreak();
+   #endif
+      Error("Assertion failed: %s, file %s, line %d", expr_text, filename, linenum);
+   }
 }
 #else
 void _Assert(int expr,char *expr_text,char *filename,int linenum)
 {
-	if (!(expr)) Error("Assertion failed: %s, file %s, line %d",expr_text,filename,linenum);
+   if (!(expr)) Error("Assertion failed: %s, file %s, line %d",expr_text,filename,linenum);
 
 }
 #endif
 
 void print_exit_message()
 {
-	if (*exit_message)
-	{
-		if (ErrorPrintFunc)
-		{
-			(*ErrorPrintFunc)(exit_message);
-		}
-		else
-		{
-			#if (defined(MACINTOSH) && defined(NDEBUG) && defined(RELEASE))
-				
-				c2pstr(exit_message);
-				ShowCursor();
-				ParamText(exit_message, "\p", "\p", "\p");
-				StopAlert(ERROR_ALERT, nil);
-				
-			#else
-				
-				printf("%s\n",exit_message);
-			
-			#endif
-		}
-	}
+   if (*exit_message)
+   {
+      if (ErrorPrintFunc)
+      {
+         (*ErrorPrintFunc)(exit_message);
+      }
+      else
+      {
+         #if (defined(MACINTOSH) && defined(NDEBUG) && defined(RELEASE))
+            
+            c2pstr(exit_message);
+            ShowCursor();
+            ParamText(exit_message, "\p", "\p", "\p");
+            StopAlert(ERROR_ALERT, nil);
+            
+         #else
+            
+            printf("%s\n",exit_message);
+         
+         #endif
+      }
+   }
 }
 
 //terminates with error code 1, printing message
 void Error(char *fmt,...)
 {
-	va_list arglist;
+   va_list arglist;
 
-	#if (defined(MACINTOSH) && defined(NDEBUG) && defined(RELEASE))
-		strcpy(exit_message,"Error: ");		// don't put the new line in for dialog output
-	#else
-		strcpy(exit_message,"\nError: ");
-	#endif
-	va_start(arglist,fmt);
-	vsprintf(exit_message+strlen(exit_message),fmt,arglist);
-	va_end(arglist);
+   #if (defined(MACINTOSH) && defined(NDEBUG) && defined(RELEASE))
+      strcpy(exit_message,"Error: ");     // don't put the new line in for dialog output
+   #else
+      strcpy(exit_message,"\nError: ");
+   #endif
+   va_start(arglist,fmt);
+   vsprintf(exit_message+strlen(exit_message),fmt,arglist);
+   va_end(arglist);
 
-	Int3();
+   Int3();
 
-	if (!initialized) print_exit_message();
+   if (!initialized) print_exit_message();
 
-	exit(1);
+   exit(1);
 }
 
 //print out warning message to user
 void Warning(char *fmt,...)
 {
-	va_list arglist;
+   va_list arglist;
 
-	if (warn_func == NULL)
-		return;
+   if (warn_func == NULL)
+      return;
 
-	strcpy(warn_message,"Warning: ");
+   strcpy(warn_message,"Warning: ");
 
-	va_start(arglist,fmt);
-	vsprintf(warn_message+strlen(warn_message),fmt,arglist);
-	va_end(arglist);
+   va_start(arglist,fmt);
+   vsprintf(warn_message+strlen(warn_message),fmt,arglist);
+   va_end(arglist);
 
-	mprintf((0, "%s\n", warn_message));
-	(*warn_func)(warn_message);
+   mprintf((0, "%s\n", warn_message));
+   (*warn_func)(warn_message);
 
 }
 
 //initialize error handling system, and set default message. returns 0=ok
 int error_init(void (*func)(char *), char *fmt,...)
 {
-	va_list arglist;
-	int len;
+   va_list arglist;
+   int len;
 
-	atexit(print_exit_message);		//last thing at exit is print message
+   atexit(print_exit_message);      //last thing at exit is print message
 
-	ErrorPrintFunc = func;				// Set Error Print Functions
+   ErrorPrintFunc = func;           // Set Error Print Functions
 
-	if (fmt != NULL) {
-		va_start(arglist,fmt);
-		len = vsprintf(exit_message,fmt,arglist);
-		va_end(arglist);
-		if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in error_init (len=%d, max=%d)",len,MAX_MSG_LEN);
-	}
+   if (fmt != NULL) {
+      va_start(arglist,fmt);
+      len = vsprintf(exit_message,fmt,arglist);
+      va_end(arglist);
+      if (len==-1 || len>MAX_MSG_LEN) Error("Message too long in error_init (len=%d, max=%d)",len,MAX_MSG_LEN);
+   }
 
-	initialized=1;
+   initialized=1;
 
-	return 0;
+   return 0;
 }
 
 #ifdef MACINTOSH
@@ -191,10 +191,10 @@ int MacEnableInt3 = 1;
 
 void MacAssert(int expr, char *expr_text, char *filename, int linenum)
 {
-	if (!(expr)) {
-		Int3();
-//		Error("Assertion failed: %s, file %s, line %d", expr_text, filename, linenum);
-	}
+   if (!(expr)) {
+      Int3();
+//    Error("Assertion failed: %s, file %s, line %d", expr_text, filename, linenum);
+   }
 }
 
 #endif
@@ -205,7 +205,7 @@ int WinEnableInt3 = 1;
 
 void WinInt3()
 {
-	if (WinEnableInt3) 
-		DebugBreak();
+   if (WinEnableInt3) 
+      DebugBreak();
 }
 #endif

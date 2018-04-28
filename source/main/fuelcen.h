@@ -72,7 +72,7 @@ void fuelcen_damage(segment *segp, fix AmountOfDamage );
 // Called to repair an object
 //--repair-- int refuel_do_repair_effect( object * obj, int first_time, int repair_seg );
 
-#define MAX_NUM_FUELCENS			70
+#define MAX_NUM_FUELCENS         70
 
 extern char Special_names[MAX_CENTER_TYPES][11];
 
@@ -87,39 +87,39 @@ extern char Special_names[MAX_CENTER_TYPES][11];
 
 // An array of pointers to segments with fuel centers.
 typedef struct FuelCenter {
-	int			Type;
-	int			segnum;
-	byte			Flag;
-	byte			Enabled;
-	byte			Lives;			//	Number of times this can be enabled.
-	byte			dum1;
-	fix 			Capacity;
-	fix			MaxCapacity;
-	fix			Timer;			//used in matcen for when next robot comes out
-	fix			Disable_time;		//	Time until center disabled.
-//	object *		last_created_obj;
-//	int 			last_created_sig;
-	vms_vector	Center;
+   int         Type;
+   int         segnum;
+   byte        Flag;
+   byte        Enabled;
+   byte        Lives;         // Number of times this can be enabled.
+   byte        dum1;
+   fix         Capacity;
+   fix         MaxCapacity;
+   fix         Timer;         //used in matcen for when next robot comes out
+   fix         Disable_time;     // Time until center disabled.
+// object *    last_created_obj;
+// int         last_created_sig;
+   vms_vector  Center;
 } FuelCenter;
 
 // The max number of robot centers per mine.
-#define MAX_ROBOT_CENTERS  20	
+#define MAX_ROBOT_CENTERS  20 
 
 extern int Num_robot_centers;
 
 typedef struct matcen_info {
-	int			robot_flags[2];	// Up to 64 different robots
-	fix			hit_points;			// How hard it is to destroy this particular matcen
-	fix			interval;			// Interval between materialogrifizations
-	short			segnum;				// Segment this is attached to.
-	short			fuelcen_num;		// Index in fuelcen array.
+   int         robot_flags[2];   // Up to 64 different robots
+   fix         hit_points;       // How hard it is to destroy this particular matcen
+   fix         interval;         // Interval between materialogrifizations
+   short       segnum;           // Segment this is attached to.
+   short       fuelcen_num;      // Index in fuelcen array.
 } matcen_info;
 
 extern matcen_info RobotCenters[MAX_ROBOT_CENTERS];
 
-//--repair-- extern object *RepairObj;			//which object getting repaired, or NULL
+//--repair-- extern object *RepairObj;       //which object getting repaired, or NULL
 
-//	Called when a materialization center gets triggered by the player flying through some trigger!
+// Called when a materialization center gets triggered by the player flying through some trigger!
 extern void trigger_matcen(int segnum);
 
 extern void disable_matcens(void);

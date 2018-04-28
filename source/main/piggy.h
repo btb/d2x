@@ -23,15 +23,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MAX_ALIASES 20
 
 typedef struct alias {
-	char alias_name[FILENAME_LEN];
-	char file_name[FILENAME_LEN];
+   char alias_name[FILENAME_LEN];
+   char file_name[FILENAME_LEN];
 } alias;
 
 extern alias alias_list[MAX_ALIASES];
 extern int Num_aliases;
 
 typedef struct bitmap_index {
-	ushort	index;
+   ushort   index;
 } bitmap_index;
 
 int piggy_init();
@@ -45,28 +45,28 @@ int piggy_find_sound( char * name );
 extern int Pigfile_initialized;
 
 #ifdef PIGGY_USE_PAGING
-	#define PIGGY_PAGE_IN(bmp) 							\
-do { 																\
-	if ( GameBitmaps[(bmp).index].bm_flags & BM_FLAG_PAGED_OUT )	{	\
-		piggy_bitmap_page_in( bmp ); 						\
-	}																\
+   #define PIGGY_PAGE_IN(bmp)                      \
+do {                                               \
+   if ( GameBitmaps[(bmp).index].bm_flags & BM_FLAG_PAGED_OUT )   {  \
+      piggy_bitmap_page_in( bmp );                 \
+   }                                               \
 } while(0)
-/*		mprintf(( 0, "Paging in '%s' from file '%s', line %d\n", #bmp, __FILE__,__LINE__ ));	\ */
+/*    mprintf(( 0, "Paging in '%s' from file '%s', line %d\n", #bmp, __FILE__,__LINE__ ));   \ */
 
-	extern void piggy_bitmap_page_in( bitmap_index bmp );
-	extern void piggy_bitmap_page_out_all();
-	extern int piggy_page_flushed;
+   extern void piggy_bitmap_page_in( bitmap_index bmp );
+   extern void piggy_bitmap_page_out_all();
+   extern int piggy_page_flushed;
 #else
-	#define PIGGY_PAGE_IN(bmp) 
+   #define PIGGY_PAGE_IN(bmp) 
 #endif
 
 void piggy_read_bitmap_data(grs_bitmap * bmp);
-void piggy_read_sound_data(digi_sound	*snd);
+void piggy_read_sound_data(digi_sound  *snd);
 
 void piggy_load_level_data();
 
-#define MAX_BITMAP_FILES	2620 // Upped for CD Enhanced
-#define MAX_SOUND_FILES		MAX_SOUNDS
+#define MAX_BITMAP_FILES   2620 // Upped for CD Enhanced
+#define MAX_SOUND_FILES    MAX_SOUNDS
 
 extern digi_sound GameSounds[MAX_SOUND_FILES];
 extern grs_bitmap GameBitmaps[MAX_BITMAP_FILES];

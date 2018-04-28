@@ -26,7 +26,7 @@ extern void arcade_read_controls();
 
 #else
 
-#define Arcade_mode 0		//code gets optimized out
+#define Arcade_mode 0      //code gets optimized out
 
 #define arcade_init()
 #define arcade_read_controls()

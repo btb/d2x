@@ -21,24 +21,24 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern ushort swapshort(ushort s);
 extern uint swapint(uint i);
 
-#define SWAPSHORT(x)	(							\
-						((ubyte)x << 8) |					\
-						(((ushort)x) >> 8)			\
-						)
-						
-#define SWAPINT(x)		(							\
-						(x << 24) |					\
-						(((ulong)x) >> 24) |		\
-						((x & 0x0000ff00) << 8) |	\
-						((x & 0x00ff0000) >> 8)		\
-						)
+#define SWAPSHORT(x) (                    \
+                  ((ubyte)x << 8) |             \
+                  (((ushort)x) >> 8)         \
+                  )
+                  
+#define SWAPINT(x)      (                    \
+                  (x << 24) |             \
+                  (((ulong)x) >> 24) |    \
+                  ((x & 0x0000ff00) << 8) |  \
+                  ((x & 0x00ff0000) >> 8)    \
+                  )
 
 #ifndef MACINTOSH
-#define INTEL_INT(x)	x
-#define INTEL_SHORT(x)	x
+#define INTEL_INT(x) x
+#define INTEL_SHORT(x)  x
 #else
-#define INTEL_INT(x)	SWAPINT(x)
-#define INTEL_SHORT(x)	SWAPSHORT(x)
+#define INTEL_INT(x) SWAPINT(x)
+#define INTEL_SHORT(x)  SWAPSHORT(x)
 #endif
 
 #endif

@@ -19,63 +19,63 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void gr_ubox0(int left,int top,int right,int bot)
 {
-	int i, d;
+   int i, d;
 
-	unsigned char * ptr1;
-	unsigned char * ptr2;
+   unsigned char * ptr1;
+   unsigned char * ptr2;
 
-	ptr1 = DATA + ROWSIZE *top+left;
+   ptr1 = DATA + ROWSIZE *top+left;
 
-	ptr2 = ptr1;
-	d = right - left;
+   ptr2 = ptr1;
+   d = right - left;
 
-	for (i=top; i<=bot; i++ )
-	{
-		ptr2[0] = COLOR;
-		ptr2[d] = COLOR;
-		ptr2 += ROWSIZE;
-	}
+   for (i=top; i<=bot; i++ )
+   {
+      ptr2[0] = COLOR;
+      ptr2[d] = COLOR;
+      ptr2 += ROWSIZE;
+   }
 
-	ptr2 = ptr1;
-	d = (bot - top)*ROWSIZE;
+   ptr2 = ptr1;
+   d = (bot - top)*ROWSIZE;
 
-	for (i=1; i<(right-left); i++ )
-	{
-		ptr2[i+0] = COLOR;
-		ptr2[i+d] = COLOR;
-	}
+   for (i=1; i<(right-left); i++ )
+   {
+      ptr2[i+0] = COLOR;
+      ptr2[i+d] = COLOR;
+   }
 }
 
 void gr_box0(int left,int top,int right,int bot)
 {
-	if (top > MAXY ) return;
+   if (top > MAXY ) return;
     if (bot < MINY ) return;
     if (left > MAXX ) return;
     if (right < MINX ) return;
     
-	if (top < MINY) top = MINY;
+   if (top < MINY) top = MINY;
     if (bot > MAXY ) bot = MAXY;
-	if (left < MINX) left = MINX;
+   if (left < MINX) left = MINX;
     if (right > MAXX ) right = MAXX;
 
-	gr_ubox0(left,top,right,bot);
+   gr_ubox0(left,top,right,bot);
 
 }
 
 
 void gr_ubox12(int left,int top,int right,int bot)
 {
-	int i;
+   int i;
 
-	for (i=top; i<=bot; i++ )
-	{
-		gr_upixel( left, i );
-		gr_upixel( right, i );
-	}
+   for (i=top; i<=bot; i++ )
+   {
+      gr_upixel( left, i );
+      gr_upixel( right, i );
+   }
 
-	gr_uscanline( left, right, top );
+   gr_uscanline( left, right, top );
 
-	gr_uscanline( left, right, bot );
+   gr_uscanline( left, right, bot );
 }
 
 void gr_box12(int left,int top,int right,int bot)
@@ -85,35 +85,35 @@ void gr_box12(int left,int top,int right,int bot)
     if (left > MAXX ) return;
     if (right < MINX ) return;
     
-	if (top < MINY) top = MINY;
+   if (top < MINY) top = MINY;
     if (bot > MAXY ) bot = MAXY;
-	if (left < MINX) left = MINX;
+   if (left < MINX) left = MINX;
     if (right > MAXX ) right = MAXX;
         
-	gr_ubox12(left, top, right, bot );
+   gr_ubox12(left, top, right, bot );
     
 }
 
 void gr_ubox(int left,int top,int right,int bot)
 {
-	if (TYPE==BM_LINEAR)
-		gr_ubox0( left, top, right, bot );
+   if (TYPE==BM_LINEAR)
+      gr_ubox0( left, top, right, bot );
 
-	else if ( TYPE == BM_MODEX )
-		gr_ubox12( left, top, right, bot );
+   else if ( TYPE == BM_MODEX )
+      gr_ubox12( left, top, right, bot );
 
     else
-		gr_ubox12( left, top, right, bot );
+      gr_ubox12( left, top, right, bot );
 }
 
 void gr_box(int left,int top,int right,int bot)
 {
-	if (TYPE==BM_LINEAR)
-		gr_box0( left, top, right, bot );
+   if (TYPE==BM_LINEAR)
+      gr_box0( left, top, right, bot );
 
-	else if ( TYPE == BM_MODEX )
-		gr_box12( left, top, right, bot );
+   else if ( TYPE == BM_MODEX )
+      gr_box12( left, top, right, bot );
     
-	else
-		gr_ubox12( left, top, right, bot );
+   else
+      gr_ubox12( left, top, right, bot );
 }

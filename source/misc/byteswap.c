@@ -18,14 +18,14 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 ushort swapshort(ushort s)
 {
-	return ((s >> 8) & 0x00ff) | ((s << 8) & 0xff00);
+   return ((s >> 8) & 0x00ff) | ((s << 8) & 0xff00);
 }
 
 uint swapint(uint i)
 {
-	ushort s1, s2;
-	
-	s1 = (i >> 16) & 0x0000ffff;
-	s2 = i & 0x0000ffff;
-	return ((swapshort(s2) << 16) | swapshort(s1));
+   ushort s1, s2;
+   
+   s1 = (i >> 16) & 0x0000ffff;
+   s2 = i & 0x0000ffff;
+   return ((swapshort(s2) << 16) | swapshort(s1));
 }

@@ -41,23 +41,23 @@ void gr_linear_movsd( ubyte * source, ubyte * dest, int nbytes);
 
 #ifndef MACINTOSH
 #pragma aux gr_linear_movsd parm [esi] [edi] [ecx] modify exact [ecx esi edi eax ebx] = \
-" cld "					\
-" mov		ebx, ecx	"	\
-" mov		eax, edi"	\
-" and		eax, 011b"	\
-" jz		d_aligned"	\
-" mov		ecx, 4"		\
-" sub		ecx, eax"	\
-" sub		ebx, ecx"	\
-" rep		movsb"		\
-" d_aligned: "			\
-" mov		ecx, ebx"	\
-" shr		ecx, 2"		\
-" rep 	movsd"		\
-" mov		ecx, ebx"	\
-" and 	ecx, 11b"	\
-" rep 	movsb";
-#endif 		// ifdef MACINTOSH
+" cld "              \
+" mov    ebx, ecx "  \
+" mov    eax, edi"   \
+" and    eax, 011b"  \
+" jz     d_aligned"  \
+" mov    ecx, 4"     \
+" sub    ecx, eax"   \
+" sub    ebx, ecx"   \
+" rep    movsb"      \
+" d_aligned: "       \
+" mov    ecx, ebx"   \
+" shr    ecx, 2"     \
+" rep    movsd"      \
+" mov    ecx, ebx"   \
+" and    ecx, 11b"   \
+" rep    movsb";
+#endif      // ifdef MACINTOSH
 
 void gr_linear_line( int x0, int y0, int x1, int y1);
 

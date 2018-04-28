@@ -16,32 +16,32 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "fix.h"
 
-//#define INLINE 1		//are some of these functions inline?
+//#define INLINE 1      //are some of these functions inline?
 
 //The basic fixed-point vector.  Access elements by name or position
 typedef struct vms_vector {
-	fix x,y,z;
+   fix x,y,z;
 } vms_vector;
 
 typedef struct vms_vector_array {
-	fix xyz[3];
+   fix xyz[3];
 } vms_vector_array;
 
 //Short vector, used for pre-rotation points. 
 //Access elements by name or position
 typedef struct vms_svec {
-	short sv_x,sv_y,sv_z;
+   short sv_x,sv_y,sv_z;
 } vms_svec;
 
 //Angle vector.  Used to store orientations
 typedef struct vms_angvec {
-	fixang p,b,h;
+   fixang p,b,h;
 } vms_angvec;
 
 //A 3x3 rotation matrix.  Sorry about the numbering starting with one.
 //Ordering is across then down, so <m1,m2,m3> is the first row
 typedef struct vms_matrix {
-	vms_vector rvec,uvec,fvec;
+   vms_vector rvec,uvec,fvec;
 } vms_matrix;
 
 //Macros/functions to fill in fields of structures
@@ -55,24 +55,24 @@ typedef struct vms_matrix {
 #define vm_vec_zero(v) (v)->x=(v)->y=(v)->z=0
 
 //macro set set a matrix to the identity. Note: NO RETURN VALUE
-#define vm_set_identity(m) do {m->rvec.x = m->uvec.y = m->fvec.z = f1_0;	\
-										m->rvec.y = m->rvec.z = \
-										m->uvec.x = m->uvec.z = \
-										m->fvec.x = m->fvec.y = 0;} while (0)
+#define vm_set_identity(m) do {m->rvec.x = m->uvec.y = m->fvec.z = f1_0;   \
+                              m->rvec.y = m->rvec.z = \
+                              m->uvec.x = m->uvec.z = \
+                              m->fvec.x = m->fvec.y = 0;} while (0)
 
 vms_vector *vm_vec_make(vms_vector *v,fix x,fix y,fix z);
 
 #pragma aux vm_vec_make "*_" parm [eax] [edx] [ebx] [ecx] value [eax] modify exact [] = \
-	"mov 0[eax],edx"	\
-	"mov 4[eax],ebx"	\
-	"mov 8[eax],ecx";
+   "mov 0[eax],edx"  \
+   "mov 4[eax],ebx"  \
+   "mov 8[eax],ecx";
 
 vms_angvec *vm_angvec_make(vms_angvec *v,fixang p,fixang b,fixang h);
 
 #pragma aux vm_angvec_make "*_" parm [eax] [dx] [bx] [cx] value [eax] modify exact [] = \
-	"mov 0[eax],dx"	\
-	"mov 2[eax],bx"	\
-	"mov 4[eax],cx";
+   "mov 0[eax],dx"   \
+   "mov 2[eax],bx"   \
+   "mov 4[eax],cx";
 
 //Global constants
 
@@ -90,11 +90,11 @@ extern vms_matrix vmd_identity_matrix;
 ////make this local, so compiler can in-line it
 //static vms_vector *vm_vec_make(vms_vector *v,fix x,fix y,fix z)
 //{
-//	v->x = x;
-//	v->y = y;
-//	v->z = z;
+// v->x = x;
+// v->y = y;
+// v->z = z;
 //
-//	return v;
+// return v;
 //}
 //#pragma on (unreferenced)
 
@@ -102,18 +102,18 @@ extern vms_matrix vmd_identity_matrix;
 /*
 //macro to fill in elements of a matrix, also for Mike
 #define vm_mat_make(m,_m1,_m2,_m3,_m4,_m5,_m6,_m7,_m8,_m9) \
-	 do {	(m)->m1=(_m1); (m)->m2=(_m2); (m)->m3=(_m3); \
-			(m)->m4=(_m4); (m)->m5=(_m5); (m)->m6=(_m6); \
-			(m)->m7=(_m7); (m)->m8=(_m8); (m)->m9=(_m9);} while (0)
+    do { (m)->m1=(_m1); (m)->m2=(_m2); (m)->m3=(_m3); \
+         (m)->m4=(_m4); (m)->m5=(_m5); (m)->m6=(_m6); \
+         (m)->m7=(_m7); (m)->m8=(_m8); (m)->m9=(_m9);} while (0)
 */
 
-#if 0	//kill this, since bogus with new matrix ordering
+#if 0 //kill this, since bogus with new matrix ordering
 
 //macro to fill in elements of a matrix, also for Mike
 #define vm_mat_make(m,_m1,_m2,_m3,_m4,_m5,_m6,_m7,_m8,_m9) \
-	 	( ((m)->m1=(_m1), (m)->m2=(_m2), (m)->m3=(_m3), \
-			(m)->m4=(_m4), (m)->m5=(_m5), (m)->m6=(_m6), \
-			(m)->m7=(_m7), (m)->m8=(_m8), (m)->m9=(_m9)), (m))
+      ( ((m)->m1=(_m1), (m)->m2=(_m2), (m)->m3=(_m3), \
+         (m)->m4=(_m4), (m)->m5=(_m5), (m)->m6=(_m6), \
+         (m)->m7=(_m7), (m)->m8=(_m8), (m)->m9=(_m9)), (m))
 
 #endif
 
@@ -145,28 +145,28 @@ vms_vector *vm_vec_sub2(vms_vector *dest,vms_vector *src);
 
 #else
 
-#define vm_vec_add(dest,src0,src1) do {	\
-	(dest)->x = (src0)->x + (src1)->x;		\
-	(dest)->y = (src0)->y + (src1)->y;		\
-	(dest)->z = (src0)->z + (src1)->z;		\
+#define vm_vec_add(dest,src0,src1) do {   \
+   (dest)->x = (src0)->x + (src1)->x;     \
+   (dest)->y = (src0)->y + (src1)->y;     \
+   (dest)->z = (src0)->z + (src1)->z;     \
 } while (0);
 
-#define vm_vec_sub(dest,src0,src1) do {	\
-	(dest)->x = (src0)->x - (src1)->x;		\
-	(dest)->y = (src0)->y - (src1)->y;		\
-	(dest)->z = (src0)->z - (src1)->z;		\
+#define vm_vec_sub(dest,src0,src1) do {   \
+   (dest)->x = (src0)->x - (src1)->x;     \
+   (dest)->y = (src0)->y - (src1)->y;     \
+   (dest)->z = (src0)->z - (src1)->z;     \
 } while (0);
 
-#define vm_vec_add2(dest,src) do {		\
-	(dest)->x += (src)->x;					\
-	(dest)->y += (src)->y;					\
-	(dest)->z += (src)->z;					\
+#define vm_vec_add2(dest,src) do {     \
+   (dest)->x += (src)->x;              \
+   (dest)->y += (src)->y;              \
+   (dest)->z += (src)->z;              \
 } while (0);
 
-#define vm_vec_sub2(dest,src) do {		\
-	(dest)->x -= (src)->x;					\
-	(dest)->y -= (src)->y;					\
-	(dest)->z -= (src)->z;					\
+#define vm_vec_sub2(dest,src) do {     \
+   (dest)->x -= (src)->x;              \
+   (dest)->y -= (src)->y;              \
+   (dest)->z -= (src)->z;              \
 } while (0);
 
 #endif
@@ -241,22 +241,22 @@ fix vm_vec_dot(vms_vector *v0,vms_vector *v1);
 
 fix vm_vec_dotprod(vms_vector *v0,vms_vector *v1);
 #pragma aux vm_vec_dotprod parm [esi] [edi] value [eax] modify exact [eax ebx ecx edx] = \
-	"mov	eax,[esi]"				\
-	"imul	dword ptr [edi]"		\
-	"mov	ebx,eax"					\
-	"mov	ecx,edx"					\
-										\
-	"mov	eax,4[esi]"				\
-	"imul	dword ptr 4[edi]"		\
-	"add	ebx,eax"					\
-	"adc	ecx,edx"					\
-										\
-	"mov	eax,8[esi]"				\
-	"imul	dword ptr 8[edi]"		\
-	"add	eax,ebx"					\
-	"adc	edx,ecx"					\
-										\
-	"shrd	eax,edx,16";
+   "mov  eax,[esi]"           \
+   "imul dword ptr [edi]"     \
+   "mov  ebx,eax"             \
+   "mov  ecx,edx"             \
+                              \
+   "mov  eax,4[esi]"          \
+   "imul dword ptr 4[edi]"    \
+   "add  ebx,eax"             \
+   "adc  ecx,edx"             \
+                              \
+   "mov  eax,8[esi]"          \
+   "imul dword ptr 8[edi]"    \
+   "add  eax,ebx"             \
+   "adc  edx,ecx"             \
+                              \
+   "shrd eax,edx,16";
 
 #endif
 
@@ -308,7 +308,7 @@ vms_vector *vm_vec_rotate(vms_vector *dest,vms_vector *src,vms_matrix *m);
 
 //transpose a matrix in place. returns ptr to matrix
 vms_matrix *vm_transpose_matrix(vms_matrix *m);
-vms_matrix *vm_transpose(vms_matrix *m);	//same as vm_transpose_matrix()
+vms_matrix *vm_transpose(vms_matrix *m);  //same as vm_transpose_matrix()
 
 //copy and transpose a matrix. returns ptr to matrix
 //dest CANNOT equal source. use vm_transpose_matrix() if this is the case
@@ -384,9 +384,9 @@ fix vm_dist_to_plane(vms_vector *checkp,vms_vector *norm,vms_vector *planep);
 #pragma aux vm_extract_angles_vector_normalized "*" parm [edi] [esi] value [edi] modify exact [];
 
 /*
-	Questions:
+   Questions:
 
-	should simple functions like vec_add() and vec_sub() be macros?
+   should simple functions like vec_add() and vec_sub() be macros?
 
 */
 

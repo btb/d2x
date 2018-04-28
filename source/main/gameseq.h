@@ -19,33 +19,33 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "player.h"
 #include "mission.h"
 
-#define SUPER_MISSILE		0
-#define SUPER_SEEKER			1
-#define SUPER_SMARTBOMB		2
-#define SUPER_SHOCKWAVE		3
+#define SUPER_MISSILE      0
+#define SUPER_SEEKER       1
+#define SUPER_SMARTBOMB    2
+#define SUPER_SHOCKWAVE    3
 
 #if defined(SHAREWARE)
-#define Last_level			3			//the number of the very last level for shareware
-#define Last_secret_level	0 			// No secret levels!
+#define Last_level         3        //the number of the very last level for shareware
+#define Last_secret_level  0        // No secret levels!
 #else
 #if defined(D2_OEM)
-#define Last_level			8			// 8 levels for Diamond/S3 version
-#define Last_secret_level	-2			// 2 secret levels
+#define Last_level         8        // 8 levels for Diamond/S3 version
+#define Last_secret_level  -2       // 2 secret levels
 #else
-extern int Last_level,Last_secret_level;	//set by mission code
+extern int Last_level,Last_secret_level;  //set by mission code
 #endif
 #endif
 
 extern int Secret_level_table[MAX_SECRET_LEVELS_PER_MISSION];
 
-#define LEVEL_NAME_LEN 36		//make sure this is multiple of 4!
+#define LEVEL_NAME_LEN 36     //make sure this is multiple of 4!
 
 //Current_level_num starts at 1 for the first level
 //-1,-2,-3 are secret levels
 //0 means not a real level loaded
 extern int Current_level_num,Next_level_num;
 extern char Current_level_name[LEVEL_NAME_LEN];
-extern obj_position	Player_init[MAX_PLAYERS];
+extern obj_position  Player_init[MAX_PLAYERS];
 
 
 //This is the highest level the player has ever reached
@@ -71,8 +71,8 @@ void StartLevel(int random_flag);
 // Actually does the work to start new level
 void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag);
 
-void InitPlayerObject();				//make sure player's object set up
-void init_player_stats_game();		//clear all stats
+void InitPlayerObject();            //make sure player's object set up
+void init_player_stats_game();      //clear all stats
 
 //starts a resumed game loaded from disk
 void ResumeSavedGame(int start_level);

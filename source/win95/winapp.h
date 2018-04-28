@@ -31,7 +31,7 @@ extern void logclose();
 extern void logentry(char *format, ...);
 
 
-//	Clipboard crap
+// Clipboard crap
 extern HBITMAP win95_screen_shot();
 
 extern void gr_winckpit_blt_span(int xmin, int xmax, char *src, char *dest);

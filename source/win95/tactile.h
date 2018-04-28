@@ -36,72 +36,72 @@ extern void Tactile_Xvibrate_clear ();
 
 /* DLL functions -moved from i-force.h */
 
-#define 	MAX_POSITION_CHANNELS	4	/* Max num pos feedback chans */
+#define  MAX_POSITION_CHANNELS   4  /* Max num pos feedback chans */
 
 typedef struct
 {
-	int	major;		/* major release number */
-	int	minor;		/* minor release number */
-	int	subminor;	/* subminor release number */
-} FFversion;			/* firmware release version */
+   int   major;      /* major release number */
+   int   minor;      /* minor release number */
+   int   subminor;   /* subminor release number */
+} FFversion;         /* firmware release version */
 
 typedef struct
 {
-	int	month;	/* month of release */
-	int	day;		/* day of release */
-	int	year;		/* year of release */
+   int   month;   /* month of release */
+   int   day;     /* day of release */
+   int   year;    /* year of release */
 } FFdate;
 
-/*	Record containing all Joystick data
- *		Declare one of these structs in your app if you want
- *		Joystick data like serial number, model number, firmware
- *		version, etc reported back by the InitStick() command.
+/* Record containing all Joystick data
+ *    Declare one of these structs in your app if you want
+ *    Joystick data like serial number, model number, firmware
+ *    version, etc reported back by the InitStick() command.
  *   Examples: (assuming 'StickRec' is declared as a Joystick Record)
  *      StickRec.SerialNumber - serial number
  *      StickRec.ForceAxes - number of force feedback axes
  */
 typedef struct JoystickRecord
 {
-	int	ForceAxes;			/* number of force feedback axes */
-	int	CommandAvailable;	/* command available */
-	int	PositionAxes;		/* number of position feedback axes */
-	int	Position[MAX_POSITION_CHANNELS];		/* 16-bit positions */
+   int   ForceAxes;        /* number of force feedback axes */
+   int   CommandAvailable; /* command available */
+   int   PositionAxes;     /* number of position feedback axes */
+   int   Position[MAX_POSITION_CHANNELS];    /* 16-bit positions */
 
-	FFversion	Version;			/* firmware release version */
-	FFdate	Date;					/* firmware release date */
-	unsigned long int SerialNumber;
-	unsigned int	ModelNumber;
+   FFversion   Version;       /* firmware release version */
+   FFdate   Date;             /* firmware release date */
+   unsigned long int SerialNumber;
+   unsigned int   ModelNumber;
 
 } JoystickRecord;
 
-extern Bool	_cdecl InitStick(JoystickRecord *StickRec);
-extern Bool	_cdecl GetStickStatus(char *StickStatus);
-extern Bool	_cdecl Echo(void);
-extern Bool _cdecl 	IForceAuthenticate(void);
+extern Bool _cdecl InitStick(JoystickRecord *StickRec);
+extern Bool _cdecl GetStickStatus(char *StickStatus);
+extern Bool _cdecl Echo(void);
+extern Bool _cdecl   IForceAuthenticate(void);
 extern int  _cdecl  GetStickError(void);
-extern Bool _cdecl 	EnableForces(void);
-extern Bool _cdecl 	DisableForces(void);
-extern Bool _cdecl 	ClearForces(void);
-extern Bool _cdecl 	CloseStick(void);
-extern void	_cdecl SetJoystickPort(int Port);
-extern void _cdecl 	SetJoystickAddressIRQ(unsigned int addr, int irq);
+extern Bool _cdecl   EnableForces(void);
+extern Bool _cdecl   DisableForces(void);
+extern Bool _cdecl   ClearForces(void);
+extern Bool _cdecl   CloseStick(void);
+extern void _cdecl SetJoystickPort(int Port);
+extern void _cdecl   SetJoystickAddressIRQ(unsigned int addr, int irq);
 
 /* Force Effect Functions */
-extern Bool _cdecl 	Jolt(unsigned int Magnitude,int Direction,unsigned int Duration);
-extern Bool _cdecl 	ButtonReflexJolt(unsigned int ButtonAssign, unsigned int Magnitude,
-		int direction, unsigned int Duration, unsigned int RepeatRate);
-extern Bool _cdecl 	ButtonReflexClear(unsigned int ButtonAssign);
-extern Bool _cdecl 	XVibration(unsigned int Lmagnitude, unsigned int Rmagnitude,
-		unsigned int Frequency);
-extern Bool _cdecl 	XVibrationClear(void);
-extern Bool _cdecl 	YVibration(unsigned int Umagnitude, unsigned int Dmagnitude,
-		unsigned int Frequency);
-extern Bool _cdecl 	YVibrationClear(void);
-extern Bool _cdecl 	Buffeting(unsigned int Magnitude);
-extern Bool _cdecl 	BuffetingClear(void);
-extern Bool _cdecl 	VectorForce(unsigned int Magnitude, int Direction);
-extern Bool _cdecl 	VectorForceClear(void);
-extern Bool _cdecl 	XYVectorForce(int XMagnitude,int YMagnitude);
+extern Bool _cdecl   Jolt(unsigned int Magnitude,int Direction,unsigned int Duration);
+extern Bool _cdecl   ButtonReflexJolt(unsigned int ButtonAssign, unsigned int Magnitude,
+      int direction, unsigned int Duration, unsigned int RepeatRate);
+extern Bool _cdecl   ButtonReflexClear(unsigned int ButtonAssign);
+extern Bool _cdecl   XVibration(unsigned int Lmagnitude, unsigned int Rmagnitude,
+      unsigned int Frequency);
+extern Bool _cdecl   XVibrationClear(void);
+extern Bool _cdecl   YVibration(unsigned int Umagnitude, unsigned int Dmagnitude,
+      unsigned int Frequency);
+extern Bool _cdecl   YVibrationClear(void);
+extern Bool _cdecl   Buffeting(unsigned int Magnitude);
+extern Bool _cdecl   BuffetingClear(void);
+extern Bool _cdecl   VectorForce(unsigned int Magnitude, int Direction);
+extern Bool _cdecl   VectorForceClear(void);
+extern Bool _cdecl   XYVectorForce(int XMagnitude,int YMagnitude);
 
 
 #define TACTILE_IMMERSION 1

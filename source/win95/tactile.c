@@ -36,30 +36,30 @@ int Tactile_open (int port)
  {
   switch (TactileStick)
    {
-	 case TACTILE_IMMERSION:
-	#if defined (__NT__) 
-		if (!IForce_Init(port)) {
-			TactileStick = 0;
-		}
-	#endif
-		break;
+    case TACTILE_IMMERSION:
+   #if defined (__NT__) 
+      if (!IForce_Init(port)) {
+         TactileStick = 0;
+      }
+   #endif
+      break;
 
-//@@	case TACTILE_CYBERNET:
-//@@		if (!CyberImpactInit()) {	
-//@@			mprintf((0, "Unable to initialize CyberImpact Device.\n"));
-//@@			atexit(CyberImpactClose);
-//@@		}
-//@@		else {
-//@@			mprintf((0, "CyberImpact Device initialized.\n"));
-//@@			TactileStick = 0;
-//@@		}	
-//@@		break;
+//@@  case TACTILE_CYBERNET:
+//@@     if (!CyberImpactInit()) {  
+//@@        mprintf((0, "Unable to initialize CyberImpact Device.\n"));
+//@@        atexit(CyberImpactClose);
+//@@     }
+//@@     else {
+//@@        mprintf((0, "CyberImpact Device initialized.\n"));
+//@@        TactileStick = 0;
+//@@     }  
+//@@     break;
 
-	 default:
- 		break;
-	}
-	return (TactileStick);
- }	
+    default:
+      break;
+   }
+   return (TactileStick);
+ } 
 
 #define MAX_FORCE (i2f(10))
 
@@ -69,45 +69,45 @@ void Tactile_apply_force (vms_vector *force_vec,vms_matrix *orient)
     fix feedmag,tempfix=0;
     vms_angvec feedang;
     vms_vector feedvec;
-	 unsigned short tempangle;
-	 int realangle;
- 		 
+    unsigned short tempangle;
+    int realangle;
+       
     if (TactileStick==TACTILE_IMMERSION)
-	  {
-		 vm_vec_rotate (&feedvec,force_vec,orient);
-		 vm_extract_angles_vector(&feedang,&feedvec);
-		 feedmag=vm_vec_mag_quick (force_vec);	
-	    feedforce=f2i(fixmuldiv (feedmag,i2f(100),MAX_FORCE));
-				
-		 mprintf ((0,"feedforce=%d\n",feedforce));
-	       
-		 if (feedforce<0)
-		 	feedforce=0;
-		 if (feedforce>100)
-	   	feedforce=100;
-			
-		 tempangle=(unsigned short)feedang.h;			  	
-		 tempfix=tempangle;
-			
-		 realangle=f2i(fixmul(tempfix,i2f(360)));
-		 realangle-=180;
-		 if (realangle<0)
-			realangle+=360;	
-	
-		 Jolt (feedforce,realangle,feedforce*7);
-	  }
-			
+     {
+       vm_vec_rotate (&feedvec,force_vec,orient);
+       vm_extract_angles_vector(&feedang,&feedvec);
+       feedmag=vm_vec_mag_quick (force_vec); 
+       feedforce=f2i(fixmuldiv (feedmag,i2f(100),MAX_FORCE));
+            
+       mprintf ((0,"feedforce=%d\n",feedforce));
+          
+       if (feedforce<0)
+         feedforce=0;
+       if (feedforce>100)
+         feedforce=100;
+         
+       tempangle=(unsigned short)feedang.h;           
+       tempfix=tempangle;
+         
+       realangle=f2i(fixmul(tempfix,i2f(360)));
+       realangle-=180;
+       if (realangle<0)
+         realangle+=360;   
+   
+       Jolt (feedforce,realangle,feedforce*7);
+     }
+         
 
  }
 
 void Tactile_jolt (int mag,int angle,int duration)
  {
   if (TactileStick==TACTILE_IMMERSION)
-	{
-	 Jolt (mag,angle,duration);
-	}
+   {
+    Jolt (mag,angle,duration);
+   }
  }
-			
+         
 void Tactile_Xvibrate (int mag,int freq)
  {
   if (TactileStick==TACTILE_IMMERSION)
@@ -130,15 +130,15 @@ void Tactile_do_collide ()
 
 void CloseTactileStick ()
  {
-  int i=0;	
+  int i=0;  
   if (TactileStick==TACTILE_IMMERSION)
    {
     while (i<5)
      {
       if (CloseStick())
-		 break;
-		i++;
-	  }
-	}
+       break;
+      i++;
+     }
+   }
  }
-		
+      

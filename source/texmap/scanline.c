@@ -35,212 +35,212 @@ extern int loop_count;
 
 void c_tmap_scanline_flat()
 {
-	ubyte *dest;
-	int x;
+   ubyte *dest;
+   int x;
 
-	dest = dest_row_data;
+   dest = dest_row_data;
 
-	for (x=loop_count; x >= 0; x-- ) {
-		*dest++ = tmap_flat_color;
-	}
+   for (x=loop_count; x >= 0; x-- ) {
+      *dest++ = tmap_flat_color;
+   }
 }
 
 void c_tmap_scanline_shaded()
 {
-	int fade;
-	ubyte *dest;
-	int x;
+   int fade;
+   ubyte *dest;
+   int x;
 
-	dest = dest_row_data;
+   dest = dest_row_data;
 
-	fade = tmap_flat_shade_value<<8;
-	for (x=loop_count; x >= 0; x-- ) {
-		*dest++ = gr_fade_table[ fade |(*dest)];
-	}
+   fade = tmap_flat_shade_value<<8;
+   for (x=loop_count; x >= 0; x-- ) {
+      *dest++ = gr_fade_table[ fade |(*dest)];
+   }
 }
 
 void c_tmap_scanline_lin_nolight()
 {
-	ubyte *dest;
-	uint c;
-	int x;
-	fix u,v,dudx, dvdx;
+   ubyte *dest;
+   uint c;
+   int x;
+   fix u,v,dudx, dvdx;
 
-	u = fx_u;
-	v = fx_v*64;
-	dudx = fx_du_dx; 
-	dvdx = fx_dv_dx*64; 
+   u = fx_u;
+   v = fx_v*64;
+   dudx = fx_du_dx; 
+   dvdx = fx_dv_dx*64; 
 
-	dest = dest_row_data;
+   dest = dest_row_data;
 
-	if (!Transparency_on)	{
-		for (x=loop_count; x >= 0; x-- ) {
-			*dest++ = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
-			u += dudx;
-			v += dvdx;
-		}
-	} else {
-		for (x=loop_count; x >= 0; x-- ) {
-			c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
-			if ( c!=255)
-				*dest = c;
-			dest++;
-			u += dudx;
-			v += dvdx;
-		}
-	}
+   if (!Transparency_on)   {
+      for (x=loop_count; x >= 0; x-- ) {
+         *dest++ = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
+         u += dudx;
+         v += dvdx;
+      }
+   } else {
+      for (x=loop_count; x >= 0; x-- ) {
+         c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
+         if ( c!=255)
+            *dest = c;
+         dest++;
+         u += dudx;
+         v += dvdx;
+      }
+   }
 }
 
 
 void c_tmap_scanline_lin()
 {
-	ubyte *dest;
-	uint c;
-	int x;
-	fix u,v,l,dudx, dvdx, dldx;
+   ubyte *dest;
+   uint c;
+   int x;
+   fix u,v,l,dudx, dvdx, dldx;
 
-	u = fx_u;
-	v = fx_v*64;
-	dudx = fx_du_dx; 
-	dvdx = fx_dv_dx*64; 
+   u = fx_u;
+   v = fx_v*64;
+   dudx = fx_du_dx; 
+   dvdx = fx_dv_dx*64; 
 
-	l = fx_l;
-	dldx = fx_dl_dx;
-	dest = dest_row_data;
+   l = fx_l;
+   dldx = fx_dl_dx;
+   dest = dest_row_data;
 
-	if (!Transparency_on)	{
-		for (x=loop_count; x >= 0; x-- ) {
-			*dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ] ];
-			l += dldx;
-			u += dudx;
-			v += dvdx;
-		}
-	} else {
-		for (x=loop_count; x >= 0; x-- ) {
-			c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
-			if ( c!=255)
-				*dest = gr_fade_table[ (l&(0xff00)) + c ];
-			dest++;
-			l += dldx;
-			u += dudx;
-			v += dvdx;
-		}
-	}
+   if (!Transparency_on)   {
+      for (x=loop_count; x >= 0; x-- ) {
+         *dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ] ];
+         l += dldx;
+         u += dudx;
+         v += dvdx;
+      }
+   } else {
+      for (x=loop_count; x >= 0; x-- ) {
+         c = (uint)pixptr[ (f2i(v)&(64*63)) + (f2i(u)&63) ];
+         if ( c!=255)
+            *dest = gr_fade_table[ (l&(0xff00)) + c ];
+         dest++;
+         l += dldx;
+         u += dudx;
+         v += dvdx;
+      }
+   }
 }
 
 
 void c_tmap_scanline_per_nolight()
 {
-	ubyte *dest;
-	uint c;
-	int x;
-	fix u,v,z,dudx, dvdx, dzdx;
+   ubyte *dest;
+   uint c;
+   int x;
+   fix u,v,z,dudx, dvdx, dzdx;
 
-	u = fx_u;
-	v = fx_v*64;
-	z = fx_z;
-	dudx = fx_du_dx; 
-	dvdx = fx_dv_dx*64; 
-	dzdx = fx_dz_dx;
+   u = fx_u;
+   v = fx_v*64;
+   z = fx_z;
+   dudx = fx_du_dx; 
+   dvdx = fx_dv_dx*64; 
+   dzdx = fx_dz_dx;
 
-	dest = dest_row_data;
+   dest = dest_row_data;
 
-	if (!Transparency_on)	{
-		for (x=loop_count; x >= 0; x-- ) {
-			*dest++ = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	} else {
-		for (x=loop_count; x >= 0; x-- ) {
-			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
-			if ( c!=255)
-				*dest = c;
-			dest++;
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	}
+   if (!Transparency_on)   {
+      for (x=loop_count; x >= 0; x-- ) {
+         *dest++ = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   } else {
+      for (x=loop_count; x >= 0; x-- ) {
+         c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+         if ( c!=255)
+            *dest = c;
+         dest++;
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   }
 }
 
 void c_tmap_scanline_per()
 {
-	ubyte *dest;
-	uint c;
-	int x;
-	fix u,v,z,l,dudx, dvdx, dzdx, dldx;
+   ubyte *dest;
+   uint c;
+   int x;
+   fix u,v,z,l,dudx, dvdx, dzdx, dldx;
 
-	u = fx_u;
-	v = fx_v*64;
-	z = fx_z;
-	dudx = fx_du_dx; 
-	dvdx = fx_dv_dx*64; 
-	dzdx = fx_dz_dx;
+   u = fx_u;
+   v = fx_v*64;
+   z = fx_z;
+   dudx = fx_du_dx; 
+   dvdx = fx_dv_dx*64; 
+   dzdx = fx_dz_dx;
 
-	l = fx_l;
-	dldx = fx_dl_dx;
-	dest = dest_row_data;
+   l = fx_l;
+   dldx = fx_dl_dx;
+   dest = dest_row_data;
 
-	if (!Transparency_on)	{
-		for (x=loop_count; x >= 0; x-- ) {
-			*dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ] ];
-			l += dldx;
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	} else {
-		for (x=loop_count; x >= 0; x-- ) {
-			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
-			if ( c!=255)
-				*dest = gr_fade_table[ (l&(0xff00)) + c ];
-			dest++;
-			l += dldx;
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	}
+   if (!Transparency_on)   {
+      for (x=loop_count; x >= 0; x-- ) {
+         *dest++ = gr_fade_table[ (l&(0xff00)) + (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ] ];
+         l += dldx;
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   } else {
+      for (x=loop_count; x >= 0; x-- ) {
+         c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+         if ( c!=255)
+            *dest = gr_fade_table[ (l&(0xff00)) + c ];
+         dest++;
+         l += dldx;
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   }
 }
 
 #define zonk 1
 
 void c_tmap_scanline_editor()
 {
-	ubyte *dest;
-	uint c;
-	int x;
-	fix u,v,z,dudx, dvdx, dzdx;
+   ubyte *dest;
+   uint c;
+   int x;
+   fix u,v,z,dudx, dvdx, dzdx;
 
-	u = fx_u;
-	v = fx_v*64;
-	z = fx_z;
-	dudx = fx_du_dx; 
-	dvdx = fx_dv_dx*64; 
-	dzdx = fx_dz_dx;
+   u = fx_u;
+   v = fx_v*64;
+   z = fx_z;
+   dudx = fx_du_dx; 
+   dvdx = fx_dv_dx*64; 
+   dzdx = fx_dz_dx;
 
-	dest = dest_row_data;
+   dest = dest_row_data;
 
-	if (!Transparency_on)	{
-		for (x=loop_count; x >= 0; x-- ) {
-			*dest++ = zonk;
-			//(uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	} else {
-		for (x=loop_count; x >= 0; x-- ) {
-			c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
-			if ( c!=255)
-				*dest = zonk;
-			dest++;
-			u += dudx;
-			v += dvdx;
-			z += dzdx;
-		}
-	}
+   if (!Transparency_on)   {
+      for (x=loop_count; x >= 0; x-- ) {
+         *dest++ = zonk;
+         //(uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   } else {
+      for (x=loop_count; x >= 0; x-- ) {
+         c = (uint)pixptr[ ( (v/z)&(64*63) ) + ((u/z)&63) ];
+         if ( c!=255)
+            *dest = zonk;
+         dest++;
+         u += dudx;
+         v += dvdx;
+         z += dzdx;
+      }
+   }
 }
 

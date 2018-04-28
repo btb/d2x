@@ -46,74 +46,74 @@ static char rcsid[] = "$Id: arcade.c 2.0 1995/02/27 11:29:12 john Exp $";
 int Arcade_mode = 0;
 fix Arcade_timer = 0;
 
-#define	PH_SCALE	1	//8
+#define  PH_SCALE 1  //8
 
 void arcade_init()
 {
-	Arcade_mode = 1;
+   Arcade_mode = 1;
 }
 
 extern read_vfx1_sense();
 
 void arcade_read_controls()
 {
-	fix pitch, heading;
+   fix pitch, heading;
 
-	if (!Arcade_mode) return;
+   if (!Arcade_mode) return;
 
-	pitch = Controls.pitch_time;
-	heading = Controls.heading_time;
-	memset( &Controls, 0, sizeof(control_info) );
-	Controls.pitch_time = pitch;
-	Controls.heading_time = heading;
-	
-	pitch = heading = 0;
-				
+   pitch = Controls.pitch_time;
+   heading = Controls.heading_time;
+   memset( &Controls, 0, sizeof(control_info) );
+   Controls.pitch_time = pitch;
+   Controls.heading_time = heading;
+   
+   pitch = heading = 0;
+            
 //----------- Read fire_primary_down_count
-	Controls.fire_primary_down_count += joy_get_button_down_cnt(20);
+   Controls.fire_primary_down_count += joy_get_button_down_cnt(20);
 
 //----------- Read fire_primary_state
-	Controls.fire_primary_state |= joy_get_button_state(20);
+   Controls.fire_primary_state |= joy_get_button_state(20);
 
 //------------ Read forward_thrust_time ---------
-	Controls.forward_thrust_time += joy_get_button_down_time( 21 );
-	Controls.forward_thrust_time -= joy_get_button_down_time( 22 );
+   Controls.forward_thrust_time += joy_get_button_down_time( 21 );
+   Controls.forward_thrust_time -= joy_get_button_down_time( 22 );
 
 //------------ Read pitch_time -----------
-	pitch += joy_get_button_down_time(24)/(PH_SCALE*2);
-	pitch -= joy_get_button_down_time(25)/(PH_SCALE*2);
+   pitch += joy_get_button_down_time(24)/(PH_SCALE*2);
+   pitch -= joy_get_button_down_time(25)/(PH_SCALE*2);
 
 //------------ Read heading_time -----------
-	heading += joy_get_button_down_time(27)/PH_SCALE;
-	heading -= joy_get_button_down_time(26)/PH_SCALE;
+   heading += joy_get_button_down_time(27)/PH_SCALE;
+   heading -= joy_get_button_down_time(26)/PH_SCALE;
 
-	//@@if ( pitch!=0)	{
-	//@@	if ((pitch>0) && (Controls.pitch_time<0))
-	//@@		Controls.pitch_time=0;
-	//@@	if ((pitch<0) && (Controls.pitch_time>0))
-	//@@		Controls.pitch_time=0;
-	//@@	Controls.pitch_time += pitch;
-	//@@} else
-	//@@	Controls.pitch_time = 0;
-	//@@if ( heading!=0)	{
-	//@@	if ((heading>0) && (Controls.heading_time<0))
-	//@@		Controls.heading_time=0;
-	//@@	if ((heading<0) && (Controls.heading_time>0))
-	//@@		Controls.heading_time=0;
-	//@@	Controls.heading_time += heading;
-	//@@} else
-	//@@	Controls.heading_time = 0;
+   //@@if ( pitch!=0)   {
+   //@@  if ((pitch>0) && (Controls.pitch_time<0))
+   //@@     Controls.pitch_time=0;
+   //@@  if ((pitch<0) && (Controls.pitch_time>0))
+   //@@     Controls.pitch_time=0;
+   //@@  Controls.pitch_time += pitch;
+   //@@} else
+   //@@  Controls.pitch_time = 0;
+   //@@if ( heading!=0) {
+   //@@  if ((heading>0) && (Controls.heading_time<0))
+   //@@     Controls.heading_time=0;
+   //@@  if ((heading<0) && (Controls.heading_time>0))
+   //@@     Controls.heading_time=0;
+   //@@  Controls.heading_time += heading;
+   //@@} else
+   //@@  Controls.heading_time = 0;
 
-	Controls.pitch_time = pitch;
-	Controls.heading_time = heading;
+   Controls.pitch_time = pitch;
+   Controls.heading_time = heading;
 
 //------- saturate to +/- frame_time -----------
-	if (Controls.pitch_time>FrameTime) Controls.pitch_time=FrameTime;
-	if (Controls.pitch_time<-FrameTime) Controls.pitch_time=-FrameTime;
-	if (Controls.heading_time>FrameTime) Controls.heading_time=FrameTime;
-	if (Controls.heading_time<-FrameTime) Controls.heading_time=-FrameTime;
+   if (Controls.pitch_time>FrameTime) Controls.pitch_time=FrameTime;
+   if (Controls.pitch_time<-FrameTime) Controls.pitch_time=-FrameTime;
+   if (Controls.heading_time>FrameTime) Controls.heading_time=FrameTime;
+   if (Controls.heading_time<-FrameTime) Controls.heading_time=-FrameTime;
 
-	read_vfx1_sense();
+   read_vfx1_sense();
 }
 
 

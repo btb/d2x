@@ -20,16 +20,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 draw_ubitmap(int x,int y,grs_bitmap *bm)
 {
-	int xx,yy;
-	short *data15 = (short *) bm->bm_data;
+   int xx,yy;
+   short *data15 = (short *) bm->bm_data;
 
 printf("x,y=%d,%d  w,h=%d,%d\n",x,y,bm->bm_w,bm->bm_h);
 
-	for (yy=0;yy<bm->bm_h;yy++)
+   for (yy=0;yy<bm->bm_h;yy++)
 
-		for (xx=0;xx<bm->bm_w;xx++)
+      for (xx=0;xx<bm->bm_w;xx++)
 
-			gr_vesa_pixel15(x+xx,y+yy,data15[yy*bm->bm_w+xx]);
+         gr_vesa_pixel15(x+xx,y+yy,data15[yy*bm->bm_w+xx]);
 
 
 }
@@ -37,23 +37,23 @@ printf("x,y=%d,%d  w,h=%d,%d\n",x,y,bm->bm_w,bm->bm_h);
 
 main(int argc,char **argv)
 {
-	int ret;
-	grs_bitmap my_bitmap;
-	ubyte my_palette[256*3];
+   int ret;
+   grs_bitmap my_bitmap;
+   ubyte my_palette[256*3];
 
-	ret = iff_read_bitmap(argv[1],&my_bitmap,BM_RGB15,&my_palette);
+   ret = iff_read_bitmap(argv[1],&my_bitmap,BM_RGB15,&my_palette);
 
-	printf("ret = %d\n",ret);
+   printf("ret = %d\n",ret);
 
-	if (ret == IFF_NO_ERROR) {
+   if (ret == IFF_NO_ERROR) {
 
-		gr_vesa_setmode(0x110);
+      gr_vesa_setmode(0x110);
 
-		draw_ubitmap(0,0,&my_bitmap);
-	
-		getch();
+      draw_ubitmap(0,0,&my_bitmap);
+   
+      getch();
 
-	}
+   }
 
 }
 

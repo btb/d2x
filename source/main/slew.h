@@ -20,10 +20,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifndef RELEASE
 
-void	slew_init(object *obj);					//say this is slew obj
-int	slew_stop();								// Stops object
-void	slew_reset_orient();						// Resets orientation
-int	slew_frame(int dont_check_keys);		// Does slew frame
+void  slew_init(object *obj);             //say this is slew obj
+int   slew_stop();                        // Stops object
+void  slew_reset_orient();                // Resets orientation
+int   slew_frame(int dont_check_keys);    // Does slew frame
 
 #else
 

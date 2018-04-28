@@ -14,11 +14,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _MONO_H
 #define _MONO_H
 
-#if !(defined(NDEBUG) || defined(NMONO))		//normal, functioning versions
+#if !(defined(NDEBUG) || defined(NMONO))     //normal, functioning versions
 
 //==========================================================================
 // Open and close the mono screen.  close(0) clears it.
-extern int minit();	//returns true if mono card, else false
+extern int minit();  //returns true if mono card, else false
 
 // Use n = 0 to clear the entire screen, any other number just closes the
 // specific window.
@@ -67,7 +67,7 @@ extern void msetcursor( int row, int col );
 // Refreshes a window
 void mrefresh(short n);
 
-#else			//null versions for when debugging turned off
+#else       //null versions for when debugging turned off
 
 #define minit()
 #define mclose(n)

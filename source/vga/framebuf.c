@@ -78,9 +78,9 @@ void VesaMain()
    }
    else
    {
-		char *MyPtr;
-		MyPtr=(char *)VesaGetPtr();	
-		  memset( (MyPtr+((rand()%0x10000)<<4)+rand()%0x10000),rand()%256, 1 );
+      char *MyPtr;
+      MyPtr=(char *)VesaGetPtr();   
+        memset( (MyPtr+((rand()%0x10000)<<4)+rand()%0x10000),rand()%256, 1 );
    }
 
    VesaEnd();
@@ -252,8 +252,8 @@ int VesaInit( int mode )
 
 
   if (!FindArg ("-ForceVesa"))
-	return(0);		
-	
+   return(0);     
+   
   /*
   ** Get VESA mode information
   */
@@ -265,7 +265,7 @@ int VesaInit( int mode )
   if ( !( infoblock.ModeAttributes & 0x1 ) ||
        !( infoblock.ModeAttributes & 0x80 ) )
   {
-		mprintf ((0,"mode %x is not supported!\n",mode));
+      mprintf ((0,"mode %x is not supported!\n",mode));
      return 0;
   }
 
@@ -274,8 +274,8 @@ int VesaInit( int mode )
   */
   if ( ( vesa_lfb_ptr = ( void * ) DpmiMapPhysicalToLinear( infoblock.PhysBasePtr, 0x400000 - 1 ) ) == 0 )
   {
-		mprintf ((0,"mode %x mapping not supported!\n",mode));
-		
+      mprintf ((0,"mode %x mapping not supported!\n",mode));
+      
      return 0;
   }
 
@@ -289,11 +289,11 @@ int VesaInit( int mode )
   if ( r.w.ax != 0x004F )
   {
      VesaEnd();
-		mprintf ((0,"mode %x  not set!\n",mode));
-	  
+      mprintf ((0,"mode %x  not set!\n",mode));
+     
      return 0;
   }
-	mprintf ((0,"No errors! mode %x is go!\n",mode));
+   mprintf ((0,"No errors! mode %x is go!\n",mode));
   return 1;
 }
 

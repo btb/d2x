@@ -17,9 +17,9 @@ static char rcsid[] = "$Id: medfunc.c 1.1 1993/12/07 12:31:18 john Exp $";
 #pragma on (unreferenced)
 
 typedef struct {
-	char *  name;
-	int     nparams;
-	double  (*cfunction)(void);
+   char *  name;
+   int     nparams;
+   double  (*cfunction)(void);
 } FUNCTION;
 
 FUNCTION funtable[] = {
@@ -94,7 +94,7 @@ FUNCTION funtable[] = {
 {   "med-segsize-increase-height-big",  0,      IncreaseSegHeightBig },
 {   "med-segsize-decrease-height-big",  0,      DecreaseSegHeightBig },
 
-//	In ktmap.c
+// In ktmap.c
 {   "med-tmap-assign",                  0,      AssignTexture },
 {   "med-tmap-propogate",               0,      PropagateTextures },
 {   "med-tmap-propogate-selected",      0,      PropagateTexturesSelected },

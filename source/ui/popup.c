@@ -28,122 +28,122 @@ extern void ui_mouse_flip_buttons();
 
 int PopupMenu( int NumButtons, char * text[] )
 {
-	UI_WINDOW * wnd;
-	UI_GADGET_BUTTON * ButtonG[10];
+   UI_WINDOW * wnd;
+   UI_GADGET_BUTTON * ButtonG[10];
 
-	short SavedMouseX, SavedMouseY;
-	char * Button[10];
+   short SavedMouseX, SavedMouseY;
+   char * Button[10];
 
-	int button_width, button_height, width, height;
+   int button_width, button_height, width, height;
 
-	short i, x, y;
-	short w, h;
+   short i, x, y;
+   short w, h;
 
-	int choice;
+   int choice;
 
-	ui_mouse_flip_buttons();
+   ui_mouse_flip_buttons();
 
-	//ui_mouse_process();
+   //ui_mouse_process();
 
-	if ( B1_RELEASED )
-	{
-		ui_mouse_flip_buttons();
-		return -1;
-	}
+   if ( B1_RELEASED )
+   {
+      ui_mouse_flip_buttons();
+      return -1;
+   }
 
-	if ((NumButtons < 1) || (NumButtons>10))
-	{
-		ui_mouse_flip_buttons();
-		return -1;
-	}
+   if ((NumButtons < 1) || (NumButtons>10))
+   {
+      ui_mouse_flip_buttons();
+      return -1;
+   }
 
-	SavedMouseX = Mouse.x; SavedMouseY = Mouse.y;
+   SavedMouseX = Mouse.x; SavedMouseY = Mouse.y;
 
-	button_width = button_height = 0;
+   button_width = button_height = 0;
 
-	gr_set_current_canvas( &grd_curscreen->sc_canvas );
+   gr_set_current_canvas( &grd_curscreen->sc_canvas );
 
-	for (i=0; i<NumButtons; i++ )
-	{
-		Button[i] = text[i];
+   for (i=0; i<NumButtons; i++ )
+   {
+      Button[i] = text[i];
 
-		ui_get_button_size( Button[i], &width, &height );
+      ui_get_button_size( Button[i], &width, &height );
 
-		if ( width > button_width ) button_width = width;
-		if ( height > button_height ) button_height = height;
-	}
+      if ( width > button_width ) button_width = width;
+      if ( height > button_height ) button_height = height;
+   }
 
-	width = button_width + 2*(MENU_BORDER+3);
+   width = button_width + 2*(MENU_BORDER+3);
 
-	height = (button_height*NumButtons) + (MENU_VERT_SPACING*(NumButtons-1)) ;
-	height += (MENU_BORDER+3) * 2;
+   height = (button_height*NumButtons) + (MENU_VERT_SPACING*(NumButtons-1)) ;
+   height += (MENU_BORDER+3) * 2;
 
-	x = Mouse.x - width/2;
-	y = Mouse.y - (MENU_BORDER+3) - button_height/2;
+   x = Mouse.x - width/2;
+   y = Mouse.y - (MENU_BORDER+3) - button_height/2;
 
-	w = grd_curscreen->sc_w;
-	h = grd_curscreen->sc_h;
+   w = grd_curscreen->sc_w;
+   h = grd_curscreen->sc_h;
 
-	if (x < 0 ) {
-		x = 0;
-		Mouse.x = x + width / 2;
-	}
+   if (x < 0 ) {
+      x = 0;
+      Mouse.x = x + width / 2;
+   }
 
-	if ( (x+width-1) >= w ) {
-		x = w - width;
-		Mouse.x = x + width / 2;
-	}
+   if ( (x+width-1) >= w ) {
+      x = w - width;
+      Mouse.x = x + width / 2;
+   }
 
-	if (y < 0 ) {
-		y = 0;
-		Mouse.y = y + (MENU_BORDER+3) + button_height/2;
-	}
+   if (y < 0 ) {
+      y = 0;
+      Mouse.y = y + (MENU_BORDER+3) + button_height/2;
+   }
 
-	if ( (y+height-1) >= h ) {
-		y = h - height;
-		Mouse.y = y + (MENU_BORDER+3) + button_height/2;
-	}
+   if ( (y+height-1) >= h ) {
+      y = h - height;
+      Mouse.y = y + (MENU_BORDER+3) + button_height/2;
+   }
 
-	wnd = ui_open_window( x, y, width, height, WIN_DIALOG );
+   wnd = ui_open_window( x, y, width, height, WIN_DIALOG );
 
-	mouse_set_pos( Mouse.x, Mouse.y );
+   mouse_set_pos( Mouse.x, Mouse.y );
 
-	x = MENU_BORDER+3;
-	y = MENU_BORDER+3;
+   x = MENU_BORDER+3;
+   y = MENU_BORDER+3;
 
-	for (i=0; i<NumButtons; i++ )
-	{
-		ButtonG[i] = ui_add_gadget_button( wnd, x, y, button_width, button_height, Button[i], NULL );
-		y += button_height+MENU_VERT_SPACING;
-	}
+   for (i=0; i<NumButtons; i++ )
+   {
+      ButtonG[i] = ui_add_gadget_button( wnd, x, y, button_width, button_height, Button[i], NULL );
+      y += button_height+MENU_VERT_SPACING;
+   }
 
-	choice = 0;
+   choice = 0;
 
-	while(choice==0)
-	{
-		ui_mega_process();
-		ui_window_do_gadgets(wnd);
+   while(choice==0)
+   {
+      ui_mega_process();
+      ui_window_do_gadgets(wnd);
 
-		for (i=0; i<NumButtons; i++ )
-		{
-			if (ButtonG[i]->pressed)   {
-				choice = i+1;
-				break;
-			}
-		}
+      for (i=0; i<NumButtons; i++ )
+      {
+         if (ButtonG[i]->pressed)   {
+            choice = i+1;
+            break;
+         }
+      }
 
-		if ( (choice==0) && B1_JUST_RELEASED )  {
-			choice = -1;
-			break;
-		}
+      if ( (choice==0) && B1_JUST_RELEASED )  {
+         choice = -1;
+         break;
+      }
 
-	}
+   }
 
-	ui_close_window(wnd);
+   ui_close_window(wnd);
 
-	ui_mouse_flip_buttons();
+   ui_mouse_flip_buttons();
 
-	return choice;
+   return choice;
 
 }
 

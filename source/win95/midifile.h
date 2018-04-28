@@ -227,7 +227,7 @@ typedef struct tag_chunkhdr
 }   CHUNKHDR,
     *PCHUNKHDR;
 
-#pragma pack(1)	// override cl32 default packing, to match disk file.
+#pragma pack(1)   // override cl32 default packing, to match disk file.
 typedef struct tag_filehdr
 {
     WORD    wFormat;

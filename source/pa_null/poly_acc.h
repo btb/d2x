@@ -67,10 +67,10 @@ int pa_idle(void);                      // allows program to poll whether the ch
 void pa_sync(void);                     // waits for current async op to complete.
 void pa_flush(void);                    // flushes dma and waits for everything to complete.
 
-void pa_about_to_flip();					// used in Rendition version, but not in S3 version
+void pa_about_to_flip();               // used in Rendition version, but not in S3 version
 
-void pa_set_write_mode (int mode);		// used by 3Dfx
-void pa_set_frontbuffer_current(void);	// used by 3Dfx
+void pa_set_write_mode (int mode);     // used by 3Dfx
+void pa_set_frontbuffer_current(void); // used by 3Dfx
 
 #endif
 #endif

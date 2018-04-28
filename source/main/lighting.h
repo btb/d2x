@@ -16,12 +16,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _LIGHTING_H
 #define _LIGHTING_H
 
-#define MAX_LIGHT		0x10000		//max value
+#define MAX_LIGHT    0x10000     //max value
 
-#define	MIN_LIGHT_DIST			(F1_0*4)
+#define  MIN_LIGHT_DIST       (F1_0*4)
 
-extern fix	Beam_brightness;
-extern fix	Dynamic_light[MAX_VERTICES];
+extern fix  Beam_brightness;
+extern fix  Dynamic_light[MAX_VERTICES];
 
 extern void set_dynamic_light(void);
 

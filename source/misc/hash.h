@@ -17,12 +17,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _HASH_H
 
 typedef struct hashtable {
-	int 				bitsize;
-	int				and_mask;
-	int				size;
-	int				nitems;
-	char				**key;
-	int				*value;
+   int            bitsize;
+   int            and_mask;
+   int            size;
+   int            nitems;
+   char           **key;
+   int            *value;
 } hashtable;
 
 int hashtable_init( hashtable *ht, int size );

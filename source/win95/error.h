@@ -11,54 +11,54 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
-int error_init(void (*func)(char *), char *fmt,...);			//init error system, set default message, returns 0=ok
-void set_exit_message(char *fmt,...);	//specify message to print at exit
-void Warning(char *fmt,...);				//print out warning message to user
+int error_init(void (*func)(char *), char *fmt,...);        //init error system, set default message, returns 0=ok
+void set_exit_message(char *fmt,...);  //specify message to print at exit
+void Warning(char *fmt,...);           //print out warning message to user
 void set_warn_func(void (*f)(char *s));//specifies the function to call with warning messages
 void clear_warn_func(void (*f)(char *s));//say this function no longer valid
-void _Assert(int expr,char *expr_text,char *filename,int linenum);	//assert func
-void Error(char *fmt,...);					//exit with error code=1, print message
+void _Assert(int expr,char *expr_text,char *filename,int linenum);   //assert func
+void Error(char *fmt,...);             //exit with error code=1, print message
 
-#ifndef NDEBUG		//macros for debugging
+#ifndef NDEBUG    //macros for debugging
 
 #ifndef MACINTOSH
 
-	#if defined(__NT__) 
-		void WinInt3();
-		#define Int3() WinInt3()
-		#define Assert(expr) _Assert(expr, #expr, __FILE__, __LINE__)
-	#else // ifdef __NT__
-		void Int3(void);									//generate int3
-		#pragma aux Int3 = "int 3h";
+   #if defined(__NT__) 
+      void WinInt3();
+      #define Int3() WinInt3()
+      #define Assert(expr) _Assert(expr, #expr, __FILE__, __LINE__)
+   #else // ifdef __NT__
+      void Int3(void);                          //generate int3
+      #pragma aux Int3 = "int 3h";
 
-		#define Assert(expr) _Assert(expr,#expr,__FILE__,__LINE__)
+      #define Assert(expr) _Assert(expr,#expr,__FILE__,__LINE__)
 
-	//make error do int3, then call func
-		#pragma aux Error aborts = \
-			"int	3"	\
-		"jmp Error";
+   //make error do int3, then call func
+      #pragma aux Error aborts = \
+         "int  3" \
+      "jmp Error";
 
-	//#pragma aux Error aborts;
+   //#pragma aux Error aborts;
 
-	//make assert do int3 (if expr false), then call func
-		#pragma aux _Assert parm [eax] [edx] [ebx] [ecx] = \
-			"test eax,eax"		\
-			"jnz	no_int3"		\
-			"int	3"				\
-			"no_int3:"			\
-			"call _Assert";
-	#endif	
+   //make assert do int3 (if expr false), then call func
+      #pragma aux _Assert parm [eax] [edx] [ebx] [ecx] = \
+         "test eax,eax"    \
+         "jnz  no_int3"    \
+         "int  3"          \
+         "no_int3:"        \
+         "call _Assert";
+   #endif   
 
-#else		// ifndef MACINTOSH
+#else    // ifndef MACINTOSH
 
 extern int MacEnableInt3;
 
 #define Int3() do { key_close(); if (MacEnableInt3) Debugger(); } while(0)
 #define Assert(expr) MacAssert(expr,#expr,__FILE__,__LINE__)
 
-#endif		// ifndef MACINTOSH
+#endif      // ifndef MACINTOSH
 
-#else					//macros for real game
+#else             //macros for real game
 
 #if !defined(__NT__)
 #pragma aux Error aborts;

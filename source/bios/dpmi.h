@@ -34,8 +34,8 @@ typedef struct dpmi_real_regs {
 #pragma intrinsic( _enable );
 #pragma intrinsic( _disable );
 
-#define DPMI_real_segment(P)	((((uint) (P)) >> 4) & 0xFFFF)
-#define DPMI_real_offset(P)	(((uint) (P)) & 0xF)
+#define DPMI_real_segment(P)  ((((uint) (P)) >> 4) & 0xFFFF)
+#define DPMI_real_offset(P)   (((uint) (P)) & 0xF)
 
 // Initializes dpmi. Returns zero if failed.
 extern int dpmi_init(int verbose);

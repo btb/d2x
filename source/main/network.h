@@ -22,33 +22,33 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // The default socket to use.
 
 #ifdef SHAREWARE
-	#define IPX_DEFAULT_SOCKET 0x5110		
+   #define IPX_DEFAULT_SOCKET 0x5110      
 #else
-	#define IPX_DEFAULT_SOCKET 0x5130		
+   #define IPX_DEFAULT_SOCKET 0x5130      
 #endif
 
-#define NETSTAT_MENU					0
-#define NETSTAT_PLAYING				1
-#define NETSTAT_BROWSING			2
-#define NETSTAT_WAITING				3
-#define NETSTAT_STARTING			4
-#define NETSTAT_ENDLEVEL			5
+#define NETSTAT_MENU             0
+#define NETSTAT_PLAYING          1
+#define NETSTAT_BROWSING         2
+#define NETSTAT_WAITING          3
+#define NETSTAT_STARTING         4
+#define NETSTAT_ENDLEVEL         5
 
-#define CONNECT_DISCONNECTED		0
-#define CONNECT_PLAYING				1
-#define CONNECT_WAITING				2
-#define CONNECT_DIED_IN_MINE		3
-#define CONNECT_FOUND_SECRET		4
-#define CONNECT_ESCAPE_TUNNEL		5
-#define CONNECT_END_MENU			6
+#define CONNECT_DISCONNECTED     0
+#define CONNECT_PLAYING          1
+#define CONNECT_WAITING          2
+#define CONNECT_DIED_IN_MINE     3
+#define CONNECT_FOUND_SECRET     4
+#define CONNECT_ESCAPE_TUNNEL    5
+#define CONNECT_END_MENU         6
 
 #define NETGAMEIPX                              1
 #define NETGAMETCP                              2
 
 // defines and other things for appletalk/ipx games on mac
 
-#define IPX_GAME		1
-#define APPLETALK_GAME	2
+#define IPX_GAME     1
+#define APPLETALK_GAME  2
 #ifdef MACINTOSH
 extern int Network_game_type;
 #else
@@ -56,10 +56,10 @@ extern int Network_game_type;
 #endif
 
 typedef struct sequence_packet {
-	ubyte					type;
-	int 					Security;
+   ubyte             type;
+   int               Security;
    ubyte pad1[3];
-	netplayer_info		player;
+   netplayer_info    player;
 } sequence_packet;
 
 #define NET_XDATA_SIZE 454
@@ -68,24 +68,24 @@ typedef struct sequence_packet {
 // frame info is aligned -- 01/18/96 -- MWA
 // if you change this structure -- be sure to keep
 // alignment:
-//		bytes on byte boundries
-//		shorts on even byte boundries
-//		ints on even byte boundries
+//    bytes on byte boundries
+//    shorts on even byte boundries
+//    ints on even byte boundries
 
 typedef struct frame_info {
-	ubyte				type;						// What type of packet
-	ubyte				pad[3];					// Pad out length of frame_info packet
-	int				numpackets;			
-	vms_vector		obj_pos;
-	vms_matrix		obj_orient;
-	vms_vector		phys_velocity;
-	vms_vector		phys_rotvel;
-	short				obj_segnum;
-	ushort			data_size;		// Size of data appended to the net packet
-	ubyte				playernum;
-	ubyte				obj_render_type;
-	ubyte				level_num;
-	ubyte				data[NET_XDATA_SIZE];		// extra data to be tacked on the end
+   ubyte          type;                // What type of packet
+   ubyte          pad[3];              // Pad out length of frame_info packet
+   int            numpackets;       
+   vms_vector     obj_pos;
+   vms_matrix     obj_orient;
+   vms_vector     phys_velocity;
+   vms_vector     phys_rotvel;
+   short          obj_segnum;
+   ushort         data_size;     // Size of data appended to the net packet
+   ubyte          playernum;
+   ubyte          obj_render_type;
+   ubyte          level_num;
+   ubyte          data[NET_XDATA_SIZE];      // extra data to be tacked on the end
 } frame_info;
 
 // short_frame_info is not aligned -- 01/18/96 -- MWA
@@ -93,15 +93,15 @@ typedef struct frame_info {
 // to stay in current form.
 
 typedef struct short_frame_info {
-	ubyte				type;						// What type of packet
-	ubyte				pad[3];					// Pad out length of frame_info packet
-	int				numpackets;			
-	shortpos			thepos;
-	ushort			data_size;		// Size of data appended to the net packet
-	ubyte				playernum;
-	ubyte				obj_render_type;
-	ubyte				level_num;
-	ubyte				data[NET_XDATA_SIZE];		// extra data to be tacked on the end
+   ubyte          type;                // What type of packet
+   ubyte          pad[3];              // Pad out length of frame_info packet
+   int            numpackets;       
+   shortpos       thepos;
+   ushort         data_size;     // Size of data appended to the net packet
+   ubyte          playernum;
+   ubyte          obj_render_type;
+   ubyte          level_num;
+   ubyte          data[NET_XDATA_SIZE];      // extra data to be tacked on the end
 } short_frame_info;
 
 void network_start_game();

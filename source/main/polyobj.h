@@ -29,23 +29,23 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //used to describe a polygon model
 typedef struct polymodel {
-	int n_models;
-	int model_data_size;
-	ubyte *model_data;
-	int submodel_ptrs[MAX_SUBMODELS];
-	vms_vector submodel_offsets[MAX_SUBMODELS];
-	vms_vector submodel_norms[MAX_SUBMODELS];		//norm for sep plane
-	vms_vector submodel_pnts[MAX_SUBMODELS];		//point on sep plane 
-	fix submodel_rads[MAX_SUBMODELS];				//radius for each submodel
-	ubyte submodel_parents[MAX_SUBMODELS];		//what is parent for each submodel
-	vms_vector submodel_mins[MAX_SUBMODELS];
-	vms_vector submodel_maxs[MAX_SUBMODELS];
-	vms_vector mins,maxs;							//min,max for whole model
-	fix rad;
-	ubyte		n_textures;
-	ushort	first_texture;
-	ubyte		simpler_model;		//alternate model with less detail (0 if none, model_num+1 else)
-//	vms_vector min,max;
+   int n_models;
+   int model_data_size;
+   ubyte *model_data;
+   int submodel_ptrs[MAX_SUBMODELS];
+   vms_vector submodel_offsets[MAX_SUBMODELS];
+   vms_vector submodel_norms[MAX_SUBMODELS];    //norm for sep plane
+   vms_vector submodel_pnts[MAX_SUBMODELS];     //point on sep plane 
+   fix submodel_rads[MAX_SUBMODELS];            //radius for each submodel
+   ubyte submodel_parents[MAX_SUBMODELS];    //what is parent for each submodel
+   vms_vector submodel_mins[MAX_SUBMODELS];
+   vms_vector submodel_maxs[MAX_SUBMODELS];
+   vms_vector mins,maxs;                     //min,max for whole model
+   fix rad;
+   ubyte    n_textures;
+   ushort   first_texture;
+   ubyte    simpler_model;    //alternate model with less detail (0 if none, model_num+1 else)
+// vms_vector min,max;
 } polymodel;
 
 //array of pointers to polygon objects

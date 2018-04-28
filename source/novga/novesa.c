@@ -29,7 +29,7 @@ void gr_vesa_update( grs_bitmap * source1, grs_bitmap * dest, grs_bitmap * sourc
 
 int  gr_modex_setmode(short mode)
 {
-	return 0;
+   return 0;
 }
 
 

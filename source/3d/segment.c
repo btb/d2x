@@ -19,44 +19,44 @@ static char rcsid[] = "$Id: $";
 #include "3d.h"
 #include "gr.h"
 
-extern	face		Faces[];
-extern	vector	Vertices[];
-extern	uvpair	Uvs[];
-extern	rgb		Rgbs[];
+extern   face     Faces[];
+extern   vector   Vertices[];
+extern   uvpair   Uvs[];
+extern   rgb      Rgbs[];
 
-extern	int		Num_faces,Num_vertices,Num_uvs,Num_rgbs,Num_face_verts;
+extern   int      Num_faces,Num_vertices,Num_uvs,Num_rgbs,Num_face_verts;
 
-extern	short		Face_verts[];
-extern	int		Face_verts_free;
+extern   short    Face_verts[];
+extern   int      Face_verts_free;
 
 
 // ---------------------------------------------------------------------------------------------
 //           ---------- Segment interrogation functions ----------
 // ----------------------------------------------------------------------------
-//	Return a pointer to the list of vertex indices for the current segment in vp and
-//	the number of vertices in *nv.
+// Return a pointer to the list of vertex indices for the current segment in vp and
+// the number of vertices in *nv.
 void seg_get_vertex_list(segment *s,int *nv,short **vp)
 {
-	*vp = s->fvs;
-	*nv = 8;
+   *vp = s->fvs;
+   *nv = 8;
 }
 
 // ----------------------------------------------------------------------------
-//	Return a pointer to the list of vertex indices for face facenum in vp and
-//	the number of vertices in *nv.
+// Return a pointer to the list of vertex indices for face facenum in vp and
+// the number of vertices in *nv.
 void seg_get_face_vertex_list(segment *s,int facenum,int *nv,short **vp)
 {
-	face	*fp = &Faces[s->iface + facenum];
+   face  *fp = &Faces[s->iface + facenum];
 
-	*vp = &Face_verts[fp->ivert];
-	*nv = fp->num_vertices;
+   *vp = &Face_verts[fp->ivert];
+   *nv = fp->num_vertices;
 }
 
 // ----------------------------------------------------------------------------
-//	Set *nf = number of faces in segment s.
+// Set *nf = number of faces in segment s.
 void seg_get_num_faces(segment *s,int *nf)
 {
-	*nf = s->num_faces;
+   *nf = s->num_faces;
 }
 
 

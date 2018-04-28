@@ -53,49 +53,49 @@ char * KeyDesc[256] = {         \
 
 void GetKeyDescription( char * text, int keypress )
 {
-	char Ctrl[10];
-	char Alt[10];
-	char Shift[10];
+   char Ctrl[10];
+   char Alt[10];
+   char Shift[10];
 
-	if (keypress & KEY_CTRLED)
-		strcpy( Ctrl, "{Ctrl}");
-	else
-		strcpy( Ctrl, "");
+   if (keypress & KEY_CTRLED)
+      strcpy( Ctrl, "{Ctrl}");
+   else
+      strcpy( Ctrl, "");
 
-	if (keypress & KEY_ALTED)
-		strcpy( Alt, "{Alt}");
-	else
-		strcpy( Alt, "");
+   if (keypress & KEY_ALTED)
+      strcpy( Alt, "{Alt}");
+   else
+      strcpy( Alt, "");
 
-	if (keypress & KEY_SHIFTED)
-		strcpy( Shift, "{Shift}");
-	else
-		strcpy( Shift, "");
+   if (keypress & KEY_SHIFTED)
+      strcpy( Shift, "{Shift}");
+   else
+      strcpy( Shift, "");
 
-	sprintf( text, "%s%s%s%s", Ctrl, Alt, Shift, KeyDesc[keypress & 255 ]  );
+   sprintf( text, "%s%s%s%s", Ctrl, Alt, Shift, KeyDesc[keypress & 255 ]  );
 }
 
 
 int DecodeKeyText( char * text )
 {
-	int i, code = 0;
+   int i, code = 0;
 
-	if (strstr(text, "{Ctrl}") )
-		code |= KEY_CTRLED;
-	if (strstr(text, "{Alt}") )
-		code |= KEY_ALTED;
-	if (strstr(text, "{Shift}") )
-		code |= KEY_SHIFTED;
+   if (strstr(text, "{Ctrl}") )
+      code |= KEY_CTRLED;
+   if (strstr(text, "{Alt}") )
+      code |= KEY_ALTED;
+   if (strstr(text, "{Shift}") )
+      code |= KEY_SHIFTED;
 
-	for (i=0; i<256; i++ )
-	{
-		if ( strlen(KeyDesc[i])>0 && strstr(text, KeyDesc[i]) )
-		{
-			code |= i;
-			return code;
-		}
-	}
-	return -1;
+   for (i=0; i<256; i++ )
+   {
+      if ( strlen(KeyDesc[i])>0 && strstr(text, KeyDesc[i]) )
+      {
+         code |= i;
+         return code;
+      }
+   }
+   return -1;
 }
 
 
@@ -103,39 +103,39 @@ int DecodeKeyText( char * text )
 
 int GetKeyCode(char * text)
 {
-	UI_WINDOW * wnd;
-	UI_GADGET_BUTTON * DoneButton;
-	char temp_text[100];
+   UI_WINDOW * wnd;
+   UI_GADGET_BUTTON * DoneButton;
+   char temp_text[100];
 
-	text = text;
+   text = text;
 
-	wnd = ui_open_window( 200, 200, 400, 200, WIN_DIALOG );
+   wnd = ui_open_window( 200, 200, 400, 200, WIN_DIALOG );
 
-	DoneButton = ui_add_gadget_button( wnd, 170, 165, 60, 25, "Ok", NULL );
+   DoneButton = ui_add_gadget_button( wnd, 170, 165, 60, 25, "Ok", NULL );
 
-	ui_gadget_calc_keys(wnd);
+   ui_gadget_calc_keys(wnd);
 
-	//key_flush();
+   //key_flush();
 
-	wnd->keyboard_focus_gadget = (UI_GADGET *)DoneButton;
+   wnd->keyboard_focus_gadget = (UI_GADGET *)DoneButton;
 
-	while(1)
-	{
-		ui_mega_process();
-		ui_window_do_gadgets(wnd);
+   while(1)
+   {
+      ui_mega_process();
+      ui_window_do_gadgets(wnd);
 
-		if (last_keypress > 0)
-		{
-			GetKeyDescription( temp_text, last_keypress );
-			ui_wprintf_at( wnd, 10, 100, "%s     ", temp_text  );
-		}
+      if (last_keypress > 0)
+      {
+         GetKeyDescription( temp_text, last_keypress );
+         ui_wprintf_at( wnd, 10, 100, "%s     ", temp_text  );
+      }
 
-		if (DoneButton->pressed)
-			break;
-	}
+      if (DoneButton->pressed)
+         break;
+   }
 
-	ui_close_window(wnd);
+   ui_close_window(wnd);
 
-	return 0;
+   return 0;
 }
 

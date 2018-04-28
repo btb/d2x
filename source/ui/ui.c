@@ -40,57 +40,57 @@ grs_font * ui_small_font = NULL;
 
 void ui_init()
 {
-	grs_font * org_font;
+   grs_font * org_font;
 
-	if (Initialized) return;
+   if (Initialized) return;
 
-	Initialized = 1;
+   Initialized = 1;
 
-	org_font = grd_curcanv->cv_font;
-	ui_small_font = gr_init_font( "pc6x8.fnt" );
-	grd_curcanv->cv_font =org_font;
+   org_font = grd_curcanv->cv_font;
+   ui_small_font = gr_init_font( "pc6x8.fnt" );
+   grd_curcanv->cv_font =org_font;
 
-	CBLACK = gr_find_closest_color( 1, 1, 1 );
-	CGREY = gr_find_closest_color( 45, 45, 45 );
-	CWHITE = gr_find_closest_color( 50, 50, 50 );
-	CBRIGHT = gr_find_closest_color( 58, 58, 58 );
-	CRED = gr_find_closest_color( 63, 0, 0 );
+   CBLACK = gr_find_closest_color( 1, 1, 1 );
+   CGREY = gr_find_closest_color( 45, 45, 45 );
+   CWHITE = gr_find_closest_color( 50, 50, 50 );
+   CBRIGHT = gr_find_closest_color( 58, 58, 58 );
+   CRED = gr_find_closest_color( 63, 0, 0 );
 
-	//key_init();
+   //key_init();
 
-	ui_mouse_init();
+   ui_mouse_init();
 
-	gr_set_fontcolor( CBLACK, CWHITE );
+   gr_set_fontcolor( CBLACK, CWHITE );
 
-	CurWindow = NULL;
+   CurWindow = NULL;
 
-	InstallErrorHandler();
+   InstallErrorHandler();
 
-	ui_pad_init();
-	
-	atexit(ui_close );
+   ui_pad_init();
+   
+   atexit(ui_close );
 
 }
 
 void ui_close()
 {
-	if (Initialized)
-	{
-		Initialized = 0;
+   if (Initialized)
+   {
+      Initialized = 0;
 
-		ui_pad_close();
+      ui_pad_close();
 
-		ui_mouse_close();
+      ui_mouse_close();
 
-//		mouse_close();
-// 	key_close();
+//    mouse_close();
+//    key_close();
 
-		_harderr( NULL );
+      _harderr( NULL );
 
-		gr_close_font( ui_small_font );
+      gr_close_font( ui_small_font );
 
-	}
+   }
 
-	return;
+   return;
 }
 

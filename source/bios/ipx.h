@@ -13,16 +13,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifndef _IPX_H
 #define _IPX_H
-													
+                                       
 //---------------------------------------------------------------
 // Initializes all IPX internals. 
 // If socket_number==0, then opens next available socket.
-// Returns:	0  if successful.
-//				-1 if socket already open.
-//				-2	if socket table full.
-//				-3 if IPX not installed.
-//				-4 if couldn't allocate low dos memory
-//				-5 if error with getting internetwork address
+// Returns: 0  if successful.
+//          -1 if socket already open.
+//          -2 if socket table full.
+//          -3 if IPX not installed.
+//          -4 if couldn't allocate low dos memory
+//          -5 if error with getting internetwork address
 extern int ipx_init( int socket_number, int show_address );
 
 extern int ipx_change_default_socket( ushort socket_number );
@@ -46,7 +46,7 @@ extern void ipx_send_broadcast_packet_data( ubyte * data, int datasize );
 extern void ipx_send_packet_data( ubyte * data, int datasize, ubyte *network, ubyte *address, ubyte *immediate_address );
 extern void ipx_send_internetwork_packet_data( ubyte * data, int datasize, ubyte * server, ubyte *address );
 
-#define IPX_MAX_DATA_SIZE (542)		//(546-4)
+#define IPX_MAX_DATA_SIZE (542)     //(546-4)
 
 extern void ipx_read_user_file(char * filename);
 extern void ipx_read_network_file(char * filename);

@@ -18,13 +18,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //@@#include "vclip.h"
 
-#define HOSTAGE_SIZE i2f(5)	//3d size of a hostage
+#define HOSTAGE_SIZE i2f(5)   //3d size of a hostage
 
-#define MAX_HOSTAGE_TYPES		1		//only one hostage bitmap
+#define MAX_HOSTAGE_TYPES     1     //only one hostage bitmap
 
 extern int N_hostage_types;
 
-extern int Hostage_vclip_num[MAX_HOSTAGE_TYPES];	//for each type of hostage
+extern int Hostage_vclip_num[MAX_HOSTAGE_TYPES];   //for each type of hostage
 
 void draw_hostage(object *obj);
 void hostage_rescue( int hostage_num );

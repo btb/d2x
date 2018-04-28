@@ -17,13 +17,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _IBITBLT_H
 
 // Finds location/size of the largest "hole" in bitmap mask_bmp
-void		gr_ibitblt_find_hole_size ( grs_bitmap * mask_bmp, int *minx, int *miny, int *maxx, int *maxy );
+void     gr_ibitblt_find_hole_size ( grs_bitmap * mask_bmp, int *minx, int *miny, int *maxx, int *maxy );
 
 // Creates a code mask that will copy data from a bitmap that is sw by sh starting from 
 // location sx, sy with a rowsize of srowsize onto another bitmap but only copies
 // into pixel locations that are defined as transparent in bitmap bmp.
 #ifndef MACINTOSH
-ubyte	* gr_ibitblt_create_mask ( grs_bitmap * mask_bmp, int sx, int sy, int sw, int sh, int srowsize );
+ubyte * gr_ibitblt_create_mask ( grs_bitmap * mask_bmp, int sx, int sy, int sw, int sh, int srowsize );
 ubyte * gr_ibitblt_create_mask_svga(grs_bitmap *mask_bmp, int sx, int sy, int sw, int sh, int srowsize);
 ubyte * gr_ibitblt_create_mask_pa( grs_bitmap * mask_bmp, int sx, int sy, int sw, int sh, int srowsize );
 #else
@@ -35,9 +35,9 @@ void gr_ibitblt_create_mask(grs_bitmap *mask_bmp, int sx, int sy, int sw, int sh
 // transparent by the mask
 
 #ifndef MACINTOSH
-void 		gr_ibitblt (grs_bitmap * source_bmp, grs_bitmap * dest_bmp, ubyte * mask );
+void     gr_ibitblt (grs_bitmap * source_bmp, grs_bitmap * dest_bmp, ubyte * mask );
 #else
-void 		gr_ibitblt (grs_bitmap * source_bmp, grs_bitmap * dest_bmp, ubyte pixel_double );
+void     gr_ibitblt (grs_bitmap * source_bmp, grs_bitmap * dest_bmp, ubyte pixel_double );
 #endif
 
 #endif

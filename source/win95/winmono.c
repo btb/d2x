@@ -25,128 +25,128 @@ static char rcsid[] = "$Id: winmono.c 1.1 1995/12/21 11:21:38 samir Exp $";
 #include <string.h>
 
 
-static int				WinMonoInitialized = 0;
-static HANDLE			hConOutput = 0;
+static int           WinMonoInitialized = 0;
+static HANDLE        hConOutput = 0;
 
 
 
-//	----------------------------------------------------------------------------
-//	Functions
-//	----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Functions
+// ----------------------------------------------------------------------------
 
 int minit(void)
 {
 
-	if (WinMonoInitialized) return 1;
+   if (WinMonoInitialized) return 1;
 
-	if (!AllocConsole()) return 0;
-	hConOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (hConOutput == INVALID_HANDLE_VALUE) return 0;
+   if (!AllocConsole()) return 0;
+   hConOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+   if (hConOutput == INVALID_HANDLE_VALUE) return 0;
 
-	WinMonoInitialized = 1;
-	
-	return 1;
+   WinMonoInitialized = 1;
+   
+   return 1;
 
 }
 
 int mkill(void)
 {
-	FreeConsole();
+   FreeConsole();
 
-	return 1;
+   return 1;
 }
 
 
 void mopen(short n, short row, short col, short width, short height, char *title)
 {
-	if (!WinMonoInitialized) return;
+   if (!WinMonoInitialized) return;
 }
-		
+      
 
 void mclose(int n)
 {
-	if (!WinMonoInitialized) return;
-}	
+   if (!WinMonoInitialized) return;
+}  
 
 
 void msetcursor(short row, short col)
 {
-	COORD coord;
+   COORD coord;
 
-	coord.X =  col;
-	coord.Y =  row;
+   coord.X =  col;
+   coord.Y =  row;
 
-	SetConsoleCursorPosition(hConOutput, coord);
+   SetConsoleCursorPosition(hConOutput, coord);
 }
 
 
 void mputc(short n, char c)
 {
-	char buf[2];
-	DWORD chwritten;
+   char buf[2];
+   DWORD chwritten;
 
-	if (!WinMonoInitialized) return;
+   if (!WinMonoInitialized) return;
 
-	buf[0] = c; buf[1] = 0;
+   buf[0] = c; buf[1] = 0;
 
-	WriteConsole(hConOutput, buf, 1, &chwritten,  NULL); 
+   WriteConsole(hConOutput, buf, 1, &chwritten,  NULL); 
 }
 
 
 void mputc_at(short n, short row, short col, char c)
 {
-	if (!WinMonoInitialized) return;
-	
-	msetcursor(row,col);
+   if (!WinMonoInitialized) return;
+   
+   msetcursor(row,col);
 
-	mputc(n, c);
+   mputc(n, c);
 }
 
 
 void scroll(short n)
 {
-}		
+}     
 
 
 static char temp_m_buffer[1000];
 
 void mprintf(short n, char *format, ...)
 {
-	char *ptr = temp_m_buffer;
-	va_list args;
-	DWORD chwritten;
-	
-	if (!WinMonoInitialized) return;
+   char *ptr = temp_m_buffer;
+   va_list args;
+   DWORD chwritten;
+   
+   if (!WinMonoInitialized) return;
 
-	va_start(args, format);
-	vsprintf(temp_m_buffer, format, args);
-	WriteConsole(hConOutput, ptr, strlen(ptr), &chwritten, NULL); 
+   va_start(args, format);
+   vsprintf(temp_m_buffer, format, args);
+   WriteConsole(hConOutput, ptr, strlen(ptr), &chwritten, NULL); 
 }
 
 
 void mprintf_at(short n, short row, short col, char *format, ...)
 {
-	char *ptr = temp_m_buffer;
-	va_list args;
-	DWORD chwritten;
-	
-	if (!WinMonoInitialized) return;
+   char *ptr = temp_m_buffer;
+   va_list args;
+   DWORD chwritten;
+   
+   if (!WinMonoInitialized) return;
 
-	va_start(args, format);
-	vsprintf(temp_m_buffer, format, args);
-	msetcursor(row, col);
-	WriteConsole(hConOutput, ptr, strlen(ptr), &chwritten, NULL); 
+   va_start(args, format);
+   vsprintf(temp_m_buffer, format, args);
+   msetcursor(row, col);
+   WriteConsole(hConOutput, ptr, strlen(ptr), &chwritten, NULL); 
 }
-	
+   
 
 void drawbox(short n)
 {
-//	Obsolete in the New Order
+// Obsolete in the New Order
 }
 
 
 void mrefresh(short n)
 {
-//	Huh??? :)
+// Huh??? :)
 }
 

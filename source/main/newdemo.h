@@ -18,15 +18,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef NEWDEMO
 
-#define ND_STATE_NORMAL				0
-#define ND_STATE_RECORDING			1
-#define ND_STATE_PLAYBACK			2
-#define ND_STATE_PAUSED				3
-#define ND_STATE_REWINDING			4	 
-#define ND_STATE_FASTFORWARD		5
-#define ND_STATE_ONEFRAMEFORWARD	6
-#define ND_STATE_ONEFRAMEBACKWARD	7
-#define ND_STATE_PRINTSCREEN		8
+#define ND_STATE_NORMAL          0
+#define ND_STATE_RECORDING       1
+#define ND_STATE_PLAYBACK        2
+#define ND_STATE_PAUSED          3
+#define ND_STATE_REWINDING       4   
+#define ND_STATE_FASTFORWARD     5
+#define ND_STATE_ONEFRAMEFORWARD 6
+#define ND_STATE_ONEFRAMEBACKWARD   7
+#define ND_STATE_PRINTSCREEN     8
 
 // Gives state of recorder
 extern int Newdemo_state;
@@ -101,7 +101,7 @@ extern void newdemo_stop_playback();
 extern void newdemo_start_recording();
 extern void newdemo_stop_recording();
 
-extern newdemo_get_percent_done();			
+extern newdemo_get_percent_done();        
 
 extern void newdemo_record_link_sound_to_object3( int soundno, short objnum, fix max_volume, fix  max_distance, int loop_start, int loop_end );
 extern int newdemo_find_object( int signature );

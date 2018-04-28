@@ -22,66 +22,66 @@ static char rcsid[] = "$Id: findfile.c 1.6 1996/04/19 16:50:25 jed Exp $";
 #include "findfile.h"
 
 
-//	Global Variables	----------------------------------------------------------
+// Global Variables  ----------------------------------------------------------
 
-static int 				_FileFindFlag = 0;
+static int           _FileFindFlag = 0;
 static struct find_t _FileFindStruct;
 
 
 
-//	Functions
+// Functions
 
-int	FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
+int   FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
 {
-	unsigned retval;
-	
-	if (_FileFindFlag) return -1;
-	
-	retval = _dos_findfirst(search_str, 0, &_FileFindStruct);
-	if (retval) return (int)retval;
-	else {
-		ffstruct->size = _FileFindStruct.size;
-		strcpy(ffstruct->name, _FileFindStruct.name);
-		_FileFindFlag = 1;
-		return (int)retval;
-	}
+   unsigned retval;
+   
+   if (_FileFindFlag) return -1;
+   
+   retval = _dos_findfirst(search_str, 0, &_FileFindStruct);
+   if (retval) return (int)retval;
+   else {
+      ffstruct->size = _FileFindStruct.size;
+      strcpy(ffstruct->name, _FileFindStruct.name);
+      _FileFindFlag = 1;
+      return (int)retval;
+   }
 }
 
 
-int	FileFindNext(FILEFINDSTRUCT *ffstruct)
+int   FileFindNext(FILEFINDSTRUCT *ffstruct)
 {
-	unsigned retval;
+   unsigned retval;
 
-	if (!_FileFindFlag) return -1;
+   if (!_FileFindFlag) return -1;
 
-	retval = _dos_findnext(&_FileFindStruct);
-	if (retval) return (int)retval;
-	else {
-		ffstruct->size = _FileFindStruct.size;
-		strcpy(ffstruct->name, _FileFindStruct.name);
-		return (int)retval;
-	}	
+   retval = _dos_findnext(&_FileFindStruct);
+   if (retval) return (int)retval;
+   else {
+      ffstruct->size = _FileFindStruct.size;
+      strcpy(ffstruct->name, _FileFindStruct.name);
+      return (int)retval;
+   }  
 }
  
 
-int	FileFindClose(void)
+int   FileFindClose(void)
 {
-	unsigned retval = 0;
+   unsigned retval = 0;
 
-	if (!_FileFindFlag) return -1;
-	
-	if (retval) return (int)retval;
-	else {
-		_FileFindFlag = 0;
-		return (int)retval;
-	}
+   if (!_FileFindFlag) return -1;
+   
+   if (retval) return (int)retval;
+   else {
+      _FileFindFlag = 0;
+      return (int)retval;
+   }
 }
 
 
 //returns 0 if no error
 int GetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 {
-	return _dos_getftime(filehandle, &ftstruct->date, &ftstruct->time);
+   return _dos_getftime(filehandle, &ftstruct->date, &ftstruct->time);
 
 }
 
@@ -89,19 +89,19 @@ int GetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 //returns 0 if no error
 int SetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 {
-	return _dos_setftime(filehandle, ftstruct->date, ftstruct->time);
+   return _dos_setftime(filehandle, ftstruct->date, ftstruct->time);
 }
 
 // returns -1 if error
 // Gets bytes free on current drive
 int GetDiskFree ()
  {
-	struct diskfree_t dfree;
-	unsigned drive;
+   struct diskfree_t dfree;
+   unsigned drive;
 
-	_dos_getdrive(&drive);
-	if (!_dos_getdiskfree(drive, &dfree))
-		return (dfree.avail_clusters * dfree.sectors_per_cluster * dfree.bytes_per_sector);
+   _dos_getdrive(&drive);
+   if (!_dos_getdiskfree(drive, &dfree))
+      return (dfree.avail_clusters * dfree.sectors_per_cluster * dfree.bytes_per_sector);
    
    return (-1);
  }

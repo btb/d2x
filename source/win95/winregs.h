@@ -17,9 +17,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _WINREGS_H
 
 typedef struct registry_handle {
-	int keys;
-	HKEY *hKey;
-} registry_handle;	
+   int keys;
+   HKEY *hKey;
+} registry_handle;   
 
 registry_handle *registry_open(const char *path);
 int registry_getint(registry_handle *handle, const char *label, int *val);

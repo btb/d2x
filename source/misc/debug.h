@@ -19,28 +19,28 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //The debug() function takes its args in a second set of parens, so that
 //it can pass (or not pass) all the args to whatever function it calls.
 
-#ifndef NDEBUG			//if debugging is allowed
+#ifndef NDEBUG       //if debugging is allowed
 
-#ifdef __DOS__		//MS-DOS, that is
+#ifdef __DOS__    //MS-DOS, that is
 
-#ifndef NMONO		//if mono not turned off
+#ifndef NMONO     //if mono not turned off
 
-#include "mono.h"		//DOS version uses mprintf() for debug
+#include "mono.h"    //DOS version uses mprintf() for debug
 
 #define debug(args) mprintf(args)
 
-#else		//ifndef NMONO
+#else    //ifndef NMONO
 
 #define debug(args)
 
-#endif	//ifndef NMONO
+#endif   //ifndef NMONO
 
-#else		//ifdef __DOS__  - must be Windows
+#else    //ifdef __DOS__  - must be Windows
 
-#define debug(args)		//do some windows thing here
+#define debug(args)     //do some windows thing here
 
-#endif	//ifdef __DOS__
+#endif   //ifdef __DOS__
 
-#endif	//ifndef NDEBUG
+#endif   //ifndef NDEBUG
 
-#endif	//ifndef _DEBUG_H 
+#endif   //ifndef _DEBUG_H 

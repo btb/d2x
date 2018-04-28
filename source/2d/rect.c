@@ -23,26 +23,26 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 void gr_urect(int left,int top,int right,int bot)
 {
-	int i;
+   int i;
 
 #if defined(POLY_ACC) && !defined(MACINTOSH)
     if(pa_rect(left, top, right, bot))
         return;
 #endif
 
-	for ( i=top; i<=bot; i++ )
-		gr_uscanline( left, right, i );
+   for ( i=top; i<=bot; i++ )
+      gr_uscanline( left, right, i );
 }
 
 void gr_rect(int left,int top,int right,int bot)
 {
-	int i;
+   int i;
 
 #if defined(POLY_ACC) && !defined(MACINTOSH)
     if(pa_rect(left, top, right, bot))
         return;
 #endif
 
-	for ( i=top; i<=bot; i++ )
-		gr_scanline( left, right, i );
+   for ( i=top; i<=bot; i++ )
+      gr_scanline( left, right, i );
 }

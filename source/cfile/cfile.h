@@ -21,17 +21,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 
 typedef struct CFILE {
-	FILE 				*file;
-	int				size;
-	int				lib_offset;
-	int				raw_position;
+   FILE           *file;
+   int            size;
+   int            lib_offset;
+   int            raw_position;
 } CFILE;
 
 //Specify the name of the hogfile.  Returns 1 if hogfile found & had files
 int cfile_init(char *hogname);
 
 CFILE * cfopen(char * filename, char * mode);
-int cfilelength( CFILE *fp );							// Returns actual size of file...
+int cfilelength( CFILE *fp );                   // Returns actual size of file...
 size_t cfread( void * buf, size_t elsize, size_t nelem, CFILE * fp );
 void cfclose( CFILE * cfile );
 int cfgetc( CFILE * fp );
@@ -39,7 +39,7 @@ int cfseek( CFILE *fp, long int offset, int where );
 int cftell( CFILE * fp );
 char * cfgets( char * buf, size_t n, CFILE * fp );
 
-int cfexist( char * filename );	// Returns true if file exists on disk (1) or in hog (2).
+int cfexist( char * filename );  // Returns true if file exists on disk (1) or in hog (2).
 
 // Allows files to be gotten from an alternate hog file.
 // Passing NULL disables this.

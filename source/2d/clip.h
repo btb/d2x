@@ -31,7 +31,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
     ((var) = ((arg) * (num)) / (den))
 
 # define USCALE(var,arg,num,den)                                        \
-	((var) = ((unsigned)(arg) * (unsigned)(num)) / (unsigned)(den))
+   ((var) = ((unsigned)(arg) * (unsigned)(num)) / (unsigned)(den))
 
 # define FSCALE(var,arg,num,den) ((var) = fixmuldiv((arg),(num),(den)))
 
@@ -79,25 +79,25 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
             WHEN_OUTSIDE;                                               \
         }                                                               \
         if(x1 < XMIN) {                                        \
-			MY_SCALE(temp,(y2 - y1),(XMIN - x1),(x2 - x1));      \
+         MY_SCALE(temp,(y2 - y1),(XMIN - x1),(x2 - x1));      \
             if((y1 += temp) > YMAX) { WHEN_OUTSIDE; }          \
             x1 = XMIN;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(x2 > XMAX) {                                        \
-			MY_SCALE(temp,(y2 - y1),(x2 - XMAX),(x2 - x1));      \
+         MY_SCALE(temp,(y2 - y1),(x2 - XMAX),(x2 - x1));      \
             if((y2 -= temp) < YMIN) { WHEN_OUTSIDE; }          \
             x2 = XMAX;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(y1 < YMIN) {                                        \
-			MY_SCALE(temp,(x2 - x1),(YMIN - y1),(y2 - y1));      \
+         MY_SCALE(temp,(x2 - x1),(YMIN - y1),(y2 - y1));      \
             x1 += temp;                                                 \
             y1 = YMIN;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(y2 > YMAX) {                                        \
-			MY_SCALE(temp,(x2 - x1),(y2 - YMAX),(y2 - y1));      \
+         MY_SCALE(temp,(x2 - x1),(y2 - YMAX),(y2 - y1));      \
             x2 -= temp;                                                 \
             y2 = YMAX;                                         \
             WHEN_CLIPPED;                                               \
@@ -108,25 +108,25 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
             WHEN_OUTSIDE;                                               \
         }                                                               \
         if(x1 > XMAX) {                                        \
-			MY_SCALE(temp,(y2 - y1),(x1 - XMAX),(x1 - x2));      \
+         MY_SCALE(temp,(y2 - y1),(x1 - XMAX),(x1 - x2));      \
             if((y1 += temp) > YMAX) { WHEN_OUTSIDE; }          \
             x1 = XMAX;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(x2 < XMIN) {                                        \
-			MY_SCALE(temp,(y2 - y1),(XMIN - x2),(x1 - x2));      \
+         MY_SCALE(temp,(y2 - y1),(XMIN - x2),(x1 - x2));      \
             if((y2 -= temp) < YMIN) { WHEN_OUTSIDE; }          \
             x2 = XMIN;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(y1 < YMIN) {                                        \
-			MY_SCALE(temp,(x1 - x2),(YMIN - y1),(y2 - y1));      \
+         MY_SCALE(temp,(x1 - x2),(YMIN - y1),(y2 - y1));      \
             x1 -= temp;                                                 \
             y1 = YMIN;                                         \
             WHEN_CLIPPED;                                               \
         }                                                               \
         if(y2 > YMAX) {                                        \
-			MY_SCALE(temp,(x1 - x2),(y2 - YMAX),(y2 - y1));      \
+         MY_SCALE(temp,(x1 - x2),(y2 - YMAX),(y2 - y1));      \
             x2 += temp;                                                 \
             y2 = YMAX;                                         \
             WHEN_CLIPPED;                                               \

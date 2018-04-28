@@ -30,79 +30,79 @@ static int func_params[MAX_PARAMS];
 
 int func_howmany()
 {
-	return func_size;
+   return func_size;
 }
 
 void func_init( FUNCTION * funtable, int size )
 {
-	if (!initialized)
-	{
-		initialized = 1;
-		func_table = funtable;
-		func_size = size;
-		atexit( func_close );
-	}
+   if (!initialized)
+   {
+      initialized = 1;
+      func_table = funtable;
+      func_size = size;
+      atexit( func_close );
+   }
 }
 
 
 void func_close()
 {
-	if (initialized)
-	{
-		initialized = 0;
-		func_table = NULL;
-		func_size = 0;
-	}
+   if (initialized)
+   {
+      initialized = 0;
+      func_table = NULL;
+      func_size = 0;
+   }
 }
 
 int (*func_get( char * name, int * numparams ))(void)
 {
-	int i;
+   int i;
 
-	for (i=0; i<func_size; i++ )
-		if (!strcmpi( name, func_table[i].name ))
-		{
-			*numparams = func_table[i].nparams;
-			return func_table[i].cfunction;
-		}
+   for (i=0; i<func_size; i++ )
+      if (!strcmpi( name, func_table[i].name ))
+      {
+         *numparams = func_table[i].nparams;
+         return func_table[i].cfunction;
+      }
 
-	return NULL;
+   return NULL;
 }
 
 int func_get_index( char * name )
 {
-	int i;
+   int i;
 
-	for (i=0; i<func_size; i++ )
-		if (!strcmpi( name, func_table[i].name ))
-		{
-			return i;
-		}
+   for (i=0; i<func_size; i++ )
+      if (!strcmpi( name, func_table[i].name ))
+      {
+         return i;
+      }
 
-	return -1;
+   return -1;
 }
 
 
 int (*func_nget( int func_number, int * numparams, char **name ))(void)
 {
-	if (func_number < func_size )
-	{
-		*name = func_table[func_number].name;
-		*numparams = func_table[func_number].nparams;
-		return func_table[func_number].cfunction;
-	}
+   if (func_number < func_size )
+   {
+      *name = func_table[func_number].name;
+      *numparams = func_table[func_number].nparams;
+      return func_table[func_number].cfunction;
+   }
 
-	return NULL;
+   return NULL;
 }
 
 void func_set_param( int n, int value )
 {
-	func_params[n] = value;
+   func_params[n] = value;
 }
 
 int func_get_param( int n )
 {
-	return func_params[n];
+   return func_params[n];
 }
 
 

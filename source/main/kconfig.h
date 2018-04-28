@@ -20,60 +20,60 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gamestat.h"
 
 typedef struct control_info {
-	fix	pitch_time;						
-	fix	vertical_thrust_time;
-	fix	heading_time;
-	fix	sideways_thrust_time;
-	fix	bank_time;
-	fix	forward_thrust_time;
-		
-	ubyte	rear_view_down_count;	
-	ubyte	rear_view_down_state;	
-	
-	ubyte	fire_primary_down_count;
-	ubyte	fire_primary_state;
-	ubyte	fire_secondary_state;
-	ubyte	fire_secondary_down_count;
-	ubyte	fire_flare_down_count;
+   fix   pitch_time;                
+   fix   vertical_thrust_time;
+   fix   heading_time;
+   fix   sideways_thrust_time;
+   fix   bank_time;
+   fix   forward_thrust_time;
+      
+   ubyte rear_view_down_count;   
+   ubyte rear_view_down_state;   
+   
+   ubyte fire_primary_down_count;
+   ubyte fire_primary_state;
+   ubyte fire_secondary_state;
+   ubyte fire_secondary_down_count;
+   ubyte fire_flare_down_count;
 
-	ubyte	drop_bomb_down_count;	
+   ubyte drop_bomb_down_count;   
 
-	ubyte	automap_down_count;
-	ubyte	automap_state;
+   ubyte automap_down_count;
+   ubyte automap_state;
 
 //   vms_angvec heading;
-//	char oem_message[64];
+// char oem_message[64];
   
-	ubyte	afterburner_state;
-	ubyte cycle_primary_count;
-	ubyte cycle_secondary_count;
-	ubyte headlight_count;	
+   ubyte afterburner_state;
+   ubyte cycle_primary_count;
+   ubyte cycle_secondary_count;
+   ubyte headlight_count;  
 } control_info;
 
 typedef struct ext_control_info {
-	fix	pitch_time;						
-	fix	vertical_thrust_time;
-	fix	heading_time;
-	fix	sideways_thrust_time;
-	fix	bank_time;
-	fix	forward_thrust_time;
-		
-	ubyte	rear_view_down_count;	
-	ubyte	rear_view_down_state;	
-	
-	ubyte	fire_primary_down_count;
-	ubyte	fire_primary_state;
-	ubyte	fire_secondary_state;
-	ubyte	fire_secondary_down_count;
-	ubyte	fire_flare_down_count;
+   fix   pitch_time;                
+   fix   vertical_thrust_time;
+   fix   heading_time;
+   fix   sideways_thrust_time;
+   fix   bank_time;
+   fix   forward_thrust_time;
+      
+   ubyte rear_view_down_count;   
+   ubyte rear_view_down_state;   
+   
+   ubyte fire_primary_down_count;
+   ubyte fire_primary_state;
+   ubyte fire_secondary_state;
+   ubyte fire_secondary_down_count;
+   ubyte fire_flare_down_count;
 
-	ubyte	drop_bomb_down_count;	
+   ubyte drop_bomb_down_count;   
 
-	ubyte	automap_down_count;
-	ubyte	automap_state;
+   ubyte automap_down_count;
+   ubyte automap_state;
 
-// vms_angvec heading;	 // for version >=1.0 
-//	char oem_message[64]; // for version >=1.0
+// vms_angvec heading;   // for version >=1.0 
+// char oem_message[64]; // for version >=1.0
 
 // vms_vector ship_pos   // for version >=2.0
 // vms_matrix ship_orient // for version >=2.0
@@ -111,30 +111,30 @@ typedef struct ext_control_info {
 } ext_control_info;
 
 typedef struct advanced_ext_control_info {
-	fix	pitch_time;						
-	fix	vertical_thrust_time;
-	fix	heading_time;
-	fix	sideways_thrust_time;
-	fix	bank_time;
-	fix	forward_thrust_time;
-		
-	ubyte	rear_view_down_count;	
-	ubyte	rear_view_down_state;	
-	
-	ubyte	fire_primary_down_count;
-	ubyte	fire_primary_state;
-	ubyte	fire_secondary_state;
-	ubyte	fire_secondary_down_count;
-	ubyte	fire_flare_down_count;
+   fix   pitch_time;                
+   fix   vertical_thrust_time;
+   fix   heading_time;
+   fix   sideways_thrust_time;
+   fix   bank_time;
+   fix   forward_thrust_time;
+      
+   ubyte rear_view_down_count;   
+   ubyte rear_view_down_state;   
+   
+   ubyte fire_primary_down_count;
+   ubyte fire_primary_state;
+   ubyte fire_secondary_state;
+   ubyte fire_secondary_down_count;
+   ubyte fire_flare_down_count;
 
-	ubyte	drop_bomb_down_count;	
+   ubyte drop_bomb_down_count;   
 
-	ubyte	automap_down_count;
-	ubyte	automap_state;
+   ubyte automap_down_count;
+   ubyte automap_state;
 
 // everything below this line is for version >=1.0
 
- vms_angvec heading;	  
+ vms_angvec heading;   
  char oem_message[64]; 
 
 // everything below this line is for version >=2.0

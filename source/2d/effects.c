@@ -27,13 +27,13 @@ static char rcsid[] = "$Id: effects.c 1.5 1994/11/18 22:51:04 john Exp $";
 
 int bitwidth(unsigned int n)
 {
-	int width = 0;
+   int width = 0;
 
-	while ( n!=0 )  {
-		n >>= 1;
-		width++;
-	}
-	return width;
+   while ( n!=0 )  {
+      n >>= 1;
+      width++;
+   }
+   return width;
 }
 
 long randmasks[] = { 0,0,0x03,0x06,0x0c,0x14,0x30,0x60,0xb8,\
@@ -44,56 +44,56 @@ long randmasks[] = { 0,0,0x03,0x06,0x0c,0x14,0x30,0x60,0xb8,\
 
 void dissolve_in(grs_bitmap * bitmap )
 {
-	int height, width, zz;
-	int rwidth, cwidth;     /* bit width for rows, for columns */
-	int regwidth;           /* "width" of sequence generator */
-	long mask;     /* mask to XOR with to create sequence */
-	int rowshift;  /* shift distance to get row  */
-													/* from element */
-	int colmask; /* mask to extract column from element */
-	unsigned long element; /* one element of random */                                                                 /* sequence */
-	int row, column;    /* row and column for one pixel */
+   int height, width, zz;
+   int rwidth, cwidth;     /* bit width for rows, for columns */
+   int regwidth;           /* "width" of sequence generator */
+   long mask;     /* mask to XOR with to create sequence */
+   int rowshift;  /* shift distance to get row  */
+                                       /* from element */
+   int colmask; /* mask to extract column from element */
+   unsigned long element; /* one element of random */                                                                 /* sequence */
+   int row, column;    /* row and column for one pixel */
 
-	/* Find the mask to produce all rows and columns. */
-	height = bitmap->bm_h;
-	width = bitmap->bm_w;
+   /* Find the mask to produce all rows and columns. */
+   height = bitmap->bm_h;
+   width = bitmap->bm_w;
 
-	rwidth = bitwidth (height); /* how many bits needed for height? */
-	cwidth = bitwidth (width);  /* how many bits needed for width? */
-	regwidth = rwidth + cwidth; /* how wide must the register be? */
-	mask = randmasks[regwidth]; /* which mask is for that width? */
+   rwidth = bitwidth (height); /* how many bits needed for height? */
+   cwidth = bitwidth (width);  /* how many bits needed for width? */
+   regwidth = rwidth + cwidth; /* how wide must the register be? */
+   mask = randmasks[regwidth]; /* which mask is for that width? */
 
-	/* Find values to extract row and col numbers from each element. */
-	rowshift = cwidth; /* find dist to shift to get top bits (row) */
-	colmask = (1<<cwidth)-1;        /* find mask to extract  */
-												/* bottom bits (col) */
+   /* Find values to extract row and col numbers from each element. */
+   rowshift = cwidth; /* find dist to shift to get top bits (row) */
+   colmask = (1<<cwidth)-1;        /* find mask to extract  */
+                                    /* bottom bits (col) */
 
-	/* Now cycle through all sequence elements. */
+   /* Now cycle through all sequence elements. */
 
-	element = 1;    /* 1st element (could be any nonzero) */
-	do {
-		for (zz=0; zz < 100; zz++);
-		row = element >> rowshift; /* find row number for this pixel */
-		column = element & colmask; /* and how many columns across? */
-		/* does element fall in the array? */
-		/* ...must check row AND column */
+   element = 1;    /* 1st element (could be any nonzero) */
+   do {
+      for (zz=0; zz < 100; zz++);
+      row = element >> rowshift; /* find row number for this pixel */
+      column = element & colmask; /* and how many columns across? */
+      /* does element fall in the array? */
+      /* ...must check row AND column */
 
-		if ((row < height) && (column < width)) {
-			// Draw the (r,c)'th pixel
-			gr_setcolor(gr_ugpixel( bitmap, column, row ));
- 			gr_upixel(column, row);
-		}
+      if ((row < height) && (column < width)) {
+         // Draw the (r,c)'th pixel
+         gr_setcolor(gr_ugpixel( bitmap, column, row ));
+         gr_upixel(column, row);
+      }
 
-		/* Compute the next sequence element */
-		if (element & 1)                /* is the low bit set? */
-			element = (element >>1)^mask; /* yes: shift value, */
-		else
-			element = (element >>1); /* no: just shift the value */
-	} while (element != 1);         /* loop until we return to */
-									/*  original element */
+      /* Compute the next sequence element */
+      if (element & 1)                /* is the low bit set? */
+         element = (element >>1)^mask; /* yes: shift value, */
+      else
+         element = (element >>1); /* no: just shift the value */
+   } while (element != 1);         /* loop until we return to */
+                           /*  original element */
 
-	gr_setcolor(gr_ugpixel( bitmap, 0, 0 ));
-	gr_upixel(0,0);
+   gr_setcolor(gr_ugpixel( bitmap, 0, 0 ));
+   gr_upixel(0,0);
 
 }
 

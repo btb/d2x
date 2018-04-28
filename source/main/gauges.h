@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //from gauges.c
 
-#define MAX_GAUGE_BMS 100	//	increased from 56 to 80 by a very unhappy MK on 10/24/94.
+#define MAX_GAUGE_BMS 100  // increased from 56 to 80 by a very unhappy MK on 10/24/94.
 
 extern bitmap_index Gauges[MAX_GAUGE_BMS];   // Array of all gauge bitmaps.
 extern bitmap_index Gauges_hires[MAX_GAUGE_BMS];   // hires gauges
@@ -52,7 +52,7 @@ extern int HUD_init_message(char * format, ... );
 
 #define gauge_message HUD_init_message
 
-extern void draw_hud();		//draw all the HUD stuff
+extern void draw_hud();    //draw all the HUD stuff
 
 extern void player_dead_message(void);
 // extern void say_afterburner_status(void);
@@ -67,19 +67,19 @@ extern void update_laser_weapon_info(void);
 extern void play_homing_warning(void);
 
 typedef struct {
-	ubyte r,g,b;
+   ubyte r,g,b;
 } rgb;
 
 extern rgb player_rgb[];
 
-#define WBU_WEAPON		0		//the weapons display
-#define WBU_MISSILE		1		//the missile view
-#define WBU_ESCORT		2		//the "buddy bot"
-#define WBU_REAR			3		//the rear view
-#define WBU_COOP			4		//coop or team member view
-#define WBU_GUIDED		5		//the guided missile
-#define WBU_MARKER		6		//a dropped marker
-#define WBU_STATIC		7		//playing static after missile hits
+#define WBU_WEAPON      0     //the weapons display
+#define WBU_MISSILE     1     //the missile view
+#define WBU_ESCORT      2     //the "buddy bot"
+#define WBU_REAR        3     //the rear view
+#define WBU_COOP        4     //coop or team member view
+#define WBU_GUIDED      5     //the guided missile
+#define WBU_MARKER      6     //a dropped marker
+#define WBU_STATIC      7     //playing static after missile hits
 
 //draws a 3d view into one of the cockpit windows.  win is 0 for left,
 //1 for right.  viewer is object.  NULL object means give up window
@@ -89,9 +89,9 @@ extern rgb player_rgb[];
 void do_cockpit_window_view(int win,object *viewer,int rear_view_flag,int user,char *label);
 
 #ifdef MACINTOSH
-	#include "QuickDraw.h"
-	#include "RAVE.h"
-	void calculate_sub_view_window_bounds(int inSubWindowNum, TQARect* outBoundsRect);
+   #include "QuickDraw.h"
+   #include "RAVE.h"
+   void calculate_sub_view_window_bounds(int inSubWindowNum, TQARect* outBoundsRect);
 #endif
 
 #endif

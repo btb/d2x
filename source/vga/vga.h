@@ -20,7 +20,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 typedef unsigned short uword;
 
-#define SM_ORIGINAL		-1
+#define SM_ORIGINAL     -1
 #define SM_320x200C     0
 #define SM_320x200U     1
 #define SM_320x240U     2
@@ -40,8 +40,8 @@ typedef unsigned short uword;
 #define SM_1024x768V    16
 #define SM_640x480V15   17
 #define SM_800x600V15   18
-#define SM_1280x1024V	19
-#define SM_320x400_3DMAX	22		//special mode in 3dMax bios
+#define SM_1280x1024V   19
+#define SM_320x400_3DMAX   22    //special mode in 3dMax bios
 
 void vga_set_cellheight( ubyte height );
 void vga_set_linear(void);

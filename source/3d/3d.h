@@ -15,49 +15,49 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _3D_H
 
 #include "fix.h"
-#include "vecmat.h"	//the vector/matrix library
+#include "vecmat.h"  //the vector/matrix library
 #include "gr.h"
 
-extern int g3d_interp_outline;		//if on, polygon models outlined in white
+extern int g3d_interp_outline;      //if on, polygon models outlined in white
 
-extern vms_vector Matrix_scale;		//how the matrix is currently scaled
+extern vms_vector Matrix_scale;     //how the matrix is currently scaled
 #pragma aux Matrix_scale "*";
 
 //Structure for storing u,v,light values.  This structure doesn't have a
 //prefix because it was defined somewhere else before it was moved here
 typedef struct g3s_uvl {
-	fix u,v,l;
+   fix u,v,l;
 } g3s_uvl;
 
 //Stucture to store clipping codes in a word
 typedef struct g3s_codes {
-	ubyte or,and;	//or is low byte, and is high byte
+   ubyte or,and;  //or is low byte, and is high byte
 } g3s_codes;
 
 //flags for point structure
-#define PF_PROJECTED 	1	//has been projected, so sx,sy valid
-#define PF_OVERFLOW		2	//can't project
-#define PF_TEMP_POINT	4	//created during clip
-#define PF_UVS				8	//has uv values set
-#define PF_LS				16	//has lighting values set
+#define PF_PROJECTED    1  //has been projected, so sx,sy valid
+#define PF_OVERFLOW     2  //can't project
+#define PF_TEMP_POINT   4  //created during clip
+#define PF_UVS          8  //has uv values set
+#define PF_LS           16 //has lighting values set
 
 //clipping codes flags
 
-#define CC_OFF_LEFT	1
-#define CC_OFF_RIGHT	2
-#define CC_OFF_BOT	4
-#define CC_OFF_TOP	8
-#define CC_BEHIND		0x80
+#define CC_OFF_LEFT  1
+#define CC_OFF_RIGHT 2
+#define CC_OFF_BOT   4
+#define CC_OFF_TOP   8
+#define CC_BEHIND    0x80
 
 //Used to store rotated points for mines.  Has frame count to indictate
 //if rotated, and flag to indicate if projected.
 typedef struct g3s_point {
-	vms_vector p3_vec;	//x,y,z of rotated point
-	fix p3_u,p3_v,p3_l;	//u,v,l coords
-	fix p3_sx,p3_sy;		//screen x&y
-	ubyte p3_codes;		//clipping codes
-	ubyte p3_flags;		//projected?
-	short p3_pad;			//keep structure longwork aligned
+   vms_vector p3_vec;   //x,y,z of rotated point
+   fix p3_u,p3_v,p3_l;  //u,v,l coords
+   fix p3_sx,p3_sy;     //screen x&y
+   ubyte p3_codes;      //clipping codes
+   ubyte p3_flags;      //projected?
+   short p3_pad;        //keep structure longwork aligned
 } g3s_point;
 
 //macros to reference x,y,z elements of a 3d point
@@ -67,12 +67,12 @@ typedef struct g3s_point {
 
 //An object, such as a robot
 typedef struct g3s_object {
-	vms_vector o3_pos;       //location of this object
-	vms_angvec o3_orient;    //orientation of this object
-	int o3_nverts;           //number of points in the object
-	int o3_nfaces;           //number of faces in the object
+   vms_vector o3_pos;       //location of this object
+   vms_angvec o3_orient;    //orientation of this object
+   int o3_nverts;           //number of points in the object
+   int o3_nfaces;           //number of faces in the object
 
-	//this will be filled in later
+   //this will be filled in later
 
 } g3s_object;
 

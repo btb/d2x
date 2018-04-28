@@ -10,24 +10,24 @@
 
 UI_GADGET_KEYTRAP * ui_add_gadget_keytrap( UI_WINDOW * wnd, int key_to_trap, int (*function_to_call)(void)  )
 {
-	UI_GADGET_KEYTRAP * keytrap;
+   UI_GADGET_KEYTRAP * keytrap;
 
-	keytrap = (UI_GADGET_KEYTRAP *)ui_gadget_add( wnd, 8, 0, 0, 0, 0 );
-	keytrap->parent = (UI_GADGET *)keytrap;
+   keytrap = (UI_GADGET_KEYTRAP *)ui_gadget_add( wnd, 8, 0, 0, 0, 0 );
+   keytrap->parent = (UI_GADGET *)keytrap;
 
-	keytrap->trap_key = key_to_trap;
-	keytrap->user_function = function_to_call;
+   keytrap->trap_key = key_to_trap;
+   keytrap->user_function = function_to_call;
 
-	return keytrap;
+   return keytrap;
 
 }
 
 void ui_keytrap_do( UI_GADGET_KEYTRAP * keytrap, int keypress )
 {
-	int result;
+   int result;
 
-	if ( keypress == keytrap->trap_key )
-	{
-		result = keytrap->user_function();
-	}
+   if ( keypress == keytrap->trap_key )
+   {
+      result = keytrap->user_function();
+   }
 }

@@ -17,17 +17,17 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _FIREBALL_H
 
 //explosion types
-#define ET_SPARKS			0		//little sparks, like when laser hits wall
-#define ET_MULTI_START	1		//first part of multi-part explosion
-#define ET_MULTI_SECOND	2		//second part of multi-part explosion
+#define ET_SPARKS       0     //little sparks, like when laser hits wall
+#define ET_MULTI_START  1     //first part of multi-part explosion
+#define ET_MULTI_SECOND 2     //second part of multi-part explosion
 
 //data for exploding walls (such as hostage door)
 typedef struct expl_wall {
-	int segnum,sidenum;
-	fix time;
+   int segnum,sidenum;
+   fix time;
 } expl_wall;
 
-#define MAX_EXPLODING_WALLS 			10
+#define MAX_EXPLODING_WALLS         10
 
 extern expl_wall expl_wall_list[MAX_EXPLODING_WALLS];
 
@@ -35,8 +35,8 @@ object *object_create_explosion(short segnum, vms_vector * position, fix size, i
 object *object_create_muzzle_flash(short segnum, vms_vector * position, fix size, int vclip_type );
 
 object *object_create_badass_explosion(object *objp, short segnum, 
-		vms_vector * position, fix size, int vclip_type, 
-		fix maxdamage, fix maxdistance, fix maxforce, int parent );
+      vms_vector * position, fix size, int vclip_type, 
+      fix maxdamage, fix maxdistance, fix maxforce, int parent );
 
 //blows up a badass weapon, creating the badass explosion
 //return the explosion object
@@ -48,7 +48,7 @@ object *explode_badass_player(object *obj);
 
 void explode_object(object *obj,fix delay_time);
 void do_explosion_sequence(object *obj);
-void do_debris_frame(object *obj);		//deal with debris for this frame
+void do_debris_frame(object *obj);     //deal with debris for this frame
 
 void draw_fireball(object *obj);
 

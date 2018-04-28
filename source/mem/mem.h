@@ -15,7 +15,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern ubyte virtual_memory_on;
 #endif
 
-#if !defined(NDEBUG) || defined(MACINTOSH)		// mac always gets this stuff.
+#if !defined(NDEBUG) || defined(MACINTOSH)      // mac always gets this stuff.
 
 extern int show_mem_info;
 

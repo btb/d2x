@@ -18,13 +18,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include <time.h>
 
-#define DESC_ID_LEN			40		//how long the id string can be
-#define DESC_CHECKSUM_LEN	4		//checksum is 4 bytes
-#define DESC_DEAD_TIME_LEN	8		//dead time is 8 bytes
+#define DESC_ID_LEN        40    //how long the id string can be
+#define DESC_CHECKSUM_LEN  4     //checksum is 4 bytes
+#define DESC_DEAD_TIME_LEN 8     //dead time is 8 bytes
 
-#define DESC_ID_TAG			"Midway in our life's journey, I went astray"
-#define DESC_ID_CHKSUM_TAG	"alone in a dark wood."
-#define DESC_DEAD_TIME_TAG	"from the straight road and woke to find myself"
+#define DESC_ID_TAG        "Midway in our life's journey, I went astray"
+#define DESC_ID_CHKSUM_TAG "alone in a dark wood."
+#define DESC_DEAD_TIME_TAG "from the straight road and woke to find myself"
 
 extern char desc_id_exit_num;
 

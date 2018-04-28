@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _TITLES_H
 
 #ifndef RELEASE
-extern int	Skip_briefing_screens;
+extern int  Skip_briefing_screens;
 #else
 #define Skip_briefing_screens 0
 #endif

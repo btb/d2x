@@ -19,10 +19,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef WINDOWS
 
-#define DESCENT_VIEWPORT_WIDTH	640
-#define DESCENT_VIEWPORT_HEIGHT	480
-#define DESCENT_RENDER_WIDTH		320
-#define DESCENT_RENDER_HEIGHT		200
+#define DESCENT_VIEWPORT_WIDTH   640
+#define DESCENT_VIEWPORT_HEIGHT  480
+#define DESCENT_RENDER_WIDTH     320
+#define DESCENT_RENDER_HEIGHT    200
 
 
 #define WIN95
@@ -36,62 +36,62 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "fix.h"
 #include "gr.h"
 
-#undef	DEFAULT_PALETTE
+#undef   DEFAULT_PALETTE
 
 
 #define WINAPP_NAME "Descent II"
 
 typedef struct GAME_CONTEXT {
-	BOOL paused;
-	BOOL active;
+   BOOL paused;
+   BOOL active;
 };
 
 typedef struct SCREEN_CONTEXT {
-	char *bkg_filename;
+   char *bkg_filename;
 } SCREEN_CONTEXT;
 
 
 typedef struct PALETTE {
-	WORD version;
-	WORD num_entries;
-	PALETTEENTRY entries[256];
+   WORD version;
+   WORD num_entries;
+   PALETTEENTRY entries[256];
 } PALETTE;
 
 typedef struct RGBBITMAPINFO {
-	BITMAPINFOHEADER	bmiHeader;
-	RGBQUAD				rgb[256];
+   BITMAPINFOHEADER  bmiHeader;
+   RGBQUAD           rgb[256];
 } RGBBITMAPINFO;
 
 
 
-//	Other Structures
+// Other Structures
 
-#define MSG_QUIT	0
+#define MSG_QUIT  0
 #define MSG_SHUTDOWN 1
 #define MSG_NORMAL 2
 
 
 typedef struct WinJoystickDesc {
-	char title[32];
-	char cal_ztitle[16];
-	char cal_rtitle[16];
-	char cal_utitle[16];
-	char cal_vtitle[16];
-	char cal_zmsg[6][16];
-	char cal_rmsg[6][16];
-	char cal_umsg[6][16];
-	char cal_vmsg[6][16];
+   char title[32];
+   char cal_ztitle[16];
+   char cal_rtitle[16];
+   char cal_utitle[16];
+   char cal_vtitle[16];
+   char cal_zmsg[6][16];
+   char cal_rmsg[6][16];
+   char cal_umsg[6][16];
+   char cal_vmsg[6][16];
 } WinJoystickDesc;
 
 
-//	Globals
+// Globals
 
-extern HWND 		_hAppWnd;						// Descent Window
-extern HINSTANCE 	_hAppInstance;
-extern int			_DDraw;							// Direct X Implementation
-extern BOOL			_AppActive;
-extern BOOL 		SOS_DLLInit;
-extern BOOL			_RedrawScreen;
+extern HWND       _hAppWnd;                  // Descent Window
+extern HINSTANCE  _hAppInstance;
+extern int        _DDraw;                    // Direct X Implementation
+extern BOOL       _AppActive;
+extern BOOL       SOS_DLLInit;
+extern BOOL       _RedrawScreen;
 extern SCREEN_CONTEXT _SCRContext;
 
 
@@ -102,24 +102,24 @@ extern dd_grs_canvas dd_VR_render_sub_buffer[2];
 
 
 
-//	WinG Stuff
+// WinG Stuff
 
-extern HPALETTE	_hAppPalette;					// Application Palette
-
-
-//	Other Globals
-
-extern RECT			ViewportRect;					// Viewport rect for window
-extern char			*_OffscreenCanvasBits;		// Pointer to DIB Bits.
-extern fix			WinFrameTime;					// Time per frame
-extern int			Platform_system;				// Tells us the platform
+extern HPALETTE   _hAppPalette;              // Application Palette
 
 
-//	Functions
+// Other Globals
+
+extern RECT       ViewportRect;              // Viewport rect for window
+extern char       *_OffscreenCanvasBits;     // Pointer to DIB Bits.
+extern fix        WinFrameTime;              // Time per frame
+extern int        Platform_system;           // Tells us the platform
+
+
+// Functions
 
 extern void WinDelay(int msecs);
 
-//	misc functions
+// misc functions
 extern void WErrorPrint(char *msg);
 extern dd_grs_canvas *get_current_game_screen();
 extern BOOL SOSInit();
@@ -134,10 +134,10 @@ extern void ShowCursorW();
 extern void HideCursorW();
 
 
-//	Macros
+// Macros
 #define CanvasWidth(C) ((C).bmiHeader.biWidth)
 #define CanvasHeight(C) (((C).bmiHeader.biHeight > 0) ? \
-							(C).bmiHeader.biHeight : -(C).bmiHeader.biHeight)
+                     (C).bmiHeader.biHeight : -(C).bmiHeader.biHeight)
 
 #define DebugMessageBox(c) (MessageBox(NULL,c,"Message",MB_OK))
 

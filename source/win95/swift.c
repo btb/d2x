@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: swift.c 1.1 1995/12/21 11:21:09 samir Exp $";
 
 int SWIFT_Initialize(void)
 {
-	return 0;
+   return 0;
 }
 
 
@@ -33,13 +33,13 @@ void SWIFT_Terminate(void)
 
 int SWIFT_GetAttachedDevice(void)
 {
-	return 0;
+   return 0;
 }
 
 
 int SWIFT_GetStaticDeviceInfo(SWIFT_StaticData far *psd)
 {
-	return 0;
+   return 0;
 }
 
 
@@ -63,5 +63,5 @@ void SWIFT_TactileFeedback(int d, int on, int off)
 
 unsigned SWIFT_GetDynamicDeviceData(void)
 {
-	return 0;
+   return 0;
 }

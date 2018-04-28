@@ -53,7 +53,7 @@ int                _3dfx_no_bilinear;
 int                _3dfx_available;
 
 typedef struct BitmapFile       {
-	char                    name[15];
+   char                    name[15];
 } BitmapFile;
 extern BitmapFile AllBitmaps[ MAX_BITMAP_FILES ];
 

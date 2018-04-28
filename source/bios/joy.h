@@ -17,38 +17,38 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "fix.h"
 
-#define JOY_1_BUTTON_A	1
-#define JOY_1_BUTTON_B	2
-#define JOY_2_BUTTON_A	4
-#define JOY_2_BUTTON_B	8
-#define JOY_ALL_BUTTONS	(1+2+4+8)
+#define JOY_1_BUTTON_A  1
+#define JOY_1_BUTTON_B  2
+#define JOY_2_BUTTON_A  4
+#define JOY_2_BUTTON_B  8
+#define JOY_ALL_BUTTONS (1+2+4+8)
 
-#define JOY_1_X_AXIS		1
-#define JOY_1_Y_AXIS		2
-#define JOY_1_Z_AXIS		4
-#define JOY_1_R_AXIS		16
-#define JOY_1_U_AXIS		32
-#define JOY_1_V_AXIS		64
+#define JOY_1_X_AXIS    1
+#define JOY_1_Y_AXIS    2
+#define JOY_1_Z_AXIS    4
+#define JOY_1_R_AXIS    16
+#define JOY_1_U_AXIS    32
+#define JOY_1_V_AXIS    64
 
 #ifdef WINDOWS
-	#define MAX_JOY_AXIS		7
+   #define MAX_JOY_AXIS    7
 #else
-	#define MAX_JOY_AXIS 	4
+   #define MAX_JOY_AXIS    4
 #endif
 
 #ifdef  _WIN32
-#define JOY_1_POV			8
-#define JOY_ALL_AXIS		(1+2+4+8)
-#define JOY_EXT_AXIS		(16+32+64)
+#define JOY_1_POV       8
+#define JOY_ALL_AXIS    (1+2+4+8)
+#define JOY_EXT_AXIS    (16+32+64)
 #else
-#define JOY_2_X_AXIS		4
-#define JOY_2_Y_AXIS		8
-#define JOY_ALL_AXIS		(1+2+4+8)
+#define JOY_2_X_AXIS    4
+#define JOY_2_Y_AXIS    8
+#define JOY_ALL_AXIS    (1+2+4+8)
 #endif
 
-#define JOY_SLOW_READINGS 	1
-#define JOY_POLLED_READINGS 	2
-#define JOY_BIOS_READINGS 	4
+#define JOY_SLOW_READINGS  1
+#define JOY_POLLED_READINGS   2
+#define JOY_BIOS_READINGS  4
 
 //==========================================================================
 // This initializes the joy and does a "quick" calibration which

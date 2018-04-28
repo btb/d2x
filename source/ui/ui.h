@@ -15,200 +15,200 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _UI_H
 
 typedef struct {
-	char	description[100];
-	char 	* buttontext[17];
-	int	numkeys;
-	short keycode[100];
-	int 	function_number[100];
+   char  description[100];
+   char  * buttontext[17];
+   int   numkeys;
+   short keycode[100];
+   int   function_number[100];
 } UI_KEYPAD;
 
 typedef struct
 {
-	unsigned int frame;
-	int type;
-	int data;
+   unsigned int frame;
+   int type;
+   int data;
 } UI_EVENT;
 
 #define BASE_GADGET             \
-	short           kind;       \
-	struct _gadget  * prev;     \
-	struct _gadget  * next;     \
-	struct _gadget  * when_tab;  \
-	struct _gadget  * when_btab; \
-	struct _gadget  * when_up;    \
-	struct _gadget  * when_down;   \
-	struct _gadget  * when_left;   \
-	struct _gadget  * when_right;  \
-	struct _gadget  * parent;    \
-	int             status;     \
-	int             oldstatus;  \
-	grs_canvas *    canvas;     \
-	int             hotkey;     \
-	short           x1,y1,x2,y2;
+   short           kind;       \
+   struct _gadget  * prev;     \
+   struct _gadget  * next;     \
+   struct _gadget  * when_tab;  \
+   struct _gadget  * when_btab; \
+   struct _gadget  * when_up;    \
+   struct _gadget  * when_down;   \
+   struct _gadget  * when_left;   \
+   struct _gadget  * when_right;  \
+   struct _gadget  * parent;    \
+   int             status;     \
+   int             oldstatus;  \
+   grs_canvas *    canvas;     \
+   int             hotkey;     \
+   short           x1,y1,x2,y2;
 
 
 typedef struct _gadget {
-	BASE_GADGET
-	unsigned char rsvd[256];
+   BASE_GADGET
+   unsigned char rsvd[256];
 } UI_GADGET;
 
 
 typedef struct  {
-	BASE_GADGET
-	int         trap_key;
-	int      (*user_function)(void);
+   BASE_GADGET
+   int         trap_key;
+   int      (*user_function)(void);
 } UI_GADGET_KEYTRAP;
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
-	short           b1_held_down;
-	short           b1_clicked;
-	short           b1_double_clicked;
-	short           b1_dragging;
-	short           b1_drag_x1, b1_drag_y1;
-	short           b1_drag_x2, b1_drag_y2;
-	short           b1_done_dragging;
-	int             keypress;
-	short           mouse_onme;
-	short           mouse_x, mouse_y;
-	grs_bitmap *    bitmap;
+   BASE_GADGET
+   short           width, height;
+   short           b1_held_down;
+   short           b1_clicked;
+   short           b1_double_clicked;
+   short           b1_dragging;
+   short           b1_drag_x1, b1_drag_y1;
+   short           b1_drag_x2, b1_drag_y2;
+   short           b1_done_dragging;
+   int             keypress;
+   short           mouse_onme;
+   short           mouse_x, mouse_y;
+   grs_bitmap *    bitmap;
 } UI_GADGET_USERBOX;
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
-	char            * text;
-	short           position;
-	short           oldposition;
-	short           pressed;
-	int          	 (*user_function)(void);
-	int          	 (*user_function1)(void);
-	int				 hotkey1;
-	int				 dim_if_no_function;
+   BASE_GADGET
+   short           width, height;
+   char            * text;
+   short           position;
+   short           oldposition;
+   short           pressed;
+   int             (*user_function)(void);
+   int             (*user_function1)(void);
+   int             hotkey1;
+   int             dim_if_no_function;
 } UI_GADGET_BUTTON;
 
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
-	char            * text;
-	short           length;
-	short           slength;
-	short           position;
-	short           oldposition;
-	short           pressed;
-	short           first_time;
+   BASE_GADGET
+   short           width, height;
+   char            * text;
+   short           length;
+   short           slength;
+   short           position;
+   short           oldposition;
+   short           pressed;
+   short           first_time;
 } UI_GADGET_INPUTBOX;
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
-	char            * text;
-	short           position;
-	short           oldposition;
-	short           pressed;
-	short           group;
-	short           flag;
+   BASE_GADGET
+   short           width, height;
+   char            * text;
+   short           position;
+   short           oldposition;
+   short           pressed;
+   short           group;
+   short           flag;
 } UI_GADGET_RADIO;
 
 
 typedef struct  {
-	BASE_GADGET
-	char 				 *text;
-	short 		    width, height;
-	byte            flag;
-	byte            pressed;
-	byte            position;
-	byte            oldposition;
-	int             trap_key;
-	int          	(*user_function)(void);
+   BASE_GADGET
+   char            *text;
+   short           width, height;
+   byte            flag;
+   byte            pressed;
+   byte            position;
+   byte            oldposition;
+   int             trap_key;
+   int            (*user_function)(void);
 } UI_GADGET_ICON;
 
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
+   BASE_GADGET
+   short           width, height;
    char            * text;
-	short           position;
-	short           oldposition;
-	short           pressed;
-	short           group;
-	short           flag;
+   short           position;
+   short           oldposition;
+   short           pressed;
+   short           group;
+   short           flag;
 } UI_GADGET_CHECKBOX;
 
 
 typedef struct  {
-	BASE_GADGET
-	short           horz;
-	short           width, height;
-	int             start;
-	int             stop;
-	int             position;
-	int             window_size;
-	int             fake_length;
-	int             fake_position;
-	int             fake_size;
-	UI_GADGET_BUTTON * up_button;
-	UI_GADGET_BUTTON * down_button;
-	unsigned int    last_scrolled;
-	short           drag_x, drag_y;
-	int             drag_starting;
-	int             dragging;
-	int             moved;
+   BASE_GADGET
+   short           horz;
+   short           width, height;
+   int             start;
+   int             stop;
+   int             position;
+   int             window_size;
+   int             fake_length;
+   int             fake_position;
+   int             fake_size;
+   UI_GADGET_BUTTON * up_button;
+   UI_GADGET_BUTTON * down_button;
+   unsigned int    last_scrolled;
+   short           drag_x, drag_y;
+   int             drag_starting;
+   int             dragging;
+   int             moved;
 } UI_GADGET_SCROLLBAR;
 
 typedef struct  {
-	BASE_GADGET
-	short           width, height;
-	char            * list;
-	int             text_width;
-	int             num_items;
-	int             num_items_displayed;
-	int             first_item;
-	int             old_first_item;
-	int             current_item;
-	int             selected_item;
-	int             old_current_item;
-	unsigned int    last_scrolled;
-	int             dragging;
-	int             textheight;
-	UI_GADGET_SCROLLBAR * scrollbar;
-	int             moved;
+   BASE_GADGET
+   short           width, height;
+   char            * list;
+   int             text_width;
+   int             num_items;
+   int             num_items_displayed;
+   int             first_item;
+   int             old_first_item;
+   int             current_item;
+   int             selected_item;
+   int             old_current_item;
+   unsigned int    last_scrolled;
+   int             dragging;
+   int             textheight;
+   UI_GADGET_SCROLLBAR * scrollbar;
+   int             moved;
 } UI_GADGET_LISTBOX;
 
 typedef struct _ui_window {
-	short           x, y;
-	short           width, height;
-	short           text_x, text_y;
-	grs_canvas *    canvas;
-	grs_canvas *    oldcanvas;
-	grs_bitmap *    background;
-	UI_GADGET *     gadget;
-	UI_GADGET *     keyboard_focus_gadget;
-	struct _ui_window * next;
-	struct _ui_window * prev;
+   short           x, y;
+   short           width, height;
+   short           text_x, text_y;
+   grs_canvas *    canvas;
+   grs_canvas *    oldcanvas;
+   grs_bitmap *    background;
+   UI_GADGET *     gadget;
+   UI_GADGET *     keyboard_focus_gadget;
+   struct _ui_window * next;
+   struct _ui_window * prev;
 } UI_WINDOW;
 
 typedef struct  {
-	short           new_dx, new_dy;
-	short           new_buttons;
-	short           x, y;
-	short           dx, dy;
-	short           hidden;
-	short           backwards;
-	short           b1_status;
-	short           b1_last_status;
-	short           b2_status;
-	short           b2_last_status;
-	short           b3_status;
-	short           b3_last_status;
-	short           bg_x, bg_y;
-	short           bg_saved;
-	grs_bitmap *    background;
-	grs_bitmap *    pointer;
-	unsigned int    time_lastpressed;
-	short           moved;
+   short           new_dx, new_dy;
+   short           new_buttons;
+   short           x, y;
+   short           dx, dy;
+   short           hidden;
+   short           backwards;
+   short           b1_status;
+   short           b1_last_status;
+   short           b2_status;
+   short           b2_last_status;
+   short           b3_status;
+   short           b3_last_status;
+   short           bg_x, bg_y;
+   short           bg_saved;
+   grs_bitmap *    background;
+   grs_bitmap *    pointer;
+   unsigned int    time_lastpressed;
+   short           moved;
 } UI_MOUSE;
 
 #define BUTTON_PRESSED          1

@@ -54,7 +54,7 @@ typedef struct tag_seq
     UINT        uMCIDeviceID;       /* Our MCI device ID given to us                */
     UINT        uMCITimeFormat;     /* Current time format                          */
     UINT        uMCITimeDiv;        /* MCI_SEQ_DIV_xxx for current file             */
-	HWND		hWnd;				/* Where to post MMSG_DONE when done playing	*/
+   HWND     hWnd;          /* Where to post MMSG_DONE when done playing */
 
     UINT        uState;             /* Sequencer state (SEQ_S_xxx)                  */
     TICKS       tkLength;           /* Length of longest track                      */

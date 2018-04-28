@@ -5,9 +5,9 @@ void macro_test(void);
 
 main()
 {
-	minit();
-	mclear(0);
+   minit();
+   mclear(0);
 
-	macro_test();
+   macro_test();
 
 }

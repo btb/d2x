@@ -19,13 +19,13 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pstypes.h"
 #include "vecmat.h"
 
-typedef struct digi_sound 	{
-	int length;
-	ubyte * data;
+typedef struct digi_sound  {
+   int length;
+   ubyte * data;
 } digi_sound;
 
-#define SAMPLE_RATE_11K		11025
-#define SAMPLE_RATE_22K		22050
+#define SAMPLE_RATE_11K    11025
+#define SAMPLE_RATE_22K    22050
 
 extern int digi_driver_board;
 extern int digi_driver_port;

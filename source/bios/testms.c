@@ -21,57 +21,57 @@ short i_dx, i_dy, i_b, i_f, i_happend;
 
 void John( mouse_event * evt )
 {
-	i_dx = evt->dx;
-	i_dy = evt->dy;
-	i_b = evt->buttons;
-	i_f = evt->flags;
-	i_happend = 1;
+   i_dx = evt->dx;
+   i_dy = evt->dy;
+   i_b = evt->buttons;
+   i_f = evt->flags;
+   i_happend = 1;
 }
 
 void main (void)
 {
-	short x, y, dx, dy, i, b;
+   short x, y, dx, dy, i, b;
 
-	printf( "This tests the mouse interface. ESC exits.\n" );
+   printf( "This tests the mouse interface. ESC exits.\n" );
 
-	if (!mouse_init())  {
-		printf( "No mouse installed.\n" );
-		exit(1);
-	}
+   if (!mouse_init())  {
+      printf( "No mouse installed.\n" );
+      exit(1);
+   }
 
-	key_init();
+   key_init();
 
-	mouse_set_handler( ME_LEFT_DOWN | ME_MOVEMENT | ME_RIGHT_DOWN, John );
+   mouse_set_handler( ME_LEFT_DOWN | ME_MOVEMENT | ME_RIGHT_DOWN, John );
 
-	while( !keyd_pressed[KEY_ESC])
-	{
+   while( !keyd_pressed[KEY_ESC])
+   {
 
-		if (i_happend)
-		{
-			i_happend = 0;
-			printf( "INT: POS:(%d,%d)\tBTN:%d\tFLG:%d\n", i_dx, i_dy, i_b, i_f );
-		}
-	}
+      if (i_happend)
+      {
+         i_happend = 0;
+         printf( "INT: POS:(%d,%d)\tBTN:%d\tFLG:%d\n", i_dx, i_dy, i_b, i_f );
+      }
+   }
 
-	mouse_clear_handler();
+   mouse_clear_handler();
 
-	delay(500);
+   delay(500);
 
-	while( !keyd_pressed[KEY_ESC])
-	{
+   while( !keyd_pressed[KEY_ESC])
+   {
 
-		if (i_happend)
-		{
-			printf( "ERROR: INT SHouLD NOT HAVe HAPND !!\n" );
-			break;
-		}
-		mouse_get_pos( &x, &y );
-		mouse_get_delta( &dx, &dy );
-		b = mouse_get_btns();
-		printf( "POS:(%d,%d)\tDELTA:(%d,%d)\tBUTTONS:%d\n", x, y, dx, dy, b );
-	}
+      if (i_happend)
+      {
+         printf( "ERROR: INT SHouLD NOT HAVe HAPND !!\n" );
+         break;
+      }
+      mouse_get_pos( &x, &y );
+      mouse_get_delta( &dx, &dy );
+      b = mouse_get_btns();
+      printf( "POS:(%d,%d)\tDELTA:(%d,%d)\tBUTTONS:%d\n", x, y, dx, dy, b );
+   }
 
 
-	mouse_close();
-	key_close();
+   mouse_close();
+   key_close();
 }

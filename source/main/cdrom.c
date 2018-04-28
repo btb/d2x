@@ -23,70 +23,70 @@ static char rcsid[] = "$Id: cdrom.c 1.2 1995/03/20 15:01:19 john Exp $";
 #include "dpmi.h"
 
 typedef struct {
-	char unit;
-	ushort dev_offset;
-	ushort dev_segment;
+   char unit;
+   ushort dev_offset;
+   ushort dev_segment;
 } dev_list;
 
 typedef struct _Dev_Hdr {
-	unsigned int dev_next;
-	unsigned short dev_att;
-	ushort dev_stat;
-	ushort dev_int;
-	char dev_name[8];
-	short dev_resv;
-	char dev_letr;
-	char dev_units;
+   unsigned int dev_next;
+   unsigned short dev_att;
+   ushort dev_stat;
+   ushort dev_int;
+   char dev_name[8];
+   short dev_resv;
+   char dev_letr;
+   char dev_units;
 } dev_header;
 
 int find_descent_cd()
 {
-	dpmi_real_regs rregs;
-		
-	// Get dos memory for call...
-	dev_list * buf;
-	dev_header *device;
-	int num_drives, i;
-	unsigned cdrive, cur_drive, cdrom_drive;
+   dpmi_real_regs rregs;
+      
+   // Get dos memory for call...
+   dev_list * buf;
+   dev_header *device;
+   int num_drives, i;
+   unsigned cdrive, cur_drive, cdrom_drive;
 
-	memset(&rregs,0,sizeof(dpmi_real_regs));
-	rregs.eax = 0x1500;
-	rregs.ebx = 0;
-	dpmi_real_int386x( 0x2f, &rregs );
-	if ((rregs.ebx & 0xffff) == 0) {
-		return -1;			// No cdrom
-	}
-	num_drives = rregs.ebx;
+   memset(&rregs,0,sizeof(dpmi_real_regs));
+   rregs.eax = 0x1500;
+   rregs.ebx = 0;
+   dpmi_real_int386x( 0x2f, &rregs );
+   if ((rregs.ebx & 0xffff) == 0) {
+      return -1;        // No cdrom
+   }
+   num_drives = rregs.ebx;
 
-	buf = (dev_list *)dpmi_get_temp_low_buffer( sizeof(dev_list)*26 );	
-	if (buf==NULL) {
-		return -2;			// Error getting memory!
-	}
+   buf = (dev_list *)dpmi_get_temp_low_buffer( sizeof(dev_list)*26 );   
+   if (buf==NULL) {
+      return -2;        // Error getting memory!
+   }
 
-	memset(&rregs,0,sizeof(dpmi_real_regs));
-	rregs.es = DPMI_real_segment(buf);
-	rregs.ebx = DPMI_real_offset(buf);
-	rregs.eax = 0x1501;
-	dpmi_real_int386x( 0x2f, &rregs );
-	cdrom_drive = 0;
-	_dos_getdrive(&cdrive);
-	for (i = 0; i < num_drives; i++) {
-		device = (dev_header *)((buf[i].dev_segment<<4)+ buf[i].dev_offset);
-		_dos_setdrive(device->dev_letr,&cur_drive);
-		_dos_getdrive(&cur_drive);
-		if (cur_drive == device->dev_letr) {
-			if (!chdir("\\descent")) {
-				FILE * fp;
-				fp = fopen( "saturn.hog", "rb" );	
-				if ( fp )	{
-					cdrom_drive = device->dev_letr;
-					fclose(fp);
-					break;
-				}
-			}
-		}				
-	}
-	_dos_setdrive(cdrive,&cur_drive);
-	return cdrom_drive;
+   memset(&rregs,0,sizeof(dpmi_real_regs));
+   rregs.es = DPMI_real_segment(buf);
+   rregs.ebx = DPMI_real_offset(buf);
+   rregs.eax = 0x1501;
+   dpmi_real_int386x( 0x2f, &rregs );
+   cdrom_drive = 0;
+   _dos_getdrive(&cdrive);
+   for (i = 0; i < num_drives; i++) {
+      device = (dev_header *)((buf[i].dev_segment<<4)+ buf[i].dev_offset);
+      _dos_setdrive(device->dev_letr,&cur_drive);
+      _dos_getdrive(&cur_drive);
+      if (cur_drive == device->dev_letr) {
+         if (!chdir("\\descent")) {
+            FILE * fp;
+            fp = fopen( "saturn.hog", "rb" );   
+            if ( fp )   {
+               cdrom_drive = device->dev_letr;
+               fclose(fp);
+               break;
+            }
+         }
+      }           
+   }
+   _dos_setdrive(cdrive,&cur_drive);
+   return cdrom_drive;
 }
 

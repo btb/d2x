@@ -22,70 +22,70 @@ static char rcsid[] = "$Id: findfile.c 1.2 1996/02/07 17:09:02 samir Exp $";
 #include "findfile.h"
 
 
-//	Global Variables	----------------------------------------------------------
+// Global Variables  ----------------------------------------------------------
 
-static HANDLE	_FindFileHandle = INVALID_HANDLE_VALUE;
+static HANDLE  _FindFileHandle = INVALID_HANDLE_VALUE;
 
 
 
-//	Functions
+// Functions
 
-int	FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
+int   FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
 {
-	WIN32_FIND_DATA find;
+   WIN32_FIND_DATA find;
 
-	_FindFileHandle =  FindFirstFile((LPSTR)search_str, &find);
-	if (_FindFileHandle == INVALID_HANDLE_VALUE) return 1;
-	else {
-		ffstruct->size = find.nFileSizeLow;
-		strcpy(ffstruct->name, find.cFileName);
-		return 0; 
-	}
+   _FindFileHandle =  FindFirstFile((LPSTR)search_str, &find);
+   if (_FindFileHandle == INVALID_HANDLE_VALUE) return 1;
+   else {
+      ffstruct->size = find.nFileSizeLow;
+      strcpy(ffstruct->name, find.cFileName);
+      return 0; 
+   }
 }
 
 
-int	FileFindNext(FILEFINDSTRUCT *ffstruct)
+int   FileFindNext(FILEFINDSTRUCT *ffstruct)
 {
-	WIN32_FIND_DATA find;
+   WIN32_FIND_DATA find;
 
-	if (!FindNextFile(_FindFileHandle, &find)) return 1;
-	else {
-		ffstruct->size = find.nFileSizeLow;
-		strcpy(ffstruct->name, find.cFileName);
-		return 0;
-	}
+   if (!FindNextFile(_FindFileHandle, &find)) return 1;
+   else {
+      ffstruct->size = find.nFileSizeLow;
+      strcpy(ffstruct->name, find.cFileName);
+      return 0;
+   }
 }
  
 
-int	FileFindClose(void)
+int   FileFindClose(void)
 {
-	if (!FindClose(_FindFileHandle)) return 1;
-	else return 0;
+   if (!FindClose(_FindFileHandle)) return 1;
+   else return 0;
 }
 
 
 int GetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 {
-	FILETIME filetime;
-	int retval;
+   FILETIME filetime;
+   int retval;
 
-	retval = GetFileTime((HANDLE)filehandle, NULL, NULL, &filetime);
-	if (retval) {
-		FileTimeToDosDateTime(&filetime, &ftstruct->date, &ftstruct->time);
-		return 0;
-	}
-	else return 1;
+   retval = GetFileTime((HANDLE)filehandle, NULL, NULL, &filetime);
+   if (retval) {
+      FileTimeToDosDateTime(&filetime, &ftstruct->date, &ftstruct->time);
+      return 0;
+   }
+   else return 1;
 }
 
 
 //returns 0 if no error
 int SetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
 {
-	FILETIME ft;
-	int retval;
+   FILETIME ft;
+   int retval;
 
-	DosDateTimeToFileTime(ftstruct->date, ftstruct->time, &ft);
-	retval = SetFileTime((HANDLE)filehandle, NULL, NULL, &ft);	
-	if (retval) return 0;
-	else return 1;
+   DosDateTimeToFileTime(ftstruct->date, ftstruct->time, &ft);
+   retval = SetFileTime((HANDLE)filehandle, NULL, NULL, &ft);  
+   if (retval) return 0;
+   else return 1;
 }

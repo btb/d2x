@@ -30,7 +30,7 @@ render_external_scene();
 draw_exit_model();
 init_endlevel();
 
-extern grs_bitmap *terrain_bitmap;	//*satellite_bitmap,*station_bitmap,
+extern grs_bitmap *terrain_bitmap;  //*satellite_bitmap,*station_bitmap,
 extern int exit_segnum;
 
 //@@extern vms_vector mine_exit_point;
