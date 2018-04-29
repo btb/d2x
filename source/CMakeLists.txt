@@ -27,8 +27,6 @@ if(WATCOM)
     endif()
 elseif(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-else()
-    add_definitions(-fpack-struct=1)
 endif()
 
 option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
