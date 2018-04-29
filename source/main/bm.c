@@ -343,7 +343,9 @@ void read_powerup_info(CFILE *fp, int inNumPowerupsToRead, int inOffset)
       Powerup_info[i].light = cfile_read_fix(fp);
    }
 }
+#endif
 
+#if defined(MACINTOSH) || !defined(POINTERS_ARE_32BIT)
 void read_polygon_models(CFILE *fp, int inNumPolygonModelsToRead, int inOffset)
 {
    int i, j;
@@ -377,7 +379,9 @@ void read_polygon_models(CFILE *fp, int inNumPolygonModelsToRead, int inOffset)
       Polygon_models[i].simpler_model = cfile_read_byte(fp);
    }
 }
+#endif
 
+#ifdef MACINTOSH
 void read_player_ship(CFILE *fp)
 {
    int i;
@@ -627,7 +631,7 @@ void bm_read_all(CFILE * fp)
 #endif
 
    N_polygon_models = cfile_read_int(fp);
-#ifndef MACINTOSH
+#if !defined(MACINTOSH) && defined(POINTERS_ARE_32BIT)
    cfread( Polygon_models, sizeof(polymodel), N_polygon_models, fp );
 #else
    read_polygon_models(fp, N_polygon_models, 0);
@@ -787,7 +791,7 @@ void bm_read_extra_robots(char *fname,int type)
    N_polygon_models = N_D2_POLYGON_MODELS+t;
    if (N_polygon_models >= MAX_POLYGON_MODELS)
       Error("Too many polygon models (%d) in <%s>.  Max is %d.",t,fname,MAX_POLYGON_MODELS-N_D2_POLYGON_MODELS);
-   #ifdef MACINTOSH
+   #if defined(MACINTOSH) || !defined(POINTERS_ARE_32BIT)
       read_polygon_models(fp, t, N_D2_POLYGON_MODELS);
    #else
       cfread( &Polygon_models[N_D2_POLYGON_MODELS], sizeof(polymodel), t, fp );
@@ -898,7 +902,7 @@ void load_robot_replacements(char *level_name)
       if (i<0 || i>=N_polygon_models)
          Error("Polygon model (%d) out of range in (%s).  Range = [0..%d].",i,level_name,N_polygon_models-1);
 
-      #ifdef MACINTOSH
+      #if defined(MACINTOSH) || !defined(POINTERS_ARE_32BIT)
          read_polygon_models(fp, 1, i);
       #else
          cfread( &Polygon_models[i], sizeof(polymodel), 1, fp );

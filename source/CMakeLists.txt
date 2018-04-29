@@ -29,6 +29,10 @@ elseif(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
+if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    add_definitions(-DPOINTERS_ARE_32BIT)
+endif()
+
 option(RELEASE_VERSION  "turn off test, cheat, & debugging functions" ON)
 option(NMONO            "is monochrome debugging turned off?" ON)
 option(NDEBUG           "is debugging turned off? (kills Asserts, Int3s, etc.)" ON)
