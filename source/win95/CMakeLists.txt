@@ -43,5 +43,4 @@ set_source_files_properties(${win95_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(win95 ${win95_SRCS} ${win95_OTHERS})
 
-find_path(DIRECTX_INCLUDE_DIR d3d.h ../../extlib/dxsdk/include/)
 include_directories(${DIRECTX_INCLUDE_DIR})

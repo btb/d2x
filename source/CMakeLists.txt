@@ -80,6 +80,8 @@ elseif(TARGSYS MATCHES "^WIN32$")
     add_definitions(-DWINDOWS)
     list(APPEND SUBSYSTEMS win95) # tactile unarj
 
+    find_path(DIRECTX_INCLUDE_DIR d3d.h ../../extlib/dxsdk/include/)
+
 else()
     find_package(SDL2 REQUIRED)
     include(FindPkgConfig)
