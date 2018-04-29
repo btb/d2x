@@ -358,19 +358,19 @@ void read_polygon_models(CFILE *fp, int inNumPolygonModelsToRead, int inOffset)
       for (j = 0; j < MAX_SUBMODELS; j++)
          Polygon_models[i].submodel_ptrs[j] = cfile_read_int(fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
-         cfile_read_vector(&(Polygon_models[i].submodel_offsets), fp);
+         cfile_read_vector(Polygon_models[i].submodel_offsets, fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
-         cfile_read_vector(&(Polygon_models[i].submodel_norms), fp);
+         cfile_read_vector(Polygon_models[i].submodel_norms, fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
-         cfile_read_vector(&(Polygon_models[i].submodel_pnts), fp);
+         cfile_read_vector(Polygon_models[i].submodel_pnts, fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
          Polygon_models[i].submodel_rads[j] = cfile_read_fix(fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
          Polygon_models[i].submodel_parents[j] = cfile_read_byte(fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
-         cfile_read_vector(&(Polygon_models[i].submodel_mins), fp);
+         cfile_read_vector(Polygon_models[i].submodel_mins, fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
-         cfile_read_vector(&(Polygon_models[i].submodel_maxs), fp);
+         cfile_read_vector(Polygon_models[i].submodel_maxs, fp);
       cfile_read_vector(&(Polygon_models[i].mins), fp);
       cfile_read_vector(&(Polygon_models[i].maxs), fp);
       Polygon_models[i].rad = cfile_read_fix(fp);
