@@ -28,6 +28,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define MAX_POLYGON_MODELS 200
 
 //used to describe a polygon model
+#pragma pack(push, 1)
 typedef struct polymodel {
    int n_models;
    int model_data_size;
@@ -47,6 +48,7 @@ typedef struct polymodel {
    ubyte    simpler_model;    //alternate model with less detail (0 if none, model_num+1 else)
 // vms_vector min,max;
 } polymodel;
+#pragma pack(pop)
 
 //array of pointers to polygon objects
 extern polymodel Polygon_models[];

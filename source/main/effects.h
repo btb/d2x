@@ -26,6 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define EF_ONE_SHOT     2     //this is a special that gets played once
 #define EF_STOPPED      4     //this has been stopped
 
+#pragma pack(push, 1)
 typedef struct eclip {
    vclip       vc;            //imbedded vclip
    fix         time_left;     //for sequencing
@@ -41,6 +42,7 @@ typedef struct eclip {
    int         sound_num;     //what sound this makes
    int         segnum,sidenum;   //what seg & side, for one-shot clips
 } eclip;
+#pragma pack(pop)
 
 extern int Num_effects;
 extern eclip Effects[MAX_EFFECTS];

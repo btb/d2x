@@ -129,6 +129,7 @@ typedef struct cloaking_wall {
 #define WCF_TMAP1       4     //this uses primary tmap, not tmap2
 #define WCF_HIDDEN      8     //this uses primary tmap, not tmap2
 
+#pragma pack(push, 1)
 typedef struct {
    fix            play_time;
    short          num_frames;
@@ -139,6 +140,7 @@ typedef struct {
    char           filename[13];
    char           pad;
 } wclip;
+#pragma pack(pop)
 
 extern char Wall_names[7][10];
 

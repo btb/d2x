@@ -34,6 +34,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //vclip flags
 #define VF_ROD    1     //draw as a rod, not a blob
 
+#pragma pack(push, 1)
 typedef struct {
    fix            play_time;        //total time (in seconds) of clip
    int            num_frames;
@@ -43,6 +44,7 @@ typedef struct {
    bitmap_index   frames[VCLIP_MAX_FRAMES];
    fix            light_value;
 } vclip;
+#pragma pack(pop)
 
 extern int Num_vclips;
 extern vclip Vclip[VCLIP_MAXNUM];

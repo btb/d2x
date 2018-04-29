@@ -22,6 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //weapon info flags
 #define WIF_PLACABLE    1     //can be placed by level designer
 
+#pragma pack(push, 1)
 typedef struct weapon_info {
    sbyte render_type;            // How to draw 0=laser, 1=blob, 2=object
    sbyte persistent;             // 0 = dies when it hits something,
@@ -88,6 +89,7 @@ typedef struct weapon_info {
    bitmap_index   picture;          // a picture of the weapon for the cockpit
    bitmap_index   hires_picture;    // a hires picture of the above
 } weapon_info;
+#pragma pack(pop)
 
 #define  REARM_TIME              (F1_0)
 
