@@ -29,6 +29,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "error.h"
 #include "cfile.h"
 #include "byteswap.h"
+#include "vecmat.h"
 
 #if !defined(__DOS__) && !defined(WINDOWS)
 #include "fileutil.h"
@@ -470,23 +471,21 @@ sbyte cfile_read_byte(CFILE *file)
    return b;
 }
 
-#if 0
-fix read_fix(CFILE *file)
+fix cfile_read_fix(CFILE *file)
 {
    fix f;
 
    if (cfread( &f, sizeof(f), 1, file) != 1)
-      Error( "Error reading fix in gamesave.c" );
+      Error( "Error reading fix in cfile_read_fix()" );
 
    f = (fix)INTEL_INT((int)f);
    return f;
 }
 
-static void read_vector(vms_vector *v,CFILE *file)
+void cfile_read_vector(vms_vector *v, CFILE *file)
 {
-   v->x = read_fix(file);
-   v->y = read_fix(file);
-   v->z = read_fix(file);
+   v->x = cfile_read_fix(file);
+   v->y = cfile_read_fix(file);
+   v->z = cfile_read_fix(file);
 }
-#endif
 

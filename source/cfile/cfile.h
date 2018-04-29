@@ -19,6 +19,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 
 #include "pstypes.h"
+#include "fix.h"
+#include "vecmat.h"
+
 
 typedef struct CFILE {
    FILE           *file;
@@ -58,5 +61,9 @@ void cfile_set_critical_error_counter_ptr(int *ptr);
 int cfile_read_int(CFILE *file);
 short cfile_read_short(CFILE *file);
 sbyte cfile_read_byte(CFILE *file);
+fix cfile_read_fix(CFILE *file);
+
+// prototypes for reading structs from cfile
+void cfile_read_vector(vms_vector *v, CFILE *file);
 
 #endif
