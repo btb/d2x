@@ -354,7 +354,7 @@ void read_polygon_models(CFILE *fp, int inNumPolygonModelsToRead, int inOffset)
    {
       Polygon_models[i].n_models = cfile_read_int(fp);
       Polygon_models[i].model_data_size = cfile_read_int(fp);
-      Polygon_models[i].model_data = (ubyte *)(size_t)read_int_swap(fp);
+      Polygon_models[i].model_data = (ubyte *)(size_t)cfile_read_int(fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
          Polygon_models[i].submodel_ptrs[j] = cfile_read_int(fp);
       for (j = 0; j < MAX_SUBMODELS; j++)
