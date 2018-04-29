@@ -50,7 +50,7 @@ set_source_files_properties(${3d_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(3d ${3d_SRCS} ${3d_OTHERS})
 
-if (CMAKE_C_COMPILER_ID MATCHES "^Clang$")
+if (CMAKE_C_COMPILER_ID MATCHES "^(Clang|AppleClang)$")
     # make sure globvarsc gets included despite containing no code
     target_link_libraries(3d INTERFACE -all_load)
 endif()
