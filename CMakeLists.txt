@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.60)
+cmake_minimum_required(VERSION 3.8)
 
 project(Descent2)
 
