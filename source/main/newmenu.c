@@ -14,6 +14,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #ifdef WINDOWS
 #include "desw.h"
+#elif !defined(__DOS__)
+#include "SDL.h"
 #endif
 
 #include <stdio.h>
@@ -1148,6 +1150,18 @@ RePaintNewmenu4:
 
       DDGRRESTORE;
 
+   #elif !defined(__DOS__)
+      extern SDL_Window *window;
+      extern SDL_Texture *texture;
+      extern SDL_Renderer *renderer;
+      extern SDL_Surface *screen, *windowSurface;
+
+      SDL_BlitSurface(screen, NULL, windowSurface, NULL);
+      SDL_UpdateTexture(texture, NULL, windowSurface->pixels, windowSurface->pitch);
+      SDL_RenderClear(renderer);
+      SDL_RenderCopy(renderer, texture, NULL, NULL);
+      SDL_RenderPresent(renderer);
+      SDL_PumpEvents();
    #endif
 
 
