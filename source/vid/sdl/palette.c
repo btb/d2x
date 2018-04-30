@@ -39,7 +39,7 @@ void gr_palette_clear(void)
    ncolors = palette->ncolors;
    memset(colors, 0, ncolors * sizeof(SDL_Color));
 
-//   SDL_SetColors(screen, colors, 0, 256);
+   SDL_SetPaletteColors(palette, colors, 0, 256);
 
    gr_palette_faded_out = 1;
 }
@@ -67,7 +67,7 @@ void gr_palette_load(ubyte *pal)
       colors[j].b = min(gr_current_pal[i] + gr_palette_gamma, 63) * 4; i++;
    }
 
-//   SDL_SetColors(screen, colors, 0, 256);
+   SDL_SetPaletteColors(palette, colors, 0, 256);
 
    gr_palette_faded_out = 0;
    init_computed_colors();
@@ -138,7 +138,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
          i++;
       }
 
-//      SDL_SetColors(screen, fade_colors, 0, 256);
+      SDL_SetPaletteColors(palette, fade_colors, 0, 256);
    }
 
    gr_palette_load(pal);

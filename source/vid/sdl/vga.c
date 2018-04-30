@@ -17,9 +17,11 @@
 
 int VGA_current_mode = SM_ORIGINAL;
 
-static int sdl_video_flags = SDL_SWSURFACE;
+static int sdl_window_flags = SDL_WINDOW_SHOWN;
 
-SDL_Surface *screen;
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Surface *screen, *windowSurface;
 SDL_Texture *texture;
 
 
@@ -38,7 +40,8 @@ short vga_init(void)
    if (SDL_WasInit(SDL_INIT_VIDEO))
       return 1;
 
-   SDL_InitSubSystem(SDL_INIT_VIDEO);
+   if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
+      Error("Could not initialize SDL video: %s\n", SDL_GetError());
 
    atexit(vga_close);
 
@@ -69,19 +72,21 @@ short vga_set_mode(short mode)
    if (screen != NULL)
       gr_palette_clear();
 
-   SDL_Window *window = SDL_CreateWindow("Descent II",
-                             SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED,
-                             w, h,
-                             sdl_video_flags);
-   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
+   window = SDL_CreateWindow("Descent II",
+                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                             w, h, sdl_window_flags);
+   renderer = SDL_CreateRenderer(window, -1, 0);
+
+   if (window == NULL || renderer == NULL)
+      Error("Could not create SDL window: %s\n", SDL_GetError());
 
    screen = SDL_CreateRGBSurfaceWithFormat(0, w, h, 8, SDL_PIXELFORMAT_INDEX8);
-   texture = SDL_CreateTextureFromSurface(renderer, screen);
+
+   windowSurface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+
+   texture = SDL_CreateTextureFromSurface(renderer, windowSurface);
 
    return gr_init_screen(BM_LINEAR, w, h, 0, 0, w, screen->pixels);
-
-   return 1;
 }
 
 short vga_check_mode(short mode)
