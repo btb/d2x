@@ -53,7 +53,6 @@ fix timer_get_fixed_secondsX(void)
 
 fix timer_get_approx_seconds(void)
 {
-   Int3();
    fix val;
    Uint32 time;
 
