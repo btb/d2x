@@ -75,7 +75,71 @@ void gr_palette_load(ubyte *pal)
 
 int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys)
 {
-   Int3();
+   int i, j, k;
+   ubyte c;
+   fix fade_palette[768];
+   fix fade_palette_delta[768];
+
+   SDL_Palette *palette;
+   SDL_Color fade_colors[256];
+
+   if (gr_palette_faded_out)
+      return 0;
+
+#ifndef NDEBUG
+   if (grd_fades_disabled) {
+      gr_palette_clear();
+      return 0;
+   }
+#endif
+
+   palette = screen->format->palette;
+   if (palette == NULL)
+      return -1; // Display is not palettised
+
+   if (pal == NULL)
+      pal = gr_current_pal;
+
+   for (i = 0; i < 768; i++) {
+      gr_current_pal[i] = pal[i];
+      fade_palette[i] = i2f(pal[i]);
+      fade_palette_delta[i] = fade_palette[i] / nsteps;
+   }
+
+   for (j = 0; j < nsteps; j++) {
+      for (i = 0, k = 0; k < 256; k++) {
+         fade_palette[i] -= fade_palette_delta[i];
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         c = f2i(fade_palette[i]);
+         if (c > 63) c = 63;
+         fade_colors[k].r = c * 4;
+         i++;
+
+         fade_palette[i] -= fade_palette_delta[i];
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         c = f2i(fade_palette[i]);
+         if (c > 63) c = 63;
+         fade_colors[k].g = c * 4;
+         i++;
+
+         fade_palette[i] -= fade_palette_delta[i];
+         if (fade_palette[i] > i2f(pal[i] + gr_palette_gamma))
+            fade_palette[i] = i2f(pal[i] + gr_palette_gamma);
+         c = f2i(fade_palette[i]);
+         if (c > 63) c = 63;
+         fade_colors[k].b = c * 4;
+         i++;
+      }
+
+      SDL_SetPaletteColors(palette, fade_colors, 0, 256);
+   }
+
+   gr_palette_faded_out = 1;
+
+   SDL_FillRect(screen, NULL, 0);
+
    return 0;
 }
 
