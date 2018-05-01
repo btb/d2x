@@ -109,10 +109,10 @@ multi_can_move_robot(int objnum, int agitation)
       int slot_num = Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM;
 
       if ((slot_num < 0) || (slot_num >= MAX_ROBOTS_CONTROLLED))
-       {
-        mprintf ((0,"Not asserting in multi_can_move_robot!"));
-        return 0;
-       }
+      {
+         mprintf ((0,"Not asserting in multi_can_move_robot!"));
+         return 0;
+      }
 
       if (robot_fired[slot_num]) {
 //       mprintf((0, "Preventing robot from firing again until firing complete!\n"));
@@ -161,10 +161,10 @@ multi_check_robot_timeout(void)
                return;
             }
             if (Objects[robot_controlled[i]].ctype.ai_info.REMOTE_OWNER !=Player_num)
-             {
+            {
                mprintf ((0,"What? This ain't my bot and I'm trying to time it out!\n"));
                return;
-             }
+            }
             mprintf((0, "Robot %d (slot %d) removed, timed out, frame %d.\n", robot_controlled[i], i, GameTime));
             if (robot_send_pending[i])
                multi_send_robot_position(robot_controlled[i], 1);
@@ -321,11 +321,11 @@ multi_delete_controlled_robot(int objnum)
    mprintf((0, "Releasing control of robot %d\n", objnum));
 
    if (Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM != i)
-    {
-     mprintf ((0,"Saved from asserting in multi_delete_controlled_bot!"));
-     Int3();  // can't release this bot!
-     return;
-    }
+   {
+      mprintf ((0,"Saved from asserting in multi_delete_controlled_bot!"));
+      Int3();  // can't release this bot!
+      return;
+   }
 
    Objects[objnum].ctype.ai_info.REMOTE_OWNER = -1;
    Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM = 0;
@@ -443,13 +443,13 @@ multi_send_robot_position_sub(int objnum)
 // mprintf((0, "SENDPOS object %d, Gametime %d.\n", objnum, GameTime));
 
    multibuf[loc] = MULTI_ROBOT_POSITION;                          loc += 1;
-   multibuf[loc] = Player_num;                                 loc += 1;
+   multibuf[loc] = Player_num;                                    loc += 1;
    s = objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
    *(short *)(multibuf+loc) = INTEL_SHORT(s);                  
 
-                                                      loc += 3;
+                                                                  loc += 3;
 #ifndef MACINTOSH
-   create_shortpos((shortpos *)(multibuf+loc), Objects+objnum,0);    loc += sizeof(shortpos);
+   create_shortpos((shortpos *)(multibuf+loc), Objects+objnum,0); loc += sizeof(shortpos);
 #else
    create_shortpos(&sp, Objects+objnum, 1);
    memcpy(&(multibuf[loc]), (ubyte *)(sp.bytemat), 9);
@@ -526,16 +526,16 @@ multi_send_robot_fire(int objnum, int gun_num, vms_vector *fire)
    {
       int slot = Objects[objnum].ctype.ai_info.REMOTE_SLOT_NUM;
       if (slot<0 || slot>=MAX_ROBOTS_CONTROLLED)
-       {
+      {
          mprintf ((0,"Saved from asserting in robofire\n"));
          return;
-       }
+      }
       if (robot_fired[slot] != 0)
-       {
+      {
          mprintf ((0,"Couldn't find an open slot for robo firing!\n"));
         //  Int3(); // ROB!
          return;
-       }
+      }
       memcpy(robot_fire_buf[slot], multibuf, loc);
       robot_fired[slot] = 1;
       if (Game_mode & GM_NETWORK)
@@ -559,7 +559,7 @@ multi_send_robot_explode(int objnum, int killer,char isthief)
    *(short *)(multibuf+loc) = INTEL_SHORT(s);
                                                       loc += 3;
    s = (short)objnum_local_to_remote(objnum, (byte *)&multibuf[loc+2]);
-   *(short *)(multibuf+loc) = INTEL_SHORT(s);   loc += 3;
+   *(short *)(multibuf+loc) = INTEL_SHORT(s);         loc += 3;
    
    multibuf[loc]=isthief;   loc++;
       
@@ -575,11 +575,11 @@ multi_send_create_robot(int station, int objnum, int type)
 
    int loc = 0;
 
-   multibuf[loc] = MULTI_CREATE_ROBOT;                loc += 1;
-   multibuf[loc] = Player_num;                        loc += 1;
-   multibuf[loc] = (byte)station;                     loc += 1;
+   multibuf[loc] = MULTI_CREATE_ROBOT;                      loc += 1;
+   multibuf[loc] = Player_num;                              loc += 1;
+   multibuf[loc] = (byte)station;                           loc += 1;
    *(short *)(multibuf+loc) = INTEL_SHORT((short)objnum);   loc += 2;
-   multibuf[loc] = type;                           loc += 1;
+   multibuf[loc] = type;                                    loc += 1;
 
    map_objnum_local_to_local((short)objnum);
 
@@ -1027,12 +1027,12 @@ multi_do_boss_actions(char *buf)
    int loc = 1;
    short remote_objnum, segnum;
 
-   pnum = buf[loc];                          loc += 1;
-   boss_objnum = INTEL_SHORT( *(short *)(buf+loc) );  loc += 2;
-   action = buf[loc];                           loc += 1;
-   secondary = buf[loc];                        loc += 1;
+   pnum = buf[loc];                                      loc += 1;
+   boss_objnum = INTEL_SHORT( *(short *)(buf+loc) );     loc += 2;
+   action = buf[loc];                                    loc += 1;
+   secondary = buf[loc];                                 loc += 1;
    remote_objnum = INTEL_SHORT( *(short *)(buf+loc) );   loc += 2;
-   segnum = INTEL_SHORT( *(short *)(buf+loc) );    loc += 2;
+   segnum = INTEL_SHORT( *(short *)(buf+loc) );          loc += 2;
    
    if ((boss_objnum < 0) || (boss_objnum > Highest_object_index))
    {
@@ -1052,75 +1052,75 @@ multi_do_boss_actions(char *buf)
 
    switch(action) 
    {
-      case 1: // Teleport
-         {  
-            int teleport_segnum;
-            vms_vector boss_dir;
+   case 1: // Teleport
+      {  
+         int teleport_segnum;
+         vms_vector boss_dir;
 
-            if ((secondary < 0) || (secondary > Num_boss_teleport_segs))
-            {
-               Int3(); // Bad segnum for boss teleport, ROB!!
-               return;
-            }
-            teleport_segnum = Boss_teleport_segs[secondary];
-            mprintf((0, "Boss is teleporting, remove from other's list.\n"));
-            if ((teleport_segnum < 0) || (teleport_segnum > Highest_segment_index))
-            {
-               Int3();  // See Rob
-               return;
-            }
-            compute_segment_center(&boss_obj->pos, &Segments[teleport_segnum]);
-            obj_relink(boss_obj-Objects, teleport_segnum);
-            Last_teleport_time = GameTime;
-      
-            vm_vec_sub(&boss_dir, &Objects[Players[pnum].objnum].pos, &boss_obj->pos);
-            vm_vector_2_matrix(&boss_obj->orient, &boss_dir, NULL, NULL);
-
-            digi_link_sound_to_pos( Vclip[VCLIP_MORPHING_ROBOT].sound_num, teleport_segnum, 0, &boss_obj->pos, 0 , F1_0);
-            digi_kill_sound_linked_to_object( boss_obj-Objects);
-            digi_link_sound_to_object2( SOUND_BOSS_SHARE_SEE, boss_obj-Objects, 1, F1_0, F1_0*512 );  // F1_0*512 means play twice as loud
-            Ai_local_info[boss_obj-Objects].next_fire = 0;
-
-            if (boss_obj->ctype.ai_info.REMOTE_OWNER == Player_num)
-            {
-               mprintf((1, "WARNING: Accepted teleport message for boss when I controlled him!\n"));
-               multi_delete_controlled_robot(boss_objnum);
-//             robot_controlled[boss_obj->ctype.ai_info.REMOTE_SLOT_NUM] = -1;
-            }
-
-            boss_obj->ctype.ai_info.REMOTE_OWNER = -1; // Boss is up for grabs again!
-            boss_obj->ctype.ai_info.REMOTE_SLOT_NUM = 0; // Available immediately!
-         }
-         break;
-      case 2: // Cloak
-         Boss_hit_time = -F1_0*10;
-         Boss_cloak_start_time = GameTime;
-         Boss_cloak_end_time = GameTime + Boss_cloak_duration;
-         boss_obj->ctype.ai_info.CLOAKED = 1;
-         break;
-      case 3: // Gate in robots!
+         if ((secondary < 0) || (secondary > Num_boss_teleport_segs))
          {
-            // Do some validity checking
-            if ( (remote_objnum >= MAX_OBJECTS) || (remote_objnum < 0) || (segnum < 0) || (segnum > Highest_segment_index) )
-            {
-               Int3(); // See Rob, bad data in boss gate action message
-               return;
-            }
-
-            // Gate one in!
-            if (gate_in_robot(secondary, segnum))
-               map_objnum_local_to_remote(Net_create_objnums[0], remote_objnum, pnum);
-            mprintf((0, "REMOTE: Boss gating in robot id %d, objnum %d (%d).\n", secondary, Net_create_objnums[0], remote_objnum));
+            Int3(); // Bad segnum for boss teleport, ROB!!
+            return;
          }
-         break;
-      case 4: // Start effect
-         restart_effect(BOSS_ECLIP_NUM);
-         break;
-      case 5:  // Stop effect
-         stop_effect(BOSS_ECLIP_NUM);
-         break;
-      default:
-         Int3(); // Illegal type to boss actions
+         teleport_segnum = Boss_teleport_segs[secondary];
+         mprintf((0, "Boss is teleporting, remove from other's list.\n"));
+         if ((teleport_segnum < 0) || (teleport_segnum > Highest_segment_index))
+         {
+            Int3();  // See Rob
+            return;
+         }
+         compute_segment_center(&boss_obj->pos, &Segments[teleport_segnum]);
+         obj_relink(boss_obj-Objects, teleport_segnum);
+         Last_teleport_time = GameTime;
+   
+         vm_vec_sub(&boss_dir, &Objects[Players[pnum].objnum].pos, &boss_obj->pos);
+         vm_vector_2_matrix(&boss_obj->orient, &boss_dir, NULL, NULL);
+
+         digi_link_sound_to_pos( Vclip[VCLIP_MORPHING_ROBOT].sound_num, teleport_segnum, 0, &boss_obj->pos, 0 , F1_0);
+         digi_kill_sound_linked_to_object( boss_obj-Objects);
+         digi_link_sound_to_object2( SOUND_BOSS_SHARE_SEE, boss_obj-Objects, 1, F1_0, F1_0*512 );  // F1_0*512 means play twice as loud
+         Ai_local_info[boss_obj-Objects].next_fire = 0;
+
+         if (boss_obj->ctype.ai_info.REMOTE_OWNER == Player_num)
+         {
+            mprintf((1, "WARNING: Accepted teleport message for boss when I controlled him!\n"));
+            multi_delete_controlled_robot(boss_objnum);
+//             robot_controlled[boss_obj->ctype.ai_info.REMOTE_SLOT_NUM] = -1;
+         }
+
+         boss_obj->ctype.ai_info.REMOTE_OWNER = -1; // Boss is up for grabs again!
+         boss_obj->ctype.ai_info.REMOTE_SLOT_NUM = 0; // Available immediately!
+      }
+      break;
+   case 2: // Cloak
+      Boss_hit_time = -F1_0*10;
+      Boss_cloak_start_time = GameTime;
+      Boss_cloak_end_time = GameTime + Boss_cloak_duration;
+      boss_obj->ctype.ai_info.CLOAKED = 1;
+      break;
+   case 3: // Gate in robots!
+      {
+         // Do some validity checking
+         if ( (remote_objnum >= MAX_OBJECTS) || (remote_objnum < 0) || (segnum < 0) || (segnum > Highest_segment_index) )
+         {
+            Int3(); // See Rob, bad data in boss gate action message
+            return;
+         }
+
+         // Gate one in!
+         if (gate_in_robot(secondary, segnum))
+            map_objnum_local_to_remote(Net_create_objnums[0], remote_objnum, pnum);
+         mprintf((0, "REMOTE: Boss gating in robot id %d, objnum %d (%d).\n", secondary, Net_create_objnums[0], remote_objnum));
+      }
+      break;
+   case 4: // Start effect
+      restart_effect(BOSS_ECLIP_NUM);
+      break;
+   case 5:  // Stop effect
+      stop_effect(BOSS_ECLIP_NUM);
+      break;
+   default:
+      Int3(); // Illegal type to boss actions
    }
 }
 
@@ -1133,10 +1133,10 @@ multi_do_create_robot_powerups(char *buf)
    object del_obj;
    int pnum, egg_objnum, i;
 
-   pnum = buf[loc];                             loc += 1;
-   del_obj.contains_count = buf[loc];                 loc += 1;   
-   del_obj.contains_type = buf[loc];                  loc += 1;
-   del_obj.contains_id = buf[loc];                 loc += 1;
+   pnum = buf[loc];                                      loc += 1;
+   del_obj.contains_count = buf[loc];                    loc += 1;   
+   del_obj.contains_type = buf[loc];                     loc += 1;
+   del_obj.contains_id = buf[loc];                       loc += 1;
    del_obj.segnum = INTEL_SHORT( *(short *)(buf+loc) );  loc += 2;
    del_obj.pos = *(vms_vector *)(buf+loc);               loc += 12;
    

@@ -825,23 +825,23 @@ void multi_compute_kill(int killer, int killed)
          HUD_init_message("%s %s %s!", killer_name, TXT_KILLED, killed_name);
    }
 
-  TheGoal=Netgame.KillGoal*5;
+   TheGoal=Netgame.KillGoal*5;
 
-  if (Netgame.KillGoal>0)
+   if (Netgame.KillGoal>0)
    {
-    if (Players[killer_pnum].KillGoalCount>=TheGoal)
-     {
-      if (killer_pnum==Player_num)
-       {
-        HUD_init_message("You reached the kill goal!");
-        Players[Player_num].shields=i2f(200);
-       }  
-      else
-       HUD_init_message ("%s has reached the kill goal!",Players[killer_pnum].callsign);
+      if (Players[killer_pnum].KillGoalCount>=TheGoal)
+      {
+         if (killer_pnum==Player_num)
+         {
+            HUD_init_message("You reached the kill goal!");
+            Players[Player_num].shields=i2f(200);
+         }
+         else
+            HUD_init_message ("%s has reached the kill goal!",Players[killer_pnum].callsign);
 
-      HUD_init_message ("The control center has been destroyed!");
-      net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
-     }
+         HUD_init_message ("The control center has been destroyed!");
+         net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
+      }
    }
 
    multi_sort_kill_list();
@@ -852,8 +852,8 @@ void multi_compute_kill(int killer, int killed)
 void
 multi_do_frame(void)
 {
-     static int lasttime=0;
-     int i;
+   static int lasttime=0;
+   int i;
 
    if (!(Game_mode & GM_MULTI))
    {
@@ -861,18 +861,18 @@ multi_do_frame(void)
       return;
    }
 
-  if ((Game_mode & GM_NETWORK) && Netgame.PlayTimeAllowed && lasttime!=f2i (ThisLevelTime))
+   if ((Game_mode & GM_NETWORK) && Netgame.PlayTimeAllowed && lasttime!=f2i (ThisLevelTime))
    {
-    for (i=0;i<N_players;i++)
-     if (Players[i].connected)
-      {
-       if (i==Player_num)
-        {
-         multi_send_heartbeat();
-         lasttime=f2i(ThisLevelTime);
-        }
-       break;
-      }
+      for (i=0;i<N_players;i++)
+         if (Players[i].connected)
+         {
+            if (i==Player_num)
+            {
+               multi_send_heartbeat();
+               lasttime=f2i(ThisLevelTime);
+            }
+            break;
+         }
    }
 
    multi_send_message(); // Send any waiting messages
@@ -1202,33 +1202,33 @@ void multi_send_message_end()
    Network_message_reciever = 100;
 
    if (!strnicmp (Network_message,"!Names",6))
-      {
-       NameReturning=1-NameReturning;
-       HUD_init_message ("Name returning is now %s.",NameReturning?"active":"disabled");
-      }
+   {
+      NameReturning=1-NameReturning;
+      HUD_init_message ("Name returning is now %s.",NameReturning?"active":"disabled");
+   }
    else if (!strnicmp (Network_message,"Handicap:",9))
-      {
-       mytempbuf=&Network_message[9];      
-       mprintf ((0,"Networkhandi=%s\n",mytempbuf));
-       StartingShields=atol (mytempbuf);
-       if (StartingShields<10)
+   {
+      mytempbuf=&Network_message[9];
+      mprintf ((0,"Networkhandi=%s\n",mytempbuf));
+      StartingShields=atol (mytempbuf);
+      if (StartingShields<10)
          StartingShields=10;
-       if (StartingShields>100)
-         {
-            sprintf (Network_message,"%s has tried to cheat!",Players[Player_num].callsign);
-            StartingShields=100;
-         }
-       else
+      if (StartingShields>100)
+      {
+         sprintf (Network_message,"%s has tried to cheat!",Players[Player_num].callsign);
+         StartingShields=100;
+      }
+      else
          sprintf (Network_message,"%s handicap is now %d",Players[Player_num].callsign,StartingShields);
 
-       HUD_init_message ("Telling others of your handicap of %d!",StartingShields);
-       StartingShields=i2f(StartingShields);
-      }
+      HUD_init_message ("Telling others of your handicap of %d!",StartingShields);
+      StartingShields=i2f(StartingShields);
+   }
    else if (!strnicmp (Network_message,"NoBombs",7))
-    Netgame.DoSmartMine=0;
+      Netgame.DoSmartMine=0;
    else if (!strnicmp (Network_message,"Ping:",5))
-    {
-     if (Game_mode & GM_NETWORK)
+   {
+      if (Game_mode & GM_NETWORK)
       {
          int name_index=5;
          if (strlen(Network_message) > 5)
@@ -1236,108 +1236,108 @@ void multi_send_message_end()
                name_index++;
 
          if (strlen(Network_message)<=name_index)
-          {
+         {
             HUD_init_message ("You must specify a name to ping");
             return;
-          }
+         }
 
          for (i = 0; i < N_players; i++)
-           if ((!strnicmp(Players[i].callsign, &Network_message[name_index], strlen(Network_message)-name_index)) && (i != Player_num) && (Players[i].connected))
-            {
-             PingLaunchTime=timer_get_fixed_seconds();
-             network_send_ping (i);
-             HUD_init_message("Pinging %s...",Players[i].callsign);
-             multi_message_index = 0;
-             multi_sending_message = 0;
-             return;
-            }
+            if ((!strnicmp(Players[i].callsign, &Network_message[name_index], strlen(Network_message)-name_index)) && (i != Player_num) && (Players[i].connected))
+         {
+            PingLaunchTime=timer_get_fixed_seconds();
+            network_send_ping (i);
+            HUD_init_message("Pinging %s...",Players[i].callsign);
+            multi_message_index = 0;
+            multi_sending_message = 0;
+            return;
+         }
       }
-     else // Modem/Serial ping
+      else // Modem/Serial ping
       {
-          PingLaunchTime=timer_get_fixed_seconds();
-          multi_send_modem_ping ();
-          HUD_init_message("Pinging opponent...");
-          multi_message_index = 0;
-          multi_sending_message = 0;
-          return;
+         PingLaunchTime=timer_get_fixed_seconds();
+         multi_send_modem_ping ();
+         HUD_init_message("Pinging opponent...");
+         multi_message_index = 0;
+         multi_sending_message = 0;
+         return;
       }
-    }                                   
+   }
    else if (!strnicmp (Network_message,"move:",5))
-    { 
+   {
       mprintf ((0,"moving?\n"));
       
-     if ((Game_mode & GM_NETWORK) && (Game_mode & GM_TEAM))
+      if ((Game_mode & GM_NETWORK) && (Game_mode & GM_TEAM))
       {
          int name_index=5;
          if (strlen(Network_message) > 5)
             while (Network_message[name_index] == ' ')
                name_index++;
 
-        if (!network_i_am_master())
+         if (!network_i_am_master())
          {  
-          HUD_init_message ("Only %s can move players!",Players[network_who_is_master()].callsign);
-          return;
+            HUD_init_message ("Only %s can move players!",Players[network_who_is_master()].callsign);
+            return;
          }
-   
+
          if (strlen(Network_message)<=name_index)
-          {
+         {
             HUD_init_message ("You must specify a name to move");
             return;
-          }
+         }
 
          for (i = 0; i < N_players; i++)
-           if ((!strnicmp(Players[i].callsign, &Network_message[name_index], strlen(Network_message)-name_index)) && (Players[i].connected))
+            if ((!strnicmp(Players[i].callsign, &Network_message[name_index], strlen(Network_message)-name_index)) && (Players[i].connected))
             {
-             if ((Game_mode & GM_CAPTURE) && (Players[i].flags & PLAYER_FLAGS_FLAG))
-              {
-               HUD_init_message ("Can't move player because s/he has a flag!");
-               return;
-              }
-      
-             if (Netgame.team_vector & (1<<i))
-               Netgame.team_vector&=(~(1<<i));
-             else
-               Netgame.team_vector|=(1<<i);
-   
-             for (t=0;t<N_players;t++)
-             if (Players[t].connected)
+               if ((Game_mode & GM_CAPTURE) && (Players[i].flags & PLAYER_FLAGS_FLAG))
+               {
+                  HUD_init_message ("Can't move player because s/he has a flag!");
+                  return;
+               }
+
+               if (Netgame.team_vector & (1<<i))
+                  Netgame.team_vector&=(~(1<<i));
+               else
+                  Netgame.team_vector|=(1<<i);
+
+               for (t=0;t<N_players;t++)
+                  if (Players[t].connected)
                multi_reset_object_texture (&Objects[Players[t].objnum]);
 
-             network_send_netgame_update (); 
-             sprintf (Network_message,"%s has changed teams!",Players[i].callsign);
-             if (i==Player_num)
+               network_send_netgame_update ();
+               sprintf (Network_message,"%s has changed teams!",Players[i].callsign);
+               if (i==Player_num)
                {
-                HUD_init_message ("You have changed teams!");
-                reset_cockpit();    
+                  HUD_init_message ("You have changed teams!");
+                  reset_cockpit();
                }
-             else
-                HUD_init_message ("Moving %s to other team.",Players[i].callsign);
-             break;
+               else
+                  HUD_init_message ("Moving %s to other team.",Players[i].callsign);
+               break;
             }
-        }    
-    }                                   
+      }
+   }
 
    else if (!strnicmp (Network_message,"kick:",5) && (Game_mode & GM_NETWORK))
-    {
+   {
       int name_index=5;
       if (strlen(Network_message) > 5)
          while (Network_message[name_index] == ' ')
             name_index++;
 
-     if (!network_i_am_master())
-      {  
-       HUD_init_message ("Only %s can kick others out!",Players[network_who_is_master()].callsign);
-       multi_message_index = 0;
-       multi_sending_message = 0;
-       return;
+      if (!network_i_am_master())
+      {
+         HUD_init_message ("Only %s can kick others out!",Players[network_who_is_master()].callsign);
+         multi_message_index = 0;
+         multi_sending_message = 0;
+         return;
       }
       if (strlen(Network_message)<=name_index)
-       {
+      {
          HUD_init_message ("You must specify a name to kick");
          multi_message_index = 0;
          multi_sending_message = 0;
          return;
-       }
+      }
 
       if (Network_message[name_index] == '#' && isdigit(Network_message[name_index+1])) {
          int players[MAX_NUM_NET_PLAYERS];
@@ -1360,9 +1360,9 @@ void multi_send_message_end()
          else HUD_init_message ("You cannot use # kicking with in team display.");
             
 
-          multi_message_index = 0;
-          multi_sending_message = 0;
-          return;
+         multi_message_index = 0;
+         multi_sending_message = 0;
+         return;
       }
 
 
@@ -1379,7 +1379,7 @@ kick_player:;
             multi_sending_message = 0;
             return;
          }
-    }                                   
+   }
 
    else
       HUD_init_message("%s '%s'", TXT_SENDING, Network_message);
@@ -1534,10 +1534,10 @@ multi_do_fire(char *buf)
       mprintf((0,"missile id = %d, gun = %d\n",weapon_id,weapon_gun));
 
       if (weapon-MISSILE_ADJUST==GUIDED_INDEX)
-       {
-        mprintf ((0,"Missile is guided!!!\n"));
-        Multi_is_guided=1;
-       }
+      {
+         mprintf ((0,"Missile is guided!!!\n"));
+         Multi_is_guided=1;
+      }
 
       Laser_player_fire( Objects+Players[pnum].objnum, weapon_id, weapon_gun, 1, 0 );
    }
@@ -1572,17 +1572,17 @@ multi_do_message(char *buf)
    int loc = 2;
    
    if (tilde=strchr (buf+loc,'$'))  // do that stupid name stuff
-    {                               // why'd I put this in?  Probably for the
-     tloc=tilde-(buf+loc);          // same reason you can name your guidebot
-     mprintf ((0,"Tloc=%d\n",tloc));
+   {                                // why'd I put this in?  Probably for the
+      tloc=tilde-(buf+loc);         // same reason you can name your guidebot
+      mprintf ((0,"Tloc=%d\n",tloc));
    
-     if (tloc>0)
-        strncpy (mesbuf,buf+loc,tloc);
-     strcpy (mesbuf+tloc,Players[Player_num].callsign);
-     strcpy (mesbuf+strlen(Players[Player_num].callsign)+tloc,buf+loc+tloc+1);
-     strcpy (buf+loc,mesbuf);
-    } 
- 
+      if (tloc>0)
+         strncpy (mesbuf,buf+loc,tloc);
+      strcpy (mesbuf+tloc,Players[Player_num].callsign);
+      strcpy (mesbuf+strlen(Players[Player_num].callsign)+tloc,buf+loc+tloc+1);
+      strcpy (buf+loc,mesbuf);
+   }
+
    if (((colon = strrchr(buf+loc, ':')) == NULL) || (colon-(buf+loc) < 1) || (colon-(buf+loc) > CALLSIGN_LEN))
    {
       mesbuf[0] = 1;
@@ -1632,11 +1632,11 @@ multi_do_position(char *buf)
    Assert(&Objects[Players[pnum].objnum] != ConsoleObject);
 
    if (Game_mode & GM_NETWORK)
-    {
-     Int3(); // Get Jason, what the hell are we doing here?
-     return;
-    }
-    
+   {
+      Int3(); // Get Jason, what the hell are we doing here?
+      return;
+   }
+
 
 #ifndef MACINTOSH
    extract_shortpos(&Objects[Players[pnum].objnum], (shortpos *)(buf+1),0);
@@ -1703,22 +1703,22 @@ multi_do_player_explode(char *buf)
    count = 2;
    Players[pnum].primary_weapon_flags = INTEL_SHORT(*(ushort *)(buf+count)); count += 2;
    Players[pnum].secondary_weapon_flags = INTEL_SHORT(*(ushort *)(buf+count)); count += 2;
-   Players[pnum].laser_level = buf[count];                                                 count++;
-   Players[pnum].secondary_ammo[HOMING_INDEX] = buf[count];                count++;
-   Players[pnum].secondary_ammo[CONCUSSION_INDEX] = buf[count];count++;
-   Players[pnum].secondary_ammo[SMART_INDEX] = buf[count];         count++;
-   Players[pnum].secondary_ammo[MEGA_INDEX] = buf[count];          count++;
-   Players[pnum].secondary_ammo[PROXIMITY_INDEX] = buf[count]; count++;
+   Players[pnum].laser_level = buf[count];                        count++;
+   Players[pnum].secondary_ammo[HOMING_INDEX] = buf[count];       count++;
+   Players[pnum].secondary_ammo[CONCUSSION_INDEX] = buf[count];   count++;
+   Players[pnum].secondary_ammo[SMART_INDEX] = buf[count];        count++;
+   Players[pnum].secondary_ammo[MEGA_INDEX] = buf[count];         count++;
+   Players[pnum].secondary_ammo[PROXIMITY_INDEX] = buf[count];    count++;
 
-   Players[pnum].secondary_ammo[SMISSILE1_INDEX] = buf[count]; count++;
-   Players[pnum].secondary_ammo[GUIDED_INDEX]    = buf[count]; count++;
-   Players[pnum].secondary_ammo[SMART_MINE_INDEX]= buf[count]; count++;
-   Players[pnum].secondary_ammo[SMISSILE4_INDEX] = buf[count]; count++;
-   Players[pnum].secondary_ammo[SMISSILE5_INDEX] = buf[count]; count++;
+   Players[pnum].secondary_ammo[SMISSILE1_INDEX] = buf[count];    count++;
+   Players[pnum].secondary_ammo[GUIDED_INDEX]    = buf[count];    count++;
+   Players[pnum].secondary_ammo[SMART_MINE_INDEX]= buf[count];    count++;
+   Players[pnum].secondary_ammo[SMISSILE4_INDEX] = buf[count];    count++;
+   Players[pnum].secondary_ammo[SMISSILE5_INDEX] = buf[count];    count++;
 
    Players[pnum].primary_ammo[VULCAN_INDEX] = INTEL_SHORT(*(ushort *)(buf+count)); count += 2;
    Players[pnum].primary_ammo[GAUSS_INDEX] = INTEL_SHORT(*(ushort *)(buf+count)); count += 2;
-   Players[pnum].flags = INTEL_INT(*(uint *)(buf+count));                     count += 4;
+   Players[pnum].flags = INTEL_INT(*(uint *)(buf+count));         count += 4;
     
    multi_adjust_remote_cap (pnum);
 
@@ -1909,22 +1909,22 @@ multi_do_remobj(char *buf)
       Network_send_objnum = -1;
    }
    if (Objects[local_objnum].type==OBJ_POWERUP)
-    if (Game_mode & GM_NETWORK)  
+      if (Game_mode & GM_NETWORK)  
       {
-       if (PowerupsInMine[Objects[local_objnum].id]>0)
-         PowerupsInMine[Objects[local_objnum].id]--;
+         if (PowerupsInMine[Objects[local_objnum].id]>0)
+            PowerupsInMine[Objects[local_objnum].id]--;
 
-        if (multi_powerup_is_4pack (Objects[local_objnum].id))
-          {
+         if (multi_powerup_is_4pack (Objects[local_objnum].id))
+         {
             mprintf ((0,"Hey babe! Doing that wacky 4 pack stuff."));
       
             if (PowerupsInMine[Objects[local_objnum].id-1]-4<0)
                PowerupsInMine[Objects[local_objnum].id-1]=0;
             else
                PowerupsInMine[Objects[local_objnum].id-1]-=4;
-          }
+         }
       
-       mprintf ((0,"Decrementing powerups! %d\n",PowerupsInMine[Objects[local_objnum].id]));
+         mprintf ((0,"Decrementing powerups! %d\n",PowerupsInMine[Objects[local_objnum].id]));
       }
 
    Objects[local_objnum].flags |= OF_SHOULD_BE_DEAD; // quick and painless
@@ -2049,7 +2049,7 @@ multi_do_door_open(char *buf)
       w->flags=flag;
    }
    else
-    w->flags=flag;
+      w->flags=flag;
 
 //      else
 //              mprintf((0, "Door already opening!\n"));
@@ -2075,14 +2075,14 @@ multi_do_controlcen_fire(char *buf)
    short objnum;
    int count = 1;
 
-   memcpy(&to_target, buf+count, 12);      count += 12;
+   memcpy(&to_target, buf+count, 12);                             count += 12;
    #ifdef MACINTOSH  // swap the vector to_target
    to_target.x = (fix)INTEL_INT((int)to_target.x);
    to_target.y = (fix)INTEL_INT((int)to_target.y);
    to_target.z = (fix)INTEL_INT((int)to_target.z);
    #endif
-   gun_num = buf[count];                                   count += 1;
-   objnum = INTEL_SHORT(*(short *)(buf+count));         count += 2;
+   gun_num = buf[count];                                          count += 1;
+   objnum = INTEL_SHORT(*(short *)(buf+count));                   count += 2;
 
    Laser_create_new_easy(&to_target, &Gun_pos[gun_num], objnum, CONTROLCEN_WEAPON_NUM, 1);
 }
@@ -2204,31 +2204,31 @@ multi_do_trigger(char *buf)
 }
 
 void multi_do_drop_marker (char *buf)
- {
-  int i;
-  int pnum=(int)(buf[1]);
-  int mesnum=(int)(buf[2]);
-  vms_vector position;
+{
+   int i;
+   int pnum=(int)(buf[1]);
+   int mesnum=(int)(buf[2]);
+   vms_vector position;
 
-  if (pnum==Player_num)  // my marker? don't set it down cuz it might screw up the orientation
-   return;
+   if (pnum==Player_num)  // my marker? don't set it down cuz it might screw up the orientation
+      return;
 
-  position.x=(fix)INTEL_INT(*(int *)(buf+3));
-  position.y=(fix)INTEL_INT(*(int *)(buf+7));
-  position.z=(fix)INTEL_INT(*(int *)(buf+11));
+   position.x=(fix)INTEL_INT(*(int *)(buf+3));
+   position.y=(fix)INTEL_INT(*(int *)(buf+7));
+   position.z=(fix)INTEL_INT(*(int *)(buf+11));
 
-  for (i=0;i<40;i++)
-   MarkerMessage[(pnum*2)+mesnum][i]=buf[15+i];
+   for (i=0;i<40;i++)
+      MarkerMessage[(pnum*2)+mesnum][i]=buf[15+i];
 
-  MarkerPoint[(pnum*2)+mesnum]=position;
+   MarkerPoint[(pnum*2)+mesnum]=position;
 
-  if (MarkerObject[(pnum*2)+mesnum] !=-1 && Objects[MarkerObject[(pnum*2)+mesnum]].type!=OBJ_NONE && MarkerObject[(pnum*2)+mesnum] !=0)
+   if (MarkerObject[(pnum*2)+mesnum] !=-1 && Objects[MarkerObject[(pnum*2)+mesnum]].type!=OBJ_NONE && MarkerObject[(pnum*2)+mesnum] !=0)
       obj_delete(MarkerObject[(pnum*2)+mesnum]);
 
-  MarkerObject[(pnum*2)+mesnum] = drop_marker_object(&position,Objects[Players[Player_num].objnum].segnum,&Objects[Players[Player_num].objnum].orient,(pnum*2)+mesnum);
-  strcpy (MarkerOwner[(pnum*2)+mesnum],Players[pnum].callsign);
-  mprintf ((0,"Dropped player %d message: %s\n",pnum,MarkerMessage[(pnum*2)+mesnum]));
- }
+   MarkerObject[(pnum*2)+mesnum] = drop_marker_object(&position,Objects[Players[Player_num].objnum].segnum,&Objects[Players[Player_num].objnum].orient,(pnum*2)+mesnum);
+   strcpy (MarkerOwner[(pnum*2)+mesnum],Players[pnum].callsign);
+   mprintf ((0,"Dropped player %d message: %s\n",pnum,MarkerMessage[(pnum*2)+mesnum]));
+}
 
 
 void multi_do_hostage_door_status(char *buf)
@@ -2239,8 +2239,8 @@ void multi_do_hostage_door_status(char *buf)
    int wallnum; 
    fix hps;
 
-   wallnum = INTEL_SHORT(*(short *)(buf+count));                count += 2;
-   hps = (fix)INTEL_INT(*(int *)(buf+count));              count += 4;
+   wallnum = INTEL_SHORT(*(short *)(buf+count));                  count += 2;
+   hps = (fix)INTEL_INT(*(int *)(buf+count));                     count += 4;
 
    if ((wallnum < 0) || (wallnum > Num_walls) || (hps < 0) || (Walls[wallnum].type != WALL_BLASTABLE))
    {
@@ -2261,9 +2261,9 @@ void multi_do_save_game(char *buf)
    uint id;
    char desc[25];
 
-   slot = *(ubyte *)(buf+count);           count += 1;
-   id = INTEL_INT(*(uint *)(buf+count));              count += 4;
-   memcpy( desc, &buf[count], 20 );        count += 20;
+   slot = *(ubyte *)(buf+count);                                  count += 1;
+   id = INTEL_INT(*(uint *)(buf+count));                          count += 4;
+   memcpy( desc, &buf[count], 20 );                               count += 20;
 
    multi_save_game( slot, id, desc );
 }
@@ -2274,8 +2274,8 @@ void multi_do_restore_game(char *buf)
    ubyte slot;
    uint id;
 
-   slot = *(ubyte *)(buf+count);           count += 1;
-   id = INTEL_INT(*(uint *)(buf+count));              count += 4;
+   slot = *(ubyte *)(buf+count);                                  count += 1;
+   id = INTEL_INT(*(uint *)(buf+count));                          count += 4;
 
    multi_restore_game( slot, id );
 }
@@ -2417,141 +2417,141 @@ multi_process_data(char *buf, int len)
 
 
    #ifdef NETPROFILING
-      TTRecv[type]++;  
-      fprintf (RecieveLogFile,"Packet type: %d Len:%d TT=%d\n",type,len,TTRecv[type]);
-      fflush (RecieveLogFile);
+   TTRecv[type]++;  
+   fprintf (RecieveLogFile,"Packet type: %d Len:%d TT=%d\n",type,len,TTRecv[type]);
+   fflush (RecieveLogFile);
    #endif
   
    switch(type) 
    {
-      case MULTI_POSITION:
-         if (!Endlevel_sequence) multi_do_position(buf); break;
-      case MULTI_REAPPEAR:
-         if (!Endlevel_sequence) multi_do_reappear(buf); break;
-      case MULTI_FIRE:
-         if (!Endlevel_sequence) multi_do_fire(buf); break;
-      case MULTI_KILL:
-         multi_do_kill(buf); break;
-      case MULTI_REMOVE_OBJECT:
-         if (!Endlevel_sequence) multi_do_remobj(buf); break;
-      case MULTI_PLAYER_DROP:
-      case MULTI_PLAYER_EXPLODE:
-         if (!Endlevel_sequence) multi_do_player_explode(buf); break;
-      case MULTI_MESSAGE:
-         if (!Endlevel_sequence) multi_do_message(buf); break;
-      case MULTI_QUIT:
-         if (!Endlevel_sequence) multi_do_quit(buf); break;
-      case MULTI_BEGIN_SYNC:
-         break;
-      case MULTI_CONTROLCEN:
-         if (!Endlevel_sequence) multi_do_controlcen_destroy(buf); break;
-      case MULTI_POWERUP_UPDATE:
-         if (!Endlevel_sequence) multi_do_powerup_update(buf); break;
-      case MULTI_SOUND_FUNCTION:
-         multi_do_sound_function(buf); break;
-      case MULTI_MARKER:
-    if (!Endlevel_sequence) multi_do_drop_marker (buf); break;
-      case MULTI_DROP_WEAPON:
-    if (!Endlevel_sequence) multi_do_drop_weapon(buf); break;
-      case MULTI_DROP_FLAG:
-    if (!Endlevel_sequence) multi_do_drop_flag(buf); break;
-      case MULTI_GUIDED:
-    if (!Endlevel_sequence) multi_do_guided (buf); break;
-      case MULTI_STOLEN_ITEMS:
-    if (!Endlevel_sequence) multi_do_stolen_items(buf); break;
-      case MULTI_WALL_STATUS:
-    if (!Endlevel_sequence) multi_do_wall_status(buf); break;
-      case MULTI_HEARTBEAT:
-    if (!Endlevel_sequence) multi_do_heartbeat (buf); break;
-      case MULTI_SEISMIC:
+   case MULTI_POSITION:
+      if (!Endlevel_sequence) multi_do_position(buf); break;
+   case MULTI_REAPPEAR:
+      if (!Endlevel_sequence) multi_do_reappear(buf); break;
+   case MULTI_FIRE:
+      if (!Endlevel_sequence) multi_do_fire(buf); break;
+   case MULTI_KILL:
+      multi_do_kill(buf); break;
+   case MULTI_REMOVE_OBJECT:
+      if (!Endlevel_sequence) multi_do_remobj(buf); break;
+   case MULTI_PLAYER_DROP:
+   case MULTI_PLAYER_EXPLODE:
+      if (!Endlevel_sequence) multi_do_player_explode(buf); break;
+   case MULTI_MESSAGE:
+      if (!Endlevel_sequence) multi_do_message(buf); break;
+   case MULTI_QUIT:
+      if (!Endlevel_sequence) multi_do_quit(buf); break;
+   case MULTI_BEGIN_SYNC:
+      break;
+   case MULTI_CONTROLCEN:
+      if (!Endlevel_sequence) multi_do_controlcen_destroy(buf); break;
+   case MULTI_POWERUP_UPDATE:
+      if (!Endlevel_sequence) multi_do_powerup_update(buf); break;
+   case MULTI_SOUND_FUNCTION:
+      multi_do_sound_function(buf); break;
+   case MULTI_MARKER:
+      if (!Endlevel_sequence) multi_do_drop_marker (buf); break;
+   case MULTI_DROP_WEAPON:
+      if (!Endlevel_sequence) multi_do_drop_weapon(buf); break;
+   case MULTI_DROP_FLAG:
+      if (!Endlevel_sequence) multi_do_drop_flag(buf); break;
+   case MULTI_GUIDED:
+      if (!Endlevel_sequence) multi_do_guided (buf); break;
+   case MULTI_STOLEN_ITEMS:
+      if (!Endlevel_sequence) multi_do_stolen_items(buf); break;
+   case MULTI_WALL_STATUS:
+      if (!Endlevel_sequence) multi_do_wall_status(buf); break;
+   case MULTI_HEARTBEAT:
+      if (!Endlevel_sequence) multi_do_heartbeat (buf); break;
+   case MULTI_SEISMIC:
       if (!Endlevel_sequence) multi_do_seismic (buf); break;
-      case MULTI_LIGHT:
+   case MULTI_LIGHT:
       if (!Endlevel_sequence) multi_do_light (buf); break;
-      case MULTI_KILLGOALS:
-      
-       if (!Endlevel_sequence) multi_do_kill_goal_counts (buf); break;
-      case MULTI_ENDLEVEL_START:
-         if (!Endlevel_sequence) multi_do_escape(buf); break;
-      case MULTI_END_SYNC:
-         break;
-      case MULTI_CLOAK:
-         if (!Endlevel_sequence) multi_do_cloak(buf); break;
-      case MULTI_DECLOAK:
-         if (!Endlevel_sequence) multi_do_decloak(buf); break;
-      case MULTI_DOOR_OPEN:
-         if (!Endlevel_sequence) multi_do_door_open(buf); break;
-      case MULTI_CREATE_EXPLOSION:
-         if (!Endlevel_sequence) multi_do_create_explosion(buf); break;
-      case MULTI_CONTROLCEN_FIRE:
-         if (!Endlevel_sequence) multi_do_controlcen_fire(buf); break;
-      case MULTI_CREATE_POWERUP:
-         if (!Endlevel_sequence) multi_do_create_powerup(buf); break;
-      case MULTI_PLAY_SOUND:
-         if (!Endlevel_sequence) multi_do_play_sound(buf); break;
-      case MULTI_CAPTURE_BONUS:
-         if (!Endlevel_sequence) multi_do_capture_bonus(buf); break;
-      case MULTI_ORB_BONUS:
-         if (!Endlevel_sequence) multi_do_orb_bonus(buf); break;
-      case MULTI_GOT_FLAG:
-         if (!Endlevel_sequence) multi_do_got_flag(buf); break;
-      case MULTI_GOT_ORB:
-         if (!Endlevel_sequence) multi_do_got_orb(buf); break;
-      case MULTI_PLAY_BY_PLAY:
-         if (!Endlevel_sequence) multi_do_play_by_play(buf); break;
-      case MULTI_RANK:
-         if (!Endlevel_sequence) multi_do_ranking (buf); break;
-      case MULTI_MODEM_PING:
-         if (!Endlevel_sequence) multi_send_modem_ping_return(); break;
-      case MULTI_MODEM_PING_RETURN:
-         if (!Endlevel_sequence) multi_do_modem_ping_return(); break;
-#ifndef SHAREWARE
-      case MULTI_FINISH_GAME:
-         multi_do_finish_game(buf); break;  // do this one regardless of endsequence   
-      case MULTI_ROBOT_CONTROLS:
-         if (!Endlevel_sequence) multi_do_robot_controls(buf); break;
-      case MULTI_ROBOT_CLAIM:
-         if (!Endlevel_sequence) multi_do_claim_robot(buf); break;
-      case MULTI_ROBOT_POSITION:
-         if (!Endlevel_sequence) multi_do_robot_position(buf); break;
-      case MULTI_ROBOT_EXPLODE:
-         if (!Endlevel_sequence) multi_do_robot_explode(buf); break;
-      case MULTI_ROBOT_RELEASE:
-         if (!Endlevel_sequence) multi_do_release_robot(buf); break;
-      case MULTI_ROBOT_FIRE:
-         if (!Endlevel_sequence) multi_do_robot_fire(buf); break;
-#endif
-      case MULTI_SCORE:
-         if (!Endlevel_sequence) multi_do_score(buf); break;
-      case MULTI_CREATE_ROBOT:
-         if (!Endlevel_sequence) multi_do_create_robot(buf); break;
-      case MULTI_TRIGGER:
-         if (!Endlevel_sequence) multi_do_trigger(buf); break;
-      case MULTI_START_TRIGGER:
-         if (!Endlevel_sequence) multi_do_start_trigger(buf); break;
-      case MULTI_FLAGS:
-         if (!Endlevel_sequence) multi_do_flags(buf); break;
-      case MULTI_DROP_BLOB:
-         if (!Endlevel_sequence) multi_do_drop_blob(buf); break;
-      case MULTI_ACTIVE_DOOR:
-         if (!Endlevel_sequence) multi_do_active_door(buf); break;
-      case MULTI_BOSS_ACTIONS:
-         if (!Endlevel_sequence) multi_do_boss_actions(buf); break;
-      case MULTI_CREATE_ROBOT_POWERUPS:
-         if (!Endlevel_sequence) multi_do_create_robot_powerups(buf); break;
-      case MULTI_HOSTAGE_DOOR:
-         if (!Endlevel_sequence) multi_do_hostage_door_status(buf); break;
-      case MULTI_SAVE_GAME:
-         if (!Endlevel_sequence) multi_do_save_game(buf); break;
-      case MULTI_RESTORE_GAME:
-         if (!Endlevel_sequence) multi_do_restore_game(buf); break;
-      case MULTI_REQ_PLAYER:
-         if (!Endlevel_sequence) multi_do_req_player(buf); break;
-      case MULTI_SEND_PLAYER:
-         if (!Endlevel_sequence) multi_do_send_player(buf); break;
+   case MULTI_KILLGOALS:
 
-      default:
-         mprintf((1, "Invalid type in multi_process_input().\n"));
-         Int3();
+      if (!Endlevel_sequence) multi_do_kill_goal_counts (buf); break;
+   case MULTI_ENDLEVEL_START:
+      if (!Endlevel_sequence) multi_do_escape(buf); break;
+   case MULTI_END_SYNC:
+      break;
+   case MULTI_CLOAK:
+      if (!Endlevel_sequence) multi_do_cloak(buf); break;
+   case MULTI_DECLOAK:
+      if (!Endlevel_sequence) multi_do_decloak(buf); break;
+   case MULTI_DOOR_OPEN:
+      if (!Endlevel_sequence) multi_do_door_open(buf); break;
+   case MULTI_CREATE_EXPLOSION:
+      if (!Endlevel_sequence) multi_do_create_explosion(buf); break;
+   case MULTI_CONTROLCEN_FIRE:
+      if (!Endlevel_sequence) multi_do_controlcen_fire(buf); break;
+   case MULTI_CREATE_POWERUP:
+      if (!Endlevel_sequence) multi_do_create_powerup(buf); break;
+   case MULTI_PLAY_SOUND:
+      if (!Endlevel_sequence) multi_do_play_sound(buf); break;
+   case MULTI_CAPTURE_BONUS:
+      if (!Endlevel_sequence) multi_do_capture_bonus(buf); break;
+   case MULTI_ORB_BONUS:
+      if (!Endlevel_sequence) multi_do_orb_bonus(buf); break;
+   case MULTI_GOT_FLAG:
+      if (!Endlevel_sequence) multi_do_got_flag(buf); break;
+   case MULTI_GOT_ORB:
+      if (!Endlevel_sequence) multi_do_got_orb(buf); break;
+   case MULTI_PLAY_BY_PLAY:
+      if (!Endlevel_sequence) multi_do_play_by_play(buf); break;
+   case MULTI_RANK:
+      if (!Endlevel_sequence) multi_do_ranking (buf); break;
+   case MULTI_MODEM_PING:
+      if (!Endlevel_sequence) multi_send_modem_ping_return(); break;
+   case MULTI_MODEM_PING_RETURN:
+      if (!Endlevel_sequence) multi_do_modem_ping_return(); break;
+#ifndef SHAREWARE
+   case MULTI_FINISH_GAME:
+      multi_do_finish_game(buf); break;  // do this one regardless of endsequence   
+   case MULTI_ROBOT_CONTROLS:
+      if (!Endlevel_sequence) multi_do_robot_controls(buf); break;
+   case MULTI_ROBOT_CLAIM:
+      if (!Endlevel_sequence) multi_do_claim_robot(buf); break;
+   case MULTI_ROBOT_POSITION:
+      if (!Endlevel_sequence) multi_do_robot_position(buf); break;
+   case MULTI_ROBOT_EXPLODE:
+      if (!Endlevel_sequence) multi_do_robot_explode(buf); break;
+   case MULTI_ROBOT_RELEASE:
+      if (!Endlevel_sequence) multi_do_release_robot(buf); break;
+   case MULTI_ROBOT_FIRE:
+      if (!Endlevel_sequence) multi_do_robot_fire(buf); break;
+#endif
+   case MULTI_SCORE:
+      if (!Endlevel_sequence) multi_do_score(buf); break;
+   case MULTI_CREATE_ROBOT:
+      if (!Endlevel_sequence) multi_do_create_robot(buf); break;
+   case MULTI_TRIGGER:
+      if (!Endlevel_sequence) multi_do_trigger(buf); break;
+   case MULTI_START_TRIGGER:
+      if (!Endlevel_sequence) multi_do_start_trigger(buf); break;
+   case MULTI_FLAGS:
+      if (!Endlevel_sequence) multi_do_flags(buf); break;
+   case MULTI_DROP_BLOB:
+      if (!Endlevel_sequence) multi_do_drop_blob(buf); break;
+   case MULTI_ACTIVE_DOOR:
+      if (!Endlevel_sequence) multi_do_active_door(buf); break;
+   case MULTI_BOSS_ACTIONS:
+      if (!Endlevel_sequence) multi_do_boss_actions(buf); break;
+   case MULTI_CREATE_ROBOT_POWERUPS:
+      if (!Endlevel_sequence) multi_do_create_robot_powerups(buf); break;
+   case MULTI_HOSTAGE_DOOR:
+      if (!Endlevel_sequence) multi_do_hostage_door_status(buf); break;
+   case MULTI_SAVE_GAME:
+      if (!Endlevel_sequence) multi_do_save_game(buf); break;
+   case MULTI_RESTORE_GAME:
+      if (!Endlevel_sequence) multi_do_restore_game(buf); break;
+   case MULTI_REQ_PLAYER:
+      if (!Endlevel_sequence) multi_do_req_player(buf); break;
+   case MULTI_SEND_PLAYER:
+      if (!Endlevel_sequence) multi_do_send_player(buf); break;
+
+   default:
+      mprintf((1, "Invalid type in multi_process_input().\n"));
+      Int3();
    }
 }
 
@@ -2627,23 +2627,23 @@ multi_send_destroy_controlcen(int objnum, int player)
 }
 
 void multi_send_drop_marker (int player,vms_vector position,char messagenum,char text[])
- {
-  int i;
+{
+   int i;
 
    if (player<N_players)
-     {
-       mprintf ((0,"Sending MARKER drop!\n"));
-       multibuf[0]=(char)MULTI_MARKER;
-       multibuf[1]=(char)player;
-       multibuf[2]=messagenum;
-       *(fix *)(multibuf+3)=INTEL_INT(position.x);
-       *(fix *)(multibuf+7)=INTEL_INT(position.y);
-       *(fix *)(multibuf+11)=INTEL_INT(position.z);
-       for (i=0;i<40;i++)
-        multibuf[15+i]=text[i];
-     }
+   {
+      mprintf ((0,"Sending MARKER drop!\n"));
+      multibuf[0]=(char)MULTI_MARKER;
+      multibuf[1]=(char)player;
+      multibuf[2]=messagenum;
+      *(fix *)(multibuf+3)=INTEL_INT(position.x);
+      *(fix *)(multibuf+7)=INTEL_INT(position.y);
+      *(fix *)(multibuf+11)=INTEL_INT(position.z);
+      for (i=0;i<40;i++)
+      multibuf[15+i]=text[i];
+   }
    multi_send_data(multibuf, 55, 1);
- }
+}
             
 void 
 multi_send_endlevel_start(int secret)
@@ -2754,33 +2754,33 @@ extern ubyte Primary_weapon_to_powerup[];
 // to prevent rampant powerups in netgames
 
 void multi_cap_objects ()
- {
-  char type,flagtype;
-  int index;
+{
+   char type,flagtype;
+   int index;
 
-  if (!(Game_mode & GM_NETWORK))
-   return;
+   if (!(Game_mode & GM_NETWORK))
+      return;
 
-  for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
+   for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
    {
       type=Primary_weapon_to_powerup[index];
       if (PowerupsInMine[type]>=MaxPowerupsAllowed[type])
-       if(Players[Player_num].primary_weapon_flags & (1 << index))
+         if(Players[Player_num].primary_weapon_flags & (1 << index))
          {
-          mprintf ((0,"PIM=%d MPA=%d\n",PowerupsInMine[type],MaxPowerupsAllowed[type]));
-          mprintf ((0,"Killing a primary cuz there's too many! (%d)\n",type));
-          Players[Player_num].primary_weapon_flags&=(~(1 << index));
+            mprintf ((0,"PIM=%d MPA=%d\n",PowerupsInMine[type],MaxPowerupsAllowed[type]));
+            mprintf ((0,"Killing a primary cuz there's too many! (%d)\n",type));
+            Players[Player_num].primary_weapon_flags&=(~(1 << index));
          }
    }
   
 
   // Don't do the adjustment stuff for Hoard mode
-  if (!(Game_mode & GM_HOARD))        
-     Players[Player_num].secondary_ammo[2]/=4;
+   if (!(Game_mode & GM_HOARD))        
+      Players[Player_num].secondary_ammo[2]/=4;
 
-  Players[Player_num].secondary_ammo[7]/=4;
+   Players[Player_num].secondary_ammo[7]/=4;
    
-  for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
+   for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
    {
       if ((Game_mode & GM_HOARD) && index==PROXIMITY_INDEX)
          continue;
@@ -2788,134 +2788,134 @@ void multi_cap_objects ()
       type=Secondary_weapon_to_powerup[index];
       
       if ((Players[Player_num].secondary_ammo[index]+PowerupsInMine[type])>MaxPowerupsAllowed[type])
-       {
-        if (MaxPowerupsAllowed[type]-PowerupsInMine[type]<0)
-          Players[Player_num].secondary_ammo[index]=0;
-       else 
-          Players[Player_num].secondary_ammo[index]=(MaxPowerupsAllowed[type]-PowerupsInMine[type]);
-        
+      {
+         if (MaxPowerupsAllowed[type]-PowerupsInMine[type]<0)
+            Players[Player_num].secondary_ammo[index]=0;
+         else 
+            Players[Player_num].secondary_ammo[index]=(MaxPowerupsAllowed[type]-PowerupsInMine[type]);
+
          mprintf ((0,"Hey! I killed secondary type %d because PIM=%d MPA=%d\n",type,PowerupsInMine[type],MaxPowerupsAllowed[type]));         
-       } 
+      } 
    }
 
-  if (!(Game_mode & GM_HOARD))        
-     Players[Player_num].secondary_ammo[2]*=4;
-  Players[Player_num].secondary_ammo[7]*=4;
-    
-      if (Players[Player_num].laser_level > MAX_LASER_LEVEL)
-       if (PowerupsInMine[POW_SUPER_LASER]+1 > MaxPowerupsAllowed[POW_SUPER_LASER])
+   if (!(Game_mode & GM_HOARD))        
+      Players[Player_num].secondary_ammo[2]*=4;
+   Players[Player_num].secondary_ammo[7]*=4;
+
+   if (Players[Player_num].laser_level > MAX_LASER_LEVEL)
+      if (PowerupsInMine[POW_SUPER_LASER]+1 > MaxPowerupsAllowed[POW_SUPER_LASER])
          Players[Player_num].laser_level=0;
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_QUAD_LASERS)
-       if (PowerupsInMine[POW_QUAD_FIRE]+1 > MaxPowerupsAllowed[POW_QUAD_FIRE])
+   if (Players[Player_num].flags & PLAYER_FLAGS_QUAD_LASERS)
+      if (PowerupsInMine[POW_QUAD_FIRE]+1 > MaxPowerupsAllowed[POW_QUAD_FIRE])
          Players[Player_num].flags&=(~PLAYER_FLAGS_QUAD_LASERS);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)
-       if (PowerupsInMine[POW_CLOAK]+1 > MaxPowerupsAllowed[POW_CLOAK])
+   if (Players[Player_num].flags & PLAYER_FLAGS_CLOAKED)
+      if (PowerupsInMine[POW_CLOAK]+1 > MaxPowerupsAllowed[POW_CLOAK])
          Players[Player_num].flags&=(~PLAYER_FLAGS_CLOAKED);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_MAP_ALL)
-       if (PowerupsInMine[POW_FULL_MAP]+1 > MaxPowerupsAllowed[POW_FULL_MAP])
+   if (Players[Player_num].flags & PLAYER_FLAGS_MAP_ALL)
+      if (PowerupsInMine[POW_FULL_MAP]+1 > MaxPowerupsAllowed[POW_FULL_MAP])
          Players[Player_num].flags&=(~PLAYER_FLAGS_MAP_ALL);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_AFTERBURNER)
-       if (PowerupsInMine[POW_AFTERBURNER]+1 > MaxPowerupsAllowed[POW_AFTERBURNER])
+   if (Players[Player_num].flags & PLAYER_FLAGS_AFTERBURNER)
+      if (PowerupsInMine[POW_AFTERBURNER]+1 > MaxPowerupsAllowed[POW_AFTERBURNER])
          Players[Player_num].flags&=(~PLAYER_FLAGS_AFTERBURNER);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_AMMO_RACK)
-       if (PowerupsInMine[POW_AMMO_RACK]+1 > MaxPowerupsAllowed[POW_AMMO_RACK])
+   if (Players[Player_num].flags & PLAYER_FLAGS_AMMO_RACK)
+      if (PowerupsInMine[POW_AMMO_RACK]+1 > MaxPowerupsAllowed[POW_AMMO_RACK])
          Players[Player_num].flags&=(~PLAYER_FLAGS_AMMO_RACK);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_CONVERTER)
-       if (PowerupsInMine[POW_CONVERTER]+1 > MaxPowerupsAllowed[POW_CONVERTER])
+   if (Players[Player_num].flags & PLAYER_FLAGS_CONVERTER)
+      if (PowerupsInMine[POW_CONVERTER]+1 > MaxPowerupsAllowed[POW_CONVERTER])
          Players[Player_num].flags&=(~PLAYER_FLAGS_CONVERTER);
 
-      if (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT)
-       if (PowerupsInMine[POW_HEADLIGHT]+1 > MaxPowerupsAllowed[POW_HEADLIGHT])
+   if (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT)
+      if (PowerupsInMine[POW_HEADLIGHT]+1 > MaxPowerupsAllowed[POW_HEADLIGHT])
          Players[Player_num].flags&=(~PLAYER_FLAGS_HEADLIGHT);
       
-      if (Game_mode & GM_CAPTURE)
+   if (Game_mode & GM_CAPTURE)
+   {
+      if (Players[Player_num].flags & PLAYER_FLAGS_FLAG)
       {
-         if (Players[Player_num].flags & PLAYER_FLAGS_FLAG)
-          {
-           if (get_team(Player_num)==TEAM_RED)
+         if (get_team(Player_num)==TEAM_RED)
             flagtype=POW_FLAG_BLUE;
-           else
+         else
             flagtype=POW_FLAG_RED;
          
-           if (PowerupsInMine[flagtype]+1 > MaxPowerupsAllowed[flagtype])
-              Players[Player_num].flags&=(~PLAYER_FLAGS_FLAG);
-          }
+         if (PowerupsInMine[flagtype]+1 > MaxPowerupsAllowed[flagtype])
+            Players[Player_num].flags&=(~PLAYER_FLAGS_FLAG);
       }
+   }
 
- }
+}
 
 // adds players inventory to multi cap
 
 void multi_adjust_cap_for_player (int pnum)
- {
-  char type;
-  
-  int index;
+{
+   char type;
 
-  if (!(Game_mode & GM_NETWORK))
-   return;
+   int index;
 
-  for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
+   if (!(Game_mode & GM_NETWORK))
+      return;
+
+   for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
    {
       type=Primary_weapon_to_powerup[index];
-        if (Players[pnum].primary_weapon_flags & (1 << index))
-          MaxPowerupsAllowed[type]++;
+         if (Players[pnum].primary_weapon_flags & (1 << index))
+            MaxPowerupsAllowed[type]++;
    }
-         
-  for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
+
+   for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
    {
       type=Secondary_weapon_to_powerup[index];
       MaxPowerupsAllowed[type]+=Players[pnum].secondary_ammo[index];
    }
 
-  if (Players[pnum].laser_level > MAX_LASER_LEVEL)
-    MaxPowerupsAllowed[POW_SUPER_LASER]++;
+   if (Players[pnum].laser_level > MAX_LASER_LEVEL)
+      MaxPowerupsAllowed[POW_SUPER_LASER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_QUAD_LASERS)
-    MaxPowerupsAllowed[POW_QUAD_FIRE]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_QUAD_LASERS)
+      MaxPowerupsAllowed[POW_QUAD_FIRE]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_CLOAKED)
-    MaxPowerupsAllowed[POW_CLOAK]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_CLOAKED)
+      MaxPowerupsAllowed[POW_CLOAK]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_MAP_ALL)
-    MaxPowerupsAllowed[POW_FULL_MAP]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_MAP_ALL)
+      MaxPowerupsAllowed[POW_FULL_MAP]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_AFTERBURNER)
-   MaxPowerupsAllowed[POW_AFTERBURNER]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_AFTERBURNER)
+      MaxPowerupsAllowed[POW_AFTERBURNER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_AMMO_RACK)
-     MaxPowerupsAllowed[POW_AMMO_RACK]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_AMMO_RACK)
+      MaxPowerupsAllowed[POW_AMMO_RACK]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_CONVERTER)
-    MaxPowerupsAllowed[POW_CONVERTER]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_CONVERTER)
+      MaxPowerupsAllowed[POW_CONVERTER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_HEADLIGHT)
-    MaxPowerupsAllowed[POW_HEADLIGHT]++;
- }
+   if (Players[pnum].flags & PLAYER_FLAGS_HEADLIGHT)
+      MaxPowerupsAllowed[POW_HEADLIGHT]++;
+}
 
 void multi_adjust_remote_cap (int pnum)
- {
-  char type;
+{
+   char type;
   
-  int index;
+   int index;
 
-  if (!(Game_mode & GM_NETWORK))
-   return;
+   if (!(Game_mode & GM_NETWORK))
+      return;
 
-  for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
+   for (index=0;index<MAX_PRIMARY_WEAPONS;index++)  
    {
       type=Primary_weapon_to_powerup[index];
-        if (Players[pnum].primary_weapon_flags & (1 << index))
-          PowerupsInMine[type]++;
+      if (Players[pnum].primary_weapon_flags & (1 << index))
+         PowerupsInMine[type]++;
    }
          
-  for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
+   for (index=0;index<MAX_SECONDARY_WEAPONS;index++)   
    {
       type=Secondary_weapon_to_powerup[index];
 
@@ -2929,31 +2929,31 @@ void multi_adjust_remote_cap (int pnum)
  
    }
 
-  if (Players[pnum].laser_level > MAX_LASER_LEVEL)
-    PowerupsInMine[POW_SUPER_LASER]++;
+   if (Players[pnum].laser_level > MAX_LASER_LEVEL)
+      PowerupsInMine[POW_SUPER_LASER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_QUAD_LASERS)
-    PowerupsInMine[POW_QUAD_FIRE]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_QUAD_LASERS)
+      PowerupsInMine[POW_QUAD_FIRE]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_CLOAKED)
-    PowerupsInMine[POW_CLOAK]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_CLOAKED)
+      PowerupsInMine[POW_CLOAK]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_MAP_ALL)
-    PowerupsInMine[POW_FULL_MAP]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_MAP_ALL)
+      PowerupsInMine[POW_FULL_MAP]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_AFTERBURNER)
-   PowerupsInMine[POW_AFTERBURNER]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_AFTERBURNER)
+      PowerupsInMine[POW_AFTERBURNER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_AMMO_RACK)
-     PowerupsInMine[POW_AMMO_RACK]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_AMMO_RACK)
+      PowerupsInMine[POW_AMMO_RACK]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_CONVERTER)
-    PowerupsInMine[POW_CONVERTER]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_CONVERTER)
+      PowerupsInMine[POW_CONVERTER]++;
 
-  if (Players[pnum].flags & PLAYER_FLAGS_HEADLIGHT)
-    PowerupsInMine[POW_HEADLIGHT]++;
+   if (Players[pnum].flags & PLAYER_FLAGS_HEADLIGHT)
+      PowerupsInMine[POW_HEADLIGHT]++;
 
- }
+}
 
 void
 multi_send_message(void)
@@ -3051,23 +3051,23 @@ multi_send_remobj(int objnum)
    short remote_objnum;
 
    if (Objects[objnum].type==OBJ_POWERUP && (Game_mode & GM_NETWORK))
-    {
+   {
       if (PowerupsInMine[Objects[objnum].id] > 0)
-       {
+      {
          PowerupsInMine[Objects[objnum].id]--;
-        if (multi_powerup_is_4pack (Objects[objnum].id))
-          {
+         if (multi_powerup_is_4pack (Objects[objnum].id))
+         {
             mprintf ((0,"Hey babe! Doing that wacky 4 pack stuff."));
       
             if (PowerupsInMine[Objects[objnum].id-1]-4<0)
                PowerupsInMine[Objects[objnum].id-1]=0;
             else
                PowerupsInMine[Objects[objnum].id-1]-=4;
-          }
-       }
+         }
+      }
             
-    }
-         
+   }
+
    multibuf[0] = (char)MULTI_REMOVE_OBJECT;
 
    remote_objnum = objnum_local_to_remote((short)objnum, &obj_owner);
@@ -3169,8 +3169,8 @@ multi_send_create_explosion(int pnum)
 
    int count = 0;
 
-   multibuf[count] = MULTI_CREATE_EXPLOSION;       count += 1;
-   multibuf[count] = (byte)pnum;                                   count += 1;
+   multibuf[count] = MULTI_CREATE_EXPLOSION;                      count += 1;
+   multibuf[count] = (byte)pnum;                                  count += 1;
    //                                                                                                      -----------
    //                                                                                                      Total size = 2
 
@@ -3185,19 +3185,19 @@ multi_send_controlcen_fire(vms_vector *to_goal, int best_gun_num, int objnum)
 #endif
    int count = 0;
 
-   multibuf[count] = MULTI_CONTROLCEN_FIRE;                count +=  1;
+   multibuf[count] = MULTI_CONTROLCEN_FIRE;                       count +=  1;
    #ifndef MACINTOSH
-   memcpy(multibuf+count, to_goal, 12);                    count += 12;
+   memcpy(multibuf+count, to_goal, 12);                           count += 12;
    #else
    swapped_vec.x = (fix)INTEL_INT( (int)to_goal->x );
    swapped_vec.y = (fix)INTEL_INT( (int)to_goal->y );
    swapped_vec.z = (fix)INTEL_INT( (int)to_goal->z );
-   memcpy(multibuf+count, &swapped_vec, 12);          count += 12;
+   memcpy(multibuf+count, &swapped_vec, 12);                      count += 12;
    #endif
-   multibuf[count] = (char)best_gun_num;                   count +=  1;
+   multibuf[count] = (char)best_gun_num;                          count +=  1;
    *(short *)(multibuf+count) = INTEL_SHORT( (short)objnum );     count +=  2;
-   //                                                                                                                      ------------
-   //                                                                                                                      Total  = 16
+   //                                                             ------------
+   //                                                             Total  = 16
    multi_send_data(multibuf, count, 0);
 }
 
@@ -3216,9 +3216,9 @@ multi_send_create_powerup(int powerup_type, int segnum, int objnum, vms_vector *
    if (Game_mode & GM_NETWORK)
       PowerupsInMine[powerup_type]++;
 
-   multibuf[count] = MULTI_CREATE_POWERUP;         count += 1;
-   multibuf[count] = Player_num;                                      count += 1;
-   multibuf[count] = powerup_type;                                 count += 1;
+   multibuf[count] = MULTI_CREATE_POWERUP;                        count += 1;
+   multibuf[count] = Player_num;                                  count += 1;
+   multibuf[count] = powerup_type;                                count += 1;
    *(short *)(multibuf+count) = INTEL_SHORT( (short)segnum );     count += 2;
    *(short *)(multibuf+count) = INTEL_SHORT( (short)objnum );     count += 2;
 #ifndef MACINTOSH
@@ -3227,10 +3227,10 @@ multi_send_create_powerup(int powerup_type, int segnum, int objnum, vms_vector *
    swapped_vec.x = (fix)INTEL_INT( (int)pos->x );
    swapped_vec.y = (fix)INTEL_INT( (int)pos->y );
    swapped_vec.z = (fix)INTEL_INT( (int)pos->z );
-   memcpy(multibuf+count, &swapped_vec, 12);          count += 12;
+   memcpy(multibuf+count, &swapped_vec, 12);                      count += 12;
 #endif
-   //                                                                                                            -----------
-   //                                                                                                            Total =  19
+   //                                                             -----------
+   //                                                             Total =  19
    multi_send_data(multibuf, count, 2);
 
    if (Network_send_objects && network_objnum_is_past(objnum))
@@ -3247,12 +3247,12 @@ void
 multi_send_play_sound(int sound_num, fix volume)
 {
    int count = 0;
-   multibuf[count] = MULTI_PLAY_SOUND;                     count += 1;
-   multibuf[count] = Player_num;                                   count += 1;
-   multibuf[count] = (char)sound_num;                      count += 1;
-   multibuf[count] = (char)(volume >> 12); count += 1;
-   //                                                                                                         -----------
-   //                                                                                                         Total = 4
+   multibuf[count] = MULTI_PLAY_SOUND;                            count += 1;
+   multibuf[count] = Player_num;                                  count += 1;
+   multibuf[count] = (char)sound_num;                             count += 1;
+   multibuf[count] = (char)(volume >> 12);                        count += 1;
+   //                                                             -----------
+   //                                                              Total = 4
    multi_send_data(multibuf, count, 0);
 }
 
@@ -3289,8 +3289,8 @@ multi_send_score(void)
 
    if (Game_mode & GM_MULTI_COOP) {
       multi_sort_kill_list();
-      multibuf[count] = MULTI_SCORE;                  count += 1;
-      multibuf[count] = Player_num;                           count += 1;
+      multibuf[count] = MULTI_SCORE;                              count += 1;
+      multibuf[count] = Player_num;                               count += 1;
       *(int *)(multibuf+count) = INTEL_INT( Players[Player_num].score );  count += 4;
       multi_send_data(multibuf, count, 0);
    }
@@ -3304,8 +3304,8 @@ multi_send_save_game(ubyte slot, uint id, char * desc)
    
    multibuf[count] = MULTI_SAVE_GAME;              count += 1;
    multibuf[count] = slot;                         count += 1;    // Save slot=0
-   *(uint *)(multibuf+count) = INTEL_INT( id );         count += 4;             // Save id
-   memcpy( &multibuf[count], desc, 20 ); count += 20;
+   *(uint *)(multibuf+count) = INTEL_INT( id );    count += 4;    // Save id
+   memcpy( &multibuf[count], desc, 20 );           count += 20;
 
    multi_send_data(multibuf, count, 2);
 }
@@ -3315,9 +3315,9 @@ multi_send_restore_game(ubyte slot, uint id)
 {
    int count = 0;
    
-   multibuf[count] = MULTI_RESTORE_GAME;   count += 1;
-   multibuf[count] = slot;                                                 count += 1;             // Save slot=0
-   *(uint *)(multibuf+count) = INTEL_INT( id );         count += 4;             // Save id
+   multibuf[count] = MULTI_RESTORE_GAME;           count += 1;
+   multibuf[count] = slot;                         count += 1;    // Save slot=0
+   *(uint *)(multibuf+count) = INTEL_INT( id );    count += 4;    // Save id
 
    multi_send_data(multibuf, count, 2);
 }
@@ -3327,7 +3327,7 @@ multi_send_netplayer_stats_request(ubyte player_num)
 {
    int count = 0;
    
-   multibuf[count] = MULTI_REQ_PLAYER;     count += 1;
+   multibuf[count] = MULTI_REQ_PLAYER;             count += 1;
    multibuf[count] = player_num;                   count += 1;
 
    multi_send_data(multibuf, count, 0 );
@@ -3340,8 +3340,8 @@ multi_send_trigger(int triggernum)
    
    int count = 0;
    
-   multibuf[count] = MULTI_TRIGGER;                                count += 1;
-   multibuf[count] = Player_num;                                   count += 1;
+   multibuf[count] = MULTI_TRIGGER;                count += 1;
+   multibuf[count] = Player_num;                   count += 1;
    multibuf[count] = (ubyte)triggernum;            count += 1;
    
    mprintf ((0,"Sending trigger %d\n",triggernum));
@@ -3431,11 +3431,11 @@ void multi_prep_level(void)
    }
  
    if (Game_mode & GM_NETWORK)
-    {
-     multi_adjust_cap_for_player(Player_num);   
-     multi_send_powerup_update();
-     ng=1;  // ng means network game
-    }
+   {
+      multi_adjust_cap_for_player(Player_num);   
+      multi_send_powerup_update();
+      ng=1;  // ng means network game
+   }
    ng=1; 
 
    inv_count = 0;
@@ -3464,13 +3464,13 @@ void multi_prep_level(void)
       {
          if (Objects[i].id == POW_EXTRA_LIFE) 
          {
-         if (ng && !Netgame.DoInvulnerability)
+            if (ng && !Netgame.DoInvulnerability)
             {
              Objects[i].id = POW_SHIELD_BOOST;
              Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
              Objects[i].rtype.vclip_info.frametime = Vclip[Objects[i].rtype.vclip_info.vclip_num].frame_time;
             }
-         else
+            else
             {
              Objects[i].id = POW_INVULNERABILITY;
              Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
@@ -3481,11 +3481,11 @@ void multi_prep_level(void)
 
          if (!(Game_mode & GM_MULTI_COOP))
             if ((Objects[i].id >= POW_KEY_BLUE) && (Objects[i].id <= POW_KEY_GOLD))
-               {
-                  Objects[i].id = POW_SHIELD_BOOST;
-                  Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
-                  Objects[i].rtype.vclip_info.frametime = Vclip[Objects[i].rtype.vclip_info.vclip_num].frame_time;
-               }
+            {
+               Objects[i].id = POW_SHIELD_BOOST;
+               Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
+               Objects[i].rtype.vclip_info.frametime = Vclip[Objects[i].rtype.vclip_info.vclip_num].frame_time;
+            }
 
          if (Objects[i].id == POW_INVULNERABILITY) {
             if (inv_count >= 3 || (ng && !Netgame.DoInvulnerability)) {
@@ -3498,7 +3498,7 @@ void multi_prep_level(void)
          }
 
          if (Objects[i].id == POW_CLOAK) {
-      if (cloak_count >= 3 || (ng && !Netgame.DoCloak)) {
+            if (cloak_count >= 3 || (ng && !Netgame.DoCloak)) {
                mprintf((0, "Bashing Cloak object #%i to shield.\n", i));
                Objects[i].id = POW_SHIELD_BOOST;
                Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
@@ -3507,94 +3507,94 @@ void multi_prep_level(void)
                cloak_count++;
          }
 
-   if (Objects[i].id == POW_AFTERBURNER && ng && !Netgame.DoAfterburner)
-      bash_to_shield (i,"afterburner");
-   if (Objects[i].id == POW_FUSION_WEAPON && ng &&  !Netgame.DoFusions)
-      bash_to_shield (i,"fusion");
-   if (Objects[i].id == POW_PHOENIX_WEAPON && ng && !Netgame.DoPhoenix)
-      bash_to_shield (i,"phoenix");
+         if (Objects[i].id == POW_AFTERBURNER && ng && !Netgame.DoAfterburner)
+            bash_to_shield (i,"afterburner");
+         if (Objects[i].id == POW_FUSION_WEAPON && ng &&  !Netgame.DoFusions)
+            bash_to_shield (i,"fusion");
+         if (Objects[i].id == POW_PHOENIX_WEAPON && ng && !Netgame.DoPhoenix)
+            bash_to_shield (i,"phoenix");
 
-   if (Objects[i].id == POW_HELIX_WEAPON && ng && !Netgame.DoHelix)
-      bash_to_shield (i,"helix");
+         if (Objects[i].id == POW_HELIX_WEAPON && ng && !Netgame.DoHelix)
+            bash_to_shield (i,"helix");
 
-   if (Objects[i].id == POW_MEGA_WEAPON && ng && !Netgame.DoMegas)
-      bash_to_shield (i,"mega");
+         if (Objects[i].id == POW_MEGA_WEAPON && ng && !Netgame.DoMegas)
+            bash_to_shield (i,"mega");
 
-   if (Objects[i].id == POW_SMARTBOMB_WEAPON && ng && !Netgame.DoSmarts)
-      bash_to_shield (i,"smartmissile");
+         if (Objects[i].id == POW_SMARTBOMB_WEAPON && ng && !Netgame.DoSmarts)
+            bash_to_shield (i,"smartmissile");
 
-   if (Objects[i].id == POW_GAUSS_WEAPON && ng && !Netgame.DoGauss)
-      bash_to_shield (i,"gauss");
+         if (Objects[i].id == POW_GAUSS_WEAPON && ng && !Netgame.DoGauss)
+            bash_to_shield (i,"gauss");
 
-   if (Objects[i].id == POW_VULCAN_WEAPON && ng && !Netgame.DoVulcan)
-      bash_to_shield (i,"vulcan");
-         
-   if (Objects[i].id == POW_PLASMA_WEAPON && ng && !Netgame.DoPlasma)
-      bash_to_shield (i,"plasma");
-       
-   if (Objects[i].id == POW_OMEGA_WEAPON && ng && !Netgame.DoOmega)
-      bash_to_shield (i,"omega");
+         if (Objects[i].id == POW_VULCAN_WEAPON && ng && !Netgame.DoVulcan)
+            bash_to_shield (i,"vulcan");
+               
+         if (Objects[i].id == POW_PLASMA_WEAPON && ng && !Netgame.DoPlasma)
+            bash_to_shield (i,"plasma");
+            
+         if (Objects[i].id == POW_OMEGA_WEAPON && ng && !Netgame.DoOmega)
+            bash_to_shield (i,"omega");
 
-   if (Objects[i].id == POW_SUPER_LASER && ng && !Netgame.DoSuperLaser)
-      bash_to_shield (i,"superlaser");
+         if (Objects[i].id == POW_SUPER_LASER && ng && !Netgame.DoSuperLaser)
+            bash_to_shield (i,"superlaser");
 
-   if (Objects[i].id == POW_PROXIMITY_WEAPON && ng && !Netgame.DoProximity)
-      bash_to_shield (i,"proximity");
+         if (Objects[i].id == POW_PROXIMITY_WEAPON && ng && !Netgame.DoProximity)
+            bash_to_shield (i,"proximity");
 
 //    Special: Make all proximity bombs into shields if in hoard mode because
 //    we use the proximity slot in the player struct to signify how many orbs
 //    the player has.
 
-   if (Objects[i].id == POW_PROXIMITY_WEAPON && ng && (Game_mode & GM_HOARD))
-      bash_to_shield (i,"proximity");
+         if (Objects[i].id == POW_PROXIMITY_WEAPON && ng && (Game_mode & GM_HOARD))
+            bash_to_shield (i,"proximity");
 
-   if (Objects[i].id==POW_VULCAN_AMMO && ng && (!Netgame.DoVulcan && !Netgame.DoGauss))
-      bash_to_shield(i,"vulcan ammo");
+         if (Objects[i].id==POW_VULCAN_AMMO && ng && (!Netgame.DoVulcan && !Netgame.DoGauss))
+            bash_to_shield(i,"vulcan ammo");
 
-   if (Objects[i].id == POW_SPREADFIRE_WEAPON && ng && !Netgame.DoSpread)
-      bash_to_shield (i,"spread");
-   if (Objects[i].id == POW_SMART_MINE && ng && !Netgame.DoSmartMine)
-      bash_to_shield (i,"smartmine");
-   if (Objects[i].id == POW_SMISSILE1_1 && ng &&  !Netgame.DoFlash)
-      bash_to_shield (i,"flash");
-   if (Objects[i].id == POW_SMISSILE1_4 && ng &&  !Netgame.DoFlash)
-      bash_to_shield (i,"flash");
-   if (Objects[i].id == POW_GUIDED_MISSILE_1 && ng &&  !Netgame.DoGuided)
-      bash_to_shield (i,"guided");
-   if (Objects[i].id == POW_GUIDED_MISSILE_4 && ng &&  !Netgame.DoGuided)
-      bash_to_shield (i,"guided");
-   if (Objects[i].id == POW_EARTHSHAKER_MISSILE && ng &&  !Netgame.DoEarthShaker)
-      bash_to_shield (i,"earth");
-   if (Objects[i].id == POW_MERCURY_MISSILE_1 && ng &&  !Netgame.DoMercury)
-      bash_to_shield (i,"Mercury");
-   if (Objects[i].id == POW_MERCURY_MISSILE_4 && ng &&  !Netgame.DoMercury)
-      bash_to_shield (i,"Mercury");
-   if (Objects[i].id == POW_CONVERTER && ng &&  !Netgame.DoConverter)
-      bash_to_shield (i,"Converter");
-   if (Objects[i].id == POW_AMMO_RACK && ng &&  !Netgame.DoAmmoRack)
-      bash_to_shield (i,"Ammo rack");
-   if (Objects[i].id == POW_HEADLIGHT && ng &&  !Netgame.DoHeadlight)
-      bash_to_shield (i,"Headlight");
-   if (Objects[i].id == POW_LASER && ng &&  !Netgame.DoLaserUpgrade)
-      bash_to_shield (i,"Laser powerup");
-   if (Objects[i].id == POW_HOMING_AMMO_1 && ng &&  !Netgame.DoHoming)
-      bash_to_shield (i,"Homing");
-   if (Objects[i].id == POW_HOMING_AMMO_4 && ng &&  !Netgame.DoHoming)
-      bash_to_shield (i,"Homing");
-   if (Objects[i].id == POW_QUAD_FIRE && ng &&  !Netgame.DoQuadLasers)
-      bash_to_shield (i,"Quad Lasers");
-   if (Objects[i].id == POW_FLAG_BLUE && !(Game_mode & GM_CAPTURE))
-      bash_to_shield (i,"Blue flag");
-   if (Objects[i].id == POW_FLAG_RED && !(Game_mode & GM_CAPTURE))
-      bash_to_shield (i,"Red flag");
-     }
+         if (Objects[i].id == POW_SPREADFIRE_WEAPON && ng && !Netgame.DoSpread)
+            bash_to_shield (i,"spread");
+         if (Objects[i].id == POW_SMART_MINE && ng && !Netgame.DoSmartMine)
+            bash_to_shield (i,"smartmine");
+         if (Objects[i].id == POW_SMISSILE1_1 && ng &&  !Netgame.DoFlash)
+            bash_to_shield (i,"flash");
+         if (Objects[i].id == POW_SMISSILE1_4 && ng &&  !Netgame.DoFlash)
+            bash_to_shield (i,"flash");
+         if (Objects[i].id == POW_GUIDED_MISSILE_1 && ng &&  !Netgame.DoGuided)
+            bash_to_shield (i,"guided");
+         if (Objects[i].id == POW_GUIDED_MISSILE_4 && ng &&  !Netgame.DoGuided)
+            bash_to_shield (i,"guided");
+         if (Objects[i].id == POW_EARTHSHAKER_MISSILE && ng &&  !Netgame.DoEarthShaker)
+            bash_to_shield (i,"earth");
+         if (Objects[i].id == POW_MERCURY_MISSILE_1 && ng &&  !Netgame.DoMercury)
+            bash_to_shield (i,"Mercury");
+         if (Objects[i].id == POW_MERCURY_MISSILE_4 && ng &&  !Netgame.DoMercury)
+            bash_to_shield (i,"Mercury");
+         if (Objects[i].id == POW_CONVERTER && ng &&  !Netgame.DoConverter)
+            bash_to_shield (i,"Converter");
+         if (Objects[i].id == POW_AMMO_RACK && ng &&  !Netgame.DoAmmoRack)
+            bash_to_shield (i,"Ammo rack");
+         if (Objects[i].id == POW_HEADLIGHT && ng &&  !Netgame.DoHeadlight)
+            bash_to_shield (i,"Headlight");
+         if (Objects[i].id == POW_LASER && ng &&  !Netgame.DoLaserUpgrade)
+            bash_to_shield (i,"Laser powerup");
+         if (Objects[i].id == POW_HOMING_AMMO_1 && ng &&  !Netgame.DoHoming)
+            bash_to_shield (i,"Homing");
+         if (Objects[i].id == POW_HOMING_AMMO_4 && ng &&  !Netgame.DoHoming)
+            bash_to_shield (i,"Homing");
+         if (Objects[i].id == POW_QUAD_FIRE && ng &&  !Netgame.DoQuadLasers)
+            bash_to_shield (i,"Quad Lasers");
+         if (Objects[i].id == POW_FLAG_BLUE && !(Game_mode & GM_CAPTURE))
+            bash_to_shield (i,"Blue flag");
+         if (Objects[i].id == POW_FLAG_RED && !(Game_mode & GM_CAPTURE))
+            bash_to_shield (i,"Red flag");
+      }
    }
    
    if (Game_mode & GM_HOARD)
       init_hoard_data();
 
    if ((Game_mode & GM_CAPTURE) || (Game_mode & GM_HOARD))
-    multi_apply_goal_textures();
+      multi_apply_goal_textures();
   
    multi_sort_kill_list();
 
@@ -3615,13 +3615,13 @@ void multi_apply_goal_textures()
    segment2 *seg2;
  
    for (i=0; i <= Highest_segment_index; i++)
-    {
+   {
       seg = &Segments[i];
       seg2 = &Segment2s[i];
  
       if (seg2->special==SEGMENT_IS_GOAL_BLUE)
-       {
-         
+      {
+
          Goal_blue_segnum = i;
 
          if (Game_mode & GM_HOARD)
@@ -3639,10 +3639,10 @@ void multi_apply_goal_textures()
 
          seg2->static_light = i2f(100);   //make static light bright
 
-       } 
+      } 
          
       if (seg2->special==SEGMENT_IS_GOAL_RED)
-       {
+      {
          Goal_red_segnum = i;
 
          // Make both textures the same if Hoard mode
@@ -3661,36 +3661,36 @@ void multi_apply_goal_textures()
             }
 
          seg2->static_light = i2f(100);   //make static light bright
-       }
-    }
- }
+      }
+   }
+}
 int find_goal_texture (ubyte t)
- {
-  int i;
+{
+   int i;
  
-  for (i=0;i<NumTextures;i++)
-   if (TmapInfo[i].flags & t)
-      return i;
+   for (i=0;i<NumTextures;i++)
+      if (TmapInfo[i].flags & t)
+         return i;
 
-  Int3(); // Hey, there is no goal texture for this PIG!!!!
+   Int3(); // Hey, there is no goal texture for this PIG!!!!
           // Edit bitmaps.tbl and designate two textures to be RED and BLUE
           // goal textures
-  return (-1);
- }
+   return (-1);
+}
 
 
 void bash_to_shield (int i,char *s)
- {
+{
    int type=Objects[i].id;
   
-    mprintf((0, "Bashing %s object #%i to shield.\n",s, i));
+   mprintf((0, "Bashing %s object #%i to shield.\n",s, i));
 
-    PowerupsInMine[type]=MaxPowerupsAllowed[type]=0;
+   PowerupsInMine[type]=MaxPowerupsAllowed[type]=0;
               
-    Objects[i].id = POW_SHIELD_BOOST;
-    Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
-    Objects[i].rtype.vclip_info.frametime = Vclip[Objects[i].rtype.vclip_info.vclip_num].frame_time;
- }
+   Objects[i].id = POW_SHIELD_BOOST;
+   Objects[i].rtype.vclip_info.vclip_num = Powerup_info[Objects[i].id].vclip_num;
+   Objects[i].rtype.vclip_info.frametime = Vclip[Objects[i].rtype.vclip_info.vclip_num].frame_time;
+}
 
 void multi_set_robot_ai(void)
 {
@@ -3748,15 +3748,15 @@ void change_playernum_to( int new_Player_num )
 }
 
 int multi_all_players_alive()
- {
-  int i;
-  for (i=0;i<N_players;i++)
+{
+   int i;
+   for (i=0;i<N_players;i++)
    {
-    if (PKilledFlags[i] && Players[i].connected)
-      return (0);
+      if (PKilledFlags[i] && Players[i].connected)
+         return (0);
    }
-  return (1);
- }
+   return (1);
+}
 
 void multi_initiate_save_game()
 {
@@ -3769,10 +3769,10 @@ void multi_initiate_save_game()
       return;
     
    if (!multi_all_players_alive())
-    {
-     HUD_init_message ("Can't save...all players must be alive!");
-     return;
-    }
+   {
+      HUD_init_message ("Can't save...all players must be alive!");
+      return;
+   }
 
 //      multi_send_netplayer_stats_request(255);
 //      return;
@@ -3812,10 +3812,10 @@ void multi_initiate_restore_game()
       return;
 
    if (!multi_all_players_alive())
-    {
-     HUD_init_message ("Can't restore...all players must be alive!");
-     return;
-    }
+   {
+      HUD_init_message ("Can't restore...all players must be alive!");
+      return;
+   }
 
 // stop_time();
    slot = state_get_restore_file(filename,1);
@@ -3826,7 +3826,7 @@ void multi_initiate_restore_game()
    state_game_id=state_get_game_id (filename);
    if (!state_game_id)
       return;
-  
+
    slot--;
 // start_time();
    multi_send_restore_game(slot,state_game_id);
@@ -3876,10 +3876,10 @@ void multi_restore_game(ubyte slot, uint id)
    
    thisid=state_get_game_id (filename);
    if (thisid!=id)
-    {
+   {
       multi_bad_restore ();
       return;
-    }
+   }
   
    pnum=state_restore_all_sub( filename, 1, 0 );
 
@@ -3976,7 +3976,7 @@ void use_netplayer_stats( player * ps, netplayer_stats *pd )
 void multi_send_drop_weapon (int objnum,int seed)
  {
    object *objp;
-  int count=0;
+   int count=0;
    int ammo_count;
 
    objp = &Objects[objnum];
@@ -3988,27 +3988,27 @@ void multi_send_drop_weapon (int objnum,int seed)
 
    Assert(ammo_count < F1_0); //make sure fits in short
 
-  multibuf[count++]=(char)MULTI_DROP_WEAPON;
-  multibuf[count++]=(char)objp->id;
+   multibuf[count++]=(char)MULTI_DROP_WEAPON;
+   multibuf[count++]=(char)objp->id;
 
-  *(short *) (multibuf+count)=INTEL_SHORT(Player_num); count += 2;
-  *(short *) (multibuf+count)=INTEL_SHORT(objnum); count += 2;
-  *(short *) (multibuf+count)=INTEL_SHORT(ammo_count); count += 2;
-  *(int *) (multibuf+count)=INTEL_INT(seed);
+   *(short *) (multibuf+count)=INTEL_SHORT(Player_num); count += 2;
+   *(short *) (multibuf+count)=INTEL_SHORT(objnum); count += 2;
+   *(short *) (multibuf+count)=INTEL_SHORT(ammo_count); count += 2;
+   *(int *) (multibuf+count)=INTEL_INT(seed);
+      
+   map_objnum_local_to_local(objnum);
    
-  map_objnum_local_to_local(objnum);
-  
-  if (Game_mode & GM_NETWORK)
+   if (Game_mode & GM_NETWORK)
       PowerupsInMine[objp->id]++;
 
-  multi_send_data(multibuf, 12, 2);
- }
+   multi_send_data(multibuf, 12, 2);
+}
 
 void multi_do_drop_weapon (char *buf)
- {
-  int pnum,ammo,objnum,remote_objnum,seed;
+{
+   int pnum,ammo,objnum,remote_objnum,seed;
    object *objp;
-  int powerup_id;
+   int powerup_id;
 
    powerup_id=(int)(buf[1]);
    pnum = INTEL_SHORT(*(short *)(buf+2));
@@ -4028,26 +4028,26 @@ void multi_do_drop_weapon (char *buf)
    if (Game_mode & GM_NETWORK)
       PowerupsInMine[powerup_id]++;
 
-  mprintf ((0,"Dropped weapon %d!\n"));
-  
- }
+   mprintf ((0,"Dropped weapon %d!\n"));
+
+}
 
 void multi_send_guided_info (object *miss,char done)
 {
 #ifdef MACINTOSH
    shortpos sp;
 #endif
-  int count=0;
+   int count=0;
 
-  mprintf ((0,"Sending guided info!\n"));
+   mprintf ((0,"Sending guided info!\n"));
 
-  multibuf[count++]=(char)MULTI_GUIDED;
-  multibuf[count++]=(char)Player_num;
-  multibuf[count++]=done;
+   multibuf[count++]=(char)MULTI_GUIDED;
+   multibuf[count++]=(char)Player_num;
+   multibuf[count++]=done;
 
 #ifndef MACINTOSH
-  create_shortpos((shortpos *)(multibuf+count), miss,0);
-  count+=sizeof(shortpos);
+   create_shortpos((shortpos *)(multibuf+count), miss,0);
+   count+=sizeof(shortpos);
 #else
    create_shortpos(&sp, miss, 1);
    memcpy(&(multibuf[count]), (ubyte *)(sp.bytemat), 9);
@@ -4056,98 +4056,98 @@ void multi_send_guided_info (object *miss,char done)
    count += 14;
 #endif
 
-  multi_send_data(multibuf, count, 0);
- }
+   multi_send_data(multibuf, count, 0);
+}
 
 void multi_do_guided (char *buf)
- {
-  char pnum=buf[1];
-  int count=3;
-  static fun=200;
+{
+   char pnum=buf[1];
+   int count=3;
+   static fun=200;
 #ifdef MACINTOSH
    shortpos sp;
 #endif
 
-  if (Guided_missile[pnum]==NULL)
+   if (Guided_missile[pnum]==NULL)
    {
-    if (++fun>=50)
-     {
-      mprintf ((0,"Guided missile for %s is NULL!\n",Players[pnum].callsign));
+      if (++fun>=50)
+      {
+         mprintf ((0,"Guided missile for %s is NULL!\n",Players[pnum].callsign));
+         fun=0;
+      }
+      return;
+   }
+   else if (++fun>=50)
+   {
+      mprintf ((0,"Got guided info for %d (%s)\n",pnum,Players[pnum].callsign));
       fun=0;
-     }
-    return;
    }
-  else if (++fun>=50)
+
+   if (buf[2])
    {
-    mprintf ((0,"Got guided info for %d (%s)\n",pnum,Players[pnum].callsign));
-    fun=0;
-   }
-
-  if (buf[2])
-   {
-    release_guided_missile(pnum);
-    return;
+      release_guided_missile(pnum);
+      return;
    }
 
 
-  if (Guided_missile[pnum]-Objects<0 || Guided_missile[pnum]-Objects > Highest_object_index)
+   if (Guided_missile[pnum]-Objects<0 || Guided_missile[pnum]-Objects > Highest_object_index)
    {  
-    Int3();  // Get Jason immediately!
-    return;
+      Int3();  // Get Jason immediately!
+      return;
    }
 
 #ifndef MACINTOSH 
-  extract_shortpos(Guided_missile[pnum], (shortpos *)(buf+count),0); 
+   extract_shortpos(Guided_missile[pnum], (shortpos *)(buf+count),0); 
 #else
    memcpy((ubyte *)(sp.bytemat), (ubyte *)(buf + count), 9);
    memcpy((ubyte *)&(sp.xo), (ubyte *)(buf + count + 9), 14);
    extract_shortpos(Guided_missile[pnum], &sp, 1);
 #endif
 
-  count+=sizeof (shortpos);
+   count+=sizeof (shortpos);
 
-  update_object_seg(Guided_missile[pnum]);
- }
+   update_object_seg(Guided_missile[pnum]);
+}
 
 void multi_send_stolen_items ()
- {
-  int i,count=1;
-  multibuf[0]=MULTI_STOLEN_ITEMS;
-  
-  for (i=0;i<MAX_STOLEN_ITEMS;i++)
+{
+   int i,count=1;
+   multibuf[0]=MULTI_STOLEN_ITEMS;
+   
+   for (i=0;i<MAX_STOLEN_ITEMS;i++)
    {
-    multibuf[i+1]=Stolen_items[i];
-    mprintf ((0,"[%d]=%d ",i,Stolen_items[i]));
-    count++;      // So I like to break my stuff into smaller chunks, so what?
+      multibuf[i+1]=Stolen_items[i];
+      mprintf ((0,"[%d]=%d ",i,Stolen_items[i]));
+      count++;      // So I like to break my stuff into smaller chunks, so what?
    }
-  mprintf ((0,"\n"));
-  multi_send_data(multibuf, count, 1);
- }
+   mprintf ((0,"\n"));
+   multi_send_data(multibuf, count, 1);
+}
 
 void multi_do_stolen_items (char *buf)
- {
-  int i;
+{
+   int i;
 
-  mprintf ((0,"Recieved a stolen item packet...\n"));
+   mprintf ((0,"Recieved a stolen item packet...\n"));
 
-  for (i=0;i<MAX_STOLEN_ITEMS;i++)
-  {
-   Stolen_items[i]=buf[i+1];
-   mprintf ((0,"[%d]=%d ",i,Stolen_items[i]));
-  }
-  mprintf ((0,"\n"));
- }
+   for (i=0;i<MAX_STOLEN_ITEMS;i++)
+   {
+      Stolen_items[i]=buf[i+1];
+      mprintf ((0,"[%d]=%d ",i,Stolen_items[i]));
+   }
+   mprintf ((0,"\n"));
+}
 
 extern void network_send_important_packet (char *,int);
 
 void multi_send_wall_status (int wallnum,ubyte type,ubyte flags,ubyte state)
 {
-  int count=0;
-  multibuf[count]=MULTI_WALL_STATUS;        count++;
-  *(short *)(multibuf+count)=INTEL_SHORT(wallnum);   count+=2;
-  multibuf[count]=type;                 count++;
-  multibuf[count]=flags;                count++;
-  multibuf[count]=state;                count++;
+   int count=0;
+   multibuf[count]=MULTI_WALL_STATUS;                 count++;
+   *(short *)(multibuf+count)=INTEL_SHORT(wallnum);   count+=2;
+   multibuf[count]=type;                              count++;
+   multibuf[count]=flags;                             count++;
+   multibuf[count]=state;                             count++;
 
  /* if (Game_mode & GM_NETWORK)
    {
@@ -4156,210 +4156,210 @@ void multi_send_wall_status (int wallnum,ubyte type,ubyte flags,ubyte state)
    } 
   else*/
    {
-     multi_send_data(multibuf, count, 1); // twice, just to be sure
-     multi_send_data(multibuf, count, 1);
+      multi_send_data(multibuf, count, 1); // twice, just to be sure
+      multi_send_data(multibuf, count, 1);
    }
 }
 void multi_send_wall_status_specific (int pnum,int wallnum,ubyte type,ubyte flags,ubyte state)
 {
-  // Send wall states a specific rejoining player
- 
-  int count=0;
+   // Send wall states a specific rejoining player
+   
+   int count=0;
 
-  Assert (Game_mode & GM_NETWORK);
+   Assert (Game_mode & GM_NETWORK);
 //  Assert (pnum>-1 && pnum<N_players);
-  
-  multibuf[count]=MULTI_WALL_STATUS;        count++;
-  *(short *)(multibuf+count)=INTEL_SHORT(wallnum);   count+=2;
-  multibuf[count]=type;                 count++;
-  multibuf[count]=flags;                count++;
-  multibuf[count]=state;                count++;
+   
+   multibuf[count]=MULTI_WALL_STATUS;                 count++;
+   *(short *)(multibuf+count)=INTEL_SHORT(wallnum);   count+=2;
+   multibuf[count]=type;                              count++;
+   multibuf[count]=flags;                             count++;
+   multibuf[count]=state;                             count++;
 
-  network_send_naked_packet(multibuf, count,pnum); // twice, just to be sure
-  network_send_naked_packet(multibuf, count,pnum);
+   network_send_naked_packet(multibuf, count,pnum); // twice, just to be sure
+   network_send_naked_packet(multibuf, count,pnum);
 }
 
 void multi_do_wall_status (char *buf)
- {
-  short wallnum;
-  ubyte flag,type,state;
+{
+   short wallnum;
+   ubyte flag,type,state;
 
-  wallnum=INTEL_SHORT( *(short *)(buf+1) );
-  type=buf[3];
-  flag=buf[4];
-  state=buf[5];
+   wallnum=INTEL_SHORT( *(short *)(buf+1) );
+   type=buf[3];
+   flag=buf[4];
+   state=buf[5];
 
-  Assert (wallnum>=0);
-  Walls[wallnum].type=type;
-  Walls[wallnum].flags=flag;
+   Assert (wallnum>=0);
+   Walls[wallnum].type=type;
+   Walls[wallnum].flags=flag;
 //  Assert(state <= 4);
-  Walls[wallnum].state=state; 
-  
-  if (Walls[wallnum].type==WALL_OPEN)
+   Walls[wallnum].state=state; 
+   
+   if (Walls[wallnum].type==WALL_OPEN)
    {  
-     digi_kill_sound_linked_to_segment(Walls[wallnum].segnum,Walls[wallnum].sidenum,SOUND_FORCEFIELD_HUM);
+      digi_kill_sound_linked_to_segment(Walls[wallnum].segnum,Walls[wallnum].sidenum,SOUND_FORCEFIELD_HUM);
  //  digi_kill_sound_linked_to_segment(csegp-Segments,cside,SOUND_FORCEFIELD_HUM);
    }
 
    
 //  mprintf ((0,"Got a walls packet.\n"));
- }
+}
 
 void multi_send_jason_cheat (int num)
- {
-  num=num;
-  return;
- }
+{
+   num=num;
+   return;
+}
 
 void multi_send_kill_goal_counts()
- {
-  int i,count=1;
-  multibuf[0]=MULTI_KILLGOALS;
-  
-  for (i=0;i<MAX_PLAYERS;i++)
+{
+   int i,count=1;
+   multibuf[0]=MULTI_KILLGOALS;
+   
+   for (i=0;i<MAX_PLAYERS;i++)
    {
-    *(char *)(multibuf+count)=(char)Players[i].KillGoalCount;
-    count++;
+      *(char *)(multibuf+count)=(char)Players[i].KillGoalCount;
+      count++;
    }
 
-  mprintf ((0,"MULTI: Sending KillGoalCounts...\n"));
-  multi_send_data(multibuf, count, 1);
- }
+   mprintf ((0,"MULTI: Sending KillGoalCounts...\n"));
+   multi_send_data(multibuf, count, 1);
+}
 
 void multi_do_kill_goal_counts(char *buf)
- {
-  int i,count=1;
-  
-  for (i=0;i<MAX_PLAYERS;i++)
+{
+   int i,count=1;
+   
+   for (i=0;i<MAX_PLAYERS;i++)
    {
-    Players[i].KillGoalCount=*(char *)(buf+count);
-    mprintf ((0,"KGC: %s has %d kills!\n",Players[i].callsign,Players[i].KillGoalCount));
-    count++;
+      Players[i].KillGoalCount=*(char *)(buf+count);
+      mprintf ((0,"KGC: %s has %d kills!\n",Players[i].callsign,Players[i].KillGoalCount));
+      count++;
    }
 
- }
+}
 
 void multi_send_heartbeat ()
- {
-  if (!Netgame.PlayTimeAllowed)
-   return;
- 
-  multibuf[0]=MULTI_HEARTBEAT;
-  *(fix *)(multibuf+1)=(fix)INTEL_INT(ThisLevelTime);
-  multi_send_data(multibuf, 5, 0);
- }
+{
+   if (!Netgame.PlayTimeAllowed)
+      return;
+
+   multibuf[0]=MULTI_HEARTBEAT;
+   *(fix *)(multibuf+1)=(fix)INTEL_INT(ThisLevelTime);
+   multi_send_data(multibuf, 5, 0);
+}
 
 void multi_do_heartbeat (char *buf)
- {
-  fix num;
+{
+   fix num;
 
-  num=(fix)INTEL_INT(*(int *)(buf+1));
+   num=(fix)INTEL_INT(*(int *)(buf+1));
 
-  ThisLevelTime=num;
- }
+   ThisLevelTime=num;
+}
 
 void multi_check_for_killgoal_winner ()
- {
-  int i,best=0,bestnum=0;
-  object *objp;
- 
-  
-  if (Control_center_destroyed)  
-   return;
- 
-  for (i=0;i<N_players;i++)
+{
+   int i,best=0,bestnum=0;
+   object *objp;
+   
+   
+   if (Control_center_destroyed)  
+      return;
+   
+   for (i=0;i<N_players;i++)
    {
-    if (Players[i].KillGoalCount>best)
-     {
-      best=Players[i].KillGoalCount;
-      bestnum=i;
-     }
+      if (Players[i].KillGoalCount>best)
+      {
+         best=Players[i].KillGoalCount;
+         bestnum=i;
+      }
    }
 
-  if (bestnum==Player_num)
+   if (bestnum==Player_num)
    {
-    HUD_init_message("You have the best score at %d kills!",best);
+      HUD_init_message("You have the best score at %d kills!",best);
 //    Players[Player_num].shields=i2f(200);
    }
-  else
+   else
 
-   HUD_init_message ("%s has the best score with %d kills!",Players[bestnum].callsign,best);
+      HUD_init_message ("%s has the best score with %d kills!",Players[bestnum].callsign,best);
 
-  HUD_init_message ("The control center has been destroyed!");
- 
-  objp=obj_find_first_of_type (OBJ_CNTRLCEN);
-  net_destroy_controlcen (objp);
- }
-  
+   HUD_init_message ("The control center has been destroyed!");
+   
+   objp=obj_find_first_of_type (OBJ_CNTRLCEN);
+   net_destroy_controlcen (objp);
+}
+
 void multi_send_seismic (fix start,fix end)
- {
-  int count=1; 
-  
-  multibuf[0]=MULTI_SEISMIC;
-  *(fix *)(multibuf+count)=(fix)INTEL_INT(start); count+=(sizeof(fix));
-  *(fix *)(multibuf+count)=(fix)INTEL_INT(end); count+=(sizeof(fix));
-  
-  multi_send_data(multibuf, count, 1);
- }
+{
+   int count=1; 
+   
+   multibuf[0]=MULTI_SEISMIC;
+   *(fix *)(multibuf+count)=(fix)INTEL_INT(start); count+=(sizeof(fix));
+   *(fix *)(multibuf+count)=(fix)INTEL_INT(end); count+=(sizeof(fix));
+   
+   multi_send_data(multibuf, count, 1);
+}
 
 extern fix Seismic_disturbance_start_time;
 extern fix Seismic_disturbance_end_time;
      
 void multi_do_seismic (char *buf)
- {
-  Seismic_disturbance_start_time=(fix)INTEL_INT( *(int *)(buf+1) );
-  Seismic_disturbance_end_time=(fix)INTEL_INT( *(int *)(buf+5) );
-  digi_play_sample (SOUND_SEISMIC_DISTURBANCE_START, F1_0);
- }
+{
+   Seismic_disturbance_start_time=(fix)INTEL_INT( *(int *)(buf+1) );
+   Seismic_disturbance_end_time=(fix)INTEL_INT( *(int *)(buf+5) );
+   digi_play_sample (SOUND_SEISMIC_DISTURBANCE_START, F1_0);
+}
 
 void multi_send_light (int segnum,ubyte val)
- {
-  int count=1,i;
-  multibuf[0]=MULTI_LIGHT;
-  *(int *)(multibuf+count)=INTEL_INT(segnum); count+=(sizeof(int));
-  *(char *)(multibuf+count)=val; count++;
-  for (i=0;i<6;i++)
+{
+   int count=1,i;
+   multibuf[0]=MULTI_LIGHT;
+   *(int *)(multibuf+count)=INTEL_INT(segnum); count+=(sizeof(int));
+   *(char *)(multibuf+count)=val; count++;
+   for (i=0;i<6;i++)
    {
-    //mprintf ((0,"Sending %d!\n",Segments[segnum].sides[i].tmap_num2));
-    *(short *)(multibuf+count)=INTEL_SHORT(Segments[segnum].sides[i].tmap_num2); count+=2;
+      //mprintf ((0,"Sending %d!\n",Segments[segnum].sides[i].tmap_num2));
+      *(short *)(multibuf+count)=INTEL_SHORT(Segments[segnum].sides[i].tmap_num2); count+=2;
    }
    multi_send_data(multibuf, count, 1);
- }
+}
 void multi_send_light_specific (int pnum,int segnum,ubyte val)
- {
-  int count=1,i;
+{
+   int count=1,i;
 
-  Assert (Game_mode & GM_NETWORK);
+   Assert (Game_mode & GM_NETWORK);
 //  Assert (pnum>-1 && pnum<N_players);
  
-  multibuf[0]=MULTI_LIGHT;
-  *(int *)(multibuf+count)=INTEL_INT(segnum); count+=(sizeof(int));
-  *(char *)(multibuf+count)=val; count++;
+   multibuf[0]=MULTI_LIGHT;
+   *(int *)(multibuf+count)=INTEL_INT(segnum); count+=(sizeof(int));
+   *(char *)(multibuf+count)=val; count++;
 
-  for (i=0;i<6;i++)
+   for (i=0;i<6;i++)
    {
-    //mprintf ((0,"Sending %d!\n",Segments[segnum].sides[i].tmap_num2));
-    *(short *)(multibuf+count)=INTEL_SHORT(Segments[segnum].sides[i].tmap_num2); count+=2;
+      //mprintf ((0,"Sending %d!\n",Segments[segnum].sides[i].tmap_num2));
+      *(short *)(multibuf+count)=INTEL_SHORT(Segments[segnum].sides[i].tmap_num2); count+=2;
    }
    network_send_naked_packet(multibuf, count, pnum);
- }
+}
 
 void multi_do_light (char *buf)
- {
-  int i;
-  int seg=INTEL_INT(*(int *)(buf+1));
-  ubyte sides=*(char *)(buf+5);
+{
+   int i;
+   int seg=INTEL_INT(*(int *)(buf+1));
+   ubyte sides=*(char *)(buf+5);
 
-  for (i=0;i<6;i++)
+   for (i=0;i<6;i++)
    {
-    if ((sides & (1<<i)))
-     {
-      subtract_light (seg,i);
-      Segments[seg].sides[i].tmap_num2=INTEL_SHORT( *(short *)(buf+(6+(2*i))) );
-  //            mprintf ((0,"Got %d!\n",Segments[seg].sides[i].tmap_num2));
-     }     
+      if ((sides & (1<<i)))
+      {
+         subtract_light (seg,i);
+         Segments[seg].sides[i].tmap_num2=INTEL_SHORT( *(short *)(buf+(6+(2*i))) );
+//            mprintf ((0,"Got %d!\n",Segments[seg].sides[i].tmap_num2));
+      }     
    }
- }
+}
 
 //@@void multi_send_start_trigger(int triggernum)
 //@@{
@@ -4407,47 +4407,47 @@ void multi_do_flags (char *buf)
 }
 
 void multi_send_flags (char pnum)
- {
-  multibuf[0]=MULTI_FLAGS;
-  multibuf[1]=pnum;
-  *(uint *)(multibuf+2)=INTEL_INT(Players[pnum].flags);
-  
-  multi_send_data(multibuf, 6, 1);
- } 
+{
+   multibuf[0]=MULTI_FLAGS;
+   multibuf[1]=pnum;
+   *(uint *)(multibuf+2)=INTEL_INT(Players[pnum].flags);
+
+   multi_send_data(multibuf, 6, 1);
+} 
   
 void multi_send_drop_blobs (char pnum)
- {
-  multibuf[0]=MULTI_DROP_BLOB;
-  multibuf[1]=pnum;
+{
+   multibuf[0]=MULTI_DROP_BLOB;
+   multibuf[1]=pnum;
 
-  multi_send_data(multibuf, 2, 0);
- }
+   multi_send_data(multibuf, 2, 0);
+}
 
 void multi_do_drop_blob (char *buf)
- {
+{
    char pnum=buf[1];
    drop_afterburner_blobs (&Objects[Players[pnum].objnum], 2, i2f(5)/2, -1);
- }
+}
 
 void multi_send_powerup_update ()
- {
-  int i;    
+{
+   int i;    
 
-   
-  multibuf[0]=MULTI_POWERUP_UPDATE;
-  for (i=0;i<MAX_POWERUP_TYPES;i++) 
-   multibuf[i+1]=MaxPowerupsAllowed[i];
+      
+   multibuf[0]=MULTI_POWERUP_UPDATE;
+   for (i=0;i<MAX_POWERUP_TYPES;i++) 
+      multibuf[i+1]=MaxPowerupsAllowed[i];
 
-  multi_send_data(multibuf, MAX_POWERUP_TYPES+1, 1);
- }
+   multi_send_data(multibuf, MAX_POWERUP_TYPES+1, 1);
+}
 void multi_do_powerup_update (char *buf)
- {
-  int i;
+{
+   int i;
 
-  for (i=0;i<MAX_POWERUP_TYPES;i++)
-   if (buf[i+1]>MaxPowerupsAllowed[i])
-      MaxPowerupsAllowed[i]=buf[i+1];
- }
+   for (i=0;i<MAX_POWERUP_TYPES;i++)
+      if (buf[i+1]>MaxPowerupsAllowed[i])
+         MaxPowerupsAllowed[i]=buf[i+1];
+}
 
 extern active_door ActiveDoors[];
 extern int Num_open_doors;                // Number of open doors
@@ -4534,24 +4534,24 @@ void multi_do_sound_function (char *buf)
 
 void multi_send_capture_bonus (char pnum)
 {
-  Assert (Game_mode & GM_CAPTURE);
-  
-  multibuf[0]=MULTI_CAPTURE_BONUS;
-  multibuf[1]=pnum;
+   Assert (Game_mode & GM_CAPTURE);
+   
+   multibuf[0]=MULTI_CAPTURE_BONUS;
+   multibuf[1]=pnum;
 
-  multi_send_data (multibuf,2,1); 
-  multi_do_capture_bonus (multibuf);
+   multi_send_data (multibuf,2,1); 
+   multi_do_capture_bonus (multibuf);
 }
 void multi_send_orb_bonus (char pnum)
 {
-  Assert (Game_mode & GM_HOARD);
-  
-  multibuf[0]=MULTI_ORB_BONUS;
-  multibuf[1]=pnum;
-  multibuf[2]=Players[Player_num].secondary_ammo[PROXIMITY_INDEX];
+   Assert (Game_mode & GM_HOARD);
+   
+   multibuf[0]=MULTI_ORB_BONUS;
+   multibuf[1]=pnum;
+   multibuf[2]=Players[Player_num].secondary_ammo[PROXIMITY_INDEX];
 
-  multi_send_data (multibuf,3,1); 
-  multi_do_orb_bonus (multibuf);
+   multi_send_data (multibuf,3,1); 
+   multi_do_orb_bonus (multibuf);
 }
 void multi_do_capture_bonus(char *buf)
 {
@@ -4581,23 +4581,23 @@ void multi_do_capture_bonus(char *buf)
    Players[pnum].net_kills_total += 5;
    Players[pnum].KillGoalCount+=5;
 
-  if (Netgame.KillGoal>0)
+   if (Netgame.KillGoal>0)
    {
-    TheGoal=Netgame.KillGoal*5;
+      TheGoal=Netgame.KillGoal*5;
 
-    if (Players[pnum].KillGoalCount>=TheGoal)
-     {
-      if (pnum==Player_num)
-       {
-        HUD_init_message("You reached the kill goal!");
-        Players[Player_num].shields=i2f(200);
-       }  
-      else
-       HUD_init_message ("%s has reached the kill goal!",Players[pnum].callsign);
+      if (Players[pnum].KillGoalCount>=TheGoal)
+      {
+         if (pnum==Player_num)
+         {
+            HUD_init_message("You reached the kill goal!");
+            Players[Player_num].shields=i2f(200);
+         }  
+         else
+            HUD_init_message ("%s has reached the kill goal!",Players[pnum].callsign);
 
-      HUD_init_message ("The control center has been destroyed!");
-      net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
-     }
+         HUD_init_message ("The control center has been destroyed!");
+         net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
+      }
    }
 
    multi_sort_kill_list();
@@ -4605,12 +4605,12 @@ void multi_do_capture_bonus(char *buf)
 }
 
 int GetOrbBonus (char num)
- {
-  int bonus;
+{
+   int bonus;
 
-  bonus=num*(num+1)/2;
-  return (bonus);
- }
+   bonus=num*(num+1)/2;
+   return (bonus);
+}
 
 void multi_do_orb_bonus(char *buf)
 {
@@ -4631,24 +4631,24 @@ void multi_do_orb_bonus(char *buf)
    if (pnum==Player_num)
       digi_start_sound_queued (SOUND_HUD_YOU_GOT_GOAL,F1_0*2);
    else if (Game_mode & GM_TEAM)
-    {
-     if (get_team(pnum)==TEAM_RED)
-      digi_play_sample (SOUND_HUD_RED_GOT_GOAL,F1_0*2);
-     else
-      digi_play_sample (SOUND_HUD_BLUE_GOT_GOAL,F1_0*2);
-    }
+   {
+      if (get_team(pnum)==TEAM_RED)
+         digi_play_sample (SOUND_HUD_RED_GOT_GOAL,F1_0*2);
+      else
+         digi_play_sample (SOUND_HUD_BLUE_GOT_GOAL,F1_0*2);
+   }
    else
       digi_play_sample (SOUND_OPPONENT_HAS_SCORED,F1_0*2);
 
    if (bonus>PhallicLimit)
    {
-     if (pnum==Player_num)
-      HUD_init_message ("You have the record with %d points!",bonus);
-     else
-      HUD_init_message ("%s has the record with %d points!",Players[pnum].callsign,bonus);
-     digi_play_sample (SOUND_BUDDY_MET_GOAL,F1_0*2);
-     PhallicMan=pnum;
-     PhallicLimit=bonus;
+      if (pnum==Player_num)
+         HUD_init_message ("You have the record with %d points!",bonus);
+      else
+         HUD_init_message ("%s has the record with %d points!",Players[pnum].callsign,bonus);
+      digi_play_sample (SOUND_BUDDY_MET_GOAL,F1_0*2);
+      PhallicMan=pnum;
+      PhallicLimit=bonus;
    }
 
    Players[pnum].flags &= ~(PLAYER_FLAGS_FLAG);  // Clear orb flag
@@ -4661,23 +4661,23 @@ void multi_do_orb_bonus(char *buf)
    Players[pnum].net_kills_total%=1000;
    Players[pnum].KillGoalCount%=1000;
 
-  if (Netgame.KillGoal>0)
+   if (Netgame.KillGoal>0)
    {
-    TheGoal=Netgame.KillGoal*5;
+      TheGoal=Netgame.KillGoal*5;
 
-    if (Players[pnum].KillGoalCount>=TheGoal)
-     {
-      if (pnum==Player_num)
-       {
-        HUD_init_message("You reached the kill goal!");
-        Players[Player_num].shields=i2f(200);
-       }  
-      else
-       HUD_init_message ("%s has reached the kill goal!",Players[pnum].callsign);
+      if (Players[pnum].KillGoalCount>=TheGoal)
+      {
+         if (pnum==Player_num)
+         {
+            HUD_init_message("You reached the kill goal!");
+            Players[Player_num].shields=i2f(200);
+         }  
+         else
+            HUD_init_message ("%s has reached the kill goal!",Players[pnum].callsign);
 
-      HUD_init_message ("The control center has been destroyed!");
-      net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
-     }
+         HUD_init_message ("The control center has been destroyed!");
+         net_destroy_controlcen (obj_find_first_of_type (OBJ_CNTRLCEN));
+      }
    }
    multi_sort_kill_list();
    multi_show_player_list();
@@ -4685,13 +4685,13 @@ void multi_do_orb_bonus(char *buf)
 
 void multi_send_got_flag (char pnum)
 {
-  multibuf[0]=MULTI_GOT_FLAG;
-  multibuf[1]=pnum;
-  
-  digi_start_sound_queued (SOUND_HUD_YOU_GOT_FLAG,F1_0*2);
+   multibuf[0]=MULTI_GOT_FLAG;
+   multibuf[1]=pnum;
+   
+   digi_start_sound_queued (SOUND_HUD_YOU_GOT_FLAG,F1_0*2);
 
-  multi_send_data (multibuf,2,1);
-  multi_send_flags (Player_num);
+   multi_send_data (multibuf,2,1);
+   multi_send_flags (Player_num);
 }
 
 int SoundHacked=0;
@@ -4699,13 +4699,13 @@ digi_sound ReversedSound;
 
 void multi_send_got_orb (char pnum)
 {
-  multibuf[0]=MULTI_GOT_ORB;
-  multibuf[1]=pnum;
-  
-  digi_play_sample (SOUND_YOU_GOT_ORB,F1_0*2);
+   multibuf[0]=MULTI_GOT_ORB;
+   multibuf[1]=pnum;
+   
+   digi_play_sample (SOUND_YOU_GOT_ORB,F1_0*2);
 
-  multi_send_data (multibuf,2,1);
-  multi_send_flags (Player_num);
+   multi_send_data (multibuf,2,1);
+   multi_send_flags (Player_num);
 }
 
 void multi_do_got_flag (char *buf)
@@ -4728,14 +4728,14 @@ void multi_do_got_orb (char *buf)
    Assert (Game_mode & GM_HOARD);
 
    if (Game_mode & GM_TEAM)
-    {  
-     if (get_team(pnum)==get_team(Player_num))
-      digi_play_sample (SOUND_FRIEND_GOT_ORB,F1_0*2);
-     else 
-      digi_play_sample (SOUND_OPPONENT_GOT_ORB,F1_0*2);
-    }
+   {  
+      if (get_team(pnum)==get_team(Player_num))
+         digi_play_sample (SOUND_FRIEND_GOT_ORB,F1_0*2);
+      else 
+         digi_play_sample (SOUND_OPPONENT_GOT_ORB,F1_0*2);
+   }
    else 
-    digi_play_sample (SOUND_OPPONENT_GOT_ORB,F1_0*2);
+      digi_play_sample (SOUND_OPPONENT_GOT_ORB,F1_0*2);
 
    Players[pnum].flags|=PLAYER_FLAGS_FLAG;
    HUD_init_message ("%s picked up an orb!",Players[pnum].callsign);
@@ -4747,7 +4747,7 @@ void DropOrb ()
    int objnum,seed;
 
    if (!(Game_mode & GM_HOARD))
-    Int3(); // How did we get here? Get Leighton!
+      Int3(); // How did we get here? Get Leighton!
 
    if (!Players[Player_num].secondary_ammo[PROXIMITY_INDEX])
    {
@@ -4772,7 +4772,7 @@ void DropOrb ()
 
    // If empty, tell everyone to stop drawing the box around me
    if (Players[Player_num].secondary_ammo[PROXIMITY_INDEX]==0)
-    multi_send_flags (Player_num);
+      multi_send_flags (Player_num);
 }
 
 void DropFlag ()
@@ -4800,9 +4800,9 @@ void DropFlag ()
    seed = rand();
 
    if (get_team (Player_num)==TEAM_RED)
-    objnum = spit_powerup(ConsoleObject,POW_FLAG_BLUE,seed);
+      objnum = spit_powerup(ConsoleObject,POW_FLAG_BLUE,seed);
    else
-    objnum = spit_powerup(ConsoleObject,POW_FLAG_RED,seed);
+      objnum = spit_powerup(ConsoleObject,POW_FLAG_RED,seed);
     
    if (objnum<0)
       return;
@@ -4835,7 +4835,7 @@ void multi_send_drop_flag (int objnum,int seed)
       if (Game_mode & GM_NETWORK)
          PowerupsInMine[objp->id]++;
 
-  multi_send_data(multibuf, 12, 2);
+   multi_send_data(multibuf, 12, 2);
 }
 
 void multi_do_drop_flag (char *buf)
@@ -4892,288 +4892,288 @@ extern byte robot_fire_buf[MAX_ROBOTS_CONTROLLED][18+3];
 extern void network_send_naked_packet (char *,short,int);
 
 void multi_send_robot_controls (char pnum)
- {
-  int count=2;
-  
-  mprintf ((0,"Sending ROBOT_CONTROLS!!!\n"));
- 
-  multibuf[0]=MULTI_ROBOT_CONTROLS;
-  multibuf[1]=pnum;
-  memcpy (&(multibuf[count]),&robot_controlled,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_agitation,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_controlled_time,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_last_send_time,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_last_message_time,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_send_pending,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&(multibuf[count]),&robot_fired,MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
+{
+   int count=2;
+   
+   mprintf ((0,"Sending ROBOT_CONTROLS!!!\n"));
+   
+   multibuf[0]=MULTI_ROBOT_CONTROLS;
+   multibuf[1]=pnum;
+   memcpy (&(multibuf[count]),&robot_controlled,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_agitation,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_controlled_time,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_last_send_time,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_last_message_time,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_send_pending,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&(multibuf[count]),&robot_fired,MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
 
-  network_send_naked_packet (multibuf,142,pnum);
- }
+   network_send_naked_packet (multibuf,142,pnum);
+}
 void multi_do_robot_controls(char *buf)
- {
-  int count=2;
+{
+   int count=2;
 
-  mprintf ((0,"Recieved ROBOT_CONTROLS!!!\n"));
- 
-  if (buf[1]!=Player_num)
+   mprintf ((0,"Recieved ROBOT_CONTROLS!!!\n"));
+   
+   if (buf[1]!=Player_num)
    {
-    Int3(); // Get Jason!  Recieved a coop_sync that wasn't ours!
-    return;
+      Int3(); // Get Jason!  Recieved a coop_sync that wasn't ours!
+      return;
    }
 
-  memcpy (&robot_controlled,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_agitation,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_controlled_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_last_send_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_last_message_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_send_pending,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
-  memcpy (&robot_fired,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
-  count+=(MAX_ROBOTS_CONTROLLED*4);
- }
+   memcpy (&robot_controlled,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_agitation,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_controlled_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_last_send_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_last_message_time,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_send_pending,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+   memcpy (&robot_fired,&(buf[count]),MAX_ROBOTS_CONTROLLED*4);
+   count+=(MAX_ROBOTS_CONTROLLED*4);
+}
 
 #define POWERUPADJUSTS 5
 int PowerupAdjustMapping[]={11,19,39,41,44};
 
 int multi_powerup_is_4pack (int id)
- {
-  int i;
- 
-  for (i=0;i<POWERUPADJUSTS;i++)
-   if (id==PowerupAdjustMapping[i])
-    return (1);
-  return (0);
- } 
+{
+   int i;
+   
+   for (i=0;i<POWERUPADJUSTS;i++)
+      if (id==PowerupAdjustMapping[i])
+         return (1);
+   return (0);
+}
 
 int multi_powerup_is_allowed(int id)
- {
+{
    if (id == POW_INVULNERABILITY && !Netgame.DoInvulnerability)
-    return (0);
+      return (0);
    if (id == POW_CLOAK && !Netgame.DoCloak) 
-    return (0);
+      return (0);
    if (id == POW_AFTERBURNER && !Netgame.DoAfterburner)
-    return (0);
+      return (0);
    if (id == POW_FUSION_WEAPON &&  !Netgame.DoFusions)
-    return (0);
+      return (0);
    if (id == POW_PHOENIX_WEAPON && !Netgame.DoPhoenix)
-    return (0);
+      return (0);
    if (id == POW_HELIX_WEAPON && !Netgame.DoHelix)
-    return (0);
+      return (0);
    if (id == POW_MEGA_WEAPON && !Netgame.DoMegas)
-    return (0);
+      return (0);
    if (id == POW_SMARTBOMB_WEAPON && !Netgame.DoSmarts)
-    return (0);
+      return (0);
    if (id == POW_GAUSS_WEAPON && !Netgame.DoGauss)
-    return (0);
+      return (0);
    if (id == POW_VULCAN_WEAPON && !Netgame.DoVulcan)
-    return (0);
+      return (0);
    if (id == POW_PLASMA_WEAPON && !Netgame.DoPlasma)
-    return (0);
+      return (0);
    if (id == POW_OMEGA_WEAPON && !Netgame.DoOmega)
-    return (0);
+      return (0);
    if (id == POW_SUPER_LASER && !Netgame.DoSuperLaser)
-    return (0);
+      return (0);
    if (id == POW_PROXIMITY_WEAPON && !Netgame.DoProximity)
-    return (0);
+      return (0);
    if (id==POW_VULCAN_AMMO && (!Netgame.DoVulcan && !Netgame.DoGauss))
-    return (0);
+      return (0);
    if (id == POW_SPREADFIRE_WEAPON && !Netgame.DoSpread)
-    return (0);
+      return (0);
    if (id == POW_SMART_MINE && !Netgame.DoSmartMine)
-    return (0);
+      return (0);
    if (id == POW_SMISSILE1_1 &&  !Netgame.DoFlash)
-    return (0);
+      return (0);
    if (id == POW_SMISSILE1_4 &&  !Netgame.DoFlash)
-    return (0);
+      return (0);
    if (id == POW_GUIDED_MISSILE_1 &&  !Netgame.DoGuided)
-    return (0);
+      return (0);
    if (id == POW_GUIDED_MISSILE_4 &&  !Netgame.DoGuided)
-    return (0);
+      return (0);
    if (id == POW_EARTHSHAKER_MISSILE &&  !Netgame.DoEarthShaker)
-    return (0);
+      return (0);
    if (id == POW_MERCURY_MISSILE_1 &&  !Netgame.DoMercury)
-    return (0);
+      return (0);
    if (id == POW_MERCURY_MISSILE_4 &&  !Netgame.DoMercury)
-    return (0);
+      return (0);
    if (id == POW_CONVERTER &&  !Netgame.DoConverter)
-    return (0);
+      return (0);
    if (id == POW_AMMO_RACK &&  !Netgame.DoAmmoRack)
-    return (0);
+      return (0);
    if (id == POW_HEADLIGHT &&  !Netgame.DoHeadlight)
-    return (0);
+      return (0);
    if (id == POW_LASER &&  !Netgame.DoLaserUpgrade)
-    return (0);
+      return (0);
    if (id == POW_HOMING_AMMO_1 &&  !Netgame.DoHoming)
-    return (0);
+      return (0);
    if (id == POW_HOMING_AMMO_4 &&  !Netgame.DoHoming)
-    return (0);
+      return (0);
    if (id == POW_QUAD_FIRE &&  !Netgame.DoQuadLasers)
-    return (0);
+      return (0);
    if (id == POW_FLAG_BLUE && !(Game_mode & GM_CAPTURE))
-    return (0);
+      return (0);
    if (id == POW_FLAG_RED && !(Game_mode & GM_CAPTURE))
-    return (0);
+      return (0);
 
-  return (1);
- }
+   return (1);
+}
 
 void multi_send_finish_game ()
- {
-  multibuf[0]=MULTI_FINISH_GAME;
-  multibuf[1]=Player_num;
+{
+   multibuf[0]=MULTI_FINISH_GAME;
+   multibuf[1]=Player_num;
 
-  multi_send_data (multibuf,2,1);
- }
+   multi_send_data (multibuf,2,1);
+}
 
 
 extern void do_final_boss_hacks();
 void multi_do_finish_game (char *buf)
- {
-  if (buf[0]!=MULTI_FINISH_GAME)
-   return;
- 
-  if (Current_level_num!=Last_level)
-   return;
+{
+   if (buf[0]!=MULTI_FINISH_GAME)
+      return;
+   
+   if (Current_level_num!=Last_level)
+      return;
 
-  do_final_boss_hacks();
- }
+   do_final_boss_hacks();
+}
 
 void multi_send_trigger_specific (char pnum,char trig)
- {
+{
    multibuf[0] = MULTI_START_TRIGGER;
    multibuf[1] = trig;
    
    network_send_naked_packet(multibuf, 2, pnum);
- }
+}
 void multi_do_start_trigger (char *buf)
- {  
-  Triggers[buf[1]].flags |=TF_DISABLED;
- }
+{  
+   Triggers[buf[1]].flags |=TF_DISABLED;
+}
 
 extern int GetMyNetRanking();
 extern char *RankStrings[];
 
 void multi_add_lifetime_kills ()
- {  
-  // This function adds a kill to lifetime stats of this player, and possibly
-  // gives a promotion.  If so, it will tell everyone else
+{  
+   // This function adds a kill to lifetime stats of this player, and possibly
+   // gives a promotion.  If so, it will tell everyone else
+      
+   int oldrank;
+
+   if (!Game_mode & GM_NETWORK)
+      return;
    
-  int oldrank;
+   oldrank=GetMyNetRanking();
+   
+   Netlife_kills++;
 
-  if (!Game_mode & GM_NETWORK)
-   return;
- 
-  oldrank=GetMyNetRanking();
-  
-  Netlife_kills++;
-
-  if (oldrank!=GetMyNetRanking())
+   if (oldrank!=GetMyNetRanking())
    {
-    multi_send_ranking();
-    if (!FindArg("-norankings"))
-     {
-       HUD_init_message ("You have been promoted to %s!",RankStrings[GetMyNetRanking()]);
-       digi_play_sample (SOUND_BUDDY_MET_GOAL,F1_0*2);
-       NetPlayers.players[Player_num].rank=GetMyNetRanking();
-     }
+      multi_send_ranking();
+      if (!FindArg("-norankings"))
+      {
+         HUD_init_message ("You have been promoted to %s!",RankStrings[GetMyNetRanking()]);
+         digi_play_sample (SOUND_BUDDY_MET_GOAL,F1_0*2);
+         NetPlayers.players[Player_num].rank=GetMyNetRanking();
+      }
    }
-  write_player_file();  
- } 
+   write_player_file();  
+} 
 
 void multi_add_lifetime_killed ()
- {  
-  // This function adds a "killed" to lifetime stats of this player, and possibly
-  // gives a demotion.  If so, it will tell everyone else
+{  
+   // This function adds a "killed" to lifetime stats of this player, and possibly
+   // gives a demotion.  If so, it will tell everyone else
 
-  int oldrank;
+   int oldrank;
 
-  if (!Game_mode & GM_NETWORK)
-   return;
- 
-  oldrank=GetMyNetRanking();
-  
-  Netlife_killed++;
+   if (!Game_mode & GM_NETWORK)
+      return;
+   
+   oldrank=GetMyNetRanking();
+   
+   Netlife_killed++;
 
-  if (oldrank!=GetMyNetRanking())
+   if (oldrank!=GetMyNetRanking())
    {
-     multi_send_ranking();
-     NetPlayers.players[Player_num].rank=GetMyNetRanking();
-     
-     if (!FindArg("-norankings"))   
-        HUD_init_message ("You have been demoted to %s!",RankStrings[GetMyNetRanking()]);
-  
-   }  
-  write_player_file();  
+      multi_send_ranking();
+      NetPlayers.players[Player_num].rank=GetMyNetRanking();
+      
+      if (!FindArg("-norankings"))   
+         HUD_init_message ("You have been demoted to %s!",RankStrings[GetMyNetRanking()]);
 
- } 
+   }  
+   write_player_file();  
+
+}
    
 void multi_send_ranking ()
- {
-  multibuf[0]=(char)MULTI_RANK;
-  multibuf[1]=(char)Player_num;
-  multibuf[2]=(char)GetMyNetRanking();
-  
-  multi_send_data (multibuf,3,1);
- }
+{
+   multibuf[0]=(char)MULTI_RANK;
+   multibuf[1]=(char)Player_num;
+   multibuf[2]=(char)GetMyNetRanking();
+
+   multi_send_data (multibuf,3,1);
+}
 
 void multi_do_ranking (char *buf)
- {
-  char rankstr[20];
-  char pnum=buf[1];
-  char rank=buf[2];
+{
+   char rankstr[20];
+   char pnum=buf[1];
+   char rank=buf[2];
 
-  if (NetPlayers.players[pnum].rank<rank)
-    strcpy (rankstr,"promoted");
-  else if (NetPlayers.players[pnum].rank>rank)
-    strcpy (rankstr,"demoted");
-  else
-    return;
+   if (NetPlayers.players[pnum].rank<rank)
+      strcpy (rankstr,"promoted");
+   else if (NetPlayers.players[pnum].rank>rank)
+      strcpy (rankstr,"demoted");
+   else
+      return;
 
-  NetPlayers.players[pnum].rank=rank;
+   NetPlayers.players[pnum].rank=rank;
 
-  if (!FindArg("-norankings"))
-     HUD_init_message ("%s has been %s to %s!",Players[pnum].callsign,rankstr,RankStrings[rank]);
- }
+   if (!FindArg("-norankings"))
+      HUD_init_message ("%s has been %s to %s!",Players[pnum].callsign,rankstr,RankStrings[rank]);
+}
 void multi_send_modem_ping ()
 {
-  multibuf[0]=MULTI_MODEM_PING;
-  multi_send_data (multibuf,1,1);
+   multibuf[0]=MULTI_MODEM_PING;
+   multi_send_data (multibuf,1,1);
 }
 void multi_send_modem_ping_return ()
- {
-  multibuf[0]=MULTI_MODEM_PING_RETURN;
-  multi_send_data (multibuf,1,1);
- }
+{
+   multibuf[0]=MULTI_MODEM_PING_RETURN;
+   multi_send_data (multibuf,1,1);
+}
 
 void  multi_do_modem_ping_return ()
- {
-  if (PingLaunchTime==0)
+{
+   if (PingLaunchTime==0)
    {
-    mprintf ((0,"Got invalid PING RETURN from opponent!\n"));
-    return;
+      mprintf ((0,"Got invalid PING RETURN from opponent!\n"));
+      return;
    }
   
-  PingReturnTime=timer_get_fixed_seconds();
+   PingReturnTime=timer_get_fixed_seconds();
 
-  HUD_init_message ("Ping time for opponent is %d ms!",f2i(fixmul(PingReturnTime-PingLaunchTime,i2f(1000))));
-  PingLaunchTime=0;
- }
+   HUD_init_message ("Ping time for opponent is %d ms!",f2i(fixmul(PingReturnTime-PingLaunchTime,i2f(1000))));
+   PingLaunchTime=0;
+}
 
 
 void multi_quick_sound_hack (int num) 
- {
+{
    int length,i;
    num = digi_xlat_sound(num);
    length=GameSounds[num].length;
@@ -5181,24 +5181,24 @@ void multi_quick_sound_hack (int num)
    ReversedSound.length=length;
       
    for (i=0;i<length;i++)
-    ReversedSound.data[i]=GameSounds[num].data[length-i-1];
+      ReversedSound.data[i]=GameSounds[num].data[length-i-1];
 
    SoundHacked=1;
- }
+}
 
 void multi_send_play_by_play (int num,int spnum,int dpnum)
- {
-  if (!(Game_mode & GM_HOARD))
+{
+   if (!(Game_mode & GM_HOARD))
+      return;
+
    return;
- 
-  return;
-  multibuf[0]=MULTI_PLAY_BY_PLAY;
-  multibuf[1]=(char)num; 
-  multibuf[2]=(char)spnum;
-  multibuf[3]=(char)dpnum;
-  multi_send_data (multibuf,4,1);
-  multi_do_play_by_play (multibuf);
- }
+   multibuf[0]=MULTI_PLAY_BY_PLAY;
+   multibuf[1]=(char)num; 
+   multibuf[2]=(char)spnum;
+   multibuf[3]=(char)dpnum;
+   multi_send_data (multibuf,4,1);
+   multi_do_play_by_play (multibuf);
+}
 void multi_do_play_by_play (char *buf)
 {
    int whichplay=buf[1];
@@ -5213,14 +5213,14 @@ void multi_do_play_by_play (char *buf)
 
    switch (whichplay)
    {
-      case 0: // Smacked!
-       HUD_init_message ("Ouch! %s has been smacked by %s!",Players[dpnum].callsign,Players[spnum].callsign);
-       break;
-      case 1: // Spanked!
-       HUD_init_message ("Haha! %s has been spanked by %s!",Players[dpnum].callsign,Players[spnum].callsign);
-       break;
-      default:
-         Int3(); 
+   case 0: // Smacked!
+      HUD_init_message ("Ouch! %s has been smacked by %s!",Players[dpnum].callsign,Players[spnum].callsign);
+      break;
+   case 1: // Spanked!
+      HUD_init_message ("Haha! %s has been spanked by %s!",Players[dpnum].callsign,Players[spnum].callsign);
+      break;
+   default:
+      Int3(); 
    }
 }
   
