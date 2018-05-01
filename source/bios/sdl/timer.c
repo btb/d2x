@@ -65,7 +65,6 @@ fix timer_get_approx_seconds(void)
 
 void timer_delay(fix seconds)
 {
-   Int3();
    Uint32 numticks = f2i(fixmul(seconds, i2f(1000)));
 
    SDL_Delay(numticks);
@@ -73,6 +72,5 @@ void timer_delay(fix seconds)
 
 void delay(unsigned int milliseconds)
 {
-   Int3();
    SDL_Delay(milliseconds);
 }

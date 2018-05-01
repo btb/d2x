@@ -164,8 +164,18 @@ int joy_get_button_state(int btn)
 
 int joy_get_button_down_cnt(int btn)
 {
-   Int3();
-   return 0;
+   int count;
+
+   if ((!joy_installed) || (!joy_present))
+      return 0;
+
+   if (btn >= MAX_BUTTONS)
+      return 0;
+
+   count = joystick.buttons[btn].downcount;
+   joystick.buttons[btn].downcount = 0;
+
+   return count;
 }
 
 fix joy_get_button_down_time(int btn)

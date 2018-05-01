@@ -59,9 +59,12 @@ void mouse_close()
 
 void mouse_get_delta(int *dx, int *dy)
 {
+   if (!Mouse_installed) {
+      *dx = *dy = 0;
+      return;
+   }
+
    Int3();
-   *dx = 0;
-   *dy = 0;
 }
 
 int mouse_get_btns(void)
@@ -98,8 +101,10 @@ void mouse_flush(void)
 // Returns how many times this button has went down since last call.
 int mouse_button_down_count(int button)
 {
-   Int3();
    int count;
+
+   if (!Mouse_installed)
+      return 0;
 
    count = Mouse.num_downs[button];
    Mouse.num_downs[button] = 0;
