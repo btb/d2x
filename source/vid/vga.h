@@ -86,4 +86,10 @@ short vga_check_mode(short mode);
 //the current mode the adapter is in, one of the SM_ values above
 extern int VGA_current_mode;
 
+#if defined(__DOS__) || defined(WINDOWS)
+#define vid_update() ((void)0)
+#else
+extern void vid_update(void);
+#endif
+
 #endif

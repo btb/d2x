@@ -102,3 +102,14 @@ short vga_check_mode(short mode)
          return 11;
    }
 }
+
+void vid_update(void)
+{
+   SDL_BlitSurface(screen, NULL, windowSurface, NULL);
+   SDL_UpdateTexture(texture, NULL,
+                     windowSurface->pixels, windowSurface->pitch);
+   SDL_RenderClear(renderer);
+   SDL_RenderCopy(renderer, texture, NULL, NULL);
+   SDL_RenderPresent(renderer);
+   SDL_PumpEvents();
+}

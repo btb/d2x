@@ -29,6 +29,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
+#include "vga.h"
+
 #include "game.h"
 #include "gamepal.h"
 #include "timer.h"
@@ -440,6 +442,8 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
             DDGRRESTORE;
          }
       #endif
+
+         vid_update();
 
          //see if redbook song needs to be restarted
          songs_check_redbook_repeat();

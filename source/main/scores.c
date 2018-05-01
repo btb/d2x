@@ -31,6 +31,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "mono.h"
 #include "key.h"
 #include "palette.h"
+#include "vga.h"
+
 #include "game.h"
 #include "gamefont.h"
 #include "mem.h"
@@ -455,6 +457,8 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
          DDGRRESTORE;
       }
    #endif
+
+      vid_update();
 
       k = key_inkey();
       switch( k ) {
