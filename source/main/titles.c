@@ -657,7 +657,7 @@ int show_briefing_message(int screen_num, char *message)
    static int tab_stop=0;
    int   flashing_cursor=0;
    int   new_page=0,GotZ=0;
-   char *spinRobotName="rba.mve",kludge;  // matt don't change this!
+   char spinRobotName[] = "rba.mve", kludge; // matt don't change this!
    char fname[15];
    char DumbAdjust=0;
    char chattering=0;
