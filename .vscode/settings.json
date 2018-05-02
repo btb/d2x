@@ -1,0 +1,8 @@
+{
+    "editor.detectIndentation": false,
+    "editor.tabSize": 3,
+    "editor.insertSpaces": true,
+    "editor.wordWrapColumn": 80,
+    "editor.wordWrap": "wordWrapColumn",
+    "C_Cpp.dimInactiveRegions": false,
+}
