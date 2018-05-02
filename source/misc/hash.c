@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -21,7 +21,7 @@ static char rcsid[] = "$Id: hash.c 2.2 1995/08/17 11:32:54 matt Exp $";
 
 #include "error.h"
 #include "hash.h"
-   
+
 int hashtable_init( hashtable *ht, int size )   {
    int i;
 
@@ -83,7 +83,7 @@ int hashtable_search( hashtable *ht, char *key )   {
 
    k = hashtable_getkey( key );
    i = 0;
-   
+
    while(i < ht->size ) {
       j = (k+(i++)) & ht->and_mask;
       if ( ht->key[j] == NULL )

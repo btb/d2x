@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -24,7 +24,7 @@ char cdmix32_rcsid[] = "$Id: cdmix32.c 1.8 1996/04/29 15:38:22 samir Exp $";
 #include "mono.h"
 #include "error.h"
 
-typedef struct 
+typedef struct
  {
   int id;
   char *name;
@@ -39,7 +39,7 @@ DigiDevices SBCards[NUM_OF_CARDS]={
   {_SOUND_BLASTER_8_MONO      , "Sound Blaster" },
   {_SOUND_BLASTER_8_ST        , "Sound Blaster Pro" },
   {_SB16_8_ST                 , "Sound Blaster 16/AWE32" },
-  {_AWE32_8_ST                ,  "Sound Blaster AWE32"} 
+  {_AWE32_8_ST                ,  "Sound Blaster AWE32"}
  };
 #endif
 
@@ -56,7 +56,7 @@ int CD_blast_mixer ()
 
 #ifndef WINDOWS
   InFile = fopen("descent.cfg", "rt");
-  if (InFile == NULL) 
+  if (InFile == NULL)
     return (NULL);
 
   while (!feof(InFile)) {
@@ -88,15 +88,15 @@ int CD_blast_mixer ()
    {
     if (SBCards[i].id==digiboard)
       {
-       mprintf ((0,"Sound board=%s\n",SBCards[i].name)); 
+       mprintf ((0,"Sound board=%s\n",SBCards[i].name));
        digiboard=i;
        nosbcard=0;
        break;
       }
    }
-     
+
   fclose (InFile);
- 
+
   if (nosbcard)
    {
     mprintf ((0,"No Soundblaster type card was found!"));
@@ -123,10 +123,10 @@ int CD_blast_mixer ()
 void SetRedSB16 (short aport,short dport,char vol)
  {
   char val;
-  
+
   if (vol>15)
    vol=15;
-    
+
   outp (aport,0x36);
   val=inp (dport);
 
@@ -147,12 +147,12 @@ void SetRedSB16 (short aport,short dport,char vol)
 void SetRedSB (short aport,short dport,char vol)
  {
   char val;
-  
+
   if (vol>15)
    vol=15;
 
   vol=11;
- 
+
   outp (aport,0x08);
   val=inp (dport);
   if ((val & 7)==0)
@@ -164,12 +164,12 @@ void SetRedSB (short aport,short dport,char vol)
 void SetRedSBPro (short aport,short dport,char vol)
  {
   char val;
-  
+
   if (vol>15)
    vol=15;
 
   vol=11;
- 
+
   outp (aport,0x28);
   val=inp (dport);
   if ((val & 7)==0)
@@ -183,8 +183,8 @@ void SetRedSBPro (short aport,short dport,char vol)
 
 
 
-  
 
-  
-  
-  
+
+
+
+

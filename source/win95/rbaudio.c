@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -94,7 +94,7 @@ void RBAInit(void)
    atexit(RBClose);
 
    num_devs = auxGetNumDevs();
-   
+
 // Find CD-AUDIO device if there is one.
    for (i = 0; i < num_devs; i++)
    {
@@ -106,7 +106,7 @@ void RBAInit(void)
          break;
       }
    }
-               
+
    if (AUXDevice == -1) {
       mprintf((1, "Unable to find CD-AUDIO device. No Redbook music.\n"));
       RedBookEnabled = 0;
@@ -150,8 +150,8 @@ void RBARegisterCD(void)
    MCI_STATUS_PARMS  mciStatusParms;
 
 // Insure that CD is Redbook, then get track information
-   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS; 
-   retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM, 
+   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS;
+   retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM,
                   (DWORD)(LPVOID)&mciStatusParms);
    if (retval) {
       mciGetErrorString(retval, MCIErrorMsg, 256);
@@ -159,32 +159,32 @@ void RBARegisterCD(void)
       CDNumTracks = 0;
       return;
    }
-   
+
    CDNumTracks = numtracks = mciStatusParms.dwReturn;
 
    for (i = 0; i < numtracks; i++)
    {
       mciStatusParms.dwTrack = i+1;
       mciStatusParms.dwItem = MCI_STATUS_POSITION;
-      retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_TRACK, (DWORD)(LPVOID)&mciStatusParms);  
+      retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_TRACK, (DWORD)(LPVOID)&mciStatusParms);
       if (retval) {
          mprintf((0, "Could not retrieve information on track %d.\n", i+1));
       }
       CDTrackInfo[i].msf = mciStatusParms.dwReturn;
-      
+
       mciStatusParms.dwTrack = i+1;
       mciStatusParms.dwItem = MCI_STATUS_LENGTH;
       retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_TRACK, (DWORD)(LPVOID)&mciStatusParms);
-      if (retval) { 
+      if (retval) {
          mprintf((0, "Couldn't get length of track %d.\n", i+1));
       }
       CDTrackInfo[i].length = mciStatusParms.dwReturn;
 
 //    logentry("[%d] (%d:%d):(%d:%d)\n", i+1, MCI_MSF_MINUTE(CDTrackInfo[i].msf), MCI_MSF_SECOND(CDTrackInfo[i].msf), MCI_MSF_MINUTE(CDTrackInfo[i].length), MCI_MSF_SECOND(CDTrackInfo[i].length));
-   }  
+   }
 
    CDDiscID = GetCDDiscID();
-} 
+}
 
 
 long RBAGetDeviceStatus()
@@ -210,7 +210,7 @@ int get_track_time(int first,int last)
 int RBAPlayTrack(int track)
 {
    MCI_PLAY_PARMS mciPlayParms;
-   int min=0; 
+   int min=0;
    int retval;
 
 // Register CD if media has changed
@@ -269,7 +269,7 @@ int RBAPlayTracks(int start, int end)
       mciGetErrorString(retval, MCIErrorMsg, 256);
       mprintf((1,"RBA MCI:%s.\n", MCIErrorMsg));
       mprintf((0, "Unable to play CD tracks %d-%d.\n", start,end));
-      return 0;      
+      return 0;
    }
    else {
       Playback_Length = i2f(get_track_time(start,end));
@@ -290,13 +290,13 @@ void RBAStop()
    int retval;
 
    if (!RedBookEnabled) return;
-   
+
    retval = mciSendCommand(CDDeviceID, MCI_STOP,0,NULL);
    if (retval) {
       mciGetErrorString(retval, MCIErrorMsg, 256);
       mprintf((1,"RBA MCI:%s.\n", MCIErrorMsg));
       mprintf((0, "CD Stop command failed.\n"));
-   } 
+   }
 }
 
 
@@ -329,10 +329,10 @@ void RBAPause()
 
   if (!RedBookEnabled) return;
 
-   rba_paused_head_loc = RBAGetHeadLoc(&min, &sec, &frame); 
+   rba_paused_head_loc = RBAGetHeadLoc(&min, &sec, &frame);
 
    mciGenParms.dwCallback = GetLibraryWindow();
-   retval = mciSendCommand(CDDeviceID, MCI_PAUSE, MCI_NOTIFY, 
+   retval = mciSendCommand(CDDeviceID, MCI_PAUSE, MCI_NOTIFY,
       (DWORD)(LPVOID)&mciGenParms);
    if (retval) {
       mprintf((1,"ERROR: Unable to pause CD.\n"));
@@ -351,36 +351,36 @@ int RBAResume()
    MCI_PLAY_PARMS mciPlayParms;
 
    if (!RedBookEnabled) return 0;
-   
+
    if (RBACheckMediaChange()) {
       RBARegisterCD();
       return RBA_MEDIA_CHANGED;
    }
 
    mciPlayParms.dwFrom = rba_paused_head_loc; // MCI_MAKE_TMSF(track, 0, 0, 0);
-   mciPlayParms.dwTo = msf_add(CDTrackInfo[Playback_last_track-1].msf, 
+   mciPlayParms.dwTo = msf_add(CDTrackInfo[Playback_last_track-1].msf,
                            CDTrackInfo[Playback_last_track-1].length);
    retval = mciSendCommand(CDDeviceID, MCI_PLAY, MCI_FROM | MCI_TO, (DWORD)(LPVOID)&mciPlayParms);
 
    if (retval) {
       mprintf((1, "ERROR: Resume CD play failed.\n"));
    }
-   else 
+   else
       Playback_Start_Time += timer_get_fixed_seconds() - Playback_Pause_Time;
 
    return 1;
 }
 
 
-void RBASetChannelVolume(int channel, int volume) 
+void RBASetChannelVolume(int channel, int volume)
 {
    DWORD vol;
-   
+
    volume = volume << 8;
-   
-   if (channel == 0) 
+
+   if (channel == 0)
       vol = MAKELONG(0,volume);
-   else if (channel == 1) 
+   else if (channel == 1)
       vol = MAKELONG(volume,0);
 
    auxSetVolume(AUXDevice, vol);
@@ -411,7 +411,7 @@ long RBAGetHeadLoc(int *min, int *sec, int *frame)
 
    mciStatusParms.dwItem = MCI_STATUS_POSITION;
    retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM, (DWORD)(LPVOID)&mciStatusParms);
-   
+
    if (retval) {
       mprintf((0, "Couldn't get location of CD head.\n"));
    }
@@ -421,7 +421,7 @@ long RBAGetHeadLoc(int *min, int *sec, int *frame)
    *frame = MCI_MSF_FRAME(mciStatusParms.dwReturn);
 
    return mciStatusParms.dwReturn;
-}     
+}
 
 
 int RBAGetTrackNum()
@@ -457,7 +457,7 @@ int RBAPeekPlayStatus()
 
 
    if ((timer_get_fixed_seconds()-Playback_Start_Time) > Playback_Length) return 0;
-   else return 1; 
+   else return 1;
 
 
 //@@  mciStatusParms.dwItem = MCI_STATUS_MODE;
@@ -465,11 +465,11 @@ int RBAPeekPlayStatus()
 //@@  if (retval) {
 //@@     mprintf((0, "Unable to obtain current status of CD.\n"));
 //@@  }
-//@@  
+//@@
 //@@  if (mciStatusParms.dwReturn == MCI_MODE_PLAY) return 1;
 //@@  else return 0;
 }
-   
+
 
 
 int RBAEnabled()
@@ -496,15 +496,15 @@ void RBADisable()
 int RBAGetNumberOfTracks(void)
 {
    MCI_STATUS_PARMS  mciStatusParms;
-   int retval; 
+   int retval;
 
    if (!RedBookEnabled) return 0;
 
-   if (RBACheckMediaChange())  
+   if (RBACheckMediaChange())
       RBARegisterCD();
-      
-   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS; 
-   retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM, 
+
+   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS;
+   retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM,
                   (DWORD)(LPVOID)&mciStatusParms);
 
    if (retval) {
@@ -576,11 +576,11 @@ unsigned long msf_add(unsigned long msf1, unsigned long msf2)
    else sec2 = sec1 + MCI_MSF_SECOND(msf2);
    min2 = min1+MCI_MSF_MINUTE(msf2);
    frame2 = 0;
-   
+
 // logentry("msf_add:(%d:%d)\n", min2, sec2);
 
    return MCI_MAKE_MSF(min2, sec2, 0);
-} 
+}
 
 
 unsigned long msf_sub(unsigned long msf1, unsigned long msf2)
@@ -605,9 +605,9 @@ unsigned long msf_sub(unsigned long msf1, unsigned long msf2)
    frame2 = 0;
 
 // logentry("msf_sub:(%d:%d)\n", min2, sec2);
-   
+
    return MCI_MAKE_MSF(min2, sec2, 0);
-} 
+}
 
 
 unsigned long msf_to_sec(unsigned long msf)
@@ -618,18 +618,18 @@ unsigned long msf_to_sec(unsigned long msf)
    sec   = (msf >>  8) & 0xFF;
    frame = (msf >>  0) & 0xFF;
 
-   return (min*60) + sec;  
+   return (min*60) + sec;
 }
 
 
 UINT GetCDDiscID()
 {
    MCI_STATUS_PARMS  mciStatusParms;
-   int retval; 
+   int retval;
    unsigned long msflen, tracks, msftrack1;
 
-   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS; 
-   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM, 
+   mciStatusParms.dwItem = MCI_STATUS_NUMBER_OF_TRACKS;
+   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM,
                   (DWORD)(LPVOID)&mciStatusParms)) {
       mprintf((1, "RBA: Get number of CD tracks failed.\n"));
       return 0;
@@ -637,7 +637,7 @@ UINT GetCDDiscID()
    tracks = mciStatusParms.dwReturn;
 
    mciStatusParms.dwItem = MCI_STATUS_LENGTH;
-   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM, 
+   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM,
                   (DWORD)(LPVOID)&mciStatusParms)) {
       mprintf((1, "RBA: Get media length failed.\n"));
       return 0;
@@ -646,7 +646,7 @@ UINT GetCDDiscID()
 
    mciStatusParms.dwTrack = 1;
    mciStatusParms.dwItem = MCI_STATUS_POSITION;
-   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_TRACK, (DWORD)(LPVOID)&mciStatusParms)) {  
+   if (retval = mciSendCommand(CDDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_TRACK, (DWORD)(LPVOID)&mciStatusParms)) {
       mprintf((1, "Could not retrieve information on track %d.\n", 1));
       return 0;
    }
@@ -659,7 +659,7 @@ UINT GetCDDiscID()
 UINT MakeCDDiscID(int tracks, unsigned long msflen, unsigned long msftrack1)
 {
    UINT code=0;
-   
+
    code = (UINT)(msf_to_sec(msftrack1) << 19);
    code |= (UINT)(msf_to_sec(msflen) << 6);
 
@@ -667,6 +667,6 @@ UINT MakeCDDiscID(int tracks, unsigned long msflen, unsigned long msftrack1)
 
    return code;
 }
-   
+
 
 

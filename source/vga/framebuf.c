@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -79,7 +79,7 @@ void VesaMain()
    else
    {
       char *MyPtr;
-      MyPtr=(char *)VesaGetPtr();   
+      MyPtr=(char *)VesaGetPtr();
         memset( (MyPtr+((rand()%0x10000)<<4)+rand()%0x10000),rand()%256, 1 );
    }
 
@@ -252,8 +252,8 @@ int VesaInit( int mode )
 
 
   if (!FindArg ("-ForceVesa"))
-   return(0);     
-   
+   return(0);
+
   /*
   ** Get VESA mode information
   */
@@ -275,7 +275,7 @@ int VesaInit( int mode )
   if ( ( vesa_lfb_ptr = ( void * ) DpmiMapPhysicalToLinear( infoblock.PhysBasePtr, 0x400000 - 1 ) ) == 0 )
   {
       mprintf ((0,"mode %x mapping not supported!\n",mode));
-      
+
      return 0;
   }
 
@@ -290,7 +290,7 @@ int VesaInit( int mode )
   {
      VesaEnd();
       mprintf ((0,"mode %x  not set!\n",mode));
-     
+
      return 0;
   }
    mprintf ((0,"No errors! mode %x is go!\n",mode));

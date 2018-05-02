@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -39,7 +39,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define PLAYER_FLAGS_RED_KEY        4        // Player has red key
 #define PLAYER_FLAGS_GOLD_KEY       8        // Player has gold key
 #define PLAYER_FLAGS_FLAG           16       // Player has his team's flag
-#define PLAYER_FLAGS_UNUSED         32       // 
+#define PLAYER_FLAGS_UNUSED         32       //
 #define PLAYER_FLAGS_MAP_ALL        64       // Player can see unvisited areas on map
 #define PLAYER_FLAGS_AMMO_RACK      128      // Player has ammo rack
 #define PLAYER_FLAGS_CONVERTER      256      // Player has energy->shield converter
@@ -79,7 +79,7 @@ typedef struct player {
    // Game data
    uint     flags;                     // Powerup flags, see below...
    fix      energy;                    // Amount of energy remaining.
-   fix      shields;                   // shields remaining (protection) 
+   fix      shields;                   // shields remaining (protection)
    ubyte    lives;                     // Lives remaining, 0 = game over.
    byte     level;                     // Current level player is playing. (must be signed for secret levels)
    ubyte    laser_level;               // Current level of the laser.
@@ -117,7 +117,7 @@ typedef struct player {
    fix      homing_object_dist;        // Distance of nearest homing object.
    byte     hours_level;               // Hours played (since time_total can only go up to 9 hours)
    byte     hours_total;               // Hours played (since time_total can only go up to 9 hours)
-} player;                     
+} player;
 
 #define N_PLAYER_GUNS 8
 
@@ -153,7 +153,7 @@ typedef struct player16 {
    // Game data
    uint     flags;                     // Powerup flags, see below...
    fix      energy;                    // Amount of energy remaining.
-   fix      shields;                   // shields remaining (protection) 
+   fix      shields;                   // shields remaining (protection)
    ubyte    lives;                     // Lives remaining, 0 = game over.
    byte     level;                     // Current level player is playing. (must be signed for secret levels)
    ubyte    laser_level;               // Current level of the laser.

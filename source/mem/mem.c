@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -47,13 +47,13 @@ static char rcsid[] = "$Id: mem.c 1.29 1996/05/30 10:31:57 champaign Exp $";
       #define MEMSTATS  1
    #endif
 
-   
+
    #if MEMSTATS
       static   int      sMemStatsFileInitialized   = false;
       static   FILE*    sMemStatsFile           = NULL;
       static   char     sMemStatsFileName[32]      = "memstats.txt";
    #endif   // end of if MEMSTATS
-   
+
 #else // no memstats on pc
    #define MEMSTATS 0
 #endif
@@ -96,7 +96,7 @@ void mem_display_blocks();
 void mem_init()
 {
    int i;
-   
+
    Initialized = 1;
 
    for (i=0; i<MAX_INDEX; i++ )
@@ -118,7 +118,7 @@ void mem_init()
    LargestIndex = 0;
 
    atexit(mem_display_blocks);
-   
+
 #ifdef MACINTOSH
 
 // need to check for virtual memory since we will need to do some
@@ -128,7 +128,7 @@ void mem_init()
       int         mem_type;
       THz            theD2PartionPtr = nil;
       unsigned long  thePartitionSize = 0;
-      
+
       MaxApplZone();
       MoreMasters();       // allocate 240 more master pointers (mainly for snd handles)
       MoreMasters();
@@ -138,14 +138,14 @@ void mem_init()
       if(Gestalt(gestaltVMAttr, &mem_type) == noErr)
          if (mem_type & 0x1)
             virtual_memory_on = 1;
-            
+
       #if MEMSTATS
          sMemStatsFile = fopen(sMemStatsFileName, "wt");
-   
+
          if (sMemStatsFile != NULL)
          {
             sMemStatsFileInitialized = true;
-   
+
             theD2PartionPtr = ApplicationZone();
             thePartitionSize =  ((unsigned long) theD2PartionPtr->bkLim) - ((unsigned long) theD2PartionPtr);
             fprintf(sMemStatsFile, "\nMemory Stats File Initialized.");
@@ -179,11 +179,11 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 #if MEMSTATS
    {
       unsigned long  theFreeMem = 0;
-   
+
       if (sMemStatsFileInitialized)
       {
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before attempting: MALLOC %9u bytes.",
                theFreeMem,
@@ -193,7 +193,7 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 #endif   // end of ifdef memstats
 
    if ( num_blocks >= MAX_INDEX )   {
-      fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );      
+      fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );
       fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", var, filename, line );
       Error( "MEM_OUT_OF_SLOTS" );
    }
@@ -204,7 +204,7 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 
    if (id==-1)
    {
-      fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );      
+      fprintf( stderr,"\nMEM_OUT_OF_SLOTS: Not enough space in mem.c to hold all the mallocs.\n" );
       fprintf( stderr, "\tBlock '%s' created in %s, line %d.\n", Varname[id], Filename[id], LineNum[id] );
       Error( "MEM_OUT_OF_SLOTS" );
    }
@@ -294,7 +294,7 @@ int mem_check_integrity( int block_number )
    }
 
    ErrorCount = 0;
-         
+
    for (i=0; i<CHECKSIZE; i++ )
       if (CheckData[i] != CHECKBYTE ) {
          ErrorCount++;
@@ -322,11 +322,11 @@ void mem_free( void * buffer )
 #if MEMSTATS
    {
       unsigned long  theFreeMem = 0;
-   
+
       if (sMemStatsFileInitialized)
       {
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before attempting: FREE", theFreeMem);
       }
@@ -350,9 +350,9 @@ void mem_free( void * buffer )
       Int3();
       return;
    }
-   
+
    mem_check_integrity( id );
-   
+
    BytesMalloced -= MallocSize[id];
 
 #ifndef MACINTOSH
@@ -360,8 +360,8 @@ void mem_free( void * buffer )
 #else
    DisposePtr( (Ptr)buffer );
 #endif
-   
-   
+
+
    Present[id] = 0;
    MallocBase[id] = 0;
    MallocSize[id] = 0;
@@ -374,15 +374,15 @@ void mem_display_blocks()
    int i, numleft;
 
    if (Initialized==0) return;
-   
+
 #if MEMSTATS
-   {  
+   {
       if (sMemStatsFileInitialized)
       {
          unsigned long  theFreeMem = 0;
 
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before closing MEMSTATS file.", theFreeMem);
          fprintf(sMemStatsFile, "\nMemory Stats File Closed.");
@@ -422,7 +422,7 @@ void mem_display_blocks()
 void mem_validate_heap()
 {
    int i;
-   
+
    for (i=0; i<LargestIndex; i++  )
       if (Present[i]==1 )
          mem_check_integrity( i );
@@ -434,14 +434,14 @@ void mem_print_all()
    int i, size = 0;
 
    ef = fopen( "DESCENT.MEM", "wt" );
-   
+
    for (i=0; i<LargestIndex; i++  )
       if (Present[i]==1 )  {
          size += MallocSize[i];
          //fprintf( ef, "Var:%s\t File:%s\t Line:%d\t Size:%d Base:%x\n", Varname[i], Filename[i], Line[i], MallocSize[i], MallocBase[i] );
          fprintf( ef, "%12d bytes in %s declared in %s, line %d\n", MallocSize[i], Varname[i], Filename[i], LineNum[i]  );
       }
-   fprintf( ef, "%d bytes (%d Kbytes) allocated.\n", size, size/1024 ); 
+   fprintf( ef, "%d bytes (%d Kbytes) allocated.\n", size, size/1024 );
    fclose(ef);
 }
 
@@ -472,12 +472,12 @@ void mem_init()
 
    // need to check for virtual memory since we will need to do some
    // tricks based on whether it is on or not
-   
+
    {
       int         mem_type;
       THz            theD2PartionPtr = nil;
       unsigned long  thePartitionSize = 0;
-      
+
       MaxApplZone();
       MoreMasters();    // allocate 240 more master pointers (mainly for snd handles)
       MoreMasters();
@@ -487,7 +487,7 @@ void mem_init()
       if(Gestalt(gestaltVMAttr, &mem_type) == noErr)
          if (mem_type & 0x1)
             virtual_memory_on = 1;
-            
+
       #if MEMSTATS
          sMemStatsFile = fopen(sMemStatsFileName, "wt");
 
@@ -503,7 +503,7 @@ void mem_init()
          }
       #endif   // end of ifdef memstats
    }
-   
+
 #endif   // end of ifdef macintosh
 
 }
@@ -520,11 +520,11 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
 #if MEMSTATS
    {
       unsigned long  theFreeMem = 0;
-   
+
       if (sMemStatsFileInitialized)
       {
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before attempting: MALLOC %9u bytes.",
                theFreeMem,
@@ -579,11 +579,11 @@ void mem_free( void * buffer )
 #if MEMSTATS
    {
       unsigned long  theFreeMem = 0;
-   
+
       if (sMemStatsFileInitialized)
       {
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before attempting: FREE", theFreeMem);
       }
@@ -611,13 +611,13 @@ void mem_display_blocks()
    if (Initialized==0) return;
 
 #if MEMSTATS
-   {  
+   {
       if (sMemStatsFileInitialized)
       {
          unsigned long  theFreeMem = 0;
 
          theFreeMem = FreeMem();
-      
+
          fprintf(sMemStatsFile,
                "\n%9u bytes free before closing MEMSTATS file.", theFreeMem);
          fprintf(sMemStatsFile, "\nMemory Stats File Closed.");
@@ -661,10 +661,10 @@ void PurgeTempMem()
    Handle tempHandle;
    THz appZone, processZone;
    Size heapSize;
-   
+
    // compact the system zone to try and squeeze some temporary memory out of it
    MaxMemSys(&heapSize);
-   
+
    // compact the Process Manager zone to get more temporary memory
    appZone = ApplicationZone();
    tempHandle = TempNewHandle(10, &err);     // temporary allocation may fail

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -92,13 +92,13 @@ BOOL DDInit(int mode)
 #ifndef NDEBUG
    if (FindArg("-logfile")) LogFile = fopen("dd.log", "wt");
    else LogFile = NULL;
-#endif   
+#endif
 
 // Create Direct Draw Object (Use Emulation if Hardware is off)
    if (!_lpDD) {
       {
          ddresult = DirectDrawCreate(NULL, &lpdd, NULL);
-      
+
          if (ddresult == DDERR_NODIRECTDRAWHW) {
             if (FindArg("-ddemul")) {
                ddresult = DirectDrawCreate( (LPVOID) DDCREATE_EMULATIONONLY, &lpdd, NULL );
@@ -112,7 +112,7 @@ BOOL DDInit(int mode)
                return FALSE;
             }
          }
-         else if (ddresult != DD_OK) 
+         else if (ddresult != DD_OK)
             return FALSE;
       }
       WRITELOG((LogFile, "System initiated.\n"));
@@ -135,15 +135,15 @@ BOOL DDInit(int mode)
    #endif
 
       if (!FindArg("-disallowreboot")) flags |= DDSCL_ALLOWREBOOT;
- 
-      ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd, flags); 
 
-      if (!CheckDDResult(ddresult, "DDInit::SetCooperativeLevel")) { 
+      ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd, flags);
+
+      if (!CheckDDResult(ddresult, "DDInit::SetCooperativeLevel")) {
          IDirectDraw_Release(lpdd);
          return FALSE;
       }
 
-      _DDFullScreen = TRUE;         
+      _DDFullScreen = TRUE;
    }
    else if (mode == DDGR_WINDOW) {
       ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd,
@@ -193,12 +193,12 @@ void DDEmulateTest(void)
       ddsd.dwSize = sizeof(ddsd);
       ddsd.dwFlags = DDSD_CAPS;
       ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
-                     
+
       ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &lpdds, NULL);
       if (ddresult != DD_OK) {
          DD_Emulation = 1;
          return;
-      }     
+      }
 
    // Performing lock test!
       ZeroMemory(&ddsd, sizeof(ddsd));
@@ -215,14 +215,14 @@ void DDEmulateTest(void)
          IDirectDrawSurface_Release(lpdds);
          DD_Emulation = 0;
       }
-      
+
    // Cleanup
 //    IDirectDrawSurface_Unlock(lpdds, ddsd.lpSurface);
 //    IDirectDrawSurface_Release(lpdds);
    }
 }
 
-   
+
 BOOL DDEnumerateModes(void)
 {
    HRESULT ddresult;
@@ -237,7 +237,7 @@ BOOL DDEnumerateModes(void)
 
 // If we're full screen, enumerate modes.
    if (_DDFullScreen) {
-      ddresult = IDirectDraw_EnumDisplayModes(_lpDD, 0, NULL, 0, 
+      ddresult = IDirectDraw_EnumDisplayModes(_lpDD, 0, NULL, 0,
                            EnumDispModesCB);
       if(!CheckDDResult(ddresult, "DDInit::EnumDisplayModes")) {
          IDirectDraw_Release(_lpDD);
@@ -252,14 +252,14 @@ BOOL DDEnumerateModes(void)
       _DDModeList[SM95_640x480x8].emul = 1;
       _DDModeList[SM95_640x480x8].dbuf = 0;
       _DDModeList[SM95_640x480x8].modex = 0;
-      _DDModeList[SM95_640x480x8].paged = 0; 
+      _DDModeList[SM95_640x480x8].paged = 0;
    }
-    
+
    return TRUE;
-}           
+}
 
 
-BOOL DDInitClipper(void) 
+BOOL DDInitClipper(void)
 {
    return FALSE;
 }
@@ -299,21 +299,21 @@ void DDSetDisplayMode(int display_mode, int flags)
    if (_DDFullScreen) {
    // Change literal display mode of screen
       DDKillScreen();
-      WRITELOG((LogFile, "Setting display mode to (%dx%dx%d).\n", GRMODEINFO(w), GRMODEINFO(h), GRMODEINFO(bpp)));      
+      WRITELOG((LogFile, "Setting display mode to (%dx%dx%d).\n", GRMODEINFO(w), GRMODEINFO(h), GRMODEINFO(bpp)));
 
-      ddresult = IDirectDraw_SetDisplayMode(_lpDD, 
-                     _DDModeList[W95DisplayMode].w, 
+      ddresult = IDirectDraw_SetDisplayMode(_lpDD,
+                     _DDModeList[W95DisplayMode].w,
                      _DDModeList[W95DisplayMode].h,
                      _DDModeList[W95DisplayMode].bpp);
 
       if (!CheckDDResult(ddresult, "DDInit::SetDisplayMode")) {
-         Error("Unable to set display mode: %d [%dx%dx%d].( Err: %x ) \n", W95DisplayMode, _DDModeList[W95DisplayMode].w, 
+         Error("Unable to set display mode: %d [%dx%dx%d].( Err: %x ) \n", W95DisplayMode, _DDModeList[W95DisplayMode].w,
                      _DDModeList[W95DisplayMode].h,
                      _DDModeList[W95DisplayMode].bpp,
                      ddresult);
       }
       if (!DDCreateScreen()) exit(1);
-      Sleep(1000);         
+      Sleep(1000);
    }
    else {
       Error("Windowed display modes not currently supported.");
@@ -332,7 +332,7 @@ void DDResizeViewport()
    p1.x = rect.left;
    p1.y = rect.top;
    p2.x = rect.right;
-   p2.y = rect.bottom; 
+   p2.y = rect.bottom;
    ClientToScreen(GetLibraryWindow(), &p1);
    ClientToScreen(GetLibraryWindow(), &p2);
 
@@ -371,7 +371,7 @@ BOOL DDCreateScreen(void)
    WRITELOG((LogFile, "HAL: %8x\tHEL: %8x\n", ddcaps.dwCaps, ddcaps2.dwCaps));
    WRITELOG((LogFile, "PAL: %8x\tDDS: %8x\n", ddcaps.dwPalCaps, ddcaps.ddsCaps.dwCaps));
 
-// This makes the game plenty faster (3 fps extra on Highres)  
+// This makes the game plenty faster (3 fps extra on Highres)
    ddDriverCaps.offscreen.sysmem = 1;
 
    if (ddcaps.dwCaps & DDCAPS_COLORKEYHWASSIST) {
@@ -393,26 +393,26 @@ BOOL DDCreateScreen(void)
    ddsd.ddpfPixelFormat.dwSize = sizeof(DDPIXELFORMAT);
    _lpDDSBack = NULL;
 
-   if (GRMODEINFO(paged)) 
+   if (GRMODEINFO(paged))
    {
    // Create a flipping surface if we can
 
       ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
       ddsd.dwBackBufferCount = 1;
       ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
-                     
+
 //    ddsd.ddpfPixelFormat.dwFlags = DDPF_PALETTEINDEXED8 | DDPF_RGB;
       ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &_lpDDSPrimary, NULL);
       if (!CheckDDResult(ddresult, "DDCreateScreen::CreateSurface -paged"))
          return FALSE;
-   
+
       ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
       ddresult = IDirectDrawSurface_GetAttachedSurface(_lpDDSPrimary,
                                        &ddscaps, &_lpDDSBack);
       if (!CheckDDResult(ddresult, "DDCreateScreen::GetAttachedSurface"))
          return FALSE;
    }
-   else 
+   else
    {
    // Normal primary surface (non-emulated)
       ddsd.dwFlags = DDSD_CAPS;
@@ -422,12 +422,12 @@ BOOL DDCreateScreen(void)
       if (!CheckDDResult(ddresult, "DDCreateScreen::CreateSurface"))
          return FALSE;
    }
-   
-   if (GRMODEINFO(emul)) 
+
+   if (GRMODEINFO(emul))
    {
-   // Create emulated 2nd page for window modes that don't let us render to the 
+   // Create emulated 2nd page for window modes that don't let us render to the
    // screen directly.
-      _lpDDSBack = DDCreateSurface(_DDModeList[W95DisplayMode].rw, 
+      _lpDDSBack = DDCreateSurface(_DDModeList[W95DisplayMode].rw,
                               _DDModeList[W95DisplayMode].rh, 1);
       if (!_lpDDSBack) {
          mprintf((0,"Call to create DDSBackBuffer failed."));
@@ -435,20 +435,20 @@ BOOL DDCreateScreen(void)
       }
    }
 
-   if (GRMODEINFO(bpp) == 8) 
+   if (GRMODEINFO(bpp) == 8)
    {
-   // for 8-bit palettized modes, assert that we use the RGB pixel format. 
+   // for 8-bit palettized modes, assert that we use the RGB pixel format.
    // Also create a base palette for this 8-bit mode.
       ubyte pal[768];
       memset(pal, 0, 768);
-      
+
       memset(&ddsd, 0, sizeof(ddsd));
       ddsd.dwSize = sizeof(ddsd);
       IDirectDrawSurface_GetSurfaceDesc(_lpDDSPrimary, &ddsd);
 
-      WRITELOG((LogFile, "Surface pixel format: %x, %d\n", ddsd.ddpfPixelFormat.dwFlags, ddsd.ddpfPixelFormat.dwRGBBitCount)); 
+      WRITELOG((LogFile, "Surface pixel format: %x, %d\n", ddsd.ddpfPixelFormat.dwFlags, ddsd.ddpfPixelFormat.dwRGBBitCount));
 
-      if ((_lpDDPalette = DDCreatePalette(pal))!= NULL) 
+      if ((_lpDDPalette = DDCreatePalette(pal))!= NULL)
          DDSetPalette(_lpDDPalette);
       else Error("Failed to create palette for screen.\n");
    }
@@ -472,7 +472,7 @@ void DDKillScreen()
       }
 
       IDirectDrawSurface_Release(_lpDDSPrimary);
- 
+
    }
 
    _lpDDPalette = NULL;
@@ -524,7 +524,7 @@ LPDIRECTDRAWSURFACE DDCreateSurface(int width, int height, BOOL vram)
    HRESULT ddresult;
    LPDIRECTDRAWSURFACE lpdds;
 
-   if (ddDriverCaps.offscreen.sysmem && !vram) 
+   if (ddDriverCaps.offscreen.sysmem && !vram)
       return DDCreateSysMemSurface(width, height);
 
    memset(&ddsd, 0, sizeof(ddsd));
@@ -559,7 +559,7 @@ LPDIRECTDRAWSURFACE DDCreateSysMemSurface(int width, int height)
 
    ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &lpdds, NULL);
    if (ddresult != DD_OK) {
-      logentry("DDRAW::CreateSysMemSurface err: %x\n", ddresult);    
+      logentry("DDRAW::CreateSysMemSurface err: %x\n", ddresult);
       return NULL;
    }
 
@@ -583,11 +583,11 @@ void DDFreeSurface(LPDIRECTDRAWSURFACE lpdds)
 BOOL DDRestoreSurface(LPDIRECTDRAWSURFACE lpdds)
 {
    HRESULT ddresult;
-   
+
    Assert(lpdds != NULL);
-   if (IDirectDrawSurface_IsLost(lpdds) == DD_OK) return TRUE; 
+   if (IDirectDrawSurface_IsLost(lpdds) == DD_OK) return TRUE;
    ddresult = IDirectDrawSurface_Restore(lpdds);
-   if (ddresult != DD_OK) 
+   if (ddresult != DD_OK)
       return FALSE;
 
    return TRUE;
@@ -610,14 +610,14 @@ RetryLock:
 
    ddresult = IDirectDrawSurface_Lock(lpdds, rect, &ddsd, DDLOCK_WAIT, NULL);
 
-   if (ddresult != DD_OK) 
+   if (ddresult != DD_OK)
    {
       if (ddresult == DDERR_SURFACELOST) {
          if (!DDRestoreSurface(lpdds) || try_count) {
             WRITELOG((LogFile, "Unable to restore surface for lock.\n"));
             return NULL;
          }
-         else {                      
+         else {
             try_count++;
             goto RetryLock;
          }
@@ -627,22 +627,22 @@ RetryLock:
          return NULL;
       }
    }
-   
+
    _DDLockCounter++;
-         
+
    *pitch = (int)ddsd.lPitch;
-   return (ubyte *)ddsd.lpSurface;  
+   return (ubyte *)ddsd.lpSurface;
 }
 
 
 void DDUnlockSurface(LPDIRECTDRAWSURFACE lpdds, char *data)
 {
    HRESULT ddresult;
-   
+
    if (_DDLockCounter < 1) return;
 
    ddresult = IDirectDrawSurface_Unlock(lpdds, data);
-   if (ddresult != DD_OK) {   
+   if (ddresult != DD_OK) {
       Error("Unable to unlock canvas: %x\n", ddresult);
    }
 
@@ -666,7 +666,7 @@ LPDIRECTDRAWPALETTE DDGetPalette(LPDIRECTDRAWSURFACE lpdds)
    }
    return lpddp;
 }
-   
+
 
 LPDIRECTDRAWPALETTE DDCreatePalette(ubyte *pal)
 {
@@ -683,15 +683,15 @@ LPDIRECTDRAWPALETTE DDCreatePalette(ubyte *pal)
       pe[i].peFlags = 0;
    }
 
-   ddresult = IDirectDraw_CreatePalette(_lpDD, 
-                        DDPCAPS_8BIT | DDPCAPS_ALLOW256 | DDPCAPS_INITIALIZE, 
-                        pe, 
+   ddresult = IDirectDraw_CreatePalette(_lpDD,
+                        DDPCAPS_8BIT | DDPCAPS_ALLOW256 | DDPCAPS_INITIALIZE,
+                        pe,
                         &lpddpal, NULL);
    if (ddresult != DD_OK) {
       mprintf((1, "DDERR: CreatePalette %x.\n", ddresult));
       return NULL;
    }
-   
+
    return lpddpal;
 }
 
@@ -745,7 +745,7 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
 {
    DWORD width, height,bpp;
    int mode;
-   DWORD modex;   
+   DWORD modex;
 
    width = lpddsd->dwWidth;
    height = lpddsd->dwHeight;
@@ -754,7 +754,7 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
 
    modex = modex & DDSCAPS_MODEX;
 
-   if (width == 640 && height == 480 && bpp==8)   
+   if (width == 640 && height == 480 && bpp==8)
       mode = SM95_640x480x8;
    else if (width == 640 && height == 400 && bpp==8)
       mode = SM95_640x400x8;
@@ -762,7 +762,7 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
       mode = SM95_320x200x8X;
       if (DD_Emulation) return DDENUMRET_OK;
    }
-   else if (width == 800 && height == 600 && bpp==8) 
+   else if (width == 800 && height == 600 && bpp==8)
       mode = SM95_800x600x8;
    else if (width == 1024 && height == 768 && bpp==8)
       mode = SM95_1024x768x8;
@@ -790,7 +790,7 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
 
    _DDNumModes++;
 
-   WRITELOG((LogFile, "Register mode (%dx%dx%d) (paged=%d) (dbuf=%d).\n", width, height, bpp, _DDModeList[mode].paged, _DDModeList[mode].dbuf));   
+   WRITELOG((LogFile, "Register mode (%dx%dx%d) (paged=%d) (dbuf=%d).\n", width, height, bpp, _DDModeList[mode].paged, _DDModeList[mode].dbuf));
 
    return DDENUMRET_OK;
 }

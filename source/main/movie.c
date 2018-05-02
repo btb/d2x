@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -77,7 +77,7 @@ typedef struct {
 } subtitle;
 
 
-// #define BUFFER_MOVIE 
+// #define BUFFER_MOVIE
 
 #define MAX_SUBTITLES 500
 subtitle Subtitles[MAX_SUBTITLES];
@@ -160,7 +160,7 @@ int PlayMovie(const char *filename, int must_have)
    digi_sample_rate = SAMPLE_RATE_22K;    //always 22K for movies
    digi_reset(); digi_reset();
 
-   // Start sound 
+   // Start sound
    if (hSOSDigiDriver < 0xffff) {
       MVE_SOS_sndInit(hSOSDigiDriver);
       MVE_sndVolume((Config_digi_volume*MOVIE_VOLUME_SCALE)/8);
@@ -169,7 +169,7 @@ int PlayMovie(const char *filename, int must_have)
       MVE_SOS_sndInit(-1);
 
    MVE_rmFastMode (MVE_RM_NORMAL);
-   
+
    ret = RunMovie(name,MovieHires,must_have,-1,-1);
 
 //@@  if (ret == MOVIE_NOT_PLAYED) {      //couldn't find movie. try other version
@@ -191,7 +191,7 @@ int PlayMovie(const char *filename, int must_have)
    return ret;
 
 }
- 
+
 void __cdecl MovieShowFrame (ubyte *buf,uint bufw,uint bufh,uint sx,uint sy,uint w,uint h,uint dstx,uint dsty)
 {
    grs_bitmap source_bm;
@@ -227,7 +227,7 @@ void __cdecl MovieSetPalette(unsigned char *p, unsigned start, unsigned count)
    //Set color 255 to be our subtitle color
    gr_palette[765] = gr_palette[766] = gr_palette[767] = 50;
 
-   //movie libs palette into our array  
+   //movie libs palette into our array
    memcpy(gr_palette+start*3,p+start*3,count*3);
 
    //finally set the palette in the hardware
@@ -246,7 +246,7 @@ bkg movie_bg = {0,0,0,0,NULL};
 #define BOX_BORDER (MenuHires?40:20)
 
 void show_pause_message(char *msg)
-{  
+{
    int w,h,aw;
    int x,y;
 
@@ -284,7 +284,7 @@ void clear_pause_message()
    if (movie_bg.bmp) {
 
       gr_bitmap(movie_bg.x-BOX_BORDER/2, movie_bg.y-BOX_BORDER/2, movie_bg.bmp);
-   
+
       gr_free_bitmap(movie_bg.bmp);
       movie_bg.bmp = NULL;
    }
@@ -310,7 +310,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
            {
             strupr(filename);
             Error("Cannot open movie file <%s>",filename);
-           }   
+           }
           else
            return MOVIE_NOT_PLAYED;
       #else
@@ -320,7 +320,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
    MVE_memCallbacks(MPlayAlloc, MPlayFree);
    MVE_ioCallbacks(FileRead);
-   
+
 #if defined(POLY_ACC)
     Assert(hires_flag);
 
@@ -357,7 +357,7 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
    if (MVE_rmPrepMovie(filehndl, dx, dy, track)) {
       Int3();
-      return MOVIE_NOT_PLAYED;   
+      return MOVIE_NOT_PLAYED;
    }
 
 #if !defined(POLY_ACC)
@@ -394,33 +394,33 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
    }
 
    Assert(aborted || result == MVE_ERR_EOF);    ///movie should be over
-      
+
    MVE_rmEndMovie();
    MVE_ReleaseMem();
 
    close(filehndl);                           // Close Movie File
- 
+
    //MVE_gfxReset();
 
    // Restore old graphic state
 
    Screen_mode=-1;      //force reset of screen mode
-       
-//@@   if (MenuHires) 
+
+//@@   if (MenuHires)
 //@@     vga_set_mode(SM_640x480V);
-//@@   else 
+//@@   else
 //@@     vga_set_mode(SM_320x200C);
-   
+
    return (aborted?MOVIE_ABORTED:MOVIE_PLAYED_FULL);
 }
-      
+
 
 int InitMovieBriefing ()
  {
 #if defined(POLY_ACC)
     Assert(MenuHires);
     pa_flush();
-    
+
    #ifdef PA_3DFX_VOODOO
     pa_begin_lfb();
     MVE_sfSVGA( 640, 480, 2048, 0, pa_get_buffer_address(0), 0, 0, NULL, 1);
@@ -448,21 +448,21 @@ int InitMovieBriefing ()
       }
    }
   return (1);
- }  
-  
+ }
+
 int FlipFlop=0;
 
 int MyShowFrame (void)
  {
   grs_bitmap source_bm;
- 
+
   int rw,rh,rdx,rdy;
 
   if (MenuHires)
    { rw=320; rh=200; rdx=280; rdy=200;}
   else
    { rw=160; rh=100; rdx=140; rdy=80;}
-   
+
    source_bm.bm_x = source_bm.bm_y = 0;
    source_bm.bm_w = source_bm.bm_rowsize = rw;
    source_bm.bm_h = rh;
@@ -486,7 +486,7 @@ int MyShowFrame (void)
   gr_bm_ubitblt(rw,rh,rdx,rdy,0,0,&source_bm,&grd_curcanv->cv_bitmap);
 
   FlipFlop=1-FlipFlop;
- 
+
   return (NULL);
  }
 
@@ -504,23 +504,23 @@ void ShowRobotBuffer ()
 #else
   grs_bitmap source_bm;
   int rw,rh,rdx,rdy;
-  
-  if (timer_get_approx_seconds()<(RobBufTime+fixdiv (F1_0,i2f(15))))
-   return;  
 
-  RobBufTime=timer_get_approx_seconds();  
-  
+  if (timer_get_approx_seconds()<(RobBufTime+fixdiv (F1_0,i2f(15))))
+   return;
+
+  RobBufTime=timer_get_approx_seconds();
+
   if (MenuHires)
    { rw=320; rh=200; rdx=280; rdy=200;}
   else
    { rw=160; rh=100; rdx=140; rdy=80;}
-   
+
    source_bm.bm_x = source_bm.bm_y = 0;
    source_bm.bm_w = source_bm.bm_rowsize = rw;
    source_bm.bm_h = rh;
    source_bm.bm_type = BM_LINEAR;
    source_bm.bm_flags = 0;
-  
+
    source_bm.bm_data = RoboBuffer[RobBufCount];
 
    gr_bm_ubitblt(rw,rh,rdx,rdy,0,0,&source_bm,&grd_curcanv->cv_bitmap);
@@ -528,7 +528,7 @@ void ShowRobotBuffer ()
    RobBufCount++;
    RobBufCount%=RobBufLimit;
 #endif
- } 
+ }
 
 //returns 1 if frame updated ok
 int RotateRobot ()
@@ -541,8 +541,8 @@ int RotateRobot ()
    if (PlayingBuf)
     {
      ShowRobotBuffer ();
-     return (1);  
-    }      
+     return (1);
+    }
 #endif
 
    #if defined(POLY_ACC)
@@ -587,24 +587,24 @@ int RotateRobot ()
 void FreeRoboBuffer (int n)
  {
   // frees the 64k frame buffers, starting with n and then working down
-   
+
   #ifndef BUFFER_MOVIE
    n++;  //kill warning
    return;
   #else
   int i;
- 
+
   for (i=n;i>=0;i--)
    free (RoboBuffer[i]);
 
-  #endif 
+  #endif
  }
 
 
 void DeInitRobotMovie()
  {
   RobBufCount=0; PlayingBuf=0;
- 
+
 #if !defined(POLY_ACC)
   memset (FirstVid,0,64000);
   memset (SecondVid,0,64000);
@@ -615,9 +615,9 @@ void DeInitRobotMovie()
   MVE_ReleaseMem();
   free (FirstVid);
   free (SecondVid);
-   
-  FreeRoboBuffer (49);  
- 
+
+  FreeRoboBuffer (49);
+
   MVE_palCallbacks (MVE_SetPalette);
   close(RoboFile);                           // Close Movie File
  }
@@ -648,15 +648,15 @@ int InitRobotMovie (char *filename)
   RobBufCount=0; PlayingBuf=0; RobBufLimit=0;
 
   if (FindArg("-nomovies"))
-   return (0); 
-   
+   return (0);
+
 //   digi_stop_all();
 
 //@@   if (MovieHires)
 //@@     filename[4]='h';
 //@@  else
 //@@     filename[4]='l';
-  
+
    mprintf ((0,"RoboFile=%s\n",filename));
 
 #ifdef BUFFER_MOVIE
@@ -677,16 +677,16 @@ int InitRobotMovie (char *filename)
       }
     }
 #endif
- 
+
    if ((FirstVid=calloc (65000L,1))==NULL)
     {
-     FreeRoboBuffer(49);   
+     FreeRoboBuffer(49);
      return (NULL);
     }
-   if ((SecondVid=calloc (65000L,1))==NULL)  
+   if ((SecondVid=calloc (65000L,1))==NULL)
     {
-     free (FirstVid);   
-     FreeRoboBuffer(49);   
+     free (FirstVid);
+     FreeRoboBuffer(49);
      return (NULL);
     }
 
@@ -700,7 +700,7 @@ int InitRobotMovie (char *filename)
 
    if (RoboFile == -1) {
       free (FirstVid);
-      free (SecondVid); 
+      free (SecondVid);
       FreeRoboBuffer (49);
       #ifdef RELEASE
          Error("Cannot open movie file <%s>",filename);
@@ -709,12 +709,12 @@ int InitRobotMovie (char *filename)
       #endif
    }
 
-   Vid_State = VID_PLAY;                           
+   Vid_State = VID_PLAY;
 
 #if !defined(POLY_ACC)
    MVE_sfCallbacks ((mve_cb_ShowFrame *)MyShowFrame);
 #endif
-      
+
 #if defined(POLY_ACC)
    if (MVE_rmPrepMovie(RoboFile, 280, 200, 0)) {
 #else
@@ -722,7 +722,7 @@ int InitRobotMovie (char *filename)
 #endif
       Int3();
       free (FirstVid);
-      free (SecondVid); 
+      free (SecondVid);
       FreeRoboBuffer (49);
       return 0;
    }
@@ -743,7 +743,7 @@ int InitRobotMovie (char *filename)
 
 ubyte *subtitle_raw_data;
 
-//search for next field following whitespace 
+//search for next field following whitespace
 ubyte *next_field(ubyte *p)
 {
    while (*p && !isspace(*p))
@@ -788,7 +788,7 @@ int init_subtitles(char *filename)
    }
 
    size = cfilelength(ifile);
-   
+
    MALLOC (subtitle_raw_data, ubyte, size+1);
 
    read_count = cfread(subtitle_raw_data, 1, size, ifile);
@@ -807,7 +807,7 @@ int init_subtitles(char *filename)
    while (p && p < subtitle_raw_data+size) {
       char *endp;
 
-      endp = strchr(p,'\n'); 
+      endp = strchr(p,'\n');
       if (endp) {
          if (endp[-1] == '\r')
             endp[-1] = 0;     //handle 0d0a pair
@@ -876,7 +876,7 @@ void draw_subtitles(int frame_num)
       else
          t++;
 
-   //get any subtitles new for this frame 
+   //get any subtitles new for this frame
    while (next_subtitle < Num_subtitles && frame_num >= Subtitles[next_subtitle].first_frame) {
       if (num_active_subtitles >= MAX_ACTIVE_SUBTITLES)
          Error("Too many active subtitles!");
@@ -1009,16 +1009,16 @@ movielib *init_old_movie_lib(char *filename,FILE *fp)
 
 }
 
-//find the specified movie library, and read in list of movies in it   
+//find the specified movie library, and read in list of movies in it
 movielib *init_movie_lib(char *filename)
 {
    //note: this based on cfile_init_hogfile()
 
    char id[4];
    FILE * fp;
- 
+
    fp = fopen( filename, "rb" );
-   if ( fp == NULL ) 
+   if ( fp == NULL )
       return NULL;
 
    fread( id, 4, 1, fp );
@@ -1087,7 +1087,7 @@ int request_cd()
    gr_set_current_canvas(save_canv);
 
    gr_clear_canvas(BM_XRGB(0,0,0));
-   
+
    memcpy(save_pal,gr_palette,sizeof(save_pal));
 
    memcpy(gr_palette,last_palette_for_color_fonts,sizeof(gr_palette));
@@ -1105,12 +1105,12 @@ try_again:;
          goto try_again;
    }
 
-   force_rb_register = 1;  //disc has changed; force register new CD    
-   
+   force_rb_register = 1;  //disc has changed; force register new CD
+
    gr_palette_clear();
 
    memcpy(gr_palette,save_pal,sizeof(save_pal));
-   
+
    gr_ubitmap(0,0,&tcanv->cv_bitmap);
 
    if (!was_faded)
@@ -1148,7 +1148,7 @@ try_again:;
 
    if ((movie_libs[libnum] = init_movie_lib(filename)) == NULL) {
       char name2[100];
-      
+
       strcpy(name2,CDROM_dir);
       strcat(name2,filename);
       movie_libs[libnum] = init_movie_lib(name2);
@@ -1223,7 +1223,7 @@ search_movie_lib(movielib *lib,char *filename,int must_have)
       return -1;
 
    for (i=0;i<lib->n_movies;i++)
-      if (!stricmp(filename,lib->movies[i].name)) {   //found the movie in a library 
+      if (!stricmp(filename,lib->movies[i].name)) {   //found the movie in a library
          int from_cd;
 
          from_cd = (lib->flags & MLF_ON_CD);

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -92,10 +92,10 @@ void g3_close(void);
 //start the frame
 void g3_start_frame(void);
 
-//set view from x,y,z & p,b,h, zoom.  Must call one of g3_set_view_*() 
+//set view from x,y,z & p,b,h, zoom.  Must call one of g3_set_view_*()
 void g3_set_view_angles(vms_vector *view_pos,vms_angvec *view_orient,fix zoom);
 
-//set view from x,y,z, viewer matrix, and zoom.  Must call one of g3_set_view_*() 
+//set view from x,y,z, viewer matrix, and zoom.  Must call one of g3_set_view_*()
 void g3_set_view_matrix(vms_vector *view_pos,vms_matrix *view_matrix,fix zoom);
 
 //end the frame
@@ -130,7 +130,7 @@ fix g3_get_zoom(char axis,fixang fov,short window_width,short window_height);
 //returns the normalized, unscaled view vectors
 void g3_get_view_vectors(vms_vector *forward,vms_vector *up,vms_vector *right);
 
-//returns true if a plane is facing the viewer. takes the unrotated surface 
+//returns true if a plane is facing the viewer. takes the unrotated surface
 //normal of the plane, and a point on it.  The normal need not be normalized
 bool g3_check_normal_facing(vms_vector *v,vms_vector *norm);
 
@@ -185,7 +185,7 @@ g3_draw_sphere(g3s_point *pnt,fix rad);
 
 
 //like g3_draw_poly(), but checks to see if facing.  If surface normal is
-//NULL, this routine must compute it, which will be slow.  It is better to 
+//NULL, this routine must compute it, which will be slow.  It is better to
 //pre-compute the normal, and pass it to this function.  When the normal
 //is passed, this function works like g3_check_normal_facing() plus
 //g3_draw_poly().
@@ -204,7 +204,7 @@ bool g3_draw_rod_flat(g3s_point *bot_point,fix bot_width,g3s_point *top_point,fi
 //returns 1 if off screen, 0 if drew
 bool g3_draw_rod_tmap(grs_bitmap *bitmap,g3s_point *bot_point,fix bot_width,g3s_point *top_point,fix top_width,fix light);
 
-//draws a bitmap with the specified 3d width & height 
+//draws a bitmap with the specified 3d width & height
 //returns 1 if off screen, 0 if drew
 bool g3_draw_bitmap(vms_vector *pos,fix width,fix height,grs_bitmap *bm, int orientation);
 

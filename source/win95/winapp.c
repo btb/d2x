@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -46,7 +46,7 @@ HWND GetLibraryWindow(void)
 
 HINSTANCE GetLibraryWinInstance(void)
 {
-   return hWAppInstance;   
+   return hWAppInstance;
 }
 
 
@@ -76,7 +76,7 @@ void cprintf(char *text, ...)
    va_list args;
    DWORD size;
 
-   if (!ConInit) return;   
+   if (!ConInit) return;
 
    va_start(args, text );
    vsprintf(buffer,text,args);
@@ -93,7 +93,7 @@ int cgetch()
    ReadConsole(ConStdIn, buffer, sizeof(TCHAR), &chread, NULL);
    return (int)buffer[0];
 }
-   
+
 
 // Log Functions
 
@@ -121,9 +121,9 @@ void logclose()
    fprintf(LogFile, "\n-----------------------------------------\nlog ends.\n");
 
    fclose(LogFile);
-   
+
    LogFile = NULL;
-}  
+}
 
 
 void logentry(char *format, ...)
@@ -131,7 +131,7 @@ void logentry(char *format, ...)
    char buffer[256];
    va_list args;
 
-   if (!LogFile) return;   
+   if (!LogFile) return;
 
    va_start(args, format );
    vsprintf(buffer, format ,args);
@@ -174,7 +174,7 @@ HBITMAP win95_screen_shot()
 //@@  hdcscreen = CreateDC("DISPLAY", NULL, NULL, NULL);
    IDirectDrawSurface_GetDC(dd_grd_screencanv->lpdds, &hdcscreen);
    hdccapture = CreateCompatibleDC(hdcscreen);
-   
+
    screen_bitmap = CreateCompatibleBitmap(hdcscreen, GRMODEINFO(w), GRMODEINFO(h));
 
    if (!screen_bitmap) {
@@ -192,7 +192,7 @@ HBITMAP win95_screen_shot()
       //@@  DeleteDC(hdcscreen);
       return NULL;
    }
-   
+
    if (!BitBlt(hdccapture, 0,0,GRMODEINFO(w), GRMODEINFO(h), hdcscreen, 0, 0,
          SRCCOPY)) {
       SelectObject(hdccapture, old_bitmap);
@@ -210,7 +210,7 @@ HBITMAP win95_screen_shot()
 //@@  DeleteDC(hdcscreen);
 
    return screen_bitmap;
-}     
+}
 
 
 HANDLE win95_dib_from_bitmap(HBITMAP hbm)
@@ -228,7 +228,7 @@ HANDLE win95_dib_from_bitmap(HBITMAP hbm)
    GetObject(hbm, sizeof(bm), &bm);
 
    memset(&bi, 0, sizeof(bi));
-   
+
    bi.biSize = sizeof(BITMAPINFOHEADER);
    bi.biWidth = bm.bmWidth;
    bi.biHeight = bm.bmHeight;
@@ -253,12 +253,12 @@ HANDLE win95_dib_from_bitmap(HBITMAP hbm)
    }
    GetDIBits(hdc, hbm, 0, bi.biHeight, NULL, (BITMAPINFO *)pbi, DIB_RGB_COLORS);
    bi = *pbi;
-   GlobalUnlock(hMem); 
-   
+   GlobalUnlock(hMem);
+
    if (!bi.biSizeImage) {
       bi.biSizeImage = bi.biWidth * bi.biHeight;
-   }     
-   
+   }
+
    hX = GlobalReAlloc(hMem, bi.biSize + 256*sizeof(RGBQUAD) + bi.biSizeImage,0);
    if (!hX) {
       GlobalFree(hMem);
@@ -269,9 +269,9 @@ HANDLE win95_dib_from_bitmap(HBITMAP hbm)
    hMem = hX;
 
    pbi = GlobalLock(hMem);
-   
-   if (!GetDIBits(hdc, hbm, 0, 
-         pbi->biHeight, 
+
+   if (!GetDIBits(hdc, hbm, 0,
+         pbi->biHeight,
          (LPSTR)pbi + pbi->biSize + 256*sizeof(RGBQUAD),
          (BITMAPINFO *)pbi, DIB_RGB_COLORS)) {
       GlobalUnlock(hMem);
@@ -283,22 +283,22 @@ HANDLE win95_dib_from_bitmap(HBITMAP hbm)
    bi = *pbi;
 
    IDirectDrawSurface_ReleaseDC(dd_grd_screencanv->lpdds, hdc);
-   
+
    rgbp = (RGBQUAD *)(((LPSTR)pbi + pbi->biSize));
 
    gr_palette_read(grpal);
-   for (i = 0; i < 256; i++) 
+   for (i = 0; i < 256; i++)
    {
       rgbp[i].rgbRed = grpal[i*3]<<2;
       rgbp[i].rgbGreen = grpal[i*3+1]<<2;
       rgbp[i].rgbBlue = grpal[i*3+2]<<2;
       rgbp[i].rgbReserved = 0;
-   }        
+   }
 
    GlobalUnlock(hMem);
 
    return hMem;
 }
 
-      
-         
+
+

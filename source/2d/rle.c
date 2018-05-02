@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -51,38 +51,38 @@ ubyte *gr_rle_decode_asm( ubyte * src, ubyte * dest );
 #if !defined(MACINTOSH)
 #pragma aux gr_rle_decode_asm parm [esi] [edi] value [edi] modify exact [eax ebx ecx edx esi edi] = \
 "  cld               "\
-"  xor   ecx, ecx    "\    
-"  cld               "\    
-"  jmp   NextByte    "\                                                                
-"                    "\                                                          
-"Unique:             "\                                                          
+"  xor   ecx, ecx    "\
+"  cld               "\
+"  jmp   NextByte    "\
+"                    "\
+"Unique:             "\
 "  mov   [edi],al    "\
-"  inc   edi         "\    
-"                    "\                                                          
-"NextByte:           "\                                                       
-"  mov   al,[esi]    "\    
-"  inc   esi         "\    
-"                    "\                                                    
+"  inc   edi         "\
+"                    "\
+"NextByte:           "\
+"  mov   al,[esi]    "\
+"  inc   esi         "\
+"                    "\
 "  mov   ah, al      "\
 "  and   ah, 0xE0    "\
 "  cmp   ah, 0xE0    "\
-"  jne   Unique      "\    
-"                    "\                                                    
-"  mov   cl, al      "\    
-"  and   cl, 31      "\    
+"  jne   Unique      "\
+"                    "\
+"  mov   cl, al      "\
+"  and   cl, 31      "\
 "  je    done        "\
-"                    "\                                  
-"  mov   al,[esi]    "\    
-"  inc   esi         "\    
+"                    "\
+"  mov   al,[esi]    "\
+"  inc   esi         "\
 "  mov   ah, al      "\
-"  shr   ecx,1       "\    
-"  rep   stosw       "\    
+"  shr   ecx,1       "\
+"  rep   stosw       "\
 "  jnc   NextByte    "\
 "  mov   [edi],al    "\
-"  inc   edi         "\    
+"  inc   edi         "\
 "                    "\
-"  jmp   NextByte    "\ 
-"                    "\          
+"  jmp   NextByte    "\
+"                    "\
 "done:               ";
 
 void gr_rle_decode( ubyte * src, ubyte * dest, int dest_len )
@@ -109,7 +109,7 @@ void gr_rle_decode( ubyte * src, ubyte * dest )
          count = data & NOT_RLE_CODE;
          if (count==0) return;
          data = *src++;
-         for (i=0; i<count; i++ )   
+         for (i=0; i<count; i++ )
             *dest++ = data;
       }
    }
@@ -160,7 +160,7 @@ void gr_rle_expand_scanline_masked( ubyte *dest, ubyte *src, int x1, int x2  )
    count = i - x1;
    i = x1;
    // we know have '*count' pixels of 'color'.
-   
+
    if ( x1+count > x2 ) {
       count = x2-x1+1;
       if ( color != TRANSPARENCY_COLOR )  rle_stosb( dest, count, color );
@@ -193,7 +193,7 @@ void gr_rle_expand_scanline_masked( ubyte *dest, ubyte *src, int x1, int x2  )
          dest += count;
       }
 
-   }  
+   }
 }
 
 void gr_rle_expand_scanline( ubyte *dest, ubyte *src, int x1, int x2  )
@@ -220,7 +220,7 @@ void gr_rle_expand_scanline( ubyte *dest, ubyte *src, int x1, int x2  )
    count = i - x1;
    i = x1;
    // we know have '*count' pixels of 'color'.
-   
+
    if ( x1+count > x2 ) {
       count = x2-x1+1;
       rle_stosb( dest, count, color );
@@ -252,7 +252,7 @@ void gr_rle_expand_scanline( ubyte *dest, ubyte *src, int x1, int x2  )
          i += count;
          dest += count;
       }
-   }  
+   }
 }
 
 
@@ -268,7 +268,7 @@ int gr_rle_encode( int org_size, ubyte *src, ubyte *dest )
    count = 1;
 
    for (i=1; i<org_size; i++ )   {
-      c = *src++;                   
+      c = *src++;
       if ( c!=oc )   {
          if ( count )   {
             if ( (count==1) && ((oc & RLE_CODE)!=RLE_CODE) )   {
@@ -318,7 +318,7 @@ int gr_rle_getsize( int org_size, ubyte *src )
    count = 1;
 
    for (i=1; i<org_size; i++ )   {
-      c = *src++;                   
+      c = *src++;
       if ( c!=oc )   {
          if ( count )   {
             if ( (count==1) && ((oc & RLE_CODE)!=RLE_CODE) )   {
@@ -374,7 +374,7 @@ int gr_bitmap_rle_compress( grs_bitmap * bmp )
       doffset = 4 + bmp->bm_h;
    else
       doffset = 4 + (2 * bmp->bm_h);      // each row of rle'd bitmap has short instead of byte offset now
-      
+
    for (y=0; y<bmp->bm_h; y++ )  {
       d1= gr_rle_getsize( bmp->bm_w, &bmp->bm_data[bmp->bm_w*y] );
       if ( ((doffset+d1) > bmp->bm_w*bmp->bm_h) || (d1 > (large_rle?32767:255) ) )  {
@@ -404,7 +404,7 @@ int gr_bitmap_rle_compress( grs_bitmap * bmp )
 typedef struct rle_cache_element {
    grs_bitmap * rle_bitmap;
    ubyte * rle_data;
-   grs_bitmap * expanded_bitmap;       
+   grs_bitmap * expanded_bitmap;
    int last_used;
 } rle_cache_element;
 
@@ -435,7 +435,7 @@ void rle_cache_init()
       rle_cache[i].expanded_bitmap = gr_create_bitmap( 64, 64 );
       rle_cache[i].last_used = 0;
       Assert( rle_cache[i].expanded_bitmap != NULL );
-   }  
+   }
    rle_cache_initialized = 1;
    atexit( rle_cache_close );
 }
@@ -446,7 +446,7 @@ void rle_cache_flush()
    for (i=0; i<MAX_CACHE_BITMAPS; i++ )   {
       rle_cache[i].rle_bitmap = NULL;
       rle_cache[i].last_used = 0;
-   }  
+   }
 }
 
 void rle_expand_texture_sub( grs_bitmap * bmp, grs_bitmap * rle_temp_bitmap_1 )
@@ -517,7 +517,7 @@ grs_bitmap * rle_expand_texture( grs_bitmap * bmp )
    rle_next++;
    if ( rle_next >= MAX_CACHE_BITMAPS )
       rle_next = 0;
-      
+
    for (i=0; i<MAX_CACHE_BITMAPS; i++ )   {
       if (rle_cache[i].rle_bitmap == bmp)    {
          rle_hits++;
@@ -528,7 +528,7 @@ grs_bitmap * rle_expand_texture( grs_bitmap * bmp )
          lowest_count = rle_cache[i].last_used;
          least_recently_used = i;
       }
-   }  
+   }
 
    Assert(bmp->bm_w<=64 && bmp->bm_h<=64);   //dest buffer is 64x64
    rle_misses++;
@@ -563,7 +563,7 @@ void gr_rle_expand_scanline_generic( grs_bitmap * dest, int dx, int dy, ubyte *s
    count = i - x1;
    i = x1;
    // we know have '*count' pixels of 'color'.
-   
+
    if ( x1+count > x2 ) {
       count = x2-x1+1;
       for ( j=0; j<count; j++ )
@@ -596,7 +596,7 @@ void gr_rle_expand_scanline_generic( grs_bitmap * dest, int dx, int dy, ubyte *s
             gr_bm_pixel( dest, dx++, dy, color );
          i += count;
       }
-   }  
+   }
 }
 
 void gr_rle_expand_scanline_generic_masked( grs_bitmap * dest, int dx, int dy, ubyte *src, int x1, int x2  )
@@ -623,10 +623,10 @@ void gr_rle_expand_scanline_generic_masked( grs_bitmap * dest, int dx, int dy, u
    count = i - x1;
    i = x1;
    // we know have '*count' pixels of 'color'.
-   
+
    if ( x1+count > x2 ) {
       count = x2-x1+1;
-      if (color != TRANSPARENCY_COLOR) {  
+      if (color != TRANSPARENCY_COLOR) {
          for ( j=0; j<count; j++ )
             gr_bm_pixel( dest, dx++, dy, color );
       }
@@ -667,7 +667,7 @@ void gr_rle_expand_scanline_generic_masked( grs_bitmap * dest, int dx, int dy, u
             dx += count;
          i += count;
       }
-   }  
+   }
 }
 
 
@@ -692,7 +692,7 @@ void gr_rle_expand_scanline_svga_masked( grs_bitmap * dest, int dx, int dy, ubyt
       gr_rle_expand_scanline_masked( &vram[offset], src, x1, x2 );
       return;
    }
-   
+
    count = 0;
    while ( i < x1 )  {
       color = *src++;
@@ -709,10 +709,10 @@ void gr_rle_expand_scanline_svga_masked( grs_bitmap * dest, int dx, int dy, ubyt
    count = i - x1;
    i = x1;
    // we know have '*count' pixels of 'color'.
-   
+
    if ( x1+count > x2 ) {
       count = x2-x1+1;
-      if (color != TRANSPARENCY_COLOR) {  
+      if (color != TRANSPARENCY_COLOR) {
          for ( j=0; j<count; j++ )  {
             vram[offset++] = color;
             if ( offset >= 65536 ) {
@@ -795,6 +795,6 @@ void gr_rle_expand_scanline_svga_masked( grs_bitmap * dest, int dx, int dy, ubyt
          }
          i += count;
       }
-   }  
+   }
 }
 

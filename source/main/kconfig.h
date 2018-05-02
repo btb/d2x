@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -20,66 +20,66 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gamestat.h"
 
 typedef struct control_info {
-   fix   pitch_time;                
+   fix   pitch_time;
    fix   vertical_thrust_time;
    fix   heading_time;
    fix   sideways_thrust_time;
    fix   bank_time;
    fix   forward_thrust_time;
-      
-   ubyte rear_view_down_count;   
-   ubyte rear_view_down_state;   
-   
+
+   ubyte rear_view_down_count;
+   ubyte rear_view_down_state;
+
    ubyte fire_primary_down_count;
    ubyte fire_primary_state;
    ubyte fire_secondary_state;
    ubyte fire_secondary_down_count;
    ubyte fire_flare_down_count;
 
-   ubyte drop_bomb_down_count;   
+   ubyte drop_bomb_down_count;
 
    ubyte automap_down_count;
    ubyte automap_state;
 
 //   vms_angvec heading;
 // char oem_message[64];
-  
+
    ubyte afterburner_state;
    ubyte cycle_primary_count;
    ubyte cycle_secondary_count;
-   ubyte headlight_count;  
+   ubyte headlight_count;
 } control_info;
 
 typedef struct ext_control_info {
-   fix   pitch_time;                
+   fix   pitch_time;
    fix   vertical_thrust_time;
    fix   heading_time;
    fix   sideways_thrust_time;
    fix   bank_time;
    fix   forward_thrust_time;
-      
-   ubyte rear_view_down_count;   
-   ubyte rear_view_down_state;   
-   
+
+   ubyte rear_view_down_count;
+   ubyte rear_view_down_state;
+
    ubyte fire_primary_down_count;
    ubyte fire_primary_state;
    ubyte fire_secondary_state;
    ubyte fire_secondary_down_count;
    ubyte fire_flare_down_count;
 
-   ubyte drop_bomb_down_count;   
+   ubyte drop_bomb_down_count;
 
    ubyte automap_down_count;
    ubyte automap_state;
 
-// vms_angvec heading;   // for version >=1.0 
+// vms_angvec heading;   // for version >=1.0
 // char oem_message[64]; // for version >=1.0
 
 // vms_vector ship_pos   // for version >=2.0
 // vms_matrix ship_orient // for version >=2.0
-    
+
 // ubyte cycle_primary_count // for version >=3.0
-// ubyte cycle_secondary_count // for version >=3.0 
+// ubyte cycle_secondary_count // for version >=3.0
 // ubyte afterburner_state // for version >=3.0
 // ubyte headlight_count // for version >=3.0
 
@@ -87,7 +87,7 @@ typedef struct ext_control_info {
 
 // ubyte headlight_state
 
-// int primary_weapon_flags 
+// int primary_weapon_flags
 // int secondary_weapon_flags
 // ubyte Primary_weapon_selected
 // ubyte Secondary_weapon_selected
@@ -107,35 +107,35 @@ typedef struct ext_control_info {
 // ubyte current_guidebot_command;
 
 // ubyte Reactor_blown
- 
+
 } ext_control_info;
 
 typedef struct advanced_ext_control_info {
-   fix   pitch_time;                
+   fix   pitch_time;
    fix   vertical_thrust_time;
    fix   heading_time;
    fix   sideways_thrust_time;
    fix   bank_time;
    fix   forward_thrust_time;
-      
-   ubyte rear_view_down_count;   
-   ubyte rear_view_down_state;   
-   
+
+   ubyte rear_view_down_count;
+   ubyte rear_view_down_state;
+
    ubyte fire_primary_down_count;
    ubyte fire_primary_state;
    ubyte fire_secondary_state;
    ubyte fire_secondary_down_count;
    ubyte fire_flare_down_count;
 
-   ubyte drop_bomb_down_count;   
+   ubyte drop_bomb_down_count;
 
    ubyte automap_down_count;
    ubyte automap_state;
 
 // everything below this line is for version >=1.0
 
- vms_angvec heading;   
- char oem_message[64]; 
+ vms_angvec heading;
+ char oem_message[64];
 
 // everything below this line is for version >=2.0
 
@@ -143,9 +143,9 @@ typedef struct advanced_ext_control_info {
  vms_matrix ship_orient;
 
 // everything below this line is for version >=3.0
-    
- ubyte cycle_primary_count; 
- ubyte cycle_secondary_count;  
+
+ ubyte cycle_primary_count;
+ ubyte cycle_secondary_count;
  ubyte afterburner_state;
  ubyte headlight_count;
 
@@ -156,7 +156,7 @@ typedef struct advanced_ext_control_info {
  ubyte current_primary_weapon;
  ubyte current_secondary_weapon;
 
- 
+
  vms_vector force_vector;
  vms_matrix force_matrix;
  int joltinfo[3];
@@ -174,7 +174,7 @@ typedef struct advanced_ext_control_info {
  ubyte keyboard[128]; // scan code array, not ascii
 
  ubyte Reactor_blown;
- 
+
 } advanced_ext_control_info;
 
 extern ubyte ExtGameStatus;
@@ -184,7 +184,7 @@ extern void kconfig(int n, char * title );
 
 #define NUM_KEY_CONTROLS 57
 #define NUM_OTHER_CONTROLS 31
-#define MAX_CONTROLS 60         //there are actually 48, so this leaves room for more   
+#define MAX_CONTROLS 60         //there are actually 48, so this leaves room for more
 
 extern ubyte kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];
 extern ubyte default_kconfig_settings[CONTROL_MAX_TYPES][MAX_CONTROLS];

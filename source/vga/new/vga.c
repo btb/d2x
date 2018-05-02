@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -223,7 +223,7 @@ int vga_save_mode()
          printf( "Graphics mode\n" );
       else
          printf( "Text mode\n" );
-   
+
       printf( "( %d columns by %d rows)\n", saved_num_columns, saved_num_rows );
       printf( "Char height is %d pixel rows\n", saved_char_height );
       printf( "Cursor of type 0x%x is at (%d, %d)\n", saved_cursor_type, saved_cursor_pos & 0xFF, saved_cursor_pos >> 8 );
@@ -295,7 +295,7 @@ void vga_restore_mode()
          default: vga_set_text_25(); break;
       }
    } else {
-      vga_set_misc_mode(saved_video_mode);   
+      vga_set_misc_mode(saved_video_mode);
    }
 
    if (saved_is_graphics==0)
@@ -341,7 +341,7 @@ int vga_vesa_setmode( short mode )
       LinearSVGABuffer=1;
       return(0);
     }
-   
+
    LinearSVGABuffer=0;
    retcode=gr_vesa_checkmode( mode );     // do the old banking way
    if ( retcode ) return retcode;
@@ -365,12 +365,12 @@ if(mode != SM_640x480x15xPA)
 }
 #endif
 
-   LinearSVGABuffer=0; 
-      
+   LinearSVGABuffer=0;
+
    if (!vga_installed)
       return 1;
-   
-  
+
+
    switch(mode)
    {
    case SM_ORIGINAL:
@@ -378,26 +378,26 @@ if(mode != SM_640x480x15xPA)
 
    case SM_320x200C:
       if (!isvga()) return 1;
-      vga_set_misc_mode(0x13);   
+      vga_set_misc_mode(0x13);
       w = 320; r = 320; h = 200; t=BM_LINEAR; data = 0xA0000;
       break;
-   
+
    case SM_640x400V:
-      retcode = vga_vesa_setmode( 0x100 ); 
+      retcode = vga_vesa_setmode( 0x100 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 640; r = 640; h = 400; t=BM_SVGA; data = 0;
       break;
 
    case SM_640x480V:
-      retcode = vga_vesa_setmode( 0x101 ); 
+      retcode = vga_vesa_setmode( 0x101 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 640; r = 640; h = 480; t=BM_SVGA; data = 0;
       break;
 
    case SM_800x600V:
-      retcode = vga_vesa_setmode( 0x103 ); 
+      retcode = vga_vesa_setmode( 0x103 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 800; h = 600; t=BM_SVGA; data = 0;
@@ -405,7 +405,7 @@ if(mode != SM_640x480x15xPA)
       break;
 
    case SM_1024x768V:
-      retcode = vga_vesa_setmode( 0x105 ); 
+      retcode = vga_vesa_setmode( 0x105 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 1024; r = 1024; h = 768; t=BM_SVGA; data = 0;
@@ -413,7 +413,7 @@ if(mode != SM_640x480x15xPA)
       break;
 
    case SM_1280x1024V:
-      retcode = vga_vesa_setmode( 0x107 ); 
+      retcode = vga_vesa_setmode( 0x107 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 1280; r = 1280; h = 1024; t=BM_SVGA; data = 0;
@@ -421,14 +421,14 @@ if(mode != SM_640x480x15xPA)
       break;
 
    case SM_640x480V15:
-      retcode = vga_vesa_setmode( 0x110 ); 
+      retcode = vga_vesa_setmode( 0x110 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 640; r = 640*2; h=480; t=BM_SVGA15; data = 0;
       break;
 
    case SM_800x600V15:
-      retcode = vga_vesa_setmode( 0x113 ); 
+      retcode = vga_vesa_setmode( 0x113 );
       //gr_enable_default_palette_loading();
       if (retcode !=0 ) return retcode;
       w = 800; r = 800*2; h=600; t=BM_SVGA15; data = 0;
@@ -444,13 +444,13 @@ if(mode != SM_640x480x15xPA)
 
    //@@case 19:
    //@@  if (!isvga()) return 1;
-   //@@  vga_set_misc_mode(0x13);   
+   //@@  vga_set_misc_mode(0x13);
    //@@  vga_set_cellheight( 3 );
    //@@  w = 320; r = 320; h = 200; t=BM_LINEAR; data = 0xA0000;
    //@@  break;
    //@@
    //@@case 20:
-   //@@  retcode = vga_vesa_setmode( 0x102 ); 
+   //@@  retcode = vga_vesa_setmode( 0x102 );
    //@@  //gr_enable_default_palette_loading();
    //@@  if (retcode !=0 ) return retcode;
    //@@  vga_16_to_256();
@@ -462,7 +462,7 @@ if(mode != SM_640x480x15xPA)
    //@@
    //@@case 21:
    //@@  if (!isvga()) return 1;
-   //@@  vga_set_misc_mode(0xd); 
+   //@@  vga_set_misc_mode(0xd);
    //@@  vga_16_to_256();
    //@@  vga_set_linear();
    //@@  //gr_set_cellheight( 3 );
@@ -566,7 +566,7 @@ short vga_init()
 
 short vga_mode13_checkmode()
 {
-   if (isvga()) 
+   if (isvga())
       return 0;
    else
       return 1;
@@ -608,12 +608,12 @@ if(mode != SM_640x480x15xPA)
    case SM_360x360U:
    case SM_376x308U:
    case SM_376x564U:    return vga_mode13_checkmode();
-   case SM_640x400V:    return gr_vesa_checkmode( 0x100 ); 
-   case SM_640x480V:    return gr_vesa_checkmode( 0x101 ); 
-   case SM_800x600V:    return gr_vesa_checkmode( 0x103 ); 
-   case SM_1024x768V:   return gr_vesa_checkmode( 0x105 ); 
-   case SM_640x480V15:  return gr_vesa_checkmode( 0x110 ); 
-   case SM_800x600V15:  return gr_vesa_checkmode( 0x113 ); 
+   case SM_640x400V:    return gr_vesa_checkmode( 0x100 );
+   case SM_640x480V:    return gr_vesa_checkmode( 0x101 );
+   case SM_800x600V:    return gr_vesa_checkmode( 0x103 );
+   case SM_1024x768V:   return gr_vesa_checkmode( 0x105 );
+   case SM_640x480V15:  return gr_vesa_checkmode( 0x110 );
+   case SM_800x600V15:  return gr_vesa_checkmode( 0x113 );
 #if defined(POLY_ACC)
    case SM_640x480x15xPA: return pa_detect(mode);
 #endif

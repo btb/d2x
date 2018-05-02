@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -64,7 +64,7 @@ int Dead_modelnums[MAX_POLYGON_MODELS];
 //the polygon model number to use for the marker
 int   Marker_model_num = -1;
 
-//right now there's only one player ship, but we can have another by 
+//right now there's only one player ship, but we can have another by
 //adding an array and setting the pointer to the active ship.
 player_ship only_player_ship,*Player_ship=&only_player_ship;
 
@@ -87,7 +87,7 @@ ushort            ObjBitmapPtrs[MAX_OBJ_BITMAPS];     // These point back into O
 void read_tmap_info(CFILE *fp, int inNumTexturesToRead, int inOffset)
 {
    int i;
-   
+
    for (i = inOffset; i < (inNumTexturesToRead + inOffset); i++)
    {
       TmapInfo[i].flags = cfile_read_byte(fp);
@@ -106,7 +106,7 @@ void read_tmap_info(CFILE *fp, int inNumTexturesToRead, int inOffset)
 void read_vclip_info(CFILE *fp, int inNumVClipsToRead, int inOffset)
 {
    int i, j;
-   
+
    for (i = inOffset; i < (inNumVClipsToRead + inOffset); i++)
    {
       Vclip[i].play_time = cfile_read_fix(fp);
@@ -154,7 +154,7 @@ void read_effect_info(CFILE *fp, int inNumEffectsToRead, int inOffset)
 void read_wallanim_info(CFILE *fp, int inNumWallAnimsToRead, int inOffset)
 {
    int i, j;
-   
+
    for (i = inOffset; i < (inNumWallAnimsToRead + inOffset); i++)
    {
       WallAnims[i].play_time = cfile_read_fix(fp);;
@@ -166,13 +166,13 @@ void read_wallanim_info(CFILE *fp, int inNumWallAnimsToRead, int inOffset)
       WallAnims[i].flags = cfile_read_short(fp);
       cfread(WallAnims[i].filename, 13, 1, fp);
       WallAnims[i].pad = cfile_read_byte(fp);
-   }     
+   }
 }
 
 void read_robot_info(CFILE *fp, int inNumRobotsToRead, int inOffset)
 {
    int i, j, k;
-   
+
    for (i = inOffset; i < (inNumRobotsToRead + inOffset); i++)
    {
       Robot_info[i].model_num = cfile_read_int(fp);
@@ -200,7 +200,7 @@ void read_robot_info(CFILE *fp, int inNumRobotsToRead, int inOffset)
       Robot_info[i].score_value = cfile_read_short(fp);
       Robot_info[i].badass = cfile_read_byte(fp);
       Robot_info[i].energy_drain = cfile_read_byte(fp);
-      
+
       Robot_info[i].lighting = cfile_read_fix(fp);
       Robot_info[i].strength = cfile_read_fix(fp);
 
@@ -276,7 +276,7 @@ void read_robot_joint_info(CFILE *fp, int inNumRobotJointsToRead, int inOffset)
 void read_weapon_info(CFILE *fp, int inNumWeaponsToRead, int inOffset)
 {
    int i, j;
-   
+
    for (i = inOffset; i < (inNumWeaponsToRead + inOffset); i++)
    {
       Weapon_info[i].render_type = cfile_read_byte(fp);
@@ -286,15 +286,15 @@ void read_weapon_info(CFILE *fp, int inNumWeaponsToRead, int inOffset)
 
       Weapon_info[i].flash_vclip = cfile_read_byte(fp);
       Weapon_info[i].robot_hit_vclip = cfile_read_byte(fp);
-      Weapon_info[i].flash_sound = cfile_read_short(fp);    
+      Weapon_info[i].flash_sound = cfile_read_short(fp);
 
       Weapon_info[i].wall_hit_vclip = cfile_read_byte(fp);
       Weapon_info[i].fire_count = cfile_read_byte(fp);
       Weapon_info[i].robot_hit_sound = cfile_read_short(fp);
-      
+
       Weapon_info[i].ammo_usage = cfile_read_byte(fp);
       Weapon_info[i].weapon_vclip = cfile_read_byte(fp);
-      Weapon_info[i].wall_hit_sound = cfile_read_short(fp);    
+      Weapon_info[i].wall_hit_sound = cfile_read_short(fp);
 
       Weapon_info[i].destroyable = cfile_read_byte(fp);
       Weapon_info[i].matter = cfile_read_byte(fp);
@@ -305,14 +305,14 @@ void read_weapon_info(CFILE *fp, int inNumWeaponsToRead, int inOffset)
       Weapon_info[i].flags = cfile_read_byte(fp);
       Weapon_info[i].flash = cfile_read_byte(fp);
       Weapon_info[i].afterburner_size = cfile_read_byte(fp);
-      
+
       Weapon_info[i].children = cfile_read_byte(fp);
 
       Weapon_info[i].energy_usage = cfile_read_fix(fp);
       Weapon_info[i].fire_wait = cfile_read_fix(fp);
-      
+
       Weapon_info[i].multi_damage_scale = cfile_read_fix(fp);
-      
+
       Weapon_info[i].bitmap.index = cfile_read_short(fp);   // bitmap_index = short
 
       Weapon_info[i].blob_size = cfile_read_fix(fp);
@@ -337,7 +337,7 @@ void read_weapon_info(CFILE *fp, int inNumWeaponsToRead, int inOffset)
 void read_powerup_info(CFILE *fp, int inNumPowerupsToRead, int inOffset)
 {
    int i;
-   
+
    for (i = inOffset; i < (inNumPowerupsToRead + inOffset); i++)
    {
       Powerup_info[i].vclip_num = cfile_read_int(fp);
@@ -374,7 +374,7 @@ void read_polygon_models(CFILE *fp, int inNumPolygonModelsToRead, int inOffset)
          cfile_read_vector(&(Polygon_models[i].submodel_maxs), fp);
       cfile_read_vector(&(Polygon_models[i].mins), fp);
       cfile_read_vector(&(Polygon_models[i].maxs), fp);
-      Polygon_models[i].rad = cfile_read_fix(fp);     
+      Polygon_models[i].rad = cfile_read_fix(fp);
       Polygon_models[i].n_textures = cfile_read_byte(fp);
       Polygon_models[i].first_texture = cfile_read_short(fp);
       Polygon_models[i].simpler_model = cfile_read_byte(fp);
@@ -401,7 +401,7 @@ void read_player_ship(CFILE *fp)
 void read_reactor_info(CFILE *fp, int inNumReactorsToRead, int inOffset)
 {
    int i, j;
-   
+
    for (i = inOffset; i < (inNumReactorsToRead + inOffset); i++)
    {
       Reactors[i].model_num = cfile_read_int(fp);
@@ -432,7 +432,7 @@ bitmap_index exitmodel_bm_load_sub( char * filename )
    if (iff_error != IFF_NO_ERROR)      {
       Error("Error loading exit model bitmap <%s> - IFF error: %s",filename,iff_errormsg(iff_error));
    }
-   
+
    if ( iff_has_transparency )
       gr_remap_bitmap_good( new, newpal, iff_transparent_color, 254 );
    else
@@ -443,7 +443,7 @@ bitmap_index exitmodel_bm_load_sub( char * filename )
    bitmap_num.index = extra_bitmap_num;
 
    GameBitmaps[extra_bitmap_num++] = *new;
-   
+
    free( new );
    return bitmap_num;
 }
@@ -511,7 +511,7 @@ void load_exit_models()
          cfile_read_vector(&(Polygon_models[i].submodel_maxs), exit_hamfile);
       cfile_read_vector(&(Polygon_models[i].mins), exit_hamfile);
       cfile_read_vector(&(Polygon_models[i].maxs), exit_hamfile);
-      Polygon_models[i].rad = cfile_read_fix(exit_hamfile);    
+      Polygon_models[i].rad = cfile_read_fix(exit_hamfile);
       Polygon_models[i].n_textures = cfile_read_byte(exit_hamfile);
       Polygon_models[i].first_texture = cfile_read_short(exit_hamfile);
       Polygon_models[i].simpler_model = cfile_read_byte(exit_hamfile);
@@ -545,7 +545,7 @@ void load_exit_models()
 
 //-----------------------------------------------------------------
 // Read data from piggy.
-// This is called when the editor is OUT.  
+// This is called when the editor is OUT.
 // If editor is in, bm_init_use_table() is called.
 int bm_init()
 {
@@ -576,7 +576,7 @@ void bm_read_all(CFILE * fp)
    read_tmap_info(fp, NumTextures, 0);
 #endif
 
-   t = cfile_read_int(fp); 
+   t = cfile_read_int(fp);
    cfread( Sounds, sizeof(ubyte), t, fp );
    cfread( AltSounds, sizeof(ubyte), t, fp );
 
@@ -590,7 +590,7 @@ void bm_read_all(CFILE * fp)
    Num_effects = cfile_read_int(fp);
 #ifndef MACINTOSH
    cfread( Effects, sizeof(eclip), Num_effects, fp );
-#else 
+#else
    read_effect_info(fp, Num_effects, 0);
 #endif
 
@@ -628,7 +628,7 @@ void bm_read_all(CFILE * fp)
 #else
    read_powerup_info(fp, N_powerup_types, 0);
 #endif
-   
+
    N_polygon_models = cfile_read_int(fp);
 #ifndef MACINTOSH
    cfread( Polygon_models, sizeof(polymodel), N_polygon_models, fp );
@@ -734,7 +734,7 @@ void bm_read_extra_robots(char *fname,int type)
    CFILE *fp;
    int t,i;
    int version;
-   
+
    #ifdef MACINTOSH
       ulong varSave = 0;
    #endif
@@ -762,8 +762,8 @@ void bm_read_extra_robots(char *fname,int type)
       read_weapon_info(fp, t, N_D2_WEAPON_TYPES);
    #else
       cfread( &Weapon_info[N_D2_WEAPON_TYPES], sizeof(weapon_info), t, fp );
-   #endif 
-   
+   #endif
+
    //now read robot info
 
    t = cfile_read_int(fp);
@@ -775,7 +775,7 @@ void bm_read_extra_robots(char *fname,int type)
    #else
       cfread( &Robot_info[N_D2_ROBOT_TYPES], sizeof(robot_info), t, fp );
    #endif
-   
+
    t = cfile_read_int(fp);
    N_robot_joints = N_D2_ROBOT_JOINTS+t;
    if (N_robot_joints >= MAX_ROBOT_JOINTS)
@@ -785,7 +785,7 @@ void bm_read_extra_robots(char *fname,int type)
    #else
       cfread( &Robot_joints[N_D2_ROBOT_JOINTS], sizeof(jointpos), t, fp );
    #endif
-   
+
    t = cfile_read_int(fp);
    N_polygon_models = N_D2_POLYGON_MODELS+t;
    if (N_polygon_models >= MAX_POLYGON_MODELS)
@@ -795,17 +795,17 @@ void bm_read_extra_robots(char *fname,int type)
    #else
       cfread( &Polygon_models[N_D2_POLYGON_MODELS], sizeof(polymodel), t, fp );
    #endif
-   
+
    for (i=N_D2_POLYGON_MODELS; i<N_polygon_models; i++ )
    {
       Polygon_models[i].model_data = malloc(Polygon_models[i].model_data_size);
       Assert( Polygon_models[i].model_data != NULL );
       cfread( Polygon_models[i].model_data, sizeof(ubyte), Polygon_models[i].model_data_size, fp );
-      
+
       #ifdef MACINTOSH
          swap_polygon_model_data(Polygon_models[i].model_data);
       #endif
-      
+
       g3_init_polygon_model(Polygon_models[i].model_data);
    }
 
@@ -856,19 +856,19 @@ void load_robot_replacements(char *level_name)
    char ifile_name[FILENAME_LEN];
 
    change_filename_extension(ifile_name, level_name, ".HXM" );
-   
+
    fp = cfopen(ifile_name,"rb");
 
    if (!fp)    //no robot replacement file
       return;
 
    t = cfile_read_int(fp);       //read id "HXM!"
-   if (t!= 0x21584d48) 
+   if (t!= 0x21584d48)
       Error("ID of HXM! file incorrect");
 
    t = cfile_read_int(fp);       //read version
    if (t<1)
-      Error("HXM! version too old (%d)",t); 
+      Error("HXM! version too old (%d)",t);
 
    t = cfile_read_int(fp);       //read number of robots
    for (j=0;j<t;j++) {
@@ -900,13 +900,13 @@ void load_robot_replacements(char *level_name)
       i = cfile_read_int(fp);    //read model number
       if (i<0 || i>=N_polygon_models)
          Error("Polygon model (%d) out of range in (%s).  Range = [0..%d].",i,level_name,N_polygon_models-1);
-   
+
       #ifdef MACINTOSH
          read_polygon_models(fp, 1, i);
       #else
          cfread( &Polygon_models[i], sizeof(polymodel), 1, fp );
       #endif
-   
+
       free(Polygon_models[i].model_data);
       Polygon_models[i].model_data = malloc(Polygon_models[i].model_data_size);
       Assert( Polygon_models[i].model_data != NULL );

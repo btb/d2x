@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -39,7 +39,7 @@ static char rcsid[] = "$Id: gamemine.c 2.21 1996/05/07 16:09:17 jeremy Exp $";
 #include "editor\editor.h"
 #endif
 
-#include "cfile.h"      
+#include "cfile.h"
 #include "fuelcen.h"
 
 #include "hash.h"
@@ -70,7 +70,7 @@ typedef struct v16_segment {
    short    group;                        // group number to which the segment belongs.
    #endif
    short    objects;                      // pointer to objects in this segment
-   ubyte    special;                      // what type of center this is 
+   ubyte    special;                      // what type of center this is
    byte     matcen_num;                   // which center segment is associated with.
    short    value;
    fix      static_light;                 //average static light in segment
@@ -112,8 +112,8 @@ struct mfi_v19 {
    int      links_howmany;
    int      links_sizeof;
    int      object_offset;          // Object info
-   int      object_howmany;      
-   int      object_sizeof;  
+   int      object_howmany;
+   int      object_sizeof;
    int      unused_offset;       //was: doors_offset
    int      unused_howmamy;      //was: doors_howmany
    int      unused_sizeof;       //was: doors_sizeof
@@ -199,7 +199,7 @@ int load_mine_data(CFILE *LoadFile)
 
    for (i=0; i<MAX_TEXTURES; i++ )
       tmap_times_used[i] = 0;
-   
+
    #ifdef EDITOR
    // Create a new mine to initialize things.
    //texpage_goto_first();
@@ -231,13 +231,13 @@ int load_mine_data(CFILE *LoadFile)
    mine_fileinfo.texture_sizeof    =   FILENAME_LEN;  // num characters in a name
    mine_fileinfo.walls_offset      =   -1;
    mine_fileinfo.walls_howmany     =   0;
-   mine_fileinfo.walls_sizeof      =   sizeof(wall);  
+   mine_fileinfo.walls_sizeof      =   sizeof(wall);
    mine_fileinfo.triggers_offset   =   -1;
    mine_fileinfo.triggers_howmany  =   0;
-   mine_fileinfo.triggers_sizeof   =   sizeof(trigger);  
+   mine_fileinfo.triggers_sizeof   =   sizeof(trigger);
    mine_fileinfo.object_offset      =  -1;
    mine_fileinfo.object_howmany     =  1;
-   mine_fileinfo.object_sizeof      =  sizeof(object);  
+   mine_fileinfo.object_sizeof      =  sizeof(object);
 
    mine_fileinfo.level_shake_frequency    =  0;
    mine_fileinfo.level_shake_duration     =  0;
@@ -246,11 +246,11 @@ int load_mine_data(CFILE *LoadFile)
 // if (mine_top_fileinfo.fileinfo_version >= 19) {
       mine_fileinfo.dl_indices_offset     =  -1;
       mine_fileinfo.dl_indices_howmany    =  0;
-      mine_fileinfo.dl_indices_sizeof     =  sizeof(dl_index);  
+      mine_fileinfo.dl_indices_sizeof     =  sizeof(dl_index);
 
       mine_fileinfo.delta_light_offset    =  -1;
       mine_fileinfo.delta_light_howmany      =  0;
-      mine_fileinfo.delta_light_sizeof    =  sizeof(delta_light);  
+      mine_fileinfo.delta_light_sizeof    =  sizeof(delta_light);
 
 // }
 
@@ -259,7 +259,7 @@ int load_mine_data(CFILE *LoadFile)
    mine_fileinfo.segment2_sizeof    = sizeof(segment2);
 
    // Read in mine_top_fileinfo to get size of saved fileinfo.
-   
+
    memset( &mine_top_fileinfo, 0, sizeof(mine_top_fileinfo) );
 
    if (cfseek( LoadFile, mine_start, SEEK_SET ))
@@ -305,7 +305,7 @@ int load_mine_data(CFILE *LoadFile)
    {
       if (cfseek( LoadFile, mine_fileinfo.header_offset, SEEK_SET ))
          Error( "Error seeking to header_offset in gamemine.c" );
-   
+
       if (cfread( &mine_header, mine_fileinfo.header_size, 1, LoadFile )!=1)
          Error( "Error reading mine_header in gamemine.c" );
    }
@@ -324,7 +324,7 @@ int load_mine_data(CFILE *LoadFile)
    {
       if (cfseek( LoadFile, mine_fileinfo.editor_offset, SEEK_SET ))
          Error( "Error seeking to editor_offset in gamemine.c" );
-   
+
       if (cfread( &mine_editor, mine_fileinfo.editor_size, 1, LoadFile )!=1)
          Error( "Error reading mine_editor in gamemine.c" );
    }
@@ -346,29 +346,29 @@ int load_mine_data(CFILE *LoadFile)
    //=============== GENERATE TEXTURE TRANSLATION TABLE ===============
 
    translate = 0;
-   
+
    Assert (NumTextures < MAX_TEXTURES);
 
    {
       hashtable ht;
-   
+
       hashtable_init( &ht, NumTextures );
-   
+
       // Remove all the file extensions in the textures list
-   
+
       for (i=0;i<NumTextures;i++)   {
          temptr = strchr(TmapInfo[i].filename, '.');
          if (temptr) *temptr = '\0';
          hashtable_insert( &ht, TmapInfo[i].filename, i );
       }
-   
+
       // For every texture, search through the texture list
       // to find a matching name.
       for (j=0;j<mine_fileinfo.texture_howmany;j++)   {
          // Remove this texture name's extension
          temptr = strchr(old_tmap_list[j], '.');
          if (temptr) *temptr = '\0';
-   
+
          tmap_xlate_table[j] = hashtable_search( &ht,old_tmap_list[j]);
          if (tmap_xlate_table[j] < 0 ) {
             //tmap_xlate_table[j] = 0;
@@ -379,7 +379,7 @@ int load_mine_data(CFILE *LoadFile)
          if (tmap_xlate_table[j] >= 0)
             tmap_times_used[tmap_xlate_table[j]]++;
       }
-   
+
       {
          int count = 0;
          for (i=0; i<MAX_TEXTURES; i++ )
@@ -387,9 +387,9 @@ int load_mine_data(CFILE *LoadFile)
                count++;
          mprintf( (0, "This mine has %d unique textures in it (~%d KB)\n", count, (count*4096) /1024 ));
       }
-   
+
       // -- mprintf( (0, "Translate=%d\n", translate ));
-   
+
       hashtable_free( &ht );
    }
 
@@ -556,7 +556,7 @@ int load_mine_data(CFILE *LoadFile)
          Vertices[NEW_SEGMENT_VERTICES+i].x = 1;
          Vertices[NEW_SEGMENT_VERTICES+i].y = 1;
          Vertices[NEW_SEGMENT_VERTICES+i].z = 1;
-         
+
          if (cfread( &Vertices[NEW_SEGMENT_VERTICES+i], mine_fileinfo.newseg_verts_sizeof,1,LoadFile )!=1)
             Error( "Error reading Vertices[NEW_SEGMENT_VERTICES+i] in gamemine.c" );
 
@@ -565,14 +565,14 @@ int load_mine_data(CFILE *LoadFile)
    }
 
    #endif
-                                             
+
    //========================= UPDATE VARIABLES ======================
 
    #ifdef EDITOR
 
    // Setting to Markedsegp to NULL ignores Curside and Markedside, which
    // we want to do when reading in an old file.
-   
+
    Markedside = mine_editor.Markedside;
    Curside = mine_editor.Curside;
    for (i=0;i<10;i++)
@@ -583,7 +583,7 @@ int load_mine_data(CFILE *LoadFile)
    else
       Cursegp = NULL;
 
-   if (mine_editor.Markedsegp != -1 ) 
+   if (mine_editor.Markedsegp != -1 )
       Markedsegp = mine_editor.Markedsegp + Segments;
    else
       Markedsegp = NULL;
@@ -733,7 +733,7 @@ int load_mine_data_compiled(CFILE *LoadFile)
 //    temp_ushort = read_short(LoadFile);
 //    Segment2s[segnum].static_light   = ((fix)temp_ushort) << 4;
       //cfread( &Segments[segnum].static_light, sizeof(fix), 1, LoadFile );
-   
+
       // Read the walls as a 6 byte array
       for (sidenum=0; sidenum<MAX_SIDES_PER_SEGMENT; sidenum++ )  {
          Segments[segnum].sides[sidenum].pad = 0;
@@ -745,9 +745,9 @@ int load_mine_data_compiled(CFILE *LoadFile)
 
          if (bit_mask & (1 << sidenum)) {
             cfread( &byte_wallnum, sizeof(ubyte), 1, LoadFile );
-            if ( byte_wallnum == 255 )       
+            if ( byte_wallnum == 255 )
                Segments[segnum].sides[sidenum].wall_num = -1;
-            else     
+            else
                Segments[segnum].sides[sidenum].wall_num = byte_wallnum;
          } else
                Segments[segnum].sides[sidenum].wall_num = -1;
@@ -781,7 +781,7 @@ int load_mine_data_compiled(CFILE *LoadFile)
                temp_ushort = read_short(LoadFile);
                Segments[segnum].sides[sidenum].uvls[i].l = ((fix)temp_ushort) << 1;
                //cfread( &Segments[segnum].sides[sidenum].uvls[i].l, sizeof(fix), 1, LoadFile );
-            }  
+            }
          } else {
             Segments[segnum].sides[sidenum].tmap_num = 0;
             Segments[segnum].sides[sidenum].tmap_num2 = 0;
@@ -789,15 +789,15 @@ int load_mine_data_compiled(CFILE *LoadFile)
                Segments[segnum].sides[sidenum].uvls[i].u = 0;
                Segments[segnum].sides[sidenum].uvls[i].v = 0;
                Segments[segnum].sides[sidenum].uvls[i].l = 0;
-            }  
+            }
          }
       }
    }
 
-#if 0 
+#if 0
    {
       FILE *fp;
-      
+
       fp = fopen("segments.out", "wt");
       for (i = 0; i <= Highest_segment_index; i++) {
 
@@ -818,11 +818,11 @@ int load_mine_data_compiled(CFILE *LoadFile)
             fprintf(fp, "%d\n", Segments[i].sides[j].pad;
             fprintf(fp, "%d\n", Segments[i].sides[j].wall_num;
             fprintf(fp, "%d\n", Segments[i].tmap_num
-         
+
       }
       fclose(fp);
    }
-#endif   
+#endif
 
    Highest_vertex_index = Num_vertices-1;
    Highest_segment_index = Num_segments-1;

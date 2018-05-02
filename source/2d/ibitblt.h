@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -19,7 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // Finds location/size of the largest "hole" in bitmap mask_bmp
 void     gr_ibitblt_find_hole_size ( grs_bitmap * mask_bmp, int *minx, int *miny, int *maxx, int *maxy );
 
-// Creates a code mask that will copy data from a bitmap that is sw by sh starting from 
+// Creates a code mask that will copy data from a bitmap that is sw by sh starting from
 // location sx, sy with a rowsize of srowsize onto another bitmap but only copies
 // into pixel locations that are defined as transparent in bitmap bmp.
 #ifndef MACINTOSH

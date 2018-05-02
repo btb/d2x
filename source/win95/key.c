@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -60,7 +60,7 @@ static volatile keyboard key_data;
 
 static unsigned char Installed=0;
 
-unsigned char ascii_table[128] = 
+unsigned char ascii_table[128] =
 { 255, 255, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',255,255,
   'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 255, 255,
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', 39, '`',
@@ -71,10 +71,10 @@ unsigned char ascii_table[128] =
   255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
   255,255,255,255,255,255,255,255 };
 
-unsigned char shifted_ascii_table[128] = 
+unsigned char shifted_ascii_table[128] =
 { 255, 255, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',255,255,
   'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 255, 255,
-  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~', 
+  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
   255, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 255,255,
   255, ' ', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,255,255,
   255, 255, 255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -147,7 +147,7 @@ void key_flush()
       key_data.keybuffer[i] = 0;
       key_data.time_pressed[i] = 0;
    }
-   
+
    //Clear the keyboard array
 
    CurTime =timer_get_fixed_secondsX();
@@ -216,16 +216,16 @@ void key_putkey (unsigned short keycode)
  {
   // this function simulates a key stroke entered
   char temp;
-  
+
 
   temp = key_data.keytail+1;
   if ( temp >= KEY_BUFFER_SIZE ) temp=0;
-  if (temp!=key_data.keyhead) 
+  if (temp!=key_data.keyhead)
     {
       key_data.keybuffer[key_data.keytail] = keycode;
       key_data.keytail = temp;
     }
- }  
+ }
 
 
 int key_peekkey()
@@ -246,7 +246,7 @@ int key_peekkey()
 int key_getch()
 {
    int dummy=0;
-   
+
    if (!Installed)
       return getch();
 
@@ -288,7 +288,7 @@ fix key_down_time(int scancode)  {
 
 #ifndef NDEBUG
    if (keyd_editor_mode && key_get_shift_status() )
-      return 0;  
+      return 0;
 #endif
 
    if ( !keyd_pressed[scancode] )   {
@@ -340,13 +340,13 @@ void Int5();
 void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack)
 {
    unsigned char scancode, temp;
-   unsigned short keycode;   
-   
+   unsigned short keycode;
+
 // Extract 8-bit OEM scancode
    scancode = (char)((keypack >> 16) & 0xff);
 
    if (vkeycode == VK_SNAPSHOT) {
-      scancode = KEY_PRINT_SCREEN;     
+      scancode = KEY_PRINT_SCREEN;
       keyd_print_screen = 1;
    }
    else if (keypack & 0x01000000) scancode |= 0x80;
@@ -359,7 +359,7 @@ void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack)
       // Handle Pauses the easy way.
          keyd_last_pressed = scancode;
          keyd_time_when_last_pressed = timer_get_fixed_secondsX();
-         
+
          if (!keyd_pressed[scancode]) {
          // First time key is down.
             key_data.TimeKeyWentDown[scancode] = timer_get_fixed_secondsX();
@@ -374,21 +374,21 @@ void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack)
          #endif
          }
          else if (!keyd_repeat) {
-         // don't buffer repeating key if repeat mode is off   
+         // don't buffer repeating key if repeat mode is off
             scancode = 0xaa;
          }
          if (scancode != 0xaa) {
             keycode = (unsigned short)scancode;
-            
-            if (keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT]) 
+
+            if (keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT])
                keycode |= KEY_SHIFTED;
 
-            if (keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT]) 
-               keycode |= KEY_ALTED;         
+            if (keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT])
+               keycode |= KEY_ALTED;
 
             if (keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL])
                keycode |= KEY_CTRLED;
-         
+
          #ifndef NDEBUG
             if (keyd_pressed[KEY_DELETE])
                keycode |= KEY_DEBUGGED;
@@ -404,7 +404,7 @@ void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack)
             }
          }
          break;
-         
+
       case WM_SYSKEYUP:
       case WM_KEYUP:                // handle key ups
          keyd_last_released = scancode;
@@ -414,13 +414,13 @@ void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack)
          temp |= keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT];
          temp |= keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT];
          temp |= keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL];
-      
+
       #ifndef NDEBUG
          temp |= keyd_pressed[KEY_DELETE];
          if (!(keyd_editor_mode && temp))
-      #endif 
+      #endif
             // NOTICE LINK TO ABOVE IF!!!!
-            key_data.TimeKeyHeldDown[scancode] += timer_get_fixed_secondsX() - 
+            key_data.TimeKeyHeldDown[scancode] += timer_get_fixed_secondsX() -
                                              key_data.TimeKeyWentDown[scancode];
          break;
    }  // switch (msg)

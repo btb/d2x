@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -19,7 +19,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 //------------------------------------------------------------
 // A refueling center is one segment... to identify it in the
-// segment structure, the "special" field is set to 
+// segment structure, the "special" field is set to
 // SEGMENT_IS_FUELCEN.  The "value" field is then used for how
 // much fuel the center has left, with a maximum value of 100.
 
@@ -28,8 +28,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // * When all segents are deleted or before a new mine is created
 //   or loaded, call fuelcen_reset().
 // * Add call to fuelcen_create(segment * segp) to make a segment
-//   which isn't a fuel center be a fuel center.  
-// * When a mine is loaded call fuelcen_activate(segp) with each 
+//   which isn't a fuel center be a fuel center.
+// * When a mine is loaded call fuelcen_activate(segp) with each
 //   new segment as it loads. Always do this.
 // * When a segment is deleted, always call fuelcen_delete(segp).
 // * Call fuelcen_replentish_all() to fill 'em all up, like when
@@ -47,7 +47,7 @@ void fuelcen_reset();
 int create_matcen( segment * segp );
 // Makes a segment a fuel center.
 void fuelcen_create( segment * segp);
-// Makes a fuel center active... needs to be called when 
+// Makes a fuel center active... needs to be called when
 // a segment is loaded from disk.
 void fuelcen_activate( segment * segp, int station_type );
 // Deletes a segment as a fuel center.
@@ -78,10 +78,10 @@ extern char Special_names[MAX_CENTER_TYPES][11];
 
 //--repair-- //do the repair center for this frame
 //--repair-- void do_repair_sequence(object *obj);
-//--repair-- 
+//--repair--
 //--repair-- //see if we should start the repair center
 //--repair-- void check_start_repair_center(object *obj);
-//--repair-- 
+//--repair--
 //--repair-- //if repairing, cut it short
 //--repair-- abort_repair_center();
 
@@ -103,7 +103,7 @@ typedef struct FuelCenter {
 } FuelCenter;
 
 // The max number of robot centers per mine.
-#define MAX_ROBOT_CENTERS  20 
+#define MAX_ROBOT_CENTERS  20
 
 extern int Num_robot_centers;
 

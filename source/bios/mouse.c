@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -240,7 +240,7 @@ void _loadds far mouse_handler (int m_ax, int mbx, int mcx, int mdx, int msi, in
          }
       }
    }
-   
+
 }
 
 
@@ -292,7 +292,7 @@ int mouse_init(int enable_cyberman)
       if (Mouse_dos_mem==NULL)   {
          printf( "Unable to allocate DOS buffer in mouse.c\n" );
       } else {
-         // Check for Cyberman...   
+         // Check for Cyberman...
          memset( &rr, 0, sizeof(dpmi_real_regs) );
          rr.es = DPMI_real_segment(Mouse_dos_mem);
          rr.edx = DPMI_real_offset(Mouse_dos_mem);
@@ -301,7 +301,7 @@ int mouse_init(int enable_cyberman)
          if (rr.eax==1) {
             // SWIFT functions supported
             ci = (cyberman_info *)Mouse_dos_mem;
-            if (ci->device_type==1) {  // Cyberman 
+            if (ci->device_type==1) {  // Cyberman
                Mouse.cyberman = 1;
                //printf( "Cyberman mouse detected\n" );
                Mouse.num_buttons = 11;
@@ -351,7 +351,7 @@ void mouse_close()
       memset( &sregs, 0, sizeof(sregs));
       inregs.w.ax    = 0xC;
       inregs.w.cx    = 0;     // disable event handler by setting to zero.
-      inregs.x.edx   = 0;  
+      inregs.x.edx   = 0;
       sregs.es       = 0;
       int386x(0x33, &inregs, &outregs, &sregs);
    }
@@ -388,8 +388,8 @@ void mouse_get_pos( int *x, int *y)
    memset( &inregs, 0, sizeof(inregs));
    inregs.w.ax = 0x3;   // Get Mouse Position and Button Status
    int386(0x33, &inregs, &outregs);
-   *x = (short)outregs.w.cx; 
-   *y = (short)outregs.w.dx; 
+   *x = (short)outregs.w.cx;
+   *y = (short)outregs.w.dx;
 }
 
 void mouse_get_delta( int *dx, int *dy )
@@ -404,8 +404,8 @@ void mouse_get_delta( int *dx, int *dy )
    memset( &inregs, 0, sizeof(inregs));
    inregs.w.ax = 0xb;   // Read Mouse motion counters
    int386(0x33, &inregs, &outregs);
-   *dx = (short)outregs.w.cx; 
-   *dy = (short)outregs.w.dx; 
+   *dx = (short)outregs.w.cx;
+   *dy = (short)outregs.w.dx;
 }
 
 int mouse_get_btns()
@@ -414,7 +414,7 @@ int mouse_get_btns()
    uint flag=1;
    int status = 0;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return 0;
 
    for (i=0; i<MOUSE_MAX_BUTTONS; i++ )   {
@@ -429,7 +429,7 @@ void mouse_set_pos( int x, int y)
 {
    union REGS inregs, outregs;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return;
 
    memset( &inregs, 0, sizeof(inregs));
@@ -445,7 +445,7 @@ void mouse_flush()
    int i;
    fix CurTime;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return;
 
    _disable();
@@ -464,11 +464,11 @@ void mouse_flush()
 
 
 // Returns how many times this button has went down since last call.
-int mouse_button_down_count(int button)   
+int mouse_button_down_count(int button)
 {
    int count;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return 0;
 
    _disable();
@@ -482,11 +482,11 @@ int mouse_button_down_count(int button)
 }
 
 // Returns 1 if this button is currently down
-int mouse_button_state(int button)  
+int mouse_button_state(int button)
 {
    int state;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return 0;
 
    _disable();
@@ -501,11 +501,11 @@ int mouse_button_state(int button)
 
 
 // Returns how long this button has been down since last call.
-fix mouse_button_down_time(int button) 
+fix mouse_button_down_time(int button)
 {
    fix time_down, time;
 
-   if (!Mouse_installed) 
+   if (!Mouse_installed)
       return 0;
 
    _disable();

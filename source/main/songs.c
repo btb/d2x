@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -164,7 +164,7 @@ void songs_stop_redbook(void)
 
    RBASetVolume(old_volume);  //restore volume
 
-   Redbook_playing = 0;    
+   Redbook_playing = 0;
 
 }
 
@@ -231,7 +231,7 @@ int play_redbook_track(int tracknum,int keep_playing)
 int songs_haved2_cd()
 {
    char temp[128],cwd[128];
-   
+
    getcwd(cwd, 128);
 
    strcpy(temp,CDROM_dir);
@@ -245,10 +245,10 @@ int songs_haved2_cd()
       chdir(cwd);
       return 1;
    }
-   
+
    return 0;
 }
-   
+
 
 void songs_play_song( int songnum, int repeat )
 {
@@ -256,7 +256,7 @@ void songs_play_song( int songnum, int repeat )
    Assert(songnum != SONG_ENDLEVEL && songnum != SONG_ENDGAME);   //not in full version
    #endif
 
-   if ( !Songs_initialized ) 
+   if ( !Songs_initialized )
       songs_init();
 
    //stop any music already playing
@@ -302,7 +302,7 @@ void songs_play_level_song( int levelnum )
    current_song_level = levelnum;
 
    songnum = (levelnum>0)?(levelnum-1):(-levelnum);
-   
+
    if (!RBAEnabled() && Redbook_enabled && !FindArg("-noredbook"))
       reinit_redbook();
 
@@ -351,10 +351,10 @@ void songs_check_redbook_repeat()
             play_redbook_track(REDBOOK_CREDITS_TRACK,0);
          else {
             //songs_goto_next_song();
-   
+
             //new code plays all tracks to end of disk, so if disk has
             //stopped we must be at end.  So start again with level 1 song.
-   
+
             songs_play_level_song(1);
          }
          start_time();

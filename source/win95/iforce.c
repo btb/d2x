@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -50,13 +50,13 @@ int IForce_Init(int port)
 
    if (port < 1 || port > 4) return 0;
 
-   SetJoystickPort(port);  
+   SetJoystickPort(port);
    result = InitStick(&iForceCaps);
    if (!result) {
       logentry( "IFORCE: Initialization failed!.\n");
       return 0;
    }
-   
+
    if (!EnableForces()) {
       logentry("IFORCE: Unable to enable forces.\n");
       return 0;
@@ -83,7 +83,7 @@ int IForce_Close()
       i++;
    }
    return 1;
-}  
+}
 
 
 int IForce_GetCaps(IForce_Caps *caps)
@@ -99,7 +99,7 @@ int IForce_GetCaps(IForce_Caps *caps)
       caps->has_pov = 1;
    }
    return 1;
-}     
+}
 
 
 void IForce_ReadRawValues(int *axis)
@@ -107,7 +107,7 @@ void IForce_ReadRawValues(int *axis)
    JOYINFOEX   joy;
 
    if (!iForceInit) return;
-   
+
    memset(&joy, 0, sizeof(joy));
    joy.dwSize = sizeof(joy);
    joy.dwFlags = JOY_RETURNALL | JOY_USEDEADZONE;

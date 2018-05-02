@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -376,7 +376,7 @@ void draw_model(polymodel *pm,int submodel_num,vms_angvec *anim_angles,fix light
          }
 
       }
-   
+
 
    //now draw everything
 
@@ -392,16 +392,16 @@ void draw_model(polymodel *pm,int submodel_num,vms_angvec *anim_angles,fix light
             texture_list[i] = &GameBitmaps[ObjBitmaps[ObjBitmapPtrs[pm->first_texture+i]].index];
          }
 
-#ifdef PIGGY_USE_PAGING       
+#ifdef PIGGY_USE_PAGING
          // Make sure the textures for this object are paged in...
          piggy_page_flushed = 0;
-         for (i=0;i<pm->n_textures;i++)   
+         for (i=0;i<pm->n_textures;i++)
             PIGGY_PAGE_IN( texture_list_index[i] );
          // Hmmm... cache got flushed in the middle of paging all these in,
          // so we need to reread them all in.
          if (piggy_page_flushed) {
             piggy_page_flushed = 0;
-            for (i=0;i<pm->n_textures;i++)   
+            for (i=0;i<pm->n_textures;i++)
                PIGGY_PAGE_IN( texture_list_index[i] );
          }
          // Make sure that they can all fit in memory.

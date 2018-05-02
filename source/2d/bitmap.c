@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -191,7 +191,7 @@ void decode_data_asm(ubyte *data, int num_pixels, ubyte * colormap, int * count 
 void decode_data_asm(ubyte *data, int num_pixels, ubyte *colormap, int *count)
 {
    int i;
-   
+
    for (i = 0; i < num_pixels; i++) {
       count[*data]++;
       *data = colormap[*data];
@@ -205,9 +205,9 @@ void build_colormap_good( ubyte * palette, ubyte * colormap, int * freq )
    int i, r, g, b;
 
    for (i=0; i<256; i++ )  {
-      r = *palette++;      
-      g = *palette++;      
-      b = *palette++;      
+      r = *palette++;
+      g = *palette++;
+      b = *palette++;
       *colormap++ = gr_find_closest_color( r, g, b );
       *freq++ = 0;
    }
@@ -280,7 +280,7 @@ void gr_bitmap_check_transparency( grs_bitmap * bmp )
    ubyte * data;
 
    data = bmp->bm_data;
-   
+
    for (y=0; y<bmp->bm_h; y++ )  {
       for (x=0; x<bmp->bm_w; x++ )  {
          if (*data++ == TRANSPARENCY_COLOR ) {

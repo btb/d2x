@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -65,12 +65,12 @@ static FILE                *LogFile=NULL;    // Log File!
 #define LOGCLOSE
 #else
 #define WRITELOG(t) if (LogFile) { fprintf t; fflush(LogFile); }
-#define LOGINIT(n) LogFile = fopen(n, "wt"); 
+#define LOGINIT(n) LogFile = fopen(n, "wt");
 #define LOGCLOSE if (LogFile) fclose(LogFile);
 #endif
 
-HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc, 
-                            LPSTR lpDeviceName, LPD3DDEVICEDESC lpHWDevDesc, 
+HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc,
+                            LPSTR lpDeviceName, LPD3DDEVICEDESC lpHWDevDesc,
                             LPD3DDEVICEDESC lpHELDevDesc, LPVOID lpUserArg);
 
 int d3d_close();
@@ -88,7 +88,7 @@ int d3d_handle_error(HRESULT err);
 
       We need to do a few things, first get the D3D interface from our
       DirectDraw Object
-      
+
       Then we need to find an active device.
 
       Then we need to query the caps of such a device, and tell our GFX system
@@ -109,11 +109,11 @@ BOOL d3d_init(void)
 
 // initialize Direct3d interface
    res = IDirectDraw_QueryInterface(_lpDD, &IID_IDirect3D, &_lpD3D);
-   if (res != DD_OK) 
+   if (res != DD_OK)
       return d3d_handle_error(res);
 
 // enumerate all 3d devices useable by Direct3d
-   if (d3d_enum_devices(&guid)) return FALSE; 
+   if (d3d_enum_devices(&guid)) return FALSE;
 
    memcpy(&_3DGUID, &guid, sizeof(GUID));
 
@@ -131,12 +131,12 @@ int d3d_close(void)
       d3d_initialized = FALSE;
    }
    return 0;
-}     
+}
 
 
 int d3d_enum_devices(GUID *pguid)
 {
-   HRESULT res; 
+   HRESULT res;
    GUID guid;
 
    res = IDirect3D_EnumDevices(_lpD3D, d3d_enum_callback, (LPVOID)&guid);
@@ -172,7 +172,7 @@ int d3d_init_device(GUID guid)
       WRITELOG((LogFile, "Unable to retrieve device from back buffer. %x\n",res));
       return d3d_handle_error(res);
    }
-         
+
 // Enumerate texture formats
    Assert(d3dCaps.tmap_acc == TRUE);
    d3dCaps.tmap_formats = 0;
@@ -201,7 +201,7 @@ int d3d_enum_texformats()
 
 
 /* Miscellaneous Utilities */
-   
+
 int d3d_handle_error(HRESULT err)
 {
    if (err != DD_OK) return err;
@@ -210,17 +210,17 @@ int d3d_handle_error(HRESULT err)
 
 
 
-/* Direct 3D callbacks 
+/* Direct 3D callbacks
 
       enum_callback:   enumerates all 3D devices attached to system.
-   
+
 
 */
 
-HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc, 
-                           LPSTR lpDeviceName, 
-                           LPD3DDEVICEDESC lpHWDevDesc, 
-                           LPD3DDEVICEDESC lpHELDevDesc, 
+HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc,
+                           LPSTR lpDeviceName,
+                           LPD3DDEVICEDESC lpHWDevDesc,
+                           LPD3DDEVICEDESC lpHELDevDesc,
                            LPVOID lpUserArg)
 {
 
@@ -233,7 +233,7 @@ HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc,
       return D3DENUMRET_OK;
    }
 
-/* Test hardware caps 
+/* Test hardware caps
       texture = MUST HAVE
 */
    if (lpHWDevDesc->dpcTriCaps.dwTextureCaps & D3DPTEXTURECAPS_PERSPECTIVE) {
@@ -249,4 +249,4 @@ HRESULT FAR PASCAL d3d_enum_callback(LPGUID pguid, LPSTR lpDeviceDesc,
 
    return D3DENUMRET_CANCEL;
 }
-   
+

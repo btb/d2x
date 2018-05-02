@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -52,7 +52,7 @@ extern int div0_set_saturate( void *div_addr );
 
 //==========================================================================
 // These three variables count the number of times the divide by zero handler
-// has been used. 
+// has been used.
 //   - div0_num_handled_by_cblist is the number of times a divide exception
 //     has occurred and was corrected by calling a user-specified function.
 //   - div0_num_handled_by_satlist is the number of times a divide exception

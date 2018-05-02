@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -32,7 +32,7 @@ static char rcsid[] = "$Id: texmerge.c 2.3 1996/03/05 11:03:37 jay Exp $";
 
 #define MAX_NUM_CACHE_BITMAPS 50
 
-//static grs_bitmap * cache_bitmaps[MAX_NUM_CACHE_BITMAPS];                     
+//static grs_bitmap * cache_bitmaps[MAX_NUM_CACHE_BITMAPS];
 
 typedef struct {
    grs_bitmap * bitmap;
@@ -95,7 +95,7 @@ int texmerge_init(int num_cached_textures)
       num_cache_entries = num_cached_textures;
    else
       num_cache_entries = MAX_NUM_CACHE_BITMAPS;
-   
+
    for (i=0; i<num_cache_entries; i++ )   {
          // Make temp tmap for use when combining
       Cache[i].bitmap = gr_create_bitmap( 64, 64 );
@@ -155,18 +155,18 @@ grs_bitmap * texmerge_get_cached_bitmap( int tmap_bottom, int tmap_top )
 
    bitmap_top = &GameBitmaps[Textures[tmap_top&0x3FFF].index];
    bitmap_bottom = &GameBitmaps[Textures[tmap_bottom].index];
-   
+
    orient = ((tmap_top&0xC000)>>14) & 3;
 
    least_recently_used = 0;
    lowest_frame_count = Cache[0].last_frame_used;
-   
+
    for (i=0; i<num_cache_entries; i++ )   {
       if ( (Cache[i].last_frame_used > -1) && (Cache[i].top_bmp==bitmap_top) && (Cache[i].bottom_bmp==bitmap_bottom) && (Cache[i].orient==orient ))   {
          cache_hits++;
          Cache[i].last_frame_used = FrameCount;
          return Cache[i].bitmap;
-      }  
+      }
       if ( Cache[i].last_frame_used < lowest_frame_count )  {
          lowest_frame_count = Cache[i].last_frame_used;
          least_recently_used = i;
@@ -200,7 +200,7 @@ grs_bitmap * texmerge_get_cached_bitmap( int tmap_bottom, int tmap_top )
       Cache[least_recently_used].bitmap->bm_flags = bitmap_bottom->bm_flags & (~BM_FLAG_RLE);
       Cache[least_recently_used].bitmap->avg_color = bitmap_bottom->avg_color;
    }
-      
+
    Cache[least_recently_used].top_bmp = bitmap_top;
    Cache[least_recently_used].bottom_bmp = bitmap_bottom;
    Cache[least_recently_used].last_frame_used = FrameCount;
@@ -235,13 +235,13 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
    switch( type ) {
       case 0:
          // Normal
-         
+
 #ifndef MACINTOSH
          gr_merge_textures( bottom_data, top_data, dest_data );
 #else
          for (y=0; y<64; y++ )
             for (x=0; x<64; x++ )   {
-               c = top_data[ 64*y+x ];    
+               c = top_data[ 64*y+x ];
                if (c==TRANSPARENCY_COLOR)
                   c = bottom_data[ 64*y+x ];
                *dest_data++ = c;
@@ -254,7 +254,7 @@ void merge_textures_new( int type, grs_bitmap * bottom_bmp, grs_bitmap * top_bmp
 #else
          for (y=0; y<64; y++ )
             for (x=0; x<64; x++ )   {
-               c = top_data[ 64*x+(63-y) ];     
+               c = top_data[ 64*x+(63-y) ];
                if (c==TRANSPARENCY_COLOR)
                   c = bottom_data[ 64*y+x ];
                *dest_data++ = c;
@@ -312,13 +312,13 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
 
    //mprintf( 0, "SuperX remapping type=%d\n", type );
    //Int3();
-    
+
    switch( type ) {
       case 0:
          // Normal
          for (y=0; y<64; y++ )
             for (x=0; x<64; x++ )   {
-               c = top_data[ 64*y+x ];    
+               c = top_data[ 64*y+x ];
                if (c==TRANSPARENCY_COLOR)
                   c = bottom_data[ 64*y+x ];
                else if (c==254)
@@ -327,10 +327,10 @@ void merge_textures_super_xparent( int type, grs_bitmap * bottom_bmp, grs_bitmap
             }
          break;
       case 1:
-         // 
+         //
          for (y=0; y<64; y++ )
             for (x=0; x<64; x++ )   {
-               c = top_data[ 64*x+(63-y) ];     
+               c = top_data[ 64*x+(63-y) ];
                if (c==TRANSPARENCY_COLOR)
                   c = bottom_data[ 64*y+x ];
                else if (c==254)

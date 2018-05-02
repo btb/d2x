@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -78,7 +78,7 @@ void mputc( short n, char c )
 {
    if (!OPEN) return;
 
-// if (keyd_pressed[KEY_BACKSP]) 
+// if (keyd_pressed[KEY_BACKSP])
 //    mono_int_3();
 
    switch (c)
@@ -354,13 +354,13 @@ void mopen( short n, short row, short col, short width, short height, char * tit
 
 #pragma aux mono_present value [eax] modify [bx] = \
    "mov  ax,1a00h"   \
-   "int  10h"        \  
-   "mov  eax,-1"     \  
+   "int  10h"        \
+   "mov  eax,-1"     \
    "cmp  bl,1"       \
    "je   got_it"     \
    "cmp  bh,1"       \
    "je   got_it"     \
-   "xor  eax,eax"    \  
+   "xor  eax,eax"    \
 "got_it:";
 
 

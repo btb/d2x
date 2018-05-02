@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -34,7 +34,7 @@ void registry_setpath(HKEY hKey)
 {
    hRootKey = HKEY_LOCAL_MACHINE;
 }
-      
+
 
 
 registry_handle *registry_open(const char *path)
@@ -46,7 +46,7 @@ registry_handle *registry_open(const char *path)
    long lres;
    registry_handle *handle;
 
-// Find number of keys 
+// Find number of keys
    regpath = (char *)malloc(strlen(path)+1);
    if (!regpath) return NULL;
 
@@ -54,8 +54,8 @@ registry_handle *registry_open(const char *path)
 
    i = 0;
    regtoken = strtok(regpath, "\\");
-   if (!regtoken) { 
-      free(regpath); 
+   if (!regtoken) {
+      free(regpath);
       return NULL;
    }
 
@@ -84,9 +84,9 @@ registry_handle *registry_open(const char *path)
    if (regtoken) mprintf((0, "%s\\", regtoken));
 
    lres = RegOpenKeyEx(hRootKey, regtoken, 0, KEY_EXECUTE | KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE, &handle->hKey[i]);
-   if (lres != ERROR_SUCCESS) 
+   if (lres != ERROR_SUCCESS)
       goto RegistryOpen_Cleanup;
-   
+
    regtoken = strtok(NULL, "\\");
    i++;
    if (regtoken) mprintf((0, "%s\\", regtoken));
@@ -95,7 +95,7 @@ registry_handle *registry_open(const char *path)
    while (regtoken)
    {
       lres = RegOpenKeyEx(handle->hKey[i-1], regtoken, 0, KEY_EXECUTE | KEY_ENUMERATE_SUB_KEYS | KEY_QUERY_VALUE, &handle->hKey[i]);
-      if (lres != ERROR_SUCCESS) 
+      if (lres != ERROR_SUCCESS)
          goto RegistryOpen_Cleanup;
 
       regtoken = strtok(NULL, "\\");
@@ -115,12 +115,12 @@ RegistryOpen_Cleanup:
          RegCloseKey(handle->hKey[i]);
          handle->hKey[i]=0;
       }
-   
+
    free(handle->hKey);
    free(handle);
    free(regpath);
    return NULL;
-}  
+}
 
 
 int registry_getint(registry_handle *handle, const char *label, int *val)
@@ -130,11 +130,11 @@ int registry_getint(registry_handle *handle, const char *label, int *val)
 
    *val = 0;
    size = sizeof(int);
-   lres = RegQueryValueEx(handle->hKey[handle->keys-1], label, NULL, 
+   lres = RegQueryValueEx(handle->hKey[handle->keys-1], label, NULL,
             &type, (LPBYTE)val, &size);
    if (lres != ERROR_SUCCESS) return 0;
    if (type != REG_DWORD) return 0;
-      
+
    return 1;
 }
 
@@ -145,17 +145,17 @@ int registry_getstring(registry_handle *handle, const char *label, char *str, in
    DWORD type, size;
 
    size = bufsize;
-   lres = RegQueryValueEx(handle->hKey[handle->keys-1], label, NULL, &type, 
+   lres = RegQueryValueEx(handle->hKey[handle->keys-1], label, NULL, &type,
             (LPBYTE)str, &size);
 
    if (lres != ERROR_SUCCESS) return 0;
    if (type != REG_SZ && type != REG_EXPAND_SZ) return 0;
-   
-   return 1;
-}     
 
-      
-   
+   return 1;
+}
+
+
+
 int registry_close(registry_handle *handle)
 {
    int i;
@@ -165,7 +165,7 @@ int registry_close(registry_handle *handle)
          RegCloseKey(handle->hKey[i]);
          handle->hKey[i]=0;
       }
-   
+
    free(handle->hKey);
    free(handle);
 
@@ -207,7 +207,7 @@ int registry_create(const char *name)
    RegCloseKey(hSubKey);
    return 1;
 }
-   
+
 
 int registry_delete(const char *name)
 {
@@ -219,7 +219,7 @@ int registry_delete(const char *name)
 int registry_open(const char *name)
 {
    HANDLE hKey;
-   int result; 
+   int result;
    char path[256];
 
    Assert(hMyRegKey == NULL);
@@ -231,11 +231,11 @@ int registry_open(const char *name)
    if (result != ERROR_SUCCESS) return 0;
 
    hMyRegKey = hKey;
-   
+
    return 1;
 }
 
-   
+
 int registry_close()
 {
    Assert(hMyRegKey != NULL);

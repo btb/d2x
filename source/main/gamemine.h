@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -58,8 +58,8 @@ struct mfi {
    int      links_howmany;
    int      links_sizeof;
    int      object_offset;          // Object info
-   int      object_howmany;      
-   int      object_sizeof;  
+   int      object_howmany;
+   int      object_sizeof;
    int      unused_offset;       //was: doors_offset
    int      unused_howmamy;      //was: doors_howmany
    int      unused_sizeof;       //was: doors_sizeof

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -716,7 +716,7 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
             break;
         default:
             Assert(0);              // Illegal value for Interpolation_method, must be 0,1,2,3
-         
+
     }
    return;
  #endif
@@ -755,13 +755,13 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
       for (i=0; i<nverts; i++, tvp++) {
          tvp->z = fixdiv( min_z, tvp->z );
          // Z is now in the range 0-F1_0 (17 bits)
-         // So, in the next line, we need to 
+         // So, in the next line, we need to
          // scale Z down so that it fits in the available
          // number of significant bits (12 bits now).  But, at the
-         // same time, we're scaling it up by Z_SHIFTER amount so 
-         // that it use 30 bits for Z interpolation, which keeps the 
+         // same time, we're scaling it up by Z_SHIFTER amount so
+         // that it use 30 bits for Z interpolation, which keeps the
          // dz_dx values from becoming so small that they go to zero.
-         tvp->z <<= Z_SHIFTER-(17-DIVIDE_SIG_BITS);               
+         tvp->z <<= Z_SHIFTER-(17-DIVIDE_SIG_BITS);
       }
    }
 
@@ -795,7 +795,7 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
 #else
    switch( lighting_mode ) {
    case 0:
-      switch (render_method) {   
+      switch (render_method) {
       case 1:                       // linear interpolation
          if (Transparency_on)
             ntmap_outerloop_lin_nolight_trans(&Tmap1);
@@ -816,7 +816,7 @@ void draw_tmap(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
       }
       break;
    case 1:
-      switch (render_method) {   
+      switch (render_method) {
       case 1:                       // linear interpolation
          if (Transparency_on)
             ntmap_outerloop_lin_lighted_trans(&Tmap1);

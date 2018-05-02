@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -88,15 +88,15 @@ short gr_vesa_check_mode(short mode)
    rr.eax = 0x4f00;  // Return SuperVGA information
    rr.es = DPMI_real_segment(pDosBuffer);
    rr.edi = DPMI_real_offset(pDosBuffer);
-   
+
    dpmi_real_int386( 0x10, &rr );
-                           
+
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return 5;      // No VESA driver found                            
+      return 5;      // No VESA driver found
    }
-      
+
    memcpy( &vesa_info_block, pDosBuffer, sizeof(VgaInfoBlock) );
-               
+
    // Make sure there is a VESA signature
    if (!memcmp( vesa_info_block.VESASignature, "VESA" ))
       return 5;         // No VESA driver found
@@ -104,31 +104,31 @@ short gr_vesa_check_mode(short mode)
    // We now have a valid VESA driver loaded, so search through the
    // list of supported modes, searching for the mode we want.
    SupportedModes = (ushort *)((vesa_info_block.VideoModePtrSegment*16)+vesa_info_block.VideoModePtrOffset);
-      
+
    while( *SupportedModes != 0xffff )  {
       if (*SupportedModes==mode) {
          break;
-      }  
+      }
       SupportedModes++;
    }
    if (*SupportedModes!=mode) {
       return 4;      // Video card doesn't support that VESA mode.
    }
-         
+
    memset( &rr, 0, sizeof(dpmi_real_regs);      // Clear real registers...
    rr.eax = 0x4f01;  // Return SuperVGA mode information
    rr.ecx = mode;    // Super VGA video mode
    rr.es = DPMI_real_segment(pDosBuffer);
    rr.edi = DPMI_real_offset(pDosBuffer);
-   
+
    dpmi_real_int386x( 0x10, &rr );
-                     
+
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return 5;      // No VESA driver found                            
+      return 5;      // No VESA driver found
    }
 
    memcpy( &vesa_mode_info_block, pDosBuffer, sizeof(ModeInfoBlock) );
-   
+
    if (!(vesa_mode_info_block.ModeAttributes&1) )  {
       return 3;      // Monitor doesn't support this mode.
    }
@@ -141,10 +141,10 @@ short gr_vesa_check_mode(short mode)
    case 4:  PageSizeShift = 4; break;
    case 2:  PageSizeShift = 5; break;
    case 1:  PageSizeShift = 6; break;
-   default: 
+   default:
       return 2;      // Granularity not supported.
    }
-   
+
    return 0;
 }
 
@@ -167,7 +167,7 @@ void * gr_save_mode_vesa()
    dpmi_real_regs rr;
    VgaInfoBlock vesa_info_block;
    int save_size;
-   
+
    pDosBuffer = dpmi_real_malloc(sizeof(VgaInfoBlock), &DosSelector);
    if (!pDosBuffer)
       return NULL;
@@ -181,19 +181,19 @@ void * gr_save_mode_vesa()
    memcpy( &vesa_info_block, pDosBuffer, sizeof(VgaInfoBlock) );
    dpmi_real_free(DosSelector);
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return NULL;      // No VESA driver found                            
+      return NULL;      // No VESA driver found
    }
    // Make sure there is a VESA signature
    if (!memcmp( vesa_info_block.VESASignature, "VESA", 4 ))
       return NULL;         // No VESA driver found
-   
+
    memset( &rr, 0, sizeof(dpmi_real_regs));     // Clear real registers...
    rr.eax = 0x4f04;  // Save/Restore SuperVGA video state
    rr.edx = 00;      // Return save/restore buffer size
    rr.ecx = 0xf;     // Save all states
    dpmi_real_int386x( 0x10, &rr );
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return NULL;      // No VESA driver found                            
+      return NULL;      // No VESA driver found
    }
    save_size = (rr.ebx & 0xffff)*64;      // How many bytes save buffer requires...
 
@@ -211,7 +211,7 @@ void * gr_save_mode_vesa()
    dpmi_real_int386x( 0x10, &rr );
    if ((rr.eax & 0xffff) != 0x4f )  {
       dpmi_real_free(DosSelector);
-      return NULL;      // No VESA driver found                            
+      return NULL;      // No VESA driver found
    }
    gr_restore_mode_vesa( pDosBuffer );
    return pDosBuffer;
@@ -223,7 +223,7 @@ void gr_restore_mode_vesa(void * buffer)
    ushort DosSelector;
    dpmi_real_regs rr;
    VgaInfoBlock vesa_info_block;
-   
+
    pDosBuffer = dpmi_real_malloc(sizeof(VgaInfoBlock), &DosSelector);
    if (!pDosBuffer)
       return;
@@ -237,12 +237,12 @@ void gr_restore_mode_vesa(void * buffer)
    memcpy( &vesa_info_block, pDosBuffer, sizeof(VgaInfoBlock) );
    dpmi_real_free(DosSelector);
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return;     // No VESA driver found                            
+      return;     // No VESA driver found
    }
    // Make sure there is a VESA signature
    if (!memcmp( vesa_info_block.VESASignature, "VESA", 4 ))
       return;        // No VESA driver found
-   
+
    memset( &rr, 0, sizeof(dpmi_real_regs));     // Clear real registers...
    rr.eax = 0x4f04;  // Save/Restore SuperVGA video state
    rr.edx = 2;       // Restore video state
@@ -251,7 +251,7 @@ void gr_restore_mode_vesa(void * buffer)
    rr.ebx = DPMI_real_offset(buffer);
    dpmi_real_int386x( 0x10, &rr );
    if ((rr.eax & 0xffff) != 0x4f )  {
-      return;     // No VESA driver found                            
+      return;     // No VESA driver found
    }
    return;
 }

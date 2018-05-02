@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -34,9 +34,9 @@ static struct find_t _FileFindStruct;
 int   FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
 {
    unsigned retval;
-   
+
    if (_FileFindFlag) return -1;
-   
+
    retval = _dos_findfirst(search_str, 0, &_FileFindStruct);
    if (retval) return (int)retval;
    else {
@@ -60,16 +60,16 @@ int   FileFindNext(FILEFINDSTRUCT *ffstruct)
       ffstruct->size = _FileFindStruct.size;
       strcpy(ffstruct->name, _FileFindStruct.name);
       return (int)retval;
-   }  
+   }
 }
- 
+
 
 int   FileFindClose(void)
 {
    unsigned retval = 0;
 
    if (!_FileFindFlag) return -1;
-   
+
    if (retval) return (int)retval;
    else {
       _FileFindFlag = 0;
@@ -102,7 +102,7 @@ int GetDiskFree ()
    _dos_getdrive(&drive);
    if (!_dos_getdiskfree(drive, &dfree))
       return (dfree.avail_clusters * dfree.sectors_per_cluster * dfree.bytes_per_sector);
-   
+
    return (-1);
  }
 

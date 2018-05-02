@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -135,13 +135,13 @@ int mouse_init(int enable_cyberman)
 {
    if (Mouse_installed)
       return 2;
-            
+
    Mouse_installed = 1;
 
    atexit( mouse_close );
 
    mouse_flush();
-   
+
 
    return 2;
 }
@@ -176,14 +176,14 @@ void mouse_get_pos( int *x, int *y)
 void mouse_get_delta( int *dx, int *dy )
 {
    POINT point;
- 
-   GetCursorPos(&point);   
+
+   GetCursorPos(&point);
    *dx = (point.x-MOUSE_CENTER_X)/2;
    *dy = (point.y-MOUSE_CENTER_Y)/2;
 
    //mprintf((0,"C=%d (%d,%d) (%d,%d) ",Mouse_center,point.x,point.y,*dx,*dy));
 
-   if (Mouse_center) 
+   if (Mouse_center)
       //SetCursorPos (320,240);
       SetCursorPos (MOUSE_CENTER_X,MOUSE_CENTER_Y);
 }
@@ -207,7 +207,7 @@ void mouse_set_pos( int x, int y)
    POINT point;
    point.x = x;
    point.y = y;
-   
+
    ClientToScreen(_hMouseWnd, &point);
    SetCursorPos(point.x, point.y);
 }
@@ -231,7 +231,7 @@ void mouse_flush()
 
 
 // Returns how many times this button has went down since last call.
-int mouse_button_down_count(int button) 
+int mouse_button_down_count(int button)
 {
    int count;
 
@@ -243,10 +243,10 @@ int mouse_button_down_count(int button)
 }
 
 // Returns 1 if this button is currently down
-int mouse_button_state(int button)      
+int mouse_button_state(int button)
 {
    int state;
-   
+
 
    state = Mouse.pressed[button];
 
@@ -256,7 +256,7 @@ int mouse_button_state(int button)
 
 
 // Returns how long this button has been down since last call.
-fix mouse_button_down_time(int button)  
+fix mouse_button_down_time(int button)
 {
    fix time_down, time;
 
@@ -287,7 +287,7 @@ void mouse_win_callback(UINT msg, UINT wParam, UINT lParam)
    if (!timer_initialized) return;
 
    Mouse.ctime = timer_get_fixed_secondsX();
-   
+
    switch (msg)
    {
       case WM_LBUTTONDOWN:
@@ -309,7 +309,7 @@ void mouse_win_callback(UINT msg, UINT wParam, UINT lParam)
          break;
 
       case WM_RBUTTONDOWN:
-   
+
          mprintf ((0,"Right down!\n"));
          if (!Mouse.pressed[MB_RIGHT]) {
             Mouse.pressed[MB_RIGHT] = 1;
@@ -347,4 +347,4 @@ void mouse_win_callback(UINT msg, UINT wParam, UINT lParam)
 
 
 
-      
+

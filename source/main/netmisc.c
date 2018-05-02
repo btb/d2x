@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -116,7 +116,7 @@ ushort netmisc_calc_checksum_pc( void * vptr, int len )
       sum2 += sum1;
    }
    sum2 %= 255;
-   
+
    return ((sum1<<8)+ sum2);
 }
 
@@ -137,7 +137,7 @@ byte out_buffer[IPX_MAX_DATA_SIZE];    // used for tmp netgame packets as well a
 void receive_netplayer_info(ubyte *data, netplayer_info *info)
 {
    int loc = 0;
-   
+
    memcpy(info->callsign, &(data[loc]), CALLSIGN_LEN+1);    loc += CALLSIGN_LEN+1;
    memcpy(&(info->network.ipx.server), &(data[loc]), 4);             loc += 4;
    memcpy(&(info->network.ipx.node), &(data[loc]), 6);                  loc += 6;
@@ -145,7 +145,7 @@ void receive_netplayer_info(ubyte *data, netplayer_info *info)
    info->version_minor = data[loc];                   loc++;
    memcpy(&(info->computer_type), &(data[loc]), 1);         loc++;      // memcpy to avoid compile time warning about enum
    info->connected = data[loc];                       loc++;
-   memcpy(&(info->socket), &(data[loc]), 2);             loc += 2; 
+   memcpy(&(info->socket), &(data[loc]), 2);             loc += 2;
    memcpy (&(info->rank),&(data[loc]),1);                loc++;
 //MWA  don't think we need to swap this because we need it in high order   info->socket = swapshort(info->socket);
 }
@@ -155,7 +155,7 @@ void send_netplayers_packet(ubyte *server, ubyte *node)
    int i, tmpi;
    int loc = 0;
    short tmps;
-   
+
    memset(out_buffer, 0, sizeof(out_buffer));
    out_buffer[0] = NetPlayers.type;                loc++;
    tmpi = INTEL_INT(NetPlayers.Security);
@@ -169,10 +169,10 @@ void send_netplayers_packet(ubyte *server, ubyte *node)
       memcpy(&(out_buffer[loc]), &(NetPlayers.players[i].computer_type), 1);     loc++;
       memcpy(&(out_buffer[loc]), &(NetPlayers.players[i].connected), 1);         loc++;
       tmps = INTEL_SHORT(NetPlayers.players[i].socket);
-      memcpy(&(out_buffer[loc]), &tmps, 2);                             loc += 2;      
+      memcpy(&(out_buffer[loc]), &tmps, 2);                             loc += 2;
       memcpy(&(out_buffer[loc]), &(NetPlayers.players[i].rank), 1);        loc++;
    }
-   
+
    if ((server == NULL) && (node == NULL))
       ipx_send_broadcast_packet_data( out_buffer, loc );
    else
@@ -213,7 +213,7 @@ void send_sequence_packet(sequence_packet seq, ubyte *server, ubyte *node, ubyte
    tmps = swapshort(seq.player.socket);
    memcpy(&(out_buffer[loc]), &tmps, 2);                    loc += 2;
    out_buffer[loc]=seq.player.rank;                         loc++;      // for pad byte
-   if (net_address != NULL)   
+   if (net_address != NULL)
       ipx_send_packet_data( out_buffer, loc, server, node, net_address);
    else if ((server == NULL) && (node == NULL))
       ipx_send_broadcast_packet_data( out_buffer, loc );
@@ -224,7 +224,7 @@ void send_sequence_packet(sequence_packet seq, ubyte *server, ubyte *node, ubyte
 void receive_sequence_packet(ubyte *data, sequence_packet *seq)
 {
    int loc = 0;
-   
+
    seq->type = data[0];                loc++;
    memcpy(&(seq->Security), &(data[loc]), 4);   loc += 4;   loc += 3;      // +3 for pad byte
    seq->Security = INTEL_INT(seq->Security);
@@ -237,7 +237,7 @@ void send_netgame_packet(ubyte *server, ubyte *node, ubyte *net_address, int lit
    ushort tmps, p;
    int i, j;
    int loc = 0;
-   
+
    memset(out_buffer, 0, IPX_MAX_DATA_SIZE);
    memcpy(&(out_buffer[loc]), &(Netgame.type), 1); loc++;
    tmpi = INTEL_INT(Netgame.Security);
@@ -259,7 +259,7 @@ void send_netgame_packet(ubyte *server, ubyte *node, ubyte *net_address, int lit
    memcpy(&(out_buffer[loc]), &(Netgame.version_major), 1);    loc++;
    memcpy(&(out_buffer[loc]), &(Netgame.version_minor), 1);    loc++;
    memcpy(&(out_buffer[loc]), &(Netgame.team_vector), 1);         loc++;
-   
+
    if (lite_flag)
       goto do_send;
 
@@ -293,7 +293,7 @@ void send_netgame_packet(ubyte *server, ubyte *node, ubyte *net_address, int lit
    tmps = INTEL_SHORT(tmps);
    memcpy(&(out_buffer[loc]), &tmps, 2);                    loc += 2;
 #endif
-   
+
    memcpy(&(out_buffer[loc]), Netgame.team_name, 2*(CALLSIGN_LEN+1)); loc += 2*(CALLSIGN_LEN+1);
    for (i = 0; i < MAX_PLAYERS; i++) {
       tmpi = INTEL_INT(Netgame.locations[i]);
@@ -344,7 +344,7 @@ void send_netgame_packet(ubyte *server, ubyte *node, ubyte *net_address, int lit
    memcpy(&(out_buffer[loc]), &(Netgame.ShortPackets), 1);  loc ++;
 
 do_send:
-   if (net_address != NULL)   
+   if (net_address != NULL)
       ipx_send_packet_data( out_buffer, loc, server, node, net_address);
    else if ((server == NULL) && (node == NULL))
       ipx_send_broadcast_packet_data( out_buffer, loc );
@@ -357,7 +357,7 @@ void receive_netgame_packet(ubyte *data, netgame_info *netgame, int lite_flag)
    int i, j;
    int loc = 0;
    short bitfield, new_field;
-   
+
    memcpy(&(netgame->type), &(data[loc]), 1);                  loc++;
    memcpy(&(netgame->Security), &(data[loc]), 4);              loc += 4;
    netgame->Security = INTEL_INT(netgame->Security);
@@ -481,55 +481,55 @@ void swap_object(object *obj)
    obj->orient.uvec.x      = INTEL_INT(obj->orient.uvec.x);
    obj->orient.uvec.y      = INTEL_INT(obj->orient.uvec.y);
    obj->orient.uvec.z      = INTEL_INT(obj->orient.uvec.z);
-   
+
    obj->size            = INTEL_INT(obj->size);
    obj->shields         = INTEL_INT(obj->shields);
-   
+
    obj->last_pos.x      = INTEL_INT(obj->last_pos.x);
    obj->last_pos.y      = INTEL_INT(obj->last_pos.y);
    obj->last_pos.z      = INTEL_INT(obj->last_pos.z);
-   
+
    obj->lifeleft        = INTEL_INT(obj->lifeleft);
-   
+
    switch (obj->movement_type) {
-   
+
    case MT_PHYSICS:
-   
+
       obj->mtype.phys_info.velocity.x = INTEL_INT(obj->mtype.phys_info.velocity.x);
       obj->mtype.phys_info.velocity.y = INTEL_INT(obj->mtype.phys_info.velocity.y);
       obj->mtype.phys_info.velocity.z = INTEL_INT(obj->mtype.phys_info.velocity.z);
-   
+
       obj->mtype.phys_info.thrust.x    = INTEL_INT(obj->mtype.phys_info.thrust.x);
       obj->mtype.phys_info.thrust.y    = INTEL_INT(obj->mtype.phys_info.thrust.y);
       obj->mtype.phys_info.thrust.z    = INTEL_INT(obj->mtype.phys_info.thrust.z);
-   
+
       obj->mtype.phys_info.mass     = INTEL_INT(obj->mtype.phys_info.mass);
       obj->mtype.phys_info.drag     = INTEL_INT(obj->mtype.phys_info.drag);
       obj->mtype.phys_info.brakes      = INTEL_INT(obj->mtype.phys_info.brakes);
-   
+
       obj->mtype.phys_info.rotvel.x = INTEL_INT(obj->mtype.phys_info.rotvel.x);
       obj->mtype.phys_info.rotvel.y = INTEL_INT(obj->mtype.phys_info.rotvel.y);
       obj->mtype.phys_info.rotvel.z    = INTEL_INT(obj->mtype.phys_info.rotvel.z);
-   
+
       obj->mtype.phys_info.rotthrust.x = INTEL_INT(obj->mtype.phys_info.rotthrust.x);
       obj->mtype.phys_info.rotthrust.y = INTEL_INT(obj->mtype.phys_info.rotthrust.y);
       obj->mtype.phys_info.rotthrust.z = INTEL_INT(obj->mtype.phys_info.rotthrust.z);
-   
+
       obj->mtype.phys_info.turnroll = INTEL_INT(obj->mtype.phys_info.turnroll);
       obj->mtype.phys_info.flags    = INTEL_SHORT(obj->mtype.phys_info.flags);
-   
+
       break;
-   
+
    case MT_SPINNING:
-      
+
       obj->mtype.spin_rate.x = INTEL_INT(obj->mtype.spin_rate.x);
       obj->mtype.spin_rate.y = INTEL_INT(obj->mtype.spin_rate.y);
       obj->mtype.spin_rate.z = INTEL_INT(obj->mtype.spin_rate.z);
       break;
    }
-   
+
    switch (obj->control_type) {
-   
+
    case CT_WEAPON:
       obj->ctype.laser_info.parent_type      = INTEL_SHORT(obj->ctype.laser_info.parent_type);
       obj->ctype.laser_info.parent_num    = INTEL_SHORT(obj->ctype.laser_info.parent_num);
@@ -539,7 +539,7 @@ void swap_object(object *obj)
       obj->ctype.laser_info.track_goal    = INTEL_SHORT(obj->ctype.laser_info.track_goal);
       obj->ctype.laser_info.multiplier    = INTEL_INT(obj->ctype.laser_info.multiplier);
       break;
-   
+
    case CT_EXPLOSION:
       obj->ctype.expl_info.spawn_time     = INTEL_INT(obj->ctype.expl_info.spawn_time);
       obj->ctype.expl_info.delete_time = INTEL_INT(obj->ctype.expl_info.delete_time);
@@ -548,7 +548,7 @@ void swap_object(object *obj)
       obj->ctype.expl_info.prev_attach = INTEL_SHORT(obj->ctype.expl_info.prev_attach);
       obj->ctype.expl_info.next_attach = INTEL_SHORT(obj->ctype.expl_info.next_attach);
       break;
-   
+
    case CT_AI:
       obj->ctype.ai_info.hide_segment        = INTEL_SHORT(obj->ctype.ai_info.hide_segment);
       obj->ctype.ai_info.hide_index       = INTEL_SHORT(obj->ctype.ai_info.hide_index);
@@ -557,11 +557,11 @@ void swap_object(object *obj)
       obj->ctype.ai_info.danger_laser_signature = INTEL_INT(obj->ctype.ai_info.danger_laser_signature);
       obj->ctype.ai_info.dying_start_time    = INTEL_INT(obj->ctype.ai_info.dying_start_time);
       break;
-   
+
    case CT_LIGHT:
       obj->ctype.light_info.intensity = INTEL_INT(obj->ctype.light_info.intensity);
       break;
-   
+
    case CT_POWERUP:
       obj->ctype.powerup_info.count = INTEL_INT(obj->ctype.powerup_info.count);
       obj->ctype.powerup_info.creation_time = INTEL_INT(obj->ctype.powerup_info.creation_time);
@@ -570,29 +570,29 @@ void swap_object(object *obj)
       //if (obj->id == POW_VULCAN_WEAPON)
       // obj->ctype.powerup_info.count = VULCAN_WEAPON_AMMO_AMOUNT;
       break;
-   
+
    }
-   
+
    switch (obj->render_type) {
-   
+
    case RT_MORPH:
    case RT_POLYOBJ: {
       int i;
-   
+
       obj->rtype.pobj_info.model_num      = INTEL_INT(obj->rtype.pobj_info.model_num);
-   
+
       for (i=0;i<MAX_SUBMODELS;i++) {
          obj->rtype.pobj_info.anim_angles[i].p = INTEL_INT(obj->rtype.pobj_info.anim_angles[i].p);
          obj->rtype.pobj_info.anim_angles[i].b = INTEL_INT(obj->rtype.pobj_info.anim_angles[i].b);
          obj->rtype.pobj_info.anim_angles[i].h = INTEL_INT(obj->rtype.pobj_info.anim_angles[i].h);
       }
-   
+
       obj->rtype.pobj_info.subobj_flags   = INTEL_INT(obj->rtype.pobj_info.subobj_flags);
       obj->rtype.pobj_info.tmap_override  = INTEL_INT(obj->rtype.pobj_info.tmap_override);
       obj->rtype.pobj_info.alt_textures   = INTEL_INT(obj->rtype.pobj_info.alt_textures);
       break;
    }
-   
+
    case RT_WEAPON_VCLIP:
    case RT_HOSTAGE:
    case RT_POWERUP:
@@ -600,10 +600,10 @@ void swap_object(object *obj)
       obj->rtype.vclip_info.vclip_num  = INTEL_INT(obj->rtype.vclip_info.vclip_num);
       obj->rtype.vclip_info.frametime  = INTEL_INT(obj->rtype.vclip_info.frametime);
       break;
-   
+
    case RT_LASER:
       break;
-   
+
    }
 //  END OF SWAPPING OBJECT STRUCTURE
 
@@ -626,28 +626,28 @@ ushort netmisc_calc_checksum( void * vptr, int len )
       sum2 += sum1;
    }
    sum2 %= 255;
-   
+
    return ((sum1<<8)+ sum2);
 }
 
 #endif
-//--unused-- //Finds the difference between block1 and block2.  Fills in diff_buffer and 
+//--unused-- //Finds the difference between block1 and block2.  Fills in diff_buffer and
 //--unused-- //returns the size of diff_buffer.
 //--unused-- int netmisc_find_diff( void *block1, void *block2, int block_size, void *diff_buffer )
 //--unused-- {
 //--unused--   int mode;
 //--unused--   ushort *c1, *c2, *diff_start, *c3;
 //--unused--   int i, j, size, diff, n , same;
-//--unused-- 
+//--unused--
 //--unused--   size=(block_size+1)/sizeof(ushort);
 //--unused--   c1 = (ushort *)block1;
 //--unused--   c2 = (ushort *)block2;
 //--unused--   c3 = (ushort *)diff_buffer;
-//--unused-- 
+//--unused--
 //--unused--   mode = same = diff = n = 0;
-//--unused-- 
+//--unused--
 //--unused--   //mprintf( 0, "=================================\n" );
-//--unused-- 
+//--unused--
 //--unused--   for (i=0; i<size; i++, c1++, c2++ ) {
 //--unused--      if (*c1 != *c2 ) {
 //--unused--         if (mode==0)   {
@@ -692,7 +692,7 @@ ushort netmisc_calc_checksum( void * vptr, int len )
 //--unused--            diff_start = c2;
 //--unused--         }
 //--unused--      }
-//--unused--   
+//--unused--
 //--unused--   }
 //--unused--   if (mode==0)   {
 //--unused--      // send how many the same
@@ -706,25 +706,25 @@ ushort netmisc_calc_checksum( void * vptr, int len )
 //--unused--      for (j=0; j<diff; j++ )
 //--unused--         c3[n++] = diff_start[j];
 //--unused--   }
-//--unused-- 
+//--unused--
 //--unused--   //mprintf( 0, "=================================\n" );
-//--unused--   
+//--unused--
 //--unused--   return n*2;
 //--unused-- }
 
 //--unused-- //Applies diff_buffer to block1 to create a new block1.  Returns the final
 //--unused-- //size of block1.
-//--unused-- int netmisc_apply_diff(void *block1, void *diff_buffer, int diff_size )   
+//--unused-- int netmisc_apply_diff(void *block1, void *diff_buffer, int diff_size )
 //--unused-- {
 //--unused--   unsigned int i, j, n, size;
 //--unused--   ushort *c1, *c2;
-//--unused-- 
+//--unused--
 //--unused--   //mprintf( 0, "=================================\n" );
 //--unused--   c1 = (ushort *)diff_buffer;
 //--unused--   c2 = (ushort *)block1;
-//--unused-- 
+//--unused--
 //--unused--   size = diff_size/2;
-//--unused-- 
+//--unused--
 //--unused--   i=j=0;
 //--unused--   while (1)   {
 //--unused--      j += c1[i];       // Same
@@ -743,7 +743,7 @@ ushort netmisc_calc_checksum( void * vptr, int len )
 //--unused--      if ( i>=size) break;
 //--unused--   }
 //--unused--   //mprintf( 0, "=================================\n" );
-//--unused-- 
+//--unused--
 //--unused--   return j*2;
 //--unused-- }
 

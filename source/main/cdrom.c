@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -42,7 +42,7 @@ typedef struct _Dev_Hdr {
 int find_descent_cd()
 {
    dpmi_real_regs rregs;
-      
+
    // Get dos memory for call...
    dev_list * buf;
    dev_header *device;
@@ -58,7 +58,7 @@ int find_descent_cd()
    }
    num_drives = rregs.ebx;
 
-   buf = (dev_list *)dpmi_get_temp_low_buffer( sizeof(dev_list)*26 );   
+   buf = (dev_list *)dpmi_get_temp_low_buffer( sizeof(dev_list)*26 );
    if (buf==NULL) {
       return -2;        // Error getting memory!
    }
@@ -77,14 +77,14 @@ int find_descent_cd()
       if (cur_drive == device->dev_letr) {
          if (!chdir("\\descent")) {
             FILE * fp;
-            fp = fopen( "saturn.hog", "rb" );   
+            fp = fopen( "saturn.hog", "rb" );
             if ( fp )   {
                cdrom_drive = device->dev_letr;
                fclose(fp);
                break;
             }
          }
-      }           
+      }
    }
    _dos_setdrive(cdrive,&cur_drive);
    return cdrom_drive;

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -24,8 +24,8 @@ static char rcsid[] = "$Id: windigi.c 1.26 1996/09/24 23:26:12 samir Exp $";
 #include<stdlib.h>
 #include<stdio.h>
 #include<dos.h>
-#include<fcntl.h> 
-#include<malloc.h> 
+#include<fcntl.h>
+#include<malloc.h>
 #include<bios.h>
 #include<io.h>
 #include<string.h>
@@ -57,7 +57,7 @@ static char rcsid[] = "$Id: windigi.c 1.26 1996/09/24 23:26:12 samir Exp $";
 #define MAX_CHANNELS 32
 
 typedef struct digi_channel {
-   ubyte    used;          // Non-zero if a sound is playing on this channel 
+   ubyte    used;          // Non-zero if a sound is playing on this channel
    int      soundnum;      // Which sound effect is on this channel, -1 if none
    WORD     handle;        // What SS handle this is playing on
    int      soundobj;      // Which soundobject is on this channel
@@ -112,7 +112,7 @@ extern int Redbook_playing;
 
 
 /* Obsolete */
-WORD     hSOSDigiDriver = 0xffff;            // handle for the SOS driver being used 
+WORD     hSOSDigiDriver = 0xffff;            // handle for the SOS driver being used
 WORD     hSOSMidiDriver = 0xffff;         // handle for the loaded MIDI driver
 WORD     hTimerEventHandle = 0xffff;         // handle for the timer function
 int digi_driver_dma                                = 0;
@@ -176,7 +176,7 @@ int digi_init(void)
          return 2;
       }
    }
-      
+
    if (!digi_atexit_called) {
       atexit(digi_close);
       digi_atexit_called = 1;
@@ -190,7 +190,7 @@ int digi_init(void)
 
    digi_stop_all_channels();
 
-   return 0; 
+   return 0;
 }
 
 
@@ -214,7 +214,7 @@ int digi_init_digi(void)
 
    Assert(digi_sample_rate == SAMPLE_RATE_11K || digi_sample_rate == SAMPLE_RATE_22K);
 
-   if (!digi_system_initialized) 
+   if (!digi_system_initialized)
       return 1;
 
 // Determine board type?
@@ -227,7 +227,7 @@ int digi_init_digi(void)
    }
 
    SSGetCaps(&sscaps);
-   if (sscaps.sample_rate < SAMPLE_RATE_22K) 
+   if (sscaps.sample_rate < SAMPLE_RATE_22K)
       digi_sample_rate = SAMPLE_RATE_11K;
 
 // logentry("Detected sound card using (%d Hz).  Using (%d Hz) samples.\n", sscaps.sample_rate, digi_sample_rate);
@@ -252,7 +252,7 @@ int digi_init_midi(void)
    DWORD res;
 
 // check to see if MIDI is going to be used.
-   if (!midi_system_initialized) 
+   if (!midi_system_initialized)
       return 1;
 
 // Initialize MIDI system and driver
@@ -263,14 +263,14 @@ int digi_init_midi(void)
       return 1;
    }
    else {
-//@@     switch(sMIDICaps.wTechnology) 
+//@@     switch(sMIDICaps.wTechnology)
 //@@     {
 //@@        case MOD_SYNTH:
 //@@           mprintf((0, "Using SB/SYNTH for MIDI.\n"));  break;
 //@@
 //@@        case MOD_FMSYNTH:
 //@@           mprintf((0, "Using ADLIB FM for MIDI.\n")); break;
-//@@        
+//@@
 //@@        case MOD_MAPPER:
 //@@           mprintf((0, "Using MIDI mapping.\n")); break;
 //@@
@@ -285,14 +285,14 @@ int digi_init_midi(void)
 //@@     }
 
       digi_midi_type = 1;
-   
+
       MIDIDriverInit = TRUE;
    }
 
    digi_set_midi_volume(Config_midi_volume*16);
 
    return 0;
-}     
+}
 
 
 void digi_close_midi()
@@ -319,7 +319,7 @@ void digi_close_midi()
 }
 
 
-void digi_reset() 
+void digi_reset()
 {
    if ( Digi_initialized ) {
       digi_stop_all_channels();
@@ -351,9 +351,9 @@ void digi_set_max_channels(int n)
 {
    digi_max_channels = n;
 
-   if ( digi_max_channels < 1 ) 
+   if ( digi_max_channels < 1 )
       digi_max_channels = 1;
-   if ( digi_max_channels > 32 ) 
+   if ( digi_max_channels > 32 )
       digi_max_channels = 32;
 
    if ( !Digi_initialized ) return;
@@ -372,7 +372,7 @@ int digi_is_channel_playing( int c )
    if (!Digi_initialized) return 0;
    if (!DIGIDriverInit) return 0;
 
-   if ( channels[c].used && SSChannelPlaying((int)channels[c].handle)) 
+   if ( channels[c].used && SSChannelPlaying((int)channels[c].handle))
       return 1;
    return 0;
 }
@@ -386,7 +386,7 @@ void digi_set_channel_volume( int c, int volume )
 
    SSSetChannelVolume(channels[c].handle, (unsigned short)fixmuldiv(volume,digi_volume,F1_0));
 }
-   
+
 void digi_set_channel_pan( int c, int pan )
 {
    if (!Digi_initialized) return;
@@ -445,11 +445,11 @@ int digi_find_channel(int soundno)
       if ( channels[i].used && (channels[i].soundnum==soundno) )
          if ( digi_is_channel_playing(i) )
             return i;
-   }  
+   }
    return -1;
 }
 
-extern void digi_end_soundobj(int channel);  
+extern void digi_end_soundobj(int channel);
 extern int SoundQ_channel;
 extern void SoundQ_end();
 
@@ -468,7 +468,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
    Assert(GameSounds[soundnum].data != -1);
 
    memset(&ssb, 0, sizeof(SSoundBuffer));
-   
+
    ssb.data = (char *)GameSounds[soundnum].data;
    ssb.length = GameSounds[soundnum].length;
    ssb.pan = (unsigned short)pan+1;
@@ -482,24 +482,24 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
    if (looping) {
       ssb.looping = 1;
       ssb.loop_start = ssb.loop_end = -1;
-   }  
+   }
    if (loop_start != -1) {
       Assert( loop_end != -1);
       ssb.loop_start = loop_start;
       ssb.loop_end = loop_end;
       ssb.loop_length = loop_end - loop_start;
-   }     
+   }
 
    starting_channel = next_channel;
 
    while(1) {
       if ( !channels[next_channel].used ) break;
-      
+
       if (!SSChannelPlaying((int)channels[next_channel].handle)) break;
 
       if ( !channels[next_channel].persistant ) {
          SSStopChannel(channels[next_channel].handle);
-         break;   // use this channel! 
+         break;   // use this channel!
       }
       next_channel++;
       if ( next_channel >= digi_max_channels )
@@ -512,7 +512,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
    if ( channels[next_channel].used )  {
       channels[next_channel].used = 0;
       if ( channels[next_channel].soundobj > -1 )  {
-         digi_end_soundobj(channels[next_channel].soundobj);   
+         digi_end_soundobj(channels[next_channel].soundobj);
       }
       if (SoundQ_channel==next_channel)
          SoundQ_end();
@@ -533,7 +533,7 @@ int digi_start_sound(short soundnum, fix volume, int pan, int looping, int loop_
       if ( channels[i].used && (channels[i].handle == sHandle)  ) {
          channels[i].used = 0;
          if ( channels[i].soundobj > -1 ) {
-            digi_end_soundobj(channels[i].soundobj);  
+            digi_end_soundobj(channels[i].soundobj);
          }
          if (SoundQ_channel==i)
             SoundQ_end();
@@ -600,8 +600,8 @@ void digi_set_digi_volume( int dvolume )
 }
 
 
-// 0-0x7FFF 
-void digi_set_volume( int dvolume, int mvolume )   
+// 0-0x7FFF
+void digi_set_volume( int dvolume, int mvolume )
 {
    digi_set_midi_volume( mvolume );
    digi_set_digi_volume( dvolume );
@@ -613,7 +613,7 @@ void * digi_load_file( char * szFileName, HGLOBAL *hmem, int * length )
 {
    PSTR  pDataPtr;
    CFILE * fp;
-   
+
    // open file
    fp  =  cfopen( szFileName, "rb" );
    if ( !fp ) return NULL;
@@ -630,7 +630,7 @@ void * digi_load_file( char * szFileName, HGLOBAL *hmem, int * length )
    // close driver file
    cfclose( fp );
 
-   // return 
+   // return
    return( pDataPtr );
 }
 
@@ -675,7 +675,7 @@ void digi_play_midi_song( char * filename, char * melodic_bank, char * drum_bank
    fp = NULL;
 
    sl = strlen( filename );
-   strcpy( fname, filename ); 
+   strcpy( fname, filename );
    fname[sl-3] = 'm';
    fname[sl-2] = 'i';
    fname[sl-1] = 'd';
@@ -723,7 +723,7 @@ void digi_play_midi_song( char * filename, char * melodic_bank, char * drum_bank
 // initialize the song
    WMidiHandle = wmidi_init_song(&WMidiSong);
    if (!WMidiHandle) {
-      mprintf((1, "Unable to initialize MIDI song.\n"));    
+      mprintf((1, "Unable to initialize MIDI song.\n"));
       GlobalUnlock(SongData);
       GlobalFree(hSongData);
       SongData=NULL;
@@ -732,7 +732,7 @@ void digi_play_midi_song( char * filename, char * melodic_bank, char * drum_bank
    }
 
    Assert( WMidiHandle == 1 );
-    
+
 // start the song playing
    mprintf((0, "Playing song %x.\n", WMidiHandle));
 
@@ -803,7 +803,7 @@ void digi_midi_debug()
 {
 
 }
-   
+
 #endif
 
 
@@ -816,7 +816,7 @@ void digi_midi_wait()
 
    tech = wmidi_get_tech();
    if (tech) return;
-   
+
    ftime = timer_get_fixed_seconds() + 0x50000;
    WMidi_NewStream = FALSE;
    while ((WMidi_NewStream < 2 && WMidiHandle) || (timer_get_fixed_seconds() < ftime)) Sleep(0);

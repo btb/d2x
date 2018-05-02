@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -34,8 +34,8 @@ extern expl_wall expl_wall_list[MAX_EXPLODING_WALLS];
 object *object_create_explosion(short segnum, vms_vector * position, fix size, int vclip_type );
 object *object_create_muzzle_flash(short segnum, vms_vector * position, fix size, int vclip_type );
 
-object *object_create_badass_explosion(object *objp, short segnum, 
-      vms_vector * position, fix size, int vclip_type, 
+object *object_create_badass_explosion(object *objp, short segnum,
+      vms_vector * position, fix size, int vclip_type,
       fix maxdamage, fix maxdistance, fix maxforce, int parent );
 
 //blows up a badass weapon, creating the badass explosion

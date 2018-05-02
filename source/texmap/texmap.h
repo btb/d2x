@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -70,7 +70,7 @@ extern   int   Interpolation_method;
 extern   int   Lighting_on;
 
 // HACK INTERFACE: how far away the current segment (& thus texture) is
-extern   int   Current_seg_depth;      
+extern   int   Current_seg_depth;
 extern   int   Max_perspective_depth;     // Deepest segment at which perspective interpolation will be used.
 extern   int   Max_linear_depth;          // Deepest segment at which linear interpolation will be used.
 extern   int   Max_flat_depth;            // Deepest segment at which flat shading will be used. (If not flat shading, then what?)

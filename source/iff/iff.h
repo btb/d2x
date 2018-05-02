@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -18,7 +18,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "gr.h"
 
 //Prototypes for IFF library functions
- 
+
 int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,ubyte *palette);
    //reads an IFF file into a grs_bitmap structure. fills in palette if not null
    //returns error codes - see IFF.H.  see GR.H for bitmap_type
@@ -33,7 +33,7 @@ int iff_read_bitmap(char *ifilename,grs_bitmap *bm,int bitmap_type,ubyte *palett
    //   exit(0)
 
 //like iff_read_bitmap(), but reads into a bitmap that already exists,
-//without allocating memory for the bitmap. 
+//without allocating memory for the bitmap.
 int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette);
 
 //read in animator brush (.abm) file

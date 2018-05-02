@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -23,15 +23,15 @@ char *jcrypt (char *plainstring)
  {
   int i,t,len;
   static char cryptstring[20];
-  
-  len=strlen (plainstring); 
+
+  len=strlen (plainstring);
   if (len>8)
    len=8;
-   
+
   for (i=0;i<len;i++)
    {
-    cryptstring[i]=0; 
-  
+    cryptstring[i]=0;
+
      for (t=0;t<8;t++)
       {
        cryptstring[i]^=(plainstring[t] ^ plainstring[i%(t+1)]);
@@ -42,12 +42,12 @@ char *jcrypt (char *plainstring)
   cryptstring[i]=0;
   return ((char *)cryptstring);
  }
-       
-   
-  
-   
- 
 
- 
-  
+
+
+
+
+
+
+
 

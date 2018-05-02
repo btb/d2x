@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -39,7 +39,7 @@ int   FileFindFirst(char *search_str, FILEFINDSTRUCT *ffstruct)
    else {
       ffstruct->size = find.nFileSizeLow;
       strcpy(ffstruct->name, find.cFileName);
-      return 0; 
+      return 0;
    }
 }
 
@@ -55,7 +55,7 @@ int   FileFindNext(FILEFINDSTRUCT *ffstruct)
       return 0;
    }
 }
- 
+
 
 int   FileFindClose(void)
 {
@@ -85,7 +85,7 @@ int SetFileDateTime(int filehandle, FILETIMESTRUCT *ftstruct)
    int retval;
 
    DosDateTimeToFileTime(ftstruct->date, ftstruct->time, &ft);
-   retval = SetFileTime((HANDLE)filehandle, NULL, NULL, &ft);  
+   retval = SetFileTime((HANDLE)filehandle, NULL, NULL, &ft);
    if (retval) return 0;
    else return 1;
 }

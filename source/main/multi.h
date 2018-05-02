@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -163,7 +163,7 @@ int multi_endlevel(int *secret);
 int multi_menu_poll(void);
 void multi_leave_game(void);
 void multi_process_data(char *dat, int len);
-void multi_process_bigdata(char *buf, int len);    
+void multi_process_bigdata(char *buf, int len);
 void multi_do_death(int objnum);
 void multi_send_message_dialog(void);
 int multi_delete_extra_objects(void);
@@ -218,7 +218,7 @@ extern int Network_message_reciever;
 
 // Used to map network to local object numbers
 
-extern short remote_to_local[MAX_NUM_NET_PLAYERS][MAX_OBJECTS];  // Network object num for each 
+extern short remote_to_local[MAX_NUM_NET_PLAYERS][MAX_OBJECTS];  // Network object num for each
 extern short local_to_remote[MAX_OBJECTS];   // Local object num for each network objnum
 extern byte object_owner[MAX_OBJECTS]; // Who 'owns' each local object for network purposes
 
@@ -237,7 +237,7 @@ extern int control_invul_time;
 
 extern bitmap_index multi_player_textures[MAX_NUM_NET_PLAYERS][N_PLAYER_SHIP_TEXTURES];
 
-#define NETGAME_FLAG_CLOSED            1  
+#define NETGAME_FLAG_CLOSED            1
 #define NETGAME_FLAG_SHOW_ID           2
 #define NETGAME_FLAG_SHOW_MAP          4
 #define NETGAME_FLAG_HOARD             8
@@ -332,7 +332,7 @@ typedef struct netgame_info {
    short DoEarthShaker:1;
    short DoMercury:1;
    short Allow_marker_view:1;
-   short AlwaysLighting:1; 
+   short AlwaysLighting:1;
    short DoAmmoRack:1;
    short DoConverter:1;
    short DoHeadlight:1;
@@ -370,7 +370,7 @@ typedef struct netgame_info {
    short DoHeadlight:1;
    short DoConverter:1;
    short DoAmmoRack:1;
-   short AlwaysLighting:1; 
+   short AlwaysLighting:1;
    short Allow_marker_view:1;
    short DoMercury:1;
    short DoEarthShaker:1;
@@ -394,7 +394,7 @@ typedef struct netgame_info {
    ubyte             player_flags[MAX_PLAYERS];
    short             PacketsPerSec;
    ubyte             ShortPackets;
-   
+
 } netgame_info;
 
 extern struct netgame_info Netgame;

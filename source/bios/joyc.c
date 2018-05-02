@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -31,9 +31,9 @@ static char rcsid[] = "$Id: joyc.c 1.37 1995/11/22 11:30:10 matt Exp $";
 #include "dpmi.h"
 
 //In key.c
-// ebx = read mask                                                                           
-// edi = pointer to buffer                                                                   
-// returns number of events                                                                  
+// ebx = read mask
+// edi = pointer to buffer
+// returns number of events
 int joy_read_stick_asm( int read_masks, int * event_buffer, int timeout );
 #pragma aux joy_read_stick_asm parm [ebx] [edi] [ecx] value [eax] modify exact [eax ebx ecx edx edi];
 
@@ -124,10 +124,10 @@ void joy_flush()  {
    _disable();
    for (i=0; i<MAX_BUTTONS; i++ )   {
       joystick.buttons[i].ignore = 0;
-      joystick.buttons[i].state = 0;   
-      joystick.buttons[i].timedown = 0;   
-      joystick.buttons[i].downcount = 0;  
-      joystick.buttons[i].upcount = 0; 
+      joystick.buttons[i].state = 0;
+      joystick.buttons[i].timedown = 0;
+      joystick.buttons[i].downcount = 0;
+      joystick.buttons[i].upcount = 0;
    }
    _enable();
 
@@ -155,7 +155,7 @@ void joy_handler(int ticks_this_time)  {
          joystick.last_value = value;
       } else {
          value = joystick.last_value;
-      }     
+      }
    } else {
       value = JOY_READ_BUTTONS;
    #ifdef ARCADE
@@ -169,10 +169,10 @@ void joy_handler(int ticks_this_time)  {
          if ( i < 5 )
             state = (value >> i) & 1;
 #ifdef ARCADE
-         else if ( i >= 20 ) 
+         else if ( i >= 20 )
             state = (valuea >> (i-20)) & 1;
 #endif
-         else if (i==(value+4))  
+         else if (i==(value+4))
             state = 1;
          else
             state = 0;
@@ -183,7 +183,7 @@ void joy_handler(int ticks_this_time)  {
             if (state)  {
                button->downcount += state;
                button->state = 1;
-            } else { 
+            } else {
                button->upcount += button->state;
                button->state = 0;
             }
@@ -199,9 +199,9 @@ void joy_handler_end()  {     // Dummy function to help calculate size of joysti
 #pragma off (check_stack)
 
 ubyte joy_read_raw_buttons()  {
-   if ( joystick.slow_read & JOY_BIOS_READINGS )   
+   if ( joystick.slow_read & JOY_BIOS_READINGS )
       return joy_read_buttons_bios();
-   else 
+   else
       return JOY_READ_BUTTONS;
 }
 
@@ -231,7 +231,7 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
    }
 
    if ( joystick.slow_read & JOY_SLOW_READINGS )   {
-      for (c=0; c<4; c++ ) {     
+      for (c=0; c<4; c++ ) {
          if ( mask & (1 << c))   {
             // Time out at  (1/100th of a second)
 
@@ -241,14 +241,14 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
                num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
             else
                num_channels = joy_read_stick_asm( (1 << c), buffer, (1193180/100) );
-   
+
             if ( num_channels > 0 ) {
                t1 = buffer[0];
                e = buffer[1];
                t2 = buffer[2];
                if ( joystick.slow_read & (JOY_POLLED_READINGS|JOY_BIOS_READINGS) )  {
                   t = t2 - t1;
-               } else {       
+               } else {
                   if ( t1 > t2 )
                      t = t1 - t2;
                   else           {
@@ -256,7 +256,7 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
                      //mprintf( 0, "%d, %d, %d, %d\n", t1, t2, joystick.max_timer, t );
                   }
                }
-   
+
                if ( e & 1 ) { axis[0] = t; read_masks |= 1; }
                if ( e & 2 ) { axis[1] = t; read_masks |= 2; }
                if ( e & 4 ) { axis[2] = t; read_masks |= 4; }
@@ -270,32 +270,32 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
          num_channels = joy_read_stick_polled( mask, buffer, 65536 );
       else if ( joystick.slow_read & JOY_BIOS_READINGS )
          num_channels = joy_read_stick_bios( (1 << c), buffer, 65536 );
-      else 
+      else
          num_channels = joy_read_stick_asm( mask, buffer, (1193180/100) );
       //mprintf(( 0, "(%d)\n", num_channels ));
-   
+
       for (i=0; i<num_channels; i++ )  {
          t1 = buffer[0];
          t2 = buffer[i*2+2];
-         
+
          if ( joystick.slow_read & (JOY_POLLED_READINGS|JOY_BIOS_READINGS) )  {
             t = t2 - t1;
-         } else {       
+         } else {
             if ( t1 > t2 )
                t = t1 - t2;
             else           {
                t = t1 + joystick.max_timer - t2;
                //mprintf(( 0, "%d, %d, %d, %d\n", t1, t2, joystick.max_timer, t ));
             }
-         }     
+         }
          e = buffer[i*2+1];
-   
+
          if ( e & 1 ) { axis[0] = t; read_masks |= 1; }
          if ( e & 2 ) { axis[1] = t; read_masks |= 2; }
          if ( e & 4 ) { axis[2] = t; read_masks |= 4; }
          if ( e & 8 ) { axis[3] = t; read_masks |= 8; }
       }
-      
+
    }
 
    return read_masks;
@@ -303,7 +303,7 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 
 extern void timer_set_joyhandler( void (*joy_handler)() );
 
-int joy_init() 
+int joy_init()
 {
    int i;
    int temp_axis[4];
@@ -311,7 +311,7 @@ int joy_init()
    joy_flush();
 
    _disable();
-   for (i=0; i<MAX_BUTTONS; i++ )   
+   for (i=0; i<MAX_BUTTONS; i++ )
       joystick.buttons[i].last_state = 0;
    _enable();
 
@@ -347,13 +347,13 @@ int joy_init()
    return joy_present;
 }
 
-void joy_close()  
+void joy_close()
 {
    if (!joy_installed) return;
    joy_installed = 0;
 }
 
-void joy_set_ul() 
+void joy_set_ul()
 {
    joystick.present_mask = JOY_ALL_AXIS;     // Assume they're all present
    joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_min );
@@ -363,7 +363,7 @@ void joy_set_ul()
       joy_present = 0;
 }
 
-void joy_set_lr() 
+void joy_set_lr()
 {
    joystick.present_mask = JOY_ALL_AXIS;     // Assume they're all present
    joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_max );
@@ -373,7 +373,7 @@ void joy_set_lr()
       joy_present = 0;
 }
 
-void joy_set_cen() 
+void joy_set_cen()
 {
    joystick.present_mask = JOY_ALL_AXIS;     // Assume they're all present
    joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS, joystick.axis_center );
@@ -383,12 +383,12 @@ void joy_set_cen()
       joy_present = 0;
 }
 
-void joy_set_cen_fake(int channel)  
+void joy_set_cen_fake(int channel)
 {
 
    int i,n=0;
    int minx, maxx, cenx;
-   
+
    minx=maxx=cenx=0;
 
    for (i=0; i<4; i++ ) {
@@ -408,7 +408,7 @@ void joy_set_cen_fake(int channel)
    joystick.axis_center[channel] = cenx;
 }
 
-int joy_get_scaled_reading( int raw, int axn )  
+int joy_get_scaled_reading( int raw, int axn )
 {
    int x, d;
 
@@ -426,7 +426,7 @@ int joy_get_scaled_reading( int raw, int axn )
 
    if ( d )
       x = (raw << 7) / d;
-   else 
+   else
       x = 0;
 
    if ( x < -128 ) x = -128;
@@ -435,7 +435,7 @@ int joy_get_scaled_reading( int raw, int axn )
    return x;
 }
 
-void joy_get_pos( int *x, int *y )  
+void joy_get_pos( int *x, int *y )
 {
    ubyte flags;
    int axis[4];
@@ -455,15 +455,15 @@ void joy_get_pos( int *x, int *y )
       *y = 0;
 }
 
-ubyte joy_read_stick( ubyte masks, int *axis )  
+ubyte joy_read_stick( ubyte masks, int *axis )
 {
    ubyte flags;
    int raw_axis[4];
 
-   if ((!joy_installed)||(!joy_present)) { 
+   if ((!joy_installed)||(!joy_present)) {
       axis[0] = 0; axis[1] = 0;
       axis[2] = 0; axis[3] = 0;
-      return 0;  
+      return 0;
    }
 
    flags=joystick_read_raw_axis( masks, raw_axis );
@@ -492,14 +492,14 @@ ubyte joy_read_stick( ubyte masks, int *axis )
 }
 
 
-int joy_get_btns()   
+int joy_get_btns()
 {
    if ((!joy_installed)||(!joy_present)) return 0;
 
    return joy_read_raw_buttons();
 }
 
-void joy_get_btn_down_cnt( int *btn0, int *btn1 ) 
+void joy_get_btn_down_cnt( int *btn0, int *btn1 )
 {
    if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
 
@@ -511,7 +511,7 @@ void joy_get_btn_down_cnt( int *btn0, int *btn1 )
    _enable();
 }
 
-int joy_get_button_state( int btn ) 
+int joy_get_button_state( int btn )
 {
    int count;
 
@@ -522,11 +522,11 @@ int joy_get_button_state( int btn )
    _disable();
    count = joystick.buttons[btn].state;
    _enable();
-   
+
    return  count;
 }
 
-int joy_get_button_up_cnt( int btn ) 
+int joy_get_button_up_cnt( int btn )
 {
    int count;
 
@@ -542,7 +542,7 @@ int joy_get_button_up_cnt( int btn )
    return count;
 }
 
-int joy_get_button_down_cnt( int btn ) 
+int joy_get_button_down_cnt( int btn )
 {
    int count;
 
@@ -557,8 +557,8 @@ int joy_get_button_down_cnt( int btn )
    return count;
 }
 
-   
-fix joy_get_button_down_time( int btn ) 
+
+fix joy_get_button_down_time( int btn )
 {
    fix count;
 
@@ -573,7 +573,7 @@ fix joy_get_button_down_time( int btn )
    return fixmuldiv(count, 65536, 1193180 );
 }
 
-void joy_get_btn_up_cnt( int *btn0, int *btn1 ) 
+void joy_get_btn_up_cnt( int *btn0, int *btn1 )
 {
    if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
 
@@ -598,6 +598,6 @@ void joy_set_btn_values( int btn, int state, fix timedown, int downcount, int up
 
 void joy_poll()
 {
-   if ( joystick.slow_read & JOY_BIOS_READINGS )   
+   if ( joystick.slow_read & JOY_BIOS_READINGS )
       joystick.last_value = joy_read_buttons_bios();
 }

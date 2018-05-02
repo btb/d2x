@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -40,7 +40,7 @@ struct SSMixerObject {
    int ch_num;
    int ch_cur;
    SSoundBuffer *ch_list;
-} SSMixer = { NULL, 0, 0, 0, NULL };      
+} SSMixer = { NULL, 0, 0, 0, NULL };
 
 
 long XlatSSToDSPan(unsigned short pan);
@@ -62,7 +62,7 @@ BOOL SSInit(HWND hWnd, int channels, unsigned flags)
    if (SSMixer.lpds) return TRUE;
 
 // Perform Direct Sound Initialization
-   if (DirectSoundCreate(NULL, &lpDS, NULL) != DS_OK) 
+   if (DirectSoundCreate(NULL, &lpDS, NULL) != DS_OK)
       return FALSE;
 
    SSMixer.lpds = lpDS;
@@ -94,9 +94,9 @@ BOOL SSInit(HWND hWnd, int channels, unsigned flags)
    SSMixer.ch_cur = 0;
    SSMixer.ch_list = (SSoundBuffer *)malloc(sizeof(SSoundBuffer)*channels);
    if (!SSMixer.ch_list) return FALSE;
-   
+
    memset(SSMixer.ch_list, 0, sizeof(SSoundBuffer)*channels);
-   
+
    SSMixer.ch_num = channels;
 
 // Determine Sound technology and volume caps
@@ -104,15 +104,15 @@ BOOL SSInit(HWND hWnd, int channels, unsigned flags)
 // waveOutSetVolume((HWAVEOUT)WAVE_MAPPER, 0x40004000);
    return TRUE;
 }
-      
-      
+
+
 void SSDestroy()
 {
    int i;
    int j = 0;
 
    if (!SSMixer.lpds) return;
-   
+
 // Free sound buffers currently allocated.
    for (i=0; i<SSMixer.ch_num; i++)
       if (SSMixer.ch_list[i].obj) {
@@ -128,9 +128,9 @@ void SSDestroy()
 
 // Turn off DirectSound
    if (SSMixer.lpds) IDirectSound_Release(SSMixer.lpds);
-   
+
    memset(&SSMixer, 0, sizeof(SSMixer));
-} 
+}
 
 
 LPDIRECTSOUND SSGetObject()
@@ -145,7 +145,7 @@ void SSGetCaps(SSCaps *caps)
 
    dscaps.dwSize = sizeof(DSCAPS);
    IDirectSound_GetCaps(SSMixer.lpds, &dscaps);
-   
+
    if ((dscaps.dwFlags&DSCAPS_SECONDARY16BIT)) caps->bits_per_sample = 16;
    else caps->bits_per_sample = 8;
 
@@ -165,18 +165,18 @@ WORD SSGetVolume()
    DWORD vol;
 
    waveOutGetVolume((HWAVEOUT)WAVE_MAPPER, &vol);
-   
+
    return XlatWAVToSSVol(vol);
 }
- 
-   
+
+
 
 // SSInitBuffer
 //    Must Create a DirectSound Secondary Buffer for the sound info.
 
 BOOL SSInitBuffer(SSoundBuffer *sample)
 {
-   
+
    DSBUFFERDESC dsbd;
    WAVEFORMATEX wav;
    HRESULT dsresult;
@@ -219,16 +219,16 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
    dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLDEFAULT;
    dsbd.lpwfxFormat = &wav;
    dsbd.dwBufferBytes = length;
-   
-   if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->obj, NULL)  
+
+   if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->obj, NULL)
          != DS_OK) {
       return FALSE;
    }
 
 // Copy main data to buffer
    if (data) {
-      dsresult = IDirectSoundBuffer_Lock(sample->obj, 0, length, &databuf,       
-                           &writesize1, &databuf2, &writesize2, 0); 
+      dsresult = IDirectSoundBuffer_Lock(sample->obj, 0, length, &databuf,
+                           &writesize1, &databuf2, &writesize2, 0);
       {
          if (dsresult != DS_OK) return FALSE;
          memcpy(databuf, data, writesize1);
@@ -252,15 +252,15 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
       dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLDEFAULT;
       dsbd.lpwfxFormat = &wav;
       dsbd.dwBufferBytes = auxlength;
-   
-      if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->auxobj, NULL)  
+
+      if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->auxobj, NULL)
          != DS_OK) {
          mprintf((1, "SS: Unable to create aux-buffer.\n"));
          return FALSE;
       }
 
-      dsresult = IDirectSoundBuffer_Lock(sample->auxobj, 0, auxlength, &databuf,       
-                           &writesize1, &databuf2, &writesize2, 0); 
+      dsresult = IDirectSoundBuffer_Lock(sample->auxobj, 0, auxlength, &databuf,
+                           &writesize1, &databuf2, &writesize2, 0);
       {
          if (dsresult != DS_OK) return FALSE;
          memcpy(databuf, auxdata, writesize1);
@@ -281,15 +281,15 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
 //@@     dsbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLDEFAULT;
 //@@     dsbd.lpwfxFormat = &wav;
 //@@     dsbd.dwBufferBytes = aux2length;
-//@@  
-//@@     if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->auxobj2, NULL)  
+//@@
+//@@     if (IDirectSound_CreateSoundBuffer(SSMixer.lpds, &dsbd, &sample->auxobj2, NULL)
 //@@        != DS_OK) {
 //@@        mprintf((1, "SS: Unable to create aux-buffer.\n"));
 //@@        return FALSE;
 //@@     }
 //@@
-//@@     dsresult = IDirectSoundBuffer_Lock(sample->auxobj2, 0, aux2length, &databuf,        
-//@@                          &writesize1, &databuf2, &writesize2, 0); 
+//@@     dsresult = IDirectSoundBuffer_Lock(sample->auxobj2, 0, aux2length, &databuf,
+//@@                          &writesize1, &databuf2, &writesize2, 0);
 //@@     {
 //@@        if (dsresult != DS_OK) return FALSE;
 //@@        memcpy(databuf, aux2data, writesize1);
@@ -297,7 +297,7 @@ BOOL SSInitBuffer(SSoundBuffer *sample)
 //@@     }
 //@@     IDirectSoundBuffer_Unlock(sample->auxobj2, databuf, writesize1, databuf2, writesize2);
 
-   }                                    
+   }
 
    return TRUE;
 }
@@ -311,7 +311,7 @@ void SSDestroyBuffer(SSoundBuffer *sample)
    sample->obj = NULL;
    sample->auxobj = NULL;
    sample->auxobj2 = NULL;
-}  
+}
 
 
 int SSInitChannel(SSoundBuffer *sample)
@@ -323,10 +323,10 @@ int SSInitChannel(SSoundBuffer *sample)
 
 // Find Free channel
    start_channel = SSMixer.ch_cur;
-   
+
    while (1)
    {
-      if (!SSMixer.ch_list[SSMixer.ch_cur].obj) 
+      if (!SSMixer.ch_list[SSMixer.ch_cur].obj)
          break;
       else if (!SSChannelPlaying(SSMixer.ch_cur)) {
          SSDestroyBuffer(&SSMixer.ch_list[SSMixer.ch_cur]);
@@ -336,8 +336,8 @@ int SSInitChannel(SSoundBuffer *sample)
       if (SSMixer.ch_cur >= SSMixer.ch_num) SSMixer.ch_cur=0;
       if (SSMixer.ch_cur == start_channel) return -1;
    }
-  
-// Create sound object for mixer.      
+
+// Create sound object for mixer.
    flags = 0;
 
    if (sample->looping) {
@@ -369,11 +369,11 @@ int SSInitChannel(SSoundBuffer *sample)
       if (dsresult != DS_OK) return -1;
       mprintf((0, "SS: looping midsample (%d).\n", sample->loop_start));
    }
-   
+
 // Add to mixer list.
    this_channel = SSMixer.ch_cur;
    memcpy(&SSMixer.ch_list[SSMixer.ch_cur++], sample, sizeof(SSoundBuffer));
-   if (SSMixer.ch_cur >= SSMixer.ch_num) SSMixer.ch_cur = 0; 
+   if (SSMixer.ch_cur >= SSMixer.ch_num) SSMixer.ch_cur = 0;
 
    return this_channel;
 }
@@ -396,17 +396,17 @@ BOOL SSChannelPlaying(int channel)
       }
 
       if (SSMixer.ch_list[i].auxobj) {
-         dsresult = IDirectSoundBuffer_GetStatus(SSMixer.ch_list[i].auxobj, 
+         dsresult = IDirectSoundBuffer_GetStatus(SSMixer.ch_list[i].auxobj,
                                              &status);
          if (dsresult != DS_OK) return FALSE;
          if (status & DSBSTATUS_PLAYING) {
             return TRUE;
          }
-      } 
+      }
    }
    return FALSE;
 }
-      
+
 
 BOOL SSStopChannel(int channel)
 {
@@ -419,7 +419,7 @@ BOOL SSStopChannel(int channel)
       if (IDirectSoundBuffer_Stop(SSMixer.ch_list[channel].obj) != DS_OK) {
          return TRUE;
       }
-      
+
       SSDestroyBuffer(&SSMixer.ch_list[channel]);
    }
 
@@ -439,10 +439,10 @@ BOOL SSSetChannelPan(int channel, unsigned short pan)
                      XlatSSToDSPan(pan));
       if (dsresult != DS_OK) return FALSE;
       return TRUE;
-      
+
    }
    return FALSE;
-}  
+}
 
 
 BOOL SSSetChannelVolume(int channel, unsigned short vol)
@@ -457,10 +457,10 @@ BOOL SSSetChannelVolume(int channel, unsigned short vol)
                      XlatSSToDSVol(vol));
       if (dsresult != DS_OK) return FALSE;
       return TRUE;
-      
+
    }
    return FALSE;
-}  
+}
 
 
 // ----------------------------------------------------------------------------
@@ -472,10 +472,10 @@ long XlatSSToDSPan(unsigned short pan)
 
    pan1 = fixdiv(pan,0x8000);
    pan2 = fixmul(pan1, i2f(10000));
-      
+
    panr = (long)f2i(pan2);
    panr = -10000+panr;
-   
+
    return panr;
 }
 
@@ -483,7 +483,7 @@ long XlatSSToDSPan(unsigned short pan)
 long XlatSSToDSVol(unsigned vol)
 {
    float atten;
-   float fvol; 
+   float fvol;
 
    atten = 32768.0   / ((float)(vol));
    fvol = log(atten) / log(2.0);

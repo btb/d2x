@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -52,7 +52,7 @@ static char rcsid[] = "$Id: fireball.c 2.72 1996/09/18 17:17:19 jed Exp $";
 #include "gameseg.h"
 #include "automap.h"
 
-#define EXPLOSION_SCALE (F1_0*5/2)     //explosion is the obj size times this  
+#define EXPLOSION_SCALE (F1_0*5/2)     //explosion is the obj size times this
 
 fix   Flash_effect=0;
 //--unused-- ubyte   Frame_processed[MAX_OBJECTS];
@@ -89,7 +89,7 @@ object *object_create_explosion_sub(object *objp, short segnum, vms_vector * pos
       fix damage;
       int i;
       object * obj0p = &Objects[0];
-                 
+
       // -- now legal for badass explosions on a wall. Assert(objp != NULL);
 
       for (i=0; i<=Highest_object_index; i++ )  {
@@ -108,10 +108,10 @@ object *object_create_explosion_sub(object *objp, short segnum, vms_vector * pos
                   // Find the force vector on the object
                   vm_vec_normalized_dir_quick( &vforce, &obj0p->pos, &obj->pos );
                   vm_vec_scale(&vforce, force );
-   
+
                   // Find where the point of impact is... ( pos_hit )
                   vm_vec_scale(vm_vec_sub(&pos_hit, &obj->pos, &obj0p->pos), fixdiv(obj0p->size, obj0p->size + dist));
-   
+
                   switch ( obj0p->type )  {
                      case OBJ_WEAPON:
                         phys_apply_force(obj0p,&vforce);
@@ -149,7 +149,7 @@ object *object_create_explosion_sub(object *objp, short segnum, vms_vector * pos
 
                         // When a robot gets whacked by a badass force, he looks towards it because robots tend to get blasted from behind.
                         {
-                           vms_vector neg_vforce; 
+                           vms_vector neg_vforce;
                            neg_vforce.x = vforce.x * -2 * (7 - Difficulty_level)/8;
                            neg_vforce.y = vforce.y * -2 * (7 - Difficulty_level)/8;
                            neg_vforce.z = vforce.z * -2 * (7 - Difficulty_level)/8;
@@ -188,7 +188,7 @@ object *object_create_explosion_sub(object *objp, short segnum, vms_vector * pos
                         }
                         break;
                      case OBJ_PLAYER:  {
-                        object * killer=NULL; 
+                        object * killer=NULL;
                         vms_vector  vforce2;
 
                         // Hack! Warning! Test code!
@@ -286,10 +286,10 @@ object *explode_badass_weapon(object *obj,vms_vector *pos)
 
    digi_link_sound_to_object(SOUND_BADASS_EXPLOSION, obj-Objects, 0, F1_0);
 
-   return object_create_badass_explosion( obj, obj->segnum, pos, 
-               wi->impact_size, 
-               wi->robot_hit_vclip, 
-               wi->strength[Difficulty_level], 
+   return object_create_badass_explosion( obj, obj->segnum, pos,
+               wi->impact_size,
+               wi->robot_hit_vclip,
+               wi->strength[Difficulty_level],
                wi->damage_radius,wi->strength[Difficulty_level],
                obj->ctype.laser_info.parent_num );
 
@@ -344,7 +344,7 @@ object *object_create_debris(object *parent, int subobj_num)
 
    Assert(subobj_num < 32);
 
-   //Set polygon-object-specific data 
+   //Set polygon-object-specific data
 
    obj->rtype.pobj_info.model_num = parent->rtype.pobj_info.model_num;
    obj->rtype.pobj_info.subobj_flags = 1<<subobj_num;
@@ -539,7 +539,7 @@ int choose_drop_segment()
       if (count == N_players) {
          //if can't valid non-player person, use the player
          pnum = Player_num;
- 
+
          //mprintf((1, "Warning: choose_drop_segment: Couldn't find legal drop segment because no connected players.\n"));
          //return (rand() * Highest_segment_index) >> 15;
       }
@@ -801,7 +801,7 @@ int drop_powerup(int type, int id, int num, vms_vector *init_vel, vms_vector *po
 //          new_pos.z += (rand()-16384)*8;
 
             if (Game_mode & GM_MULTI)
-            {  
+            {
                if (Net_create_loc >= MAX_NET_CREATE_OBJECTS)
                {
                   mprintf( (1, "Not enough slots to drop all powerups!\n" ));
@@ -904,18 +904,18 @@ int drop_powerup(int type, int id, int num, vms_vector *init_vel, vms_vector *po
             //@@//this is a super-ugly hack.  Since the baby stripe robots have
             //@@//their firing point on their bounding sphere, the firing points
             //@@//can poke through a wall if the robots are very close to it. So
-            //@@//we make their radii bigger so the guns can't get too close to 
+            //@@//we make their radii bigger so the guns can't get too close to
             //@@//the walls
             //@@if (Robot_info[obj->id].flags & RIF_BIG_RADIUS)
             //@@  obj->size = (obj->size*3)/2;
 
-            //Set polygon-object-specific data 
+            //Set polygon-object-specific data
 
             obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
             obj->rtype.pobj_info.subobj_flags = 0;
 
             //set Physics info
-      
+
             obj->mtype.phys_info.velocity = new_velocity;
 
             obj->mtype.phys_info.mass = Robot_info[obj->id].mass;
@@ -1087,18 +1087,18 @@ void explode_object(object *hitobj,fix delay_time)
 
       objnum = obj_create( OBJ_FIREBALL,-1,hitobj->segnum,&hitobj->pos,&vmd_identity_matrix,0,
                   CT_EXPLOSION,MT_NONE,RT_NONE);
-   
+
       if (objnum < 0 ) {
          maybe_delete_object(hitobj);     //no explosion, die instantly
          mprintf((1,"Couldn't start explosion, deleting object now\n"));
          Int3();
          return;
       }
-   
+
       obj = &Objects[objnum];
-   
+
       //now set explosion-specific data
-   
+
       obj->lifeleft = delay_time;
       obj->ctype.expl_info.delete_objnum = hitobj-Objects;
 #ifndef NDEBUG
@@ -1116,7 +1116,7 @@ void explode_object(object *hitobj,fix delay_time)
       vclip_num = get_explosion_vclip(hitobj,0);
 
       expl_obj = object_create_explosion(hitobj->segnum, &hitobj->pos, fixmul(hitobj->size,EXPLOSION_SCALE), vclip_num );
-   
+
       if (! expl_obj) {
          maybe_delete_object(hitobj);     //no explosion, die instantly
          mprintf((0,"Couldn't start explosion, deleting object now\n"));
@@ -1125,12 +1125,12 @@ void explode_object(object *hitobj,fix delay_time)
 
       //don't make debris explosions have physics, because they often
       //happen when the debris has hit the wall, so the fireball is trying
-      //to move into the wall, which shows off FVI problems.      
+      //to move into the wall, which shows off FVI problems.
       if (hitobj->type!=OBJ_DEBRIS && hitobj->movement_type==MT_PHYSICS) {
          expl_obj->movement_type = MT_PHYSICS;
          expl_obj->mtype.phys_info = hitobj->mtype.phys_info;
       }
-   
+
       if (hitobj->render_type==RT_POLYOBJ && hitobj->type!=OBJ_DEBRIS)
          explode_model(hitobj);
 
@@ -1384,7 +1384,7 @@ void do_exploding_wall_frame()
             size = EXPL_WALL_FIREBALL_SIZE + (2*EXPL_WALL_FIREBALL_SIZE * e / EXPL_WALL_TOTAL_FIREBALLS);
 
             //fireballs start away from door, with subsequent ones getting closer
-            #ifdef COMPACT_SEGS  
+            #ifdef COMPACT_SEGS
                {
                vms_vector _vn;
                get_side_normal(&Segments[segnum], sidenum, 0, &_vn );
@@ -1397,8 +1397,8 @@ void do_exploding_wall_frame()
             if (e & 3)     //3 of 4 are normal
                object_create_explosion(expl_wall_list[i].segnum,&pos,size,VCLIP_SMALL_EXPLOSION);
             else
-               object_create_badass_explosion( NULL, expl_wall_list[i].segnum, &pos, 
-               size, 
+               object_create_badass_explosion( NULL, expl_wall_list[i].segnum, &pos,
+               size,
                VCLIP_SMALL_EXPLOSION,
                i2f(4),     // damage strength
                i2f(20),    // damage radius
@@ -1407,7 +1407,7 @@ void do_exploding_wall_frame()
                );
 
 
-         } 
+         }
 
          if (expl_wall_list[i].time >= EXPL_WALL_TIME)
             expl_wall_list[i].segnum = -1;   //flag this slot as free

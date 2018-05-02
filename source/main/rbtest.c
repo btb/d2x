@@ -42,7 +42,7 @@ int main()
          break;
       }
    }
-   while (1); 
+   while (1);
 
    key_close();
    timer_close();

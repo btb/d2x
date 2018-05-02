@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -81,14 +81,14 @@ dd_grs_canvas *dd_gr_create_canvas(int w, int h)
    new->cv_font_bg_color = 0;
 
    ddnew->lpdds = DDCreateSurface(w, h, 0);
-   if (!ddnew->lpdds) 
+   if (!ddnew->lpdds)
       Error("dd_gr_create_canvas: Unable to create DD Surface");
    ddnew->lock_count = 0;
 
-   IDirectDrawSurface_GetCaps(ddnew->lpdds, &ddsc); 
+   IDirectDrawSurface_GetCaps(ddnew->lpdds, &ddsc);
 
    if (ddDriverCaps.offscreen.sysmem) ddnew->sram = 1;
-   else ddnew->sram = 0;      
+   else ddnew->sram = 0;
 
    return ddnew;
 }
@@ -119,15 +119,15 @@ void dd_gr_init_canvas(dd_grs_canvas *canv, int pixtype, int w, int h)
    new->cv_font_bg_color = 0;
 
    canv->lpdds = DDCreateSurface(w,h,0);
-   if (!canv->lpdds) 
+   if (!canv->lpdds)
       Error("dd_gr_create_canvas: Unable to create DD Surface");
-      
+
    canv->lock_count = 0;
-   IDirectDrawSurface_GetCaps(canv->lpdds, &ddsc);    
+   IDirectDrawSurface_GetCaps(canv->lpdds, &ddsc);
 
    if (ddsc.dwCaps & DDSCAPS_VIDEOMEMORY) canv->sram = 0;
    else if (ddDriverCaps.offscreen.sysmem) canv->sram = 1;
-   else canv->sram = 0;    
+   else canv->sram = 0;
 
 }
 
@@ -136,7 +136,7 @@ void dd_gr_reinit_canvas(dd_grs_canvas *canv)
 {
    grs_canvas *new;
    DDSURFACEDESC ddsd;
-   LPDIRECTDRAWSURFACE lpdds; 
+   LPDIRECTDRAWSURFACE lpdds;
 
    ddsd.dwSize = sizeof(ddsd);
    ddsd.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
@@ -185,7 +185,7 @@ void dd_gr_free_canvas(dd_grs_canvas *canvas)
 
 // dd_gr_create_sub_canvas
 // ----------------------------------------------------------------------------
-dd_grs_canvas *dd_gr_create_sub_canvas(dd_grs_canvas *cvs, 
+dd_grs_canvas *dd_gr_create_sub_canvas(dd_grs_canvas *cvs,
                            int x, int y, int w, int h)
 {
    dd_grs_canvas *ddnew;
@@ -255,14 +255,14 @@ void dd_gr_init()
 {
    Assert(!dd_gr_initialized);
 
-   if (!dd_grd_screencanv) 
+   if (!dd_grd_screencanv)
       dd_grd_screencanv = (dd_grs_canvas *)malloc(sizeof(dd_grs_canvas));
-   if (!dd_grd_backcanv) 
+   if (!dd_grd_backcanv)
       dd_grd_backcanv = (dd_grs_canvas *)malloc(sizeof(dd_grs_canvas));
-   
+
 
    dd_grd_screencanv->lpdds = NULL;
-   dd_grd_backcanv->lpdds = NULL;   
+   dd_grd_backcanv->lpdds = NULL;
 
    if (!ddgr_atexit_called) {
       atexit(dd_gr_close);
@@ -283,7 +283,7 @@ void dd_gr_close()
 
    dd_grd_screencanv = dd_grd_backcanv = NULL;
    dd_gr_initialized = 0;
-}  
+}
 
 
 // dd_gr_init_screen
@@ -309,17 +309,17 @@ void dd_gr_init_screen()
    grwin_set_winpalette(_lpDD, _lpDDPalette);
    gr_palette_clear();
 
-   gr_init_screen(BM_LINEAR, 
-               GRMODEINFO(rw), GRMODEINFO(rh), 
+   gr_init_screen(BM_LINEAR,
+               GRMODEINFO(rw), GRMODEINFO(rh),
                0, 0, 0, NULL);
-   
+
    dd_grd_screencanv->lock_count = 0;
    memcpy(&dd_grd_screencanv->canvas, &grd_curscreen->sc_canvas, sizeof(grs_canvas));
 
-// NEW!!!  
+// NEW!!!
 // Scheme 1:
 //    The 'Emulated' Method.
-//    We will define the screen canvas as the Windows equiv to 
+//    We will define the screen canvas as the Windows equiv to
 //    DOS display memory.   This will be our Direct Draw Back canvas.
 
    if (GRMODEINFO(emul) || GRMODEINFO(modex)) {
@@ -327,13 +327,13 @@ void dd_gr_init_screen()
       dd_grd_backcanv->lpdds = NULL;
       dd_grd_curcanv = NULL;
    }
-   
+
 // Scheme 2:
 //    The Page Flipping Full Screen Method
 //    The screen canvas is the actual display
 //    The back canvas is our scratch page
 //    This does not apply to Mode X modes
-   
+
    else if (GRMODEINFO(paged) && !GRMODEINFO(modex)) {
       dd_grd_screencanv->lpdds = _lpDDSPrimary;
 
@@ -353,8 +353,8 @@ void dd_gr_init_screen()
       new->cv_font = NULL;
       new->cv_font_fg_color = 0;
       new->cv_font_bg_color = 0;
-   
-      dd_grd_backcanv->lpdds = _lpDDSBack;   
+
+      dd_grd_backcanv->lpdds = _lpDDSBack;
       dd_grd_backcanv->lock_count = 0;
       dd_grd_curcanv = NULL;
    }
@@ -401,18 +401,18 @@ int dd_gr_restore_canvas(dd_grs_canvas *canvas)
    }
    return 1;
 }
-   
-   
+
+
 
 // dd_gr_screen_lock
 //    copies dd_gr_screencanv to grd_curscreen->sc_canvas
 // ----------------------------------------------------------------------------
 void dd_gr_screen_lock()
 {
-   if (dd_grd_screencanv->lpdds == _lpDDSPrimary && GRMODEINFO(modex)) 
+   if (dd_grd_screencanv->lpdds == _lpDDSPrimary && GRMODEINFO(modex))
       Int3();                          // Can't do this in ModeX!!
    dd_gr_lock(dd_grd_screencanv);
-   memcpy(&grd_curscreen->sc_canvas, &dd_grd_screencanv->canvas, sizeof(grs_canvas)); 
+   memcpy(&grd_curscreen->sc_canvas, &dd_grd_screencanv->canvas, sizeof(grs_canvas));
 }
 
 
@@ -421,7 +421,7 @@ void dd_gr_screen_lock()
 // ----------------------------------------------------------------------------
 void dd_gr_screen_unlock()
 {
-   memcpy(&dd_grd_screencanv->canvas, &grd_curscreen->sc_canvas, sizeof(grs_canvas)); 
+   memcpy(&dd_grd_screencanv->canvas, &grd_curscreen->sc_canvas, sizeof(grs_canvas));
    dd_gr_unlock(dd_grd_screencanv);
 }
 
@@ -433,18 +433,18 @@ void dd_gr_lock(dd_grs_canvas *canv)
    grs_bitmap *bmp;
    int rowsize;
 
-   if (canv->lock_count == 0) 
+   if (canv->lock_count == 0)
    {
       bmp = &canv->canvas.cv_bitmap;
       SetRect(&rect,bmp->bm_x,bmp->bm_y,bmp->bm_x+bmp->bm_w, bmp->bm_y+bmp->bm_h);
 
-      if (!dd_gr_restore_canvas(canv)) 
+      if (!dd_gr_restore_canvas(canv))
          Error("Failed to lock canvas (restore err)!\n");
 
       data = DDLockSurface(canv->lpdds, &rect, &rowsize);
       canv->canvas.cv_bitmap.bm_rowsize = (short)rowsize;
-      
-      if (!data) 
+
+      if (!data)
          Error("Failed to lock canvas! You may need to use the -emul option.\n");
 
       canv->canvas.cv_bitmap.bm_data = data;
@@ -452,7 +452,7 @@ void dd_gr_lock(dd_grs_canvas *canv)
       if (canv == dd_grd_curcanv) {
          gr_set_current_canvas(&canv->canvas);
       }
-   }  
+   }
    canv->lock_count++;
 }
 
@@ -464,27 +464,27 @@ void dd_gr_lock_d(dd_grs_canvas *canv, char *filename, int line)
    grs_bitmap *bmp;
    int rowsize;
 
-   if (canv->lock_count == 0) 
+   if (canv->lock_count == 0)
    {
       bmp = &canv->canvas.cv_bitmap;
       SetRect(&rect,bmp->bm_x,bmp->bm_y,bmp->bm_x+bmp->bm_w, bmp->bm_y+bmp->bm_h);
 
-      if (!dd_gr_restore_canvas(canv)) 
+      if (!dd_gr_restore_canvas(canv))
       #ifndef NDEBUG
          Error("Failed to lock canvas (restore err) (%s line %d)\n", filename, line);
       #else
          Error("Failed to lock canvas (restore err)!\n");
-      #endif   
-      
+      #endif
+
       data = DDLockSurface(canv->lpdds, &rect, &rowsize);
       canv->canvas.cv_bitmap.bm_rowsize = (short)rowsize;
-      
-      if (!data) 
+
+      if (!data)
       #ifndef NDEBUG
          Error("Failed to lock canvas (%s line %d)\n", filename, line);
       #else
          Error("Failed to lock canvas! You may ned to use the -emul option.\n");
-      #endif   
+      #endif
 
       canv->canvas.cv_bitmap.bm_data = data;
 
@@ -499,7 +499,7 @@ void dd_gr_lock_d(dd_grs_canvas *canv, char *filename, int line)
 
 void dd_gr_unlock(dd_grs_canvas *canv)
 {
-   if (canv->lock_count == 1) 
+   if (canv->lock_count == 1)
    {
       DDUnlockSurface(canv->lpdds, canv->canvas.cv_bitmap.bm_data);
    }
@@ -511,7 +511,7 @@ void dd_gr_unlock(dd_grs_canvas *canv)
 //    This function should do this:
 //       set desired canvas to dd_grd_curcanv
 //       call gr_set_current_canvas
-//    
+//
 //    If desired canvas is NULL, then set current canvas to screen
 //       set grd_curscreen->sc_canvas.cv_bitmap, etc to dd_grd_screencanv info
 //       call gr_set_current_canvas(NULL)
@@ -537,7 +537,7 @@ void dd_gr_set_current_canvas(dd_grs_canvas *canvas)
 // dd_gr_init_sub_canvas
 //    perform gr_init_sub_canvas.
 //    same surface but reset lock count.
-void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src, 
+void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src,
                            int x, int y, int w, int h)
 {
    gr_init_sub_canvas(&new->canvas, &src->canvas, x, y, w, h);
@@ -558,23 +558,23 @@ void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src,
 void dd_gr_flip()
 {
    if (GRMODEINFO(emul)) {
-      dd_gr_blt_display(dd_grd_screencanv, 
-                  0,0,0,0, 
-                  ViewportRect.left, ViewportRect.top, 
-                  ViewportRect.right-ViewportRect.left, 
+      dd_gr_blt_display(dd_grd_screencanv,
+                  0,0,0,0,
+                  ViewportRect.left, ViewportRect.top,
+                  ViewportRect.right-ViewportRect.left,
                   ViewportRect.bottom-ViewportRect.top);
    }
    else if (_DDFullScreen) {
       DDFlip();
    }
-   else {          
+   else {
       Int3();                          // Illegal display mode!
    }
 }
 
 
 // dd_gr_restore_display
-//    blts the screen canvas to the display 
+//    blts the screen canvas to the display
 //    (for Slow modes which emulate a DOS display)
 void dd_gr_restore_display()
 {
@@ -602,7 +602,7 @@ void dd_gr_restore_display()
 //    no color keying
 void dd_gr_blt_notrans(dd_grs_canvas *srccanv,
                int sx, int sy, int swidth, int sheight,
-               dd_grs_canvas *destcanv, 
+               dd_grs_canvas *destcanv,
                int dx, int dy, int dwidth, int dheight)
 {
    RECT srect, drect;
@@ -615,7 +615,7 @@ void dd_gr_blt_notrans(dd_grs_canvas *srccanv,
    dbmp = &destcanv->canvas.cv_bitmap;
 
    if (swidth || sheight) {
-      SetRect(psrect, sx+sbmp->bm_x, sy+sbmp->bm_y, sx+sbmp->bm_x+swidth, 
+      SetRect(psrect, sx+sbmp->bm_x, sy+sbmp->bm_y, sx+sbmp->bm_x+swidth,
                sy+sbmp->bm_y+sheight);
    }
    else {
@@ -624,19 +624,19 @@ void dd_gr_blt_notrans(dd_grs_canvas *srccanv,
    }
 
    if (dwidth || dheight) {
-      SetRect(pdrect, dx+dbmp->bm_x, dy+dbmp->bm_y, dx+dbmp->bm_x+dwidth, 
+      SetRect(pdrect, dx+dbmp->bm_x, dy+dbmp->bm_y, dx+dbmp->bm_x+dwidth,
                dy+dbmp->bm_y+dheight);
    }
    else {
-      SetRect(pdrect, dbmp->bm_x, dbmp->bm_y, dbmp->bm_x+dbmp->bm_w, 
+      SetRect(pdrect, dbmp->bm_x, dbmp->bm_y, dbmp->bm_x+dbmp->bm_w,
                dbmp->bm_y+dbmp->bm_h);
    }
 
    if (_DDFullScreen && !GRMODEINFO(emul)) {
-      IDirectDrawSurface_BltFast(destcanv->lpdds, dx+dbmp->bm_x, dy+dbmp->bm_y,     
-                     srccanv->lpdds, psrect, 
+      IDirectDrawSurface_BltFast(destcanv->lpdds, dx+dbmp->bm_x, dy+dbmp->bm_y,
+                     srccanv->lpdds, psrect,
                      DDBLTFAST_NOCOLORKEY | DDBLTFAST_WAIT);
-   }     
+   }
    else {
       IDirectDrawSurface_Blt(destcanv->lpdds,
                pdrect,
@@ -671,7 +671,7 @@ void dd_gr_blt_display(dd_grs_canvas *srccanv,
    sbmp = &srccanv->canvas.cv_bitmap;
 
    if (swidth || sheight) {
-      SetRect(psrect, sx+sbmp->bm_x, sy+sbmp->bm_y, sx+sbmp->bm_x+swidth-1, 
+      SetRect(psrect, sx+sbmp->bm_x, sy+sbmp->bm_y, sx+sbmp->bm_x+swidth-1,
                sy+sbmp->bm_y+sheight-1);
    }
    else {
@@ -691,7 +691,7 @@ void dd_gr_blt_display(dd_grs_canvas *srccanv,
                psrect,
                DDBLT_WAIT,
                NULL);
-   if (result != DD_OK) 
+   if (result != DD_OK)
       Error("DDERR: Blt: (%d)\n", (result & 0x0000ffff));
 }
 
@@ -725,7 +725,7 @@ void dd_gr_clear_canvas(int color)
 
     Assert(_DDLockCounter == 0);
 
-    SetRect(&drect, bmp->bm_x, bmp->bm_y, bmp->bm_x+bmp->bm_w, 
+    SetRect(&drect, bmp->bm_x, bmp->bm_y, bmp->bm_x+bmp->bm_w,
                bmp->bm_y+bmp->bm_h);
 
     ddresult = IDirectDrawSurface_Blt(
@@ -739,12 +739,12 @@ void dd_gr_clear_canvas(int color)
       if (ddresult == DDERR_SURFACELOST) {
          if (!dd_gr_restore_canvas(dd_grd_curcanv))
             Error("Direct Draw GR library Blt Clear Restore error.");
-      }     
+      }
       else Error("Direct Draw GR library Blt Clear error: %x", ddresult);
     }
 
    if (!_DDFullScreen) {
-      Assert(_DDLockCounter == 0);     
+      Assert(_DDLockCounter == 0);
       DDGRRESTORE;
    }
 }

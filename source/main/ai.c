@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -287,7 +287,7 @@ void make_nearby_robot_snipe(void)
    }
 
    mprintf((0, "Couldn't find a robot to make snipe!\n"));
-   
+
 }
 
 int   Ai_last_missile_camera;
@@ -503,7 +503,7 @@ _exit_cheat:
                   move_towards_segment_center(obj);
                else if (!((aip->behavior == AIB_STILL) || (aip->behavior == AIB_STATION) || (aip->behavior == AIB_FOLLOW)))   // Behavior is still, so don't follow path.
                   attempt_to_resume_path(obj);
-               break;   
+               break;
             case AIM_FOLLOW_PATH:
                   // mprintf((0, "Object %i following path got %i retries in frame %i\n", obj-Objects, ailp->consecutive_retries, FrameCount));
                if (Game_mode & GM_MULTI) {
@@ -908,9 +908,9 @@ _exit_cheat:
             if (ai_evaded) {
                ai_multi_send_robot_position(objnum, 1);
                ai_evaded = 0;
-            } else 
+            } else
                ai_multi_send_robot_position(objnum, -1);
-            
+
             do_firing_stuff(obj, player_visibility, &vec_to_player);
          }
          break;
@@ -959,7 +959,7 @@ _exit_cheat:
                Laser_create_new_easy( &fire_vec, &fire_pos, obj-Objects, PROXIMITY_ID, 1);
 
             ailp->next_fire = (F1_0/2)*(NDL+5 - Difficulty_level);      // Drop a proximity bomb every 5 seconds.
-            
+
             #ifndef SHAREWARE
             if (Game_mode & GM_MULTI)
             {
@@ -967,9 +967,9 @@ _exit_cheat:
                if (aip->SUB_FLAGS & SUB_FLAGS_SPROX)
                  multi_send_robot_fire(obj-Objects, -2, &fire_vec);
                 else
-                 multi_send_robot_fire(obj-Objects, -1, &fire_vec);  
-            }             
-            #endif   
+                 multi_send_robot_fire(obj-Objects, -1, &fire_vec);
+            }
+            #endif
          }
          break;
 
@@ -1051,7 +1051,7 @@ _exit_cheat:
             //    Else choose goal with larger dot from left, right.
             vms_vector  goal_point, goal_vector, vec_to_goal, rand_vec;
             fix         dot;
-         
+
             dot = vm_vec_dot(&ConsoleObject->orient.fvec, &vec_to_player);
             if (dot > 0) {       // Remember, we're interested in the rear vector dot being < 0.
                goal_vector = ConsoleObject->orient.fvec;
@@ -1067,7 +1067,7 @@ _exit_cheat:
                } else
                   ; // -- mprintf((0, "Goal is RIGHT\n"));
             }
-         
+
             vm_vec_scale(&goal_vector, 2*(ConsoleObject->size + obj->size + (((objnum*4 + FrameCount) & 63) << 12)));
             vm_vec_add(&goal_point, &ConsoleObject->pos, &goal_vector);
             make_random_vector(&rand_vec);
@@ -1131,7 +1131,7 @@ _exit_cheat:
                      ai_multi_send_robot_position(objnum, -1);
                      ai_evaded = 0;
                   }
-                  else           
+                  else
                      ai_multi_send_robot_position(objnum, -1);
                }
             } else if ((obj->segnum != aip->hide_segment) && (dist_to_player > F1_0*80) && (!(Game_mode & GM_MULTI))) {
@@ -1539,7 +1539,7 @@ void init_robots_for_level(void)
 {
    Overall_agitation = 0;
    Final_boss_is_dead=0;
-  
+
    Buddy_objnum = 0;
    Buddy_allowed_to_talk = 0;
 

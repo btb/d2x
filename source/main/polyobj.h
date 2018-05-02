@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -35,7 +35,7 @@ typedef struct polymodel {
    int submodel_ptrs[MAX_SUBMODELS];
    vms_vector submodel_offsets[MAX_SUBMODELS];
    vms_vector submodel_norms[MAX_SUBMODELS];    //norm for sep plane
-   vms_vector submodel_pnts[MAX_SUBMODELS];     //point on sep plane 
+   vms_vector submodel_pnts[MAX_SUBMODELS];     //point on sep plane
    fix submodel_rads[MAX_SUBMODELS];            //radius for each submodel
    ubyte submodel_parents[MAX_SUBMODELS];    //what is parent for each submodel
    vms_vector submodel_mins[MAX_SUBMODELS];
@@ -51,8 +51,8 @@ typedef struct polymodel {
 //array of pointers to polygon objects
 extern polymodel Polygon_models[];
 
-//switch to simpler model when the object has depth 
-//greater than this value times its radius.   
+//switch to simpler model when the object has depth
+//greater than this value times its radius.
 extern int Simple_model_threshhold_scale;
 
 //how many polygon objects there are

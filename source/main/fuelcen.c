@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -98,7 +98,7 @@ void fuelcen_reset()
 }
 
 #ifndef NDEBUG    //this is sometimes called by people from the debugger
-void reset_all_robot_centers() 
+void reset_all_robot_centers()
 {
    int i;
 
@@ -213,7 +213,7 @@ void fuelcen_activate( segment * segp, int station_type )
       matcen_create( segp);
    else
       fuelcen_create( segp);
-   
+
 }
 
 // The lower this number is, the more quickly the center can be re-triggered.
@@ -341,7 +341,7 @@ object * create_morph_robot( segment *segp, vms_vector *object_pos, int object_i
 
    obj = &Objects[objnum];
 
-   //Set polygon-object-specific data 
+   //Set polygon-object-specific data
 
    obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
    obj->rtype.pobj_info.subobj_flags = 0;
@@ -354,7 +354,7 @@ object * create_morph_robot( segment *segp, vms_vector *object_pos, int object_i
    obj->mtype.phys_info.flags |= (PF_LEVELLING);
 
    obj->shields = Robot_info[obj->id].strength;
-   
+
    default_behavior = Robot_info[obj->id].behavior;
 
    init_ai_object(obj-Objects, default_behavior, -1 );      // Note, -1 = segment this robot goes to to hide, should probably be something useful
@@ -440,11 +440,11 @@ void robotmaker_proc( FuelCenter * robotcen )
 
    switch( robotcen->Flag )   {
    case 0:     // Wait until next robot can generate
-      if (Game_mode & GM_MULTI) 
+      if (Game_mode & GM_MULTI)
       {
-         top_time = ROBOT_GEN_TIME; 
+         top_time = ROBOT_GEN_TIME;
       }
-      else 
+      else
       {
          dist_to_player = vm_vec_dist_quick( &ConsoleObject->pos, &robotcen->Center );
          top_time = dist_to_player/64 + rand() * 2 + F1_0*2;
@@ -560,7 +560,7 @@ void robotmaker_proc( FuelCenter * robotcen )
                // Make object faces player...
                vm_vec_sub( &direction, &ConsoleObject->pos,&obj->pos );
                vm_vector_2_matrix( &obj->orient, &direction, &obj->orient.uvec, NULL);
-   
+
                morph_start( obj );
                //robotcen->last_created_obj = obj;
                //robotcen->last_created_sig = robotcen->last_created_obj->signature;
@@ -568,7 +568,7 @@ void robotmaker_proc( FuelCenter * robotcen )
                mprintf((0, "Warning: create_morph_robot returned NULL (no objects left?)\n"));
 
          }
-  
+
       }
       break;
    default:
@@ -586,7 +586,7 @@ void fuelcen_update_all()
 {
    int i;
    fix AmountToreplenish;
-   
+
    AmountToreplenish = fixmul(FrameTime,Fuelcen_refill_speed);
 
    for (i=0; i<Num_fuelcenters; i++ )  {
@@ -595,7 +595,7 @@ void fuelcen_update_all()
             robotmaker_proc( &Station[i] );
       } else if ( Station[i].Type == SEGMENT_IS_CONTROLCEN )   {
          //controlcen_proc( &Station[i] );
-   
+
       } else if ( (Station[i].MaxCapacity > 0) && (PlayerSegment!=&Segments[Station[i].segnum]) )  {
          if ( Station[i].Capacity < Station[i].MaxCapacity )   {
             Station[i].Capacity += AmountToreplenish;
@@ -614,12 +614,12 @@ void fuelcen_update_all()
 //--unused-- void fuelcen_replenish_all()
 //--unused-- {
 //--unused--   int i;
-//--unused-- 
+//--unused--
 //--unused--   for (i=0; i<Num_fuelcenters; i++ )  {
 //--unused--      Station[i].Capacity = Station[i].MaxCapacity;
 //--unused--   }
 //--unused--   //mprintf( (0, "All fuel centers are replenished\n" ));
-//--unused-- 
+//--unused--
 //--unused-- }
 
 #define FUELCEN_SOUND_DELAY (f1_0/4)      //play every half second
@@ -695,10 +695,10 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--unused-- {
 //--unused--   //int i;
 //--unused--   // int   station_num = segp->value;
-//--unused-- 
+//--unused--
 //--unused--   Assert( segp != NULL );
 //--unused--   if ( segp == NULL ) return;
-//--unused-- 
+//--unused--
 //--unused--   mprintf((0, "Obsolete function fuelcen_damage() called with seg=%i, damage=%7.3f\n", segp-Segments, f2fl(damage)));
 //--unused--   switch( segp->special ) {
 //--unused--   case SEGMENT_IS_NOTHING:
@@ -721,7 +721,7 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--unused-- //--    }
 //--unused-- //--    //mprintf( (0, "Materializatormografier has %x capacity left\n", Station[station_num].MaxCapacity ));
 //--unused--      break;
-//--unused--   case SEGMENT_IS_FUELCEN:   
+//--unused--   case SEGMENT_IS_FUELCEN:
 //--unused-- //--    digi_play_sample( SOUND_REFUEL_STATION_HIT );
 //--unused-- //--    if (Station[station_num].MaxCapacity>0 )  {
 //--unused-- //--       Station[station_num].MaxCapacity -= damage;
@@ -750,9 +750,9 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--unused-- fixang my_delta_ang(fixang a,fixang b)
 //--unused-- {
 //--unused--   fixang delta0,delta1;
-//--unused-- 
+//--unused--
 //--unused--   return (abs(delta0 = a - b) < abs(delta1 = b - a)) ? delta0 : delta1;
-//--unused-- 
+//--unused--
 //--unused-- }
 
 //--unused-- //   ----------------------------------------------------------------------------------------------------------
@@ -761,9 +761,9 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--unused-- {
 //--unused--   segment *Seg=&Segments[seg0];
 //--unused--   int i;
-//--unused-- 
+//--unused--
 //--unused--   for (i=MAX_SIDES_PER_SEGMENT;i--;) if (Seg->children[i]==seg1) return i;
-//--unused-- 
+//--unused--
 //--unused--   return -1;
 //--unused-- }
 
@@ -798,31 +798,31 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair-- {
 //--repair--   vms_vector nextcenter, headfvec, *headuvec;
 //--repair--   vms_matrix goal_orient;
-//--repair-- 
+//--repair--
 //--repair--   // Find time for this movement
 //--repair--   delta_time = F1_0;      // one second...
-//--repair--      
+//--repair--
 //--repair--   // Find start and goal position
 //--repair--   start_pos = obj->pos;
-//--repair--   
+//--repair--
 //--repair--   // Find delta position to get to goal position
 //--repair--   compute_segment_center(&goal_pos,&Segments[repair_seg]);
 //--repair--   vm_vec_sub( &delta_pos,&goal_pos,&start_pos);
-//--repair--   
+//--repair--
 //--repair--   // Find start angles
 //--repair--   //angles_from_vector(&start_angles,&obj->orient.fvec);
 //--repair--   vm_extract_angles_matrix(&start_angles,&obj->orient);
-//--repair--   
+//--repair--
 //--repair--   // Find delta angles to get to goal orientation
 //--repair--   med_compute_center_point_on_side(&nextcenter,&Segments[repair_seg],next_side);
 //--repair--   vm_vec_sub(&headfvec,&nextcenter,&goal_pos);
 //--repair--   //mprintf( (0, "Next_side = %d, Head fvec = %d,%d,%d\n", next_side, headfvec.x, headfvec.y, headfvec.z ));
-//--repair-- 
+//--repair--
 //--repair--   if (next_side == 5)                 //last side
 //--repair--      headuvec = &repair_save_uvec;
 //--repair--   else
 //--repair--      headuvec = &Segments[repair_seg].sides[SideUpVector[next_side]].normals[0];
-//--repair-- 
+//--repair--
 //--repair--   vm_vector_2_matrix(&goal_orient,&headfvec,headuvec,NULL);
 //--repair--   vm_extract_angles_matrix(&goal_angles,&goal_orient);
 //--repair--   delta_angles.p = my_delta_ang(start_angles.p,goal_angles.p);
@@ -831,42 +831,42 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--   current_time = 0;
 //--repair--   Repairing = 0;
 //--repair-- }
-//--repair-- 
+//--repair--
 //--repair-- //   ----------------------------------------------------------------------------------------------------------
 //--repair-- //if repairing, cut it short
 //--repair-- abort_repair_center()
 //--repair-- {
 //--repair--   if (!RepairObj || side_index==5)
 //--repair--      return;
-//--repair-- 
+//--repair--
 //--repair--   current_time = 0;
 //--repair--   side_index = 5;
 //--repair--   next_side = sidelist[side_index];
 //--repair--   refuel_calc_deltas(RepairObj, next_side, FuelStationSeg);
 //--repair-- }
-//--repair-- 
+//--repair--
 //--repair-- //   ----------------------------------------------------------------------------------------------------------
 //--repair-- void repair_ship_damage()
 //--repair-- {
 //--repair--   //mprintf((0,"Repairing ship damage\n"));
 //--repair-- }
-//--repair-- 
+//--repair--
 //--repair-- //   ----------------------------------------------------------------------------------------------------------
 //--repair-- int refuel_do_repair_effect( object * obj, int first_time, int repair_seg )  {
-//--repair-- 
-//--repair--   obj->mtype.phys_info.velocity.x = 0;            
-//--repair--   obj->mtype.phys_info.velocity.y = 0;            
-//--repair--   obj->mtype.phys_info.velocity.z = 0;            
-//--repair-- 
+//--repair--
+//--repair--   obj->mtype.phys_info.velocity.x = 0;
+//--repair--   obj->mtype.phys_info.velocity.y = 0;
+//--repair--   obj->mtype.phys_info.velocity.z = 0;
+//--repair--
 //--repair--   if (first_time)   {
 //--repair--      int entry_side;
 //--repair--      current_time = 0;
-//--repair-- 
+//--repair--
 //--repair--      digi_play_sample( SOUND_REPAIR_STATION_PLAYER_ENTERING, F1_0 );
-//--repair-- 
+//--repair--
 //--repair--      entry_side = john_find_connect_side(repair_seg,obj->segnum );
 //--repair--      Assert( entry_side > -1 );
-//--repair-- 
+//--repair--
 //--repair--      switch( entry_side ) {
 //--repair--      case WBACK: sidelist = SideOrderBack; break;
 //--repair--      case WFRONT: sidelist = SideOrderFront; break;
@@ -877,35 +877,35 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--      }
 //--repair--      side_index = 0;
 //--repair--      next_side = sidelist[side_index];
-//--repair-- 
+//--repair--
 //--repair--      refuel_calc_deltas(obj,next_side, repair_seg);
-//--repair--   } 
-//--repair-- 
+//--repair--   }
+//--repair--
 //--repair--   //update shields
 //--repair--   if (Players[Player_num].shields < MAX_SHIELDS) {   //if above max, don't mess with it
-//--repair-- 
+//--repair--
 //--repair--      Players[Player_num].shields += fixmul(FrameTime,repair_rate);
-//--repair-- 
+//--repair--
 //--repair--      if (Players[Player_num].shields > MAX_SHIELDS)
 //--repair--         Players[Player_num].shields = MAX_SHIELDS;
 //--repair--   }
-//--repair-- 
+//--repair--
 //--repair--   current_time += FrameTime;
-//--repair-- 
+//--repair--
 //--repair--   if (current_time >= delta_time ) {
 //--repair--      vms_angvec av;
 //--repair--      obj->pos = goal_pos;
 //--repair--      av = goal_angles;
 //--repair--      vm_angles_2_matrix(&obj->orient,&av);
-//--repair-- 
-//--repair--      if (side_index >= 5 )   
+//--repair--
+//--repair--      if (side_index >= 5 )
 //--repair--         return 1;      // Done being repaired...
-//--repair-- 
+//--repair--
 //--repair--      if (Repairing==0)    {
 //--repair--         //mprintf( (0, "<MACHINE EFFECT ON SIDE %d>\n", next_side ));
 //--repair--         //digi_play_sample( SOUND_REPAIR_STATION_FIXING );
 //--repair--         Repairing=1;
-//--repair-- 
+//--repair--
 //--repair--         switch( next_side )  {
 //--repair--         case 0:  digi_play_sample( SOUND_REPAIR_STATION_FIXING_1,F1_0 ); break;
 //--repair--         case 1:  digi_play_sample( SOUND_REPAIR_STATION_FIXING_2,F1_0 ); break;
@@ -914,32 +914,32 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--         case 4:  digi_play_sample( SOUND_REPAIR_STATION_FIXING_1,F1_0 ); break;
 //--repair--         case 5:  digi_play_sample( SOUND_REPAIR_STATION_FIXING_2,F1_0 ); break;
 //--repair--         }
-//--repair--      
+//--repair--
 //--repair--         repair_ship_damage();
-//--repair-- 
+//--repair--
 //--repair--      }
-//--repair-- 
+//--repair--
 //--repair--      if (current_time >= (delta_time+(F1_0/2)) )  {
 //--repair--         current_time = 0;
 //--repair--         // Find next side...
 //--repair--         side_index++;
 //--repair--         if (side_index >= 6 ) return 1;
 //--repair--         next_side = sidelist[side_index];
-//--repair--   
+//--repair--
 //--repair--         refuel_calc_deltas(obj, next_side, repair_seg);
 //--repair--      }
-//--repair-- 
+//--repair--
 //--repair--   } else {
-//--repair--      fix factor, p,b,h;   
+//--repair--      fix factor, p,b,h;
 //--repair--      vms_angvec av;
-//--repair-- 
+//--repair--
 //--repair--      factor = fixdiv( current_time,delta_time );
-//--repair-- 
+//--repair--
 //--repair--      // Find object's current position
 //--repair--      obj->pos = delta_pos;
 //--repair--      vm_vec_scale( &obj->pos, factor );
 //--repair--      vm_vec_add2( &obj->pos, &start_pos );
-//--repair--         
+//--repair--
 //--repair--      // Find object's current orientation
 //--repair--      p  = fixmul(delta_angles.p,factor);
 //--repair--      b  = fixmul(delta_angles.b,factor);
@@ -948,20 +948,20 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--      av.b = (fixang)b + start_angles.b;
 //--repair--      av.h = (fixang)h + start_angles.h;
 //--repair--      vm_angles_2_matrix(&obj->orient,&av);
-//--repair-- 
+//--repair--
 //--repair--   }
-//--repair-- 
+//--repair--
 //--repair--   update_object_seg(obj);    //update segment
-//--repair-- 
+//--repair--
 //--repair--   return 0;
 //--repair-- }
-//--repair-- 
+//--repair--
 //--repair-- //   ----------------------------------------------------------------------------------------------------------
 //--repair-- //do the repair center for this frame
 //--repair-- void do_repair_sequence(object *obj)
 //--repair-- {
 //--repair--   Assert(obj == RepairObj);
-//--repair-- 
+//--repair--
 //--repair--   if (refuel_do_repair_effect( obj, 0, FuelStationSeg )) {
 //--repair--      if (Players[Player_num].shields < MAX_SHIELDS)
 //--repair--         Players[Player_num].shields = MAX_SHIELDS;
@@ -969,41 +969,41 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--      obj->movement_type = save_movement_type;
 //--repair--      disable_repair_center=1;
 //--repair--      RepairObj = NULL;
-//--repair-- 
-//--repair-- 
+//--repair--
+//--repair--
 //--repair--      //the two lines below will spit the player out of the rapair center,
 //--repair--      //but what happen is that the ship just bangs into the door
 //--repair--      //if (obj->movement_type == MT_PHYSICS)
 //--repair--      // vm_vec_copy_scale(&obj->mtype.phys_info.velocity,&obj->orient.fvec,i2f(200));
 //--repair--   }
-//--repair-- 
+//--repair--
 //--repair-- }
-//--repair-- 
+//--repair--
 //--repair-- //   ----------------------------------------------------------------------------------------------------------
 //--repair-- //see if we should start the repair center
 //--repair-- void check_start_repair_center(object *obj)
 //--repair-- {
 //--repair--   if (RepairObj != NULL) return;      //already in repair center
-//--repair-- 
+//--repair--
 //--repair--   if (Lsegments[obj->segnum].special_type & SS_REPAIR_CENTER) {
-//--repair-- 
+//--repair--
 //--repair--      if (!disable_repair_center) {
 //--repair--         //have just entered repair center
-//--repair-- 
+//--repair--
 //--repair--         RepairObj = obj;
 //--repair--         repair_save_uvec = obj->orient.uvec;
-//--repair-- 
+//--repair--
 //--repair--         repair_rate = fixmuldiv(FULL_REPAIR_RATE,(MAX_SHIELDS - Players[Player_num].shields),MAX_SHIELDS);
-//--repair-- 
+//--repair--
 //--repair--         save_control_type = obj->control_type;
 //--repair--         save_movement_type = obj->movement_type;
-//--repair-- 
+//--repair--
 //--repair--         obj->control_type = CT_REPAIRCEN;
 //--repair--         obj->movement_type = MT_NONE;
-//--repair-- 
+//--repair--
 //--repair--         FuelStationSeg = Lsegments[obj->segnum].special_segment;
 //--repair--         Assert(FuelStationSeg != -1);
-//--repair-- 
+//--repair--
 //--repair--         if (refuel_do_repair_effect( obj, 1, FuelStationSeg )) {
 //--repair--            Int3();     //can this happen?
 //--repair--            obj->control_type = CT_FLYING;
@@ -1013,7 +1013,7 @@ fix fuelcen_give_fuel(segment *segp, fix MaxAmountCanTake )
 //--repair--   }
 //--repair--   else
 //--repair--      disable_repair_center=0;
-//--repair-- 
+//--repair--
 //--repair-- }
 
 // --------------------------------------------------------------------------------------------
@@ -1087,14 +1087,14 @@ void fuelcen_check_for_goal(segment *segp)
    if ( seg2p->special==SEGMENT_IS_GOAL_RED) {
 
          if ((get_team(Player_num)==TEAM_RED) && (Players[Player_num].flags & PLAYER_FLAGS_FLAG))
-          {    
+          {
             mprintf ((0,"In goal segment RED\n"));
             multi_send_capture_bonus (Player_num);
             Players[Player_num].flags &=(~(PLAYER_FLAGS_FLAG));
             maybe_drop_net_powerup (POW_FLAG_BLUE);
           }
        }
-  } 
+  }
 
 void fuelcen_check_for_hoard_goal(segment *segp)
 {
@@ -1106,7 +1106,7 @@ void fuelcen_check_for_hoard_goal(segment *segp)
    if (Player_is_dead)
       return;
 
-   if (seg2p->special==SEGMENT_IS_GOAL_BLUE || seg2p->special==SEGMENT_IS_GOAL_RED  )  
+   if (seg2p->special==SEGMENT_IS_GOAL_BLUE || seg2p->special==SEGMENT_IS_GOAL_RED  )
    {
       if (Players[Player_num].secondary_ammo[PROXIMITY_INDEX])
       {
@@ -1117,7 +1117,7 @@ void fuelcen_check_for_hoard_goal(segment *segp)
       }
    }
 
-} 
+}
 
 
 

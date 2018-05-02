@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -44,7 +44,7 @@ void comm_dump_info(COMM_OBJ *obj);
 
 
 // ---------------------------------------------------------------------
- 
+
 int comm_get_modem_info(int modem, COMM_OBJ *obj)
 {
    HKEY hKey, hSubKey;
@@ -62,12 +62,12 @@ int comm_get_modem_info(int modem, COMM_OBJ *obj)
       return 1;
    }
    else obj->type = 1;
-   
+
    sprintf(buf, "\\%04d", modem);
 
    strcpy(path, MODEM_REGISTRY_PATH);
    strcat(path, buf);
-   
+
    mprintf((0, "Looking for modem in HKEY_LOCAL_MACHINE\\%s\n", path));
 
    err = RegOpenKeyEx(HKEY_LOCAL_MACHINE, path, 0, KEY_READ, &hKey);
@@ -91,8 +91,8 @@ int comm_get_modem_info(int modem, COMM_OBJ *obj)
       RegCloseKey(hKey);
       return 0;
    }
-   mprintf((0, "COM:%d\n", buf[0]));   
- 
+   mprintf((0, "COM:%d\n", buf[0]));
+
    obj->port = buf[0];
 
    len = sizeof(buf);
@@ -173,8 +173,8 @@ int comm_get_modem_info(int modem, COMM_OBJ *obj)
    comm_dump_info(obj);
 
    return 1;
-}  
- 
+}
+
 
 // int comm_open_connection(COMM_OBJ *obj);
 // ----------------------------------------------------------------------------
@@ -184,21 +184,21 @@ int comm_open_connection(COMM_OBJ *obj)
    COMMTIMEOUTS ctimeouts;
 
    sprintf(filename, "COM%d", obj->port);
-                                 
-   obj->handle = CreateFile(filename, 
+
+   obj->handle = CreateFile(filename,
                      GENERIC_READ | GENERIC_WRITE,
                      0,
                      NULL,
-                     OPEN_EXISTING, 
+                     OPEN_EXISTING,
                      FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
-   if (obj->handle == INVALID_HANDLE_VALUE)  
+   if (obj->handle == INVALID_HANDLE_VALUE)
       return 0;
-   
+
 //  Modem COMport is open.
    SetCommMask(obj->handle, EV_RXCHAR);
    SetupComm(obj->handle, 4096, 4096);
-   PurgeComm( obj->handle, 
-               PURGE_TXABORT | 
+   PurgeComm( obj->handle,
+               PURGE_TXABORT |
                PURGE_RXABORT |
                PURGE_TXCLEAR | PURGE_RXCLEAR ) ;
 
@@ -223,7 +223,7 @@ int comm_open_connection(COMM_OBJ *obj)
    if (obj->wov.hEvent == NULL) {
       mprintf((0, "COMM: Unable to create write event.\n"));
       CloseHandle(obj->rov.hEvent);
-      CloseHandle(obj->handle); 
+      CloseHandle(obj->handle);
       return 0;
    }
 
@@ -232,7 +232,7 @@ int comm_open_connection(COMM_OBJ *obj)
    obj->dcb.DCBlength = sizeof(DCB);
    GetCommState(obj->handle, &obj->dcb);
 
-   if (obj->baud) 
+   if (obj->baud)
       obj->dcb.BaudRate = obj->baud;
    else obj->baud = obj->dcb.BaudRate;
 
@@ -258,8 +258,8 @@ int comm_open_connection(COMM_OBJ *obj)
    obj->dcb.fOutxCtsFlow   = FALSE;             // rts/cts off
 
 // obj->dcb.fInX = obj->dcb.fOutX = 1;          // Software flow control XON/XOFF
-   
-   if (SetCommState(obj->handle, &obj->dcb) == TRUE) 
+
+   if (SetCommState(obj->handle, &obj->dcb) == TRUE)
    {
       obj->hThread = NULL;
       obj->threadID = (DWORD)(-1);
@@ -286,7 +286,7 @@ int comm_open_connection(COMM_OBJ *obj)
 
 
 // int comm_close_connection(COMM_OBJ *obj);
-// ----------------------------------------------------------------------------  
+// ----------------------------------------------------------------------------
 int comm_close_connection(COMM_OBJ *obj)
 {
    CloseHandle(obj->wov.hEvent);
@@ -294,8 +294,8 @@ int comm_close_connection(COMM_OBJ *obj)
 
    SetCommMask(obj->handle, 0);
    EscapeCommFunction(obj->handle, CLRDTR);
-   PurgeComm( obj->handle, 
-               PURGE_TXABORT | 
+   PurgeComm( obj->handle,
+               PURGE_TXABORT |
                PURGE_RXABORT |
                PURGE_TXCLEAR | PURGE_RXCLEAR ) ;
    CloseHandle(obj->handle);
@@ -304,7 +304,7 @@ int comm_close_connection(COMM_OBJ *obj)
    obj->handle = NULL;
    mprintf((0, "COM%d closed.\n", obj->port));
    return 1;
-}     
+}
 
 
 // int comm_read_char(COMM_OBJ *obj);
@@ -334,7 +334,7 @@ int comm_read_char(COMM_OBJ *obj)
    ClearCommError(obj->handle, &errflags, &comstat);
 
    if (comstat.cbInQue > 0) {
-      if (comstat.cbInQue < ROTBUF_SIZE) 
+      if (comstat.cbInQue < ROTBUF_SIZE)
          length_to_read = comstat.cbInQue;
       else
          length_to_read = ROTBUF_SIZE;
@@ -384,13 +384,13 @@ int comm_read_char_timed(COMM_OBJ *obj, int msecs)
    while (cstat.cbInQue == 0)
    {
       status = comm_idle_function(obj);
-      if (!status) return -1; 
+      if (!status) return -1;
       ClearCommError(obj->handle, &err, &cstat);
       if (timeout <= timeGetTime()) return -1;
    }
    return comm_read_char(obj);
 }
-   
+
 
 // int comm_write_char(COMM_OBJ *obj, int ch);
 // ----------------------------------------------------------------------------
@@ -410,7 +410,7 @@ int comm_write_char(COMM_OBJ *obj, int ch)
    if (!WriteFile(obj->handle, &c, 1, &length, &obj->wov)) {
       if (GetLastError() == ERROR_IO_PENDING) {
          while (!GetOverlappedResult(obj->handle, &obj->wov, &length, TRUE))
-         {  
+         {
             errflags = GetLastError();
             if (errflags == ERROR_IO_INCOMPLETE)
                continue;
@@ -432,7 +432,7 @@ int comm_write_char(COMM_OBJ *obj, int ch)
 
    return 1;
 }
-         
+
 
 // int comm_get_cd(COMM_OBJ *obj);
 // ----------------------------------------------------------------------------
@@ -459,7 +459,7 @@ int comm_get_line_status(COMM_OBJ *obj)
    if (!obj->connect) return 0;
 
    ClearCommError(obj->handle, &err, &comstat);
-   
+
    if (err & CE_BREAK) status |= COMM_STATUS_BREAK;
    if (err & CE_FRAME) status |= COMM_STATUS_FRAME;
    if (err & CE_OVERRUN) status |= COMM_STATUS_OVERRUN;
@@ -473,7 +473,7 @@ int comm_get_line_status(COMM_OBJ *obj)
 // ----------------------------------------------------------------------------
 void comm_clear_line_status(COMM_OBJ *obj)
 {
-   
+
 }
 
 
@@ -484,19 +484,19 @@ void comm_set_dtr(COMM_OBJ *obj, int flag)
    if (!obj->connect) return;
 
    GetCommState(obj->handle, &obj->dcb);
-   
+
    if (flag == 1) obj->dcb.fDtrControl = DTR_CONTROL_ENABLE;
    else obj->dcb.fDtrControl = DTR_CONTROL_DISABLE;
-   
+
    SetCommState(obj->handle, &obj->dcb);
 }
-      
+
 
 // void comm_set_rtscts(COMM_OBJ *obj, int flag);
 // ----------------------------------------------------------------------------
 void comm_set_rtscts(COMM_OBJ *obj, int flag)
 {
-   
+
    if (!obj->connect) return;
 
    GetCommState(obj->handle, &obj->dcb);
@@ -517,13 +517,13 @@ void comm_set_rtscts(COMM_OBJ *obj, int flag)
 // int comm_modem_input_line(COMM_OBJ *obj, int msecs, char *buffer, int chars);
 // ----------------------------------------------------------------------------
 int comm_modem_input_line(COMM_OBJ *obj, int msecs, char *buffer, int chars)
-{     
+{
    long timeout;
    int ch;
    int retval=1;
    int i;
 
-   i = 0; 
+   i = 0;
 
    timeout = timeGetTime() + msecs;
 
@@ -532,7 +532,7 @@ int comm_modem_input_line(COMM_OBJ *obj, int msecs, char *buffer, int chars)
    while (1)
    {
       ch = comm_read_char(obj);
-      if (ch >=0) { 
+      if (ch >=0) {
          if (ch == '\r') {
          // mprintf((0, "\n"));
             break;
@@ -580,10 +580,10 @@ int comm_wait(COMM_OBJ *obj, int msecs)
 
    while (timeGetTime() < delaytime) {
       if (!comm_idle_function(obj)) {
-         mprintf((1, "Comm_wait: THIS IS NOT GOOD!!\n")); 
+         mprintf((1, "Comm_wait: THIS IS NOT GOOD!!\n"));
          return 0;
       }
-   }  
+   }
    return 1;
 }
 
@@ -606,7 +606,7 @@ int comm_modem_send_string(COMM_OBJ *obj, char *str)
 
 // Checking for OK response
    curtime = comm_delay_val;
-   while(1) 
+   while(1)
    {
       curtime = comm_modem_input_line(obj, curtime, buf, 64);
       if (curtime == 0) {
@@ -616,12 +616,12 @@ int comm_modem_send_string(COMM_OBJ *obj, char *str)
       if (strcmp("OK", buf) == 0) {
          return comm_wait(obj, 500);
       }
-   }        
+   }
 
 }
 
 
-// int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term); 
+// int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term);
 // ----------------------------------------------------------------------------
 int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term)
 {
@@ -631,13 +631,13 @@ int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term)
 
 // mprintf((0, "<%s", str));
    for (i= 0; i < lstrlen(str); i++)
-      comm_write_char(obj, str[i]); 
+      comm_write_char(obj, str[i]);
 
 //@@  if (!WriteFile(obj->handle, &str, lstrlen(str), &length, &obj->wov)) {
 //@@     if (GetLastError() == ERROR_IO_PENDING) {
 //@@        mprintf((0,"Comm: SendStringNoWait IO pending...\n"));
 //@@        while (!GetOverlappedResult(obj->handle, &obj->wov, &length, TRUE))
-//@@        {  
+//@@        {
 //@@           errflags = GetLastError();
 //@@           if (errflags == ERROR_IO_INCOMPLETE)
 //@@              continue;
@@ -655,7 +655,7 @@ int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term)
 //@@     }
 //@@  }
 
-   if (term >=0) 
+   if (term >=0)
       comm_write_char(obj, term);
    else if (term == -2) {
       comm_write_char(obj, '\r');
@@ -663,7 +663,7 @@ int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term)
    }
 
    return 1;
-} 
+}
 
 
 // int comm_modem_reset(COMM_OBJ *obj);
@@ -679,7 +679,7 @@ int comm_modem_reset(COMM_OBJ *obj)
 int comm_modem_dial(COMM_OBJ *obj, char *phonenum)
 {
    char str[40];
-   
+
    strcpy(str, obj->cmd[COMM_PREFIX_CMD]);
    strcat(str, obj->cmd[COMM_DIALPREF_CMD]);
    strcat(str, phonenum);
@@ -713,7 +713,7 @@ int comm_modem_answer(COMM_OBJ *obj)
 //@@
 //@@  if (!SetCommMask(obj->handle, EV_RXCHAR)) return FALSE;
 //@@
-//@@  while (obj->connected) 
+//@@  while (obj->connected)
 //@@  {
 //@@     event_mask = 0;
 //@@     WaitCommEvent(obj->handle, &event_mask, NULL);
@@ -728,7 +728,7 @@ int comm_modem_answer(COMM_OBJ *obj)
 int FAR PASCAL comm_idle_function(COMM_OBJ *obj)
 {
    MSG msg;
-   
+
    while (PeekMessage(&msg, 0,0,0, PM_REMOVE)) {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
@@ -761,9 +761,9 @@ void comm_dump_info(COMM_OBJ *obj)
    mprintf((0, "\tXON/XOFF [In|Out]:[%d|%d]  XON/OFF thresh:[%d|%d]\n", obj->dcb.fInX, obj->dcb.fOutX, obj->dcb.XonLim, obj->dcb.XoffLim));
 }
 
-   
-   
 
 
 
-   
+
+
+

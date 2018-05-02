@@ -1,6 +1,6 @@
 To:           matt
 From:         "Mike Kulas" <SERVER/MIKE>
-Date:         20 Sep 93 10:49:26 
+Date:         20 Sep 93 10:49:26
 Subject:      Yet another piece of mail: vm_vec_normal testing
 X-mailer:     Pegasus Mail v2.3 (R5).
 

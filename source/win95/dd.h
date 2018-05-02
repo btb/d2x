@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -50,7 +50,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define SM95_320x200x8X 1
 #define SM95_640x480x8  2
 #define SM95_320x400x8  3
-#define SM95_640x400x8  4 
+#define SM95_640x400x8  4
 #define SM95_800x600x8  5
 #define SM95_1024x768x8 6
 #define SM95_640x480x8P 7
@@ -62,7 +62,7 @@ typedef struct DDMODEINFO {
    int rw, rh;
    int emul             :1;            // Emulated Display Mode (Double Buffer/Single Page)
    int dbuf             :1;            // Double Buffered Duel Page Game Mode
-   int modex            :1;            // Mode X Duel page mode. 
+   int modex            :1;            // Mode X Duel page mode.
    int paged            :1;            // Duel Page Standard Mode
 } DDMODEINFO;
 
@@ -148,7 +148,7 @@ extern void dd_gr_free_sub_canvas(dd_grs_canvas *cvs);
 extern void dd_gr_free_canvas(dd_grs_canvas *canvas);
 extern void dd_gr_set_current_canvas(dd_grs_canvas *canvas);
 extern void dd_gr_disable_current_canvas();
-extern void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src, 
+extern void dd_gr_init_sub_canvas(dd_grs_canvas *new, dd_grs_canvas *src,
                                  int x, int y, int w, int h);
 extern void dd_gr_clear_canvas(int color);
 extern void dd_gr_reinit_canvas(dd_grs_canvas *canv);
@@ -157,7 +157,7 @@ extern void dd_gr_reinit_canvas(dd_grs_canvas *canv);
 // dd_gr_blt functions
 extern void dd_gr_blt_notrans(dd_grs_canvas *srccanv,
                int sx, int sy, int swidth, int sheight,
-               dd_grs_canvas *destcanv, 
+               dd_grs_canvas *destcanv,
                int dx, int dy, int dwidth, int dheight);
 extern void dd_gr_blt_display(dd_grs_canvas *srccanv,
                int sx, int sy, int swidth, int sheight,

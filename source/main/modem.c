@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -106,7 +106,7 @@ typedef struct com_sync_pack {
    char mission_name[9];
    short killed;
    byte game_flags;
-   
+
    short DoMegas:1;
    short DoSmarts:1;
    short DoFusions:1;
@@ -129,11 +129,11 @@ typedef struct com_sync_pack {
    short DoMercury:1;
    short Allow_marker_view:1;
    short RefusePlayers:1;
-   short AlwaysLighting:1; 
+   short AlwaysLighting:1;
    short DoAmmoRack:1;
    short DoConverter:1;
    short DoHeadlight:1;
-   
+
    char  dummy[3]; // Extra space for checksum & sequence number
 } com_sync_pack;
 
@@ -187,7 +187,7 @@ fix  SerialLastMessage = 0;
 
 /* Function prototypes for functions not exported through modem.h */
 
-int GetModemList(void); 
+int GetModemList(void);
 void com_param_setup(void);
 void com_start_game(void);
 void modem_dialout(void);
@@ -237,8 +237,8 @@ int detect_UART(unsigned baseaddr, int * loc, int * code )
    *loc = 0; *code = 0;
 
    // check if a UART is present.  This is code John hacked by looking at the return
-   // values from peoples computers.  
-   olddata=inp(baseaddr+4);   
+   // values from peoples computers.
+   olddata=inp(baseaddr+4);
    outp(baseaddr+4,0x1f);        // Enable Loopback mode, sets RTS & DTR to 1.
    delay(1);
    _disable();
@@ -273,10 +273,10 @@ int detect_UART(unsigned baseaddr, int * loc, int * code )
    if ((x&0x40)==0) return 3;
    return 4;
 }
-   
+
 codex(code_02s, code_02e)
 
-int 
+int
 com_type_detect()
 {
 // static long port;
@@ -292,7 +292,7 @@ com_type_detect()
    if ( (com_port_num != 0) && (com_port_num != 1) && (com_port_num != 2) && (com_port_num != 3) )
    {
       Int3();
-      return -1; // Error, set com_port_num before calling this!  
+      return -1; // Error, set com_port_num before calling this!
    }
 
    if (com_port_num == com_custom_port)
@@ -301,8 +301,8 @@ com_type_detect()
       portaddr = port_addr[com_port_num];
 
    mprintf((0, "com port %x.\n", portaddr));
-   
-   switch( detect_UART(portaddr, &loc, &code) ) {                                   
+
+   switch( detect_UART(portaddr, &loc, &code) ) {
    case 0:  // No UART
       mprintf((0, "No UART detected. (LOC:%d, CODE:0x%x)\n", loc, code));
       return -1;
@@ -335,7 +335,7 @@ com_dump_string(char *string)
 codex(code_03s, code_03e)
 
 int
-com_enable() 
+com_enable()
 {
    // Detect and enable the COM port selected by the user
 
@@ -357,7 +357,7 @@ com_enable()
    else
       rc = Change8259Priority( IRQ4 );
 
-   if (rc != ASSUCCESS) 
+   if (rc != ASSUCCESS)
    {
       nm_messagebox(TXT_ERROR, 1, TXT_OK, TXT_SERIAL_OPEN_ERROR);
       return -1;
@@ -409,8 +409,8 @@ com_enable()
    #endif
 
    SetDtr(com_port, ON);
-   
-   if ( FindArg( "-ctsrts" ) || FindArg( "-rtscts" )  )  
+
+   if ( FindArg( "-ctsrts" ) || FindArg( "-rtscts" )  )
       UseRtsCts(com_port, ON); // Now used for null-modem as well, helps IHHD!
    else
       UseRtsCts(com_port, OFF);
@@ -431,7 +431,7 @@ com_disable()
 
    int rc;
 
-   if (!com_open) 
+   if (!com_open)
       return;
 
 // SetDtr(com_port, OFF);
@@ -520,7 +520,7 @@ com_reset_game(void)
    int i;
 
    // Reset various parameters before starting a new game
-   
+
    N_players = 2;
 
    for (i = 0; i < N_players; i++)
@@ -533,7 +533,7 @@ com_reset_game(void)
    multi_new_game(); // Reset kill list, among other things
    Control_center_destroyed = 0;
    Endlevel_sequence = 0;
-   
+
    // Yes, this really IS as ugly as it gets, kids...
 
    if (Cockpit_mode == CM_LETTERBOX || Cockpit_mode == CM_REAR_VIEW)
@@ -555,7 +555,7 @@ com_save_settings(void)
 
    if (fwrite(&com_speed, sizeof(int), 1, settings) != 1)
       goto error;
-   
+
    if (fwrite(&com_port_num, sizeof(int), 1, settings) != 1)
       goto error;
 
@@ -588,7 +588,7 @@ error:
       fclose(settings);
       unlink("serial.cfg");
    }
-   
+
    return;
 }
 
@@ -606,7 +606,7 @@ com_load_settings(void)
    cfg_size = filelength(fileno(settings));
 
    // Read the data from the file
-   
+
    if (fread(&com_speed, sizeof(int), 1, settings) != 1)
       goto error;
    if (! ((com_speed == 9600) || (com_speed == 19200) || (com_speed == 38400)) )
@@ -670,7 +670,7 @@ close:
 
 error:
    nm_messagebox(NULL, 1, TXT_OK, TXT_ERR_SER_SETTINGS);
-      
+
 defaults:
    // Return some defaults
    com_speed = 19200; // UART speed
@@ -720,7 +720,7 @@ com_send_data(char *ptr, int len, int repeat)
       if (i == 0)
          mprintf((0, "CARRIER LOST!\n"));
    }
-   
+
    len += 3; // Checksum data is 3 bytes
 
    *(ubyte *)(ptr+(len-3)) = (tx_seqnum+1)%256;
@@ -759,7 +759,7 @@ com_flush()
 
    int i = 0;
 
-   if (!com_open) 
+   if (!com_open)
       return;
 
    mprintf((0, "COM FLUSH:"));
@@ -800,7 +800,7 @@ com_getchar()
          eor_recv = 1;
          return(-1);
       }
-      else if (i == EOR_MARK) 
+      else if (i == EOR_MARK)
       {
          eor_recv = 0;
          return(EOR_MARK); // Doubled EOR returns the character
@@ -813,7 +813,7 @@ com_getchar()
          }
 #endif
          eor_recv = 0;
-         return(-2);                   
+         return(-2);
       }
    }
    return(i);
@@ -880,7 +880,7 @@ com_check_message(char *checkbuf, int len)
 {
    ushort check;
    int seqnum;
-  
+
    //mprintf ((0,"TYPE=%d!\n",checkbuf[0]));
 
    if (len < 4)
@@ -905,7 +905,7 @@ com_check_message(char *checkbuf, int len)
    if (check != *(ushort *)(checkbuf+(len-2)))
    {
       #ifndef NDEBUG
-      mprintf((0, "error in message type %d, length %d, checksum %d != %d\n", checkbuf[0], len, check, *(ushort *)(checkbuf+(len-2))));   
+      mprintf((0, "error in message type %d, length %d, checksum %d != %d\n", checkbuf[0], len, check, *(ushort *)(checkbuf+(len-2))));
       #endif
       goto error;
    }
@@ -917,23 +917,23 @@ com_check_message(char *checkbuf, int len)
       mprintf ((0,"returning due to bad checksum! type=%d seq=%d rx=%d\n",checkbuf[0],seqnum,rx_seqnum));
       return -1;
    }
-   
+
    if (seqnum != (rx_seqnum+1)%256)
    {
       #ifndef NDEBUG
-      mprintf((0, "Warning, missed 1 or more messages.\n"));   
+      mprintf((0, "Warning, missed 1 or more messages.\n"));
       #endif
    }
    rx_seqnum = seqnum;
    //mprintf((0, "message type %d len %d OK!\n", checkbuf[0], len));
-   return 0; 
+   return 0;
 
 error:
    mprintf((1,"Line status: %d.\n", GetLineStatus(com_port)));
    ClearLineStatus(com_port);
    return -1;
 }
-   
+
 codex(code_11s, code_11e)
 
 void
@@ -1027,7 +1027,7 @@ nextmessage:
          }
       }
       else mprintf ((0,"Huh?\n"));
-   
+
       len = 0;
       goto nextmessage;
    }
@@ -1050,7 +1050,7 @@ com_connect()
    my_sync.seg_checksum = 0;
    my_sync.game_mode = Game_mode;
    my_sync.level_num = 0;
-                         
+
    #ifndef NDEBUG
    mprintf((0, "com_connect()\n"));
    #endif
@@ -1080,9 +1080,9 @@ com_connect()
       else
          return(-1);  // Didn't sync properly, try again
    }
-   
+
    // Copy the remote sync data into local variables
-   
+
    OtherPlayer = (Player_num+1)%2;
    mprintf((0, "Other player is #%d.\n", OtherPlayer));
    memcpy(Players[OtherPlayer].callsign, other_sync.callsign, CALLSIGN_LEN+1);
@@ -1118,7 +1118,7 @@ com_menu_poll(int nitems, newmenu_item *menus, int *key, int citem)
 
    com_process_mode = COM_PROCESS_MENU;
    old_game_mode = Game_mode;
-   other_menu_choice = 0;  
+   other_menu_choice = 0;
 
    com_process_input();
 
@@ -1154,8 +1154,8 @@ com_ready_to_start(void)
       com_send_choice(SELECTION_YES_START);
       other_menu_choice = SELECTION_STARTGAME;
       com_start_game();
-   }     
-   else 
+   }
+   else
    {
       com_send_choice(SELECTION_NO_START);
    }
@@ -1164,9 +1164,9 @@ com_ready_to_start(void)
 void
 com_process_other_menu_choice(void)
 {
-   if (other_menu_choice == SELECTION_STARTGAME)   
+   if (other_menu_choice == SELECTION_STARTGAME)
       com_ready_to_start();
-   else if (other_menu_choice == SELECTION_CLOSE_LINK) 
+   else if (other_menu_choice == SELECTION_CLOSE_LINK)
    {
       nm_messagebox(NULL, 1, TXT_OK, TXT_CLOSED_LINK);
       com_hangup();
@@ -1223,7 +1223,7 @@ newmenu:
    }
    if (Game_mode & GM_MODEM)
       ADD_ITEM(TXT_HANGUP_MODEM, MENU_MODEM_HANGUP, KEY_H);
-   
+
    if (Game_mode & GM_SERIAL)
       ADD_ITEM(TXT_CLOSE_LINK, MENU_MODEM_HANGUP, KEY_C);
 
@@ -1232,7 +1232,7 @@ newmenu:
    if (Game_mode & GM_SERIAL)
       sprintf(subtitle+strlen(subtitle), "%s %s\n%s", TXT_SERIAL, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);
    else if (Game_mode & GM_MODEM)
-      sprintf(subtitle+strlen(subtitle), "%d %s %s %s\n%s", com_baud_rate, TXT_BAUD, TXT_MODEM, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);   
+      sprintf(subtitle+strlen(subtitle), "%d %s %s %s\n%s", com_baud_rate, TXT_BAUD, TXT_MODEM, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);
    else
       sprintf(subtitle+strlen(subtitle), TXT_NOT_CONNECTED);
 
@@ -1270,24 +1270,24 @@ newmenu:
    if (choice == -2)
    {
       // Menu poll loop caused a re-draw
-      if (other_menu_choice == SELECTION_STARTGAME)   
+      if (other_menu_choice == SELECTION_STARTGAME)
          com_ready_to_start();
-      else if (other_menu_choice == SELECTION_CLOSE_LINK) 
+      else if (other_menu_choice == SELECTION_CLOSE_LINK)
       {
          nm_messagebox(NULL, 1, TXT_OK, TXT_CLOSED_LINK);
          com_hangup();
       }
-         
+
       if (Function_mode == FMODE_GAME)
-         return;  
+         return;
 
       if (!com_port)
          Game_mode = GM_GAME_OVER;
 
       goto newmenu;
-   }     
+   }
 
-   if (choice > -1) 
+   if (choice > -1)
    {
       old_game_mode=Game_mode;
       switch (menu_choice[choice])
@@ -1298,7 +1298,7 @@ newmenu:
             break;
          case MENU_SERIAL_GAME_START:
             com_start_game();
-            if (Function_mode != FMODE_GAME) 
+            if (Function_mode != FMODE_GAME)
                goto newmenu;
             break;
          case MENU_MODEM_CALL:
@@ -1324,7 +1324,7 @@ newmenu:
             com_hangup();
             goto newmenu;
             break;
-         default: 
+         default:
             Int3();
             return;
       }
@@ -1340,7 +1340,7 @@ void com_custom_param_setup(void)
    newmenu_item mm[6];
    int loc;
 
-   char base[10]; 
+   char base[10];
    char irq[3];
    char title[60];
    int new_irq, new_base;
@@ -1348,8 +1348,8 @@ void com_custom_param_setup(void)
    int mmn;
 
    sprintf(title, "%s%d", TXT_COM_CUSTOM_SETTINGS, com_port_num+1);
-   
-   if (com_port_num != com_custom_port) 
+
+   if (com_port_num != com_custom_port)
    {
       new_irq = default_irq[com_port_num];
       new_base = default_base[com_port_num];
@@ -1372,7 +1372,7 @@ newmenu:
    menu_reset = loc;
    mm[loc].type = NM_TYPE_MENU; mm[loc].text = TXT_RESET_DEFAULTS; loc++;
    menu_save = loc;
-   mm[loc].type = NM_TYPE_MENU; mm[loc].text = TXT_ACCEPT; loc++; 
+   mm[loc].type = NM_TYPE_MENU; mm[loc].text = TXT_ACCEPT; loc++;
 
    mmn = newmenu_do1(NULL, title, loc, mm, NULL, menu_save);
 
@@ -1382,12 +1382,12 @@ newmenu:
    new_irq = strtol(irq, NULL, 0);
    new_base = strtol(base, NULL, 16);
 
-   if (mmn == menu_reset) 
+   if (mmn == menu_reset)
    {
       new_irq = default_irq[com_port_num];
       new_base = default_base[com_port_num];
    }
-   if (mmn == menu_save) 
+   if (mmn == menu_save)
    {
       if ((new_irq == default_irq[com_port_num]) && (new_base == default_base[com_port_num])) {
          com_custom_port = -1;
@@ -1413,7 +1413,7 @@ void com_param_setup_poll(int nitems, newmenu_item *menus, int *key, int citem)
    nitems = nitems;
    key = key;
    citem = citem;
-   
+
    if ((com_custom_port == -1) && menus[4].value)
    {
       menus[4].value = 0; menus[4].redraw = 1;
@@ -1423,7 +1423,7 @@ void com_param_setup_poll(int nitems, newmenu_item *menus, int *key, int citem)
    if (com_custom_port == -1)
       return;
 
-   if (menus[com_custom_port].value && !menus[4].value) 
+   if (menus[com_custom_port].value && !menus[4].value)
    {
       menus[4].value = 1; menus[4].redraw = 1;
    }
@@ -1431,7 +1431,7 @@ void com_param_setup_poll(int nitems, newmenu_item *menus, int *key, int citem)
    {
       menus[4].value = 0; menus[4].redraw = 1;
    }
-   
+
 }
 
 void com_param_setup(void)
@@ -1453,7 +1453,7 @@ void com_param_setup(void)
       com_disable();
    }
 
-setupmenu:  
+setupmenu:
    loc = 0;
    mm[loc].type=NM_TYPE_RADIO; mm[loc].value=(com_port_num == COM1); mm[loc].text="COM1"; mm[loc].group=0; loc++;
    mm[loc].type=NM_TYPE_RADIO; mm[loc].value=(com_port_num == COM2); mm[loc].text="COM2"; mm[loc].group=0; loc++;
@@ -1469,7 +1469,7 @@ setupmenu:
 
    menu_choose_string=loc;
    mm[loc].type=NM_TYPE_MENU; mm[loc].text = "Choose modem init string"; loc++;
-  
+
    mm[loc].type=NM_TYPE_TEXT; mm[loc].text = TXT_MODEM_INIT_STRING; loc++;
    mm[loc].type=NM_TYPE_INPUT; mm[loc].text_len = INIT_STRING_LEN; mm[loc].text = ModemInitString; loc++;
    menu_save = loc;
@@ -1484,11 +1484,11 @@ setupmenu:
          com_port_num = COM1;
       else if (mm[1].value)
          com_port_num = COM2;
-      else if (mm[2].value) 
+      else if (mm[2].value)
          com_port_num = COM3;
-      else 
+      else
          com_port_num = COM4;
-      
+
       if (mmn == menu_custom)
       {
          com_custom_param_setup();
@@ -1496,7 +1496,7 @@ setupmenu:
       if (mmn==menu_choose_string)
        {
          com_choose_string();
-         goto setupmenu;  
+         goto setupmenu;
        }
 
       com_type = -1;
@@ -1507,10 +1507,10 @@ setupmenu:
          nm_messagebox(NULL, 1, TXT_OK, "%s\n%s", TXT_WARNING, TXT_NO_UART);
       }
 
-      if ((mm[menu_baud].value) || (mmn == menu_baud)) 
+      if ((mm[menu_baud].value) || (mmn == menu_baud))
          com_speed = 9600;
       else if ((mm[menu_baud+1].value) || (mmn == menu_baud+1))
-         com_speed = 19200;  
+         com_speed = 19200;
       else
       {
          if (com_type == 16550)
@@ -1521,7 +1521,7 @@ setupmenu:
             com_speed = 19200;
          }
       }
-            
+
       //mprintf((0, "%s\n", ModemInitString));
 
       if ((strnicmp("AT", ModemInitString, 2)) && (strlen(ModemInitString) < (INIT_STRING_LEN-2)))
@@ -1532,7 +1532,7 @@ setupmenu:
       if (mmn != menu_save)
          goto setupmenu;
    }
-   
+
    if (was_enabled)
       com_enable();
 
@@ -1540,7 +1540,7 @@ setupmenu:
       com_save_settings();
 
 }
-   
+
 codex(code_14s, code_14e)
 
 // Handshaking to start a serial game, 2 players only
@@ -1587,7 +1587,7 @@ newmenu:
    m[opt].type = NM_TYPE_TEXT; m[opt].text = level_text; opt++;
    m[opt].type = NM_TYPE_INPUT; m[opt].text_len = 4; m[opt].text = level; opt++;
    m[opt].type = NM_TYPE_TEXT; m[opt].text = TXT_MODE;
-   mode_opt = opt; 
+   mode_opt = opt;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_ANARCHY; m[opt].value=!(Game_mode & GM_MULTI_ROBOTS); m[opt].group = 0; opt++;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_ANARCHY_W_ROBOTS; m[opt].value=(!(Game_mode & GM_MULTI_COOP) && (Game_mode & GM_MULTI_ROBOTS)); m[opt].group = 0; opt++;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_COOPERATIVE; m[opt].value=(Game_mode & GM_MULTI_COOP);m[opt].group = 0; opt++;
@@ -1600,10 +1600,10 @@ newmenu:
 
    m[opt].type = NM_TYPE_CHECK; m[opt].text = "Marker camera views"; m[opt].value=Netgame.Allow_marker_view; opt++;
    m[opt].type = NM_TYPE_CHECK; m[opt].text = "Indestructable lights"; m[opt].value=Netgame.AlwaysLighting; opt++;
-      
+
    allow_opt=opt;
    m[opt].type = NM_TYPE_MENU; m[opt].text = "Choose objects allowed"; opt++;
-   
+
 
 #ifndef SHAREWARE
    options_opt = opt;
@@ -1614,11 +1614,11 @@ newmenu:
    Assert(opt <= 12);
 
    GetChoice:
-   
+
    choice = newmenu_do1(NULL, TXT_SERIAL_GAME_SETUP, opt, m, NULL, 1);
 
-   
-   if (choice > -1) 
+
+   if (choice > -1)
    {
       if (choice==allow_opt)
          {
@@ -1627,13 +1627,13 @@ newmenu:
          }
       Netgame.Allow_marker_view=m[extraopts_opt].value;
       Netgame.AlwaysLighting=m[extraopts_opt+1].value;
-      
+
       if (m[mode_opt].value)
          {
          mprintf ((0,"Undoing capture in modem.c\n"));
          Game_mode &= ~(GM_MULTI_COOP | GM_MULTI_ROBOTS | GM_CAPTURE);
          }
-#ifdef SHAREWARE    
+#ifdef SHAREWARE
       else {
          nm_messagebox(NULL, 1, TXT_OK, TXT_ONLY_ANARCHY);
          goto newmenu;
@@ -1645,7 +1645,7 @@ newmenu:
             mprintf ((0,"Setting capture 1\n"));
             Game_mode |= (GM_CAPTURE);
          }
-         else 
+         else
           {
             nm_messagebox(NULL, 1, TXT_OK, TXT_ANARCHY_ONLY_MISSION);
             goto newmenu;
@@ -1687,7 +1687,7 @@ newmenu:
 
 int
 com_ask_to_start()
-{  
+{
    // Ask the other player if its OK to start now
 
    newmenu_item m[1];
@@ -1713,12 +1713,12 @@ menu:
          com_send_choice(SELECTION_YES_START);
          return(1);
       }
-      else 
+      else
          return(0);
    }
    goto menu;
 }
-      
+
 codex(code_15s, code_15e)
 
 void
@@ -1730,9 +1730,9 @@ com_start_game()
 
    com_reset_game();
 
-   if (! ( (Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL) ) ) 
+   if (! ( (Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL) ) )
       return;
-   
+
    Assert (master != -1);
 
    if (other_menu_choice != SELECTION_STARTGAME)
@@ -1751,14 +1751,14 @@ com_start_game()
          my_sync.difficulty = Difficulty_level;
          my_sync.game_mode = Game_mode;
          if (Game_mode & GM_CAPTURE)
-            my_sync.game_mode |=GM_UNKNOWN;  
+            my_sync.game_mode |=GM_UNKNOWN;
          memcpy(my_sync.callsign, Players[Player_num].callsign, CALLSIGN_LEN+1);
 //#ifndef SHAREWARE
          my_sync.sync_time = control_invul_time;
          my_sync.game_flags = Netgame.game_flags;
          Netgame.control_invul_time = control_invul_time;
          memcpy ((&my_sync.game_flags)+1,(&Netgame.team_vector)+1,4);
-         
+
 //#endif
          com_sync(0);
          if (Game_mode & GM_CAPTURE)
@@ -1770,9 +1770,9 @@ com_start_game()
       OtherPlayer = 0;
       change_playernum_to(1);
       memcpy(my_sync.callsign, Players[Player_num].callsign, CALLSIGN_LEN+1);
-   
+
       my_sync.level_num = 1;
-      
+
       com_sync(0);
       if (com_process_mode == COM_PROCESS_NORMAL)
       {
@@ -1784,9 +1784,9 @@ com_start_game()
             Game_mode &=~GM_UNKNOWN;
             Game_mode |=GM_CAPTURE;
          }
-            
+
          memcpy ((&Netgame.team_vector)+1,(&other_sync.game_flags)+1,4);
-         
+
 #ifndef SHAREWARE
          Netgame.game_flags = other_sync.game_flags;
          Netgame.control_invul_time = other_sync.sync_time;
@@ -1847,7 +1847,7 @@ menu:
       com_save_settings();
       return;
    }
-   
+
    default_choice = 1;
 edit:
    // Edit an entry
@@ -1856,7 +1856,7 @@ edit:
 
    choice2 = newmenu_do1(NULL, TXT_EDIT_PHONE_ENTRY, 5, menu, NULL, default_choice);
    if (choice2 != -1)
-   {  
+   {
       strcpy(phone_name[choice], menu[1].text);
       strcpy(phone_num[choice], menu[3].text);
       sprintf(m[choice].text, "%d. %s \t", choice+1, phone_name[choice]);
@@ -1909,13 +1909,13 @@ menu:
 
    strcat(m[i-1].text, "\n");
 
-   m[NUM_PHONE_NUM].type = NM_TYPE_MENU; 
+   m[NUM_PHONE_NUM].type = NM_TYPE_MENU;
    m[NUM_PHONE_NUM].text = TXT_MANUAL_ENTRY;
    m[NUM_PHONE_NUM+1].text = TXT_EDIT_PHONEBOOK;
    m[NUM_PHONE_NUM+1].type = NM_TYPE_MENU;
 
    choice = newmenu_do1(NULL, TXT_SEL_NUMBER_DIAL, NUM_PHONE_NUM+2, m, NULL, 0);
-   if (choice == -1) 
+   if (choice == -1)
       return -1; // user abort
 
    if (choice == NUM_PHONE_NUM+1)
@@ -1947,7 +1947,7 @@ com_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem)
    int result;
    char input_buffer[81];
    int baud;
-   char error_mess[5][15] = 
+   char error_mess[5][15] =
       {"NO DIAL TONE",
        "BUSY",
        "NO ANSWER",
@@ -1962,7 +1962,7 @@ com_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem)
    nitems = nitems;
    citem = citem;
 
-   
+
    if (GetCd(com_port))
    {
       carrier_on = 1;
@@ -1979,8 +1979,8 @@ com_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem)
    }
 
    result = HMInputLine(com_port, 500, input_buffer, 80);
-   
-   if (result == 0) 
+
+   if (result == 0)
       return;     // Timed out
 
    mprintf((0, "Modem string: '%s'\n", input_buffer));
@@ -2015,7 +2015,7 @@ com_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem)
 
    com_baud_rate = baud;
    *key = -2;
-   
+
    return;
 }
 
@@ -2032,14 +2032,14 @@ com_wait_for_ring(int nitems, newmenu_item *menus, int *key, int citem)
    citem = citem;
 
    result = HMInputLine(com_port, 500, input_buffer, 80);
-   
+
    if ((result <= 0) || strncmp(input_buffer, TXT_RING, 4))
       return;
-   
+
    *key = -2;
 
    return;
-   
+
 }
 
 int modem_verify(void)
@@ -2057,13 +2057,13 @@ int modem_verify(void)
       return (0);
    return(1);
 }
-   
+
 void modem_dialout(void)
 {
    newmenu_item m[5];
    char text[50];
    int choice;
-   
+
    if (!serial_active)
    {
       nm_messagebox(TXT_ERROR, 1, TXT_OK, TXT_NO_SERIAL_OPT);
@@ -2109,9 +2109,9 @@ main:
    HMReset( com_port );
 
    HMSendString( com_port, modem_init_string );
-   
+
    HMDial( com_port, phone_num[choice] );
-   
+
    carrier_on = 0;
 
    clear_boxed_message();
@@ -2144,7 +2144,7 @@ main:
       com_abort();
    }
 }
-                              
+
 codex(code_18s, code_18e)
 
 void modem_answer(void)
@@ -2164,7 +2164,7 @@ void modem_answer(void)
       return;
 
 // UseRtsCts(com_port, ON); // use hardware handshaking
-   
+
    show_boxed_message(TXT_RESET_MODEM);
 
    // Verify presence of modem
@@ -2177,7 +2177,7 @@ void modem_answer(void)
    }
 
    HMReset( com_port );
-   
+
    HMSendString( com_port, modem_init_string );
 
    HMSendString( com_port, "AT"); // To set the DTE rate for RING notification
@@ -2193,7 +2193,7 @@ repeat:
       com_abort();
       return;
    }
-   if (choice != -2) 
+   if (choice != -2)
       goto repeat;
 
    // Now answer the phone and wait for carrier
@@ -2210,14 +2210,14 @@ repeat:
    }
 
    // We are now connected to the other modem
-   
+
    N_players = 2;
 
    my_sync.sync_time=0;
    // -- commented out by mk, 2/21/96 -- master = 0;
    change_playernum_to(1);
 
-   if (!com_connect()) 
+   if (!com_connect())
    {
       Game_mode |= GM_MODEM;
       digi_play_sample(SOUND_HUD_MESSAGE, F1_0);
@@ -2249,11 +2249,11 @@ void serial_link_start(void)
    my_sync.sync_time = rand();
    mprintf((0, "My rand set to %d.\n", my_sync.sync_time));
 
-   if (!com_connect()) 
+   if (!com_connect())
    {
       Game_mode |= GM_SERIAL;
       digi_play_sample(SOUND_HUD_MESSAGE, F1_0);
-   } 
+   }
    else
    {
       nm_messagebox(NULL, 1, TXT_OK, "%s\n%s", TXT_ERROR, TXT_FAILED_TO_NEGOT);
@@ -2279,7 +2279,7 @@ serial_sync_abort(int val)
 // com_send_data(sendbuf, 3, 1);
 //#endif
 }
-   
+
 int
 com_level_sync(void)
 {
@@ -2289,7 +2289,7 @@ com_level_sync(void)
 
    Function_mode = FMODE_MENU; // Prevent the game loop from running during the menus!
 
-   // At this point, the new level is loaded but the extra objects or players have not 
+   // At this point, the new level is loaded but the extra objects or players have not
    // been removed
 
    my_sync.level_num = Current_level_num;
@@ -2330,9 +2330,9 @@ com_level_sync(void)
       nm_messagebox(TXT_ERROR, 1, TXT_OK, "%s %d %s %s%s", TXT_YOUR_LEVEL, my_sync.level_num, TXT_LVL_NO_MATCH, other_sync.callsign, TXT_CHECK_VERSION);
       gr_palette_clear ();
 //      #ifdef RELEASE
-         
+
          longjmp(LeaveGame, 0);
-//    #endif   
+//    #endif
    }
 
    if (my_sync.proto_version != other_sync.proto_version)
@@ -2384,7 +2384,7 @@ com_level_sync(void)
 }
 
 codex(code_19s, code_19e)
-   
+
 void
 com_send_end_sync(void)
 {
@@ -2445,13 +2445,13 @@ com_process_sync(char *buf, int len)
 
          memcpy(&other_sync, buf, sizeof(com_sync_pack)-3);
 //#ifndef SHAREWARE
-         if (other_sync.sync_id != my_sync.sync_id) 
+         if (other_sync.sync_id != my_sync.sync_id)
          {
             mprintf((0, "Other sync invalid id, %d != %d.\n", other_sync.sync_id, my_sync.sync_id));
          }
          else
 //#endif
-         {        
+         {
             mprintf((0, "got other sync size %d.\n", sizeof(com_sync_pack)-3));
             got_sync = 1;
             com_send_end_sync();
@@ -2469,7 +2469,7 @@ com_process_sync(char *buf, int len)
       com_process_mode = COM_PROCESS_NORMAL;
    }
 }
-   
+
 void
 com_send_sync(void)
 {
@@ -2508,7 +2508,7 @@ void com_sync_poll(int nitems, newmenu_item *menus, int *key, int citem)
    }
 
    Assert(com_process_mode == COM_PROCESS_SYNC);
-      
+
    com_process_input();
 
    if (com_process_mode == COM_PROCESS_NORMAL)
@@ -2555,13 +2555,13 @@ com_sync(int id)
 
    m[0].type=NM_TYPE_TEXT; m[0].text=TXT_ESC_ABORT;
    m[1].type = m[2].type = NM_TYPE_MENU;
-   m[1].text = TXT_YES; 
+   m[1].text = TXT_YES;
    m[2].text = TXT_NO;
 
 repeat:
    choice = newmenu_do(NULL, TXT_WAIT_OPPONENT, 1, m, com_sync_poll);
 
-   if (choice == -1) 
+   if (choice == -1)
    {
       choice = newmenu_do1(NULL, TXT_SURE_ABORT_SYNC, 2, m+1, com_sync_poll, 1);
       if (choice == -1)
@@ -2637,7 +2637,7 @@ int ReadModemList ()
        }
       else if (c==13)
        ;
-      else if (c==10) 
+      else if (c==10)
        {
         ModemStrings[num][i]=0;
         namemode=1;
@@ -2673,28 +2673,28 @@ int ReadModemList ()
           if (i<INIT_STRING_LEN)
             ModemStrings[num][i++]=c;
          }
-       }    
+       }
     }  // end while
 
    ModemStrings[num][i]=0;    //terminate in case no final newline
    fclose (MyFile);
    return (num);
-  }        
-    
-   
+  }
+
+
 void com_choose_string ()
- { 
+ {
   int num,i,choice;
   newmenu_item m[MAX_MODEMS];
 
-  if ((num=ReadModemList())==0)   
+  if ((num=ReadModemList())==0)
    {
     nm_messagebox ("Error",1,TXT_OK,"No valid modem file found!");
     return;
    }
-  
+
   mprintf ((0,"Number of strings=%d\n",num));
-  
+
 
   for (i=0;i<num;i++)
   {
@@ -2708,13 +2708,13 @@ void com_choose_string ()
 
   strcpy (ModemInitString,ModemStrings[choice]);
  }
- 
-  
-   
-   
 
 
 
-   
 
-   
+
+
+
+
+
+

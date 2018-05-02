@@ -7,12 +7,12 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #ifndef _KEY_H
-#define _KEY_H 
+#define _KEY_H
 
 #include "pstypes.h"
 #include "fix.h"
@@ -32,7 +32,7 @@ extern char keyd_repeat;        // 1=allow repeating, 0=dont allow repeat
 
 // keyd_editor_mode... 0=game mode, 1=editor mode.
 // Editor mode makes key_down_time always return 0 if modifiers are down.
-extern char keyd_editor_mode;    
+extern char keyd_editor_mode;
 
 // Time in seconds when last key was pressed...
 extern volatile int keyd_time_when_last_pressed;

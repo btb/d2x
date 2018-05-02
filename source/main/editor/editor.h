@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -74,12 +74,12 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define FVIEW_H   SMALLVIEW_H
 
 #define RVIEW_X   (TVIEW_X+SMALLVIEW_W+2) //right view
-#define RVIEW_Y   FVIEW_Y  
+#define RVIEW_Y   FVIEW_Y
 #define RVIEW_W   SMALLVIEW_W
 #define RVIEW_H   SMALLVIEW_H
 
 #define GVIEW_X   RVIEW_X                 //group view
-#define GVIEW_Y   TVIEW_Y  
+#define GVIEW_Y   TVIEW_Y
 #define GVIEW_W   SMALLVIEW_W
 #define GVIEW_H   SMALLVIEW_H
 
@@ -87,7 +87,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define  SEGMOVE_PAD_ID    0
 #define  SEGSIZE_PAD_ID    1
-#define  CURVE_PAD_ID      2  
+#define  CURVE_PAD_ID      2
 #define  TEXTURE_PAD_ID    3
 #define  OBJECT_PAD_ID     4
 #define  OBJMOV_PAD_ID     5
@@ -98,7 +98,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 /*
  * Strucures
- * 
+ *
  */
 
 #define VF_ANGLES 0
@@ -143,7 +143,7 @@ typedef struct editor_view {
 
 /*
  * Global variables
- * 
+ *
  */
 
 extern editor_view *Views[];
@@ -177,7 +177,7 @@ extern   group    GroupList[MAX_GROUPS+1];
 extern   segment  *Groupsegp[MAX_GROUPS+1];
 extern   int      Groupside[MAX_GROUPS+1];
 extern   int      current_group;
-extern   int      num_groups; 
+extern   int      num_groups;
 extern   int      Current_group;
 
 extern   short    Found_segs[];        // List of segment numbers "found" under cursor click
@@ -195,7 +195,7 @@ extern   int      Autosave_count;      // Current counter for which autosave min
 extern   int      Autosave_flag;       // Whether or not Autosave is on.
 extern   struct tm Editor_time_of_day;
 
-extern   int      SegSizeMode;         // Mode = 0/1 = not/is legal to move bound vertices, 
+extern   int      SegSizeMode;         // Mode = 0/1 = not/is legal to move bound vertices,
 
 void init_editor(void);
 void editor(void);
@@ -261,11 +261,11 @@ extern void med_scale_segment(segment *sp);
 extern   int med_load_mine(char *name);
 
 // Loads game *name from disk.
-// This function automatically loads mine with name.MIN 
+// This function automatically loads mine with name.MIN
 extern   int med_load_game(char *name);
 
 
-// Loads a previous generation mine.  Needs to be updated in code. 
+// Loads a previous generation mine.  Needs to be updated in code.
 extern   int med_load_pmine(char *name);
 
 // Saves mine contained in Segments[] and Vertices[].
@@ -287,7 +287,7 @@ extern   int med_save_mine(char *name);
 extern   int med_load_group( char *filename, short *vertex_ids, short *segment_ids, int *num_vertices, int *num_segments);
 
 // Saves group *filename from disk.
-// Saves group defined by vertex_ids and segment_ids to disk. 
+// Saves group defined by vertex_ids and segment_ids to disk.
 // Returns:
 //  0 = successfully saved.
 //  1 = unable to save.
@@ -522,7 +522,7 @@ extern void editor_status(const char *format, ... );
 #define UF_WORLD_CHANGED    0x001       //something added or deleted
 #define UF_VIEWPOINT_MOVED  0x002       //what we're watching has moved
 
-#define UF_GAME_VIEW_CHANGED 0x004     //the game window changed    
+#define UF_GAME_VIEW_CHANGED 0x004     //the game window changed
 #define UF_ED_STATE_CHANGED  0x008     //something like curside,curseg changed
 
 #define UF_ALL             0xffffffff  //all flags

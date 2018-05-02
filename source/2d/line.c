@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -29,11 +29,11 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern void gr_modex_line();
 int modex_line_vertincr;
 int modex_line_incr1;
-int modex_line_incr2;      
-int modex_line_x1;      
-int modex_line_y1;      
-int modex_line_x2;      
-int modex_line_y2;      
+int modex_line_incr2;
+int modex_line_x1;
+int modex_line_y1;
+int modex_line_x2;
+int modex_line_y2;
 ubyte modex_line_Color;
 
 /*
@@ -278,10 +278,10 @@ int gr_uline(fix _a1, fix _b1, fix _a2, fix _b2)
 #endif
       return 0;
    case BM_MODEX:
-      modex_line_x1 = a1+XOFFSET;      
-      modex_line_y1 = b1+YOFFSET;      
-      modex_line_x2 = a2+XOFFSET;      
-      modex_line_y2 = b2+YOFFSET;      
+      modex_line_x1 = a1+XOFFSET;
+      modex_line_y1 = b1+YOFFSET;
+      modex_line_x2 = a2+XOFFSET;
+      modex_line_y2 = b2+YOFFSET;
       modex_line_Color = grd_curcanv->cv_color;
       gr_modex_line();
       return 0;

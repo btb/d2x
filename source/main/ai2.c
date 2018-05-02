@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -200,7 +200,7 @@ void init_ai_object(int objnum, int behavior, int hide_segment)
       aip->CLOAKED = 0;
 
    objp->mtype.phys_info.flags |= (PF_BOUNCE | PF_TURNROLL);
-   
+
    aip->REMOTE_OWNER = -1;
 
    aip->dying_sound_playing = 0;
@@ -242,7 +242,7 @@ void create_buddy_bot(void)
 // Boss is allowed to teleport to segments he fits in (calls object_intersects_wall) and
 // he can reach from his initial position (calls find_connected_distance).
 // If size_check is set, then only add segment if boss can fit in it, else any segment is legal.
-// one_wall_hack added by MK, 10/13/95: A mega-hack!  Set to !0 to ignore the 
+// one_wall_hack added by MK, 10/13/95: A mega-hack!  Set to !0 to ignore the
 void init_boss_segments(short segptr[], int *num_segs, int size_check, int one_wall_hack)
 {
    int         boss_objnum=-1;
@@ -317,7 +317,7 @@ if (size_check)
                   } else
                      if (head+QUEUE_SIZE == tail + QUEUE_SIZE-1)
                         Int3();  // queue overflow.  Make it bigger!
-   
+
                   if ((!size_check) || boss_fits_in_seg(boss_objp, segp->children[sidenum])) {
                      segptr[(*num_segs)++] = segp->children[sidenum];
                      if (size_check) mprintf((0, "%4i ", segp->children[sidenum]));
@@ -511,28 +511,28 @@ void ai_turn_towards_vector(vms_vector *goal_vector, object *objp, fix rate)
 // -- unused, 08/07/95 -- void ai_turn_randomly(vms_vector *vec_to_player, object *obj, fix rate, int previous_visibility)
 // -- unused, 08/07/95 -- {
 // -- unused, 08/07/95 --  vms_vector  curvec;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 -- // -- MK, 06/09/95 // Random turning looks too stupid, so 1/4 of time, cheat.
 // -- unused, 08/07/95 -- // -- MK, 06/09/95 if (previous_visibility)
 // -- unused, 08/07/95 -- // -- MK, 06/09/95    if (rand() > 0x7400) {
 // -- unused, 08/07/95 -- // -- MK, 06/09/95       ai_turn_towards_vector(vec_to_player, obj, rate);
 // -- unused, 08/07/95 -- // -- MK, 06/09/95       return;
 // -- unused, 08/07/95 -- // -- MK, 06/09/95    }
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 --  curvec = obj->mtype.phys_info.rotvel;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 --  curvec.y += F1_0/64;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 --  curvec.x += curvec.y/6;
 // -- unused, 08/07/95 --  curvec.y += curvec.z/4;
 // -- unused, 08/07/95 --  curvec.z += curvec.x/10;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 --  if (abs(curvec.x) > F1_0/8) curvec.x /= 4;
 // -- unused, 08/07/95 --  if (abs(curvec.y) > F1_0/8) curvec.y /= 4;
 // -- unused, 08/07/95 --  if (abs(curvec.z) > F1_0/8) curvec.z /= 4;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 --  obj->mtype.phys_info.rotvel = curvec;
-// -- unused, 08/07/95 -- 
+// -- unused, 08/07/95 --
 // -- unused, 08/07/95 -- }
 
 // Overall_agitation affects:
@@ -1423,7 +1423,7 @@ void mprintf_animation_info(object *objp)
       case AIS_FIRE: mprintf((0, "FIRE "));  break;
       case AIS_RECO: mprintf((0, "RECO "));  break;
       case AIS_ERR_: mprintf((0, "ERR_ "));  break;
-   
+
    }
 
    mprintf((0, " Cur = "));
@@ -1607,7 +1607,7 @@ void compute_vis_and_vec(object *objp, vms_vector *pos, ai_local *ailp, vms_vect
                   digi_link_sound_to_pos( robptr->attack_sound, objp->segnum, 0, pos, 0 , Robot_sound_volume);
                ailp->time_player_sound_attacked = GameTime;
             }
-         } 
+         }
 
          if ((*player_visibility == 2) && (ailp->next_misc_sound_time < GameTime)) {
             // -- mprintf((0, "ATTACK! "));
@@ -1627,7 +1627,7 @@ void compute_vis_and_vec(object *objp, vms_vector *pos, ai_local *ailp, vms_vect
       if (ailp->player_awareness_type >= PA_NEARBY_ROBOT_FIRED)
          if (*player_visibility == 1)
             *player_visibility = 2;
-            
+
       if (*player_visibility) {
          ailp->time_player_seen = GameTime;
       }
@@ -1753,7 +1753,7 @@ int ai_door_is_openable(object *objp, segment *segp, int sidenum)
          else if ((wallp->type == WALL_ILLUSION) && !(wallp->flags & WALL_ILLUSION_OFF))
             return 0;
       }
-         
+
       if (wallp->keys != KEY_NONE) {
          if (wallp->keys == KEY_BLUE)
             return (Players[Player_num].flags & PLAYER_FLAGS_BLUE_KEY);
@@ -1857,9 +1857,9 @@ int openable_doors_in_segment(int segnum)
 // -- int special_object_in_seg(int segnum)
 // -- {
 // --    int   objnum;
-// -- 
+// --
 // --    objnum = Segments[segnum].objects;
-// -- 
+// --
 // --    while (objnum != -1) {
 // --       if ((Objects[objnum].type == OBJ_PLAYER) || (Objects[objnum].type == OBJ_CNTRLCEN)) {
 // --          mprintf((0, "Special object of type %i in segment %i\n", Objects[objnum].type, segnum));
@@ -1867,7 +1867,7 @@ int openable_doors_in_segment(int segnum)
 // --       } else
 // --          objnum = Objects[objnum].next;
 // --    }
-// -- 
+// --
 // --    return 0;
 // -- }
 
@@ -1877,14 +1877,14 @@ int openable_doors_in_segment(int segnum)
 // -- {
 // --    int   sidenum;
 // --    segment  *segp = &Segments[segnum];
-// -- 
+// --
 // --    sidenum = (rand() * 6) >> 15;
-// -- 
+// --
 // --    while (!(WALL_IS_DOORWAY(segp, sidenum) & WID_FLY_FLAG))
 // --       sidenum = (rand() * 6) >> 15;
-// -- 
+// --
 // --    segnum = segp->children[sidenum];
-// -- 
+// --
 // --    return segnum;
 // -- }
 
@@ -2007,7 +2007,7 @@ int   Spew_bots[NUM_D2_BOSSES][MAX_SPEW_BOT] = {
    {60, 61, 54},
 
    {69, 29, 24},
-   {72, 60, 73} 
+   {72, 60, 73}
 };
 
 int   Max_spew_bots[NUM_D2_BOSSES] = {2, 1, 2, 3, 3, 3,  3, 3};
@@ -2027,10 +2027,10 @@ int boss_spew_robot(object *objp, vms_vector *pos)
    if (segnum == -1) {
       mprintf((0, "Tried to spew a bot outside the mine!  Aborting!\n"));
       return -1;
-   }  
+   }
 
    objnum = create_gated_robot( segnum, Spew_bots[boss_index][(Max_spew_bots[boss_index] * rand()) >> 15], pos);
- 
+
    // Make spewed robot come tumbling out as if blasted by a flash missile.
    if (objnum != -1) {
       object   *newobjp = &Objects[objnum];
@@ -2118,7 +2118,7 @@ void teleport_boss(object *objp)
    Assert(Num_boss_teleport_segs > 0);
 
    // Pick a random segment from the list of boss-teleportable-to segments.
-   rand_index = (rand() * Num_boss_teleport_segs) >> 15; 
+   rand_index = (rand() * Num_boss_teleport_segs) >> 15;
    rand_segnum = Boss_teleport_segs[rand_index];
    Assert((rand_segnum >= 0) && (rand_segnum <= Highest_segment_index));
 
@@ -2338,13 +2338,13 @@ void do_boss_stuff(object *objp, int player_visibility)
 // -- Obsolete D1 code -- void do_super_boss_stuff(object *objp, fix dist_to_player, int player_visibility)
 // -- Obsolete D1 code -- {
 // -- Obsolete D1 code --  static int eclip_state = 0;
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --  do_boss_stuff(objp, player_visibility);
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --  // Only master player can cause gating to occur.
 // -- Obsolete D1 code --  if ((Game_mode & GM_MULTI) && !network_i_am_master())
-// -- Obsolete D1 code --     return; 
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --     return;
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --  if ((dist_to_player < BOSS_TO_PLAYER_GATE_DISTANCE) || player_visibility || (Game_mode & GM_MULTI)) {
 // -- Obsolete D1 code --     if (GameTime - Last_gate_time > Gate_interval/2) {
 // -- Obsolete D1 code --        restart_effect(BOSS_ECLIP_NUM);
@@ -2360,23 +2360,23 @@ void do_boss_stuff(object *objp, int player_visibility)
 // -- Obsolete D1 code --           eclip_state = 0;
 // -- Obsolete D1 code --        }
 // -- Obsolete D1 code --     }
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --     if (GameTime - Last_gate_time > Gate_interval)
 // -- Obsolete D1 code --        if (ai_multiplayer_awareness(objp, 99)) {
 // -- Obsolete D1 code --           int   rtval;
 // -- Obsolete D1 code --           int   randtype = (rand() * MAX_GATE_INDEX) >> 15;
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --           Assert(randtype < MAX_GATE_INDEX);
 // -- Obsolete D1 code --           randtype = Super_boss_gate_list[randtype];
 // -- Obsolete D1 code --           Assert(randtype < N_robot_types);
-// -- Obsolete D1 code -- 
+// -- Obsolete D1 code --
 // -- Obsolete D1 code --           rtval = gate_in_robot(randtype, -1);
 // -- Obsolete D1 code --           if ((rtval != -1) && (Game_mode & GM_MULTI))
 // -- Obsolete D1 code --           {
 // -- Obsolete D1 code --              multi_send_boss_actions(objp-Objects, 3, randtype, Net_create_objnums[0]);
 // -- Obsolete D1 code --              map_objnum_local_to_local(Net_create_objnums[0]);
 // -- Obsolete D1 code --           }
-// -- Obsolete D1 code --        }  
+// -- Obsolete D1 code --        }
 // -- Obsolete D1 code --  }
 // -- Obsolete D1 code -- }
 
@@ -2387,7 +2387,7 @@ void do_boss_stuff(object *objp, int player_visibility)
 
 void ai_multi_send_robot_position(int objnum, int force)
 {
-   if (Game_mode & GM_MULTI) 
+   if (Game_mode & GM_MULTI)
    {
       if (force != -1)
          multi_send_robot_position(objnum, 1);

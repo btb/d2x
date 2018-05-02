@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -82,7 +82,7 @@ static struct {
    REQHDR reqheader;
    IOCTL ioctl;
 } TrackInfoREQ = {{13,0,3,0,""}, {0,0,0,0,0}};
-  
+
 static struct {
    unsigned char code;
    unsigned long devstat;
@@ -215,11 +215,11 @@ static fix Playback_Start_Time = 0;
 static fix Playback_Pause_Time = 0;
 static fix Playback_Length = 0;
 static int Playback_first_track,Playback_last_track;
-                      
+
 
 // Prototypes ---------------------------------------------------------
 
-int RBSendRequest(char *request, char *xferptr, int xferlen);  
+int RBSendRequest(char *request, char *xferptr, int xferlen);
 unsigned long msf_to_lsn(unsigned long msf);
 unsigned long lsn_to_msf(unsigned long lsn);
 
@@ -234,8 +234,8 @@ void RBAInit(ubyte cd_drive_num) //drive a == 0, drive b == 1
    regs.x.eax = 0x1500;
    regs.x.ebx = 0;
    int386(0x2f, &regs, &regs);
-   
-   if (regs.x.ebx == 0) 
+
+   if (regs.x.ebx == 0)
       RBADisable();                 // Disable RedBook
    // Error("RBA Error: MSCDEX.EXE compatible driver couldn't be found.");
    else {
@@ -246,21 +246,21 @@ void RBAInit(ubyte cd_drive_num) //drive a == 0, drive b == 1
       RBACheckMediaChange();
 
       RBSendRequest((char*)&DevStatREQ, (char*)&DevStat, sizeof(DevStat));
-      
+
    // If Door drive open, or no disc in CD-ROM, then Redbook is Disabled.
-      if ((DevStat.devstat&2048) || (DevStat.devstat&1) || RBAEnabled() == 0) 
+      if ((DevStat.devstat&2048) || (DevStat.devstat&1) || RBAEnabled() == 0)
          RBADisable();
 
-//@@     if (DevStat.devstat&4) 
+//@@     if (DevStat.devstat&4)
 //@@        mprintf((0, "supports cooked and raw reading.\n"));
-//@@     else 
+//@@     else
 //@@        mprintf((0, "supports only cooked reading.\n"));
 //@@
-//@@     if (DevStat.devstat&256) 
+//@@     if (DevStat.devstat&256)
 //@@        mprintf((0, "audio channel manipulation.\n"));
-//@@     else 
+//@@     else
 //@@        mprintf((0, "no audio channel manipulation.\n"));
-   
+
       if (DevStat.devstat&512) {
 //       RedBookPlaybackType = MSF_CD_PLAYBACK;
          mprintf((0, "supports HSG and RedBook addressing mode.\n"));
@@ -269,7 +269,7 @@ void RBAInit(ubyte cd_drive_num) //drive a == 0, drive b == 1
 //       RedBookPlaybackType = HSG_CD_PLAYBACK;
          mprintf((0, "supports HSG addressing only.\n"));
       }
-         
+
       RedBookPlaybackType = MSF_CD_PLAYBACK;
 
    }
@@ -290,7 +290,7 @@ void RBARegisterCD(void)
       CDNumTracks = 0;
       return;
    }
-   
+
    CDNumTracks = (CDInfo.last-CDInfo.first)+1;
 
    // Define Track Starts
@@ -302,7 +302,7 @@ void RBARegisterCD(void)
    }
 
    CDTrackStart[i] = CDInfo.lead_out;
-} 
+}
 
 
 long RBAGetDeviceStatus()
@@ -316,7 +316,7 @@ int RBAGetNumberOfTracks(void)
 {
    // Get CD Information
    if (RBACheckMediaChange())
-      RBARegisterCD(); 
+      RBARegisterCD();
 
    return CDNumTracks;
 }
@@ -344,7 +344,7 @@ int RBAPlayTrack(int track)
       mprintf((0,"CD not Redbook Compatible. Will not play track.\n"));
    }
 //    Error("RBA Error: Track %d doesn't exist on CD!!!", track);
-   
+
    if (RBACheckMediaChange()) {
       mprintf((0, "Unable to play track due to CD change.\n"));
       return 0;
@@ -355,7 +355,7 @@ int RBAPlayTrack(int track)
    PlayREQ.playbeg = CDTrackStart[track];
 
    if (RedBookPlaybackType == MSF_CD_PLAYBACK) {
-      PlayREQ.playlen = 
+      PlayREQ.playlen =
          msf_to_lsn(CDTrackStart[track+1]) - msf_to_lsn(CDTrackStart[track]);
    }
    else {
@@ -385,7 +385,7 @@ int RBAPlayTracks(int first, int last)
       mprintf((0,"Invalid start or end track.\n"));
    }
 //    Error("RBA Error: Track %d doesn't exist on CD!!!", track);
-   
+
    if (RBACheckMediaChange()) {
       mprintf((0, "Unable to play track due to CD change.\n"));
       return 0;
@@ -396,7 +396,7 @@ int RBAPlayTracks(int first, int last)
    PlayREQ.playbeg = CDTrackStart[first];
 
    if (RedBookPlaybackType == MSF_CD_PLAYBACK) {
-      PlayREQ.playlen = 
+      PlayREQ.playlen =
          msf_to_lsn(CDTrackStart[last+1]) - msf_to_lsn(CDTrackStart[first]);
    }
    else {
@@ -444,7 +444,7 @@ void RBAStop()
    if (RBACheckMediaChange())
       RBARegisterCD();
 
-   RBSendRequest((char *)&StopREQ,NULL,0);      
+   RBSendRequest((char *)&StopREQ,NULL,0);
 }
 
 
@@ -456,7 +456,7 @@ void RBASetStereoAudio(RBACHANNELCTL *channels)
    AUDChannelCtl.out1vol = channels->out1vol;
    AUDChannelCtl.out2in = AUDChannelCtl.out2vol = 0;
    AUDChannelCtl.out3in = AUDChannelCtl.out3vol = 0;
-   
+
    RBSendRequest((char*)&AUDChannelCtlREQ, (char*)&AUDChannelCtl, sizeof(AUDChannelCtl));
 }
 
@@ -471,7 +471,7 @@ void RBASetQuadAudio(RBACHANNELCTL *channels)
    AUDChannelCtl.out2vol = (unsigned char)channels->out2vol;
    AUDChannelCtl.out3in = (unsigned char)channels->out3in;
    AUDChannelCtl.out3vol = (unsigned char)channels->out3vol;
-   
+
    RBSendRequest((char*)&AUDChannelCtlREQ, (char*)&AUDChannelCtl, sizeof(AUDChannelCtl));
 }
 
@@ -479,7 +479,7 @@ void RBASetQuadAudio(RBACHANNELCTL *channels)
 void RBAGetAudioInfo(RBACHANNELCTL *channels)
 {
    RBSendRequest((char*)&AUDChannelInfoREQ, (char*)&AUDChannelInfo, sizeof(AUDChannelInfo));
-   
+
    channels->out0in = (int)AUDChannelInfo.out0in;
    channels->out0vol = (int)AUDChannelInfo.out0vol;
    channels->out1in = (int)AUDChannelInfo.out1in;
@@ -492,10 +492,10 @@ void RBAGetAudioInfo(RBACHANNELCTL *channels)
 }
 
 
-void RBASetChannelVolume(int channel, int volume) 
+void RBASetChannelVolume(int channel, int volume)
 {
    //RBACHANNELCTL channels;
-   
+
    RBSendRequest((char*)&AUDChannelInfoREQ, (char*)&AUDChannelInfo, sizeof(AUDChannelInfo));
 
    AUDChannelCtl.out0in = AUDChannelInfo.out0in;
@@ -511,7 +511,7 @@ void RBASetChannelVolume(int channel, int volume)
    if (channel == 1) AUDChannelCtl.out1vol = (unsigned char)volume;
    if (channel == 2) AUDChannelCtl.out2vol = (unsigned char)volume;
    if (channel == 3) AUDChannelCtl.out3vol = (unsigned char)volume;
-   
+
    RBSendRequest((char*)&AUDChannelCtlREQ,(char*)&AUDChannelCtl, sizeof(AUDChannelCtl));
 
 }
@@ -533,10 +533,10 @@ long RBAGetHeadLoc(int *min, int *sec, int *frame)
 
    HeadInfo.mode = RedBookPlaybackType;
    RBSendRequest((char*)&HeadInfoREQ, (char*)&HeadInfo, sizeof(HeadInfo));
-   
+
    if (RedBookPlaybackType == MSF_CD_PLAYBACK)
       loc = HeadInfo.headloc;
-   else 
+   else
       loc = lsn_to_msf(HeadInfo.headloc);
 
    *min   = (int)((loc >> 16) & 0xFF);
@@ -544,9 +544,9 @@ long RBAGetHeadLoc(int *min, int *sec, int *frame)
    *frame = (int)((loc >>  0) & 0xFF);
 
    return loc;
-}     
+}
 
-//return the track number currently playing.  Useful if RBAPlayTracks() 
+//return the track number currently playing.  Useful if RBAPlayTracks()
 //is called.  Returns 0 if no track playing, else track number
 int RBAGetTrackNum()
 {
@@ -575,14 +575,14 @@ int RBAGetTrackNum()
 int RBAPeekPlayStatus()
 {
    if (RBACheckMediaChange()) {     //if media changed, then not playing
-      RBARegisterCD(); 
+      RBARegisterCD();
       return 0;
    }
 
    if ((timer_get_fixed_seconds()-Playback_Start_Time) > Playback_Length) return 0;
-   else return 1; 
+   else return 1;
 }
-   
+
 
 int RBAEnabled()
 {
@@ -632,11 +632,11 @@ int RBSendRequest(char *request, char *xferptr, int xferlen)
    dpmi_real_regs rregs;
 
    IOCTL *ioctl;
-   REQ_xlatbuf *xlat_req;           // Translated Buffer Request 
+   REQ_xlatbuf *xlat_req;           // Translated Buffer Request
    char *xlat_xferptr;              // Translated Buffer Transfer Buffer Ptr
-   
+
    unsigned short status;
-   
+
    if (!RedBookEnabled) return 0;   // Don't send request if no RBA
 
    memset(&rregs,0,sizeof(dpmi_real_regs));
@@ -646,11 +646,11 @@ int RBSendRequest(char *request, char *xferptr, int xferlen)
    memcpy(xlat_req, request, sizeof(REQHDR)+sizeof(IOCTL));
    ioctl = (IOCTL *)(((char*)xlat_req)+sizeof(REQHDR));
 
-// Set Transfer Buffer in IOCTL reqion of 'request'   
+// Set Transfer Buffer in IOCTL reqion of 'request'
    if (xferlen && xferptr) {
       xlat_xferptr = ((char*)xlat_req) + 128;
       memcpy(xlat_xferptr, xferptr, xferlen);
-      
+
       ioctl->buffer_realoff = DPMI_real_offset(xlat_xferptr);
       ioctl->buffer_realseg = DPMI_real_segment(xlat_xferptr);
       ioctl->xferlen = xferlen;
@@ -668,7 +668,7 @@ int RBSendRequest(char *request, char *xferptr, int xferlen)
       memcpy(xferptr, xlat_xferptr, xferlen);
    }
    memcpy(request, xlat_req, sizeof(REQHDR)+sizeof(IOCTL));
-   
+
 // Check for Errors.
    status = ((REQHDR *)request)->status;
 
@@ -677,8 +677,8 @@ int RBSendRequest(char *request, char *xferptr, int xferlen)
    }
 
    return status;
-} 
-      
+}
+
 
 // Converts Logical Sector Number to Minutes Seconds Frame Format
 

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -161,9 +161,9 @@ void InitCD(char *arg)
          break;
       }
    }
-               
+
    if (CD_audio_desktop_dev != -1) {
-   //  get the volume! 
+   //  get the volume!
       auxGetVolume(CD_audio_desktop_dev, &CD_audio_desktop_vol);
       mprintf((1, "CD vol: 0x%x\n", CD_audio_desktop_vol));
    }
@@ -179,7 +179,7 @@ void InitVideo()
    if (FindArg("-hw_3dacc")) flag = 1;
    else flag = 0;
 
-   if (!gfxInit(flag)) 
+   if (!gfxInit(flag))
       Error("Unable to initialize GFX system.");
 
 //@@   #ifdef _3DFX
@@ -193,7 +193,7 @@ void InitIO()
 
    key_init();
 
-   if (!win95_controls_init()) 
+   if (!win95_controls_init())
       logentry("\tUnable to detect an auxillary control.\n");
    mouse_set_window (_hAppWnd);
    mouse_set_mode(0);            // Non-centering mode
@@ -221,7 +221,7 @@ void InitData()
    cprintf("  %s", VERSION_NAME);
    #endif
    cprintf("  %s %s\n", __DATE__,__TIME__);
-   cprintf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);   
+   cprintf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);
    cprintf("\n\n");
 #endif
 
@@ -249,13 +249,13 @@ void InitNetwork()
 
    if ((t=FindArg("-socket")))
       socket = atoi( Args[t+1] );
-      
+
    if ( FindArg("-showaddress") ) showaddress=1;
-      
+
    if ((ipx_error=ipx_init(IPX_DEFAULT_SOCKET+socket,showaddress))==0)  {
       mprintf((0, "IPX protocol on channel %x.\n", IPX_DEFAULT_SOCKET+socket ));
       Network_active = 1;
-   } 
+   }
    else {
       switch( ipx_error )  {
          case 3:  mprintf((1, "%s\n", TXT_NO_NETWORK)); break;
@@ -264,11 +264,11 @@ void InitNetwork()
          default:
             mprintf((1, "\t%s %d\n", TXT_ERROR_IPX, ipx_error ));
       }
-         
+
       logentry("%s\n",TXT_NETWORK_DISABLED);
       Network_active = 0;     // Assume no network
    }
-      
+
    mprintf((0, "Here?"));
 
    ipx_read_user_file( "descent.usr" );
@@ -281,9 +281,9 @@ void InitDescent()
    Lighting_on = 1;                    // Turn on lighting for now.
 
 // Set Display Mode
-   
-   if (!dd_VR_offscreen_buffer)  
-      set_display_mode(0);             
+
+   if (!dd_VR_offscreen_buffer)
+      set_display_mode(0);
 
 // Create and Set Initial Palette.
    logentry("Initializing palette system...\n" );
@@ -293,7 +293,7 @@ void InitDescent()
    logentry( "Initializing font system...\n" );
    gamefont_init();
 
-   if (FindArg("-lowresmovies")) 
+   if (FindArg("-lowresmovies"))
       MovieHires = 0;
 
    MenuHires = MenuHiresAvailable = 1;
@@ -302,7 +302,7 @@ void InitDescent()
    logentry("Initializing movie libraries...\n" );
    init_movies();    //init movie libraries
 
-   if (!init_subtitles("intro.tex")) 
+   if (!init_subtitles("intro.tex"))
       mprintf((1, "Unable to open subtitles.\n"));
    PlayMovie("intro.mve",MOVIE_ABORT_ON);
    HideCursorW();
@@ -315,7 +315,7 @@ void InitDescent()
    //LoadCursorWin(MOUSE_WAIT_CURSOR);
 
    DEFINE_SCREEN("DESCENTB.PCX");
-   DisplayDescentTitle();  
+   DisplayDescentTitle();
 
 // SendMessage(_hAppWnd, WM_SETREDRAW, FALSE, 0);
 
@@ -340,7 +340,7 @@ void InitDescent()
    init_game();
 
    set_detail_level_parameters(Detail_level);
-   
+
 // SendMessage(_hAppWnd, WM_SETREDRAW, TRUE, 0);
    //LoadCursorWin(MOUSE_DEFAULT_CURSOR);
 }
@@ -357,9 +357,9 @@ void InitPilot()
 
    //check for special stamped version
    if (registered_copy) {
-      char time_str[32];   
+      char time_str[32];
       char time_str2[32];
-      
+
       _ctime(&t_saved_time, time_str);
       _ctime(&t_current_time, time_str2);
 
@@ -388,7 +388,7 @@ void DisplayDescentTitle(void)
    logentry("Displaying title...\n");
 
 // Display Title Bitmap, using title palette.
-   pcx_error = pcx_get_dimensions("DESCENTB.PCX", &width, &height);  
+   pcx_error = pcx_get_dimensions("DESCENTB.PCX", &width, &height);
    if (pcx_error != PCX_ERROR_NONE) {
       gr_close();
       Error( "Couldn't load pcx file 'DESCENTB.PCX', PCX load error: %s\n", pcx_errormsg(pcx_error));
@@ -401,8 +401,8 @@ void DisplayDescentTitle(void)
    dd_gr_set_current_canvas(NULL);
    DDGRLOCK(dd_grd_curcanv)
    {
-      pcx_error=pcx_read_bitmap( "DESCENTB.PCX", &grd_curcanv->cv_bitmap, 
-            grd_curcanv->cv_bitmap.bm_type, 
+      pcx_error=pcx_read_bitmap( "DESCENTB.PCX", &grd_curcanv->cv_bitmap,
+            grd_curcanv->cv_bitmap.bm_type,
             title_pal );
    }
    DDGRUNLOCK(dd_grd_curcanv)
@@ -433,7 +433,7 @@ do_register_player(ubyte *title_pal)
 }
 
 
-//@@void check_joystick_calibration()  
+//@@void check_joystick_calibration()
 //@@{
 //@@  int x1, y1, x2, y2, c;
 //@@  fix t1;
@@ -479,7 +479,7 @@ int find_descent_cd()
 
    GetCurrentDirectory(MAX_PATH, oldpath);
 
-   for (i = 0; i < 26; i++) 
+   for (i = 0; i < 26; i++)
    {
       path[0] = 'A'+i;
       if (GetDriveType(path) == DRIVE_CDROM) {
@@ -487,7 +487,7 @@ int find_descent_cd()
          GetVolumeInformation(path, volume, 256, NULL, NULL, NULL, NULL, 0);
          mprintf((0, "CD volume: %s\n", volume));
          if (!strcmpi(volume, "DESCENT_II") || !strcmpi(volume, "DESCENT.II")) {
-            if (!chdir(path)) 
+            if (!chdir(path))
                if (!chdir("\\d2data")) {
                   cdrom_drive = i;
                   break;
@@ -542,7 +542,7 @@ check_id_checksum_and_date()
    time_t current_time, saved_time;
 
    saved_time = (time_t)strtol(time_str + strlen(DESC_DEAD_TIME_TAG), NULL, 16);
-   
+
    t_saved_time = saved_time;
 
    if (saved_time == (time_t)0)
@@ -562,7 +562,7 @@ check_id_checksum_and_date()
 
    test_checksum = 0;
    for (i = 0; i < strlen(name_copy); i++) {
-      found = 0;    
+      found = 0;
       test_checksum += name_copy[i];
       if (((test_checksum / 2) * 2) != test_checksum)
          found = 1;
@@ -591,12 +591,12 @@ void win95_save_pcx_shot()
    fix t1;
 
    dd_grs_canvas *screen_canv = dd_grd_screencanv;
-   dd_grs_canvas *temp_canv_1, *save_canv;   //*temp_canv_2, 
+   dd_grs_canvas *temp_canv_1, *save_canv;   //*temp_canv_2,
    grs_font *save_font;
    ubyte pal[768];
-        
+
    char savename[FILENAME_LEN];  //NO STEREO savename2[FILENAME_LEN];
-   
+
    int w,h,aw,x,y;
 
    stop_time();
@@ -607,7 +607,7 @@ void win95_save_pcx_shot()
    save_canv = dd_grd_curcanv;
    temp_canv_1 = dd_gr_create_canvas(screen_canv->canvas.cv_bitmap.bm_w,
                                         screen_canv->canvas.cv_bitmap.bm_h);
-      
+
    dd_gr_blt_notrans(screen_canv, 0, 0, 0, 0, temp_canv_1, 0, 0, 0, 0);
 
 /* Saved screen shot */
@@ -669,16 +669,16 @@ BOOL clipboard_screenshot()
 {
    if (OpenClipboard(_hAppWnd)) {
       EmptyClipboard();
-      SetClipboardData (CF_DIB     ,clipboard_renderformat(CF_DIB)); 
-      SetClipboardData (CF_BITMAP  ,clipboard_renderformat(CF_BITMAP)); 
-      SetClipboardData (CF_PALETTE ,clipboard_renderformat(CF_PALETTE)); 
-      CloseClipboard (); 
+      SetClipboardData (CF_DIB     ,clipboard_renderformat(CF_DIB));
+      SetClipboardData (CF_BITMAP  ,clipboard_renderformat(CF_BITMAP));
+      SetClipboardData (CF_PALETTE ,clipboard_renderformat(CF_PALETTE));
+      CloseClipboard ();
       return TRUE;
    }
    else return FALSE;
 }
 
- 
+
 HANDLE clipboard_renderformat(int cf)
 {
    HANDLE hMem = NULL;
@@ -694,7 +694,7 @@ HANDLE clipboard_renderformat(int cf)
          if (!hMem) mprintf((1, "Unable to create clipboard object: CF_BITMAP\n"));
          break;
       }
-      
+
       case CF_DIB:
       {
       // Create DIB and all memory associated with it.
@@ -705,32 +705,32 @@ HANDLE clipboard_renderformat(int cf)
          DeleteObject(hbm);
          break;
       }
-      
+
       case CF_PALETTE:
       {
       //  Get current palette! (create a GDI palette from grpal)
          PALETTE lpal;
          char grpal[768];
          int i;
- 
+
          mprintf((1, "Creating Palette for clipboard.\n"));
          gr_palette_read(grpal);
          lpal.version = 0x300;
          lpal.num_entries = 256;
-         for (i = 0; i < 256; i++) 
+         for (i = 0; i < 256; i++)
          {
             lpal.entries[i].peRed = grpal[i*3] << 2;
             lpal.entries[i].peGreen = grpal[i*3+1] << 2;
             lpal.entries[i].peBlue = grpal[i*3+2] << 2;
             lpal.entries[i].peFlags = 0;
-         }           
+         }
 
          hMem = CreatePalette((LOGPALETTE*)&lpal);
          if (!hMem) mprintf((1, "Unable to create clipboard object: CF_PALETTE\n"));
          break;
       }
    }
-      
+
    return hMem;
 }
-      
+

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -142,7 +142,7 @@ int put_sig(long sig,FILE *f)
    return fputc(s[0],f);
 
 }
-   
+
 
 int get_word(FFILE *f)
 {
@@ -371,7 +371,7 @@ int parse_body(FFILE *ifile,long len,iff_bitmap_header *bmheader)
    //we got the while bitmap, and that's what really counts.
 
    ifile->position = end_pos;
-   
+
    if (ignore) ignore++;   // haha, suppress the evil warning message
 
    return IFF_NO_ERROR;
@@ -719,7 +719,7 @@ copy_iff_to_grs(grs_bitmap *bm,iff_bitmap_header *bmheader)
    bm->bm_data = bmheader->raw_data;
 
    bm->bm_flags = bm->bm_handle = 0;
-   
+
 }
 
 //if bm->bm_data is set, use it (making sure w & h are correct), else
@@ -757,7 +757,7 @@ int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,g
       ret = IFF_UNKNOWN_FORM;
 
    if (ret != IFF_NO_ERROR) {    //got an error parsing
-      if (bmheader.raw_data) free(bmheader.raw_data); 
+      if (bmheader.raw_data) free(bmheader.raw_data);
       goto done;
    }
 
@@ -780,7 +780,7 @@ int iff_parse_bitmap(FFILE *ifile,grs_bitmap *bm,int bitmap_type,byte *palette,g
    if (palette) {
       ubyte *c;
       int i;
-      
+
       c = palette;
       for (i = 0; i < 256; i++) {
          *c++ = bmheader.palette[i].r;
@@ -828,7 +828,7 @@ done:
 }
 
 //like iff_read_bitmap(), but reads into a bitmap that already exists,
-//without allocating memory for the bitmap. 
+//without allocating memory for the bitmap.
 int iff_read_into_bitmap(char *ifilename,grs_bitmap *bm,byte *palette)
 {
    int ret;       //return code

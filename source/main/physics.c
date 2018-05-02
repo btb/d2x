@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -62,7 +62,7 @@ static char rcsid[] = "$Id: physics.c 2.35 1996/06/12 16:11:30 matt Exp $";
 int Physics_cheat_flag = 0;
 extern char BounceCheat;
 
-//##//returns the distance of a point (checkp) from a plane (defined by norm & planep) 
+//##//returns the distance of a point (checkp) from a plane (defined by norm & planep)
 //##fix dist_to_plane(vms_vector *checkp,vms_vector *norm,vms_vector *planep)
 //##{
 //##    vms_vector deltap;
@@ -71,7 +71,7 @@ extern char BounceCheat;
 //##
 //##    return vm_vec_dot(&deltap,norm);
 //##}
- 
+
 //--unused-- int dpjm_old_joy_x, dpjm_old_joy_y;
 
 int floor_levelling=0;
@@ -110,7 +110,7 @@ void do_physics_align_object( object * obj )
          vms_vector _tv1;
          get_side_normal( &Segments[obj->segnum], i, 0, &_tv1 );
          d = vm_vec_dot(&_tv1,&obj->orient.uvec);
-      #else             
+      #else
          d = vm_vec_dot(&Segments[obj->segnum].sides[i].normals[0],&obj->orient.uvec);
       #endif
 
@@ -121,7 +121,7 @@ void do_physics_align_object( object * obj )
 
       // old way: used floor's normal as upvec
       #ifdef COMPACT_SEGS
-         get_side_normal(&Segments[obj->segnum], 3, 0, &desired_upvec );         
+         get_side_normal(&Segments[obj->segnum], 3, 0, &desired_upvec );
       #else
          desired_upvec = Segments[obj->segnum].sides[3].normals[0];
       #endif
@@ -131,7 +131,7 @@ void do_physics_align_object( object * obj )
       if (get_num_faces(&Segments[obj->segnum].sides[best_side])==2) {
          #ifdef COMPACT_SEGS
             vms_vector normals[2];
-            get_side_normals(&Segments[obj->segnum], best_side, &normals[0], &normals[1] );        
+            get_side_normals(&Segments[obj->segnum], best_side, &normals[0], &normals[1] );
 
             desired_upvec.x = (normals[0].x + normals[1].x) / 2;
             desired_upvec.y = (normals[0].y + normals[1].y) / 2;
@@ -143,13 +143,13 @@ void do_physics_align_object( object * obj )
             desired_upvec.x = (s->normals[0].x + s->normals[1].x) / 2;
             desired_upvec.y = (s->normals[0].y + s->normals[1].y) / 2;
             desired_upvec.z = (s->normals[0].z + s->normals[1].z) / 2;
-      
+
             vm_vec_normalize(&desired_upvec);
          #endif
       }
       else
          #ifdef COMPACT_SEGS
-            get_side_normal(&Segments[obj->segnum], best_side, 0, &desired_upvec );       
+            get_side_normal(&Segments[obj->segnum], best_side, 0, &desired_upvec );
          #else
             desired_upvec = Segments[obj->segnum].sides[best_side].normals[0];
          #endif
@@ -157,7 +157,7 @@ void do_physics_align_object( object * obj )
    if (labs(vm_vec_dot(&desired_upvec,&obj->orient.fvec)) < f1_0/2) {
       fixang save_delta_ang;
       vms_angvec tangles;
-      
+
       vm_vector_2_matrix(&temp_matrix,&obj->orient.fvec,&desired_upvec,NULL);
 
       save_delta_ang = delta_ang = vm_vec_delta_ang(&obj->orient.uvec,&temp_matrix.uvec,&obj->orient.fvec);
@@ -292,7 +292,7 @@ void do_physics_sim_rot(object *obj)
 
    //mprintf( (0, "Rot vel = %.3f,%.3f,%.3f\n", f2fl(obj->mtype.phys_info.rotvel.x),f2fl(obj->mtype.phys_info.rotvel.y), f2fl(obj->mtype.phys_info.rotvel.z) ));
 
-   //now rotate object 
+   //now rotate object
 
    //unrotate object for bank caused by turn
    if (obj->mtype.phys_info.turnroll) {
@@ -304,7 +304,7 @@ void do_physics_sim_rot(object *obj)
       vm_matrix_x_matrix(&new_pm,&obj->orient,&rotmat);
       obj->orient = new_pm;
    }
-  
+
    tangles.p = fixmul(obj->mtype.phys_info.rotvel.x,FrameTime);
    tangles.h = fixmul(obj->mtype.phys_info.rotvel.y,FrameTime);
    tangles.b  = fixmul(obj->mtype.phys_info.rotvel.z,FrameTime);
@@ -390,7 +390,7 @@ if (Dont_move_ai_objects)
       printf("  sim_time = %x\n",sim_time);
    }
 
-   //check for correct object segment 
+   //check for correct object segment
    if(!get_seg_masks(&obj->pos,obj->segnum,0).centermask==0) {
       #ifndef NDEBUG
       mprintf((0,"Warning: object %d not in given seg!\n",objnum));
@@ -420,7 +420,7 @@ if (Dont_move_ai_objects)
 //mprintf((0,"thrust=%x  speed=%x\n",vm_vec_mag(&obj->mtype.phys_info.thrust),vm_vec_mag(&obj->mtype.phys_info.velocity)));
 
    //do thrust & drag
-   
+
    if ((drag = obj->mtype.phys_info.drag) != 0) {
 
       int count;
@@ -478,7 +478,7 @@ if (Dont_move_ai_objects)
          printf("  pass %d, frame_vec = %x %x %x\n",count,XYZ(&frame_vec));
       #endif
 
-      if ( (frame_vec.x==0) && (frame_vec.y==0) && (frame_vec.z==0) )   
+      if ( (frame_vec.x==0) && (frame_vec.y==0) && (frame_vec.z==0) )
          break;
 
       count++;
@@ -640,7 +640,7 @@ save_p1 = *fq.p1;
             #endif
 
             obj->pos = save_pos;
-      
+
             //iseg = obj->segnum;      //don't change segment
 
             obj_relink(objnum, save_seg );
@@ -651,7 +651,7 @@ save_p1 = *fq.p1;
 
             //if (obj == debug_obj)
             // printf("   moved_vec = %x %x %x\n",XYZ(&moved_vec));
-         
+
             attempted_dist = vm_vec_mag(&frame_vec);
 
             sim_time = fixmuldiv(sim_time,attempted_dist-actual_dist,attempted_dist);
@@ -686,8 +686,8 @@ save_p1 = *fq.p1;
             vms_vector moved_v;
             //@@fix total_d,moved_d;
             fix hit_speed,wall_part;
-   
-            // Find hit speed 
+
+            // Find hit speed
 
             vm_vec_sub(&moved_v,&obj->pos,&save_pos);
 
@@ -720,7 +720,7 @@ save_p1 = *fq.p1;
                else {               // Slide object along wall
                   int check_vel=0;
 
-                  //We're constrained by wall, so subtract wall part from 
+                  //We're constrained by wall, so subtract wall part from
                   //velocity vector
 
                   wall_part = vm_vec_dot(&hit_info.hit_wallnorm,&obj->mtype.phys_info.velocity);
@@ -816,8 +816,8 @@ save_p1 = *fq.p1;
             }
 
             break;
-         }  
-         case HIT_NONE:    
+         }
+         case HIT_NONE:
          #ifdef TACTILE
             if (TactileStick && obj==ConsoleObject && !(FrameCount & 15))
              Tactile_Xvibrate_clear ();
@@ -959,7 +959,7 @@ save_p1 = *fq.p1;
 }
 
 //--unused-- //tell us what the given object will do (as far as hiting walls) in
-//--unused-- //the given time (in seconds) t.  Igores acceleration (sorry) 
+//--unused-- //the given time (in seconds) t.  Igores acceleration (sorry)
 //--unused-- //if check_objects is set, check with objects, else just with walls
 //--unused-- //returns fate, fills in hit time.  If fate==HIT_NONE, hit_time undefined
 //--unused-- int physics_lookahead(object *obj,fix t,int fvi_flags,fix *hit_time, fvi_info *hit_info)
@@ -967,13 +967,13 @@ save_p1 = *fq.p1;
 //--unused--   vms_vector new_pos;
 //--unused--   int objnum,fate;
 //--unused--   fvi_query fq;
-//--unused-- 
+//--unused--
 //--unused--   Assert(obj->movement_type == MT_PHYSICS);
-//--unused-- 
+//--unused--
 //--unused--   objnum = obj-Objects;
-//--unused-- 
+//--unused--
 //--unused--   vm_vec_scale_add(&new_pos, &obj->pos, &obj->mtype.phys_info.velocity, t);
-//--unused-- 
+//--unused--
 //--unused--   fq.p0                = &obj->pos;
 //--unused--   fq.startseg          = obj->segnum;
 //--unused--   fq.p1                = &new_pos;
@@ -981,22 +981,22 @@ save_p1 = *fq.p1;
 //--unused--   fq.thisobjnum        = objnum;
 //--unused--   fq.ignore_obj_list   = NULL;
 //--unused--   fq.flags             = fvi_flags;
-//--unused-- 
+//--unused--
 //--unused--   fate = find_vector_intersection(&fq,hit_info);
-//--unused-- 
+//--unused--
 //--unused--   if (fate != HIT_NONE) {
 //--unused--      fix dist,speed;
-//--unused-- 
+//--unused--
 //--unused--      dist = vm_vec_dist(&obj->pos, &hit_info->hit_pnt);
-//--unused-- 
+//--unused--
 //--unused--      speed = vm_vec_mag(&obj->mtype.phys_info.velocity);
-//--unused-- 
+//--unused--
 //--unused--      *hit_time = fixdiv(dist,speed);
-//--unused-- 
+//--unused--
 //--unused--   }
-//--unused-- 
+//--unused--
 //--unused--   return fate;
-//--unused-- 
+//--unused--
 //--unused-- }
 
 //Applies an instantaneous force on an object, resulting in an instantaneous
@@ -1016,7 +1016,7 @@ void phys_apply_force(object *obj,vms_vector *force_vec)
    if (TactileStick && obj==&Objects[Players[Player_num].objnum])
       Tactile_apply_force (force_vec,&obj->orient);
 #endif
- 
+
    //Add in acceleration due to force
    vm_vec_scale_add2(&obj->mtype.phys_info.velocity,force_vec,fixdiv(f1_0,obj->mtype.phys_info.mass));
 

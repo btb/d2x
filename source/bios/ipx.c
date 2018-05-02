@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -41,7 +41,7 @@ typedef struct local_address {
 } local_address;
 
 typedef struct net_address {
-   BYTE           network_id[4];       
+   BYTE           network_id[4];
    local_address  node_id;
    WORD           socket_id;
 } net_address;
@@ -61,7 +61,7 @@ typedef struct ecb_header {
    BYTE        in_use;
    BYTE        completion_code;
    WORD        socket_id;
-   BYTE        ipx_reserved[14];        
+   BYTE        ipx_reserved[14];
    WORD        connection_id;
    local_address immediate_address;
    WORD        fragment_count;
@@ -123,7 +123,7 @@ void free_packet( int id )
 {
    packet_buffers[id].packetnum = -1;
    packet_free_list[ --num_packets ] = id;
-   if (largest_packet_index==id) 
+   if (largest_packet_index==id)
       while ((--largest_packet_index>0) && (packet_buffers[largest_packet_index].packetnum == -1 ));
 }
 
@@ -136,7 +136,7 @@ int ipx_get_packet_data( ubyte * data )
          got_new_packet( &packets[i].ecb );
          packets[i].ecb.in_use = 0;
          ipx_listen_for_packet(&packets[i].ecb);
-      }        
+      }
    }
 
    best = -1;
@@ -150,7 +150,7 @@ int ipx_get_packet_data( ubyte * data )
             best = packet_buffers[i].packetnum;
             best_id = i;
          }
-      }        
+      }
    }
 
    //mprintf( (0, "Best id = %d, pn = %d, last_ecb = %x, len=%x, ne = %d\n", best_id, best, last_ecb, lastlen, neterrors ));
@@ -182,7 +182,7 @@ void got_new_packet( ecb_header * ecb )
    if ( p->ecb.completion_code ) { neterrors++; return; }
 
    // Error( "Recieve error %d for completion code", p->ecb.completion_code );
-   
+
    if ( memcmp( &p->ipx.source.node_id, &ipx_my_node, 6 ) ) {
       datasize=swap_short(p->ipx.length);
       lastlen=datasize;
@@ -193,7 +193,7 @@ void got_new_packet( ecb_header * ecb )
             //printf( 1, "IPX: Packet buffer overrun!!!\n" );
             neterrors++;
             return;
-         }     
+         }
          id = packet_free_list[ num_packets++ ];
          if (id > largest_packet_index ) largest_packet_index = id;
          packet_size[id] = datasize-sizeof(int);
@@ -203,7 +203,7 @@ void got_new_packet( ecb_header * ecb )
       } else {
          neterrors++; return;
       }
-   } 
+   }
    // Repost the ecb
    p->ecb.in_use = 0;
    //ipx_listen_for_packet(&p->ecb);
@@ -219,7 +219,7 @@ ubyte * ipx_get_my_server_address()
    return (ubyte *)&ipx_network;
 }
 
-void ipx_listen_for_packet(ecb_header * ecb )   
+void ipx_listen_for_packet(ecb_header * ecb )
 {
    dpmi_real_regs rregs;
    ecb->in_use = 0x1d;
@@ -230,7 +230,7 @@ void ipx_listen_for_packet(ecb_header * ecb )
    dpmi_real_int386x( 0x7A, &rregs );
 }
 
-void ipx_cancel_listen_for_packet(ecb_header * ecb )  
+void ipx_cancel_listen_for_packet(ecb_header * ecb )
 {
    dpmi_real_regs rregs;
    memset(&rregs,0,sizeof(dpmi_real_regs));
@@ -241,7 +241,7 @@ void ipx_cancel_listen_for_packet(ecb_header * ecb )
 }
 
 
-void ipx_send_packet(ecb_header * ecb )   
+void ipx_send_packet(ecb_header * ecb )
 {
    dpmi_real_regs rregs;
    memset(&rregs,0,sizeof(dpmi_real_regs));
@@ -261,16 +261,16 @@ void ipx_get_local_target( ubyte * server, ubyte * node, ubyte * local_target )
 {
    net_xlat_info * info;
    dpmi_real_regs rregs;
-      
+
    // Get dos memory for call...
-   info = (net_xlat_info *)dpmi_get_temp_low_buffer( sizeof(net_xlat_info) ); 
+   info = (net_xlat_info *)dpmi_get_temp_low_buffer( sizeof(net_xlat_info) );
    assert( info != NULL );
    memcpy( info->network, server, 4 );
    memcpy( info->node, node, 6 );
-   
+
    memset(&rregs,0,sizeof(dpmi_real_regs));
 
-   rregs.ebx = 2;    // Get Local Target  
+   rregs.ebx = 2;    // Get Local Target
    rregs.es = DPMI_real_segment(info);
    rregs.esi = DPMI_real_offset(info->network);
    rregs.edi = DPMI_real_offset(info->local_target);
@@ -298,7 +298,7 @@ void ipx_close()
 
 
 //---------------------------------------------------------------
-// Initializes all IPX internals. 
+// Initializes all IPX internals.
 // If socket_number==0, then opens next available socket.
 // Returns: 0  if successful.
 //          -1 if socket already open.
@@ -331,7 +331,7 @@ int ipx_init( int socket_number, int show_address )
    dpmi_real_int386x( 0x2f, &rregs );
 
    if ( (rregs.eax & 0xFF) != 0xFF )   {
-      return 3;   
+      return 3;
    }
    ipx_vector_offset = rregs.edi & 0xFFFF;
    ipx_vector_segment = rregs.es;
@@ -345,14 +345,14 @@ int ipx_init( int socket_number, int show_address )
    rregs.eax = ipx_socket_life;
    rregs.ebx = 0; // Open socket
    dpmi_real_int386x( 0x7A, &rregs );
-   
+
    ipx_socket = rregs.edx & 0xFFFF;
-   
+
    if ( rregs.eax & 0xFF ) {
       //mprintf( (1, "IPX error opening channel %d\n", socket_number-IPX_DEFAULT_SOCKET ));
       return -2;
    }
-   
+
    ipx_installed = 1;
 
    // Find our internetwork address
@@ -431,7 +431,7 @@ void ipx_send_packet_data( ubyte * data, int datasize, ubyte *network, ubyte *ad
    while( packets[0].ecb.in_use )
    {
    }
-   
+
 // if (packets[0].ecb.completion_code)
      //  Error("IPX: Send error %d for completion code\n", packets[0].ecb.completion_code );
 
@@ -457,7 +457,7 @@ void ipx_send_packet_data( ubyte * data, int datasize, ubyte *network, ubyte *ad
 
 }
 
-void ipx_send_broadcast_packet_data( ubyte * data, int datasize ) 
+void ipx_send_broadcast_packet_data( ubyte * data, int datasize )
 {
    int i, j;
    ubyte broadcast[] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
@@ -511,16 +511,16 @@ int ipx_change_default_socket( ushort socket_number )
 
    if ( !ipx_installed ) return -3;
 
-   // Open a new socket 
+   // Open a new socket
    memset(&rregs,0,sizeof(dpmi_real_regs));
    swab( (char *)&socket_number,(char *)&new_ipx_socket, 2 );
    rregs.edx = new_ipx_socket;
    rregs.eax = ipx_socket_life;
    rregs.ebx = 0; // Open socket
    dpmi_real_int386x( 0x7A, &rregs );
-   
+
    new_ipx_socket = rregs.edx & 0xFFFF;
-   
+
    if ( rregs.eax & 0xFF ) {
       //printf( (1, "IPX error opening channel %d\n", socket_number-IPX_DEFAULT_SOCKET ));
       return -2;
@@ -538,7 +538,7 @@ int ipx_change_default_socket( ushort socket_number )
 
    ipx_socket = new_ipx_socket;
 
-   // Repost all listen requests on the new socket... 
+   // Repost all listen requests on the new socket...
    for (i=1; i<ipx_num_packets; i++ )  {
       packets[i].ecb.in_use = 0;
       packets[i].ecb.socket_id = ipx_socket;
@@ -657,7 +657,7 @@ void ipx_read_network_file(char * filename)
 
       if ( Ipx_num_networks < MAX_NETWORKS  )   {
          int j;
-         for (j=0; j<Ipx_num_networks; j++ ) 
+         for (j=0; j<Ipx_num_networks; j++ )
             if ( !memcmp( &Ipx_networks[j], tmp.network, 4 ) )
                break;
          if ( j >= Ipx_num_networks )  {
@@ -699,7 +699,7 @@ void ipx_read_network_file(char * filename)
 //--- while( packets[0].ecb.in_use )
 //--- {
 //--- }
-//--- 
+//---
 //--- if (packets[0].ecb.completion_code) {
 //---    printf( "AAAA:Send error %d for completion code\n", packets[0].ecb.completion_code );
 //---    //exit(1);

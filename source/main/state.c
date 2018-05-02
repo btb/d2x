@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -47,7 +47,7 @@ char state_rcsid[] = "$Id: state.c 2.95 1997/01/24 18:35:39 jeremy Exp $";
 #include "game.h"
 #include "screens.h"
 #include "newmenu.h"
-#include "cfile.h"      
+#include "cfile.h"
 #include "fuelcen.h"
 #include "hash.h"
 #include "key.h"
@@ -151,7 +151,7 @@ void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
 {
    nitems = nitems;
    last_key = last_key;
-   
+
 // if ( sc_last_item != citem )  {
 //    sc_last_item = citem;
       if ( citem > 0 )  {
@@ -183,7 +183,7 @@ void state_callback(int nitems,newmenu_item * items, int * last_key, int citem)
             }
          }
       }
-// }  
+// }
 }
 
 void rpad_string( char * string, int max_chars )
@@ -210,7 +210,7 @@ int state_get_save_file(char * fname, char * dsc, int multi )
    char desc[NUM_SAVES+1][DESC_LENGTH+16];
    char id[5];
    int valid=0;
-   
+
    for (i=0;i<NUM_SAVES; i++ )   {
       sc_bmp[i] = NULL;
       if ( !multi )
@@ -242,7 +242,7 @@ int state_get_save_file(char * fname, char * dsc, int multi )
                //fread( sc_bmp[i]->bm_data, THUMBNAIL_W * THUMBNAIL_H, 1, fp );
                valid = 1;
             }
-         } 
+         }
          fclose(fp);
       }
       if (!valid) {
@@ -283,7 +283,7 @@ int state_get_restore_file(char * fname, int multi)
    int valid;
 
    nsaves=0;
-   m[0].type = NM_TYPE_TEXT; m[0].text = "\n\n\n\n";  
+   m[0].type = NM_TYPE_TEXT; m[0].text = "\n\n\n\n";
    for (i=0;i<NUM_SAVES+1; i++ ) {
       sc_bmp[i] = NULL;
       if (!multi)
@@ -321,10 +321,10 @@ int state_get_restore_file(char * fname, int multi)
                }
                nsaves++;
                valid = 1;
-            } 
+            }
          }
          fclose(fp);
-      } 
+      }
       if (!valid) {
          strcpy( desc[i], TXT_EMPTY );
          //rpad_string( desc[i], DESC_LENGTH-1 );
@@ -467,7 +467,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override)
       return 0;
 
    mprintf(( 0, "CL=%d, NL=%d\n", Current_level_num, Next_level_num ));
-   
+
    // If this is a secret save and the control center has been destroyed, don't allow
    // return to the base level.
    if (secret_save && (Control_center_destroyed)) {
@@ -493,7 +493,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override)
          return 0;
       }
    }
-      
+
    // MK, 1/1/96
    // If not in multiplayer, do special secret level stuff.
    // If secret.sgc exists, then copy it to Nsecret.sgc (where N = filenum).
@@ -534,7 +534,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override)
    // Save file we're going to save over in last slot and call "[autosave backup]"
    if (!filename_override) {
       FILE  *tfp;
-   
+
       tfp = fopen( filename, "r+b" );
 
       if ( tfp ) {
@@ -545,7 +545,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override)
          #else
          sprintf( newname, ":Players:%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
          #endif
-         
+
          fseek( tfp, DESC_OFFSET, SEEK_SET);
          fwrite( "[autosave backup]", sizeof(char)*DESC_LENGTH, 1, tfp );
          fclose(tfp);
@@ -553,7 +553,7 @@ int state_save_all(int between_levels, int secret_save, char *filename_override)
          rename(filename, newname);
       }
    }
-   
+
    rval = state_save_all_sub(filename, desc, between_levels);
 
    return rval;
@@ -581,7 +581,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       }
    }*/
 
-   #if defined(MACINTOSH) && !defined(NDEBUG) 
+   #if defined(MACINTOSH) && !defined(NDEBUG)
    if ( strncmp(filename, ":Players:", 9) )
       Int3();
    #endif
@@ -603,7 +603,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
 
 //Save description
    fwrite( desc, sizeof(char)*DESC_LENGTH, 1, fp );
-   
+
 // Save the current screen shot...
 
    cnv = gr_create_canvas( THUMBNAIL_W, THUMBNAIL_H );
@@ -618,15 +618,15 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       #endif
 
       #ifndef MACINTOSH
-      
+
          #if defined(POLY_ACC)
-         
+
                PA_DFX (pa_fool_to_backbuffer());
-         
+
                //for poly_acc, we render the frame to the normal render buffer
                //so that this doesn't show, we create yet another canvas to save
                //and restore what's on the render buffer
-               PA_DFX (pa_alpha_always());   
+               PA_DFX (pa_alpha_always());
                PA_DFX (pa_set_front_to_read());
                gr_init_sub_canvas( &cnv2, &VR_render_buffer[0], 0, 0, THUMBNAIL_W, THUMBNAIL_H );
                save_cnv2 = gr_create_canvas2(THUMBNAIL_W, THUMBNAIL_H, cnv2.cv_bitmap.bm_type);
@@ -637,11 +637,11 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
          #else
                gr_set_current_canvas( cnv );
          #endif
-         
+
                PA_DFX (pa_set_backbuffer_current());
                render_frame(0, 0);
-               PA_DFX (pa_alpha_always());  
-         
+               PA_DFX (pa_alpha_always());
+
          #if defined(POLY_ACC)
                #ifndef MACINTOSH
                screen_shot_pa(cnv,&cnv2);
@@ -650,22 +650,22 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
                   screen_shot_pa(cnv,&cnv2);
                #endif
          #endif
-         
+
                pal = gr_palette;
-         
+
                fwrite( cnv->cv_bitmap.bm_data, THUMBNAIL_W*THUMBNAIL_H, 1, fp );
-         
+
          #if defined(POLY_ACC)
-               PA_DFX (pa_alpha_always());   
+               PA_DFX (pa_alpha_always());
                PA_DFX (pa_set_frontbuffer_current());
                PA_DFX(gr_bitmap(0,0,&save_cnv2->cv_bitmap));
                PA_DFX (pa_set_backbuffer_current());
                gr_bitmap(0,0,&save_cnv2->cv_bitmap);
                gr_free_canvas(save_cnv2);
                PA_DFX (pa_fool_to_offscreen());
-         
+
          #endif
-      
+
       #else    // macintosh stuff below
       {
          #if defined(POLY_ACC)
@@ -677,14 +677,14 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
          render_frame(0, 0);
          pal = gr_palette;
          fwrite( cnv->cv_bitmap.bm_data, THUMBNAIL_W*THUMBNAIL_H, 1, fp );
-         
+
          #if defined(POLY_ACC)
             PAEnabled = savePAEnabled;
          #endif
-      }  
+      }
       #endif   // end of ifndef macintosh
-      
-      
+
+
       WINDOS(
          dd_gr_set_current_canvas(cnv_save),
          gr_set_current_canvas(cnv_save)
@@ -696,8 +696,8 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
    {
       ubyte color = 0;
       for ( i=0; i<THUMBNAIL_W*THUMBNAIL_H; i++ )
-         fwrite( &color, sizeof(ubyte), 1, fp );      
-   } 
+         fwrite( &color, sizeof(ubyte), 1, fp );
+   }
 
 // Save the Between levels flag...
    fwrite( &between_levels, sizeof(int), 1, fp );
@@ -717,7 +717,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
    if (Game_mode & GM_MULTI_COOP)
     {
       fwrite (&state_game_id,sizeof(int),1,fp);
-      fwrite (&Netgame,sizeof(netgame_info),1,fp);    
+      fwrite (&Netgame,sizeof(netgame_info),1,fp);
       fwrite (&NetPlayers,sizeof(AllNetPlayers_info),1,fp);
       fwrite (&N_players,sizeof(int),1,fp);
       fwrite (&Player_num,sizeof(int),1,fp);
@@ -732,7 +732,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       fwrite (&robot_last_message_time[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
       fwrite (&robot_send_pending[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
       fwrite (&robot_fired[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
- 
+
       for (i=0;i<MAX_ROBOTS_CONTROLLED;i++)
          fwrite (robot_fire_buf[i][0],18+3,1,fp);
 #endif
@@ -758,7 +758,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
          if ( (Objects[i].type != OBJ_NONE) && (Objects[i].render_type==RT_MORPH))  {
             morph_data *md;
             md = find_morph_data(&Objects[i]);
-            if (md) {               
+            if (md) {
                md->obj->control_type = md->morph_save_control_type;
                md->obj->movement_type = md->morph_save_movement_type;
                md->obj->render_type = RT_POLYOBJ;
@@ -772,12 +772,12 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
             }
          }
       }
-   
+
    //Save object info
       i = Highest_object_index+1;
       fwrite( &i, sizeof(int), 1, fp );
       fwrite( Objects, sizeof(object)*i, 1, fp );
-      
+
    //Save wall info
       i = Num_walls;
       fwrite( &i, sizeof(int), 1, fp );
@@ -787,21 +787,21 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       i = MAX_EXPLODING_WALLS;
       fwrite( &i, sizeof(int), 1, fp);
       fwrite( expl_wall_list, sizeof(*expl_wall_list), i, fp );
-   
+
    //Save door info
       i = Num_open_doors;
       fwrite( &i, sizeof(int), 1, fp );
       fwrite( ActiveDoors, sizeof(active_door)*i, 1, fp );
-   
+
    //Save cloaking wall info
       i = Num_cloaking_walls;
       fwrite( &i, sizeof(int), 1, fp );
       fwrite( CloakingWalls, sizeof(cloaking_wall), i, fp );
-   
+
    //Save trigger info
       fwrite( &Num_triggers, sizeof(int), 1, fp );
       fwrite( Triggers, sizeof(trigger)*Num_triggers, 1, fp );
-   
+
    //Save tmap info
       for (i=0; i<=Highest_segment_index; i++ ) {
          for (j=0; j<6; j++ ) {
@@ -810,7 +810,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
             fwrite( &Segments[i].sides[j].tmap_num2, sizeof(short), 1, fp );
          }
       }
-   
+
    // Save the fuelcen info
       fwrite( &Control_center_destroyed, sizeof(int), 1, fp );
       fwrite( &Countdown_timer, sizeof(int), 1, fp );
@@ -819,17 +819,17 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       fwrite( &ControlCenterTriggers, sizeof(control_center_triggers), 1, fp );
       fwrite( &Num_fuelcenters, sizeof(int), 1, fp );
       fwrite( Station, sizeof(FuelCenter)*Num_fuelcenters, 1, fp );
-   
+
    // Save the control cen info
       fwrite( &Control_center_been_hit, sizeof(int), 1, fp );
       fwrite( &Control_center_player_been_seen, sizeof(int), 1, fp );
       fwrite( &Control_center_next_fire_time, sizeof(int), 1, fp );
       fwrite( &Control_center_present, sizeof(int), 1, fp );
       fwrite( &Dead_controlcen_object_num, sizeof(int), 1, fp );
-   
+
    // Save the AI state
       ai_save_state( fp );
-   
+
    // Save the automap visited info
       fwrite( Automap_visited, sizeof(ubyte)*MAX_SEGMENTS, 1, fp );
 
@@ -863,7 +863,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
    fwrite(&First_secret_visit, sizeof(First_secret_visit), 1, fp);
 
    fwrite(&Omega_charge, sizeof(Omega_charge), 1, fp);
-   
+
    if ( ferror(fp) ) {
       if ( !(Game_mode & GM_MULTI) ) {
          nm_messagebox(NULL, 1, TXT_OK, "Error writing savegame.\nPossibly out of disk\nspace.");
@@ -878,7 +878,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
          FInfo finfo;
          OSErr err;
          Str255 pfilename;
-   
+
          strcpy(pfilename, filename);
          c2pstr(pfilename);
          err = HGetFInfo(0, 0, pfilename, &finfo);
@@ -888,7 +888,7 @@ int state_save_all_sub(char *filename, char *desc, int between_levels)
       }
       #endif
    }
-   
+
    start_time();
 
    return 1;
@@ -939,7 +939,7 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
       start_time();
       return 0;
    }
-   
+
    // MK, 1/1/96
    // If not in multiplayer, do special secret level stuff.
    // If Nsecret.sgc (where N = filenum) exists, then copy it to secret.sgc.
@@ -953,7 +953,7 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
             fc = (filenum-10) + 'a';
          else
             fc = '0' + filenum;
-         
+
          #ifndef MACINTOSH
          sprintf(temp_fname, "%csecret.sgc", fc);
          #else
@@ -979,7 +979,7 @@ int state_restore_all(int in_game, int secret_restore, char *filename_override)
       sprintf( temp_filename, "%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
       #else
       sprintf( temp_filename, ":Players:%s.sg%x", Players[Player_num].callsign, NUM_SAVES );
-      #endif      
+      #endif
       state_save_all(!in_game, secret_restore, temp_filename);
    }
 
@@ -1020,8 +1020,8 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
    int nplayers;  //,playid[12],mynum;
    player restore_players[MAX_PLAYERS];
    fix   old_gametime = GameTime;
-   
-   #if defined(MACINTOSH) && !defined(NDEBUG) 
+
+   #if defined(MACINTOSH) && !defined(NDEBUG)
    if ( strncmp(filename, ":Players:", 9) )
       Int3();
    #endif
@@ -1092,7 +1092,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
    if (Game_mode & GM_MULTI)
     {
       fread (&state_game_id,sizeof(int),1,fp);
-      fread (&Netgame,sizeof(netgame_info),1,fp);     
+      fread (&Netgame,sizeof(netgame_info),1,fp);
       fread (&NetPlayers,sizeof(AllNetPlayers_info),1,fp);
       fread (&nplayers,sizeof(N_players),1,fp);
       fread (&Player_num,sizeof(Player_num),1,fp);
@@ -1106,7 +1106,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       fread (&robot_last_message_time[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
       fread (&robot_send_pending[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
       fread (&robot_fired[0],4*MAX_ROBOTS_CONTROLLED,1,fp);
- 
+
       for (i=0;i<MAX_ROBOTS_CONTROLLED;i++)
          fread (&robot_fire_buf[i][0],21,1,fp);
 #endif
@@ -1123,17 +1123,17 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
        }
       memcpy (&Players,&restore_players,sizeof(player)*nplayers);
       N_players=nplayers;
-          
+
       if (network_i_am_master())
        {
         for (i=0;i<N_players;i++)
          {
           if (i==Player_num)
             continue;
-          Players[i].connected=0;   
+          Players[i].connected=0;
          }
        }
-       
+
       //Viewer = ConsoleObject = &Objects[Players[Player_num].objnum];
     }
 
@@ -1187,7 +1187,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
    fread( &Difficulty_level, sizeof(int), 1, fp );
 
 // Restore the cheats enabled flag
- 
+
    fread (&Cheats_enabled,sizeof(int),1,fp);
 
    if ( !between_levels )  {
@@ -1198,12 +1198,12 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       for (segnum=0; segnum <= Highest_segment_index; segnum++)
          Segments[segnum].objects = -1;
       reset_objects(1);
-   
+
       //Read objects, and pop 'em into their respective segments.
       fread( &i, sizeof(int), 1, fp );
       Highest_object_index = i-1;
       fread( Objects, sizeof(object)*i, 1, fp );
-   
+
       Object_next_signature = 0;
       for (i=0; i<=Highest_object_index; i++ )  {
          obj = &Objects[i];
@@ -1229,10 +1229,10 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
                obj->shields /= 2;  //give player a break
          }
 
-      }  
+      }
       special_reset_objects();
       Object_next_signature++;
-   
+
       // 1 = Didn't die on secret level.
       // 2 = Died on secret level.
       if (secret_restore && (Current_level_num >= 0)) {
@@ -1263,17 +1263,17 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       fread( &i, sizeof(int), 1, fp );
       Num_open_doors = i;
       fread( ActiveDoors, sizeof(active_door)*Num_open_doors, 1, fp );
-   
+
       if (version >= 14) {    //Restore cloaking wall info
          fread( &i, sizeof(int), 1, fp );
          Num_cloaking_walls = i;
          fread( CloakingWalls, sizeof(cloaking_wall), Num_cloaking_walls, fp );
       }
-   
+
       //Restore trigger info
       fread( &Num_triggers, sizeof(int), 1, fp );
       fread( Triggers, sizeof(trigger)*Num_triggers, 1, fp );
-   
+
       //Restore tmap info
       for (i=0; i<=Highest_segment_index; i++ ) {
          for (j=0; j<6; j++ ) {
@@ -1282,7 +1282,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
             fread( &Segments[i].sides[j].tmap_num2, sizeof(short), 1, fp );
          }
       }
-   
+
       //Restore the fuelcen info
       fread( &Control_center_destroyed, sizeof(int), 1, fp );
       fread( &Countdown_timer, sizeof(int), 1, fp );
@@ -1291,17 +1291,17 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       fread( &ControlCenterTriggers, sizeof(control_center_triggers), 1, fp );
       fread( &Num_fuelcenters, sizeof(int), 1, fp );
       fread( Station, sizeof(FuelCenter)*Num_fuelcenters, 1, fp );
-   
+
       // Restore the control cen info
       fread( &Control_center_been_hit, sizeof(int), 1, fp );
       fread( &Control_center_player_been_seen, sizeof(int), 1, fp );
       fread( &Control_center_next_fire_time, sizeof(int), 1, fp );
       fread( &Control_center_present, sizeof(int), 1, fp );
       fread( &Dead_controlcen_object_num, sizeof(int), 1, fp );
-   
+
       // Restore the AI state
       ai_restore_state( fp, version );
-   
+
       // Restore the automap visited info
       fread( Automap_visited, sizeof(ubyte)*MAX_SEGMENTS, 1, fp );
 
@@ -1381,7 +1381,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       for (i=0; i<=Highest_segment_index; i++)
          Light_subtracted[i] = 0;
    }
-   
+
    if (!secret_restore) {
       if (version >= 20) {
          fread(&First_secret_visit, sizeof(First_secret_visit), 1, fp);
@@ -1400,8 +1400,8 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
       }
 
    fclose(fp);
- 
-   if (Game_mode & GM_MULTI)   // Get rid of ships that aren't 
+
+   if (Game_mode & GM_MULTI)   // Get rid of ships that aren't
     {                          // connected in the restored game
       for (i=0;i<nplayers;i++)
        {
@@ -1413,7 +1413,7 @@ int state_restore_all_sub(char *filename, int multi, int secret_restore)
           mprintf ((0,"Killing player ship %s!\n",Players[i].callsign));
          }
        }
-         
+
     }
 
 // Load in bitmaps, etc..

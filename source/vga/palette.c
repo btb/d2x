@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -72,7 +72,7 @@ void gr_palette_set_gamma( int gamma )
       gr_palette_gamma = gamma;
       if (!gr_palette_faded_out)
          gr_palette_load( gr_palette );
-   }  
+   }
 }
 
 int gr_palette_get_gamma()
@@ -248,7 +248,7 @@ void gr_palette_step_up( int r, int g, int b )
    last_b = b;
 #if defined(POLY_ACC)
     if ( (r==0) && (g==0) && (b==0) ) return;
-    PA_DFX (pa_set_backbuffer_current()); 
+    PA_DFX (pa_set_backbuffer_current());
     pa_step_up(r, g, b);
     return; //POLY_ACC
 #endif
@@ -329,7 +329,7 @@ void gr_palette_clear()
    gr_palette_faded_out = 1;
 }
 
-void gr_palette_load( ubyte * pal ) 
+void gr_palette_load( ubyte * pal )
 {
    int i;
    ubyte c;
@@ -357,7 +357,7 @@ void gr_palette_load( ubyte * pal )
 
 extern void gr_sync_display(void);
 
-int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )  
+int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
 {
    ubyte c;
    int i,j;
@@ -388,20 +388,20 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
       gr_sync_display();
       outp( 0x3c6, 0xff );
       outp( 0x3c8, 0 );
-      for (i=0; i<768; i++ )  {     
+      for (i=0; i<768; i++ )  {
          fade_palette[i] -= fade_palette_delta[i];
          if (fade_palette[i] < 0 )
             fade_palette[i] = 0;
          c = f2i(fade_palette[i]);
          if ( c > 63 ) c = 63;
-         outp( 0x3c9, c );                      
+         outp( 0x3c9, c );
       }
    }
    gr_palette_faded_out = 1;
    return 0;
 }
 
-int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys) 
+int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 {
    int i,j;
    ubyte c;
@@ -434,13 +434,13 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
       gr_sync_display();
       outp( 0x3c6, 0xff );
       outp( 0x3c8, 0 );
-      for (i=0; i<768; i++ )  {     
+      for (i=0; i<768; i++ )  {
          fade_palette[i] += fade_palette_delta[i];
          if (fade_palette[i] > i2f(pal[i]+gr_palette_gamma) )
             fade_palette[i] = i2f(pal[i]+gr_palette_gamma);
          c = f2i(fade_palette[i]);
          if ( c > 63 ) c = 63;
-         outp( 0x3c9, c );                      
+         outp( 0x3c9, c );
       }
    }
    gr_palette_faded_out = 0;

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -130,7 +130,7 @@ char gameseq_rcsid[] = "$Id: gameseq.c 2.180 1997/01/27 16:27:02 matt Exp $";
 //-1,-2,-3 are secret levels
 //0 means not a real level loaded
 int   Current_level_num=0,Next_level_num;
-char  Current_level_name[LEVEL_NAME_LEN];    
+char  Current_level_name[LEVEL_NAME_LEN];
 
 #if !defined(SHAREWARE) && !defined(D2_OEM)
 int Last_level,Last_secret_level;
@@ -182,7 +182,7 @@ void verify_console_object()
    Assert( ConsoleObject->id==Player_num );
 }
 
-int count_number_of_robots() 
+int count_number_of_robots()
 {
    int robot_count;
    int i;
@@ -197,7 +197,7 @@ int count_number_of_robots()
 }
 
 
-int count_number_of_hostages() 
+int count_number_of_hostages()
 {
    int count;
    int i;
@@ -265,7 +265,7 @@ gameseq_init_network_players()
      for (i=0;i<N_players;i++)
        if (Players[i].connected && !(NetPlayers.players[i].version_minor & 0xF0))
          {
-          nm_messagebox ("Warning!",1,TXT_OK,"This special version of Descent II\nwill disconnect after this level.\nPlease purchase the full version\nto experience all the levels!");   
+          nm_messagebox ("Warning!",1,TXT_OK,"This special version of Descent II\nwill disconnect after this level.\nPlease purchase the full version\nto experience all the levels!");
           return;
          }
     }
@@ -330,7 +330,7 @@ void init_player_stats_game()
    Players[Player_num].num_robots_level = 0;
    Players[Player_num].num_robots_total = 0;
    Players[Player_num].KillGoalCount = 0;
-   
+
    Players[Player_num].hostages_rescued_total = 0;
    Players[Player_num].hostages_level = 0;
    Players[Player_num].hostages_total = 0;
@@ -463,10 +463,10 @@ void init_player_stats_new_ship()
    Primary_weapon = 0;
    Secondary_weapon = 0;
 
-   Players[Player_num].flags &= ~(  PLAYER_FLAGS_QUAD_LASERS | 
-                                    PLAYER_FLAGS_AFTERBURNER | 
-                                    PLAYER_FLAGS_CLOAKED | 
-                                    PLAYER_FLAGS_INVULNERABLE | 
+   Players[Player_num].flags &= ~(  PLAYER_FLAGS_QUAD_LASERS |
+                                    PLAYER_FLAGS_AFTERBURNER |
+                                    PLAYER_FLAGS_CLOAKED |
+                                    PLAYER_FLAGS_INVULNERABLE |
                                     PLAYER_FLAGS_MAP_ALL |
                                     PLAYER_FLAGS_CONVERTER |
                                     PLAYER_FLAGS_AMMO_RACK |
@@ -704,7 +704,7 @@ try_again:
       fp = fopen(filename,"rb");
    }
 #endif
-   
+
    if ( fp )   {
       nm_messagebox(NULL, 1, TXT_OK, "%s '%s' %s", TXT_PLAYER, text, TXT_ALREADY_EXISTS );
       fclose(fp);
@@ -819,14 +819,14 @@ load_bitmap_replacements(char *level_name)
    }
 
    change_filename_extension(ifile_name, level_name, ".POG" );
-   
+
    ifile = cfopen(ifile_name,"rb");
 
    if (ifile) {
       int id,version,n_bitmaps;
       int bitmap_data_size;
       ushort *indices;
- 
+
       id = cfile_read_int(ifile);
       version = cfile_read_int(ifile);
 
@@ -838,7 +838,7 @@ load_bitmap_replacements(char *level_name)
       n_bitmaps = cfile_read_int(ifile);
 
       MALLOC( indices, ushort, n_bitmaps );
-      
+
       #ifndef MACINTOSH // silly, silly, must swap shorts on the mac.
          cfread(indices,sizeof(*indices),n_bitmaps,ifile);
       #else
@@ -866,12 +866,12 @@ load_bitmap_replacements(char *level_name)
          bmh.offset = cfile_read_int(ifile);
 
          memset( &temp_bitmap, 0, sizeof(grs_bitmap) );
-   
+
          temp_bitmap.bm_w = temp_bitmap.bm_rowsize = bmh.width + ((short) (bmh.wh_extra&0x0f)<<8);
          temp_bitmap.bm_h = bmh.height + ((short) (bmh.wh_extra&0xf0)<<4);
          temp_bitmap.avg_color = bmh.avg_color;
          temp_bitmap.bm_data = Bitmap_replacement_data + bmh.offset;
-   
+
          if ( bmh.flags & BM_FLAG_TRANSPARENT ) temp_bitmap.bm_flags |= BM_FLAG_TRANSPARENT;
          if ( bmh.flags & BM_FLAG_SUPER_TRANSPARENT ) temp_bitmap.bm_flags |= BM_FLAG_SUPER_TRANSPARENT;
          if ( bmh.flags & BM_FLAG_NO_LIGHTING ) temp_bitmap.bm_flags |= BM_FLAG_NO_LIGHTING;
@@ -904,7 +904,7 @@ void LoadLevel(int level_num,int page_in_textures)
    player save_player;
    int load_ret;
 
-   save_player = Players[Player_num];  
+   save_player = Players[Player_num];
 
    Assert(level_num <= Last_level  && level_num >= Last_secret_level  && level_num != 0);
 
@@ -977,7 +977,7 @@ void LoadLevel(int level_num,int page_in_textures)
 // WIN(HideCursorW());
 }
 
-//sets up Player_num & ConsoleObject  
+//sets up Player_num & ConsoleObject
 void InitPlayerObject()
 {
    Assert(Player_num>=0 && Player_num<MAX_PLAYERS);
@@ -1006,7 +1006,7 @@ void StartNewGame(int start_level)
 {
    Game_mode = GM_NORMAL;
    Function_mode = FMODE_GAME;
-   
+
    Next_level_num = 0;
 
    InitPlayerObject();           //make sure player's object set up
@@ -1252,7 +1252,7 @@ void do_secret_message(char *msg)
 #if defined(POLY_ACC)
    pa_restore_clut();
 #endif
-   
+
    WIN(DEFINE_SCREEN(NULL));
 }
 
@@ -1267,7 +1267,7 @@ void StartNewLevelSecret(int level_num, int page_in_textures)
         //int i;
 
         ThisLevelTime=0;
-         
+
    m[0].type = NM_TYPE_TEXT;
    m[0].text = " ";
 
@@ -1308,7 +1308,7 @@ void StartNewLevelSecret(int level_num, int page_in_textures)
 
    Assert(Function_mode == FMODE_GAME);
 
-   gameseq_init_network_players(); // Initialize the Players array for 
+   gameseq_init_network_players(); // Initialize the Players array for
                                    // this level
 
    HUD_clear_messages();
@@ -1471,7 +1471,7 @@ void EnterSecretLevel(void)
    old_gametime = GameTime;
 
    StartNewLevelSecret(Next_level_num, 1);
-   
+
    // do_cloak_invul_stuff();
 }
 
@@ -1526,7 +1526,7 @@ void DoEndGame(void)
    key_flush();
 
    if (Current_mission_num == 0 && !(Game_mode & GM_MULTI))    //only built-in mission, & not multi
-   {  
+   {
       int played=MOVIE_NOT_PLAYED;  //default is not played
 
       #ifdef SHAREWARE
@@ -1544,7 +1544,7 @@ void DoEndGame(void)
             do_briefing_screens("end2oem.tex",1);
          }
          #endif
-      #endif   
+      #endif
    }
    else if (!(Game_mode & GM_MULTI)) {    //not multi
       char tname[FILENAME_LEN];
@@ -1565,7 +1565,7 @@ void DoEndGame(void)
    if (Game_mode & GM_MULTI)
       multi_endlevel_score();
    else
-      DoEndLevelScoreGlitz(0);   
+      DoEndLevelScoreGlitz(0);
 
    if (Current_mission_num == 0 && !((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))) {
       WINDOS(
@@ -1592,7 +1592,7 @@ void DoEndGame(void)
    longjmp( LeaveGame, 0 );      // Exit out of game loop
 }
 
-//from which level each do you get to each secret level 
+//from which level each do you get to each secret level
 int Secret_level_table[MAX_SECRET_LEVELS_PER_MISSION];
 
 //called to go to the next level (if there is one)
@@ -1608,8 +1608,8 @@ void AdvanceLevel(int secret_flag)
 
    if (Current_level_num != Last_level) {
       if (Game_mode & GM_MULTI)
-         multi_endlevel_score();    
-      else 
+         multi_endlevel_score();
+      else
          DoEndLevelScoreGlitz(0);      //give bonuses
    }
 
@@ -1630,7 +1630,7 @@ void AdvanceLevel(int secret_flag)
    }
 
    if (Current_level_num == Last_level) {    //player has finished the game!
-      
+
       mprintf((0,"Finished last level!\n"));
 
       DoEndGame();
@@ -1664,10 +1664,10 @@ void load_stars_palette()
 
    {  //remap stuff. this code is kindof a hack
 
-      //now, before we bring up the menu, we need to 
+      //now, before we bring up the menu, we need to
       //do some stuff to make sure the palette is ok.  First, we need to
       //get our current palette into the 2d's array, so the remapping will
-      //work.  Second, we need to remap the fonts.  Third, we need to fill 
+      //work.  Second, we need to remap the fonts.  Third, we need to fill
       //in part of the fade tables so the darkening of the menu edges works
 
       gr_copy_palette(gr_palette, pal, sizeof(gr_palette));
@@ -1789,7 +1789,7 @@ void advancing_to_level_message(void)
    set_screen_mode(SCREEN_MENU);    //go into menu mode
 
    gr_set_current_canvas(NULL);
-   
+
    load_stars();
 
 #if defined(POLY_ACC)
@@ -1839,16 +1839,16 @@ void DoPlayerDead()
    {
       multi_do_death(Players[Player_num].objnum);
    }
-   else 
+   else
    {           //Note link to above else!
       Players[Player_num].lives--;
       if (Players[Player_num].lives == 0)
-      {  
+      {
          DoGameOver();
          return;
       }
    }
-            
+
    if ( Control_center_destroyed ) {
 
       //clear out stuff so no bonus
@@ -1934,7 +1934,7 @@ void StartNewLevelSub(int level_num, int page_in_textures, int secret_flag)
 
    Assert(Current_level_num == level_num);   //make sure level set right
 
-   gameseq_init_network_players(); // Initialize the Players array for 
+   gameseq_init_network_players(); // Initialize the Players array for
                                    // this level
 
    Viewer = &Objects[Players[Player_num].objnum];
@@ -2034,15 +2034,15 @@ extern void bash_to_shield (int,char *);
 void filter_objects_from_level()
  {
   int i;
-  
+
   mprintf ((0,"Highest object index=%d\n",Highest_object_index));
- 
-  for (i=0;i<=Highest_object_index;i++)   
+
+  for (i=0;i<=Highest_object_index;i++)
    {
     if (Objects[i].type==OBJ_POWERUP)
      if (Objects[i].id==POW_FLAG_RED || Objects[i].id==POW_FLAG_BLUE)
       bash_to_shield (i,"Flag!!!!");
-   } 
+   }
 
  }
 
@@ -2075,7 +2075,7 @@ void ShowLevelIntro(int level_num)
 
       #if defined(D2_OEM) || defined(COMPILATION)
       if (level_num==1 && !intro_played)
-         do_briefing_screens ("brief2o.tex",1); 
+         do_briefing_screens ("brief2o.tex",1);
       #endif
 
       if (Current_mission_num==0)
@@ -2084,7 +2084,7 @@ void ShowLevelIntro(int level_num)
          #ifdef SHAREWARE
             if (level_num==1)
             {
-               do_briefing_screens ("brief2.tex",1);  
+               do_briefing_screens ("brief2.tex",1);
             }
          #else
             for (i=0;i<NUM_INTRO_MOVIES;i++)
@@ -2107,7 +2107,7 @@ void ShowLevelIntro(int level_num)
             if (robot_movies)
             {
                int hires_save=MenuHiresAvailable;
-               
+
                if (robot_movies == 1)     //lowres only
                {
                   MenuHiresAvailable = 0;    //pretend we can't do highres
@@ -2121,7 +2121,7 @@ void ShowLevelIntro(int level_num)
             }
 
          #endif
-      }      
+      }
       else {   //not the built-in mission.  check for add-on briefing
          char tname[FILENAME_LEN];
          sprintf(tname,"%s.tex",Current_mission_filename);
@@ -2163,7 +2163,7 @@ void StartNewLevel(int level_num, int secret_flag)
    ShowLevelIntro(level_num);
 
    WIN(DEFINE_SCREEN(NULL));     // ALT-TAB: no restore of background.
-   
+
    StartNewLevelSub(level_num, 1, secret_flag );
 
 }
@@ -2191,7 +2191,7 @@ void InitPlayerPosition(int random_flag)
 #endif
 
       do {
-         if (trys > 0)  
+         if (trys > 0)
          {
             mprintf((0, "Can't start in location %d because its too close to player %d\n", NewPlayer, closest ));
          }
@@ -2201,7 +2201,7 @@ void InitPlayerPosition(int random_flag)
 
          closest = -1;
          closest_dist = 0x7fffffff;
-   
+
          for (i=0; i<N_players; i++ )  {
             if ( (i!=Player_num) && (Objects[Players[i].objnum].type == OBJ_PLAYER) )  {
                dist = find_connected_distance(&Objects[Players[i].objnum].pos, Objects[Players[i].objnum].segnum, &Player_init[NewPlayer].pos, Player_init[NewPlayer].segnum, 10, WID_FLY_FLAG );  // Used to be 5, search up to 10 segments
@@ -2215,7 +2215,7 @@ void InitPlayerPosition(int random_flag)
 
          // -- mprintf((0, "Closest from pos %d is %f to plr %d.\n", NewPlayer, f2fl(closest_dist), closest));
       } while ( (closest_dist<i2f(15*20)) && (trys<MAX_NUM_NET_PLAYERS*2) );
-   } 
+   }
    else {
       mprintf((0, "Starting position is not being changed.\n"));
       goto done; // If deathmatch and not random, positions were already determined by sync packet
@@ -2315,7 +2315,7 @@ void StartLevel(int random_flag)
          multi_send_score();
       multi_send_position(Players[Player_num].objnum);
       multi_send_reappear();
-   }     
+   }
 
    if (Game_mode & GM_NETWORK)
       network_do_frame(1, 1);

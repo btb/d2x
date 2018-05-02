@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -103,7 +103,7 @@ typedef struct com_sync_pack {
    char mission_name[9];
    short killed;
    byte game_flags;
-   
+
    short DoMegas:1;
    short DoSmarts:1;
    short DoFusions:1;
@@ -126,11 +126,11 @@ typedef struct com_sync_pack {
    short DoMercury:1;
    short Allow_marker_view:1;
    short RefusePlayers:1;
-   short AlwaysLighting:1; 
+   short AlwaysLighting:1;
    short DoAmmoRack:1;
    short DoConverter:1;
    short DoHeadlight:1;
-   
+
    char  dummy[3]; // Extra space for checksum & sequence number
 } com_sync_pack;
 
@@ -210,13 +210,13 @@ void com_menu_poll(int nitems, newmenu_item *menus, int *key, int citem);
 int com_sync(int id);
 void com_sync_poll(int nitem, newmenu_item *menus, int *key, int citem);
 
-int GetModemList(void); 
+int GetModemList(void);
 
 
 /*
  * Functions
 */
-   
+
 #if !defined(NDEBUG) && !defined(NMONO)
 void
 com_dump_string(char *string)
@@ -229,7 +229,7 @@ com_dump_string(char *string)
 
 
 int
-com_enable() 
+com_enable()
 {
    if (com_open)
       return 0;
@@ -243,11 +243,11 @@ com_enable()
       nm_messagebox(TXT_ERROR, 1, TXT_OK, "Failed to open COM port.");
       comm_close_connection(&Comm);
       return -1;
-   }   
-   
+   }
+
    comm_set_dtr(&Comm, 1);
-   
-   if ( FindArg( "-ctsrts" ) || FindArg( "-rtscts" )  )  
+
+   if ( FindArg( "-ctsrts" ) || FindArg( "-rtscts" )  )
       comm_set_rtscts(&Comm, 1);    // Now used for null-modem as well
    else
       comm_set_rtscts(&Comm, 0);
@@ -268,7 +268,7 @@ com_disable()
 {
    // close the com port and free associated structures.
 
-   if (!com_open) 
+   if (!com_open)
       return;
 
    comm_close_connection(&Comm);
@@ -337,7 +337,7 @@ com_reset_game(void)
    int i;
 
    // Reset various parameters before starting a new game
-   
+
    N_players = 2;
 
    for (i = 0; i < N_players; i++)
@@ -350,7 +350,7 @@ com_reset_game(void)
    multi_new_game(); // Reset kill list, among other things
    Control_center_destroyed = 0;
    Endlevel_sequence = 0;
-   
+
    // Yes, this really IS as ugly as it gets, kids...
 
    if (Cockpit_mode == CM_LETTERBOX || Cockpit_mode == CM_REAR_VIEW)
@@ -374,7 +374,7 @@ com_save_settings(void)
 
    if (fwrite(&com_speed, sizeof(int), 1, settings) != 1)
       goto error;
-   
+
    if (fwrite(&com_port_num, sizeof(int), 1, settings) != 1)
       goto error;
 
@@ -407,7 +407,7 @@ error:
       fclose(settings);
       unlink("serial.cfg");
    }
-   
+
    return;
 }
 
@@ -425,7 +425,7 @@ com_load_settings(void)
    cfg_size = filelength(fileno(settings));
 
    // Read the data from the file
-   
+
    if (fread(&com_speed, sizeof(int), 1, settings) != 1)
       goto error;
    if (! ((com_speed == 9600) || (com_speed == 19200) || (com_speed == 38400)) )
@@ -509,7 +509,7 @@ close:
 
 error:
    nm_messagebox(NULL, 1, TXT_OK, TXT_ERR_SER_SETTINGS);
-      
+
 defaults:
    // Return some defaults
    com_speed = CBR_19200;
@@ -564,7 +564,7 @@ com_send_data(char *ptr, int len, int repeat)
          modem_hangup();
       }
    }
-   
+
    len += 3; // Checksum data is 3 bytes
 
    *(ubyte *)(ptr+(len-3)) = (tx_seqnum+1)%256;
@@ -602,7 +602,7 @@ com_flush()
 
    int i = 0;
 
-   if (!com_open) 
+   if (!com_open)
       return;
 
    mprintf((0, "COM FLUSH:"));
@@ -643,7 +643,7 @@ com_getchar()
          eor_recv = 1;
          return(-1);
       }
-      else if (i == EOR_MARK) 
+      else if (i == EOR_MARK)
       {
          eor_recv = 0;
          return(EOR_MARK); // Doubled EOR returns the character
@@ -656,7 +656,7 @@ com_getchar()
          }
 #endif
          eor_recv = 0;
-         return(-2);                   
+         return(-2);
       }
    }
    return(i);
@@ -720,7 +720,7 @@ com_check_message(char *checkbuf, int len)
 {
    ushort check;
    int seqnum;
-  
+
    //mprintf ((0,"TYPE=%d!\n",checkbuf[0]));
 
    if (len < 4)
@@ -745,7 +745,7 @@ com_check_message(char *checkbuf, int len)
    if (check != *(ushort *)(checkbuf+(len-2)))
    {
       #ifndef NDEBUG
-      mprintf((0, "error in message type %d, length %d, checksum %d != %d\n", checkbuf[0], len, check, *(ushort *)(checkbuf+(len-2))));   
+      mprintf((0, "error in message type %d, length %d, checksum %d != %d\n", checkbuf[0], len, check, *(ushort *)(checkbuf+(len-2))));
       #endif
       goto error;
    }
@@ -757,16 +757,16 @@ com_check_message(char *checkbuf, int len)
 //    mprintf ((0,"returning due to bad checksum! type=%d seq=%d rx=%d\n",checkbuf[0],seqnum,rx_seqnum));
       return -1;
    }
-   
+
    if (seqnum != (rx_seqnum+1)%256)
    {
       #ifndef NDEBUG
-      mprintf((0, "Warning, missed 1 or more messages.\n"));   
+      mprintf((0, "Warning, missed 1 or more messages.\n"));
       #endif
    }
    rx_seqnum = seqnum;
    //mprintf((0, "message type %d len %d OK!\n", checkbuf[0], len));
-   return 0; 
+   return 0;
 
 error:
    mprintf((1,"Line status: %d.\n", comm_get_line_status(&Comm)));
@@ -774,7 +774,7 @@ error:
    Int3();
    return -1;
 }
-   
+
 
 void
 com_process_menu(char *buf, int len)
@@ -863,7 +863,7 @@ nextmessage:
          }
       }
       else mprintf ((0,"Huh?\n"));
-   
+
       len = 0;
       goto nextmessage;
    }
@@ -886,7 +886,7 @@ com_connect()
    my_sync.seg_checksum = 0;
    my_sync.game_mode = Game_mode;
    my_sync.level_num = 0;
-                         
+
    #ifndef NDEBUG
    mprintf((0, "com_connect()\n"));
    #endif
@@ -916,9 +916,9 @@ com_connect()
       else
          return(-1);  // Didn't sync properly, try again
    }
-   
+
    // Copy the remote sync data into local variables
-   
+
    OtherPlayer = (Player_num+1)%2;
    mprintf((0, "Other player is #%d.\n", OtherPlayer));
    memcpy(Players[OtherPlayer].callsign, other_sync.callsign, CALLSIGN_LEN+1);
@@ -969,7 +969,7 @@ void com_main_menu(void)
    nm_draw_background1(Menu_pcx_name);
    com_process_mode = COM_PROCESS_MENU;
 
-   if (Game_mode & GM_SERIAL) {  // HACK to get menu system working  
+   if (Game_mode & GM_SERIAL) {  // HACK to get menu system working
       Assert(Comm.port >= 1 && Comm.port <= 4);
       mprintf((0, "WINMODEM: Going to serial link menu!\n"));
       sel = MENU_COMM_DEVICE + (Comm.port-1);
@@ -981,7 +981,7 @@ void com_main_menu(void)
       sel = xtapiCurrentModem;
       goto skip_to_com_submenus;
    }
-   
+
 // Get devices for TAPI.
    retval = xtapi_init(WINAPP_NAME, &numTapiDevs);
    if (retval == XTAPI_NODEVICES) {
@@ -998,15 +998,15 @@ void com_main_menu(void)
    if (numTapiDevs == 0) tapiDevices = NULL;
    else {
       tapiDevices = (TapiDevice *)malloc(numTapiDevs*sizeof(TapiDevice));
-      if (!tapiDevices) 
+      if (!tapiDevices)
          Error("Unable to allocate memory for com_main_menu.");
 
-      retval = xtapi_enumdevices(tapiDevices, numTapiDevs); 
+      retval = xtapi_enumdevices(tapiDevices, numTapiDevs);
       if (retval != XTAPI_SUCCESS) {
          return;
       }
    }
-   
+
 com_menu_redraw:
    num_options = 0;
    for (i = 0; i <  numTapiDevs; i++)
@@ -1020,28 +1020,28 @@ com_menu_redraw:
          device_type[i] = 2;
       }
 
-      m[i].type=NM_TYPE_MENU; menu_choice[i]=MENU_XTAPI_DEVICE+i; 
+      m[i].type=NM_TYPE_MENU; menu_choice[i]=MENU_XTAPI_DEVICE+i;
       m[i].text=buf; num_options++;
    }
 
-   device_type[num_options] = 0; 
-   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE; 
+   device_type[num_options] = 0;
+   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE;
    m[num_options].text="Direct to Com 1"; num_options++;
 
-   device_type[num_options] = 0; 
-   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+1; 
+   device_type[num_options] = 0;
+   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+1;
    m[num_options].text="Direct to Com 2"; num_options++;
 
-   device_type[num_options] = 0; 
-   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+2; 
+   device_type[num_options] = 0;
+   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+2;
    m[num_options].text="Direct to Com 3"; num_options++;
 
-   device_type[num_options] = 0; 
-   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+3; 
+   device_type[num_options] = 0;
+   m[num_options].type=NM_TYPE_MENU; menu_choice[num_options]=MENU_COMM_DEVICE+3;
    m[num_options].text="Direct to Com 4"; num_options++;
 
    choice = newmenu_do1(NULL, "Select Serial Device", num_options, m, NULL, 0);
-   
+
    if (choice == -1) {
       if (tapiDevices) free(tapiDevices);
       xtapi_shutdown();
@@ -1053,7 +1053,7 @@ com_menu_redraw:
    }
 
    sel = menu_choice[choice];
-   
+
 skip_to_com_submenus:
 
    switch (sel)
@@ -1069,15 +1069,15 @@ skip_to_com_submenus:
       case MENU_COMM_DEVICE+1:
       case MENU_COMM_DEVICE+2:
       case MENU_COMM_DEVICE+3:
-      // start a serial game  
-         mprintf((0, "Selected a null-modem game.\n")); 
-         if (!serial_link_menu(sel-MENU_COMM_DEVICE+1)) 
+      // start a serial game
+         mprintf((0, "Selected a null-modem game.\n"));
+         if (!serial_link_menu(sel-MENU_COMM_DEVICE+1))
             goto com_menu_redraw;
          mprintf((0, "WINMODEM: starting game...\n"));
          return;
    }
 
-// Freeing XTAPI  
+// Freeing XTAPI
    if (tapiDevices) free(tapiDevices);
    xtapi_shutdown();
    nm_draw_background1(Menu_pcx_name);
@@ -1104,7 +1104,7 @@ com_game_menu_redraw:
    ADD_ITEM(TXT_SEND_MESSAGEP, MENU_SEND_MESSAGE, KEY_S);
    if (Game_mode & GM_MODEM)
       ADD_ITEM(TXT_HANGUP_MODEM, MENU_MODEM_HANGUP, KEY_H);
-   
+
    if (Game_mode & GM_SERIAL)
       ADD_ITEM(TXT_CLOSE_LINK, MENU_MODEM_HANGUP, KEY_C);
 
@@ -1113,7 +1113,7 @@ com_game_menu_redraw:
    if (Game_mode & GM_SERIAL)
       sprintf(subtitle, "%s\n\n%s %s\n%s", TXT_SERIAL_GAME, TXT_SERIAL, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);
    else if (Game_mode & GM_MODEM)
-      sprintf(subtitle, "%s\n\n%d %s %s\n%s", TXT_SERIAL_GAME, com_baud_rate, TXT_BAUD, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);  
+      sprintf(subtitle, "%s\n\n%d %s %s\n%s", TXT_SERIAL_GAME, com_baud_rate, TXT_BAUD, TXT_LINK_ACTIVE, Players[OtherPlayer].callsign);
    else {
       mprintf((1, "Game mode isn't set correctly.\n"));
       Int3();
@@ -1146,18 +1146,18 @@ com_game_menu_redraw:
    if (choice == -2)
    {
       // Menu poll loop caused a re-draw
-      if (other_menu_choice == SELECTION_STARTGAME)   
+      if (other_menu_choice == SELECTION_STARTGAME)
          com_ready_to_start();
-      else if (other_menu_choice == SELECTION_CLOSE_LINK) 
+      else if (other_menu_choice == SELECTION_CLOSE_LINK)
       {
          nm_messagebox(NULL, 1, TXT_OK, TXT_CLOSED_LINK);
          com_hangup();
          mprintf((0, "Leaving modem game (hanging up)...\n"));
       }
-         
+
       if (Function_mode == FMODE_GAME) {
          mprintf((0, "We think we're still in a modem game!.\n"));
-         return 1;   
+         return 1;
       }
 
       if (!com_open) {
@@ -1167,18 +1167,18 @@ com_game_menu_redraw:
       }
 
       goto com_game_menu_redraw;
-   }     
+   }
 
    comm_dump_info(&Comm);
 
-   if (choice > -1) 
+   if (choice > -1)
    {
    // old_game_mode=Game_mode;
       switch (menu_choice[choice])
       {
          case MENU_SERIAL_GAME_START:
             com_start_game();
-            if (Function_mode != FMODE_GAME) 
+            if (Function_mode != FMODE_GAME)
                goto com_game_menu_redraw;
             return 1;
 
@@ -1194,14 +1194,14 @@ com_game_menu_redraw:
             com_hangup();
             return 0;
 
-         default: 
+         default:
             mprintf((1, "Bad com_game_menu choice\n"));
             Int3();
             return 0;
       }
    }
    return 0;
-}  
+}
 
 
 
@@ -1214,11 +1214,11 @@ com_game_menu_redraw:
 int serial_link_menu(int port)
 {
 /* This menu will give a listing of possible com_speeds.  The default will
-   be given, but the user should be given the option to change to a lower 
-   speed 
+   be given, but the user should be given the option to change to a lower
+   speed
 */
    newmenu_item mm[8];
-   int com_max_setting, loc, i, mmn, menu_link; 
+   int com_max_setting, loc, i, mmn, menu_link;
    int com_speed_setting;
    int com_speeds[5] = {
       CBR_9600, CBR_19200, CBR_38400, CBR_57600, CBR_115200
@@ -1271,7 +1271,7 @@ setup_serial_menu:
 
    for (i = 0; i < 3; i++)             // Limit to 38.4K
    {
-      mm[i+1].type=NM_TYPE_RADIO; mm[i+1].value=(i==(com_max_setting-1)); 
+      mm[i+1].type=NM_TYPE_RADIO; mm[i+1].value=(i==(com_max_setting-1));
       mm[i+1].text=com_speeds_text[i]; mm[i+1].group=1; loc++;
    }
    mm[loc].type=NM_TYPE_TEXT; mm[loc].text = ""; loc++;
@@ -1280,7 +1280,7 @@ setup_serial_menu:
    mm[loc].type=NM_TYPE_MENU; mm[loc].text = "Establish Link"; loc++;
 
    mmn = newmenu_do1(NULL, TXT_SERIAL_SETTINGS, loc, mm, NULL, menu_link);
-   
+
 /* Take care of selection */
    if (mmn > -1) {
       for (i = 0; i < 3; i++)
@@ -1291,7 +1291,7 @@ setup_serial_menu:
 
       if(menu_link != mmn) goto setup_serial_menu;
    }
-   else return 0;    
+   else return 0;
 
    com_speed = com_speed_setting;
 // com_enable();
@@ -1330,11 +1330,11 @@ void serial_link_start(void)
    my_sync.sync_time = rand();
    mprintf((0, "My rand set to %d.\n", my_sync.sync_time));
 
-   if (!com_connect()) 
+   if (!com_connect())
    {
       Game_mode |= GM_SERIAL;
       digi_play_sample(SOUND_HUD_MESSAGE, F1_0);
-   } 
+   }
    else
    {
       nm_messagebox(NULL, 1, TXT_OK, "%s\n%s", TXT_ERROR, TXT_FAILED_TO_NEGOT);
@@ -1344,7 +1344,7 @@ void serial_link_start(void)
 
 
 
-/* 
+/*
  * modem class functions
 */
 
@@ -1368,14 +1368,14 @@ modem_menu_redraw:
 
    choice = newmenu_do1(NULL, "Modem Options", num_options, m, NULL, 0);
    if (choice > -1) {
-      switch (choice) 
+      switch (choice)
       {
          case 0:
             modem_dialout(modem);
             if (Game_mode & GM_MODEM)  com_game_menu();
             if (Function_mode == FMODE_GAME) return;
             break;
-         
+
          case 1:
             modem_answer(modem);
             if (Game_mode & GM_MODEM)  com_game_menu();
@@ -1385,7 +1385,7 @@ modem_menu_redraw:
       }
    }
    else if (choice == -1) return;
-   
+
    goto modem_menu_redraw;
 }
 
@@ -1410,7 +1410,7 @@ void modem_dialout(int modem)
 
 // At this point, xtapi is initialized, so we just need to get a number
 // and dial out.
-   
+
    if (!serial_active)
    {
       nm_messagebox(TXT_ERROR, 1, TXT_OK, TXT_NO_SERIAL_OPT);
@@ -1489,7 +1489,7 @@ void modem_answer(int modem)
 
 // At this point, xtapi is initialized, so we just need to get a number
 // and dial out.
-   
+
    if (!serial_active)
    {
       nm_messagebox(TXT_ERROR, 1, TXT_OK, TXT_NO_SERIAL_OPT);
@@ -1518,7 +1518,7 @@ void modem_answer(int modem)
       return;
    }
    clear_boxed_message();
-   
+
 // wait for a ring first.
 modem_answer_redraw:
    m[0].type=NM_TYPE_TEXT; m[0].text=TXT_ESC_ABORT;
@@ -1528,7 +1528,7 @@ modem_answer_redraw:
       modem_hangup();
       return;
    }
-   if (choice != -2) 
+   if (choice != -2)
       goto modem_answer_redraw;
 
 // Now answer the phone and wait for carrier
@@ -1550,7 +1550,7 @@ modem_answer_redraw:
    //master = 0;
    change_playernum_to(1);
 
-   if (!com_connect()) 
+   if (!com_connect())
    {
       Game_mode |= GM_MODEM;
       digi_play_sample(SOUND_HUD_MESSAGE, F1_0);
@@ -1569,7 +1569,7 @@ void modem_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem
    menus = menus;
    nitems = nitems;
    citem = citem;
-   
+
    retval = xtapi_device_poll_callstate(&modem_state);
    if (retval != XTAPI_SUCCESS) {
       return;
@@ -1597,7 +1597,7 @@ void modem_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem
          nm_messagebox(NULL, 1, TXT_OK, "Unable to connect.");
          *key = -3;
          return;
-      
+
       case XTAPI_LINE_DISCONNECTED:
          nm_messagebox(NULL, 1, TXT_OK, "Disconnected!");
          *key = -3;
@@ -1612,33 +1612,33 @@ void modem_wait_for_connect(int nitems, newmenu_item *menus, int *key, int citem
          mprintf((0, "Connect at %d baud.\n", Comm.baud));
          if (Comm.baud < CBR_9600) {
             nm_messagebox(NULL, 1, TXT_OK, TXT_BAUD_GREATER_9600);
-            *key = -3; 
+            *key = -3;
             return;
-         }  
-         else { 
-            com_baud_rate = Comm.baud;    
+         }
+         else {
+            com_baud_rate = Comm.baud;
             *key = -2;
             return;
          }
-         break;      
+         break;
 
       case XTAPI_LINE_IDLE:
          menus[0].text = "Idle\n";
          menus[0].redraw = 1;
          *key = -3;
          return;
-      
+
       case XTAPI_LINE_DIALTONE:
          menus[0].text = "Dialtone\n";
          menus[0].redraw = 1;
          return;
-   
+
       case 0: break;
-   
+
       default:
          mprintf((0, "xtapi undefined call state.\n"));
    }
-   
+
    return;
 }
 
@@ -1659,7 +1659,7 @@ void modem_wait_for_ring(int nitems, newmenu_item *menus, int *key, int citem)
       result = xtapi_device_answer();
       if (result != XTAPI_SUCCESS) return;
       *key = -2;
-   }  
+   }
 }
 
 
@@ -1691,7 +1691,7 @@ menu:
       com_save_settings();
       return;
    }
-   
+
    default_choice = 1;
 edit:
    // Edit an entry
@@ -1700,7 +1700,7 @@ edit:
 
    choice2 = newmenu_do1(NULL, TXT_EDIT_PHONE_ENTRY, 5, menu, NULL, default_choice);
    if (choice2 != -1)
-   {  
+   {
       strcpy(phone_name[choice], menu[1].text);
       strcpy(phone_num[choice], menu[3].text);
       sprintf(m[choice].text, "%d. %s \t", choice+1, phone_name[choice]);
@@ -1753,13 +1753,13 @@ menu:
 
    strcat(m[i-1].text, "\n");
 
-   m[NUM_PHONE_NUM].type = NM_TYPE_MENU; 
+   m[NUM_PHONE_NUM].type = NM_TYPE_MENU;
    m[NUM_PHONE_NUM].text = TXT_MANUAL_ENTRY;
    m[NUM_PHONE_NUM+1].text = TXT_EDIT_PHONEBOOK;
    m[NUM_PHONE_NUM+1].type = NM_TYPE_MENU;
 
    choice = newmenu_do1(NULL, TXT_SEL_NUMBER_DIAL, NUM_PHONE_NUM+2, m, NULL, 0);
-   if (choice == -1) 
+   if (choice == -1)
       return -1; // user abort
 
    if (choice == NUM_PHONE_NUM+1)
@@ -1804,7 +1804,7 @@ com_menu_poll(int nitems, newmenu_item *menus, int *key, int citem)
 
    com_process_mode = COM_PROCESS_MENU;
    old_game_mode = Game_mode;
-   other_menu_choice = 0;  
+   other_menu_choice = 0;
 
    com_process_input();
 
@@ -1840,8 +1840,8 @@ com_ready_to_start(void)
       com_send_choice(SELECTION_YES_START);
       other_menu_choice = SELECTION_STARTGAME;
       com_start_game();
-   }     
-   else 
+   }
+   else
    {
       com_send_choice(SELECTION_NO_START);
    }
@@ -1850,9 +1850,9 @@ com_ready_to_start(void)
 void
 com_process_other_menu_choice(void)
 {
-   if (other_menu_choice == SELECTION_STARTGAME)   
+   if (other_menu_choice == SELECTION_STARTGAME)
       com_ready_to_start();
-   else if (other_menu_choice == SELECTION_CLOSE_LINK) 
+   else if (other_menu_choice == SELECTION_CLOSE_LINK)
    {
       nm_messagebox(NULL, 1, TXT_OK, TXT_CLOSED_LINK);
       com_hangup();
@@ -1906,7 +1906,7 @@ newmenu:
    m[opt].type = NM_TYPE_TEXT; m[opt].text = level_text; opt++;
    m[opt].type = NM_TYPE_INPUT; m[opt].text_len = 4; m[opt].text = level; opt++;
    m[opt].type = NM_TYPE_TEXT; m[opt].text = TXT_MODE;
-   mode_opt = opt; 
+   mode_opt = opt;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_ANARCHY; m[opt].value=!(Game_mode & GM_MULTI_ROBOTS); m[opt].group = 0; opt++;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_ANARCHY_W_ROBOTS; m[opt].value=(!(Game_mode & GM_MULTI_COOP) && (Game_mode & GM_MULTI_ROBOTS)); m[opt].group = 0; opt++;
    m[opt].type = NM_TYPE_RADIO; m[opt].text = TXT_COOPERATIVE; m[opt].value=(Game_mode & GM_MULTI_COOP);m[opt].group = 0; opt++;
@@ -1919,10 +1919,10 @@ newmenu:
 
    m[opt].type = NM_TYPE_CHECK; m[opt].text = "Marker camera views"; m[opt].value=Netgame.Allow_marker_view; opt++;
    m[opt].type = NM_TYPE_CHECK; m[opt].text = "Indestructable lights"; m[opt].value=Netgame.AlwaysLighting; opt++;
-      
+
    allow_opt=opt;
    m[opt].type = NM_TYPE_MENU; m[opt].text = "Choose objects allowed"; opt++;
-   
+
 
 #ifndef SHAREWARE
    options_opt = opt;
@@ -1933,11 +1933,11 @@ newmenu:
    Assert(opt <= 12);
 
    GetChoice:
-   
+
    choice = newmenu_do1(NULL, TXT_SERIAL_GAME_SETUP, opt, m, NULL, 1);
 
-   
-   if (choice > -1) 
+
+   if (choice > -1)
    {
       if (choice==allow_opt)
          {
@@ -1949,7 +1949,7 @@ newmenu:
 
       if (m[mode_opt].value)
          Game_mode &= ~(GM_MULTI_COOP | GM_MULTI_ROBOTS);
-#ifdef SHAREWARE    
+#ifdef SHAREWARE
       else {
          nm_messagebox(NULL, 1, TXT_OK, TXT_ONLY_ANARCHY);
          goto newmenu;
@@ -1958,7 +1958,7 @@ newmenu:
       else if (anarchy_only) {
          if (m[mode_opt+3].value)
             Game_mode |= (GM_CAPTURE);
-         else 
+         else
           {
             nm_messagebox(NULL, 1, TXT_OK, TXT_ANARCHY_ONLY_MISSION);
             goto newmenu;
@@ -1973,7 +1973,7 @@ newmenu:
          Game_mode |= (GM_MULTI_COOP | GM_MULTI_ROBOTS);
       else if (m[mode_opt+3].value)
          Game_mode |= (GM_CAPTURE);
-      
+
 
 //    if (m[options_opt].value)
 //       Netgame.game_flags |= NETGAME_FLAG_SHOW_ID;
@@ -2001,7 +2001,7 @@ newmenu:
 
 int
 com_ask_to_start()
-{  
+{
    // Ask the other player if its OK to start now
 
    newmenu_item m[1];
@@ -2027,12 +2027,12 @@ menu:
          com_send_choice(SELECTION_YES_START);
          return(1);
       }
-      else 
+      else
          return(0);
    }
    goto menu;
 }
-      
+
 
 void
 com_start_game()
@@ -2043,9 +2043,9 @@ com_start_game()
 
    com_reset_game();
 
-   if (! ( (Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL) ) ) 
+   if (! ( (Game_mode & GM_MODEM) || (Game_mode & GM_SERIAL) ) )
       return;
-   
+
    Assert (master != -1);
 
    if (other_menu_choice != SELECTION_STARTGAME)
@@ -2064,13 +2064,13 @@ com_start_game()
          my_sync.difficulty = Difficulty_level;
          my_sync.game_mode = Game_mode;
          if (Game_mode & GM_CAPTURE)
-            my_sync.game_mode |=GM_UNKNOWN;  
+            my_sync.game_mode |=GM_UNKNOWN;
          memcpy(my_sync.callsign, Players[Player_num].callsign, CALLSIGN_LEN+1);
          my_sync.sync_time = control_invul_time;
          my_sync.game_flags = Netgame.game_flags;
          Netgame.control_invul_time = control_invul_time;
          memcpy ((&my_sync.game_flags)+1,(&Netgame.team_vector)+1,4);
-         
+
          com_sync(0);
          if (Game_mode & GM_CAPTURE)
             my_sync.game_mode &=GM_UNKNOWN;
@@ -2081,9 +2081,9 @@ com_start_game()
       OtherPlayer = 0;
       change_playernum_to(1);
       memcpy(my_sync.callsign, Players[Player_num].callsign, CALLSIGN_LEN+1);
-   
+
       my_sync.level_num = 1;
-      
+
       com_sync(0);
       if (com_process_mode == COM_PROCESS_NORMAL)
       {
@@ -2097,7 +2097,7 @@ com_start_game()
          }
 
          memcpy ((&Netgame.team_vector)+1,(&other_sync.game_flags)+1,4);
-         
+
 #ifndef SHAREWARE
          Netgame.game_flags = other_sync.game_flags;
          Netgame.control_invul_time = other_sync.sync_time;
@@ -2147,7 +2147,7 @@ serial_sync_abort(int val)
 // com_send_data(sendbuf, 3, 1);
 //#endif
 }
-   
+
 int
 com_level_sync(void)
 {
@@ -2157,7 +2157,7 @@ com_level_sync(void)
 
    Function_mode = FMODE_MENU; // Prevent the game loop from running during the menus!
 
-   // At this point, the new level is loaded but the extra objects or players have not 
+   // At this point, the new level is loaded but the extra objects or players have not
    // been removed
 
    my_sync.level_num = Current_level_num;
@@ -2244,7 +2244,7 @@ com_level_sync(void)
    return(0);
 }
 
-   
+
 void
 com_send_end_sync(void)
 {
@@ -2305,13 +2305,13 @@ com_process_sync(char *buf, int len)
 
          memcpy(&other_sync, buf, sizeof(com_sync_pack)-3);
 //#ifndef SHAREWARE
-         if (other_sync.sync_id != my_sync.sync_id) 
+         if (other_sync.sync_id != my_sync.sync_id)
          {
             mprintf((0, "Other sync invalid id, %d != %d.\n", other_sync.sync_id, my_sync.sync_id));
          }
          else
 //#endif
-         {        
+         {
             mprintf((0, "got other sync size %d.\n", sizeof(com_sync_pack)-3));
             got_sync = 1;
             com_send_end_sync();
@@ -2329,7 +2329,7 @@ com_process_sync(char *buf, int len)
       com_process_mode = COM_PROCESS_NORMAL;
    }
 }
-   
+
 void
 com_send_sync(void)
 {
@@ -2367,7 +2367,7 @@ void com_sync_poll(int nitems, newmenu_item *menus, int *key, int citem)
    }
 
    Assert(com_process_mode == COM_PROCESS_SYNC);
-      
+
    com_process_input();
 
    if (com_process_mode == COM_PROCESS_NORMAL)
@@ -2414,13 +2414,13 @@ com_sync(int id)
 
    m[0].type=NM_TYPE_TEXT; m[0].text=TXT_ESC_ABORT;
    m[1].type = m[2].type = NM_TYPE_MENU;
-   m[1].text = TXT_YES; 
+   m[1].text = TXT_YES;
    m[2].text = TXT_NO;
 
 repeat:
    choice = newmenu_do(NULL, TXT_WAIT_OPPONENT, 1, m, com_sync_poll);
 
-   if (choice == -1) 
+   if (choice == -1)
    {
       choice = newmenu_do1(NULL, TXT_SURE_ABORT_SYNC, 2, m+1, com_sync_poll, 1);
       if (choice == -1)
@@ -2495,7 +2495,7 @@ int ReadModemList ()
        }
       else if (c==13)
        ;
-      else if (c==10) 
+      else if (c==10)
        {
         ModemStrings[num][i]=0;
         namemode=1;
@@ -2531,28 +2531,28 @@ int ReadModemList ()
           if (i<INIT_STRING_LEN)
             ModemStrings[num][i++]=c;
          }
-       }    
+       }
     }  // end while
 
    ModemStrings[num][i]=0;    //terminate in case no final newline
    fclose (MyFile);
    return (num);
-  }        
-    
-   
+  }
+
+
 void com_choose_string ()
- { 
+ {
   int num,i,choice;
   newmenu_item m[MAX_MODEMS];
 
-  if ((num=ReadModemList())==0)   
+  if ((num=ReadModemList())==0)
    {
     nm_messagebox ("Error",1,TXT_OK,"No valid modem file found!");
     return;
    }
-  
+
   mprintf ((0,"Number of strings=%d\n",num));
-  
+
 
   for (i=0;i<num;i++)
   {

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -45,17 +45,17 @@ void ui_draw_icon( UI_GADGET_ICON * icon )
 {
    int height, width, avg;
    int x, y;
-   
-   
+
+
    if ((icon->status==1) || (icon->position != icon->oldposition))
    {
       icon->status = 0;
 
       ui_mouse_hide();
-   
+
       gr_set_current_canvas( icon->canvas );
       gr_get_string_size(icon->text, &width, &height, &avg );
-   
+
       x = ((icon->width-1)/2)-((width-1)/2);
       y = ((icon->height-1)/2)-((height-1)/2);
 
@@ -69,15 +69,15 @@ void ui_draw_icon( UI_GADGET_ICON * icon )
       {
          // Draw part out
          ui_draw_box_in1( 0, 0, icon->width, icon->height );
-         x += 1; y += 1;   
+         x += 1; y += 1;
       }
       else
       {
          // Draw released!
          ui_draw_box_out( 0, 0, icon->width, icon->height );
       }
-   
-      gr_set_fontcolor( CBLACK, -1 );     
+
+      gr_set_fontcolor( CBLACK, -1 );
       gr_ustring( x, y, icon->text );
 
       ui_mouse_show();

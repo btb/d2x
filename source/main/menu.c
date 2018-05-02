@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -95,7 +95,7 @@ static char rcsid[] = "$Id: menu.c 2.152 1997/01/24 18:08:33 jeremy Exp $";
 //char *menu_detail_text[] = { "Lowest", "Low", "Medium", "High", "Highest", "", "Custom..." };
 
 #define MENU_NEW_GAME            0
-#define MENU_GAME                               1 
+#define MENU_GAME                               1
 #define MENU_EDITOR                                     2
 #define MENU_VIEW_SCORES                        3
 #define MENU_QUIT                4
@@ -174,7 +174,7 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
       gr_set_fontcolor(BM_XRGB(6,6,6),-1);
 
       gr_get_string_size("V2.2", &w, &h, &aw );
-   
+
       WIN(DDGRLOCK(dd_grd_curcanv));
          gr_printf(0x8000,grd_curcanv->cv_bitmap.bm_h-GAME_FONT->ft_h-2,TXT_COPYRIGHT);
          #ifdef MACINTOSH  // print out fix level as well if it exists
@@ -206,7 +206,7 @@ void autodemo_menu_check(int nitems, newmenu_item * items, int *last_key, int ci
 
       WIN(DDGRUNLOCK(dd_grd_curcanv));
    }
-   
+
    // Don't allow them to hit ESC in the main menu.
    if (*last_key==KEY_ESC) *last_key = 0;
 
@@ -303,7 +303,7 @@ void create_main_menu(newmenu_item *m, int *menu_choice, int *callers_num_option
 }
 
 //returns number of item chosen
-int DoMenu() 
+int DoMenu()
 {
    int menu_choice[25];
    newmenu_item m[25];
@@ -315,7 +315,7 @@ int DoMenu()
       RegisterPlayer();
       return 0;
    }
-   
+
    if ((Game_mode & GM_SERIAL) || (Game_mode & GM_MODEM)) {
       do_option(MENU_START_SERIAL);
       return 0;
@@ -325,7 +325,7 @@ int DoMenu()
 
    do {
       keyd_time_when_last_pressed = timer_get_fixed_seconds();                // .. 20 seconds from now!
-      if (main_menu_choice < 0 )      main_menu_choice = 0;           
+      if (main_menu_choice < 0 )      main_menu_choice = 0;
       Menu_draw_copyright = 1;
       main_menu_choice = newmenu_do2( "", NULL, num_options, m, autodemo_menu_check, main_menu_choice, Menu_pcx_name);
       if ( main_menu_choice > -1 ) do_option(menu_choice[main_menu_choice]);
@@ -334,7 +334,7 @@ int DoMenu()
 
 //      if (main_menu_choice != -2)
 //              do_auto_demo = 0;               // No more auto demos
-   if ( Function_mode==FMODE_GAME )        
+   if ( Function_mode==FMODE_GAME )
       gr_palette_fade_out( gr_palette, 32, 0 );
 
    return main_menu_choice;
@@ -348,7 +348,7 @@ extern void show_order_form(void);      // John didn't want this in inferno.h so
 #endif
 
 //returns flag, true means quit menu
-void do_option ( int select) 
+void do_option ( int select)
 {
    switch (select) {
       case MENU_NEW_GAME:
@@ -357,7 +357,7 @@ void do_option ( int select)
       case MENU_GAME:
          break;
       case MENU_DEMO_PLAY:
-         { 
+         {
             char demo_file[16];
             if (newmenu_get_filename( TXT_SELECT_DEMO, ".\\demos\\*.dem", demo_file, 1 ))     {
                newdemo_start_playback(demo_file);
@@ -469,13 +469,13 @@ void do_option ( int select)
          network_join_game();
          break;
 #endif
-      
+
       case MENU_START_TCP_NETGAME:
       case MENU_JOIN_TCP_NETGAME:
          nm_messagebox (TXT_SORRY,1,TXT_OK,"Not available in shareware version!");
          // DoNewIPAddress();
          break;
-                  
+
       case MENU_START_SERIAL:
          com_main_menu();
          break;
@@ -488,7 +488,7 @@ void do_option ( int select)
       case MENU_SHOW_CREDITS:
          gr_palette_fade_out( gr_palette,32,0);
          songs_stop_all();
-         credits_show(NULL); 
+         credits_show(NULL);
          break;
       default:
          Error("Unknown option %d in do_option",select);
@@ -512,7 +512,7 @@ int do_difficulty_menu()
 
    if (s > -1 )    {
       if (s != Difficulty_level)
-      {       
+      {
          Player_default_difficulty = s;
          write_player_file();
       }
@@ -658,7 +658,7 @@ void set_custom_detail_vars(void)
    Max_linear_depth_objects = Max_linear_depths_objects[Object_detail];
 
    digi_set_max_channels( Max_sound_channels[ SoundChannels ] );
-   
+
 }
 
 #define  DL_MAX   10
@@ -764,20 +764,20 @@ dmi display_mode_info[7] = {
       #ifdef WINDOWS
          {SM95_320x200x8X, 320, 200, VR_NONE, VRF_ALLOW_COCKPIT},
          {SM95_640x480x8, 640, 480, VR_NONE, VRF_COMPATIBLE_MENUS+VRF_ALLOW_COCKPIT},
-         {SM95_640x400x8, 640, 400, VR_NONE, VRF_COMPATIBLE_MENUS }, 
+         {SM95_640x400x8, 640, 400, VR_NONE, VRF_COMPATIBLE_MENUS },
          {SM95_800x600x8, 800, 600, VR_NONE, VRF_COMPATIBLE_MENUS },
-         {SM95_1024x768x8, 1024, 768, VR_NONE, VRF_COMPATIBLE_MENUS }, 
+         {SM95_1024x768x8, 1024, 768, VR_NONE, VRF_COMPATIBLE_MENUS },
       #else
-         {SM_320x200C,   320, 200, VR_NONE, VRF_ALLOW_COCKPIT+VRF_COMPATIBLE_MENUS}, 
+         {SM_320x200C,   320, 200, VR_NONE, VRF_ALLOW_COCKPIT+VRF_COMPATIBLE_MENUS},
          {SM_640x480V,   640, 480, VR_NONE, VRF_COMPATIBLE_MENUS+VRF_ALLOW_COCKPIT},
          {SM_320x400U,   320, 400, VR_NONE, VRF_USE_PAGING},
-         {SM_640x400V,   640, 400, VR_NONE, VRF_COMPATIBLE_MENUS}, 
-         {SM_800x600V,   800, 600, VR_NONE, VRF_COMPATIBLE_MENUS}, 
-         {SM_1024x768V, 1024, 768, VR_NONE, VRF_COMPATIBLE_MENUS},   
-         {SM_1280x1024V,1280,1024, VR_NONE, VRF_COMPATIBLE_MENUS}, 
+         {SM_640x400V,   640, 400, VR_NONE, VRF_COMPATIBLE_MENUS},
+         {SM_800x600V,   800, 600, VR_NONE, VRF_COMPATIBLE_MENUS},
+         {SM_1024x768V, 1024, 768, VR_NONE, VRF_COMPATIBLE_MENUS},
+         {SM_1280x1024V,1280,1024, VR_NONE, VRF_COMPATIBLE_MENUS},
       #endif
 };
- 
+
 WIN(extern int DD_Emulation);
 
 
@@ -833,13 +833,13 @@ void set_display_mode(int mode)
 void do_screen_res_menu()
 {
    #define N_SCREENRES_ITEMS 6
-   
+
    newmenu_item m[N_SCREENRES_ITEMS];
    int citem, i, n_items, odisplay_mode, result;
 
    if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE))    //special VR mode
-   {           
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+   {
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "You may not change screen\n"
             "resolution when VR modes enabled.");
       return;
@@ -873,21 +873,21 @@ void do_screen_res_menu()
 
 #ifdef SHAREWARE
    if (i > 1)
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
          "High resolution modes are\n"
          "only available in the\n"
          "Commercial version of Descent 2.");
    return;
 #else
    result = vga_check_mode(display_mode_info[i].VGA_mode);
-   
+
    if (result) {
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "Cannot set requested\n"
             "mode on this video card.");
       return;
    }
-   
+
    set_display_mode(i);
    reset_cockpit();
 #endif
@@ -906,14 +906,14 @@ void do_screen_res_menu()
    int result;
 
    if ((Current_display_mode == -1)||(VR_render_mode != VR_NONE)) {           //special VR mode
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "You may not change screen\n"
             "resolution when VR modes enabled.");
       return;
    }
 
    m[0].type=NM_TYPE_TEXT;  m[0].value=0;               m[0].text="Modes w/ Cockpit:";
-   
+
 #ifdef WINDOWS
    if (Platform_system == WINNT_PLATFORM || DD_Emulation) {
       m[1].type=NM_TYPE_TEXT; m[1].value=0; m[1].text=" 320x200 N/A";
@@ -942,7 +942,7 @@ void do_screen_res_menu()
 #endif
 
    citem = Current_display_mode+1;
-   
+
 #ifdef WINDOWS
    if (citem == 3) citem++;            // if 320x400 in DOS, make it look like 640x400
 #else
@@ -970,21 +970,21 @@ void do_screen_res_menu()
 
 #ifndef WINDOWS
    if (((i != 0) && (i != 2) && !MenuHiresAvailable) || vga_check_mode(display_mode_info[i].VGA_mode)) {
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "Cannot set requested\n"
             "mode on this video card.");
       return;
    }
 #else
-   if (i >= 3) 
+   if (i >= 3)
       result = DDCheckMode(display_mode_info[i-1].VGA_mode);
-   else 
+   else
       result = DDCheckMode(display_mode_info[i].VGA_mode);
 
    if (result) {
-      nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+      nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "Mode not supported by your\n"
-            "DirectDraw driver.\n", 
+            "DirectDraw driver.\n",
             "Using default mode for gameplay.\n");
       return;
    }
@@ -992,7 +992,7 @@ void do_screen_res_menu()
 #endif
    #ifdef SHAREWARE
       if (i != 0)
-         nm_messagebox(TXT_SORRY, 1, TXT_OK, 
+         nm_messagebox(TXT_SORRY, 1, TXT_OK,
             "High resolution modes are\n"
             "only available in the\n"
             "Commercial version of Descent 2.");
@@ -1023,7 +1023,7 @@ void do_new_game_menu()
       default_mission = 0;
       for (i=0;i<n_missions;i++) {
          m[i] = Mission_list[i].mission_name;
-         if ( !stricmp( m[i], config_last_mission ) )    
+         if ( !stricmp( m[i], config_last_mission ) )
             default_mission = i;
       }
 
@@ -1033,9 +1033,9 @@ void do_new_game_menu()
          return;         //abort!
 
       strcpy(config_last_mission, m[new_mission_num]  );
-      
+
       if (!load_mission(new_mission_num)) {
-         nm_messagebox( NULL, 1, TXT_OK, "Error in Mission file"); 
+         nm_messagebox( NULL, 1, TXT_OK, "Error in Mission file");
          return;
       }
    }
@@ -1079,7 +1079,7 @@ try_again:
 
       if (!(new_level_num>0 && new_level_num<=player_highest_level)) {
          m[0].text = TXT_ENTER_TO_CONT;
-         nm_messagebox( NULL, 1, TXT_OK, TXT_INVALID_LEVEL); 
+         nm_messagebox( NULL, 1, TXT_OK, TXT_INVALID_LEVEL);
          goto try_again;
       }
    }
@@ -1138,18 +1138,18 @@ void do_options_menu()
          m[5].text      = TXT_BRIGHTNESS;
          m[5].value     = gr_palette_get_gamma();
          m[5].min_value = 0;
-         m[5].max_value = 8; 
+         m[5].max_value = 8;
       }
       else
       {
          m[ 5].type = NM_TYPE_TEXT;   m[ 5].text="";
       }
-   
+
    #else
       m[ 5].type = NM_TYPE_TEXT;   m[ 5].text="";
    #endif
 #else
-      m[ 5].type = NM_TYPE_SLIDER; m[ 5].text=TXT_BRIGHTNESS; m[5].value=gr_palette_get_gamma();m[5].min_value=0; m[5].max_value=8; 
+      m[ 5].type = NM_TYPE_SLIDER; m[ 5].text=TXT_BRIGHTNESS; m[5].value=gr_palette_get_gamma();m[5].min_value=0; m[5].max_value=8;
 #endif
 
 
@@ -1181,9 +1181,9 @@ void do_options_menu()
       m[ 9].type = NM_TYPE_MENU;   m[ 9].text="Primary autoselect ordering...";
       m[10].type = NM_TYPE_MENU;   m[10].text="Secondary autoselect ordering...";
       m[11].type = NM_TYPE_MENU;   m[11].text="Toggles...";
-            
+
       i = newmenu_do1( NULL, TXT_OPTIONS, sizeof(m)/sizeof(*m), m, options_menuset, i );
-         
+
       switch(i)       {
          case  0: do_sound_menu();        break;
          case  2: joydefs_config();       break;
@@ -1208,7 +1208,7 @@ WIN(static BOOL windigi_driver_off=FALSE);
 
 void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 {
-   nitems=nitems;          
+   nitems=nitems;
    *last_key = *last_key;
 
    if ( Config_digi_volume != items[0].value )     {
@@ -1221,8 +1221,8 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
             Sleep(500);
             windigi_driver_off = FALSE;
          }
-      #endif         
-      
+      #endif
+
       #ifndef MACINTOSH
          digi_set_digi_volume( (Config_digi_volume*32768)/8 );
       #else
@@ -1271,7 +1271,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 
    // don't enable redbook for a non-apple demo version of the shareware demo
    #if !defined(SHAREWARE) || ( defined(SHAREWARE) && defined(APPLE_DEMO) )
-      
+
    if (Config_redbook_volume != items[2].value )   {
       Config_redbook_volume = items[2].value;
       set_redbook_volume(Config_redbook_volume);
@@ -1298,7 +1298,7 @@ void sound_menuset(int nitems, newmenu_item * items, int *last_key, int citem )
 
          if (items[4].value && !Redbook_playing) {
          #ifdef WINDOWS
-            if (RBCDROM_State == -1) 
+            if (RBCDROM_State == -1)
                nm_messagebox (TXT_SORRY,1,TXT_OK,"Cannot start CD Music.\nAnother application is\nusing the CD player.\n");
             else // link to next code line!
          #endif
@@ -1332,12 +1332,12 @@ void do_sound_menu()
  #endif
 
    do {
-      m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8; 
-      m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8; 
+      m[ 0].type = NM_TYPE_SLIDER; m[ 0].text=TXT_FX_VOLUME; m[0].value=Config_digi_volume;m[0].min_value=0; m[0].max_value=8;
+      m[ 1].type = (Redbook_playing?NM_TYPE_TEXT:NM_TYPE_SLIDER); m[ 1].text="MIDI music volume"; m[1].value=Config_midi_volume;m[1].min_value=0; m[1].max_value=8;
 
    #ifdef WINDOWS
       if (!wmidi_support_volchange() && !Redbook_playing) {
-         m[1].type = NM_TYPE_CHECK; 
+         m[1].type = NM_TYPE_CHECK;
          m[1].text = "MIDI MUSIC";
          if (Config_midi_volume) m[1].value = 1;
       }
@@ -1348,13 +1348,13 @@ void do_sound_menu()
          m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
          m[ 4].type = NM_TYPE_TEXT; m[ 4].text="";
          #ifdef MACINTOSH
-            m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8; 
-      
+            m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
+
             #ifdef APPLE_DEMO
                m[ 2].type = (Redbook_playing?NM_TYPE_SLIDER:NM_TYPE_TEXT); m[ 2].text="CD music volume"; m[2].value=Config_redbook_volume;m[2].min_value=0; m[2].max_value=8;
                m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
             #endif
-      
+
          #endif
 
       #else    // ifdef SHAREWARE
@@ -1363,14 +1363,14 @@ void do_sound_menu()
          #ifndef MACINTOSH
             m[ 3].type = NM_TYPE_TEXT; m[ 3].text="";
          #else
-            m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8; 
+            m[ 3].type = NM_TYPE_SLIDER; m[ 3].text="Sound Manager Volume"; m[3].value=Config_master_volume;m[3].min_value=0; m[3].max_value=8;
          #endif
-      
+
          m[ 4].type = NM_TYPE_CHECK;  m[ 4].text="CD Music (Redbook) enabled"; m[4].value=(Redbook_playing!=0);
       #endif
-   
-      m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed; 
-            
+
+      m[ 5].type = NM_TYPE_CHECK;  m[ 5].text=TXT_REVERSE_STEREO; m[5].value=Config_channels_reversed;
+
       i = newmenu_do1( NULL, "Sound Effects & Music", sizeof(m)/sizeof(*m), m, sound_menuset, i );
 
       Redbook_enabled = m[4].value;
@@ -1427,7 +1427,7 @@ void do_toggles_menu()
          {
             ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on);
          }
-      #else 
+      #else
          ADD_CHECK(0, "Ship auto-leveling", Auto_leveling_on);
       #endif
       ADD_CHECK(1, "Show reticle", Reticle_on);
@@ -1452,7 +1452,7 @@ void do_toggles_menu()
       else
       #endif      // note link to if
          i = newmenu_do1( NULL, "Toggles", N_TOGGLE_ITEMS, m, NULL, i );
-         
+
       Auto_leveling_on        = m[0].value;
       Reticle_on              = m[1].value;
       Missile_view_enabled       = m[2].value;
@@ -1503,10 +1503,10 @@ void do_multi_player_menu()
       ADD_ITEM(TXT_MODEM_GAME, MENU_START_SERIAL, -1);
 
       choice = newmenu_do1( NULL, TXT_MULTIPLAYER, num_options, m, NULL, choice );
-      
-      if ( choice > -1 )      
+
+      if ( choice > -1 )
          do_option(menu_choice[choice]);
-   
+
       if (old_game_mode != Game_mode)
          break;          // leave menu
 
@@ -1533,5 +1533,5 @@ void DoNewIPAddress ()
  }
 
 
-  
+
 

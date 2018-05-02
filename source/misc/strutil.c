@@ -7,10 +7,10 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -24,7 +24,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 char *strdup(char *s)
 {
    char *new_s;
-   
+
    new_s = malloc(strlen(s)+1);
    strcpy(new_s, s);
    return new_s;
@@ -73,7 +73,7 @@ void strrev( char *s1 )
 {
    int i,l;
    char *s2;
-   
+
    s2 = (char *)malloc(strlen(s1) + 1);
    strcpy(s2, s1);
    l = strlen(s2);
@@ -99,12 +99,12 @@ void _splitpath(char *name, char *drive, char *path, char *base, char *ext)
          return;
    } else if (drive)
       *drive = '\0';
-   
+
    s = strrchr(p, '\\');
    if ( s != NULL) {
       if (path) {
          char c;
-         
+
          c = *(s+1);
          *(s+1) = '\0';
          strcpy(path, p);
@@ -128,16 +128,16 @@ void _splitpath(char *name, char *drive, char *path, char *base, char *ext)
          return;
    } else if (base)
       *base = '\0';
-      
+
    if (ext)
-      strcpy(ext, p);      
+      strcpy(ext, p);
 }
 
 #if 0
 void main()
 {
    char drive[10], path[50], name[16], ext[5];
-   
+
    drive[0] = path[0] = name[0] = ext[0] = '\0';
    _splitpath("f:\\tmp\\x.out", drive, path, name, ext);
    drive[0] = path[0] = name[0] = ext[0] = '\0';

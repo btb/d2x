@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -36,7 +36,7 @@ static char rcsid[] = "$Id: effects.c 2.2 1995/12/18 11:10:52 champaign Exp $";
 int Num_effects;
 eclip Effects[MAX_EFFECTS];
 
-void init_special_effects() 
+void init_special_effects()
 {
    int i;
 
@@ -80,7 +80,7 @@ void do_special_effects()
       while (ec->time_left < 0) {
 
          ec->time_left += ec->vc.frame_time;
-         
+
          ec->frame_count++;
          if (ec->frame_count >= ec->vc.num_frames) {
             if (ec->flags & EF_ONE_SHOT) {
@@ -114,7 +114,7 @@ void do_special_effects()
          // *ec->bm_ptr = &GameBitmaps[ec->vc.frames[ec->frame_count].index];
          if (ec->changing_wall_texture != -1)
             Textures[ec->changing_wall_texture] = ec->vc.frames[ec->frame_count];
-   
+
          if (ec->changing_object_texture != -1)
             ObjBitmaps[ec->changing_object_texture] = ec->vc.frames[ec->frame_count];
       }
@@ -125,12 +125,12 @@ void do_special_effects()
 void restore_effect_bitmap_icons()
 {
    int i;
-   
+
    for (i=0;i<Num_effects;i++)
       if (! (Effects[i].flags & EF_CRITICAL))   {
          if (Effects[i].changing_wall_texture != -1)
             Textures[Effects[i].changing_wall_texture] = Effects[i].vc.frames[0];
-   
+
          if (Effects[i].changing_object_texture != -1)
             ObjBitmaps[Effects[i].changing_object_texture] = Effects[i].vc.frames[0];
       }
@@ -142,7 +142,7 @@ void restore_effect_bitmap_icons()
 void stop_effect(int effect_num)
 {
    eclip *ec = &Effects[effect_num];
-   
+
    //Assert(ec->bm_ptr != -1);
 
    ec->flags |= EF_STOPPED;
@@ -152,7 +152,7 @@ void stop_effect(int effect_num)
 
    if (ec->changing_wall_texture != -1)
       Textures[ec->changing_wall_texture] = ec->vc.frames[0];
-   
+
    if (ec->changing_object_texture != -1)
       ObjBitmaps[ec->changing_object_texture] = ec->vc.frames[0];
 

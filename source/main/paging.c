@@ -9,7 +9,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -60,7 +60,7 @@ void paging_touch_vclip_w( vclip * vc )
    int i;
 
    for (i=0; i<vc->num_frames; i++ )   {
-      if ( GameBitmaps[(vc->frames[i]).index].bm_flags & BM_FLAG_PAGED_OUT) 
+      if ( GameBitmaps[(vc->frames[i]).index].bm_flags & BM_FLAG_PAGED_OUT)
          piggy_bitmap_page_in_w( vc->frames[i],1 );
    }
 }
@@ -130,13 +130,13 @@ void paging_touch_model( int modelnum )
 void paging_touch_weapon( int weapon_type )
 {
    // Page in the robot's weapons.
-   
+
    if ( (weapon_type < 0) || (weapon_type > N_weapon_types) ) return;
 
    if ( Weapon_info[weapon_type].picture.index )   {
       PIGGY_PAGE_IN( Weapon_info[weapon_type].picture );
-   }     
-   
+   }
+
    if ( Weapon_info[weapon_type].flash_vclip > -1 )
       paging_touch_vclip(&Vclip[Weapon_info[weapon_type].flash_vclip]);
    if ( Weapon_info[weapon_type].wall_hit_vclip > -1 )
@@ -208,7 +208,7 @@ void paging_touch_object( object * obj )
             paging_touch_model(obj->rtype.pobj_info.model_num);
          break;
 
-      case RT_POWERUP: 
+      case RT_POWERUP:
          if ( obj->rtype.vclip_info.vclip_num > -1 ) {
       //@@  #ifdef WINDOWS
       //@@     paging_touch_vclip_w(&Vclip[obj->rtype.vclip_info.vclip_num]);
@@ -224,15 +224,15 @@ void paging_touch_object( object * obj )
 
       case RT_WEAPON_VCLIP: break;
 
-      case RT_HOSTAGE: 
+      case RT_HOSTAGE:
          paging_touch_vclip(&Vclip[obj->rtype.vclip_info.vclip_num]);
          break;
 
       case RT_LASER: break;
    }
 
-   switch (obj->type) { 
-   case OBJ_PLAYER:  
+   switch (obj->type) {
+   case OBJ_PLAYER:
       v = get_explosion_vclip(obj, 0);
       if ( v > -1 )
          paging_touch_vclip(&Vclip[v]);
@@ -249,7 +249,7 @@ void paging_touch_object( object * obj )
    }
 }
 
-   
+
 
 void paging_touch_side( segment * segp, int sidenum )
 {
@@ -257,7 +257,7 @@ void paging_touch_side( segment * segp, int sidenum )
 
    if (!(WALL_IS_DOORWAY(segp,sidenum) & WID_RENDER_FLAG))
       return;
-   
+
    tmap1 = segp->sides[sidenum].tmap_num;
    paging_touch_wall_effects(tmap1);
    tmap2 = segp->sides[sidenum].tmap_num2;
@@ -322,7 +322,7 @@ void paging_touch_segment(segment * segp)
    int objnum;
    segment2 *seg2p = &Segment2s[segp-Segments];
 
-   if ( seg2p->special == SEGMENT_IS_ROBOTMAKER )  
+   if ( seg2p->special == SEGMENT_IS_ROBOTMAKER )
       paging_touch_robot_maker(segp);
 
 // paging_draw_orb();
@@ -359,7 +359,7 @@ void paging_touch_all()
 {
    int black_screen;
    int s;
-   
+
    stop_time();
 
    black_screen = gr_palette_faded_out;
@@ -368,17 +368,17 @@ void paging_touch_all()
       gr_clear_canvas( BM_XRGB(0,0,0) );
       gr_palette_load( gr_palette );
    }
-   
+
 //@@  show_boxed_message(TXT_LOADING);
 
    mprintf(( 0, "Loading all textures in mine..." ));
    for (s=0; s<=Highest_segment_index; s++)  {
       paging_touch_segment( &Segments[s] );
-   }  
+   }
    paging_touch_walls();
 
    for ( s=0; s < N_powerup_types; s++ )  {
-      if ( Powerup_info[s].vclip_num > -1 )  
+      if ( Powerup_info[s].vclip_num > -1 )
          paging_touch_vclip(&Vclip[Powerup_info[s].vclip_num]);
    }
 
@@ -387,7 +387,7 @@ void paging_touch_all()
    }
 
    for ( s=0; s < N_powerup_types; s++ )  {
-      if ( Powerup_info[s].vclip_num > -1 )  
+      if ( Powerup_info[s].vclip_num > -1 )
          paging_touch_vclip(&Vclip[Powerup_info[s].vclip_num]);
    }
 
@@ -403,7 +403,7 @@ void paging_touch_all()
 
 #ifdef PSX_BUILD_TOOLS
 
-   //PSX STUFF 
+   //PSX STUFF
    paging_touch_walls();
    for(s=0; s<=Highest_object_index; s++) {
       paging_touch_object(&Objects[s]);
@@ -437,7 +437,7 @@ void paging_touch_all()
 
       //cmp added so that .damage bitmaps are included for paged-in lights of the current level
       for (i=0; i<MAX_TEXTURES;i++) {
-         if(Textures[i].index > 0 && Textures[i].index < MAX_BITMAP_FILES && 
+         if(Textures[i].index > 0 && Textures[i].index < MAX_BITMAP_FILES &&
             Used[Textures[i].index] > 0 &&
             TmapInfo[i].destroyed > 0 && TmapInfo[i].destroyed < MAX_BITMAP_FILES) {
             Used[Textures[TmapInfo[i].destroyed].index] += 1;
@@ -475,7 +475,7 @@ void paging_touch_all()
          // cmp debug
          //piggy_get_bitmap_name(i,fname);
 
-         if (GameBitmaps[i].bm_flags & BM_FLAG_PAGED_OUT ) 
+         if (GameBitmaps[i].bm_flags & BM_FLAG_PAGED_OUT )
             paged_in = 0;
 
 //                      if (GameBitmapXlat[i]!=i)
@@ -485,7 +485,7 @@ void paging_touch_all()
             paged_in = 0;
          if ( (i==47) || (i==48) )               // Mark red mplayer ship textures as paged in.
             paged_in = 1;
-   
+
          if ( !paged_in )
             fprintf( fp, "0,\t// Bitmap %d (%s)\n", i, "test\0"); // cmp debug fname );
          else

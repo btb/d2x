@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -35,7 +35,7 @@ int dpmi_find_dos_memory()
    union REGS r;
 
    memset(&r,0,sizeof(r));
-   r.x.eax = 0x0100;          // DPMI allocate DOS memory 
+   r.x.eax = 0x0100;          // DPMI allocate DOS memory
    r.x.ebx = 0xffff; // Number of paragraphs requested
    int386 (0x31, &r, &r);
    //if ( (r.x.eax & 0xffff) == 0x08 )
@@ -51,7 +51,7 @@ void *dpmi_real_malloc( int size, ushort *selector )
    union REGS r;
 
    memset(&r,0,sizeof(r));
-   r.x.eax = 0x0100;          // DPMI allocate DOS memory 
+   r.x.eax = 0x0100;          // DPMI allocate DOS memory
    r.x.ebx = (size + 15) >> 4;   // Number of paragraphs requested
    int386 (0x31, &r, &r);
 
@@ -69,7 +69,7 @@ void dpmi_real_free( ushort selector )
    union REGS r;
 
    memset(&r,0,sizeof(r));
-   r.x.eax = 0x0101;          // DPMI free DOS memory 
+   r.x.eax = 0x0101;          // DPMI free DOS memory
    r.x.ebx = selector;        // Selector to free
    int386 (0x31, &r, &r);
 }
@@ -114,7 +114,7 @@ void dpmi_real_call(dpmi_real_regs * rregs)
          dos_stack_top = &dos_stack[DOS_STACK_SIZE];
       }
    }
-   
+
    // Give this puppy a stack!!!
    if ( dos_stack_top ) {
       rregs->ss = DPMI_real_segment(dos_stack_top);
@@ -284,7 +284,7 @@ int dpmi_init(int verbose)
    mem_data mi;
 
    dpmi_dos_memory = dpmi_find_dos_memory();
-   
+
    dpmi_dos_buffer = dpmi_real_malloc( 1024, &dpmi_dos_selector);
    if (!dpmi_dos_buffer) {
       dpmi_dos_selector = 0;
@@ -326,7 +326,7 @@ int dpmi_init(int verbose)
       dpmi_physical_memory = 16*1024*1024;      // Assume 16 MB
       dpmi_available_memory = 16*1024*1024;     // Assume 16 MB
    }
-   
+
    if (!dpmi_lock_region( _GETDS, 4096 )) {
       Error( "Can't lock _GETDS" );
    }
@@ -358,7 +358,7 @@ int dpmi_set_pm_handler(unsigned intnum, void far * isr )
    regs.w.cx = FP_SEG(isr);
    regs.x.edx = FP_OFF(isr);
    int386( 0x31, &regs, &regs );
-   if (!regs.w.cflag)   
+   if (!regs.w.cflag)
       return 0;
    return 1;
 }

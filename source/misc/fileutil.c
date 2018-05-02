@@ -7,10 +7,10 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -23,7 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 int filelength(int fd)
 {
    int cur_pos, end_pos;
-   
+
    cur_pos = lseek(fd, 0, SEEK_CUR);
    lseek(fd, 0, SEEK_END);
    end_pos = lseek(fd, 0, SEEK_CUR);
@@ -34,7 +34,7 @@ int filelength(int fd)
 byte read_byte(CFILE *fp)
 {
    byte b;
-   
+
    cfread(&b, sizeof(byte), 1, fp);
    return b;
 }
@@ -42,7 +42,7 @@ byte read_byte(CFILE *fp)
 short read_short(CFILE *fp)
 {
    short s;
-   
+
    cfread(&s, sizeof(short), 1, fp);
    return (s);
 }
@@ -50,7 +50,7 @@ short read_short(CFILE *fp)
 short read_short_swap(CFILE *fp)
 {
    short s;
-   
+
    cfread(&s, sizeof(short), 1, fp);
    return swapshort(s);
 }
@@ -58,7 +58,7 @@ short read_short_swap(CFILE *fp)
 int read_int(CFILE *fp)
 {
    uint i;
-   
+
    cfread(&i, sizeof(uint), 1, fp);
    return i;
 }
@@ -66,7 +66,7 @@ int read_int(CFILE *fp)
 int read_int_swap(CFILE *fp)
 {
    uint i;
-   
+
    cfread(&i, sizeof(uint), 1, fp);
    return swapint(i);
 }
@@ -74,7 +74,7 @@ int read_int_swap(CFILE *fp)
 fix read_fix(CFILE *fp)
 {
    fix f;
-   
+
    cfread(&f, sizeof(fix), 1, fp);
    return f;
 }
@@ -82,7 +82,7 @@ fix read_fix(CFILE *fp)
 fix read_fix_swap(CFILE *fp)
 {
    fix f;
-   
+
    cfread(&f, sizeof(fix), 1, fp);
    return (fix)swapint((uint)f);
 }

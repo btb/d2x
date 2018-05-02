@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -214,7 +214,7 @@ if (vm_vec_mag_quick(&e) < F1_0/2)
          fvi_query   fq;
          fvi_info    hit_data;
          int         hit_type;
-   
+
          fq.p0                = &psegs[i].point;
          fq.startseg          = psegs[i].segnum;
          fq.p1                = &goal_pos;
@@ -222,9 +222,9 @@ if (vm_vec_mag_quick(&e) < F1_0/2)
          fq.thisobjnum        = objp-Objects;
          fq.ignore_obj_list   = NULL;
          fq.flags             = 0;
-   
+
          hit_type = find_vector_intersection(&fq, &hit_data);
-   
+
          if (hit_type == HIT_NONE)
             count = 0;
          else {
@@ -349,7 +349,7 @@ if ((objp->type == OBJ_ROBOT) && (objp->ctype.ai_info.behavior == AIB_RUN_FROM))
                fvi_query   fq;
                fvi_info    hit_data;
                int         hit_type;
-   
+
                compute_center_point_on_side(&center_point, segp, snum);
 
                fq.p0                = &objp->pos;
@@ -521,7 +521,7 @@ int polish_path(object *objp, point_seg *psegs, int num_points)
       fvi_query   fq;
       fvi_info    hit_data;
       int         hit_type;
-   
+
       fq.p0                = &objp->pos;
       fq.startseg          = objp->segnum;
       fq.p1                = &psegs[i].point;
@@ -531,11 +531,11 @@ int polish_path(object *objp, point_seg *psegs, int num_points)
       fq.flags             = 0;
 
       hit_type = find_vector_intersection(&fq, &hit_data);
-   
+
       if (hit_type == HIT_NONE)
          first_point = i+1;
       else
-         break;      
+         break;
    }
 
    if (first_point) {
@@ -647,13 +647,13 @@ void validate_all_paths(void)
 // --    ai_static   *aip = &objp->ctype.ai_info;
 // --    ai_local    *ailp = &Ai_local_info[objp-Objects];
 // --    int         start_seg, end_seg;
-// -- 
+// --
 // --    start_seg = objp->segnum;
 // --    end_seg = ailp->goal_segment;
-// -- 
+// --
 // --    if (end_seg == -1)
 // --       create_n_segment_path(objp, 3, -1);
-// -- 
+// --
 // --    if (end_seg == -1) {
 // --       ; //mprintf((0, "Object %i, hide_segment = -1, not creating path.\n", objp-Objects));
 // --    } else {
@@ -672,9 +672,9 @@ void validate_all_paths(void)
 // --       aip->PATH_DIR = 1;      // Initialize to moving forward.
 // --       aip->SUBMODE = AISM_HIDING;      // Pretend we are hiding, so we sit here until bothered.
 // --    }
-// -- 
+// --
 // --    maybe_ai_path_garbage_collect();
-// -- 
+// --
 // -- }
 
 // -------------------------------------------------------------------------------------------------------
@@ -949,12 +949,12 @@ void move_object_to_goal(object *objp, vms_vector *goal_point, int goal_seg)
 // -- too much work --  fvi_info    hit_data;
 // -- too much work --  int         fate;
 // -- too much work --  fvi_query   fq;
-// -- too much work -- 
+// -- too much work --
 // -- too much work --  if (Escort_kill_object == -1)
 // -- too much work --     return 0;
-// -- too much work -- 
+// -- too much work --
 // -- too much work --  kill_objp = &Objects[Escort_kill_object];
-// -- too much work -- 
+// -- too much work --
 // -- too much work --  fq.p0                = &objp->pos;
 // -- too much work --  fq.startseg          = objp->segnum;
 // -- too much work --  fq.p1                = &kill_objp->pos;
@@ -962,9 +962,9 @@ void move_object_to_goal(object *objp, vms_vector *goal_point, int goal_seg)
 // -- too much work --  fq.thisobjnum        = objp-Objects;
 // -- too much work --  fq.ignore_obj_list   = NULL;
 // -- too much work --  fq.flags             = 0;
-// -- too much work -- 
+// -- too much work --
 // -- too much work --  fate = find_vector_intersection(&fq,&hit_data);
-// -- too much work -- 
+// -- too much work --
 // -- too much work --  if (fate == HIT_NONE)
 // -- too much work --     return 1;
 // -- too much work --  else
@@ -1012,7 +1012,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
    if (aip->path_length < 2) {
       if ((aip->behavior == AIB_SNIPE) || (ailp->mode == AIM_RUN_FROM_OBJECT)) {
          if (ConsoleObject->segnum == objp->segnum) {
-            create_n_segment_path(objp, AVOID_SEG_LENGTH, -1);       // Can't avoid segment player is in, robot is already in it! (That's what the -1 is for) 
+            create_n_segment_path(objp, AVOID_SEG_LENGTH, -1);       // Can't avoid segment player is in, robot is already in it! (That's what the -1 is for)
             //--Int3_if((aip->path_length != 0));
          } else {
             create_n_segment_path(objp, AVOID_SEG_LENGTH, ConsoleObject->segnum);
@@ -1064,7 +1064,7 @@ void ai_follow_path(object *objp, int player_visibility, int previous_visibility
                move_object_to_goal(objp, &goal_point, goal_seg);
             } else {
                fix   prob = fixdiv(distance_travellable, dist_to_goal);
-   
+
                int   rand_num = rand();
                if ( (rand_num >> 1) < prob) {
                   move_object_to_goal(objp, &goal_point, goal_seg);
@@ -1400,7 +1400,7 @@ void ai_path_garbage_collect(void)
       }
    }
 
-   qsort(object_list, num_path_objects, sizeof(object_list[0]), 
+   qsort(object_list, num_path_objects, sizeof(object_list[0]),
          (int (*)(void const *,void const *))path_index_compare);
 
    for (objind=0; objind < num_path_objects; objind++) {

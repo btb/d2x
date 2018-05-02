@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -38,7 +38,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define TT_LIGHT_ON           13    // Turn s light on
 #define NUM_TRIGGER_TYPES     14
 
-// Trigger flags    
+// Trigger flags
 
 //could also use flags for one-shots
 
@@ -50,7 +50,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //the trigger really should have both a type & a flags, since most of the
 //flags bits are exclusive of the others.
 typedef struct trigger {
-   ubyte    type;       //what this trigger does 
+   ubyte    type;       //what this trigger does
    ubyte    flags;      //currently unused
    byte     num_links;  //how many doors, etc. linked to this
    byte     pad;        //keep alignment

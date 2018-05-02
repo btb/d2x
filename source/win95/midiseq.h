@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -17,7 +17,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define _MIDISEQ_H
 
 #include "global.h"
-#include "midifile.h"   
+#include "midifile.h"
 
 #define  VERSION_MINOR              0x00
 #define  VERSION_MAJOR              0x04
@@ -25,8 +25,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define SEQ_F_EOF           0x00000001L
 #define SEQ_F_COLONIZED     0x00000002L
-#define SEQ_F_WAITING       0x00000004L   
-                                          
+#define SEQ_F_WAITING       0x00000004L
+
 #define SEQ_S_NOFILE        0
 #define SEQ_S_OPENED        1
 #define SEQ_S_PREROLLING    2
@@ -66,15 +66,15 @@ typedef struct tag_seq
     HMIDIOUT    hmidi;              /* Handle to open MIDI device                   */
     DWORD       dwTimeDivision;     /* File time division                           */
 
-    LPBYTE      lpbAlloc;           /* Streaming buffers -- initial allocation      */ 
+    LPBYTE      lpbAlloc;           /* Streaming buffers -- initial allocation      */
     LPMIDIHDR   lpmhFree;           /* Streaming buffers -- free list               */
     LPMIDIHDR   lpmhPreroll;        /* Streaming buffers -- preroll buffer          */
     DWORD       cbPreroll;          /* Streaming buffers -- size of lpmhPreroll     */
     UINT        uBuffersInMMSYSTEM; /* Streaming buffers -- in use                  */
-    
+
     TICKS       tkBase;             /* Where playback started from in stream        */
     TICKS       tkEnd;              /* Where playback should end                    */
-    
+
     DWORD       fdwSeq;             /* Various sequencer flags                      */
 
 }   SEQ,
@@ -83,43 +83,43 @@ typedef struct tag_seq
 /* sequence.c
 */
 
-MMRESULT FNLOCAL seqAllocBuffers(    
+MMRESULT FNLOCAL seqAllocBuffers(
     PSEQ                pseq);
 
-VOID FNLOCAL seqFreeBuffers(         
+VOID FNLOCAL seqFreeBuffers(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqOpenFile(        
+MMRESULT FNLOCAL seqOpenFile(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqCloseFile(       
+MMRESULT FNLOCAL seqCloseFile(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqPreroll(         
+MMRESULT FNLOCAL seqPreroll(
     PSEQ                pseq,
     LPPREROLL           lppreroll);
 
-MMRESULT FNLOCAL seqStart(           
+MMRESULT FNLOCAL seqStart(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqPause(           
+MMRESULT FNLOCAL seqPause(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqRestart(         
+MMRESULT FNLOCAL seqRestart(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqStop(            
+MMRESULT FNLOCAL seqStop(
     PSEQ                pseq);
 
-MMRESULT FNLOCAL seqTime(            
+MMRESULT FNLOCAL seqTime(
     PSEQ                pseq,
     PTICKS              pTicks);
 
-TICKS FNLOCAL seqMillisecsToTicks(   
+TICKS FNLOCAL seqMillisecsToTicks(
     PSEQ                pseq,
     DWORD               msOffset);
 
-DWORD FNLOCAL seqTicksToMillisecs(   
+DWORD FNLOCAL seqTicksToMillisecs(
     PSEQ                pseq,
     TICKS               tkOffset);
 

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -194,7 +194,7 @@ void gr_linear_rep_movsd_2x(ubyte *src, ubyte *dest, int num_pixels)
       }
       return;
    }
-   
+
    for (i = 0; i < num_pixels / 4; i++) {
       temp = work = *s++;
 
@@ -892,7 +892,7 @@ void gr_linear_movsd_double(ubyte *src, ubyte *dest, int width)
       }
       return;
    }
-   
+
    for (i = 0; i < num_pixels / 4; i++) {
       temp = work = *s++;
 

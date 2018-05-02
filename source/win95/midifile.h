@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -16,7 +16,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #ifndef _MIDIFILE_H
 #define _MIDIFILE_H
 
-#include "global.h" 
+#include "global.h"
 
 typedef DWORD SMFRESULT;
 typedef DWORD TICKS;
@@ -103,16 +103,16 @@ extern DWORD FNLOCAL smfGetStateMaxSize(
 
 
 /* Handle structure for HSMF
-*/ 
+*/
 
 #define SMF_TF_EOT          0x00000001L
 #define SMF_TF_INVALID      0x00000002L
 
 typedef struct tag_tempomapentry
 {
-    TICKS           tkTempo;           
-    DWORD           msBase;            
-    DWORD           dwTempo;           
+    TICKS           tkTempo;
+    DWORD           msBase;
+    DWORD           dwTempo;
 }   TEMPOMAPENTRY,
     *PTEMPOMAPENTRY;
 
@@ -122,21 +122,21 @@ typedef struct tag_track
 {
     PSMF            pSmf;
 
-    DWORD           idxTrack;          
-    
-    TICKS           tkPosition;        
-    DWORD           cbLeft;            
-    HPBYTE          hpbImage;          
-    BYTE            bRunningStatus;    
-    
-    DWORD           fdwTrack;          
+    DWORD           idxTrack;
+
+    TICKS           tkPosition;
+    DWORD           cbLeft;
+    HPBYTE          hpbImage;
+    BYTE            bRunningStatus;
+
+    DWORD           fdwTrack;
 
     struct
     {
         TICKS       tkLength;
         DWORD       cbLength;
     }
-    smti;                              
+    smti;
 
 }   TRACK,
     *PTRACK;
@@ -167,19 +167,19 @@ typedef struct tag_smf
     DWORD           dwPendingUserEvent;
     DWORD           cbPendingUserEvent;
     HPBYTE          hpbPendingUserEvent;
-    
+
     TRACK           rTracks[];
 }   SMF;
 
 typedef struct tagEVENT
 {
-    TICKS           tkDelta;           
-    BYTE            abEvent[3];        
-                                       
-                                       
-                                       
-    DWORD           cbParm;            
-    HPBYTE          hpbParm;           
+    TICKS           tkDelta;
+    BYTE            abEvent[3];
+
+
+
+    DWORD           cbParm;
+    HPBYTE          hpbParm;
 }   EVENT,
     BSTACK *SPEVENT;
 
@@ -194,7 +194,7 @@ SMFRESULT FNLOCAL smfBuildFileIndex(
 
 DWORD FNLOCAL smfGetVDword(
     HPBYTE              hpbImage,
-    DWORD               dwLeft,                                
+    DWORD               dwLeft,
     DWORD BSTACK *      pdw);
 
 SMFRESULT FNLOCAL smfGetNextEvent(

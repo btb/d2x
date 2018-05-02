@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -35,7 +35,7 @@ typedef struct newmenu_item {
    int   text_len;      // The maximum length of characters that can be entered by this inputboxes
    char  *text;         // The text associated with this item.
    // The rest of these are used internally by by the menu system, so don't set 'em!!
-   short x, y;       
+   short x, y;
    short w, h;
    short right_offset;
    ubyte redraw;
@@ -43,7 +43,7 @@ typedef struct newmenu_item {
 } newmenu_item;
 
 // Pass an array of newmenu_items and it processes the menu. It will
-// return a -1 if Esc is pressed, otherwise, it returns the index of 
+// return a -1 if Esc is pressed, otherwise, it returns the index of
 // the item that was current when Enter was was selected.
 // The subfunction function gets called constantly, so you can dynamically
 // change the text of an item.  Just pass NULL if you don't want this.
@@ -67,7 +67,7 @@ extern int newmenu_do3( char * title, char * subtitle, int nitems, newmenu_item 
          int mmn;
          newmenu_item mm[8];
          char xtext[21];
-   
+
          strcpy( xtext, "John" );
 
          mm[0].type=NM_TYPE_MENU; mm[0].text="Play game";
@@ -108,7 +108,7 @@ extern char *Newmenu_allowed_chars;
 // int lb_callback( int * citem, int *nitems, char * items[], int *keypress )
 // {
 //    int i;
-// 
+//
 //    if ( *keypress = KEY_CTRLED+KEY_D ) {
 //       if ( *nitems > 1 )   {
 //          unlink( items[*citem] );      // Delete the file
@@ -121,7 +121,7 @@ extern char *Newmenu_allowed_chars;
 //          return 1;   // redraw;
 //       }
 //       *keypress = 0;
-//    }        
+//    }
 //    return 0;
 // }
 

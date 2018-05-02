@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -97,7 +97,7 @@ void draw_tmap_flat(grs_bitmap *bp,int nverts,g3s_point **vertbuf)
    else  {
       tmap_flat_shade_value = Gr_scanline_darkening_level;
       texture_map_flat_faded( &my_tmap );
-   }  
+   }
 #endif
 
 }
@@ -138,7 +138,7 @@ void gr_upoly_tmap(int nverts, int *vert )
    else  {
       tmap_flat_shade_value = Gr_scanline_darkening_level;
       texture_map_flat_faded( &my_tmap );
-   }  
+   }
 #endif
 }
 

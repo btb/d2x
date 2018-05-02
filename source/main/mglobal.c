@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -67,7 +67,7 @@ byte Side_to_verts[MAX_SIDES_PER_SEGMENT][4] = {
          encrypt(2,6,5,1),       // bottom
          encrypt(4,5,6,7),       // back
          encrypt(3,2,1,0),       // front
-};    
+};
 
 // Note, this MUST be the same as Side_to_verts, it is an int for speed reasons.
 int Side_to_verts_int[MAX_SIDES_PER_SEGMENT][4] = {
@@ -77,7 +77,7 @@ int Side_to_verts_int[MAX_SIDES_PER_SEGMENT][4] = {
          encrypt(2,6,5,1),       // bottom
          encrypt(4,5,6,7),       // back
          encrypt(3,2,1,0),       // front
-};    
+};
 
 // Texture map stuff
 

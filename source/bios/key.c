@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -59,7 +59,7 @@ static volatile keyboard key_data;
 
 static unsigned char Installed=0;
 
-unsigned char ascii_table[128] = 
+unsigned char ascii_table[128] =
 { 255, 255, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',255,255,
   'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 255, 255,
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', 39, '`',
@@ -70,10 +70,10 @@ unsigned char ascii_table[128] =
   255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
   255,255,255,255,255,255,255,255 };
 
-unsigned char shifted_ascii_table[128] = 
+unsigned char shifted_ascii_table[128] =
 { 255, 255, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',255,255,
   'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 255, 255,
-  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~', 
+  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~',
   255, '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 255,255,
   255, ' ', 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,255,255,
   255, 255, 255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -103,17 +103,17 @@ void key_putkey (unsigned short keycode)
  {
   // this function simulates a key stroke entered
   char temp;
-  
+
 
   temp = key_data.keytail+1;
   if ( temp >= KEY_BUFFER_SIZE ) temp=0;
-  if (temp!=key_data.keyhead) 
+  if (temp!=key_data.keyhead)
     {
       key_data.keybuffer[key_data.keytail] = keycode;
       key_data.keytail = temp;
     }
- }  
- 
+ }
+
 
 void key_clear_bios_buffer_all()
 {
@@ -147,7 +147,7 @@ void key_flush()
       key_data.keybuffer[i] = 0;
       key_data.time_pressed[i] = 0;
    }
-   
+
    //Clear the keyboard array
 
    CurTime =timer_get_fixed_secondsX();
@@ -239,7 +239,7 @@ int key_peekkey()
 int key_getch()
 {
    int dummy=0;
-   
+
    if (!Installed)
       return getch();
 
@@ -283,7 +283,7 @@ fix key_down_time(int scancode)  {
 
 #ifndef NDEBUG
    if (keyd_editor_mode && key_get_shift_status() )
-      return 0;  
+      return 0;
 #endif
 
    _disable();
@@ -413,8 +413,8 @@ void __interrupt __far key_handler()
 #endif
          } else if (!keyd_repeat) {
             // Don't buffer repeating key if repeat mode is off
-            scancode = 0xAA;     
-         } 
+            scancode = 0xAA;
+         }
 
          if ( scancode!=0xAA ) {
             keycode = scancode;
@@ -472,7 +472,7 @@ void key_init()
 
    Status1= *(ubyte*)0x417;
    Status2= *(ubyte*)0x418;
- 
+
    keyd_time_when_last_pressed = timer_get_fixed_seconds();
    keyd_buffer_type = 1;
    keyd_repeat = 1;
@@ -525,13 +525,13 @@ void key_close()
 {
    if (!Installed) return;
    Installed = 0;
-   
+
    _dos_setvect( 9, key_data.prev_int_9 );
 
    _disable();
    key_clear_bios_buffer_all();
    _enable();
-  
+
    *(ubyte*)0x417=Status1;
    *(ubyte*)0x418=Status2;
 }

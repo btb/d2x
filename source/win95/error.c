@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -33,7 +33,7 @@ static char rcsid[] = "$Id: error.c 1.24 1996/10/04 16:50:37 samir Exp $";
    #include <Types.h>
    #include <Strings.h>
    #include <LowMem.h>
-   
+
    #include "resource.h"
 #endif
 
@@ -108,16 +108,16 @@ void print_exit_message()
       else
       {
          #if (defined(MACINTOSH) && defined(NDEBUG) && defined(RELEASE))
-            
+
             c2pstr(exit_message);
             ShowCursor();
             ParamText(exit_message, "\p", "\p", "\p");
             StopAlert(ERROR_ALERT, nil);
-            
+
          #else
-            
+
             printf("%s\n",exit_message);
-         
+
          #endif
       }
    }
@@ -205,7 +205,7 @@ int WinEnableInt3 = 1;
 
 void WinInt3()
 {
-   if (WinEnableInt3) 
+   if (WinEnableInt3)
       DebugBreak();
 }
 #endif

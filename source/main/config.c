@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -166,7 +166,7 @@ void CheckMovieAttributes()
       HKEY hKey;
       DWORD len, type, val;
       long lres;
-  
+
       lres = RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Parallax\\Descent II\\1.1\\INSTALL",
                      0, KEY_READ, &hKey);
       if (lres == ERROR_SUCCESS) {
@@ -288,7 +288,7 @@ int ReadConfigFile()
                   SoundChannels = sc;
                   set_custom_detail_vars();
                }
-              #ifdef PA_3DFX_VOODOO   // Set to highest detail because you can't change em   
+              #ifdef PA_3DFX_VOODOO   // Set to highest detail because you can't change em
                   Object_complexity=Object_detail=Wall_detail=
                   Wall_render_depth=Debris_amount=SoundChannels = NUM_DETAIL_LEVELS-1;
                   Detail_level=NUM_DETAIL_LEVELS-1;
@@ -298,7 +298,7 @@ int ReadConfigFile()
          }
          else if (!strcmp(token, joystick_min_str))   {
             sscanf( value, "%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3] );
-         } 
+         }
          else if (!strcmp(token, joystick_max_str))   {
             sscanf( value, "%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3] );
          }
@@ -342,7 +342,7 @@ int ReadConfigFile()
 #endif
 
    i = FindArg( "-volume" );
-   
+
    if ( i > 0 )   {
       i = atoi( Args[i+1] );
       if ( i < 0 ) i = 0;
@@ -378,7 +378,7 @@ int ReadConfigFile()
    }
 #endif
 
-   // HACK!!! 
+   // HACK!!!
    //Hack to make some cards look like others, such as
    //the Crytal Lake look like Microsoft Sound System
 #ifndef WINDOWS
@@ -418,7 +418,7 @@ int ReadConfigFile()
                value[strlen(value)-1] = 0;
             if (!strcmp(token, joystick_min_str))  {
                sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_min[0], &joy_axis_min[1], &joy_axis_min[2], &joy_axis_min[3], &joy_axis_min[4], &joy_axis_min[5], &joy_axis_min[6] );
-            } 
+            }
             else if (!strcmp(token, joystick_max_str))   {
                sscanf( value, "%d,%d,%d,%d,%d,%d,%d", &joy_axis_max[0], &joy_axis_max[1], &joy_axis_max[2], &joy_axis_max[3], &joy_axis_max[4], &joy_axis_max[5], &joy_axis_max[6] );
             }
@@ -443,7 +443,7 @@ int WriteConfigFile()
    int joy_axis_center[7];
    int joy_axis_max[7];
    ubyte gamma = gr_palette_get_gamma();
-   
+
    joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
 
 #ifdef WINDOWS
@@ -520,22 +520,22 @@ int WriteConfigFile()
 {
 // Save Windows Config File
    char joyname[256];
-                  
+
 
    joy_get_cal_vals(joy_axis_min, joy_axis_center, joy_axis_max);
-   
+
    infile = fopen("descentw.cfg", "wt");
    if (infile == NULL) return 1;
 
-   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_min_str, 
+   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_min_str,
          joy_axis_min[0], joy_axis_min[1], joy_axis_min[2], joy_axis_min[3],
          joy_axis_min[4], joy_axis_min[5], joy_axis_min[6]);
    fputs(str, infile);
-   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_cen_str, 
+   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_cen_str,
          joy_axis_center[0], joy_axis_center[1], joy_axis_center[2], joy_axis_center[3],
          joy_axis_center[4], joy_axis_center[5], joy_axis_center[6]);
    fputs(str, infile);
-   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_max_str, 
+   sprintf(str, "%s=%d,%d,%d,%d,%d,%d,%d\n", joystick_max_str,
          joy_axis_max[0], joy_axis_max[1], joy_axis_max[2], joy_axis_max[3],
          joy_axis_max[4], joy_axis_max[5], joy_axis_max[6]);
    fputs(str, infile);
@@ -546,7 +546,7 @@ int WriteConfigFile()
 #endif
 
    return 0;
-}     
+}
 
 #else    // !defined(MACINTOSH)
 
@@ -693,7 +693,7 @@ CInfoPBRec  infoPB;
 
    if (! prefsInited)
       return (0);
-      
+
    theErr = Gestalt(gestaltFindFolderAttr, &response);
    if (theErr == noErr && ((response >> gestaltFindFolderPresent) & 1))
    {
@@ -709,9 +709,9 @@ CInfoPBRec  infoPB;
       theErr = SysEnvirons(1, &theSysEnv);
       if (theErr != noErr)
          return (0);
-         
+
       *prefVRefNum = theSysEnv.sysVRefNum;
-      
+
       // Check whether Preferences folder already exists
       infoPB.hFileInfo.ioCompletion = 0;
       infoPB.hFileInfo.ioNamePtr = prefFolderName;
@@ -727,7 +727,7 @@ CInfoPBRec  infoPB;
       else if (theErr == fnfErr)    // Preferences doesn't already exist
       {
       HParamBlockRec dirPB;
-      
+
          // Create "Preferences" folder
          dirPB.fileParam.ioCompletion  = 0;
          dirPB.fileParam.ioVRefNum  = *prefVRefNum;
@@ -739,7 +739,7 @@ CInfoPBRec  infoPB;
             *prefDirID = dirPB.fileParam.ioDirID;
       }
    }
-   
+
    // If we make it here OK, create Preferences file if necessary
    if (theErr == noErr)
    {
@@ -760,7 +760,7 @@ CInfoPBRec  infoPB;
          }
       }
    }
-   
+
    return (theErr == noErr);
 }
 
@@ -773,7 +773,7 @@ InitPrefsFile(OSType creator)
 {
    OSErr err;
 PrefsInfoHandle      piHdl;
-   
+
    if ((piHdl = (PrefsInfoHandle) GetResource('PRFI', 0)) == nil)
    {
    ProcessSerialNumber  thePSN;
@@ -781,11 +781,11 @@ PrefsInfoHandle      piHdl;
    FSSpec            appSpec;
    StringPtr         app_string;
 
-#if 0 
+#if 0
       GetCurrentProcess(&thePSN);
       thePIR.processName = nil;
       thePIR.processAppSpec = &appSpec;
-      
+
       // Set default to 'Application Prefs', PREF 0
       err = GetProcessInformation(&thePSN, &thePIR);
       if (err)
@@ -795,7 +795,7 @@ PrefsInfoHandle      piHdl;
 //    Pstrcpy(prefsInfo.fileName, appSpec.name);
       Pstrcpy(prefsInfo.fileName, app_string);
       Pstrcat(prefsInfo.fileName, "\p Preferences");
-      
+
       // Set creator to calling application's signature (should be able to
       // Determine this automatically, but unable to for some reason)
       prefsInfo.creator = creator;
@@ -808,11 +808,11 @@ PrefsInfoHandle      piHdl;
       // Get Preferences file setup from PRFI 0
       BlockMove(*piHdl, &prefsInfo, sizeof (prefsInfo));
       ReleaseResource((Handle) piHdl);
-      
+
       if (prefsInfo.creator == UNKNOWN_TYPE)
          prefsInfo.creator = creator;
    }
-   
+
    prefsInited = 1;
 }
 
@@ -831,14 +831,14 @@ Size     prefSize, origSize;
       return (nilHandleErr);
 
    prefSize = GetHandleSize(prefsHdl);
-      
+
    if (! FindPrefsFile(&prefVRefNum, &prefDirID))
       return (fnfErr);
 
    prefRefNum = HOpenResFile(prefVRefNum, prefDirID, prefsInfo.fileName, fsRdWrPerm);
    if (prefRefNum == -1)
       return (ResError());
-   
+
    // Not finding the resource is not an error -- caller will use default data
    if ((origHdl = Get1Resource(prefsInfo.resType, prefsInfo.resID)) != nil)
    {
@@ -849,12 +849,12 @@ Size     prefSize, origSize;
       BlockMove(*origHdl, *prefsHdl, origSize);
       ReleaseResource(origHdl);
    }
-   
+
    CloseResFile(prefRefNum);
 
    if (theErr == noErr)
       theErr = ResError();
-   
+
    return (theErr);
 }
 
@@ -868,10 +868,10 @@ long     prefDirID;
 Handle   origHdl = nil;
 Size     origSize, prefSize;
 OSErr theErr = noErr;
-   
+
    if (! FindPrefsFile(&prefVRefNum, &prefDirID))
       return (fnfErr);
-   
+
    if (prefHdl == nil)
       return (nilHandleErr);
 
@@ -880,14 +880,14 @@ OSErr theErr = noErr;
    prefRefNum = HOpenResFile(prefVRefNum, prefDirID, prefsInfo.fileName, fsRdWrPerm);
    if (prefRefNum == -1)
       return (ResError());
-      
+
    if ((origHdl = Get1Resource(prefsInfo.resType, prefsInfo.resID)) != nil)
    {
       // Overwrite existing preferences
       origSize = GetHandleSize(origHdl);
       if (prefSize > origSize)
          SetHandleSize(origHdl, prefSize);
-         
+
       BlockMove(*prefHdl, *origHdl, prefSize);
       ChangedResource(origHdl);
       WriteResource(origHdl);
@@ -900,12 +900,12 @@ OSErr theErr = noErr;
       WriteResource(prefHdl);
       DetachResource(prefHdl);
    }
-   
+
    CloseResFile(prefRefNum);
 
    if (theErr == noErr)
       theErr = ResError();
-   
+
    return (theErr);
 }
 
@@ -937,7 +937,7 @@ OSErr theErr = noErr;
    The PRFI 0 resource allows you to specify overrides for each of the above
    values.  This is useful for development, since the application name might
    go through changes, but the preferences file name is held constant.
- 
+
       OSErr LoadPrefsFile(Handle prefsHndl)
 
    This function will attempt to copy the data stored in the preferences
@@ -968,16 +968,16 @@ int ReadConfigFile()
    Handle prefs_handle;
    Preferences *prefs;
    char *p;
-   
+
    if (!have_prefs) {         // not initialized....get a handle to the preferences file
       InitPrefsFile('DCT2');
       have_prefs = 1;
    }
-   
+
    prefs_handle = NewHandleClear(sizeof(Preferences));      // new prefs handle
    if (prefs_handle == NULL)
       return;
-      
+
    prefs = (Preferences *)(*prefs_handle);
    err = LoadPrefsFile(prefs_handle);
    if (err) {
@@ -993,7 +993,7 @@ int ReadConfigFile()
    }
    if ( i == sizeof(Preferences) )
       return -1;
-   
+
    Config_digi_volume = prefs->digi_volume;
    Config_midi_volume = prefs->midi_volume;
    Config_master_volume = prefs->master_volume;
@@ -1004,7 +1004,7 @@ int ReadConfigFile()
    Scanline_double = (int)prefs->pixel_double;
    if ( PAEnabled )
       Scanline_double = 0;    // can't double with hardware acceleration
-      
+
    Detail_level = prefs->detail_level;
    if (Detail_level == NUM_DETAIL_LEVELS-1) {
       Object_complexity = prefs->oc;
@@ -1015,7 +1015,7 @@ int ReadConfigFile()
       SoundChannels = prefs->sc;
       set_custom_detail_vars();
    }
-  #ifdef PA_3DFX_VOODOO   // Set to highest detail because you can't change em   
+  #ifdef PA_3DFX_VOODOO   // Set to highest detail because you can't change em
          Object_complexity=Object_detail=Wall_detail=
          Wall_render_depth=Debris_amount=SoundChannels = NUM_DETAIL_LEVELS-1;
          Detail_level=NUM_DETAIL_LEVELS-1;
@@ -1025,13 +1025,13 @@ int ReadConfigFile()
    strncpy( config_last_player, prefs->lastplayer, CALLSIGN_LEN );
    p = strchr(config_last_player, '\n' );
    if (p) *p = 0;
-   
+
    strncpy(config_last_mission, prefs->lastmission, MISSION_NAME_LEN);
    p = strchr(config_last_mission, '\n' );
    if (p) *p = 0;
 
    strcpy(config_last_ctb_cfg, prefs->ctb_config);
-   
+
    if ( Config_digi_volume > 8 ) Config_digi_volume = 8;
 
    if ( Config_midi_volume > 8 ) Config_midi_volume = 8;
@@ -1039,7 +1039,7 @@ int ReadConfigFile()
    joy_set_cal_vals( prefs->joy_axis_min, prefs->joy_axis_center, prefs->joy_axis_max);
    digi_set_volume( (Config_digi_volume*256)/8, (Config_midi_volume*256)/8 );
    digi_set_master_volume(Config_master_volume);
-   
+
    gConfigInfo.mDoNotDisplayOptions = prefs->display_dialog;
    gConfigInfo.mUse11kSounds = prefs->sound_11k;
    gConfigInfo.mDisableSound = prefs->nosound;
@@ -1049,7 +1049,7 @@ int ReadConfigFile()
    gConfigInfo.mGameMonitor = prefs->game_monitor;
    gConfigInfo.mAcceleration = prefs->enable_rave;
    gConfigInfo.mInputSprockets = prefs->enable_input_sprockets;
-   
+
    DisposeHandle(prefs_handle);
    return 0;
 }
@@ -1059,13 +1059,13 @@ int WriteConfigFile()
    OSErr err;
    Handle prefs_handle;
    Preferences *prefs;
-   
+
    prefs_handle = NewHandleClear(sizeof(Preferences));      // new prefs handle
    if (prefs_handle == NULL)
       return;
-      
+
    prefs = (Preferences *)(*prefs_handle);
-   
+
    joy_get_cal_vals(prefs->joy_axis_min, prefs->joy_axis_center, prefs->joy_axis_max);
    prefs->digi_volume = Config_digi_volume;
    prefs->midi_volume = Config_midi_volume;
@@ -1083,7 +1083,7 @@ int WriteConfigFile()
 
    if ( !PAEnabled )
       prefs->pixel_double = (ubyte)Scanline_double;      // hmm..don't write this out if doing hardware accel.
-      
+
    strncpy( prefs->lastplayer, Players[Player_num].callsign, CALLSIGN_LEN );
    strncpy( prefs->lastmission, config_last_mission, MISSION_NAME_LEN );
    strcpy( prefs->ctb_config, config_last_ctb_cfg);

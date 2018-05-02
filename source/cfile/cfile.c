@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -62,16 +62,16 @@ char AltHogdir_initialized = 0;
 void macify_dospath(char *dos_path, char *mac_path)
 {
    char *p;
-   
+
    if (!strncmp(dos_path, ".\\", 2)) {
       strcpy(mac_path, ":");
       strcat(mac_path, &(dos_path[2]) );
    } else
       strcpy(mac_path, dos_path);
-      
+
    while ( (p = strchr(mac_path, '\\')) != NULL)
       *p = ':';
-   
+
 }
 #endif
 
@@ -91,7 +91,7 @@ int default_error_counter=0;
 //ptr to counter of how many critical errors
 int *critical_error_counter_ptr=&default_error_counter;
 
-//tell cfile about your critical error counter 
+//tell cfile about your critical error counter
 void cfile_set_critical_error_counter_ptr(int *ptr)
 {
    critical_error_counter_ptr = ptr;
@@ -119,7 +119,7 @@ FILE * cfile_get_filehandle( char * filename, char * mode )
          fclose(fp);
          fp = NULL;
       }
-   } 
+   }
    return fp;
 }
 
@@ -141,8 +141,8 @@ int cfile_init_hogfile(char *fname, hogfile * hog_files, int * nfiles )
       return 0;
    }
 
-   while( 1 )  
-   {  
+   while( 1 )
+   {
       if ( *nfiles >= MAX_HOGFILES ) {
          fclose(fp);
          Error( "HOGFILE is limited to %d files.\n",  MAX_HOGFILES );
@@ -170,10 +170,10 @@ int cfile_init(char *hogname)
 {
    #ifdef MACINTOSH
    char mac_path[255];
-   
+
    macify_dospath(hogname, mac_path);
    #endif
-   
+
    Assert(Hogfile_initialized == 0);
 
    #ifndef MACINTOSH
@@ -182,7 +182,7 @@ int cfile_init(char *hogname)
    #else
    if (cfile_init_hogfile(mac_path, HogFiles, &Num_hogfiles )) {
       strcpy( HogFilename, mac_path );
-   #endif   
+   #endif
       Hogfile_initialized = 1;
       return 1;
    }
@@ -232,7 +232,7 @@ int cfile_use_alternate_hogfile( char * name )
    if ( name ) {
       #ifdef MACINTOSH
       char mac_path[255];
-      
+
       macify_dospath(name, mac_path);
       strcpy( AltHogFilename, mac_path);
       #else
@@ -275,12 +275,12 @@ int cfexist( char * filename )
 }
 
 
-CFILE * cfopen(char * filename, char * mode ) 
+CFILE * cfopen(char * filename, char * mode )
 {
    int length;
    FILE * fp;
    CFILE *cfile;
-   
+
    if (stricmp( mode, "rb"))  {
       Error( "cfiles can only be opened with mode==rb\n" );
    }
@@ -288,7 +288,7 @@ CFILE * cfopen(char * filename, char * mode )
    if (filename[0] != '\x01') {
       #ifdef MACINTOSH
       char mac_path[255];
-      
+
       macify_dospath(filename, mac_path);
       fp = cfile_get_filehandle( mac_path, mode);
       #else
@@ -332,14 +332,14 @@ int cfilelength( CFILE *fp )
    return fp->size;
 }
 
-int cfgetc( CFILE * fp ) 
+int cfgetc( CFILE * fp )
 {
    int c;
 
    if (fp->raw_position >= fp->size ) return EOF;
 
    c = getc( fp->file );
-   if (c!=EOF) 
+   if (c!=EOF)
       fp->raw_position++;
 
 // Assert( fp->raw_position==(ftell(fp->file)-fp->lib_offset) );
@@ -364,7 +364,7 @@ char * cfgets( char * buf, size_t n, CFILE * fp )
 #ifdef MACINTOSH
          if (c == 13) {
             int c1;
-            
+
             c1 = fgetc( fp->file );
             fseek( fp->file, -1, SEEK_CUR);
             if ( c1 == 10 )
@@ -385,7 +385,7 @@ char * cfgets( char * buf, size_t n, CFILE * fp )
    return  t;
 }
 
-size_t cfread( void * buf, size_t elsize, size_t nelem, CFILE * fp ) 
+size_t cfread( void * buf, size_t elsize, size_t nelem, CFILE * fp )
 {
    unsigned int i, size;
 
@@ -398,7 +398,7 @@ size_t cfread( void * buf, size_t elsize, size_t nelem, CFILE * fp )
 }
 
 
-int cftell( CFILE *fp ) 
+int cftell( CFILE *fp )
 {
    return fp->raw_position;
 }
@@ -419,14 +419,14 @@ int cfseek( CFILE *fp, long int offset, int where )
       break;
    default:
       return 1;
-   }  
+   }
    c = fseek( fp->file, fp->lib_offset + goal_position, SEEK_SET );
    fp->raw_position = ftell(fp->file)-fp->lib_offset;
    return c;
 }
 
-void cfclose( CFILE * fp ) 
-{  
+void cfclose( CFILE * fp )
+{
    fclose(fp->file);
    free(fp);
    return;

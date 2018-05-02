@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -68,8 +68,8 @@ void c_tmap_scanline_lin_nolight()
 
    u = fx_u;
    v = fx_v*64;
-   dudx = fx_du_dx; 
-   dvdx = fx_dv_dx*64; 
+   dudx = fx_du_dx;
+   dvdx = fx_dv_dx*64;
 
    dest = dest_row_data;
 
@@ -101,8 +101,8 @@ void c_tmap_scanline_lin()
 
    u = fx_u;
    v = fx_v*64;
-   dudx = fx_du_dx; 
-   dvdx = fx_dv_dx*64; 
+   dudx = fx_du_dx;
+   dvdx = fx_dv_dx*64;
 
    l = fx_l;
    dldx = fx_dl_dx;
@@ -139,8 +139,8 @@ void c_tmap_scanline_per_nolight()
    u = fx_u;
    v = fx_v*64;
    z = fx_z;
-   dudx = fx_du_dx; 
-   dvdx = fx_dv_dx*64; 
+   dudx = fx_du_dx;
+   dvdx = fx_dv_dx*64;
    dzdx = fx_dz_dx;
 
    dest = dest_row_data;
@@ -175,8 +175,8 @@ void c_tmap_scanline_per()
    u = fx_u;
    v = fx_v*64;
    z = fx_z;
-   dudx = fx_du_dx; 
-   dvdx = fx_dv_dx*64; 
+   dudx = fx_du_dx;
+   dvdx = fx_dv_dx*64;
    dzdx = fx_dz_dx;
 
    l = fx_l;
@@ -217,8 +217,8 @@ void c_tmap_scanline_editor()
    u = fx_u;
    v = fx_v*64;
    z = fx_z;
-   dudx = fx_du_dx; 
-   dvdx = fx_dv_dx*64; 
+   dudx = fx_du_dx;
+   dvdx = fx_dv_dx*64;
    dzdx = fx_dz_dx;
 
    dest = dest_row_data;

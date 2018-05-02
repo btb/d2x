@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -78,7 +78,7 @@ int comm_wait(COMM_OBJ *obj, int msecs);
 int comm_get_modem_info(int modem, COMM_OBJ *obj);
 int comm_modem_input_line(COMM_OBJ *obj, int msecs, char *buffer, int chars);
 int comm_modem_send_string(COMM_OBJ *obj, char *str);
-int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term); 
+int comm_modem_send_string_nowait(COMM_OBJ *obj, char *str, int term);
 int comm_modem_reset(COMM_OBJ *obj);
 int comm_modem_dial(COMM_OBJ *obj, char *phonenum);
 int comm_modem_answer(COMM_OBJ *obj);

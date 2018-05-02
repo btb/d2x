@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -87,7 +87,7 @@ void clear_background_messages(void)
 #else
    if (((Cockpit_mode == CM_STATUS_BAR) || (Cockpit_mode == CM_FULL_SCREEN)) && (Last_msg_ycrd != -1) && (VR_render_sub_buffer[0].cv_bitmap.bm_y >= 6)) {
       grs_canvas  *canv_save = grd_curcanv;
-#endif     
+#endif
 
       WINDOS(  dd_gr_set_current_canvas(get_current_game_screen()),
             gr_set_current_canvas(get_current_game_screen())
@@ -97,8 +97,8 @@ void clear_background_messages(void)
       PA_DFX (copy_background_rect(0, Last_msg_ycrd, grd_curcanv->cv_bitmap.bm_w, Last_msg_ycrd+Last_msg_height-1));
       PA_DFX (pa_set_backbuffer_current());
       copy_background_rect(0, Last_msg_ycrd, grd_curcanv->cv_bitmap.bm_w, Last_msg_ycrd+Last_msg_height-1);
-     
-      WINDOS(  
+
+      WINDOS(
          dd_gr_set_current_canvas(canv_save),
          gr_set_current_canvas(canv_save)
       );
@@ -281,10 +281,10 @@ void HUD_render_message_frame()
 
         if (Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID &&
             Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window)
-               y+=SMALL_FONT->ft_h+3; 
+               y+=SMALL_FONT->ft_h+3;
 
       WIN(DDGRLOCK(dd_grd_curcanv));
-         for (i=0; i<HUD_nmessages; i++ ) {  
+         for (i=0; i<HUD_nmessages; i++ ) {
             n = (hud_first+i) % HUD_MAX_NUM;
             if ((n < 0) || (n >= HUD_MAX_NUM))
                Int3(); // Get Rob!!
@@ -292,7 +292,7 @@ void HUD_render_message_frame()
                Int3(); // Get Rob!!
             gr_get_string_size(&HUD_messages[n][0], &w, &h, &aw );
             gr_set_fontcolor( HUD_color, -1);
-         
+
             PA_DFX (pa_set_frontbuffer_current());
             PA_DFX(gr_string((grd_curcanv->cv_bitmap.bm_w-w)/2,y, &HUD_messages[n][0] ));
             PA_DFX (pa_set_backbuffer_current());
@@ -301,7 +301,7 @@ void HUD_render_message_frame()
          }
       WIN(DDGRUNLOCK(dd_grd_curcanv));
       }
-   } 
+   }
    #ifndef WINDOWS
    else if (get_current_game_screen()->cv_bitmap.bm_type == BM_MODEX) {
       if (Modex_hud_msg_count) {
@@ -313,7 +313,7 @@ void HUD_render_message_frame()
    }
    #endif
 
-   gr_set_curfont( GAME_FONT );    
+   gr_set_curfont( GAME_FONT );
 }
 
 int PlayerMessage=1;
@@ -339,15 +339,15 @@ int HUD_init_message(char * format, ... )
    va_end(args);
    // -- mprintf((0, "Hud_message: [%s]\n", message));
 
-   // Added by Leighton 
-   
+   // Added by Leighton
+
    if ((Game_mode & GM_MULTI) && FindArg("-noredundancy"))
     if (!strnicmp ("You already",message,11))
       return 0;
 
    if ((Game_mode & GM_MULTI) && FindArg("-PlayerMessages") && PlayerMessage==0)
       return 0;
-  
+
    if (HUD_nmessages > 0)  {
       if (hud_last==0)
          last_message = &HUD_messages[HUD_MAX_NUM-1][0];
@@ -386,29 +386,29 @@ int HUD_init_message(char * format, ... )
 //@@void player_dead_message(void)
 //@@{
 //@@  if (!Arcade_mode && Player_exploded) { //(ConsoleObject->flags & OF_EXPLODING)) {
-//@@     gr_set_curfont( SMALL_FONT );    
+//@@     gr_set_curfont( SMALL_FONT );
 //@@     if (HUD_color == -1)
 //@@        HUD_color = BM_XRGB(0,28,0);
 //@@     gr_set_fontcolor( HUD_color, -1);
 //@@
 //@@     gr_printf(0x8000, grd_curcanv->cv_bitmap.bm_h-8, TXT_PRESS_ANY_KEY);
-//@@     gr_set_curfont( GAME_FONT );    
+//@@     gr_set_curfont( GAME_FONT );
 //@@  }
 //@@
 //@@}
 
 void player_dead_message(void)
 {
-    if (!Arcade_mode && Player_exploded) {      
+    if (!Arcade_mode && Player_exploded) {
         if ( Players[Player_num].lives < 2 )    {
             int x, y, w, h, aw;
-            gr_set_curfont( HUGE_FONT );    
+            gr_set_curfont( HUGE_FONT );
             gr_get_string_size( TXT_GAME_OVER, &w, &h, &aw );
             w += 20;
             h += 8;
             x = (grd_curcanv->cv_w - w ) / 2;
             y = (grd_curcanv->cv_h - h ) / 2;
-            
+
             NO_DFX (Gr_scanline_darkening_level = 2*7);
             NO_DFX (gr_setcolor( BM_XRGB(0,0,0) ));
             NO_DFX (gr_rect( x, y, x+w, y+h ));
@@ -425,8 +425,8 @@ void player_dead_message(void)
             }
 #endif
 
-        } 
-        gr_set_curfont( GAME_FONT );    
+        }
+        gr_set_curfont( GAME_FONT );
         if (HUD_color == -1)
             HUD_color = BM_XRGB(0,28,0);
         gr_set_fontcolor( HUD_color, -1);

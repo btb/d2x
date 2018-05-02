@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -130,9 +130,9 @@ extern ubyte Scanline_double;       // but the Macintosh does
 
 //Suspend flags
 
-#define SUSP_NONE       0        //Everything moving normally 
+#define SUSP_NONE       0        //Everything moving normally
 #define SUSP_ROBOTS     1        //Robot AI doesn't move
-#define SUSP_WEAPONS    2        //Lasers, etc. don't move     
+#define SUSP_WEAPONS    2        //Lasers, etc. don't move
 
 extern int Game_suspended;       //if non-zero, nothing moves but player
 

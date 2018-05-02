@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -56,7 +56,7 @@ static struct _gfxBitmap {
 int dd_gfx_init()
 {
    int i;
-   
+
    if (dd_gfx_initialized) return 1;
 
    for (i = 0; i < MAX_GFX_BITMAPS; i++)
@@ -70,12 +70,12 @@ int dd_gfx_init()
    if (FindArg("-disallowgfx")) dd_gfx_initialized = 0;
    else if (FindArg("-forcegfx")) dd_gfx_initialized = 1;
    else {
-      if (ddDriverCaps.hwcolorkey) 
+      if (ddDriverCaps.hwcolorkey)
          logentry("Card supports HW colorkeying.\n");
 
       if (ddDriverCaps.hwbltstretch)
          logentry("Card supports HW bitmap stretching.\n");
-      
+
       if (ddDriverCaps.hwcolorkey) dd_gfx_initialized = 1;
       else dd_gfx_initialized = 0;
    }
@@ -95,7 +95,7 @@ int dd_gfx_close()
       if (gfxBitmap[i].lpdds)
          IDirectDrawSurface_Release(gfxBitmap[i].lpdds);
    }
-   
+
    dd_gfx_initialized =0;
 
    return 0;
@@ -118,12 +118,12 @@ unsigned short dd_gfx_createbitmap2D(int w, int h)
    if (i == MAX_GFX_BITMAPS) return 0;
 
 // Only do this if we can benefit from it.
-// if (ddDriverCaps.hwcolorkey && ddDriverCaps.hwbltstretch) 
+// if (ddDriverCaps.hwcolorkey && ddDriverCaps.hwbltstretch)
 
    if (FindArg("-forcegfx"))  force = 1;
    else force = 0;
 
-   if (ddDriverCaps.hwcolorkey || force) 
+   if (ddDriverCaps.hwcolorkey || force)
    {
       LPDIRECTDRAWSURFACE lpdds;
       DDSURFACEDESC ddsd;
@@ -149,13 +149,13 @@ unsigned short dd_gfx_createbitmap2D(int w, int h)
 
       gfxBitmap[handle].lpdds = lpdds;
       gfxBitmap[handle].w = w;
-      gfxBitmap[handle].h = h; 
-      handle++;                           // Make it a valid handle  
+      gfxBitmap[handle].h = h;
+      handle++;                           // Make it a valid handle
    }
    else handle = 0;
 
    return handle;
-}  
+}
 
 
 int dd_gfx_loadbitmap2D(unsigned short handle, void *buf, int rleflag)
@@ -183,7 +183,7 @@ RedoLock:
          ddresult = IDirectDrawSurface_Restore(gfxBitmap[handle].lpdds);
          if (ddresult != DD_OK) {
             if (ddresult != DDERR_WRONGMODE) {
-               logentry("DDGFX::Restore::Surface err: %x\n", ddresult);    
+               logentry("DDGFX::Restore::Surface err: %x\n", ddresult);
                return 1;
             }
             else {
@@ -212,7 +212,7 @@ RedoLock:
                gfxBitmap[handle].lpdds = lpdds;
             }
          }
-         
+
          goto RedoLock;
       }
       else {
@@ -223,21 +223,21 @@ RedoLock:
 
 // Locked!
    ptr = ddsd.lpSurface;
-   pitch = ddsd.lPitch; 
+   pitch = ddsd.lPitch;
 
    gr_init_bitmap(&tbmp, BM_LINEAR, 0,0,gfxBitmap[handle].w, gfxBitmap[handle].h, gfxBitmap[handle].w, buf);
    if (rleflag) tbmp.bm_flags = BM_FLAG_RLE;
 
-   for(i = 0; i < gfxBitmap[handle].h; i++) 
+   for(i = 0; i < gfxBitmap[handle].h; i++)
    {
       extern ubyte scale_rle_data[];
       if (rleflag) {
          decode_row(&tbmp,i);
          memcpy(ptr+(i*pitch), scale_rle_data, gfxBitmap[handle].w);
-      } 
+      }
       else memcpy(ptr+(i*pitch), (ubyte*)(buf)+(i*gfxBitmap[handle].w), gfxBitmap[handle].w);
    }
-   
+
    IDirectDrawSurface_Unlock(gfxBitmap[handle].lpdds, ptr);
 
 // Unlocked...
@@ -245,7 +245,7 @@ RedoLock:
    return 0;
 }
 
-   
+
 int dd_gfx_destroybitmap2D(unsigned short handle)
 {
    if (!dd_gfx_initialized) return 0;
@@ -259,7 +259,7 @@ int dd_gfx_destroybitmap2D(unsigned short handle)
       return 0;
    }
    else return 1;
-}     
+}
 
 
 int dd_gfx_resetbitmap2Dcache()
@@ -273,8 +273,8 @@ int dd_gfx_resetbitmap2Dcache()
 
    return 0;
 }
-      
-      
+
+
 void dd_gfx_blt2D(unsigned short handle, int x, int y, int x2, int y2,
                   fix u0, fix v0, fix u1, fix v1)
 {
@@ -289,7 +289,7 @@ void dd_gfx_blt2D(unsigned short handle, int x, int y, int x2, int y2,
    SetRect(&srect, f2i(u0), f2i(v0), f2i(u1), f2i(v1));
 
    IDirectDrawSurface_Blt(dd_grd_curcanv->lpdds, &drect,
-               gfxBitmap[handle].lpdds, 
+               gfxBitmap[handle].lpdds,
                &srect, DDBLT_WAIT| DDBLT_KEYSRC,
                NULL);
-}        
+}

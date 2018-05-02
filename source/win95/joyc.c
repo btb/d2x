@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -41,7 +41,7 @@ static char rcsid[] = "$Id: joyc.c 1.21 1996/10/15 17:09:16 samir Exp $";
 
 #define WIN_TACTILE_ON
 
-#define JOY_READ_BUTTONS 
+#define JOY_READ_BUTTONS
 #define MAX_BUTTONS 20
 #define JOY_POLL_RATE   75 // 100 ms.
 
@@ -128,17 +128,17 @@ int joy_init(int joy, int spjoy)
       SpecialDevice = 0;
       joy_present = 0;
 
-   // if (FindArg("-CyberImpact")) 
-   //    SpecialDevice = TACTILE_CYBERNET;         
+   // if (FindArg("-CyberImpact"))
+   //    SpecialDevice = TACTILE_CYBERNET;
 
       if (i = FindArg("-Iforce")) {
          SpecialDevice = TACTILE_IMMERSION;
          if (atoi(Args[i+1]) != 0) port = atoi(Args[i+1]);
       }
-         
-      if (SpecialDevice) 
+
+      if (SpecialDevice)
          mprintf((0, "Using Special Joystick!\n"));
-      
+
       switch(SpecialDevice)
       {
       #ifdef WIN_TACTILE_ON
@@ -156,10 +156,10 @@ int joy_init(int joy, int spjoy)
       #endif
       }
       if (!joy_present) SpecialDevice = 0;
-   }  
-   else 
+   }
+   else
       joy_present = (char)joyGetNumDevs();
-      
+
 
    return joy_present;
 }
@@ -171,25 +171,25 @@ int joy_init(int joy, int spjoy)
 void joy_close()
 {
    if (joy_installed) {
-   
+
       switch (SpecialDevice)
       {
          case TACTILE_CYBERNET:
             SpecialDevice = 0;
             break;
-      
+
          case TACTILE_IMMERSION:
-            SpecialDevice = 0;   
+            SpecialDevice = 0;
             break;
       }
       joyReleaseCapture(joystick.joyid);
       joy_installed = 0;
    }
 }
-      
+
 
 // joy_get/set_cal_vals
-//    functions that access all of the joystick axis'.  
+//    functions that access all of the joystick axis'.
 //    An array of at least four elements must be passed to each function
 
 void joy_get_cal_vals(int *axis_min, int *axis_center, int *axis_max)
@@ -208,8 +208,8 @@ void joy_get_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 void joy_set_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 {
    int i;
-   
-   for (i=0; i < 7; i++)     
+
+   for (i=0; i < 7; i++)
    {
       joystick.axis_min[i] = axis_min[i];
       joystick.axis_center[i] = axis_center[i];
@@ -221,7 +221,7 @@ void joy_set_cal_vals(int *axis_min, int *axis_center, int *axis_max)
 // joy_get_present_mask
 //    returns the joystick axis' available to be used and accessed
 
-ubyte joy_get_present_mask()  
+ubyte joy_get_present_mask()
 {
    return joystick.present_mask;
 }
@@ -231,7 +231,7 @@ ubyte joy_get_present_mask()
 // joy_flush
 //    resets joystick button parameters
 
-void joy_flush()  
+void joy_flush()
 {
    int i;
 
@@ -248,13 +248,13 @@ void joy_flush()
 // joy_read_raw_buttons
 //    returns the status of the buttons at that moment.
 
-ubyte joy_read_raw_buttons()  
+ubyte joy_read_raw_buttons()
 {
    JOYINFOEX   joy;
    ubyte       value=0;
 
    if (!joy_present) { return 0; }
-   
+
    memset(&joy, 0, sizeof(joy));
    joy.dwSize = sizeof(joy);
    joy.dwFlags = JOY_RETURNBUTTONS | JOY_USEDEADZONE;
@@ -265,7 +265,7 @@ ubyte joy_read_raw_buttons()
    value = value | ((ubyte)joy.dwButtons & JOY_BUTTON2);
    value = value | ((ubyte)joy.dwButtons & JOY_BUTTON3);
    value = value | ((ubyte)joy.dwButtons & JOY_BUTTON4);
-   
+
    return value;
 }
 
@@ -360,7 +360,7 @@ ubyte joystick_read_raw_axis( ubyte mask, int * axis )
 }
 
 
-void joy_set_ul() 
+void joy_set_ul()
 {
    joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, joystick.axis_min );
    if ( joystick.present_mask & 3 )
@@ -370,7 +370,7 @@ void joy_set_ul()
 }
 
 
-void joy_set_lr() 
+void joy_set_lr()
 {
    joystick.present_mask = joystick_read_raw_axis( JOY_ALL_AXIS+JOY_EXT_AXIS, joystick.axis_max );
    if ( joystick.present_mask & 3 )
@@ -380,7 +380,7 @@ void joy_set_lr()
 }
 
 
-void joy_set_cen() 
+void joy_set_cen()
 {
    switch (SpecialDevice)
    {
@@ -397,13 +397,13 @@ void joy_set_cen()
 }
 
 
-void joy_set_cen_fake(int channel)  
+void joy_set_cen_fake(int channel)
 {
 // Do we need this???
 }
 
 
-int joy_get_scaled_reading( int raw, int axn )  
+int joy_get_scaled_reading( int raw, int axn )
 {
    int x, d;
 
@@ -421,7 +421,7 @@ int joy_get_scaled_reading( int raw, int axn )
 
    if ( d )
       x = (raw << 7) / d;
-   else 
+   else
       x = 0;
 
    if ( x < -128 ) x = -128;
@@ -433,15 +433,15 @@ int joy_get_scaled_reading( int raw, int axn )
 //@@
 //@@  if ((joystick.axis_max[axn] - joystick.axis_min[axn]) == 0) return 0;
 //@@  if (axn == 3) return raw;
-//@@  
+//@@
 //@@  x = (256 * raw)/(joystick.axis_max[axn]-joystick.axis_min[axn]);
 //@@  x=x- 128;
 //@@
 //@@  return x;
-}  
+}
 
 
-void joy_get_pos( int *x, int *y )  
+void joy_get_pos( int *x, int *y )
 {
    ubyte flags;
    int axis[4];
@@ -463,18 +463,18 @@ void joy_get_pos( int *x, int *y )
 }
 
 
-ubyte joy_read_stick( ubyte masks, int *axis )  
+ubyte joy_read_stick( ubyte masks, int *axis )
 {
    ubyte flags;
-   int raw_axis[7];  
+   int raw_axis[7];
 
 
-   if ((!joy_installed)||(!joy_present)) { 
+   if ((!joy_installed)||(!joy_present)) {
       axis[0] = 0; axis[1] = 0;
       axis[2] = 0; axis[3] = 0;
       axis[4] = 0; axis[5] = 0;
-      axis[6] = 0; 
-      return 0;  
+      axis[6] = 0;
+      return 0;
    }
 
    flags=joystick_read_raw_axis( masks, raw_axis );
@@ -518,17 +518,17 @@ ubyte joy_read_stick( ubyte masks, int *axis )
 }
 
 
-int joy_get_btns()   
+int joy_get_btns()
 {
    if ((!joy_installed)||(!joy_present)) return 0;
    return joy_read_raw_buttons();
 }
 
 
-void joy_get_btn_down_cnt( int *btn0, int *btn1 ) 
+void joy_get_btn_down_cnt( int *btn0, int *btn1 )
 {
    if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
-      
+
    *btn0 = joystick.buttons[0].downcount;
    joystick.buttons[0].downcount = 0;
    *btn1 = joystick.buttons[1].downcount;
@@ -536,7 +536,7 @@ void joy_get_btn_down_cnt( int *btn0, int *btn1 )
 }
 
 
-int joy_get_button_state( int btn ) 
+int joy_get_button_state( int btn )
 {
    int count;
 
@@ -545,12 +545,12 @@ int joy_get_button_state( int btn )
    if ( btn >= MAX_BUTTONS ) return 0;
 
    count = joystick.buttons[btn].state;
-   
+
    return  count;
 }
 
 
-int joy_get_button_up_cnt( int btn ) 
+int joy_get_button_up_cnt( int btn )
 {
    int count;
 
@@ -565,7 +565,7 @@ int joy_get_button_up_cnt( int btn )
 }
 
 
-int joy_get_button_down_cnt( int btn ) 
+int joy_get_button_down_cnt( int btn )
 {
    int count;
 
@@ -578,8 +578,8 @@ int joy_get_button_down_cnt( int btn )
    return count;
 }
 
-   
-fix joy_get_button_down_time( int btn ) 
+
+fix joy_get_button_down_time( int btn )
 {
    fix count;
 
@@ -593,10 +593,10 @@ fix joy_get_button_down_time( int btn )
 }
 
 
-void joy_get_btn_up_cnt( int *btn0, int *btn1 ) 
+void joy_get_btn_up_cnt( int *btn0, int *btn1 )
 {
    if ((!joy_installed)||(!joy_present)) { *btn0=*btn1=0; return; }
-   
+
    *btn0 = joystick.buttons[0].upcount;
    joystick.buttons[0].upcount = 0;
    *btn1 = joystick.buttons[1].upcount;
@@ -625,7 +625,7 @@ int joy95_init_stick(int joy, int spjoy)
    MMRESULT    mmresult;
    char        joyname[256];
 
-   if (!joy_installed)       
+   if (!joy_installed)
       return 0;
 
    switch (SpecialDevice)
@@ -645,7 +645,7 @@ int joy95_init_stick(int joy, int spjoy)
    joystick.joyid = 0;
 
    if (joy == 1) joystick.joyid = joyid = JOYSTICKID1;
-   else 
+   else
       return 0;
 
    mmresult = joyGetDevCaps(joyid, &WinJoyCaps, sizeof(WinJoyCaps));
@@ -657,9 +657,9 @@ int joy95_init_stick(int joy, int spjoy)
 
 // Tell our Window App. about this joystick.
    joySetThreshold(joyid, WinJoyCaps.wXmax/256);
-   mmresult = joySetCapture(GetLibraryWindow(), 
-                  joyid, 
-                  JOY_POLL_RATE, 
+   mmresult = joySetCapture(GetLibraryWindow(),
+                  joyid,
+                  JOY_POLL_RATE,
                   FALSE);
 
    if (mmresult != JOYERR_NOERROR) {
@@ -693,20 +693,20 @@ int joy95_init_stick(int joy, int spjoy)
    joystick.axis_center[6]       = (WinJoyCaps.wVmax-WinJoyCaps.wVmin)/2;
 
    joystick.present_mask = JOY_1_X_AXIS | JOY_1_Y_AXIS;
-   
+
    if (WinJoyCaps.wCaps & JOYCAPS_HASPOV) {
       joystick.has_pov = 1;
       joystick.present_mask |= JOY_1_POV;
    }
    else joystick.has_pov = 0;
 
-   if (WinJoyCaps.wCaps & JOYCAPS_HASZ) 
+   if (WinJoyCaps.wCaps & JOYCAPS_HASZ)
       joystick.present_mask |= JOY_1_Z_AXIS;
-   if (WinJoyCaps.wCaps & JOYCAPS_HASR) 
+   if (WinJoyCaps.wCaps & JOYCAPS_HASR)
       joystick.present_mask |= JOY_1_R_AXIS;
    if (WinJoyCaps.wCaps & JOYCAPS_HASU)
       joystick.present_mask |= JOY_1_U_AXIS;
-   if (WinJoyCaps.wCaps & JOYCAPS_HASV) 
+   if (WinJoyCaps.wCaps & JOYCAPS_HASV)
       joystick.present_mask |= JOY_1_V_AXIS;
 
    joy95_get_name(JOYSTICKID1, joyname, 255);
@@ -715,11 +715,11 @@ int joy95_init_stick(int joy, int spjoy)
    }
    else CHStickHack = 0;
 
-         
+
    return 1;
 }
 
-void joy95_get_name(int joyid, char *name, int namesize) 
+void joy95_get_name(int joyid, char *name, int namesize)
 {
    JOYCAPS jc;
    MMRESULT res;
@@ -731,7 +731,7 @@ void joy95_get_name(int joyid, char *name, int namesize)
 
    name[0] = 0;
 
-   switch(SpecialDevice) 
+   switch(SpecialDevice)
    {
       case TACTILE_IMMERSION:
          strcpy(name, "I-Force Force-Feedback");
@@ -743,7 +743,7 @@ void joy95_get_name(int joyid, char *name, int namesize)
       strcpy(name, "NO JOYSTICK DETECTED");
       return;
    }
-   
+
 // we have the reg key!
    registry_setpath(HKEY_LOCAL_MACHINE);
    strcpy(regpath, "System\\CurrentControlSet\\control\\MediaResources\\joystick\\");
@@ -758,11 +758,11 @@ void joy95_get_name(int joyid, char *name, int namesize)
          return;
       }
       registry_close(rhandle);
-   
+
    // have reg entry for full name
       strcpy(regpath, "System\\CurrentControlSet\\control\\MediaProperties\\PrivateProperties\\Joystick\\OEM\\");
       strcat(regpath, name);
-   
+
       if ((rhandle = registry_open(regpath))) {
          if (!registry_getstring(rhandle, "OEMName", name, namesize)) {
             registry_close(rhandle);
@@ -771,15 +771,15 @@ void joy95_get_name(int joyid, char *name, int namesize)
          }
          registry_close(rhandle);
       }
-      else strcpy(name, "JOYSTICK"); 
+      else strcpy(name, "JOYSTICK");
    }
    else strcpy(name, "JOYSTICK");
 }
-        
 
-   
+
+
 /* joy_handler_win
-      This function takes the place of the joy_handler function for dos.  
+      This function takes the place of the joy_handler function for dos.
       The main window procedure will call this function whenever a joystick message
       is transmitted.
 */
@@ -788,7 +788,7 @@ LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam)
    DWORD interval_time;
    DWORD new_time;
    static DWORD old_time = 0xffffffff;
-   
+
    Button_info *button;
    int state=0;
    DWORD value=0;
@@ -814,12 +814,12 @@ LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam)
          joyGetPosEx(joystick.joyid, &joy);
 
          if (CHStickHack) {
-            if (joy.dwPOV == JOY_POVCENTERED && joy.dwButtons > 0) {      
+            if (joy.dwPOV == JOY_POVCENTERED && joy.dwButtons > 0) {
                value = (1 << (joy.dwButtons-1));
             }
             else value = 0;
             mprintf_at((0, 2, 32, "RAW:%08x OUR:%08x\n", joy.dwButtons, value));
-         }  
+         }
          else {
             value = joy.dwButtons;
          }
@@ -835,7 +835,7 @@ LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam)
    // Check status of each button and translate information to the button
    // structure.
       button = &joystick.buttons[i];
-      
+
       if (!button->ignore) {
          if ( i < (MAX_BUTTONS-4) ) state = (value >> i) & 1;
          else state = 0;
@@ -848,7 +848,7 @@ LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam)
             if (state)  {
                button->downcount += state;
                button->state = 1;
-            } else { 
+            } else {
                button->upcount += button->state;
                button->state = 0;
             }
@@ -859,7 +859,7 @@ LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam)
 
    old_time = new_time;
    return 0;
-}     
+}
 
 
 void joy_stop_poll()
@@ -870,9 +870,9 @@ void joy_stop_poll()
 
 void joy_start_poll()
 {
-   joySetCapture(GetLibraryWindow(), 
-                  joystick.joyid, 
-                  JOY_POLL_RATE, 
+   joySetCapture(GetLibraryWindow(),
+                  joystick.joyid,
+                  JOY_POLL_RATE,
                   FALSE);
 }
 
@@ -880,21 +880,21 @@ void joy_start_poll()
 // OBSOLETE!!!!
 
 // joy_get/set_timer_rate
-//    these functions are currently implemented for compatability with 
+//    these functions are currently implemented for compatability with
 //    DOS Descent2, but may be unecessary for now.
 
-void joy_set_timer_rate(int max_value )   
+void joy_set_timer_rate(int max_value )
 {
 // No real effect, since Joystick runs on its own timer in Windows, for now.
 }
 
 
-int joy_get_timer_rate()   
+int joy_get_timer_rate()
 {
    return joystick.max_timer;
 }
 
-void joy_handler(int ticks_this_time)  
+void joy_handler(int ticks_this_time)
 {
 // replaced by joy_handler_win for Windows
 }

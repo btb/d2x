@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -163,7 +163,7 @@ int MessageBoxN( short xc, short yc, int NumButtons, char * text, char * Button[
    }
 
    ui_close_window(wnd);
-   
+
    grd_curscreen->sc_canvas.cv_font = temp_font;
 
    return choice;
@@ -190,5 +190,5 @@ int MessageBox( short xc, short yc, int NumButtons, char * text, ... )
 
 
    return MessageBoxN( xc, yc, NumButtons, text, Button );
-   
+
 }

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -63,7 +63,7 @@ int __far critical_error_handler( unsigned deverr, unsigned errcode, unsigned fa
 {
    int x;
 
-   devhdr = devhdr; deverr = deverr; 
+   devhdr = devhdr; deverr = deverr;
 
    if (error_mode==1) return _HARDERR_FAIL;
 
@@ -341,7 +341,7 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
    FirstTime=0;
 
    file_chdir( CurDir );
-   
+
    //MessageBox( -2,-2, 1,"DEBUG:0", "Ok" );
    for (i=0; i<35; i++)
       Spaces[i] = ' ';
@@ -474,7 +474,7 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
          //mprintf( 0, "Full dir: '%s'\n", fulldir );
          //mprintf( 0, "Full fname: '%s'\n", fname );
 
-         if (strrchr( fullfname, '?' ) || strrchr( fullfname, '*' ) )   
+         if (strrchr( fullfname, '?' ) || strrchr( fullfname, '*' ) )
          {
             sprintf( fulldir, "%s%s.", drive, dir );
          } else {
@@ -528,23 +528,23 @@ int ui_get_filename( char * filename, char * Filespec, char * message  )
    _splitpath( UserFile->text, drive, dir, fname, ext );
    sprintf( fulldir, "%s%s.", drive, dir );
    sprintf( fullfname, "%s%s", fname, ext );
-   
+
    if ( strlen(fulldir) > 1 )
       file_chdir( fulldir );
-   
+
    getcwd( CurDir, 35 );
-      
+
    if ( strlen(CurDir) > 0 )
    {
          if ( CurDir[strlen(CurDir)-1] == '\\' )
             CurDir[strlen(CurDir)-1] = 0;
    }
-      
+
    sprintf( filename, "%s\\%s", CurDir, fullfname );
    //MessageBox( -2, -2, 1, filename, "Ok" );
-   
+
    file_chdir( OrgDir );
-      
+
    ui_close_window(wnd);
 
    return 1;

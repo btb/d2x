@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -27,16 +27,16 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // Various wall types.
 #define WALL_NORMAL           0     // Normal wall
 #define WALL_BLASTABLE        1     // Removable (by shooting) wall
-#define WALL_DOOR             2     // Door 
+#define WALL_DOOR             2     // Door
 #define WALL_ILLUSION         3     // Wall that appears to be there, but you can fly thru
 #define WALL_OPEN             4     // Just an open side. (Trigger)
 #define WALL_CLOSED           5     // Wall.  Used for transparent walls.
-#define WALL_OVERLAY          6     // Goes over an actual solid side.  For triggers 
+#define WALL_OVERLAY          6     // Goes over an actual solid side.  For triggers
 #define WALL_CLOAKED          7     // Can see it, and see through it
 
 // Various wall flags.
 #define WALL_BLASTED          1     // Blasted out wall.
-#define WALL_DOOR_OPENED      2     // Open door. 
+#define WALL_DOOR_OPENED      2     // Open door.
 #define WALL_DOOR_LOCKED      8     // Door is locked.
 #define WALL_DOOR_AUTO        16    // Door automatically closes after time.
 #define WALL_ILLUSION_OFF     32    // Illusionary wall is shut off.
@@ -52,8 +52,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WALL_DOOR_CLOAKING    5     // Wall is going from closed -> open
 #define WALL_DOOR_DECLOAKING  6     // Wall is going from open -> closed
 
-//note: a door is considered opened (i.e., it has WALL_OPENED set) when it 
-//is more than half way open.  Thus, it can have any of OPENING, CLOSING, 
+//note: a door is considered opened (i.e., it has WALL_OPENED set) when it
+//is more than half way open.  Thus, it can have any of OPENING, CLOSING,
 //or WAITING bits set when OPENED is set.
 
 #define KEY_NONE              1
@@ -77,7 +77,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define WID_CLOAKED_FLAG         16
 
 //@@//   WALL_IS_DOORWAY return values       F/R/RP
-//@@#define WID_WALL                2  // 0/1/0    wall  
+//@@#define WID_WALL                2  // 0/1/0    wall
 //@@#define WID_TRANSPARENT_WALL    6  // 0/1/1    transparent wall
 //@@#define WID_ILLUSORY_WALL       3  // 1/1/0    illusory wall
 //@@#define WID_TRANSILLUSORY_WALL  7  // 1/1/1    transparent illusory wall
@@ -93,13 +93,13 @@ typedef struct stuckobj {
 
 typedef struct wall {
    int   segnum,sidenum;   // Seg & side for this wall
-   fix   hps;              // "Hit points" of the wall. 
+   fix   hps;              // "Hit points" of the wall.
    int   linked_wall;      // number of linked wall
    ubyte type;             // What kind of special wall.
-   ubyte flags;            // Flags for the wall.     
+   ubyte flags;            // Flags for the wall.
    ubyte state;            // Opening, closing, etc.
    byte  trigger;          // Which trigger is associated with the wall.
-   byte  clip_num;         // Which animation associated with the wall. 
+   byte  clip_num;         // Which animation associated with the wall.
    ubyte keys;             // which keys are required
    byte  controlling_trigger; // which trigger causes something to happen here.  Not like "trigger" above, which is the trigger on this wall.
                            // Note: This gets stuffed at load time in gamemine.c.  Don't try to use it in the editor.  You will be sorry!
@@ -160,11 +160,11 @@ extern int walls_bm_num[MAX_WALL_ANIMS];
 
 // Initializes all walls (i.e. no special walls.)
 extern void wall_init();
-                                                                      
+
 // Automatically checks if a there is a doorway (i.e. can fly through)
 extern int wall_is_doorway ( segment *seg, int side );
 
-// Deteriorate appearance of wall. (Changes bitmap (paste-ons)) 
+// Deteriorate appearance of wall. (Changes bitmap (paste-ons))
 extern void wall_damage(segment *seg, int side, fix damage);
 
 // Destroys a blastable wall. (So it is an opening afterwards)
@@ -180,10 +180,10 @@ void do_door_open(int door_num);
 // Closes a door, including animation and other processing.
 void do_door_close(int door_num);
 
-// Opens a door  
+// Opens a door
 extern void wall_open_door(segment *seg, int side);
 
-// Closes a door  
+// Closes a door
 extern void wall_close_door(segment *seg, int side);
 
 //return codes for wall_hit_process()

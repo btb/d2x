@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -72,10 +72,10 @@ void mrefresh(short n);
 #define minit()
 #define mclose(n)
 #define mopen( n, row, col, width, height, title )
-#define mDumpD(window, int_var) 
-#define mDumpX(window, int_var) 
+#define mDumpD(window, int_var)
+#define mDumpX(window, int_var)
 #define mclear( n )
-#define mprintf(args) 
+#define mprintf(args)
 #define mprintf_at(args)
 #define mputc( n, c )
 #define mputc_at( n, row, col, c )

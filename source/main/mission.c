@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -221,7 +221,7 @@ char *get_value(char *buf)
 char *get_parm_value(char *parm,CFILE *f)
 {
    static char buf[80];
-   
+
    if (!mfgets(buf,80,f))
       return NULL;
 
@@ -250,18 +250,18 @@ read_mission_file(char *filename,int count,int location)
 
    switch (location) {
       case ML_MISSIONDIR:
-         strcpy(filename2,MISSION_DIR);   
+         strcpy(filename2,MISSION_DIR);
          break;
 
-      case ML_CDROM:       
+      case ML_CDROM:
          songs_stop_redbook();      //so we can read from the CD
-         strcpy(filename2,CDROM_dir);     
+         strcpy(filename2,CDROM_dir);
          break;
 
-      default:             
+      default:
          Int3();     //fall through
 
-      case ML_CURDIR:      
+      case ML_CURDIR:
          strcpy(filename2,"");
          break;
    }
@@ -312,7 +312,7 @@ read_mission_file(char *filename,int count,int location)
 
       p = get_parm_value("type",mfile);
 
-      //get mission type 
+      //get mission type
       if (p)
          Mission_list[count].anarchy_only_flag = istok(p,"anarchy");
 
@@ -355,7 +355,7 @@ int build_mission_list(int anarchy_mode)
    if (!read_mission_file(BUILTIN_MISSION,0,ML_CURDIR))     //read built-in first
       Error("Could not find required mission file <%s>",BUILTIN_MISSION);
 
-   special_count = count=1; 
+   special_count = count=1;
 
    if( !FileFindFirst( search_name, &find ) ) {
       do {
@@ -420,7 +420,7 @@ int load_mission(int mission_num)
 
    mprintf(( 0, "Loading mission %d\n", mission_num ));
 
-   //read mission from file 
+   //read mission from file
 
    switch (Mission_list[mission_num].location) {
       case ML_MISSIONDIR:  strcpy(buf,MISSION_DIR);   break;
@@ -469,7 +469,7 @@ int load_mission(int mission_num)
          continue;                  //already have name, go to next line
       }
       else if (istok(buf,"type"))
-         continue;                  //already have name, go to next line            
+         continue;                  //already have name, go to next line
       else if (istok(buf,"hog")) {
          char  *bufp = buf;
 
@@ -514,7 +514,7 @@ int load_mission(int mission_num)
             for (i=0;i<N_secret_levels && mfgets(buf,80,mfile);i++) {
                char *t;
 
-               
+
                if ((t=strchr(buf,','))!=NULL) *t++=0;
                else
                   break;

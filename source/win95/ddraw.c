@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -82,7 +82,7 @@ BOOL DDInit(int mode)
 // Create Direct Draw Object (Use Emulation if Hardware is off)
    if (!_lpDD) {
       ddresult = DirectDrawCreate(NULL, &lpdd, NULL);
-      
+
       if (ddresult == DDERR_NODIRECTDRAWHW) {
          ddresult = DirectDrawCreate( (LPVOID) DDCREATE_EMULATIONONLY, &lpdd, NULL );
          if (!CheckDDResult(ddresult, "InitDD:DirectDrawCreate emulation"))
@@ -111,16 +111,16 @@ BOOL DDInit(int mode)
    #endif
 
       if (!FindArg("-disallowreboot")) flags |= DDSCL_ALLOWREBOOT;
- 
-      ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd, flags); 
 
-      if (!CheckDDResult(ddresult, "DDInit::SetCooperativeLevel")) { 
+      ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd, flags);
+
+      if (!CheckDDResult(ddresult, "DDInit::SetCooperativeLevel")) {
          IDirectDraw_Release(lpdd);
          return FALSE;
       }
 
       _DDExclusive = TRUE;
-      _DDFullScreen = TRUE;         
+      _DDFullScreen = TRUE;
    }
    else if (mode == DDGR_EXWINDOW) {
       ddresult = IDirectDraw_SetCooperativeLevel(lpdd, DDWnd,
@@ -140,7 +140,7 @@ BOOL DDInit(int mode)
       _DDFullScreen = FALSE;
    }
    else return FALSE;
-   
+
 // Get Display modes/Window Sizes
 // Force invalidation of all modes for now
    for (num = 0; num < 16; num++)
@@ -152,7 +152,7 @@ BOOL DDInit(int mode)
    W95DisplayMode = SM95_640x480x8;
    num = 0;
    if (mode == DDGR_FULLSCREEN) {
-      ddresult = IDirectDraw_EnumDisplayModes(lpdd, 0, NULL, 0, 
+      ddresult = IDirectDraw_EnumDisplayModes(lpdd, 0, NULL, 0,
                            EnumDispModesCB);
       if(!CheckDDResult(ddresult, "DDInit::EnumDisplayModes")) {
          IDirectDraw_Release(lpdd);
@@ -167,7 +167,7 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_320x200x8X].emul = 1;
       _DDModeList[SM95_320x200x8X].dbuf = 0;
       _DDModeList[SM95_320x200x8X].modex = 0;
-      _DDModeList[SM95_320x200x8X].paged = 0; 
+      _DDModeList[SM95_320x200x8X].paged = 0;
 
       _DDModeList[SM95_640x480x8].rw = 640;
       _DDModeList[SM95_640x480x8].rh = 480;
@@ -176,7 +176,7 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_640x480x8].emul = 1;
       _DDModeList[SM95_640x480x8].dbuf = 0;
       _DDModeList[SM95_640x480x8].modex = 0;
-      _DDModeList[SM95_640x480x8].paged = 0; 
+      _DDModeList[SM95_640x480x8].paged = 0;
 
       _DDModeList[SM95_800x600x8].rw = 800;
       _DDModeList[SM95_800x600x8].rh = 600;
@@ -185,10 +185,10 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_800x600x8].emul = 1;
       _DDModeList[SM95_800x600x8].dbuf = 0;
       _DDModeList[SM95_800x600x8].modex = 0;
-      _DDModeList[SM95_800x600x8].paged = 0; 
+      _DDModeList[SM95_800x600x8].paged = 0;
       _DDNumModes = 3;
    }
-   else if (mode == DDGR_WINDOW) {  
+   else if (mode == DDGR_WINDOW) {
       _DDModeList[SM95_320x200x8X].rw = 320;
       _DDModeList[SM95_320x200x8X].rh = 200;
       _DDModeList[SM95_320x200x8X].w = 640;
@@ -196,7 +196,7 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_320x200x8X].emul = 1;
       _DDModeList[SM95_320x200x8X].dbuf = 0;
       _DDModeList[SM95_320x200x8X].modex = 0;
-      _DDModeList[SM95_320x200x8X].paged = 0; 
+      _DDModeList[SM95_320x200x8X].paged = 0;
 
       _DDModeList[SM95_640x480x8].rw = 640;
       _DDModeList[SM95_640x480x8].rh = 480;
@@ -205,7 +205,7 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_640x480x8].emul = 1;
       _DDModeList[SM95_640x480x8].dbuf = 0;
       _DDModeList[SM95_640x480x8].modex = 0;
-      _DDModeList[SM95_640x480x8].paged = 0; 
+      _DDModeList[SM95_640x480x8].paged = 0;
 
       _DDModeList[SM95_800x600x8].rw = 800;
       _DDModeList[SM95_800x600x8].rh = 600;
@@ -214,7 +214,7 @@ BOOL DDInit(int mode)
       _DDModeList[SM95_800x600x8].emul = 1;
       _DDModeList[SM95_800x600x8].dbuf = 0;
       _DDModeList[SM95_800x600x8].modex = 0;
-      _DDModeList[SM95_800x600x8].paged = 0; 
+      _DDModeList[SM95_800x600x8].paged = 0;
       _DDNumModes = 3;
    }
    else return FALSE;
@@ -227,10 +227,10 @@ BOOL DDInit(int mode)
    ddcaps.dwSize = sizeof(ddcaps);
    ddcaps2.dwSize = sizeof(ddcaps);
    ddresult = IDirectDraw_GetCaps(_lpDD, &ddcaps, NULL);
-   if (!CheckDDResult(ddresult, "InitDD::GetCaps")) 
+   if (!CheckDDResult(ddresult, "InitDD::GetCaps"))
       return FALSE;
 
-   logentry("DirectDraw: VRAM free:  %d\n", ddcaps.dwVidMemFree); 
+   logentry("DirectDraw: VRAM free:  %d\n", ddcaps.dwVidMemFree);
    logentry("DirectDraw: VRAM total: %d\n", ddcaps.dwVidMemTotal);
 
 #ifndef NDEBUG
@@ -248,9 +248,9 @@ BOOL DDInit(int mode)
       return FALSE;
    }
 #endif
-   
+
    // If 'windowed' do this.
-   if (!_DDFullScreen) 
+   if (!_DDFullScreen)
    {
          ddresult = IDirectDraw_CreateClipper(_lpDD, 0, &_lpDDClipper, NULL);
          if (!CheckDDResult(ddresult, "DDCreateScreen::CreateClipper"))
@@ -296,16 +296,16 @@ BOOL DDInit(int mode)
       logentry("DirectDraw: Hardware is not bank-switched.  Using VRAM rendering.\n");
       _DDSysMemSurfacing = FALSE;
    }
-      
-   if (ddcaps.dwCaps & DDCAPS_COLORKEYHWASSIST) 
+
+   if (ddcaps.dwCaps & DDCAPS_COLORKEYHWASSIST)
       ddDriverCaps.hwcolorkey = 1;
-   else 
+   else
       ddDriverCaps.hwcolorkey = 0;
    if (ddcaps.dwCaps & DDCAPS_BLTSTRETCH)
       ddDriverCaps.hwbltstretch = 1;
-   else 
+   else
       ddDriverCaps.hwbltstretch = 0;
-      
+
 
 //@@  mprintf((0, "DD::Hardware="));
 //@@  if (ddcaps.dwCaps & DDCAPS_NOHARDWARE) mprintf((0, "Off\n"));
@@ -313,7 +313,7 @@ BOOL DDInit(int mode)
 //@@
 //@@  mprintf((0, "DD::VideoMem=%u bytes\n", ddcaps.dwVidMemTotal));
 
-//@@  mprintf((0, "DD::SrcColorKey="));   
+//@@  mprintf((0, "DD::SrcColorKey="));
 //@@  if (ddcaps.dwCKeyCaps & DDCKEYCAPS_SRCBLT) mprintf((0, "Hardware\n"));
 //@@  else mprintf((0, "Emulation\n"));
 
@@ -369,15 +369,15 @@ BOOL DDCreateScreen(int flags)
    }
 
 // Determine GFX caps.
-   if (ddcaps.dwCaps & DDCAPS_COLORKEYHWASSIST) 
+   if (ddcaps.dwCaps & DDCAPS_COLORKEYHWASSIST)
       ddDriverCaps.hwcolorkey = 1;
-   else 
+   else
       ddDriverCaps.hwcolorkey = 0;
    if (ddcaps.dwCaps & DDCAPS_BLTSTRETCH)
       ddDriverCaps.hwbltstretch = 1;
-   else 
+   else
       ddDriverCaps.hwbltstretch = 0;
-   
+
    memset(&ddsd, 0, sizeof(ddsd));
    ddsd.dwSize = sizeof(ddsd);
 
@@ -391,7 +391,7 @@ BOOL DDCreateScreen(int flags)
       ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &_lpDDSPrimary, NULL);
       if (!CheckDDResult(ddresult, "DDCreateScreen::CreateSurface -fullscreen"))
          return FALSE;
-         
+
       ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
       ddresult = IDirectDrawSurface_GetAttachedSurface(_lpDDSPrimary,
                                        &ddscaps, &_lpDDSBack);
@@ -419,27 +419,27 @@ BOOL DDCreateScreen(int flags)
       }
 
       if (GRMODEINFO(emul)) {
-         _lpDDSBack = DDCreateSurface(_DDModeList[W95DisplayMode].rw, 
+         _lpDDSBack = DDCreateSurface(_DDModeList[W95DisplayMode].rw,
                               _DDModeList[W95DisplayMode].rh, 1);
          if (!_lpDDSBack) {
             mprintf((0,"Call to create DDSBackBuffer failed."));
             return FALSE;
          }
       }
-      else _lpDDSBack = NULL; 
-   
+      else _lpDDSBack = NULL;
+
    }
 
 // Create 8-bit palette
    {
       ubyte pal[768];
       memset(pal, 0, 768);
-      
+
       memset(&ddsd, 0, sizeof(ddsd));
       ddsd.dwSize = sizeof(ddsd);
       IDirectDrawSurface_GetSurfaceDesc(_lpDDSPrimary, &ddsd);
 
-      logentry("Primary surface pixel format: %x, %d\n", ddsd.ddpfPixelFormat.dwFlags, ddsd.ddpfPixelFormat.dwRGBBitCount); 
+      logentry("Primary surface pixel format: %x, %d\n", ddsd.ddpfPixelFormat.dwFlags, ddsd.ddpfPixelFormat.dwRGBBitCount);
 
       _lpDDPalette = DDCreatePalette(pal);
       Assert(_lpDDPalette != NULL);
@@ -484,7 +484,7 @@ void DDKillScreen()
    _lpDDPalette = NULL;
    _lpDDSBack = NULL;
    _lpDDSPrimary = NULL;
-}  
+}
 
 
 void DDKillEmulatedScreen()
@@ -506,7 +506,7 @@ void DDSetDisplayMode(int display_mode, int flags)
    W95OldDisplayMode = display_mode;
    if (_DDFullScreen) {
       logentry("Setting screen display mode to (%dx%dx%d::%dx%dx%d).\n", _DDModeList[W95DisplayMode].w, _DDModeList[W95DisplayMode].h, _DDModeList[W95DisplayMode].bpp,_DDModeList[W95DisplayMode].rw, _DDModeList[W95DisplayMode].rh, _DDModeList[W95DisplayMode].bpp);
-   
+
       DDKillScreen();
       ddresult = IDirectDraw_SetDisplayMode(_lpDD, _DDModeList[W95DisplayMode].w,
                               _DDModeList[W95DisplayMode].h,
@@ -527,9 +527,9 @@ void DDSetDisplayMode(int display_mode, int flags)
       dwStyle |= WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX;
 
       SetRect(&rect, 0, 0, _DDModeList[W95DisplayMode].w,
-            _DDModeList[W95DisplayMode].h);  
+            _DDModeList[W95DisplayMode].h);
       SetWindowLong(DDWnd, GWL_STYLE, dwStyle);
-      AdjustWindowRectEx(&rect, 
+      AdjustWindowRectEx(&rect,
                   GetWindowLong(DDWnd, GWL_STYLE),
                   GetMenu(DDWnd)!=NULL,
                   GetWindowLong(DDWnd, GWL_EXSTYLE));
@@ -537,10 +537,10 @@ void DDSetDisplayMode(int display_mode, int flags)
       SetWindowPos(DDWnd, NULL, 0,0,
                rect.right-rect.left,
                rect.bottom-rect.top,
-            SWP_NOMOVE | 
-            SWP_NOZORDER | 
+            SWP_NOMOVE |
+            SWP_NOZORDER |
             SWP_NOACTIVATE);
-      SetWindowPos(DDWnd, HWND_NOTOPMOST, 0, 0, 0, 0, 
+      SetWindowPos(DDWnd, HWND_NOTOPMOST, 0, 0, 0, 0,
             SWP_NOSIZE |
             SWP_NOMOVE |
             SWP_NOACTIVATE);
@@ -551,7 +551,7 @@ void DDSetDisplayMode(int display_mode, int flags)
 
 
 // DDRestoreScreen
-//    Restore screens 
+//    Restore screens
 // ----------------------------------------------------------------------------
 int DDRestoreScreen()
 {
@@ -614,7 +614,7 @@ LPDIRECTDRAWSURFACE DDCreateSurface(int width, int height, BOOL vram)
 // logentry("Creating %dx%d sysram/vidram surface.\n", width, height);
    ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &lpdds, NULL);
    if (ddresult != DD_OK) {
-      logentry("DDRAW::CreateSurface err: %x\n", ddresult);    
+      logentry("DDRAW::CreateSurface err: %x\n", ddresult);
       return NULL;
    }
 
@@ -638,7 +638,7 @@ LPDIRECTDRAWSURFACE DDCreateSysMemSurface(int width, int height)
 // logentry("Creating %dx%d sysram surface.\n", width, height);
    ddresult = IDirectDraw_CreateSurface(_lpDD, &ddsd, &lpdds, NULL);
    if (ddresult != DD_OK) {
-      logentry("DDRAW::CreateSysMemSurface err: %x\n", ddresult);    
+      logentry("DDRAW::CreateSysMemSurface err: %x\n", ddresult);
       return NULL;
    }
 
@@ -660,7 +660,7 @@ LPDIRECTDRAWPALETTE DDGetPalette(LPDIRECTDRAWSURFACE lpdds)
    }
    return lpddp;
 }
-   
+
 
 // DDCreatePalette
 // ----------------------------------------------------------------------------
@@ -679,15 +679,15 @@ LPDIRECTDRAWPALETTE DDCreatePalette(ubyte *pal)
       pe[i].peFlags = 0;
    }
 
-   ddresult = IDirectDraw_CreatePalette(_lpDD, 
-                        DDPCAPS_8BIT | DDPCAPS_ALLOW256, 
-                        pe, 
+   ddresult = IDirectDraw_CreatePalette(_lpDD,
+                        DDPCAPS_8BIT | DDPCAPS_ALLOW256,
+                        pe,
                         &lpddpal, NULL);
    if (ddresult != DD_OK) {
       mprintf((1, "DDERR: CreatePalette %x.\n", ddresult));
       return NULL;
    }
-   
+
    return lpddpal;
 }
 
@@ -726,15 +726,15 @@ void DDLockCanvas_D(dd_grs_canvas *canvas, char *filename, int line)
    bmp = &canvas->canvas.cv_bitmap;
    memset(&ddsd, 0, sizeof(ddsd));
    ddsd.dwSize = sizeof(ddsd);
-   
+
    if (canvas->lock_count == 0) {
    // Obtain info about a rectangle on the surface
-      SetRect(&rect, bmp->bm_x, bmp->bm_y, 
+      SetRect(&rect, bmp->bm_x, bmp->bm_y,
             bmp->bm_x+bmp->bm_w, bmp->bm_y+bmp->bm_h);
 
    RetryLock:
 
-      ddresult = IDirectDrawSurface_Lock(canvas->lpdds,  
+      ddresult = IDirectDrawSurface_Lock(canvas->lpdds,
                               &rect,
                               &ddsd,
                               DDLOCK_WAIT,
@@ -757,7 +757,7 @@ void DDLockCanvas_D(dd_grs_canvas *canvas, char *filename, int line)
 //    // Manually calculate?
 //       bmp->bm_data = bmp->bm_data + (bmp->bm_y*bmp->bm_rowsize);
 //       bmp->bm_data += bmp->bm_x;
-//    } 
+//    }
 
       _DDLockCounter++;
    }
@@ -777,15 +777,15 @@ void DDLockCanvas(dd_grs_canvas *canvas)
    bmp = &canvas->canvas.cv_bitmap;
    memset(&ddsd, 0, sizeof(ddsd));
    ddsd.dwSize = sizeof(ddsd);
-   
+
    if (canvas->lock_count == 0) {
    // Obtain info about a rectangle on the surface
-      SetRect(&rect, bmp->bm_x, bmp->bm_y, 
+      SetRect(&rect, bmp->bm_x, bmp->bm_y,
             bmp->bm_x+bmp->bm_w, bmp->bm_y+bmp->bm_h);
 
    RetryLock:
 
-      ddresult = IDirectDrawSurface_Lock(canvas->lpdds,  
+      ddresult = IDirectDrawSurface_Lock(canvas->lpdds,
                               &rect,
                               &ddsd,
                               DDLOCK_WAIT,
@@ -808,7 +808,7 @@ void DDLockCanvas(dd_grs_canvas *canvas)
 //    // Manually calculate?
 //       bmp->bm_data = bmp->bm_data + (bmp->bm_y*bmp->bm_rowsize);
 //       bmp->bm_data += bmp->bm_x;
-//    } 
+//    }
 
       _DDLockCounter++;
    }
@@ -822,15 +822,15 @@ void DDUnlockCanvas(dd_grs_canvas *canvas)
    grs_bitmap *bmp;
 
    bmp = &canvas->canvas.cv_bitmap;
-   
+
    if (canvas->lock_count == 1) {
 //    if (canvas->sram && !GRMODEINFO(modex)) {
 //       bmp->bm_data = bmp->bm_data - bmp->bm_x;
 //       bmp->bm_data = bmp->bm_data - (bmp->bm_y*bmp->bm_rowsize);
 //    }
-      ddresult = IDirectDrawSurface_Unlock(canvas->lpdds, 
+      ddresult = IDirectDrawSurface_Unlock(canvas->lpdds,
                         canvas->canvas.cv_bitmap.bm_data);
-      if (ddresult != DD_OK) {   
+      if (ddresult != DD_OK) {
             Error("Unable to unlock canvas: %x\n", ddresult);
             exit(1);
       }
@@ -860,7 +860,7 @@ void DDFreeSurface(LPDIRECTDRAWSURFACE lpdds)
 
    ddresult = IDirectDrawSurface_Release(lpdds);
    if (ddresult != DD_OK) {
-      logentry("DDRAW::FreeSurface err: %x\n", ddresult);      
+      logentry("DDRAW::FreeSurface err: %x\n", ddresult);
       Error("DDFreeSurface: Unable to free surface.");
    }
 }
@@ -871,13 +871,13 @@ void DDFreeSurface(LPDIRECTDRAWSURFACE lpdds)
 BOOL DDRestoreCanvas(dd_grs_canvas *canvas)
 {
    HRESULT ddresult;
-   
+
    Assert(canvas->lpdds != NULL);
-   
+
    ddresult = IDirectDrawSurface_Restore(canvas->lpdds);
    if (ddresult != DD_OK) {
       if (ddresult != DDERR_WRONGMODE) {
-         logentry("DDRAW::RestoreCanvas::Surface err: %x\n", ddresult);    
+         logentry("DDRAW::RestoreCanvas::Surface err: %x\n", ddresult);
          return FALSE;
       }
       mprintf((0, "Recreating surfaces:\n"));
@@ -892,10 +892,10 @@ BOOL DDRestoreCanvas(dd_grs_canvas *canvas)
                                  canvas->canvas.cv_bitmap.bm_h);
       }
       else {
-         canvas->lpdds = DDCreateSurface(canvas->canvas.cv_bitmap.bm_w, 
+         canvas->lpdds = DDCreateSurface(canvas->canvas.cv_bitmap.bm_w,
                                  canvas->canvas.cv_bitmap.bm_h,
                                  _DDSysMemSurfacing);
-      }              
+      }
    }
    return TRUE;
 }
@@ -924,7 +924,7 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
 {
    DWORD width, height,bpp;
    int mode;
-   DWORD modex;   
+   DWORD modex;
 
    width = lpddsd->dwWidth;
    height = lpddsd->dwHeight;
@@ -933,13 +933,13 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
 
    modex = modex & DDSCAPS_MODEX;
 
-   if (width == 640 && height == 480 && bpp==8)   
+   if (width == 640 && height == 480 && bpp==8)
       mode = SM95_640x480x8;
    else if (width == 640 && height == 400 && bpp==8)
       mode = SM95_640x400x8;
-   else if (width == 320 && height == 200 && bpp==8) 
+   else if (width == 320 && height == 200 && bpp==8)
       mode = SM95_320x200x8X;
-   else if (width == 800 && height == 600 && bpp==8) 
+   else if (width == 800 && height == 600 && bpp==8)
       mode = SM95_800x600x8;
    else if (width == 1024 && height == 768 && bpp==8)
       mode = SM95_1024x768x8;
@@ -966,17 +966,17 @@ HRESULT CALLBACK EnumDispModesCB(LPDDSURFACEDESC lpddsd, LPVOID context)
       _DDModeList[SM95_320x200x8].emul = 1;
       _DDModeList[SM95_320x200x8].dbuf = 0;
       _DDModeList[SM95_320x200x8].modex = 0;
-      _DDModeList[SM95_320x200x8].paged = 0; 
+      _DDModeList[SM95_320x200x8].paged = 0;
       _DDModeList[SM95_320x200x8].w = 640;
       _DDModeList[SM95_320x200x8].h = 400;
       _DDModeList[SM95_320x200x8].bpp = 8;
-      
+
       _DDModeList[SM95_320x400x8].rw = 320;
       _DDModeList[SM95_320x400x8].rh = 400;
       _DDModeList[SM95_320x400x8].emul = 1;
       _DDModeList[SM95_320x400x8].dbuf = 0;
       _DDModeList[SM95_320x400x8].modex = 0;
-      _DDModeList[SM95_320x400x8].paged = 0; 
+      _DDModeList[SM95_320x400x8].paged = 0;
       _DDModeList[SM95_320x400x8].w = 640;
       _DDModeList[SM95_320x400x8].h = 400;
       _DDModeList[SM95_320x400x8].bpp = 8;

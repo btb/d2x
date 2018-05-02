@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -26,7 +26,7 @@ typedef struct _RBACHANNELCTL {
 } RBACHANNELCTL;
 
 
-#if defined(__NT__) 
+#if defined(__NT__)
    extern void RBAInit(void); //drive a == 0, drive b == 1
 #else
    extern void RBAInit(ubyte cd_drive_num);  //drive a == 0, drive b == 1
@@ -51,7 +51,7 @@ extern int  RBAGetNumberOfTracks(void);
 extern void RBAPause();
 extern int  RBAResume();
 
-//return the track number currently playing.  Useful if RBAPlayTracks() 
+//return the track number currently playing.  Useful if RBAPlayTracks()
 //is called.  Returns 0 if no track playing, else track number
 int RBAGetTrackNum();
 

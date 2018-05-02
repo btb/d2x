@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -147,7 +147,7 @@ void pof_read_vecs(vms_vector *vecs,int n,ubyte *bufp)
 
    memcpy(vecs, &bufp[Pof_addr], n*sizeof(*vecs));
    Pof_addr += n*sizeof(*vecs);
-   
+
    if (Pof_addr > MODEL_BUF_SIZE)
       Int3();
 }
@@ -177,12 +177,12 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
    int id,len, next_chunk;
    int anim_flag = 0;
    ubyte *model_buf;
-   
+
    model_buf = (ubyte *)malloc( MODEL_BUF_SIZE * sizeof(ubyte) );
    if (!model_buf)
       Error("Can't allocate space to read model %s\n", filename);
 
-   if ((ifile=cfopen(filename,"rb"))==NULL) 
+   if ((ifile=cfopen(filename,"rb"))==NULL)
       Error("Can't open file <%s>",filename);
 
    Assert(ifile->size <= MODEL_BUF_SIZE);
@@ -197,11 +197,11 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
       Error("Bad ID in model file <%s>",filename);
 
    version = pof_read_short(model_buf);
-   
+
    if (version < PM_COMPATIBLE_VERSION || version > PM_OBJFILE_VERSION)
       Error("Bad version (%d) in model file <%s>",version,filename);
 
-   if ( FindArg( "-bspgen" )) 
+   if ( FindArg( "-bspgen" ))
       printf( "bspgen -c1" );
 
    while (new_pof_read_int(id,model_buf) == 1) {
@@ -228,18 +228,18 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
             if ( FindArg( "-bspgen" )) {
                vms_vector v;
                fix l;
-            
+
                vm_vec_sub(&v, &pmmax, &pmmin );
                l = v.x;
-               if ( v.y > l ) l = v.y;             
-               if ( v.z > l ) l = v.z;             
-                                       
+               if ( v.y > l ) l = v.y;
+               if ( v.z > l ) l = v.z;
+
                printf( " -l%.3f", f2fl(l) );
             }
 
             break;
          }
-         
+
          case ID_SOBJ: {      //Subobject header
             int n;
 
@@ -264,7 +264,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
             break;
 
          }
-         
+
          #ifndef DRIVE
          case ID_GUNS: {      //List of guns on this object
 
@@ -305,7 +305,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 
             break;
          }
-         
+
          case ID_ANIM:     //Animation data
             //mprintf(0,"Got chunk ANIM, len=%d\n",len);
 
@@ -323,14 +323,14 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
                      pof_cfread(&anim_angs[f][m],1,sizeof(vms_angvec),model_buf);
 
                robot_set_angles(r,pm,anim_angs);
-            
+
             }
             else
                pof_cfseek(model_buf,len,SEEK_CUR);
 
             break;
          #endif
-         
+
          case ID_TXTR: {      //Texture filename list
             int n;
             char name_buf[128];
@@ -346,15 +346,15 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
 
             break;
          }
-         
+
          case ID_IDTA:     //Interpreter data
             //mprintf(0,"Got chunk IDTA, len=%d\n",len);
 
             pm->model_data = malloc(len);
             pm->model_data_size = len;
-         
+
             pof_cfread(pm->model_data,1,len,model_buf);
-         
+
             break;
 
          default:
@@ -380,7 +380,7 @@ polymodel *read_model_file(polymodel *pm,char *filename,robot_info *r)
       printf( " %s.3ds\n", filename );
       *p = '.';
    }
-   
+
    free(model_buf);
 
    return pm;
@@ -400,7 +400,7 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
    if (!model_buf)
       Error("Can't allocate space to read model %s\n", filename);
 
-   if ((ifile=cfopen(filename,"rb"))==NULL) 
+   if ((ifile=cfopen(filename,"rb"))==NULL)
       Error("Can't open file <%s>",filename);
 
    Assert(ifile->size <= MODEL_BUF_SIZE);
@@ -415,7 +415,7 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
       Error("Bad ID in model file <%s>",filename);
 
    version = pof_read_short(model_buf);
-   
+
    Assert(version >= 7);      //must be 7 or higher for this data
 
    if (version < PM_COMPATIBLE_VERSION || version > PM_OBJFILE_VERSION)
@@ -455,7 +455,7 @@ int read_model_guns(char *filename,vms_vector *gun_points, vms_vector *gun_dirs,
    }
 
    free(model_buf);
-   
+
    return n_guns;
 }
 
@@ -492,7 +492,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
          {
             int cnt=1;
             fix depth;
-   
+
             depth = g3_calc_point_depth(pos);      //gets 3d depth
 
             while (po->simpler_model && depth > cnt++ * Simple_model_threshhold_scale * po->rad)
@@ -525,13 +525,13 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 #ifdef PIGGY_USE_PAGING
    // Make sure the textures for this object are paged in...
    piggy_page_flushed = 0;
-   for (i=0;i<po->n_textures;i++)   
+   for (i=0;i<po->n_textures;i++)
       PIGGY_PAGE_IN( texture_list_index[i] );
    // Hmmm... cache got flushed in the middle of paging all these in,
    // so we need to reread them all in.
    if (piggy_page_flushed) {
       piggy_page_flushed = 0;
-      for (i=0;i<po->n_textures;i++)   
+      for (i=0;i<po->n_textures;i++)
          PIGGY_PAGE_IN( texture_list_index[i] );
    }
    // Make sure that they can all fit in memory.
@@ -554,7 +554,7 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
 
    else {
       int i;
-   
+
       for (i=0;flags;flags>>=1,i++)
          if (flags & 1) {
             vms_vector ofs;
@@ -562,15 +562,15 @@ void draw_polygon_model(vms_vector *pos,vms_matrix *orient,vms_angvec *anim_angl
             Assert(i < po->n_models);
 
             //if submodel, rotate around its center point, not pivot point
-   
+
             vm_vec_avg(&ofs,&po->submodel_mins[i],&po->submodel_maxs[i]);
             vm_vec_negate(&ofs);
             g3_start_instance_matrix(&ofs,NULL);
-   
+
             g3_draw_polygon_model(&po->model_data[po->submodel_ptrs[i]],texture_list,anim_angles,light,glow_values);
-   
+
             g3_done_instance();
-         }  
+         }
    }
 
    g3_done_instance();
@@ -601,7 +601,7 @@ void polyobj_find_min_max(polymodel *pm)
    ushort *data,type;
    int m;
    vms_vector *big_mn,*big_mx;
-   
+
    big_mn = &pm->mins;
    big_mx = &pm->maxs;
 
@@ -613,40 +613,40 @@ void polyobj_find_min_max(polymodel *pm)
       ofs= &pm->submodel_offsets[m];
 
       data = (ushort *)&pm->model_data[pm->submodel_ptrs[m]];
-   
+
       type = *data++;
-   
+
       Assert(type == 7 || type == 1);
-   
+
       nverts = *data++;
-   
+
       if (type==7)
          data+=2;    //skip start & pad
-   
+
       vp = (vms_vector *) data;
-   
+
       *mn = *mx = *vp++; nverts--;
 
       if (m==0)
          *big_mn = *big_mx = *mn;
-   
+
       while (nverts--) {
          if (vp->x > mx->x) mx->x = vp->x;
          if (vp->y > mx->y) mx->y = vp->y;
          if (vp->z > mx->z) mx->z = vp->z;
-   
+
          if (vp->x < mn->x) mn->x = vp->x;
          if (vp->y < mn->y) mn->y = vp->y;
          if (vp->z < mn->z) mn->z = vp->z;
-   
+
          if (vp->x+ofs->x > big_mx->x) big_mx->x = vp->x+ofs->x;
          if (vp->y+ofs->y > big_mx->y) big_mx->y = vp->y+ofs->y;
          if (vp->z+ofs->z > big_mx->z) big_mx->z = vp->z+ofs->z;
-   
+
          if (vp->x+ofs->x < big_mn->x) big_mn->x = vp->x+ofs->x;
          if (vp->y+ofs->y < big_mn->y) big_mn->y = vp->y+ofs->y;
          if (vp->z+ofs->z < big_mn->z) big_mn->z = vp->z+ofs->z;
-   
+
          vp++;
       }
 

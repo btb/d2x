@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -140,17 +140,17 @@ void load_text()
          else if (p[1] == 't') newchar = '\t';
          else if (p[1] == '\\') newchar = '\\';
          else
-            Error("Unsupported key sequence <\\%c> on line %d of file <%s>",p[1],i+1,filename); 
+            Error("Unsupported key sequence <\\%c> on line %d of file <%s>",p[1],i+1,filename);
 
          p[0] = newchar;
          strcpy(p+1,p+2);
          p++;
       }
- 
+
    }
 
 // Assert(tptr==text+len || tptr==text+len-2);
-   
+
 }
 
 

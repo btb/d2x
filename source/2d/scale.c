@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -63,13 +63,13 @@ void scale_row_c( ubyte * sbits, ubyte * dbits, int width, fix u, fix du )
 
       if ( c != Transparency_color )
          *dbits = c;
-         
+
       dbits++;
       u += du;
    }
 }
 
-// esi, edi = source, dest 
+// esi, edi = source, dest
 // ecx = width
 // ebx = u
 // edx = du
@@ -144,7 +144,7 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf, int orientation )
    clipped_x0 = x0; clipped_y0 = y0;
    clipped_x1 = x1; clipped_y1 = y1;
 
-   if (check_sub_oflow(x0,x1) || 
+   if (check_sub_oflow(x0,x1) ||
        check_sub_oflow(y0,y1) ||
        check_sub_oflow(u0,u1) ||
        check_sub_oflow(v0,v1))
@@ -173,7 +173,7 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf, int orientation )
       clipped_v1 = FIND_SCALED_NUM(ymax,y0,y1,v0,v1);
       clipped_y1 = ymax;
    }
-   
+
    dx0 = f2i(clipped_x0); dx1 = f2i(clipped_x1);
    dy0 = f2i(clipped_y0); dy1 = f2i(clipped_y1);
 
@@ -234,7 +234,7 @@ void scale_bitmap(grs_bitmap *bp, grs_point *vertbuf, int orientation )
             Assert(bp->bm_type == BM_LINEAR && dbp->bm_type == BM_LINEAR);
         }
 #endif
-   
+
    if ( (dtemp < (f2i(clipped_x1)-f2i(clipped_x0))) && (dtemp>0) )
          scale_bitmap_cc_asm(bp, dbp, dx0, dy0, dx1, dy1, clipped_u0, clipped_v0, clipped_u1, clipped_v1, orientation  );
       else
@@ -257,7 +257,7 @@ void scale_bitmap_c(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, int y0
    for (y=y0; y<=y1; y++ )       {
       sbits = &source_bmp->bm_data[source_bmp->bm_rowsize*f2i(v)];
       dbits = &dest_bmp->bm_data[dest_bmp->bm_rowsize*y+x0];
-      u = u0; 
+      u = u0;
       v += dv;
       for (x=x0; x<=x1; x++ )       {
          *dbits++ = sbits[ u >> 16 ];
@@ -306,7 +306,7 @@ ubyte scale_rle_data[1024];
 void decode_row( grs_bitmap * bmp, int y )
 {
    int i, offset=4+bmp->bm_h;
-   
+
    for (i=0; i<y; i++ )
       offset += bmp->bm_data[4+i];
    gr_rle_decode( &bmp->bm_data[offset], scale_rle_data, sizeof(scale_rle_data) );
@@ -377,7 +377,7 @@ void scale_bitmap_cc_asm(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x0, i
    v = v0;
 
    dv = (v1-v0) / (y1-y0);
-      
+
    rls_stretch_scanline_setup( (int)(x1-x0), f2i(u1)-f2i(u0) );
    if ( scale_ydelta_minus_1 < 1 ) return;
    rls_do_cc_setup_asm();
@@ -410,7 +410,7 @@ void scale_bitmap_cc_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x
    }
 
    dv = (v1-v0) / (y1-y0);
-      
+
    rls_stretch_scanline_setup( (int)(x1-x0), f2i(u1)-f2i(u0) );
    if ( scale_ydelta_minus_1 < 1 ) return;
    rls_do_cc_setup_asm();
@@ -432,7 +432,7 @@ void scale_bitmap_cc_asm_rle(grs_bitmap *source_bmp, grs_bitmap *dest_bmp, int x
 
 
 
-// Run-length slice bitmap scan line stretcher 
+// Run-length slice bitmap scan line stretcher
 
 void DrawHorizontalRun(char *ScreenPtr, int RunLength, int Color)
 {

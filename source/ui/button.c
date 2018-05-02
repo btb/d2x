@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -65,7 +65,7 @@ void ui_draw_button( UI_GADGET_BUTTON * button )
       {
          if ((button->user_function==NULL) && button->dim_if_no_function )
             gr_set_fontcolor( CGREY, -1 );
-         else 
+         else
             gr_set_fontcolor( CBLACK, -1 );
       }
 
@@ -80,7 +80,7 @@ void ui_draw_button( UI_GADGET_BUTTON * button )
             gr_rect( 0, 0, button->width, button->height );
             gr_setcolor( color );
             gr_rect( 1, 1, button->width-1, button->height-1 );
-         }           
+         }
       } else {
          if (button->text )   {
             ui_draw_box_in( 0, 0, button->width-1, button->height-1 );
@@ -90,7 +90,7 @@ void ui_draw_button( UI_GADGET_BUTTON * button )
             gr_rect( 0, 0, button->width, button->height );
             gr_setcolor( color );
             gr_rect( 2, 2, button->width, button->height );
-         }        
+         }
       }
       button->canvas->cv_color = color;
       ui_mouse_show();
@@ -120,7 +120,7 @@ UI_GADGET_BUTTON * ui_add_gadget_button( UI_WINDOW * wnd, short x, short y, shor
    button->user_function1 = NULL;
    button->hotkey1= -1;
    button->dim_if_no_function = 0;
-   
+
    return button;
 
 }
@@ -165,14 +165,14 @@ void ui_button_do( UI_GADGET_BUTTON * button, int keypress )
       last_keypress = 0;
    }
 
-   
+
    //if ((CurWindow->keyboard_focus_gadget==(UI_GADGET *)button) && (keyd_pressed[KEY_SPACEBAR] || keyd_pressed[KEY_ENTER] ) )
    // button->position = 2;
 
    if ((CurWindow->keyboard_focus_gadget==(UI_GADGET *)button) && ((keypress==KEY_SPACEBAR) || (keypress==KEY_ENTER)) )
       button->position = 2;
 
-   if (CurWindow->keyboard_focus_gadget==(UI_GADGET *)button)  
+   if (CurWindow->keyboard_focus_gadget==(UI_GADGET *)button)
       if ((button->oldposition==2) && (keyd_pressed[KEY_SPACEBAR] || keyd_pressed[KEY_ENTER] )  )
          button->position = 2;
 

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -42,7 +42,7 @@ static char rcsid[] = "$Id: controls.c 2.15 1996/01/25 21:24:51 champaign Exp $"
 #include "vclip.h"
 #include "fireball.h"
 
-//look at keyboard, mouse, joystick, CyberMan, whatever, and set 
+//look at keyboard, mouse, joystick, CyberMan, whatever, and set
 //physics vars rotvel, velocity
 
 fix Afterburner_charge=f1_0;
@@ -111,12 +111,12 @@ void read_flying_controls( object * obj )
          {
             fix afterburner_scale;
             int old_count,new_count;
-   
+
             //add in value from 0..1
             afterburner_scale = f1_0 + min(f1_0/2,Afterburner_charge) * 2;
-   
+
             forward_thrust_time = fixmul(FrameTime,afterburner_scale);  //based on full thrust
-   
+
             old_count = (Afterburner_charge / (DROP_DELTA_TIME/AFTERBURNER_USE_SECS));
 
             Afterburner_charge -= FrameTime/AFTERBURNER_USE_SECS;
@@ -132,23 +132,23 @@ void read_flying_controls( object * obj )
       }
       else {
          fix cur_energy,charge_up;
-   
+
          //charge up to full
          charge_up = min(FrameTime/8,f1_0 - Afterburner_charge);  //recharge over 8 seconds
-   
+
          cur_energy = max(Players[Player_num].energy-i2f(10),0);  //don't drop below 10
 
          //maybe limit charge up by energy
          charge_up = min(charge_up,cur_energy/10);
-   
+
          Afterburner_charge += charge_up;
-   
+
          Players[Player_num].energy -= charge_up * 100 / 10;   //full charge uses 10% of energy
       }
 
    // Set object's thrust vector for forward/backward
    vm_vec_copy_scale(&obj->mtype.phys_info.thrust,&obj->orient.fvec, forward_thrust_time );
-   
+
    // slide left/right
    vm_vec_scale_add2(&obj->mtype.phys_info.thrust,&obj->orient.rvec, Controls.sideways_thrust_time );
 
@@ -161,7 +161,7 @@ void read_flying_controls( object * obj )
       vm_vec_scale_add2(&obj->mtype.phys_info.velocity,&obj->orient.uvec,fixmul(swiggle,Player_ship->wiggle));
    }
 
-   // As of now, obj->mtype.phys_info.thrust & obj->mtype.phys_info.rotthrust are 
+   // As of now, obj->mtype.phys_info.thrust & obj->mtype.phys_info.rotthrust are
    // in units of time... In other words, if thrust==FrameTime, that
    // means that the user was holding down the Max_thrust key for the
    // whole frame.  So we just scale them up by the max, and divide by

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -57,7 +57,7 @@ extern void create_abs_vertex_lists(int *num_faces, int *vertices, int segnum, i
 
 // -----------------------------------------------------------------------------------
 // Like create all vertex lists, but returns the vertnums (relative to
-// the side) for each of the faces that make up the side.  
+// the side) for each of the faces that make up the side.
 //      If there is one face, it has 4 vertices.
 //      If there are two faces, they both have three vertices, so face #0 is stored in vertices 0,1,2,
 //      face #1 is stored in vertices 3,4,5.
@@ -67,7 +67,7 @@ void create_all_vertnum_lists(int *num_faces, int *vertnums, int segnum, int sid
 extern int get_num_faces(side *sidep);
 
 //returns 3 different bitmasks with info telling if this sphere is in
-//this segment.  See segmasks structure for info on fields   
+//this segment.  See segmasks structure for info on fields
 segmasks get_seg_masks(vms_vector *checkp,int segnum,fix rad);
 
 //this macro returns true if the segnum for an object is correct

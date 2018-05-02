@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -33,7 +33,7 @@ void read_flying_controls( object * obj );
 void do_physics_sim(object *obj);
 
 //tell us what the given object will do (as far as hiting walls) in
-//the given time (in seconds) t.  Igores acceleration (sorry) 
+//the given time (in seconds) t.  Igores acceleration (sorry)
 //if check_objects is set, check with objects, else just with walls
 //returns fate, fills in hit time.  If fate==HIT_NONE, hit_time undefined
 // Stuff hit_info with fvi data as set by find_vector_intersection.

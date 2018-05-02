@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -44,40 +44,40 @@ jointpos Robot_joints[MAX_ROBOT_JOINTS] = {
 
                {2,{deg(0),0,0}},       //alert
                {3,{deg(0),0,0}},
-      
+
                {2,{deg(0),0,0}},       //fire
                {3,{deg(0),0,0}},
-      
+
                {2,{deg(50),0,0}},      //recoil
                {3,{deg(-50),0,0}},
-      
+
                {2,{deg(10),0,deg(70)}},      //flinch
                {3,{deg(0),deg(20),0}},
-      
+
 //gun 1
                {4,{deg(-30),0,0}},     //rest (2 joints)
                {5,{deg(-40),0,0}},
 
                {4,{deg(0),0,0}},       //alert
                {5,{deg(0),0,0}},
-      
+
                {4,{deg(0),0,0}},       //fire
                {5,{deg(0),0,0}},
-      
+
                {4,{deg(50),0,0}},      //recoil
                {5,{deg(-50),0,0}},
-      
+
                {4,{deg(20),0,deg(-50)}},  //flinch
                {5,{deg(0),0,deg(20)}},
-      
+
 //rest of body (the head)
 
                {1,{deg(70),0,0}},      //rest (1 joint, head)
 
                {1,{deg(0),0,0}},       //alert
-      
+
                {1,{deg(0),0,0}},       //fire
-      
+
                {1,{deg(0),0,0}},       //recoil
 
                {1,{deg(-20),deg(15),0}},        //flinch
@@ -131,7 +131,7 @@ void calc_gun_point(vms_vector *gun_point,object *obj,int gun_num)
    vm_copy_transpose_matrix(&m,&obj->orient);
    vm_vec_rotate(gun_point,&pnt,&m);
    vm_vec_add2(gun_point,&obj->pos);
-   
+
 }
 
 //fills in ptr to list of joints, and returns the number of joints in list
@@ -183,11 +183,11 @@ void set_robot_state(object *obj,int state)
 //--unused-- test_anim_states()
 //--unused-- {
 //--unused--   set_robot_state(&Objects[1],cur_state);
-//--unused-- 
+//--unused--
 //--unused--   mprintf(0,"Robot in state %d\n",cur_state);
-//--unused-- 
+//--unused--
 //--unused--   cur_state = (cur_state+1)%N_ANIM_STATES;
-//--unused-- 
+//--unused--
 //--unused-- }
 
 //set the animation angles for this robot.  Gun fields of robot info must

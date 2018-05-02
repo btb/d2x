@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -65,13 +65,13 @@ void do_powerup_frame(object *obj)
    vclip *vc = &Vclip[vci->vclip_num];
 
    fudge = (FrameTime * ((obj-Objects)&3)) >> 4;
-   
+
    vci->frametime -= FrameTime+fudge;
-   
+
    while (vci->frametime < 0 ) {
 
       vci->frametime += vc->frame_time;
-      
+
       if ((obj-Objects)&1)
          vci->framenum--;
       else
@@ -404,7 +404,7 @@ int do_powerup(object *obj)
             if (!used && ammo_used) {
                powerup_basic(7, 14, 21, VULCAN_AMMO_SCORE, "%s!", TXT_VULCAN_AMMO);
                special_used = 1;
-               id = POW_VULCAN_AMMO;      //set new id for making sound at end of this function 
+               id = POW_VULCAN_AMMO;      //set new id for making sound at end of this function
                if (obj->ctype.powerup_info.count == 0)
                   used = 1;      //say used if all ammo taken
             }
@@ -551,8 +551,8 @@ int do_powerup(object *obj)
              }
             else
                powerup_basic(15, 0, 15, 0, "Energy -> shield converter!");
-               
-   
+
+
             used=1;
          }
          break;
@@ -632,7 +632,7 @@ int do_powerup(object *obj)
          break;
 
       case POW_FLAG_BLUE:
-         if (Game_mode & GM_CAPTURE)         
+         if (Game_mode & GM_CAPTURE)
             if (get_team(Player_num) == TEAM_RED) {
                powerup_basic(15, 0, 15, 0, "BLUE FLAG!");
                Players[Player_num].flags |= PLAYER_FLAGS_FLAG;
@@ -642,7 +642,7 @@ int do_powerup(object *obj)
          break;
 
       case POW_HOARD_ORB:
-         if (Game_mode & GM_HOARD)        
+         if (Game_mode & GM_HOARD)
             if (Players[Player_num].secondary_ammo[PROXIMITY_INDEX]<12) {
                powerup_basic(15, 0, 15, 0, "Orb!!!");
                Players[Player_num].secondary_ammo[PROXIMITY_INDEX]++;
@@ -650,10 +650,10 @@ int do_powerup(object *obj)
                used=1;
                multi_send_got_orb (Player_num);
             }
-        break; 
+        break;
 
       case POW_FLAG_RED:
-         if (Game_mode & GM_CAPTURE)         
+         if (Game_mode & GM_CAPTURE)
             if (get_team(Player_num) == TEAM_BLUE) {
                powerup_basic(15, 0, 15, 0, "RED FLAG!");
                Players[Player_num].flags |= PLAYER_FLAGS_FLAG;

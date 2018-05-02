@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -22,9 +22,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // The default socket to use.
 
 #ifdef SHAREWARE
-   #define IPX_DEFAULT_SOCKET 0x5110      
+   #define IPX_DEFAULT_SOCKET 0x5110
 #else
-   #define IPX_DEFAULT_SOCKET 0x5130      
+   #define IPX_DEFAULT_SOCKET 0x5130
 #endif
 
 #define NETSTAT_MENU             0
@@ -75,7 +75,7 @@ typedef struct sequence_packet {
 typedef struct frame_info {
    ubyte          type;                // What type of packet
    ubyte          pad[3];              // Pad out length of frame_info packet
-   int            numpackets;       
+   int            numpackets;
    vms_vector     obj_pos;
    vms_matrix     obj_orient;
    vms_vector     phys_velocity;
@@ -95,7 +95,7 @@ typedef struct frame_info {
 typedef struct short_frame_info {
    ubyte          type;                // What type of packet
    ubyte          pad[3];              // Pad out length of frame_info packet
-   int            numpackets;       
+   int            numpackets;
    shortpos       thepos;
    ushort         data_size;     // Size of data appended to the net packet
    ubyte          playernum;
@@ -134,7 +134,7 @@ extern int Network_status;
 extern fix LastPacketTime[MAX_PLAYERS];
 
 extern ushort my_segments_checksum;
-// By putting an up-to-20-char-message into Network_message and 
+// By putting an up-to-20-char-message into Network_message and
 // setting Network_message_reciever to the player num you want to
 // send it to (100 for broadcast) the next frame the player will
 // get your message.

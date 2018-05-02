@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -183,7 +183,7 @@ check_id_checksum_and_date()
 
    test_checksum = 0;
    for (i = 0; i < strlen(name_copy); i++) {
-      found = 0;    
+      found = 0;
       test_checksum += name_copy[i];
       if (((test_checksum / 2) * 2) != test_checksum)
          found = 1;
@@ -211,7 +211,7 @@ int init_graphics()
 #endif
 
 #ifdef EDITOR
-   if ( result==0 )  
+   if ( result==0 )
       result=vga_check_mode(SM_800x600V);
 #endif
 
@@ -264,7 +264,7 @@ void check_dos_version()
 
    major = regs.h.al;
    minor = regs.h.ah;
-   
+
    if ( major < 5 )  {
       Error( "%s %d.%d\n%s", TXT_DOS_VERSION_1, major, minor, TXT_DOS_VERSION_2);
    }
@@ -296,7 +296,7 @@ void dos_check_file_handles(int num_required)
    if ( num_required > 16 )
       num_required = 16;
 
-   n = 0;   
+   n = 0;
    for (i=0; i<16; i++ )
       fp[i] = NULL;
    for (i=0; i<16; i++ )   {
@@ -312,7 +312,7 @@ void dos_check_file_handles(int num_required)
       Error(   "\n%s\n"
                "------------------------\n"
                "%d/%d %s\n"
-               "%s\n" 
+               "%s\n"
                "%s\n",
                   TXT_NOT_ENOUGH_HANDLES,
                   n, num_required, TXT_HANDLES_1,
@@ -389,7 +389,7 @@ void check_memory()
    }
 
    if ( dpmi_physical_memory < NEEDED_PHYSICAL_MEMORY )  {
-      if ( dpmi_virtual_memory ) {  
+      if ( dpmi_virtual_memory ) {
          Error( "%d %s\n%s\n", NEEDED_PHYSICAL_MEMORY - dpmi_physical_memory, TXT_PHYSICAL_MEMORY, TXT_PHYSICAL_MEMORY_2 );
       }
       else
@@ -413,31 +413,31 @@ int Inferno_verbose = 0;
 //NO_STACK_SIZE_CHECK uint * stack, *stack_ptr;
 //NO_STACK_SIZE_CHECK int stack_size, unused_stack_space;
 //NO_STACK_SIZE_CHECK int sil;
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK int main(int argc,char **argv)
 //NO_STACK_SIZE_CHECK {
 //NO_STACK_SIZE_CHECK   uint ret_value;
-//NO_STACK_SIZE_CHECK   
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   unused_stack_space = 0;
 //NO_STACK_SIZE_CHECK   stack = &ret_value;
 //NO_STACK_SIZE_CHECK   stack_size = stackavail()/4;
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   for ( sil=0; sil<stack_size; sil++ )   {
 //NO_STACK_SIZE_CHECK      stack--;
 //NO_STACK_SIZE_CHECK      *stack = 0xface0123;
 //NO_STACK_SIZE_CHECK   }
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   ret_value = descent_main( argc, argv );      // Rename main to be descent_main
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   for ( sil=0; sil<stack_size; sil++ )   {
-//NO_STACK_SIZE_CHECK      if ( *stack == 0xface0123 )   
+//NO_STACK_SIZE_CHECK      if ( *stack == 0xface0123 )
 //NO_STACK_SIZE_CHECK         unused_stack_space++;
 //NO_STACK_SIZE_CHECK      stack++;
 //NO_STACK_SIZE_CHECK   }
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   mprintf(( 0, "Program used %d/%d stack space\n", (stack_size - unused_stack_space)*4, stack_size*4 ));
 //NO_STACK_SIZE_CHECK   key_getch();
-//NO_STACK_SIZE_CHECK 
+//NO_STACK_SIZE_CHECK
 //NO_STACK_SIZE_CHECK   return ret_value;
 //NO_STACK_SIZE_CHECK }
 
@@ -531,15 +531,15 @@ print_commandline_help()
 
 void do_joystick_init()
 {
- 
+
    joy_set_timer_rate( digi_timer_rate );    // Tell joystick how fast timer is going
 
 #ifdef TACTILE
    {
    int t;
    if (t=FindArg ("-iforce"))
-    {            
-     TactileStick=TACTILE_IMMERSION;           
+    {
+     TactileStick=TACTILE_IMMERSION;
      Tactile_open ((int)atoi(Args[t+1]));
     }
    }
@@ -613,7 +613,7 @@ void do_headset_init()
          is_special = 0;
       }
       else {
-         //make sure we have version 2.0 drivers by trying to go into 
+         //make sure we have version 2.0 drivers by trying to go into
          //line-sequential mode.  If we fail to go into that mode, we
          //must have the old drivers (I guess)
          if (vfx_enable_stereo()) { //non-zero mean error
@@ -637,7 +637,7 @@ void do_headset_init()
          //VR_low_res = 3;
          disable_high_res=1;  //headset can't display 640x480
       }
-      
+
       break;
    }
    case VRD_CYBERMAXX:
@@ -714,12 +714,12 @@ void do_headset_init()
    if (Game_victor_flag) {
       char *vswitch = getenv( "CYBERMAXX" );
       if ( vswitch ) {
-         char *p = strstr( vswitch, "/E:R" ); 
+         char *p = strstr( vswitch, "/E:R" );
          if ( p ) {
             VR_eye_switch = 1;
-         } else 
+         } else
             VR_eye_switch = 0;
-      } else {    
+      } else {
          VR_eye_switch = 0;
       }
    }
@@ -736,10 +736,10 @@ do_register_player(ubyte *title_pal)
 
       key_flush();
 
-      //now, before we bring up the register player menu, we need to 
+      //now, before we bring up the register player menu, we need to
       //do some stuff to make sure the palette is ok.  First, we need to
       //get our current palette into the 2d's array, so the remapping will
-      //work.  Second, we need to remap the fonts.  Third, we need to fill 
+      //work.  Second, we need to remap the fonts.  Third, we need to fill
       //in part of the fade tables so the darkening of the menu edges works
 
       memcpy(gr_palette,title_pal,sizeof(gr_palette));
@@ -840,7 +840,7 @@ char CDROM_dir[30] = "";
 int find_descent_cd()
 {
    dpmi_real_regs rregs;
-      
+
    // Get dos memory for call...
    char * buf;
    int num_drives, i;
@@ -855,7 +855,7 @@ int find_descent_cd()
    }
    num_drives = rregs.ebx;
 
-   buf = (char *)dpmi_get_temp_low_buffer( sizeof(char *) );   
+   buf = (char *)dpmi_get_temp_low_buffer( sizeof(char *) );
    if (buf==NULL) {
       return -2;        // Error getting memory!
    }
@@ -901,7 +901,7 @@ int find_descent_cd()
                cdrom_drive = buf[i]+1;
                goto FoundIt;
             }
-         }           
+         }
          #else
          {  //check for OEM disk
 
@@ -933,17 +933,17 @@ int find_descent_cd()
 
             }
          }
-   
+
          #endif
 
-      }           
+      }
    }
-   
+
    FoundIt:
 
    _dos_setdrive(cdrive,&cur_drive);
-   
-// mprintf ((0,"cur_drive=%d cdrom_drive=%d\n",cur_drive,cdrom_drive));     
+
+// mprintf ((0,"cur_drive=%d cdrom_drive=%d\n",cur_drive,cdrom_drive));
    return cdrom_drive;
 }
 
@@ -1079,7 +1079,7 @@ int main(int argc,char **argv)
 
    //lock down the entire stack, in the hopes of fixing the crazy hang
    //bug that's been plaguing us these last few days
-   //NOTE: this code assumes that the varible i is the first thing 
+   //NOTE: this code assumes that the varible i is the first thing
    //on the stack in this routine, and that the stack is 50K
    dpmi_lock_region(((ubyte *) &i)-1024*50,1024*50);
 
@@ -1111,7 +1111,7 @@ int main(int argc,char **argv)
       #endif
    }
    #endif
-   
+
    load_text();
 
    //print out the banner title
@@ -1123,7 +1123,7 @@ int main(int argc,char **argv)
    printf("  Vertigo Enhanced");
    #endif
    printf("  %s %s\n", __DATE__,__TIME__);
-   printf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK); 
+   printf("%s\n%s\n",TXT_COPYRIGHT,TXT_TRADEMARK);
 
    check_id_checksum_and_date();
 
@@ -1159,7 +1159,7 @@ int main(int argc,char **argv)
          for (ch=0; ch<strlen(Args[t+1]); ch++)
             *pp++ ^= Args[t+1][ch];
    }
-   else 
+   else
       Error("Invalid processor");      //missing password
    #endif
 
@@ -1175,7 +1175,7 @@ int main(int argc,char **argv)
 
    if ( !FindArg( "-nodoscheck" ))
       check_dos_version();
-   
+
    if ( !FindArg( "-nofilecheck" ))
       dos_check_file_handles(5);
 
@@ -1217,7 +1217,7 @@ int main(int argc,char **argv)
 
    if (!FindArg( "-nomouse" ))   {
       verbose( "\n%s", TXT_VERBOSE_4);
-   
+
       if (FindArg ("-cybermouse"))
        {
        // CybermouseActive=InitCyberMouse();
@@ -1229,12 +1229,12 @@ int main(int argc,char **argv)
       else
          mouse_init(1);
 
-   } 
+   }
   else
       verbose( "\n%s", TXT_VERBOSE_5);
 
    Here:
-  
+
    do_joystick_init();
 
    verbose( "\n%s", TXT_VERBOSE_11);
@@ -1257,9 +1257,9 @@ int main(int argc,char **argv)
    do_network_init();
 #endif
 
-   if (!FindArg("-noserial")) 
+   if (!FindArg("-noserial"))
       serial_active = 1;
-   else 
+   else
       serial_active = 0;
 
 #if defined(POLY_ACC)
@@ -1280,7 +1280,7 @@ int main(int argc,char **argv)
    verbose( "\n%s\n\n", TXT_INITIALIZING_GRAPHICS);
    if (FindArg("-nofade"))
       grd_fades_disabled=1;
-   
+
    if ((t=gr_init())!=0)            //doesn't do much
       Error(TXT_CANT_INIT_GFX,t);
 
@@ -1316,7 +1316,7 @@ int main(int argc,char **argv)
 #endif
 
    #ifndef RELEASE
-   if ( FindArg( "-notitles" ) ) 
+   if ( FindArg( "-notitles" ) )
       songs_play_song( SONG_TITLE, 1);
    else
    #endif
@@ -1409,7 +1409,7 @@ int main(int argc,char **argv)
 
       if (!song_playing)
          songs_play_song( SONG_TITLE, 1);
-         
+
    }
 
    PA_DFX (pa_splash());
@@ -1463,9 +1463,9 @@ int main(int argc,char **argv)
       ubyte palette[256*3];
       FILE *ofile;
       int iff_error,i;
-      char *sounds[] = {"selforb.raw","selforb.r22",     //SOUND_YOU_GOT_ORB        
-                        "teamorb.raw","teamorb.r22",     //SOUND_FRIEND_GOT_ORB        
-                        "enemyorb.raw","enemyorb.r22",   //SOUND_OPPONENT_GOT_ORB   
+      char *sounds[] = {"selforb.raw","selforb.r22",     //SOUND_YOU_GOT_ORB
+                        "teamorb.raw","teamorb.r22",     //SOUND_FRIEND_GOT_ORB
+                        "enemyorb.raw","enemyorb.r22",   //SOUND_OPPONENT_GOT_ORB
                         "OPSCORE1.raw","OPSCORE1.r22"};  //SOUND_OPPONENT_HAS_SCORED
 
       ofile = fopen("hoard.ham","wb");
@@ -1544,7 +1544,7 @@ int main(int argc,char **argv)
       Auto_exit = 1;
       strcpy(Auto_file, Args[t+1]);
    }
-      
+
    }
 
    if (Auto_exit) {
@@ -1570,7 +1570,7 @@ int main(int argc,char **argv)
    Game_mode = GM_GAME_OVER;
 
    if (Auto_demo) {
-      newdemo_start_playback("DESCENT.DEM");    
+      newdemo_start_playback("DESCENT.DEM");
       if (Newdemo_state == ND_STATE_PLAYBACK )
          Function_mode = FMODE_GAME;
    }
@@ -1586,7 +1586,7 @@ int main(int argc,char **argv)
          set_screen_mode(SCREEN_MENU);
          if ( Auto_demo )  {
             newdemo_start_playback(NULL);    // Randomly pick a file
-            if (Newdemo_state != ND_STATE_PLAYBACK)   
+            if (Newdemo_state != ND_STATE_PLAYBACK)
                Error("No demo files were found for autodemo mode!");
          } else {
             #ifdef EDITOR
@@ -1600,7 +1600,7 @@ int main(int argc,char **argv)
 
             check_joystick_calibration();
             gr_palette_clear();     //I'm not sure why we need this, but we do
-            DoMenu();                              
+            DoMenu();
             #ifdef EDITOR
             if ( Function_mode == FMODE_EDITOR )   {
                create_new_mine();
@@ -1693,7 +1693,7 @@ void show_order_form()
    gr_set_current_canvas( NULL );
    gr_palette_clear();
 
-   key_flush();      
+   key_flush();
 
    #ifdef D2_OEM
       strcpy(exit_screen, MenuHires?"ordrd2ob.pcx":"ordrd2o.pcx");
@@ -1709,12 +1709,12 @@ void show_order_form()
       //vfx_set_palette_sub( title_pal );
       gr_palette_fade_in( title_pal, 32, 0 );
       key_getch();
-      gr_palette_fade_out( title_pal, 32, 0 );     
+      gr_palette_fade_out( title_pal, 32, 0 );
    }
    else
       Int3();     //can't load order screen
 
-   key_flush();      
+   key_flush();
 
 #endif
 }

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -212,7 +212,7 @@ int start_endlevel_movie()
       movie_name[2] = movie_table[Current_level_num-1];
    else {
       #ifndef SHAREWARE
-         return 0;      //no escapes for secret level 
+         return 0;      //no escapes for secret level
       #else
          Error("Invalid level number <%d>",Current_level_num);
       #endif
@@ -235,7 +235,7 @@ int start_endlevel_movie()
      Kmatrix_nomovie_message=1;
    else
      Kmatrix_nomovie_message=0;
-   
+
    return (r);
 
 }
@@ -258,7 +258,7 @@ init_endlevel()
    //##
    //##load_terrain("matt5b.bbm");     //load bitmap as height array
    //##//load_terrain("ttest2.bbm");      //load bitmap as height array
-   
+
    #ifdef STATION_ENABLED
    station_bitmap = bm_load("steel3.bbm");
    station_bitmap_list[0] = &station_bitmap;
@@ -297,7 +297,7 @@ start_endlevel_sequence()
    int   i;
    int movie_played;
    static int inited = 0;
-   
+
    #if defined(MACINTOSH) && defined(SHAREWARE)
    if (!inited) {
       load_exit_models();
@@ -340,10 +340,10 @@ start_endlevel_sequence()
    if (Current_mission_num == 0) {     //only play movie for built-in mission
 
       //try playing movie.  If it plays, great. if not, do rendered ending
-      
+
       if (!(Game_mode & GM_MULTI))
          movie_played = start_endlevel_movie();
-      
+
       #ifdef SHAREWARE
       if (movie_played == MOVIE_NOT_PLAYED) {      //don't have movie.  Do rendered sequence
       #ifndef WINDOWS
@@ -628,7 +628,7 @@ do_endlevel_frame()
 
                ext_expl_playing = 1;
             }
-   
+
             digi_link_sound_to_pos( SOUND_BIG_ENDLEVEL_EXPLOSION, exit_segnum, 0, &mine_side_exit_point, 0, i2f(3)/4 );
          }
       }
@@ -716,7 +716,7 @@ do_endlevel_frame()
 
             Endlevel_sequence = EL_LOOKBACK;
 
-            objnum = obj_create(OBJ_CAMERA, 0, 
+            objnum = obj_create(OBJ_CAMERA, 0,
                ConsoleObject->segnum,&ConsoleObject->pos,&ConsoleObject->orient,0,
                CT_NONE,MT_NONE,RT_NONE);
 
@@ -780,7 +780,7 @@ do_endlevel_frame()
  slew_obj = endlevel_camera;
 #endif
          }
-            
+
          break;
       }
 
@@ -1083,7 +1083,7 @@ draw_stars()
       if ((i&63) == 0) {
          gr_setcolor(BM_XRGB(intensity,intensity,intensity));
          intensity-=3;
-      }        
+      }
 
       //g3_rotate_point(&p,&stars[i]);
       g3_rotate_delta_vec(&p.p3_vec,&stars[i]);
@@ -1236,7 +1236,7 @@ do_endlevel_flythrough(int n)
 
    flydata = &fly_objects[n];
    obj = flydata->obj;
-   
+
    old_player_seg = obj->segnum;
 
    //move the player for this frame
@@ -1331,7 +1331,7 @@ do_endlevel_flythrough(int n)
       compute_segment_center(&nextcenter,&Segments[pseg->children[exit_side]]);
       vm_vec_sub(&flydata->headvec,&nextcenter,&curcenter);
 
-      #ifdef COMPACT_SEGS  
+      #ifdef COMPACT_SEGS
       {
          vms_vector _v1;
          get_side_normal(pseg, up_side, 0, &_v1 );
@@ -1401,20 +1401,20 @@ int _do_slew_movement(object *obj, int check_keys, int check_joy )
    if (check_joy && joy_present) {
       joy_get_pos(&joy_x,&joy_y);
       btns=joy_get_btns();
-   
+
       joyx_moved = (abs(joy_x - old_joy_x)>JOY_NULL);
       joyy_moved = (abs(joy_y - old_joy_y)>JOY_NULL);
-   
+
       if (abs(joy_x) < JOY_NULL) joy_x = 0;
       if (abs(joy_y) < JOY_NULL) joy_y = 0;
-   
+
       if (btns)
          if (!rotang.pitch) rotang.pitch = fixmul(-joy_y * 512,FrameTime); else;
       else
          if (joyy_moved) obj->phys_info.velocity.z = -joy_y * 8192;
-   
+
       if (!rotang.head) rotang.head = fixmul(joy_x * 512,FrameTime);
-   
+
       if (joyx_moved) old_joy_x = joy_x;
       if (joyy_moved) old_joy_y = joy_y;
    }
@@ -1452,9 +1452,9 @@ int convert_ext( char *dest, char *ext )
    t = strchr(dest,'.');
 
    if (t && (t-dest <= 8)) {
-      t[1] = ext[0];       
-      t[2] = ext[1];       
-      t[3] = ext[2]; 
+      t[1] = ext[0];
+      t[2] = ext[1];
+      t[3] = ext[2];
       return 1;
    }
    else
@@ -1539,7 +1539,7 @@ try_again:
                free(terrain_bm_instance.bm_data);
 
             Assert(terrain_bm_instance.bm_data == NULL);
-            
+
             iff_error = iff_read_bitmap(p,&terrain_bm_instance,BM_LINEAR,pal);
             if (iff_error != IFF_NO_ERROR) {
                mprintf((1, "File %s - IFF error: %s",p,iff_errormsg(iff_error)));
@@ -1549,7 +1549,7 @@ try_again:
             terrain_bitmap = &terrain_bm_instance;
 
             gr_remap_bitmap_good( terrain_bitmap, pal, iff_transparent_color, -1);
-            
+
             break;
          }
 

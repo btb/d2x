@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -59,14 +59,14 @@ static FILE                *LogFile=NULL;    // Log File!
 #define LOGCLOSE
 #else
 #define WRITELOG(t) if (LogFile) { fprintf t; fflush(LogFile); }
-#define LOGINIT(n) LogFile = fopen(n, "wt"); 
+#define LOGINIT(n) LogFile = fopen(n, "wt");
 #define LOGCLOSE if (LogFile) fclose(LogFile);
 #endif
 
 
 
 /* gfx Philosophy
-   
+
    The GFX system is a higher level abstraction that is independent of the
    DD-DDGR interface.   gfx uses the DD-DDGR interface, but not the other way
    around.   You may use GFX calls and DD-DDGR calls interchangably with older
@@ -79,10 +79,10 @@ static FILE                *LogFile=NULL;    // Log File!
 // ----------------------------------------------------------------------------
 
 /* gfxInit
-      
+
       When called at game initialization, this will initialize the DirectDraw
       system.  Then we initialize other graphic components if called for.
-   
+
 */
 
 BOOL gfxInit(int hw_acc)
@@ -91,7 +91,7 @@ BOOL gfxInit(int hw_acc)
 
    if (gfx_initialized) return TRUE;
 
-   if (!DDInit(DDGR_FULLSCREEN)) 
+   if (!DDInit(DDGR_FULLSCREEN))
       return FALSE;
 
    grd_curscreen = (grs_screen *)malloc(sizeof(grs_screen));
@@ -102,9 +102,9 @@ BOOL gfxInit(int hw_acc)
    dd_gr_init_screen();
 
 // Initialize 3D system if available.
-   if (hw_acc) 
+   if (hw_acc)
    {
-      if (!d3d_init()) 
+      if (!d3d_init())
          Error("Unable to initialize 3D Hardware.");
       d3d_enhanced = 1;
    }
@@ -119,5 +119,5 @@ BOOL gfxInit(int hw_acc)
 void gfxClose(void)
 {
    if (!gfx_initialized) return;
-   gfx_initialized = 0; 
+   gfx_initialized = 0;
 }

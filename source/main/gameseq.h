@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -84,13 +84,13 @@ void PlayerFinishedLevel(int secret_flag);
 //called when the player has died
 void DoPlayerDead(void);
 
-//load a level off disk. level numbers start at 1.  
+//load a level off disk. level numbers start at 1.
 //Secret levels are -1,-2,-3
 void LoadLevel(int level_num,int page_in_textures);
 
 extern void gameseq_remove_unused_players();
 
-extern void show_help(); 
+extern void show_help();
 extern void update_player_stats();
 
 //from scores.c

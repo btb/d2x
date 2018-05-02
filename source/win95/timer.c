@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -41,16 +41,16 @@ static UINT GameStartTime = 0;
 
 void timer_normalize();
 
-//@@ void PASCAL timer_callback(UINT wTimerID, UINT msg, DWORD dwUser, 
-//@@              DWORD dw1, DWORD dw2) 
+//@@ void PASCAL timer_callback(UINT wTimerID, UINT msg, DWORD dwUser,
+//@@              DWORD dw1, DWORD dw2)
 //@@{
 //@@  static int last_time = 0;
 //@@  UINT time;
-//@@  
-//@@  
+//@@
+//@@
 //@@  time = timeGetTime()-GameStartTime;
 //@@
-//@@  if (timeGetTime() < GameStartTime) 
+//@@  if (timeGetTime() < GameStartTime)
 //@@     GameStartTime = GameStartTime - timeGetTime();
 //@@
 //@@}
@@ -65,7 +65,7 @@ void timer_normalize()
       GameStartTime = new_time;
       return;
    }
-   
+
    if ((new_time - GameStartTime) > 0x01808580)    // 7 hours
       GameStartTime = new_time;
 }
@@ -146,7 +146,7 @@ void timer_set_function( void _far * function ) {}
 
 void timer_delay(fix seconds)
 {
-   unsigned int numticks = timeGetTime() + (seconds>>16)*1000 + 
+   unsigned int numticks = timeGetTime() + (seconds>>16)*1000 +
                (((seconds & 0x0000ffff)*1000)/65535);
    while (GetTickCount() < numticks);
 }

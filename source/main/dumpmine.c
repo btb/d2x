@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -163,7 +163,7 @@ void write_exit_text(FILE *my_file)
       err_printf(my_file, "Error: No external wall in this mine.\n");
    else if (count != 1) {
       // -- warning_printf(my_file, "Warning: %i external walls in this mine.\n", count);
-      // -- warning_printf(my_file, "(If %i are secret exits, then no problem.)\n", count-1); 
+      // -- warning_printf(my_file, "(If %i are secret exits, then no problem.)\n", count-1);
    } else
       fprintf(my_file, "\n");
 }
@@ -366,7 +366,7 @@ void write_segment_text(FILE *my_file)
 
       if (Segment2s[i].matcen_num != -1)
          fprintf(my_file, "matcen = %3i, ", Segment2s[i].matcen_num);
-      
+
       fprintf(my_file, "\n");
    }
 
@@ -509,7 +509,7 @@ void write_trigger_text(FILE *my_file)
    fprintf(my_file, "-----------------------------------------------------------------------------\n");
    fprintf(my_file, "Triggers:\n");
    for (i=0; i<Num_triggers; i++) {
-      fprintf(my_file, "Trigger %03i: type=%02x flags=%04x, value=%08x, time=%8x, num_links=%i ", i, 
+      fprintf(my_file, "Trigger %03i: type=%02x flags=%04x, value=%08x, time=%8x, num_links=%i ", i,
          Triggers[i].type, Triggers[i].flags, Triggers[i].value, Triggers[i].time, Triggers[i].num_links);
 
       for (j=0; j<Triggers[i].num_links; j++)
@@ -611,27 +611,27 @@ void write_game_text_file(char *filename)
 // -- {
 // --    int   i, objnum;
 // --    polymodel   *po;
-// -- 
+// --
 // --    Assert(N_polygon_models);
-// -- 
+// --
 // --    for (objnum=0; objnum <= Highest_object_index; objnum++) {
 // --       int   model_num;
-// -- 
+// --
 // --       if (Objects[objnum].render_type == RT_POLYOBJ) {
 // --          model_num = Objects[objnum].rtype.pobj_info.model_num;
-// -- 
+// --
 // --          po=&Polygon_models[model_num];
-// -- 
+// --
 // --          for (i=0;i<po->n_textures;i++)   {
 // --             int   tli;
-// -- 
+// --
 // --             tli = ObjBitmaps[ObjBitmapPtrs[po->first_texture+i]];
 // --             Assert((tli>=0) && (tli<= Num_tmaps));
 // --             tmap_buf[tli]++;
 // --          }
 // --       }
 // --    }
-// -- 
+// --
 // -- }
 
 // --05/17/95--// -----------------------------------------------------------------------------

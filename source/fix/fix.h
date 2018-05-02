@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -123,15 +123,15 @@ void fix_sincos(fix a,fix *s,fix *c);     //with interpolation
 void fix_fastsincos(fix a,fix *s,fix *c); //no interpolation
 
 //compute inverse sine & cosine
-fixang fix_asin(fix v); 
-fixang fix_acos(fix v); 
+fixang fix_asin(fix v);
+fixang fix_acos(fix v);
 
 //given cos & sin of an angle, return that angle.
 //parms need not be normalized, that is, the ratio of the parms cos/sin must
-//equal the ratio of the actual cos & sin for the result angle, but the parms 
-//need not be the actual cos & sin.  
+//equal the ratio of the actual cos & sin for the result angle, but the parms
+//need not be the actual cos & sin.
 //NOTE: this is different from the standard C atan2, since it is left-handed.
-fixang fix_atan2(fix cos,fix sin); 
+fixang fix_atan2(fix cos,fix sin);
 
 #pragma aux fix_fastsincos parm [eax] [esi] [edi] modify exact [eax ebx];
 #pragma aux fix_sincos parm [eax] [esi] [edi] modify exact [eax ebx];

@@ -5,7 +5,7 @@
 double real_mag(double a,double b,double c)
 {
    return sqrt(a*a + b*b + c*c);
-   
+
 }
 
 #define SWAP(_a,_b) do {_t=_a; _a=_b; _b=_t;} while (0)
@@ -23,9 +23,9 @@ double approx_mag1(double a,double b,double c)
       if (fabs(a) < fabs(b))
          SWAP(a,b);
    }
-   
+
    return a + b/2 + c/4;
-   
+
 }
 
 double approx_mag2(double a,double b,double c)
@@ -41,9 +41,9 @@ double approx_mag2(double a,double b,double c)
       if (fabs(a) < fabs(b))
          SWAP(a,b);
    }
-   
+
    return a + b*6/16 + c*3/16;
-   
+
 }
 
 #define TEST_RANGE 50000.0
@@ -100,7 +100,7 @@ void main(int argc,char **argv)
          worst_error1_mag = mag;
          worst_error1_m1 = m1;
          worst_error1_m2 = m2;
-         
+
       }
 
       if (error2 > worst_error2) {

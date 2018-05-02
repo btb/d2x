@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -42,7 +42,7 @@ typedef struct weapon_info {
 
    byte  destroyable;            // If !0, this weapon can be destroyed by another weapon.
    byte  matter;                 // Flag: set if this object is matter (as opposed to energy)
-   byte  bounce;                 // 1==always bounces, 2=bounces twice 
+   byte  bounce;                 // 1==always bounces, 2=bounces twice
    byte  homing_flag;            // Set if this weapon can home in on a target.
 
    ubyte speedvar;               // allowed variance in speed below average, /128: 64 = 50% meaning if speed = 100, can be 50..100
@@ -190,7 +190,7 @@ extern byte Weapon_is_energy[MAX_WEAPON_TYPES];
 // Bits set:
 //    HAS_WEAPON_FLAG
 //    HAS_ENERGY_FLAG
-//    HAS_AMMO_FLAG  
+//    HAS_AMMO_FLAG
 //    HAS_SUPER_FLAG
 extern int player_has_weapon(int weapon_num, int secondary_flag);
 

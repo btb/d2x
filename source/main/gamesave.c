@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -79,20 +79,20 @@ char Gamesave_current_filename[128];
 
 typedef struct v16_wall {
    byte  type;             // What kind of special wall.
-   byte  flags;            // Flags for the wall.     
-   fix   hps;              // "Hit points" of the wall. 
+   byte  flags;            // Flags for the wall.
+   fix   hps;              // "Hit points" of the wall.
    byte  trigger;          // Which trigger is associated with the wall.
-   byte  clip_num;         // Which animation associated with the wall. 
+   byte  clip_num;         // Which animation associated with the wall.
    byte  keys;
    } v16_wall;
 
 typedef struct v19_wall {
    int   segnum,sidenum;   // Seg & side for this wall
    byte  type;             // What kind of special wall.
-   byte  flags;            // Flags for the wall.     
-   fix   hps;              // "Hit points" of the wall. 
+   byte  flags;            // Flags for the wall.
+   fix   hps;              // "Hit points" of the wall.
    byte  trigger;          // Which trigger is associated with the wall.
-   byte  clip_num;         // Which animation associated with the wall. 
+   byte  clip_num;         // Which animation associated with the wall.
    byte  keys;
    int   linked_wall;      // number of linked wall
    } v19_wall;
@@ -161,8 +161,8 @@ struct {
    int      player_offset;          // Player info
    int      player_sizeof;
    int      object_offset;          // Object info
-   int      object_howmany;      
-   int      object_sizeof;  
+   int      object_howmany;
+   int      object_sizeof;
    int      walls_offset;
    int      walls_howmany;
    int      walls_sizeof;
@@ -268,7 +268,7 @@ void verify_object( object * obj )  {
       if ( obj->id >= N_robot_types )
          obj->id = obj->id % N_robot_types;
 
-      // Make sure model number & size are correct...    
+      // Make sure model number & size are correct...
       if ( obj->render_type == RT_POLYOBJ ) {
          Assert(Robot_info[obj->id].model_num != -1);
             //if you fail this assert, it means that a robot in this level
@@ -277,8 +277,8 @@ void verify_object( object * obj )  {
 
          Assert(Robot_info[obj->id].always_0xabcd == 0xabcd);
             //if you fail this assert, it means that the robot_ai for
-            //a robot in this level hasn't been loaded, possibly because 
-            //it's marked as non-shareware.  To see what robot number, 
+            //a robot in this level hasn't been loaded, possibly because
+            //it's marked as non-shareware.  To see what robot number,
             //print obj->id.
 
          obj->rtype.pobj_info.model_num = Robot_info[obj->id].model_num;
@@ -289,7 +289,7 @@ void verify_object( object * obj )  {
          //@@//this is a super-ugly hack.  Since the baby stripe robots have
          //@@//their firing point on their bounding sphere, the firing points
          //@@//can poke through a wall if the robots are very close to it. So
-         //@@//we make their radii bigger so the guns can't get too close to 
+         //@@//we make their radii bigger so the guns can't get too close to
          //@@//the walls
          //@@if (Robot_info[obj->id].flags & RIF_BIG_RADIUS)
          //@@  obj->size = (obj->size*3)/2;
@@ -313,7 +313,7 @@ void verify_object( object * obj )  {
          char *name = Save_pof_names[obj->rtype.pobj_info.model_num];
 
          for (i=0;i<N_polygon_models;i++)
-            if (!stricmp(Pof_names[i],name)) {     //found it! 
+            if (!stricmp(Pof_names[i],name)) {     //found it!
                // mprintf((0,"Mapping <%s> to %d (was %d)\n",name,i,obj->rtype.pobj_info.model_num));
                obj->rtype.pobj_info.model_num = i;
                break;
@@ -358,7 +358,7 @@ void verify_object( object * obj )  {
          obj->mtype.phys_info.drag = Weapon_info[obj->id].drag;
          obj->mtype.phys_info.flags |= PF_FREE_SPINNING;
 
-         // Make sure model number & size are correct...    
+         // Make sure model number & size are correct...
          Assert( obj->render_type == RT_POLYOBJ );
 
          obj->rtype.pobj_info.model_num = Weapon_info[obj->id].model_num;
@@ -371,22 +371,22 @@ void verify_object( object * obj )  {
       obj->render_type = RT_POLYOBJ;
       obj->control_type = CT_CNTRLCEN;
 
-      //@@// Make model number is correct... 
-      //@@for (i=0; i<Num_total_object_types; i++ )   
+      //@@// Make model number is correct...
+      //@@for (i=0; i<Num_total_object_types; i++ )
       //@@  if ( ObjType[i] == OL_CONTROL_CENTER )    {
       //@@     obj->rtype.pobj_info.model_num = ObjId[i];
       //@@     obj->shields = ObjStrength[i];
-      //@@     break;      
+      //@@     break;
       //@@  }
 
       #ifdef EDITOR
       {
       int i;
       // Check, and set, strength of reactor
-      for (i=0; i<Num_total_object_types; i++ ) 
+      for (i=0; i<Num_total_object_types; i++ )
          if ( ObjType[i]==OL_CONTROL_CENTER && ObjId[i] == obj->id ) {
             obj->shields = ObjStrength[i];
-            break;      
+            break;
          }
       Assert(i < Num_total_object_types);    //make sure we found it
       }
@@ -398,7 +398,7 @@ void verify_object( object * obj )  {
 
       //Assert(obj == Player);
 
-      if ( obj == ConsoleObject )      
+      if ( obj == ConsoleObject )
          init_player_object();
       else
          if (obj->render_type == RT_POLYOBJ) //recover from Matt's pof file matchup bug
@@ -566,7 +566,7 @@ extern int multi_powerup_is_4pack(int);
 //reads one object of the given version from the given file
 void read_object(object *obj,CFILE *f,int version)
 {
-   
+
    obj->type            = read_byte(f);
    obj->id              = read_byte(f);
 
@@ -640,8 +640,8 @@ void read_object(object *obj,CFILE *f,int version)
          obj->ctype.ai_info.cur_path_index      = read_short(f);
 
          if (version <= 25) {
-            read_short(f); //          obj->ctype.ai_info.follow_path_start_seg  = 
-            read_short(f); //          obj->ctype.ai_info.follow_path_end_seg    = 
+            read_short(f); //          obj->ctype.ai_info.follow_path_start_seg  =
+            read_short(f); //          obj->ctype.ai_info.follow_path_end_seg    =
          }
 
          break;
@@ -706,7 +706,7 @@ void read_object(object *obj,CFILE *f,int version)
       case CT_REPAIRCEN:
       default:
          Int3();
-   
+
    }
 
    switch (obj->render_type) {
@@ -892,7 +892,7 @@ void write_object(object *obj,FILE *f)
       case CT_FLYTHROUGH:
       default:
          Int3();
-   
+
    }
 
    switch (obj->render_type) {
@@ -949,7 +949,7 @@ typedef struct  {
 extern int remove_trigger_num(int trigger_num);
 
 // -----------------------------------------------------------------------------
-// Load game 
+// Load game
 // Loads all the relevant data for a level.
 // If level != -1, it loads the filename with extension changed to .min
 // Otherwise it loads the appropriate level mine.
@@ -969,16 +969,16 @@ load_game_data(CFILE *LoadFile)
    game_fileinfo.player_sizeof      =  sizeof(player);
    game_fileinfo.object_offset      =  -1;
    game_fileinfo.object_howmany     =  0;
-   game_fileinfo.object_sizeof      =  sizeof(object);  
+   game_fileinfo.object_sizeof      =  sizeof(object);
    game_fileinfo.walls_offset       =  -1;
    game_fileinfo.walls_howmany      =  0;
-   game_fileinfo.walls_sizeof       =  sizeof(wall);  
+   game_fileinfo.walls_sizeof       =  sizeof(wall);
    game_fileinfo.doors_offset       =  -1;
    game_fileinfo.doors_howmany      =  0;
-   game_fileinfo.doors_sizeof       =  sizeof(active_door);  
+   game_fileinfo.doors_sizeof       =  sizeof(active_door);
    game_fileinfo.triggers_offset    =  -1;
    game_fileinfo.triggers_howmany   =  0;
-   game_fileinfo.triggers_sizeof    =  sizeof(trigger);  
+   game_fileinfo.triggers_sizeof    =  sizeof(trigger);
    game_fileinfo.control_offset     =  -1;
    game_fileinfo.control_howmany    =  0;
    game_fileinfo.control_sizeof     =  sizeof(control_center_triggers);
@@ -996,8 +996,8 @@ load_game_data(CFILE *LoadFile)
 
    // Read in game_top_fileinfo to get size of saved fileinfo.
 
-   if (cfseek( LoadFile, start_offset, SEEK_SET )) 
-      Error( "Error seeking in gamesave.c" ); 
+   if (cfseek( LoadFile, start_offset, SEEK_SET ))
+      Error( "Error seeking in gamesave.c" );
 
 // if (cfread( &game_top_fileinfo, sizeof(game_top_fileinfo), 1, LoadFile) != 1)
 //    Error( "Error reading game_top_fileinfo in gamesave.c" );
@@ -1015,7 +1015,7 @@ load_game_data(CFILE *LoadFile)
       return -1;
 
    // Now, Read in the fileinfo
-   if (cfseek( LoadFile, start_offset, SEEK_SET )) 
+   if (cfseek( LoadFile, start_offset, SEEK_SET ))
       Error( "Error seeking to game_fileinfo in gamesave.c" );
 
 // if (cfread( &game_fileinfo, game_top_fileinfo.fileinfo_sizeof, 1, LoadFile )!=1)
@@ -1030,8 +1030,8 @@ load_game_data(CFILE *LoadFile)
    game_fileinfo.player_offset = read_int(LoadFile);           // Player info
    game_fileinfo.player_sizeof = read_int(LoadFile);
    game_fileinfo.object_offset = read_int(LoadFile);           // Object info
-   game_fileinfo.object_howmany = read_int(LoadFile);       
-   game_fileinfo.object_sizeof = read_int(LoadFile);  
+   game_fileinfo.object_howmany = read_int(LoadFile);
+   game_fileinfo.object_sizeof = read_int(LoadFile);
    game_fileinfo.walls_offset = read_int(LoadFile);
    game_fileinfo.walls_howmany = read_int(LoadFile);
    game_fileinfo.walls_sizeof = read_int(LoadFile);
@@ -1089,9 +1089,9 @@ load_game_data(CFILE *LoadFile)
    Gamesave_num_players = 0;
 
    if (game_fileinfo.object_offset > -1) {
-      if (cfseek( LoadFile, game_fileinfo.object_offset, SEEK_SET )) 
+      if (cfseek( LoadFile, game_fileinfo.object_offset, SEEK_SET ))
          Error( "Error seeking to object_offset in gamesave.c" );
-   
+
       for (i=0;i<game_fileinfo.object_howmany;i++) {
 
          read_object(&Objects[i],LoadFile,game_top_fileinfo.fileinfo_version);
@@ -1244,16 +1244,16 @@ load_game_data(CFILE *LoadFile)
                if (game_top_fileinfo.fileinfo_version < 30) {
                   v29_trigger trig29;
                   int t;
-   
+
                   if (cfread(&trig29, game_fileinfo.triggers_sizeof,1,LoadFile)!=1)
                      Error( "Error reading Triggers[%d] in gamesave.c", i);
-   
+
                   trig.flags     = trig29.flags;
                   trig.num_links = trig29.num_links;
                   trig.num_links = trig29.num_links;
                   trig.value     = trig29.value;
                   trig.time      = trig29.time;
-   
+
                   for (t=0;t<trig.num_links;t++) {
                      trig.seg[t]  = trig29.seg[t];
                      trig.side[t] = trig29.side[t];
@@ -1318,7 +1318,7 @@ load_game_data(CFILE *LoadFile)
                Triggers[i].pad = read_byte(LoadFile);
                Triggers[i].value = read_fix(LoadFile);
                Triggers[i].time = read_fix(LoadFile);
-               for (j=0; j<MAX_WALLS_PER_LINK; j++ )  
+               for (j=0; j<MAX_WALLS_PER_LINK; j++ )
                   Triggers[i].seg[j] = read_short(LoadFile);
                for (j=0; j<MAX_WALLS_PER_LINK; j++ )
                   Triggers[i].side[j] = read_short(LoadFile);
@@ -1413,7 +1413,7 @@ load_game_data(CFILE *LoadFile)
                if (cfread(&Dl_indices[i], game_fileinfo.dl_indices_sizeof, 1, LoadFile) != 1)
                   Error( "Error reading Dl_indices in gamesave.c", i);
 #else
-               Dl_indices[i].segnum = read_short(LoadFile);             
+               Dl_indices[i].segnum = read_short(LoadFile);
                Dl_indices[i].sidenum = read_byte(LoadFile);
                Dl_indices[i].count = read_byte(LoadFile);
                Dl_indices[i].index = read_short(LoadFile);
@@ -1669,16 +1669,16 @@ int load_level(char * filename_passed)
 
    #ifdef EDITOR
       //if we have the editor, try the LVL first, no matter what was passed.
-      //if we don't have an LVL, try RDL  
+      //if we don't have an LVL, try RDL
       //if we don't have the editor, we just use what was passed
-   
+
       change_filename_extension(filename,filename_passed,".LVL");
       use_compiled_level = 0;
-   
+
       if (!cfexist(filename)) {
          change_filename_extension(filename,filename,".RL2");
          use_compiled_level = 1;
-      }     
+      }
    #endif
 
    LoadFile = cfopen( filename, "rb" );
@@ -1730,7 +1730,7 @@ int load_level(char * filename_passed)
       Base_control_center_explosion_time = read_int(LoadFile);
    else
       Base_control_center_explosion_time = DEFAULT_CONTROL_CENTER_EXPLOSION_TIME;
-      
+
    if (version >= 4)
       Reactor_strength = read_int(LoadFile);
    else
@@ -1827,7 +1827,7 @@ int load_level(char * filename_passed)
    if (!no_old_level_file_error && (Function_mode == FMODE_EDITOR) && (((LEVEL_FILE_VERSION>3) && version<LEVEL_FILE_VERSION) || mine_err==1 || game_err==1)) {
       char  ErrorMessage[200];
 
-      sprintf( ErrorMessage, 
+      sprintf( ErrorMessage,
                "You just loaded a old version\n"
                "level.  Would you like to save\n"
                "it as a current version level?");
@@ -1847,7 +1847,7 @@ int load_level(char * filename_passed)
 
    #ifdef EDITOR
    if (check_segment_connections())
-      nm_messagebox( "ERROR", 1, "Ok", 
+      nm_messagebox( "ERROR", 1, "Ok",
             "Connectivity errors detected in\n"
             "mine.  See monochrome screen for\n"
             "details, and contact Matt or Mike." );
@@ -2067,11 +2067,11 @@ int save_level_sub(char * filename, int compiled_version)
       if (Errors_in_mine) {
          if (is_real_level(filename)) {
             char  ErrorMessage[200];
-   
+
             sprintf( ErrorMessage, "Warning: %i errors in this mine!\n", Errors_in_mine );
             stop_time();
             gr_palette_load(gr_palette);
-    
+
             if (nm_messagebox( NULL, 2, "Cancel Save", "Save", ErrorMessage )!=1)   {
                start_time();
                return 1;
@@ -2087,7 +2087,7 @@ int save_level_sub(char * filename, int compiled_version)
       // macs are using the regular hog/rl2 files for shareware
       #if defined(SHAREWARE) && !defined(MACINTOSH)
          change_filename_extension(temp_filename,filename,".SL2");
-      #else    
+      #else
          change_filename_extension(temp_filename,filename,".RL2");
       #endif
    }
@@ -2101,7 +2101,7 @@ int save_level_sub(char * filename, int compiled_version)
       _splitpath( temp_filename, NULL, NULL, fname, NULL );
 
       sprintf( ErrorMessage, \
-         "ERROR: Cannot write to '%s'.\nYou probably need to check out a locked\nversion of the file. You should save\nthis under a different filename, and then\ncheck out a locked copy by typing\n\'co -l %s.lvl'\nat the DOS prompt.\n" 
+         "ERROR: Cannot write to '%s'.\nYou probably need to check out a locked\nversion of the file. You should save\nthis under a different filename, and then\ncheck out a locked copy by typing\n\'co -l %s.lvl'\nat the DOS prompt.\n"
          , temp_filename, fname );
       stop_time();
       gr_palette_load(gr_palette);
@@ -2123,7 +2123,7 @@ int save_level_sub(char * filename, int compiled_version)
          ConsoleObject->segnum = 0;
       compute_segment_center(&ConsoleObject->pos,&(Segments[ConsoleObject->segnum]));
    }
- 
+
    fix_object_segs();
 
    //Write the header
@@ -2150,7 +2150,7 @@ int save_level_sub(char * filename, int compiled_version)
 
    gs_write_int(Num_flickering_lights,SaveFile);
    fwrite(Flickering_lights,sizeof(*Flickering_lights),Num_flickering_lights,SaveFile);
-   
+
    gs_write_int(Secret_return_segment, SaveFile);
    gs_write_int(Secret_return_orient.rvec.x, SaveFile);
    gs_write_int(Secret_return_orient.rvec.y, SaveFile);
@@ -2163,7 +2163,7 @@ int save_level_sub(char * filename, int compiled_version)
    gs_write_int(Secret_return_orient.uvec.z, SaveFile);
 
    minedata_offset = ftell(SaveFile);
-   if ( !compiled_version )   
+   if ( !compiled_version )
       save_mine_data(SaveFile);
    else
       save_mine_data_compiled(SaveFile);
@@ -2257,7 +2257,7 @@ void dump_mine_info(void)
 
 #ifdef EDITOR
 
-//read in every level in mission and save out compiled version 
+//read in every level in mission and save out compiled version
 void save_all_compiled_levels(void)
 {
    do_load_save_levels(1);

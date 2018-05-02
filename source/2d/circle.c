@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -46,7 +46,7 @@ int gr_circle(fix xc1,fix yc1,fix r1)
       gr_pixel( xc-y, yc+x );
       gr_pixel( xc+y, yc+x );
 
-      if (p<0) 
+      if (p<0)
          p=p+(x<<2)+6;
       else  {
          // Draw the second octant
@@ -87,7 +87,7 @@ int gr_ucircle(fix xc1,fix yc1,fix r1)
       gr_upixel( xc-y, yc+x );
       gr_upixel( xc+y, yc+x );
 
-      if (p<0) 
+      if (p<0)
          p=p+(x<<2)+6;
       else  {
          // Draw the second octant

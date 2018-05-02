@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -746,7 +746,7 @@ void gr_ibitblt_create_mask_pa( grs_bitmap * mask_bmp, int sx, int sy, int sw, i
                 code = pa_emit_blit(pass, code, n, 1, x - n, y - sy, x + sx - n, y);
             }
         }
-        
+
         if(pass == 0) {
             ret = malloc((int)code + sizeof(ulong));
             ret[0] = (int)code / sizeof(ulong);        // store num ulongs in list.
@@ -839,7 +839,7 @@ void gr_ibitblt_find_hole_size(grs_bitmap *mask_bmp, int *minx, int *miny, int *
       return;
    }
 #endif
-   
+
    Assert( (!(mask_bmp->bm_flags&BM_FLAG_RLE)) );
    Assert( mask_bmp->bm_flags&BM_FLAG_TRANSPARENT );
 

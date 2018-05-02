@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -126,11 +126,11 @@ typedef struct _grs_screen {     // This is a video screen
 // setup and set mode. this creates a grs_screen structure and sets
 // grd_curscreen to point to it.  grs_curcanv points to this screen's
 // canvas.  Saves the current VGA state and screen mode.
-                    
+
 int gr_init(void);
 
 // This function sets up the main screen.  It should be called whenever
-// the video mode changes. 
+// the video mode changes.
 int gr_init_screen(int mode, int w, int h, int rowsize, ubyte *data);
 
 
@@ -284,7 +284,7 @@ void gr_uscanline( int x1, int x2, int y );
 grs_font * gr_init_font( char * fontfile );
 void gr_close_font( grs_font * font );
 
-//remap a font, re-reading its data & palette 
+//remap a font, re-reading its data & palette
 void gr_remap_font( grs_font *font, char * fontname );
 
 //remap (by re-reading) all the color fonts
@@ -339,7 +339,7 @@ extern ushort gr_inverse_table_selector;
 extern ushort gr_fade_table_selector;
 
 // Remaps a bitmap into the current palette. If transparent_color is between 0 and 255
-// then all occurances of that color are mapped to whatever color the 2d uses for 
+// then all occurances of that color are mapped to whatever color the 2d uses for
 // transparency. This is normally used right after a call to iff_read_bitmap like
 // this:
 //    iff_error = iff_read_bitmap(filename,new,BM_LINEAR,newpal);

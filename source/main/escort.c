@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -153,11 +153,11 @@ int segment_is_reachable(int curseg, int sidenum)
 
    return rval;
 
-// -- MK, 10/17/95 -- 
+// -- MK, 10/17/95 --
 // -- MK, 10/17/95 --   // Hmm, a closed wall.  I think this mean not reachable.
 // -- MK, 10/17/95 --   if (Walls[wall_num].type == WALL_CLOSED)
 // -- MK, 10/17/95 --      return 0;
-// -- MK, 10/17/95 -- 
+// -- MK, 10/17/95 --
 // -- MK, 10/17/95 --   if (Walls[wall_num].type == WALL_DOOR) {
 // -- MK, 10/17/95 --      if (Walls[wall_num].keys == KEY_NONE) {
 // -- MK, 10/17/95 --         return 1;      // @MK, 10/17/95: Be consistent with ai_door_is_openable
@@ -175,7 +175,7 @@ int segment_is_reachable(int curseg, int sidenum)
 // -- MK, 10/17/95 --         Int3();  // Impossible!  Doesn't have no key, but doesn't have any key!
 // -- MK, 10/17/95 --   } else
 // -- MK, 10/17/95 --      return 1;
-// -- MK, 10/17/95 -- 
+// -- MK, 10/17/95 --
 // -- MK, 10/17/95 --   Int3();  // Hmm, thought 'if' above had to return!
 // -- MK, 10/17/95 --   return 0;
 
@@ -231,7 +231,7 @@ void create_bfs_list(int start_seg, short bfs_list[], int *length, int max_segs)
    }
 
    *length = head;
-   
+
 }
 
 // -----------------------------------------------------------------------------
@@ -485,7 +485,7 @@ void set_escort_special_goal(int special_key)
    special_key = special_key & (~KEY_SHIFTED);
 
    marker_key = special_key;
-   
+
    #ifdef MACINTOSH
    switch(special_key) {
       case KEY_5:
@@ -525,7 +525,7 @@ void set_escort_special_goal(int special_key)
 
    if (special_key == KEY_0)
       Looking_for_marker = -1;
-      
+
    if ( Looking_for_marker != -1 ) {
       Escort_special_goal = ESCORT_GOAL_MARKER1 + marker_key - KEY_1;
    } else {
@@ -558,9 +558,9 @@ void set_escort_special_goal(int special_key)
 // -- old, pre-bfs, way -- int exists_in_mine(int objtype, int objid)
 // -- old, pre-bfs, way -- {
 // -- old, pre-bfs, way --    int   i;
-// -- old, pre-bfs, way -- 
+// -- old, pre-bfs, way --
 // -- old, pre-bfs, way --    mprintf((0, "exists_in_mine, type == %i, id == %i\n", objtype, objid));
-// -- old, pre-bfs, way -- 
+// -- old, pre-bfs, way --
 // -- old, pre-bfs, way --    if (objtype == FUELCEN_CHECK) {
 // -- old, pre-bfs, way --       for (i=0; i<=Highest_segment_index; i++)
 // -- old, pre-bfs, way --          if (Segments[i].special == SEGMENT_IS_FUELCEN)
@@ -571,7 +571,7 @@ void set_escort_special_goal(int special_key)
 // -- old, pre-bfs, way --             // Don't find escort robots if looking for robot!
 // -- old, pre-bfs, way --             if ((Objects[i].type == OBJ_ROBOT) && (Robot_info[Objects[i].id].companion))
 // -- old, pre-bfs, way --                continue;
-// -- old, pre-bfs, way -- 
+// -- old, pre-bfs, way --
 // -- old, pre-bfs, way --             if (objid == -1) {
 // -- old, pre-bfs, way --                if ((objtype == OBJ_POWERUP) && (Objects[i].id != POW_KEY_BLUE) && (Objects[i].id != POW_KEY_GOLD) && (Objects[i].id != POW_KEY_RED))
 // -- old, pre-bfs, way --                   return i;
@@ -582,9 +582,9 @@ void set_escort_special_goal(int special_key)
 // -- old, pre-bfs, way --          }
 // -- old, pre-bfs, way --       }
 // -- old, pre-bfs, way --    }
-// -- old, pre-bfs, way -- 
+// -- old, pre-bfs, way --
 // -- old, pre-bfs, way --    return -1;
-// -- old, pre-bfs, way -- 
+// -- old, pre-bfs, way --
 // -- old, pre-bfs, way -- }
 
 // -----------------------------------------------------------------------------
@@ -829,7 +829,7 @@ void escort_create_path_to_goal(object *objp)
             break;
          case ESCORT_GOAL_BOSS: {
             int   boss_id;
-   
+
             boss_id = get_boss_id();
             Assert(boss_id != -1);
             Escort_goal_index = exists_in_mine(objp->segnum, OBJ_ROBOT, boss_id, -1);
@@ -909,7 +909,7 @@ int escort_set_goal_object(void)
          return ESCORT_GOAL_CONTROLCEN;
    } else
       return ESCORT_GOAL_EXIT;
-   
+
 }
 
 #define  MAX_ESCORT_TIME_AWAY    (F1_0*4)
@@ -933,7 +933,7 @@ int time_to_visit_player(object *objp, ai_local *ailp, ai_static *aip)
 
    if (aip->cur_path_index < aip->path_length/2)
       return 0;
-   
+
    return 1;
 }
 
@@ -1428,7 +1428,7 @@ void do_thief_frame(object *objp, fix dist_to_player, int player_visibility, vms
                      Ai_local_info[objp-Objects].next_action_time = Thief_wait_times[Difficulty_level]/2;
                      Ai_local_info[objp-Objects].mode = AIM_THIEF_RETREAT;
                   }
-               } 
+               }
                ai_turn_towards_vector(vec_to_player, objp, F1_0/4);
                move_towards_player(objp, vec_to_player);
             } else {
@@ -1690,8 +1690,8 @@ void init_thief_for_level(void)
       Stolen_items[i] = 255;
 
    Assert (MAX_STOLEN_ITEMS >= 3*2);   // Oops!  Loop below will overwrite memory!
-  
-   if (!(Game_mode & GM_MULTI))    
+
+   if (!(Game_mode & GM_MULTI))
       for (i=0; i<3; i++) {
          Stolen_items[2*i] = POW_SHIELD_BOOST;
          Stolen_items[2*i+1] = POW_ENERGY;
@@ -1791,7 +1791,7 @@ void do_escort_menu(void)
          sprintf(goal_str, "ERROR");
          break;
    #endif
-         
+
       case ESCORT_GOAL_BLUE_KEY:
          sprintf(goal_str, "blue key");
          break;
@@ -1823,7 +1823,7 @@ void do_escort_menu(void)
          break;
 
    }
-         
+
    if (!Buddy_messages_suppressed)
       sprintf(tstr, "Suppress");
    else
@@ -1935,7 +1935,7 @@ void do_escort_menu(void)
 // -------------------------------------------------------------------------------
 // Show the Buddy menu!
 void show_escort_menu(char *msg)
-{  
+{
    int   w,h,aw;
    int   x,y;
 
@@ -1953,7 +1953,7 @@ void show_escort_menu(char *msg)
    y = (grd_curscreen->sc_h-h)/4;
 
    gr_set_fontcolor( gr_getcolor(0, 28, 0), -1 );
-   
+
    PA_DFX (pa_set_frontbuffer_current());
    PA_DFX (nm_draw_background(x-15,y-15,x+w+15-1,y+h+15-1));
    PA_DFX (pa_set_backbuffer_current());

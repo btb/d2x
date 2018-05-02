@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -70,17 +70,17 @@ int joycal_message( char * title, char * text )
    m[1].type = NM_TYPE_MENU; m[1].text = TXT_OK;
    i = newmenu_do( title, NULL, 2, m, NULL );
    MAC(joydefs_calibrating = 0;)
-   if ( i < 0 ) 
+   if ( i < 0 )
       return 1;
    return 0;
 }
 
-extern int WriteConfigFile(); 
+extern int WriteConfigFile();
 
 void joydefs_calibrate(void)
 {
    #ifndef MACINTOSH
-   if ( (Config_control_type!=CONTROL_JOYSTICK) && (Config_control_type!=CONTROL_FLIGHTSTICK_PRO) && (Config_control_type!=CONTROL_THRUSTMASTER_FCS) )   
+   if ( (Config_control_type!=CONTROL_JOYSTICK) && (Config_control_type!=CONTROL_FLIGHTSTICK_PRO) && (Config_control_type!=CONTROL_THRUSTMASTER_FCS) )
       return;
    #else
    if ( (Config_control_type == CONTROL_NONE) || (Config_control_type == CONTROL_MOUSE) )
@@ -128,7 +128,7 @@ void joydefs_calibrate2()
       nm_messagebox( NULL, 1, TXT_OK, TXT_NO_JOYSTICK );
       return;
    }
-   
+
    masks = joy_get_present_mask();
 
 #ifndef WINDOWS
@@ -150,7 +150,7 @@ void joydefs_calibrate2()
       sprintf( title, "%s\n%s", TXT_JOYSTICK, TXT_UPPER_LEFT);
       sprintf( text, "%s %s", TXT_MOVE_JOYSTICK, TXT_TO_UL);
    }
-   
+
    if (joycal_message( title, text )) {
       joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
       return;
@@ -218,7 +218,7 @@ void joydefs_calibrate2()
          sprintf( title, "Joystick X2 axis\nRIGHT");
          sprintf( text, "Move joystick X2 axis\nall the way right");
          if (joycal_message( title, text ))  {
-            joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max); 
+            joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
             return;
          }
          joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
@@ -246,14 +246,14 @@ void joydefs_calibrate2()
             sprintf( title, "%s #2\n%s", TXT_JOYSTICK, TXT_LOWER_RIGHT);
             sprintf( text, "%s #2 %s", TXT_MOVE_JOYSTICK, TXT_TO_LR);
             if (joycal_message( title, text ))  {
-               joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max); 
+               joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
                return;
             }
             joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
             axis_max[2] = temp_values[2];
             axis_max[3] = temp_values[3];
             joy_delay();
-      
+
             sprintf( title, "%s #2\n%s", TXT_JOYSTICK, TXT_CENTER);
             sprintf( text, "%s #2 %s", TXT_MOVE_JOYSTICK, TXT_TO_C);
             if (joycal_message( title, text ))  {
@@ -262,11 +262,11 @@ void joydefs_calibrate2()
             }
             joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
             axis_cen[2] = temp_values[2];
-            axis_cen[3] = temp_values[3]; 
+            axis_cen[3] = temp_values[3];
             joy_delay();
          }
       }
-   #ifndef WINDOWS 
+   #ifndef WINDOWS
       else if ( (!(masks & JOY_2_X_AXIS)) && (masks & JOY_2_Y_AXIS) )   {
          if ( kconfig_is_axes_used(3) )   {
             // A throttle axis!!!!!
@@ -278,7 +278,7 @@ void joydefs_calibrate2()
             joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
             axis_min[3] = temp_values[3];
             joy_delay();
-      
+
             sprintf( title, "%s\n%s", TXT_THROTTLE, TXT_REVERSE);
             if (joycal_message( title, TXT_MOVE_THROTTLE_R)) {
                joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
@@ -287,7 +287,7 @@ void joydefs_calibrate2()
             joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
             axis_max[3] = temp_values[3];
             joy_delay();
-      
+
             sprintf( title, "%s\n%s", TXT_THROTTLE, TXT_CENTER);
             if (joycal_message( title, TXT_MOVE_THROTTLE_C)) {
                joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
@@ -302,7 +302,7 @@ void joydefs_calibrate2()
    }
    joy_set_cal_vals(axis_min, axis_cen, axis_max);
 
-   WriteConfigFile();   
+   WriteConfigFile();
 }
 #else
 void joydefs_calibrate2()
@@ -333,10 +333,10 @@ void joydefs_calibrate2()
       joy_set_cal_vals(axis_min, axis_cen, axis_max);
       return;
    }
-   
+
    if ( Config_control_type == CONTROL_FLIGHTSTICK_PRO )       // no calibration needed
       return;
-      
+
    joy_get_cal_vals(org_axis_min, org_axis_center, org_axis_max);
 
    joy_set_cen();
@@ -346,7 +346,7 @@ void joydefs_calibrate2()
       nm_messagebox( NULL, 1, TXT_OK, TXT_NO_JOYSTICK );
       return;
    }
-   
+
    masks = joy_get_present_mask();
 
    if ( masks == JOY_ALL_AXIS )
@@ -364,7 +364,7 @@ void joydefs_calibrate2()
       sprintf( title, "%s\n%s", TXT_JOYSTICK, TXT_UPPER_LEFT);
       sprintf( text, "%s %s", TXT_MOVE_JOYSTICK, TXT_TO_UL);
    }
-   
+
    if (joycal_message( title, text )) {
       joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
       return;
@@ -425,14 +425,14 @@ void joydefs_calibrate2()
          sprintf( title, "%s #2\n%s", TXT_JOYSTICK, TXT_LOWER_RIGHT);
          sprintf( text, "%s #2 %s", TXT_MOVE_JOYSTICK, TXT_TO_LR);
          if (joycal_message( title, text ))  {
-            joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max); 
+            joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
             return;
          }
          joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
          axis_max[2] = temp_values[2];
          axis_max[3] = temp_values[3];
          joy_delay();
-   
+
          sprintf( title, "%s #2\n%s", TXT_JOYSTICK, TXT_CENTER);
          sprintf( text, "%s #2 %s", TXT_MOVE_JOYSTICK, TXT_TO_C);
          if (joycal_message( title, text ))  {
@@ -441,7 +441,7 @@ void joydefs_calibrate2()
          }
          joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
          axis_cen[2] = temp_values[2];
-         axis_cen[3] = temp_values[3]; 
+         axis_cen[3] = temp_values[3];
          joy_delay();
       }
    } else {
@@ -455,7 +455,7 @@ void joydefs_calibrate2()
          joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
          axis_min[3] = temp_values[3];
          joy_delay();
-   
+
          sprintf( title, "%s\n%s", TXT_THROTTLE, TXT_REVERSE);
          if (joycal_message( title, TXT_MOVE_THROTTLE_R)) {
             joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
@@ -464,7 +464,7 @@ void joydefs_calibrate2()
          joystick_read_raw_axis( JOY_ALL_AXIS, temp_values );
          axis_max[3] = temp_values[3];
          joy_delay();
-   
+
          sprintf( title, "%s\n%s", TXT_THROTTLE, TXT_CENTER);
          if (joycal_message( title, TXT_MOVE_THROTTLE_C)) {
             joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
@@ -477,7 +477,7 @@ void joydefs_calibrate2()
    }
    joy_set_cal_vals(axis_min, axis_cen, axis_max);
 
-   WriteConfigFile();   
+   WriteConfigFile();
 }
 #endif
 
@@ -495,7 +495,7 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 
    nitems = nitems;
    last_key = last_key;
-   citem = citem;    
+   citem = citem;
 
    for (i=0; i<CONTROL_MAX_TYPES_DOS; i++ )
       if (items[i].value) Config_control_type = i;
@@ -537,11 +537,11 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 
    nitems = nitems;
    last_key = last_key;
-   citem = citem;    
+   citem = citem;
 
    for (i=0; i<MAX_MAC_CONTROL_TYPES; i++ )
       if (items[i].value) Config_control_type = i;
-      
+
    if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_FLIGHTSTICK_PRO ) ) {
       warning_text = ch_warning;
    }
@@ -553,7 +553,7 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
    if ( (oc_type != Config_control_type) && (Config_control_type == CONTROL_GRAVIS_GAMEPAD ) )  {
       warning_text = ms_warning;
    }
-   
+
    if (warning_text) {
       hide_cursor();
       nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, warning_text );
@@ -604,7 +604,7 @@ void joydefs_config()
       m[4].text = "Gravis Firebird/MouseStick II";
       m[5].type = NM_TYPE_RADIO; m[5].text = CONTROL_TEXT(5); m[5].value = 0; m[5].group = 0;
 
-      
+
       m[6].type = NM_TYPE_MENU;   m[6].text=TXT_CUST_ABOVE;
       m[7].type = NM_TYPE_TEXT;   m[7].text="";
       m[8].type = NM_TYPE_SLIDER; m[8].text=TXT_JOYS_SENSITIVITY; m[8].value=Config_joystick_sensitivity; m[8].min_value =0; m[8].max_value = 8;
@@ -631,7 +631,7 @@ void joydefs_config()
                nm_messagebox( TXT_IMPORTANT_NOTE, 1, TXT_OK, joy_warning );
             else if ( Config_control_type<5 ) {
                char title[64];
-               
+
 
                if (Config_control_type == 3)
                   strcpy(title, "Thrustmaster");
@@ -639,12 +639,12 @@ void joydefs_config()
                   strcpy(title, "Gravis Firebird/Mousestick II");
                else
                   strcpy(title, CONTROL_TEXT(Config_control_type) );
-                  
 
-               kconfig(1, title ); 
+
+               kconfig(1, title );
             } else
-               kconfig(2, CONTROL_TEXT(Config_control_type) ); 
-            
+               kconfig(2, CONTROL_TEXT(Config_control_type) );
+
             masks = 0;
             for (i=0; i<4; i++ )    {
                if (kconfig_is_axes_used(i))
@@ -654,7 +654,7 @@ void joydefs_config()
             switch (Config_control_type) {
             case  CONTROL_JOYSTICK:
             case  CONTROL_FLIGHTSTICK_PRO:
-            case  CONTROL_THRUSTMASTER_FCS:  
+            case  CONTROL_THRUSTMASTER_FCS:
             case  CONTROL_GRAVIS_GAMEPAD:
                {
                   for (i=0; i<4; i++ ) {
@@ -666,10 +666,10 @@ void joydefs_config()
             }
          }
          break;
-      case 10: 
-         kconfig(0, TXT_KEYBOARD); 
+      case 10:
+         kconfig(0, TXT_KEYBOARD);
          break;
-      } 
+      }
 
    } while(i1>-1);
 
@@ -690,7 +690,7 @@ void joydefs_config()
 void joydefs_set_type(ubyte type)
 {
    ubyte joy_type;
-   
+
    switch (type)
    {
       case  CONTROL_NONE:           joy_type = JOY_AS_NONE;             break;
@@ -736,7 +736,7 @@ void joydefs_config()
          m[12].type = NM_TYPE_CHECK; m[12].text = xtext; m[12].value = kc_enable_external_control;
          nitems++;
       }
-      
+
       i1 = newmenu_do1( NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1 );
       Config_joystick_sensitivity = m[9].value;
 
@@ -748,11 +748,11 @@ void joydefs_config()
                   old_masks |= (1<<i);
             }
             if ( Config_control_type==0 )
-               kconfig(0, TXT_KEYBOARD); 
-            else if ( Config_control_type<5 ) 
-               kconfig(1, CONTROL_TEXT(Config_control_type) ); 
-            else 
-               kconfig(2, CONTROL_TEXT(Config_control_type) ); 
+               kconfig(0, TXT_KEYBOARD);
+            else if ( Config_control_type<5 )
+               kconfig(1, CONTROL_TEXT(Config_control_type) );
+            else
+               kconfig(2, CONTROL_TEXT(Config_control_type) );
 
             masks = 0;
             for (i=0; i<4; i++ )    {
@@ -763,7 +763,7 @@ void joydefs_config()
             switch (Config_control_type) {
             case  CONTROL_JOYSTICK:
             case  CONTROL_FLIGHTSTICK_PRO:
-            case  CONTROL_THRUSTMASTER_FCS:  
+            case  CONTROL_THRUSTMASTER_FCS:
                {
                   for (i=0; i<4; i++ ) {
                      if ( (masks&(1<<i)) && (!(old_masks&(1<<i))))
@@ -774,10 +774,10 @@ void joydefs_config()
             }
          }
          break;
-      case 11: 
-         kconfig(0, TXT_KEYBOARD); 
+      case 11:
+         kconfig(0, TXT_KEYBOARD);
          break;
-      } 
+      }
 
       if ( kc_use_external_control )   {
          kc_enable_external_control = m[12].value;
@@ -809,7 +809,7 @@ void joydef_menuset_win(int nitems, newmenu_item * items, int *last_key, int cit
 
    nitems = nitems;
    last_key = last_key;
-   citem = citem;    
+   citem = citem;
 
    for (i=0; i<CONTROL_MAX_TYPES; i++ )
       if (items[i].value) Config_control_type = i;
@@ -843,7 +843,7 @@ void joydefs_config()
    char xtext[128];
 
    Int3();     //this routine really needs to be cleaned up
- 
+
    do {
       nitems=13;
       m[0].type = NM_TYPE_RADIO; m[0].text = CONTROL_TEXT(0); m[0].value = 0; m[0].group = 0;
@@ -868,7 +868,7 @@ void joydefs_config()
          m[13].type = NM_TYPE_CHECK; m[13].text = xtext; m[13].value = kc_enable_external_control;
          nitems++;
       }
-      
+
       i1 = newmenu_do1( NULL, TXT_CONTROLS, nitems, m, joydef_menuset_win, i1 );
       Config_joystick_sensitivity = m[10].value;
 
@@ -882,10 +882,10 @@ void joydefs_config()
             if ( Config_control_type==0 )
                // nothing...
                Config_control_type=0;
-            else if ( Config_control_type<5 ) 
-               kconfig(1, CONTROL_TEXT(Config_control_type) ); 
-            else 
-               kconfig(2, CONTROL_TEXT(Config_control_type) ); 
+            else if ( Config_control_type<5 )
+               kconfig(1, CONTROL_TEXT(Config_control_type) );
+            else
+               kconfig(2, CONTROL_TEXT(Config_control_type) );
 
             masks = 0;
             for (i=0; i<4; i++ )    {
@@ -896,7 +896,7 @@ void joydefs_config()
             switch (Config_control_type) {
             case  CONTROL_JOYSTICK:
             case  CONTROL_FLIGHTSTICK_PRO:
-            case  CONTROL_THRUSTMASTER_FCS:  
+            case  CONTROL_THRUSTMASTER_FCS:
                {
                   for (i=0; i<4; i++ ) {
                      if ( (masks&(1<<i)) && (!(old_masks&(1<<i))))
@@ -907,10 +907,10 @@ void joydefs_config()
             }
          }
          break;
-      case 12: 
-         kconfig(0, TXT_KEYBOARD); 
+      case 12:
+         kconfig(0, TXT_KEYBOARD);
          break;
-      } 
+      }
 
       if ( kc_use_external_control )   {
          kc_enable_external_control = m[13].value;

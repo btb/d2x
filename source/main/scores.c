@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -58,7 +58,7 @@ typedef struct stats_info {
    byte     ending_level;
    byte     diff_level;
    short    kill_ratio; // 0-100
-   short    hostage_ratio;   // 
+   short    hostage_ratio;   //
    int      seconds;       // How long it took in seconds...
 } stats_info;
 
@@ -139,7 +139,7 @@ void scores_read()
          Scores.stats[i].score = (10-i)*1000;
       return;
    }
-      
+
    fsize = filelength( fileno( fp ));
 
    if ( fsize != sizeof(all_scores) )  {
@@ -207,12 +207,12 @@ void scores_fill_struct(stats_info * stats)
       strcpy( stats->name, Players[Player_num].callsign );
       stats->score = Players[Player_num].score;
       stats->ending_level = Players[Player_num].level;
-      if (Players[Player_num].num_robots_total > 0 )  
+      if (Players[Player_num].num_robots_total > 0 )
          stats->kill_ratio = (Players[Player_num].num_kills_total*100)/Players[Player_num].num_robots_total;
       else
          stats->kill_ratio = 0;
 
-      if (Players[Player_num].hostages_total > 0 ) 
+      if (Players[Player_num].hostages_total > 0 )
          stats->hostage_ratio = (Players[Player_num].hostages_rescued_total*100)/Players[Player_num].hostages_total;
       else
          stats->hostage_ratio = 0;
@@ -237,9 +237,9 @@ void scores_maybe_add_player(int abort_flag)
 
    if ((Game_mode & GM_MULTI) && !(Game_mode & GM_MULTI_COOP))
       return;
-  
+
    scores_read();
-   
+
    position = MAX_HIGH_SCORES;
    for (i=0; i<MAX_HIGH_SCORES; i++ )  {
       if ( Players[Player_num].score > Scores.stats[i].score ) {
@@ -247,7 +247,7 @@ void scores_maybe_add_player(int abort_flag)
          break;
       }
    }
-   
+
    if ( position == MAX_HIGH_SCORES ) {
       if (abort_flag)
          return;
@@ -269,14 +269,14 @@ void scores_maybe_add_player(int abort_flag)
       } else {
          nm_messagebox( TXT_HIGH_SCORE, 1, TXT_OK, "%s %s!", TXT_YOU_PLACED, *(&TXT_1ST + position) );
       }
-   
+
       // move everyone down...
       for ( i=MAX_HIGH_SCORES-1; i>position; i-- ) {
          Scores.stats[i] = Scores.stats[i-1];
       }
 
       scores_fill_struct( &Scores.stats[position] );
-   
+
       scores_write();
 
    }
@@ -364,11 +364,11 @@ ReshowScores:
    scores_read();
 
    set_screen_mode(SCREEN_MENU);
- 
+
    WINDOS(  dd_gr_set_current_canvas(NULL),
             gr_set_current_canvas(NULL)
    );
-   
+
    nm_draw_background(0,0,grd_curcanv->cv_bitmap.bm_w, grd_curcanv->cv_bitmap.bm_h );
 
    grd_curcanv->cv_font = MEDIUM3_FONT;
@@ -387,20 +387,20 @@ WIN(DDGRLOCK(dd_grd_curcanv));
 // gr_string( 234, 46, "Rescues" );
    gr_string( LHX(288-42+XX), LHY(46+7+YY), TXT_TIME );
 
-   if ( citem < 0 )  
+   if ( citem < 0 )
       gr_string( 0x8000, LHY(175), TXT_PRESS_CTRL_R );
 
    gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
 
    gr_printf( 0x8000, LHY(31), "%c%s%c  - %s", 34, Scores.cool_saying, 34, Scores.stats[0].name );
-WIN(DDGRUNLOCK(dd_grd_curcanv)); 
+WIN(DDGRUNLOCK(dd_grd_curcanv));
 
    for (i=0; i<MAX_HIGH_SCORES; i++ )     {
       //@@if (i==0)  {
       //@@  gr_set_fontcolor( BM_XRGB(28,28,28), -1 );
       //@@} else {
       //@@  gr_set_fontcolor( gr_fade_table[BM_XRGB(28,28,28)+((28-i*2)*256)], -1 );
-      //@@}                                         
+      //@@}
 
       gr_set_fontcolor( BM_XRGB(28-i*2,28-i*2,28-i*2), -1 );
       scores_draw_item( i, &Scores.stats[i] );
@@ -415,9 +415,9 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 
    while(!done)   {
       if ( citem > -1 ) {
-   
+
          t1 = timer_get_fixed_seconds();
-         while ( timer_get_fixed_seconds() < t1+F1_0/128 ); 
+         while ( timer_get_fixed_seconds() < t1+F1_0/128 );
 
          //@@gr_set_fontcolor( gr_fade_table[fades[looper]*256+BM_XRGB(28,28,28)], -1 );
          gr_set_fontcolor( BM_XRGB(7+fades[looper],7+fades[looper],7+fades[looper]), -1 );
@@ -429,9 +429,9 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
             scores_draw_item( citem, &Scores.stats[citem] );
       }
 
-      for (i=0; i<4; i++ ) 
+      for (i=0; i<4; i++ )
          if (joy_get_button_down_cnt(i)>0) done=1;
-      for (i=0; i<3; i++ ) 
+      for (i=0; i<3; i++ )
          if (mouse_button_down_count(i)>0) done=1;
 
       //see if redbook song needs to be restarted
@@ -454,7 +454,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
 
       k = key_inkey();
       switch( k ) {
-      case KEY_CTRLED+KEY_R:     
+      case KEY_CTRLED+KEY_R:
          if ( citem < 0 )     {
             // Reset scores...
             if ( nm_messagebox( NULL, 2,  TXT_NO, TXT_YES, TXT_RESET_HIGH_SCORES )==1 )   {
@@ -466,7 +466,7 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
          break;
       case KEY_BACKSP:           Int3(); k = 0; break;
       case KEY_PRINT_SCREEN:     save_screen_shot(0); k = 0; break;
-         
+
       case KEY_ENTER:
       case KEY_SPACEBAR:
       case KEY_ESC:
@@ -487,5 +487,5 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
    );
 
    game_flush_inputs();
-   
+
 }

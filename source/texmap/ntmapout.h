@@ -49,7 +49,7 @@
 
 #if LINEAR == 0
       // If perspective, then we need to multiply all of
-      // the uv's by one over Z.   
+      // the uv's by one over Z.
       v3d = t->verts;
       for (y=0; y<t->nv; y++, v3d++) {
          v3d->u = fixmul( v3d->u, v3d->z >> Z_SHIFTER );
@@ -212,7 +212,7 @@ draw_scanline:
 
       if ( (y >= Window_clip_top) && (dx>=0) && (xright>=0) && (xleft<=xright) ) {
          fix   recip_dx;
-      
+
          fx_y = y;
 
          // setup to call assembler scanline renderer
@@ -260,15 +260,15 @@ draw_scanline:
 #if LIGHTING == 1
          {
             fix   mul_thing;
-            
+
             if (lleft < 0) lleft = 0;
             if (lright < 0) lright = 0;
             if (lleft > (NUM_LIGHTING_LEVELS*F1_0-F1_0/2)) lleft = (NUM_LIGHTING_LEVELS*F1_0-F1_0/2);
             if (lright > (NUM_LIGHTING_LEVELS*F1_0-F1_0/2)) lright = (NUM_LIGHTING_LEVELS*F1_0-F1_0/2);
-            
+
             fx_l = lleft;
             fx_dl_dx = fixmul(lright - lleft,recip_dx);
-            
+
             // This is a pretty ugly hack to prevent lighting overflows.
             mul_thing = dx * fx_dl_dx;
             if (lleft + mul_thing < 0)
@@ -306,7 +306,7 @@ dont_draw_scanline:
 #if USE_UVS == 1
          uleft += du_dy_left;
          vleft += dv_dy_left;
-   
+
          uright += du_dy_right;
          vright += dv_dy_right;
 #endif

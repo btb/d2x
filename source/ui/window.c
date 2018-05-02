@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -342,7 +342,7 @@ void ui_mega_process()
 {
    int mx, my;
    unsigned char k;
-   
+
    switch( Record )
    {
    case 0:
@@ -492,22 +492,22 @@ void ui_mega_process()
       last_keypress = 0;
 
       if ( keyd_last_pressed ) {
-         _disable();       
+         _disable();
          k = keyd_last_pressed;
          keyd_last_pressed = 0;
          _disable();
          SavedState[k] = 1;
       }
 
-      if ( keyd_last_released ) 
+      if ( keyd_last_released )
       {
-         _disable();       
+         _disable();
          k = keyd_last_released;
          keyd_last_released = 0;
          _disable();
          SavedState[k] = 0;
       }
-      
+
       if (key_inkey() == KEY_F12 )
       {
          //mprintf( 0, "Playing stopped.\n" );
@@ -563,28 +563,28 @@ void ui_mega_process()
       case 2:
          {
             int next_frame;
-         
+
             if ( ui_event_counter < ui_number_of_events )
             {
                next_frame = EventBuffer[ui_event_counter].frame;
-               
+
                if ( (FrameCount+PlaybackSpeed) < next_frame )
                   FrameCount = next_frame - PlaybackSpeed;
                else
                   FrameCount++;
             } else {
                FrameCount++;
-            }  
+            }
          }
          break;
 
-      case 3:        
-         if ( ui_event_counter < ui_number_of_events ) 
+      case 3:
+         if ( ui_event_counter < ui_number_of_events )
             FrameCount = EventBuffer[ui_event_counter].frame;
-         else     
+         else
             FrameCount++;
          break;
-      default:    
+      default:
          FrameCount++;
       }
    }

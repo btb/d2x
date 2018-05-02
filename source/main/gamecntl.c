@@ -9,7 +9,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -429,8 +429,8 @@ int which_bomb()
       bomb = SMART_MINE_INDEX+PROXIMITY_INDEX-bomb;
       Secondary_last_was_super[bomb%SUPER_WEAPON] = (bomb == SMART_MINE_INDEX);
    }
-   
-   
+
+
 
    return bomb;
 }
@@ -630,7 +630,7 @@ int do_game_pause()
 
    show_boxed_message(Pause_msg=msg);       //TXT_PAUSE);
 
-   while (Game_paused) 
+   while (Game_paused)
    {
       int screen_changed;
 
@@ -649,7 +649,7 @@ int do_game_pause()
          if (_RedrawScreen) {
             mprintf((0, "Redrawing paused screen.\n"));
             _RedrawScreen = FALSE;
-            if (VR_screen_flags & VRF_COMPATIBLE_MENUS) 
+            if (VR_screen_flags & VRF_COMPATIBLE_MENUS)
                game_render_frame();
             Screen_mode = -1;
             set_popup_screen();
@@ -667,12 +667,12 @@ int do_game_pause()
       #ifndef RELEASE
       HandleTestKey(key);
       #endif
-      
+
       screen_changed = HandleSystemKey(key);
 
    #ifdef WINDOWS
       if (screen_changed == -1) {
-         nm_messagebox(NULL,1, TXT_OK, "Unable to do this\noperation while paused under\n320x200 mode"); 
+         nm_messagebox(NULL,1, TXT_OK, "Unable to do this\noperation while paused under\n320x200 mode");
          goto SkipPauseStuff;
       }
    #endif
@@ -704,7 +704,7 @@ int do_game_pause()
    if (Redbook_playing)
       RBAResume();
    digi_resume_all();
-   
+
    MAC(delay(500);)  // delay 1/2 second because of dumb redbook problem
 
    return key;
@@ -759,34 +759,34 @@ void do_show_netgame_help()
 
    for (i=0;i<N_players;i++)
      if (Players[i].connected)
-     {        
+     {
       if (!FindArg ("-norankings"))
        {
          if (i==Player_num)
-            sprintf (mtext[num],"%s%s (%d/%d)",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,Netlife_kills,Netlife_killed); 
+            sprintf (mtext[num],"%s%s (%d/%d)",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,Netlife_kills,Netlife_killed);
          else
             sprintf (mtext[num],"%s%s %d/%d",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,kill_matrix[Player_num][i],
-                     kill_matrix[i][Player_num]); 
+                     kill_matrix[i][Player_num]);
          num++;
        }
       else
-       sprintf (mtext[num++],"%s",Players[i].callsign); 
+       sprintf (mtext[num++],"%s",Players[i].callsign);
      }
 
-   
+
   sprintf (mtext[num]," "); num++;
 
   eff=(int)((float)((float)Netlife_kills/((float)Netlife_killed+(float)Netlife_kills))*100.0);
 
   if (eff<0)
    eff=0;
-  
+
   if (Game_mode & GM_HOARD)
    {
     if (PhallicMan==-1)
-       sprintf (mtext[num],"There is no record yet for this level."); 
+       sprintf (mtext[num],"There is no record yet for this level.");
     else
-       sprintf (mtext[num],"%s has the record at %d points.",Players[PhallicMan].callsign,PhallicLimit); 
+       sprintf (mtext[num],"%s has the record at %d points.",Players[PhallicMan].callsign,PhallicLimit);
    num++;
    }
   else if (!FindArg ("-norankings"))
@@ -801,8 +801,8 @@ void do_show_netgame_help()
        sprintf (mtext[num],"Your lifetime efficiency of %d%%",eff); num++;
        sprintf (mtext[num],"is serving you well."); num++;
       }
-   }  
-   
+   }
+
 
    full_palette_save();
 
@@ -850,7 +850,7 @@ void HandleDeathKey(int key)
    Commented out redundant calls because the key used here typically
    will be passed to HandleSystemKey later.  Note that I do this to pause
    which is supposed to pass the ESC key to leave the level.  This
-   doesn't work in the DOS version anyway.   -Samir 
+   doesn't work in the DOS version anyway.   -Samir
 */
 
    if (Player_exploded && !key_isfunc(key) && !key_ismod(key))
@@ -908,7 +908,7 @@ void HandleDemoKey(int key)
    switch (key) {
 
       case KEY_F3:
-            
+
          #ifdef MACINTOSH
             #ifdef POLY_ACC
                if (PAEnabled)
@@ -918,7 +918,7 @@ void HandleDemoKey(int key)
                }
             #endif
          #endif
-            
+
           PA_DFX (HUD_init_message ("Cockpit not available in 3dfx version."));
           PA_DFX (break);
           if (!(Guided_missile[Player_num] && Guided_missile[Player_num]->type==OBJ_WEAPON && Guided_missile[Player_num]->id==GUIDEDMISS_ID && Guided_missile[Player_num]->signature==Guided_missile_sig[Player_num] && Guided_in_big_window))
@@ -1130,12 +1130,12 @@ dump_door_debugging_info()
 
       wall_num = Segments[hit_info.hit_seg].sides[hit_info.hit_side].wall_num;
       fprintf(dfile,"wall_num = %d\n",wall_num);
-   
+
       if (wall_num != -1) {
          wall *wall = &Walls[wall_num];
          active_door *d;
          int i;
-   
+
          fprintf(dfile,"    segnum = %d\n",wall->segnum);
          fprintf(dfile,"    sidenum = %d\n",wall->sidenum);
          fprintf(dfile,"    hps = %x\n",wall->hps);
@@ -1149,14 +1149,14 @@ dump_door_debugging_info()
          fprintf(dfile,"    controlling_trigger = %d\n",wall->controlling_trigger);
          fprintf(dfile,"    cloak_value = %d\n",wall->cloak_value);
          fprintf(dfile,"\n");
-   
-   
+
+
          for (i=0;i<Num_open_doors;i++) {    //find door
             d = &ActiveDoors[i];
             if (d->front_wallnum[0]==wall-Walls || d->back_wallnum[0]==wall-Walls || (d->n_parts==2 && (d->front_wallnum[1]==wall-Walls || d->back_wallnum[1]==wall-Walls)))
                break;
-         } 
-   
+         }
+
          if (i>=Num_open_doors)
             fprintf(dfile,"No active door.\n");
          else {
@@ -1166,7 +1166,7 @@ dump_door_debugging_info()
             fprintf(dfile,"    back_wallnum = %d,%d\n",d->back_wallnum[0],d->back_wallnum[1]);
             fprintf(dfile,"    time = %x\n",d->time);
          }
-   
+
       }
    }
 
@@ -1228,7 +1228,7 @@ int HandleSystemKey(int key)
          break;
 
       MAC( case KEY_COMMAND+KEY_P: )
-      case KEY_PAUSE: 
+      case KEY_PAUSE:
          do_game_pause();           break;
 
       #ifdef MACINTOSH
@@ -1268,7 +1268,7 @@ int HandleSystemKey(int key)
                break;
             }
          #endif
-   
+
          #ifdef MACINTOSH
             #ifdef POLY_ACC
                if (PAEnabled)
@@ -1292,7 +1292,7 @@ int HandleSystemKey(int key)
       case KEY_F7+KEY_SHIFTED: palette_save(); joydefs_calibrate(); palette_restore(); break;
 
       case KEY_SHIFTED+KEY_MINUS:
-      case KEY_MINUS:   
+      case KEY_MINUS:
       #ifdef WINDOWS
          if (Player_is_dead) break;
          if (!(VR_screen_flags&VRF_COMPATIBLE_MENUS) && Game_paused) {
@@ -1301,12 +1301,12 @@ int HandleSystemKey(int key)
          }
       #endif
 
-         shrink_window(); 
-         screen_changed=1; 
+         shrink_window();
+         screen_changed=1;
          break;
 
       case KEY_SHIFTED+KEY_EQUAL:
-      case KEY_EQUAL:         
+      case KEY_EQUAL:
       #ifdef WINDOWS
          if (Player_is_dead) break;
          if (!(VR_screen_flags&VRF_COMPATIBLE_MENUS) && Game_paused) {
@@ -1315,8 +1315,8 @@ int HandleSystemKey(int key)
          }
       #endif
 
-         grow_window();  
-         screen_changed=1; 
+         grow_window();
+         screen_changed=1;
          break;
 
       MAC(case KEY_COMMAND+KEY_5:)
@@ -1455,15 +1455,15 @@ int HandleSystemKey(int key)
       case KEY_EQUAL + KEY_ALTED:     songs_goto_next_song(); break;
 
       #ifdef MACINTOSH
-      
+
       case KEY_COMMAND+KEY_M:
          #if !defined(SHAREWARE) || defined(APPLE_DEMO)
          if ( (Game_mode & GM_MULTI) )    // don't process in multiplayer games
             break;
 
-         key_close();      // no processing of keys with keyboard handler.. jeez          
+         key_close();      // no processing of keys with keyboard handler.. jeez
          stop_time();
-         show_boxed_message ("Mounting CD\nESC to quit");   
+         show_boxed_message ("Mounting CD\nESC to quit");
          RBAMountDisk();      // OS has totaly control of the CD.
          if (Function_mode == FMODE_MENU)
             songs_play_song(SONG_TITLE,1);
@@ -1473,7 +1473,7 @@ int HandleSystemKey(int key)
          key_init();
          start_time();
          #endif
-         
+
          break;
 
       case KEY_COMMAND+KEY_E:
@@ -2316,7 +2316,7 @@ void FinalCheats(int key)
                Players[Player_num].secondary_ammo[SMISSILE5_INDEX] = 0;
                Players[Player_num].secondary_ammo[MEGA_INDEX] = 0;
          #endif
-                  
+
             if (Game_mode & GM_HOARD)
                Players[Player_num].secondary_ammo[PROXIMITY_INDEX] = 12;
 

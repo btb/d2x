@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -47,7 +47,7 @@ void InitArgs( int argc,char **argv )  {
       Args[Num_args++] = strdup( argv[i] );
    }
 
-//NO_DESCENT_INI  fp = fopen( "descent.ini", "rt" );     
+//NO_DESCENT_INI  fp = fopen( "descent.ini", "rt" );
 //NO_DESCENT_INI  if (fp!=NULL) {
 //NO_DESCENT_INI     while( fgets( line, 100, fp ) != NULL )   {
 //NO_DESCENT_INI        char *p;
@@ -67,7 +67,7 @@ void InitArgs( int argc,char **argv )  {
 //NO_DESCENT_INI  }
 
    for (i=0; i< Num_args; i++ )  {
-      if ( Args[i][0] == '/' )  
+      if ( Args[i][0] == '/' )
          Args[i][0] = '-';
 
       if ( Args[i][0] == '-' )

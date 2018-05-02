@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -113,7 +113,7 @@ Cache_lookups++;
 //mprintf((0, "\n"));
 Cache_hits++;
       return cache_vis;
-   }  
+   }
 }
 
 #define  HEADLIGHT_CONE_DOT   (F1_0*9/10)
@@ -145,7 +145,7 @@ void apply_light(fix obj_intensity, int obj_seg, vms_vector *obj_pos, int n_rend
                if (dist < abs(obji_64)) {
                   if (dist < MIN_LIGHT_DIST)
                      dist = MIN_LIGHT_DIST;
-   
+
                   Dynamic_light[vertnum] += fixdiv(obj_intensity, dist);
                }
             }
@@ -273,7 +273,7 @@ fix compute_light_intensity(int objnum)
    object      *obj = &Objects[objnum];
    int         objtype = obj->type;
    fix hoardlight,s;
-         
+
    switch (objtype) {
       case OBJ_PLAYER:
           if (Players[obj->id].flags & PLAYER_FLAGS_HEADLIGHT_ON) {
@@ -281,14 +281,14 @@ fix compute_light_intensity(int objnum)
                Headlights[Num_headlights++] = obj;
             return HEADLIGHT_SCALE;
           } else if ((Game_mode & GM_HOARD) && Players[obj->id].secondary_ammo[PROXIMITY_INDEX]) {
-         
+
          // If hoard game and player, add extra light based on how many orbs you have
          // Pulse as well.
 
             hoardlight=i2f(Players[obj->id].secondary_ammo[PROXIMITY_INDEX])/2; //i2f(12));
             hoardlight++;
             fix_sincos ((GameTime/2) & 0xFFFF,&s,NULL); // probably a bad way to do it
-            s+=F1_0;  
+            s+=F1_0;
             s>>=1;
             hoardlight=fixmul (s,hoardlight);
        //     mprintf ((0,"Hoardlight is %f!\n",f2fl(hoardlight)));
@@ -467,9 +467,9 @@ void set_dynamic_light(void)
 void toggle_headlight_active()
 {
    if (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT) {
-      Players[Player_num].flags ^= PLAYER_FLAGS_HEADLIGHT_ON;        
+      Players[Player_num].flags ^= PLAYER_FLAGS_HEADLIGHT_ON;
       if (Game_mode & GM_MULTI)
-         multi_send_flags(Player_num);    
+         multi_send_flags(Player_num);
    }
 }
 
@@ -523,38 +523,38 @@ fix compute_headlight_light_on_object(object *objp)
 // -- Unused -- {
 // -- Unused --   fix light;
 // -- Unused --   int use_beam = 0;    //flag for beam effect
-// -- Unused -- 
+// -- Unused --
 // -- Unused --   light = Beam_brightness;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --   if ((Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT) && (Players[Player_num].flags & PLAYER_FLAGS_HEADLIGHT_ON) && Viewer==&Objects[Players[Player_num].objnum] && Players[Player_num].energy > 0) {
 // -- Unused --      light *= HEADLIGHT_BOOST_SCALE;
 // -- Unused --      use_beam = 1;  //give us beam effect
 // -- Unused --   }
-// -- Unused -- 
+// -- Unused --
 // -- Unused --   if (light) {            //if no beam, don't bother with the rest of this
 // -- Unused --      fix point_dist;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --      point_dist = vm_vec_mag_quick(point);
-// -- Unused -- 
+// -- Unused --
 // -- Unused --      if (point_dist >= MAX_DIST)
-// -- Unused -- 
+// -- Unused --
 // -- Unused --         light = 0;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --      else {
 // -- Unused --         fix dist_scale,face_scale;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --         dist_scale = (MAX_DIST - point_dist) >> MAX_DIST_LOG;
 // -- Unused --         light = fixmul(light,dist_scale);
-// -- Unused -- 
+// -- Unused --
 // -- Unused --         if (face_light < 0)
 // -- Unused --            face_light = 0;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --         face_scale = f1_0/4 + face_light/2;
 // -- Unused --         light = fixmul(light,face_scale);
-// -- Unused -- 
+// -- Unused --
 // -- Unused --         if (use_beam) {
 // -- Unused --            fix beam_scale;
-// -- Unused -- 
+// -- Unused --
 // -- Unused --            if (face_light > f1_0*3/4 && point->z > i2f(12)) {
 // -- Unused --               beam_scale = fixdiv(point->z,point_dist);
 // -- Unused --               beam_scale = fixmul(beam_scale,beam_scale);  //square it
@@ -563,7 +563,7 @@ fix compute_headlight_light_on_object(object *objp)
 // -- Unused --         }
 // -- Unused --      }
 // -- Unused --   }
-// -- Unused -- 
+// -- Unused --
 // -- Unused --   return light;
 // -- Unused -- }
 
@@ -660,7 +660,7 @@ fix compute_object_light(object *obj,vms_vector *rotated_pnt)
 
    // -- Matt code: light += compute_headlight_light(rotated_pnt,f1_0);
    light += compute_headlight_light_on_object(obj);
-  
+
    //Finally, add in dynamic light for this segment
 
    light += compute_seg_dynamic_light(obj->segnum);

@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -49,10 +49,10 @@ static char rcsid[] = "$Id: ipx.c 1.7 1996/10/04 17:22:45 samir Exp $";
 
 typedef struct tIpxNetworkID {
    BYTE b[4];
-} tIpxNetworkID;  
+} tIpxNetworkID;
 
-typedef struct tIpxAddrGeneric { 
-   BYTE b[6]; 
+typedef struct tIpxAddrGeneric {
+   BYTE b[6];
 } tIpxAddrGeneric;
 
 typedef struct tIpxNetAddr {
@@ -123,7 +123,7 @@ uint wipx_get_socket_addr(SOCKET sock_id, tIpxNetworkID *net_addr, tIpxAddrGener
 uint wipx_set_socket_mode_bool(SOCKET sock_id, int opt, BOOL toggle);
 uint wipx_socket_listen(SOCKET sock_id, tIpxPacket *packet);
 uint wipx_socket_send(SOCKET sock_id, tIpxPacket *packet);
-uint wipx_close(); 
+uint wipx_close();
 uint wipx_logerror(uint ipx_result, char *text);
 
 void got_new_packet( tIpxPacket *packet );
@@ -147,10 +147,10 @@ void ipx_get_local_target( ubyte * server, ubyte * node, ubyte * local_target )
 
 // ---------------------------------------------------------------------------
 // Functions
-// ---------------------------------------------------------------------------   
+// ---------------------------------------------------------------------------
 
 //---------------------------------------------------------------
-// Initializes all IPX internals. 
+// Initializes all IPX internals.
 // If socket_number==0, then opens next available socket.
 // Returns: 0  if successful.
 //          -1 if socket already open.
@@ -181,14 +181,14 @@ int ipx_init(int socket_number, int show_address)
    ipx_result = wipx_get_socket_addr(WinSocket, &ThisIPXSubnet, &ThisIPXNode);
    if (ipx_result) return -5;
    NumIPXSubnet = 0;
-   memcpy(&IPXSubnetID[NumIPXSubnet++], &ThisIPXSubnet, sizeof(tIpxNetworkID));  
+   memcpy(&IPXSubnetID[NumIPXSubnet++], &ThisIPXSubnet, sizeof(tIpxNetworkID));
 
 // Initialize packet buffers
    PacketList = (tPacket *)GlobalAllocPtr(GPTR, MAX_PACKETS*sizeof(tPacket));
-   if (!PacketList) 
+   if (!PacketList)
       return -4;                       // Memory will be freed in ipx_close
 
-   for (i = 0; i < MAX_PACKETS; i++) 
+   for (i = 0; i < MAX_PACKETS; i++)
    {
       PacketList[i].packetnum = -1;
       PacketList[i].free = i;
@@ -200,7 +200,7 @@ int ipx_init(int socket_number, int show_address)
 
 // Setup IPX packets for packet retrieval and sending
    IPXPackets = (tIpxPacket *)GlobalAllocPtr(GPTR, sizeof(tIpxPacket)*NUM_IPX_PACKETS);
-   if (!IPXPackets) 
+   if (!IPXPackets)
       return -4;                       // Memory will be freed in ipx_close
 
    for (i = 1; i < NUM_IPX_PACKETS; i++)
@@ -215,7 +215,7 @@ int ipx_init(int socket_number, int show_address)
    ipx_installed = 1;
 
    return 0;
-}  
+}
 
 
 void ipx_close()
@@ -243,12 +243,12 @@ int ipx_get_packet_data( ubyte * data )
 {
    int i, n, best, best_id, size;
 
-   for (i=1; i < NUM_IPX_PACKETS; i++ )   
+   for (i=1; i < NUM_IPX_PACKETS; i++ )
    {
       IPXPackets[i].in_use = 1;
       wipx_socket_listen(WinSocket, &IPXPackets[i]);
-      if (!IPXPackets[i].in_use) 
-         got_new_packet(&IPXPackets[i]);        
+      if (!IPXPackets[i].in_use)
+         got_new_packet(&IPXPackets[i]);
    }
 
 // Take oldest packet from list and get data.
@@ -256,7 +256,7 @@ int ipx_get_packet_data( ubyte * data )
    n = 0;
    best_id = -1;
 
-   for (i=0; i <= PacketListTail; i++ )   
+   for (i=0; i <= PacketListTail; i++ )
    {
       if ( PacketList[i].packetnum > -1 ) {
          n++;
@@ -264,7 +264,7 @@ int ipx_get_packet_data( ubyte * data )
             best = PacketList[i].packetnum;
             best_id = i;
          }
-      }        
+      }
    }
 
    if ( best_id < 0 ) return 0;
@@ -272,7 +272,7 @@ int ipx_get_packet_data( ubyte * data )
    size = PacketList[best_id].size;
    memcpy( data, PacketList[best_id].data, size );
 
-   free_packet(best_id);                     
+   free_packet(best_id);
 
    return size;
 }
@@ -287,23 +287,23 @@ void got_new_packet( tIpxPacket *packet )
 
    if (memcmp( &packet->saddr.node_addr, &ThisIPXNode, sizeof(tIpxAddrGeneric))) {
    // Find slot to put packet in...
-      datasize = packet->datalen;     
+      datasize = packet->datalen;
 
       if ( datasize > 0 && datasize <= sizeof(tPacket) ) {
          if ( PacketListCur >= MAX_PACKETS ) {
             neterrors++;
             return;
-         }     
+         }
          id = PacketList[PacketListCur++].free;
          if (id > PacketListTail ) PacketListTail = id;
          PacketList[id].size = datasize - sizeof(int);
          PacketList[id].packetnum = packet->packetnum;
-         if (PacketList[id].packetnum < 0) { neterrors++; return; } 
+         if (PacketList[id].packetnum < 0) { neterrors++; return; }
          memcpy( PacketList[id].data, packet->data, PacketList[id].size );
       } else {
          neterrors++; return;
       }
-   } 
+   }
    // Repost the ecb
    packet->in_use = 0;
 }
@@ -313,7 +313,7 @@ void free_packet( int id )
 {
    PacketList[id].packetnum = -1;
    PacketList[ --PacketListCur].free = id;
-   if (PacketListTail==id) 
+   if (PacketListTail==id)
       while ((--PacketListTail>0) && (PacketList[PacketListTail].packetnum == -1 ));
 }
 
@@ -323,21 +323,21 @@ void free_packet( int id )
 // Send IPX Packet Functions
 // ----------------------------------------------------------------------------
 
-void ipx_send_packet_data( ubyte * data, 
-            int datasize, 
-            ubyte *network, 
-            ubyte *address, 
+void ipx_send_packet_data( ubyte * data,
+            int datasize,
+            ubyte *network,
+            ubyte *address,
             ubyte *immediate_address )
 {
    Assert(ipx_installed);
 
    if ( datasize >= IPX_MAX_DATA_SIZE )   {
-      Error("Illegal sized IPX packet being sent.");     
+      Error("Illegal sized IPX packet being sent.");
    }
 
 // Make sure no one is already sending something
    IPXPackets[0].packetnum = IPXPacketNum;
-   IPXPacketNum++;   
+   IPXPacketNum++;
    memcpy( &IPXPackets[0].daddr.net_id, (tIpxNetworkID *)network, 4);
    memcpy( &IPXPackets[0].daddr.node_addr, (tIpxAddrGeneric *)address, sizeof(tIpxAddrGeneric) );
 
@@ -352,7 +352,7 @@ void ipx_send_packet_data( ubyte * data,
 }
 
 
-void ipx_send_broadcast_packet_data( ubyte * data, int datasize ) 
+void ipx_send_broadcast_packet_data( ubyte * data, int datasize )
 {
    int i, j;
    ubyte broadcast[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
@@ -361,35 +361,35 @@ void ipx_send_broadcast_packet_data( ubyte * data, int datasize )
    wipx_set_socket_mode_bool(WinSocket, SO_BROADCAST, TRUE);
 
 // Set to all networks besides mine
-   for (i = 0; i < NumIPXSubnet; i++ ) 
+   for (i = 0; i < NumIPXSubnet; i++ )
    {
       if (memcmp(&IPXSubnetID[i], &ThisIPXSubnet, 4)) {
-         ipx_get_local_target( (ubyte *)&IPXSubnetID[i], 
-                  broadcast, 
+         ipx_get_local_target( (ubyte *)&IPXSubnetID[i],
+                  broadcast,
                   (ubyte*)&local_address );
-         ipx_send_packet_data( data, datasize, 
-                  (ubyte *)&IPXSubnetID[i], 
-                  broadcast, 
+         ipx_send_packet_data( data, datasize,
+                  (ubyte *)&IPXSubnetID[i],
+                  broadcast,
                   (ubyte *)&local_address );
       } else {
-         ipx_send_packet_data( data, datasize, 
-                  (ubyte *)&IPXSubnetID[i], 
-                  broadcast, 
+         ipx_send_packet_data( data, datasize,
+                  (ubyte *)&IPXSubnetID[i],
+                  broadcast,
                   broadcast );
       }
    }
-                      
+
 // Send directly to all users not on my network or in the network list.
-   for (i = 0; i < NumIPXUsers; i++ )  
+   for (i = 0; i < NumIPXUsers; i++ )
    {
       if ( memcmp( &IPXUsers[i].net_id, &ThisIPXSubnet,4 ) )   {
          for (j=0; j < NumIPXSubnet; j++ )      {
             if (!memcmp( &IPXUsers[i].net_id, &IPXSubnetID[j], 4 ))
                goto SkipUser;
          }
-         ipx_send_packet_data( data, datasize, 
-                  (ubyte*)&IPXUsers[i].net_id, 
-                  (ubyte*)&IPXUsers[i].node_addr, 
+         ipx_send_packet_data( data, datasize,
+                  (ubyte*)&IPXUsers[i].net_id,
+                  (ubyte*)&IPXUsers[i].node_addr,
                   (ubyte*)&IPXUsers[i].addr );
 SkipUser:
          j = 0;
@@ -398,11 +398,11 @@ SkipUser:
 }
 
 
-// Functions Sends a non-localized packet... needs 4 byte server, 
+// Functions Sends a non-localized packet... needs 4 byte server,
 // 6 byte address
 
-void ipx_send_internetwork_packet_data( ubyte * data, int datasize, 
-                  ubyte * server, 
+void ipx_send_internetwork_packet_data( ubyte * data, int datasize,
+                  ubyte * server,
                   ubyte *address )
 {
    tIpxAddrGeneric local_address;
@@ -431,10 +431,10 @@ int ipx_change_default_socket( ushort socket_number )
 
    if ( !ipx_installed ) return -3;
 
-// Open a new socket 
+// Open a new socket
    result = wipx_open_socket(socket_number, &new_socket, &new_ipx_socket);
    if (result) return -2;
-   
+
 
 // Close existing socket...
    wipx_close_socket(WinSocket);
@@ -442,8 +442,8 @@ int ipx_change_default_socket( ushort socket_number )
    IPXSocket = new_ipx_socket;
    WinSocket = new_socket;
 
-// Repost all listen requests on the new socket... 
-   for (i=1; i<NUM_IPX_PACKETS; i++ )  
+// Repost all listen requests on the new socket...
+   for (i=1; i<NUM_IPX_PACKETS; i++ )
    {
       IPXPackets[i].in_use = 0;
       wipx_socket_listen(WinSocket, &IPXPackets[i]);
@@ -453,7 +453,7 @@ int ipx_change_default_socket( ushort socket_number )
    IPXPacketNum = 0;
 
 // init packet buffers.
-   for (i=0; i<MAX_PACKETS; i++ )   
+   for (i=0; i<MAX_PACKETS; i++ )
    {
       PacketList[i].packetnum = -1;
       PacketList[i].free = i;
@@ -484,7 +484,7 @@ void ipx_read_user_file(char * filename)
       ln++;
       p1 = strchr(temp_line,'\n'); if (p1) *p1 = '\0';
       p1 = strchr(temp_line,';'); if (p1) *p1 = '\0';
-      n = sscanf( temp_line, "%2x%2x%2x%2x/%2x%2x%2x%2x%2x%2x", &tmp.net_id.b[0], 
+      n = sscanf( temp_line, "%2x%2x%2x%2x/%2x%2x%2x%2x%2x%2x", &tmp.net_id.b[0],
                &tmp.net_id.b[1], &tmp.net_id.b[2], &tmp.net_id.b[3],
                &tmp.node_addr.b[0], &tmp.node_addr.b[1], &tmp.node_addr.b[2],
                &tmp.node_addr.b[3], &tmp.node_addr.b[4], &tmp.node_addr.b[5] );
@@ -531,7 +531,7 @@ void ipx_read_network_file(char * filename)
       if ( n != 4 ) continue;
       if ( NumIPXSubnet < MAX_SUBNETS  )  {
          int j;
-         for (j=0; j<NumIPXSubnet; j++ )  
+         for (j=0; j<NumIPXSubnet; j++ )
             if ( !memcmp( &IPXSubnetID[j], &tmp.net_id, 4 ) )
                break;
          if ( j >= NumIPXSubnet )   {
@@ -559,15 +559,15 @@ uint wipx_init()
    WSADATA version_info;
    WORD version_requested;
    int result;
-   
+
    version_requested = MAKEWORD(2,0);
-   
+
    result = WSAStartup(version_requested, &version_info);
    if (result) {
-      wipx_logerror(result, "wpx_init");  
+      wipx_logerror(result, "wpx_init");
       return result;
    }
-      
+
    if (LOBYTE(version_requested) < 1 && HIBYTE(version_requested) < 1) {
       logentry("Bad version of Winsock DLL %d.%d.\n", LOBYTE(version_requested), HIBYTE(version_requested));
       return 0xffffffff;
@@ -596,7 +596,7 @@ uint wipx_open_socket(int sock_num, SOCKET *sock_id, WORD *ipx_socket)
    ling.l_onoff = 1;
    ling.l_linger = 0;
    setsockopt(s, SOL_SOCKET, SO_LINGER, (PSTR)&ling, sizeof(ling));
-   
+
    memset(&ipx_addr, 0, sizeof(SOCKADDR_IPX));
    ipx_addr.sa_socket = htons(sock_num);
    ipx_addr.sa_family = AF_IPX;
@@ -607,7 +607,7 @@ uint wipx_open_socket(int sock_num, SOCKET *sock_id, WORD *ipx_socket)
       wipx_logerror(SOCKET_ERROR, "wipx_open_socket::bind");
       return SOCKET_ERROR;
    }
-   
+
    ioctlval = 1;                       // Set socket to non-blocking mode
    if (ioctlsocket(s, FIONBIO, &ioctlval) == SOCKET_ERROR) {
       closesocket(s);
@@ -616,7 +616,7 @@ uint wipx_open_socket(int sock_num, SOCKET *sock_id, WORD *ipx_socket)
       wipx_logerror(SOCKET_ERROR, "wipx_open_socket::ioctlsocket");
       return SOCKET_ERROR;
    }
-   
+
    *sock_id = s;
    *ipx_socket = sock_num;
 
@@ -634,7 +634,7 @@ uint wipx_close_socket(SOCKET sock_id)
 }
 
 
-uint wipx_get_socket_addr(SOCKET sock_id, tIpxNetworkID *net_addr, 
+uint wipx_get_socket_addr(SOCKET sock_id, tIpxNetworkID *net_addr,
             tIpxAddrGeneric *node_addr)
 {
    SOCKADDR_IPX   ipx_addr;
@@ -670,7 +670,7 @@ uint wipx_socket_listen(SOCKET sock_id, tIpxPacket *packet)
    unsigned long ioctlval = 0;
    int bytes, length = sizeof(SOCKADDR_IPX);
    SOCKADDR_IPX ipx_addr;
-   
+
    if (ioctlsocket(sock_id, FIONREAD, &ioctlval) == SOCKET_ERROR) {
       wipx_logerror(SOCKET_ERROR, "wipx_socket_listen::ioctlsocket");
       return SOCKET_ERROR;
@@ -704,7 +704,7 @@ uint wipx_socket_send(SOCKET sock_id, tIpxPacket *packet)
    ipx_addr.sa_family = AF_IPX;
    memcpy(ipx_addr.sa_nodenum, &packet->daddr.node_addr, 6);
    memcpy(ipx_addr.sa_netnum, &packet->daddr.net_id, 4);
-   
+
 /* logentry("Sending packet to %2X%2X%2X%2X:%2X%2X%2X%2X%2X%2X\n",
             packet->daddr.net_id.b[0],
             packet->daddr.net_id.b[1],
@@ -722,7 +722,7 @@ uint wipx_socket_send(SOCKET sock_id, tIpxPacket *packet)
             packet->datalen,
             0,
             &ipx_addr,
-            sizeof(SOCKADDR_IPX));     
+            sizeof(SOCKADDR_IPX));
    packet->in_use = 1;
    if (bytes == SOCKET_ERROR) {
       wipx_logerror(SOCKET_ERROR, "wipx_socket_send::sendto");
@@ -737,10 +737,10 @@ uint wipx_close()
    return WSACleanup();
 }
 
- 
+
 uint wipx_logerror(uint ipx_result, char *text)
 {
    logentry("%s:: error %x.\n", text, ipx_result);
    return ipx_result;
-}  
+}
 

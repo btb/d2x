@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -39,7 +39,7 @@ typedef struct ConfigInfoStruct
    ubyte mUserChoseQuit;
    ubyte mGameMonitor;
    ubyte mAcceleration;          // allow RAVE level acceleration
-   ubyte mInputSprockets;        // allow use of Input Sprocket devices 
+   ubyte mInputSprockets;        // allow use of Input Sprocket devices
 } ConfigInfo;
 
 extern ConfigInfo gConfigInfo;

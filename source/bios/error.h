@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -23,7 +23,7 @@ void Error(char *fmt,...);             //exit with error code=1, print message
 
 #ifndef MACINTOSH
 
-   #if defined(__NT__) 
+   #if defined(__NT__)
       void WinInt3();
       #define Int3() WinInt3()
       #define Assert(expr) _Assert(expr, #expr, __FILE__, __LINE__)
@@ -47,7 +47,7 @@ void Error(char *fmt,...);             //exit with error code=1, print message
          "int  3"          \
          "no_int3:"        \
          "call _Assert";
-   #endif   
+   #endif
 
 #else    // ifndef MACINTOSH
 

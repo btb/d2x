@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -67,7 +67,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define CT_POWERUP      13 //animating powerup blob
 #define CT_LIGHT        14 //doesn't actually do anything
 #define CT_REMOTE       15 //controlled by another net player
-#define CT_CNTRLCEN     16 //the control center/main reactor 
+#define CT_CNTRLCEN     16 //the control center/main reactor
 
 //Movement types
 #define MT_NONE         0  //doesn't move
@@ -176,7 +176,7 @@ typedef struct light_info {
    fix         intensity;     //how bright the light is
 } light_info;
 
-#define PF_SPAT_BY_PLAYER  1     //this powerup was spat by the player   
+#define PF_SPAT_BY_PLAYER  1     //this powerup was spat by the player
 
 typedef struct powerup_info {
    int         count;         //how many/much we pick up (vulcan cannon only?)
@@ -222,7 +222,7 @@ typedef struct object {
    byte        matcen_creator;// Materialization center that created this object, high bit set if matcen-created
    fix         lifeleft;      // how long until goes away, or 7fff if immortal
    // -- Removed, MK, 10/16/95, using lifeleft instead:  int         lightlevel;
-   
+
 
    //movement info, determined by MOVEMENT_TYPE
    union {
@@ -231,7 +231,7 @@ typedef struct object {
    } mtype;
 
    //control info, determined by CONTROL_TYPE
-   union {                       
+   union {
       laser_info     laser_info;
       explosion_info expl_info;     //NOTE: debris uses this also
       ai_static      ai_info;
@@ -243,7 +243,7 @@ typedef struct object {
    union {
       polyobj_info pobj_info;       //polygon model
       vclip_info   vclip_info;      //vclip
-      
+
    } rtype;
 
 } object;
@@ -252,7 +252,7 @@ typedef struct obj_position {
    vms_vector  pos;           // absolute x,y,z coordinate of center of object
    vms_matrix  orient;        // orientation of object in world
    short       segnum;        // segment number containing object
-} obj_position;   
+} obj_position;
 
 typedef struct {
    int      frame;
@@ -285,7 +285,7 @@ extern int Num_robot_types;
 
 extern object *ConsoleObject;       //pointer to the object that is the player
 extern object *Viewer;        //which object we are seeing from
-extern object *Dead_player_camera; 
+extern object *Dead_player_camera;
 
 extern object Follow;
 extern int Player_is_dead;          // !0 means player is dead!
@@ -330,7 +330,7 @@ int obj_create_copy(int objnum, vms_vector *new_pos, int newsegnum);
 //remove object from the world
 void obj_delete(int objnum);
 
-//called after load.  Takes number of objects,  and objects should be 
+//called after load.  Takes number of objects,  and objects should be
 //compressed
 void reset_objects(int n_objs);
 
@@ -369,7 +369,7 @@ void init_player_object();
 
 //check if object is in object->segnum.  if not, check the adjacent segs.
 //if not any of these, returns false, else sets obj->segnum & returns true
-//callers should really use find_vector_intersection()  
+//callers should really use find_vector_intersection()
 //Note: this function is in gameseg.c
 extern int update_object_seg(struct object *obj);
 

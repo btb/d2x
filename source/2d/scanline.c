@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -148,7 +148,7 @@ void gr_uscanline( int x1, int x2, int y )
             gr_vesa_setpage( page );
             if ( offset2 <= 0xFFFF )   {
                gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
-            } else {                      
+            } else {
                gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, 0xFFFF-offset1+1, gr_fade_table);
                page++;
                gr_vesa_setpage(page);
@@ -217,7 +217,7 @@ void gr_scanline( int x1, int x2, int y )
             gr_vesa_setpage( page );
             if ( offset2 <= 0xFFFF )   {
                gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, x2-x1+1, gr_fade_table);
-            } else {                      
+            } else {
                gr_linear_darken( &vram[offset1], Gr_scanline_darkening_level, 0xFFFF-offset1+1, gr_fade_table);
                page++;
                gr_vesa_setpage(page);

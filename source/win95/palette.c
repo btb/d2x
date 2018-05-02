@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -44,7 +44,7 @@ typedef struct LOGPAL256 {
 extern int gr_installed;
 
 
-// Globals --------------------------------------------------------------------  
+// Globals --------------------------------------------------------------------
 
 ubyte gr_palette[256*3];               // Main Palette in RGB
 ubyte gr_current_pal[256*3];           // Current Valid Palette in RGB
@@ -56,7 +56,7 @@ ubyte gr_palette_faded_out = 1;
 
 int grd_fades_disabled=0;              // Used to skip fading for development
 
-static LPDIRECTDRAWPALETTE _lpDDPalActive = 0;  
+static LPDIRECTDRAWPALETTE _lpDDPalActive = 0;
 static LPDIRECTDRAW  lpDD = NULL;
 
 static BOOL PalGDI = FALSE;
@@ -73,7 +73,7 @@ void grwin_set_winpalette(LPDIRECTDRAW lpdd, LPDIRECTDRAWPALETTE lpDDPal)
 {
    _lpDDPalActive = lpDDPal;
    lpDD = lpdd;
-   
+
 }
 
 
@@ -114,7 +114,7 @@ void grwin_set_palette_exclusive(int yes)
 }
 
 
-void grwin_gdi_realizepal(HDC hdc) 
+void grwin_gdi_realizepal(HDC hdc)
 {
    if (PalGDI) {
       SelectPalette(hdc, hPalGDI, FALSE);
@@ -136,7 +136,7 @@ void gr_palette_set_gamma( int gamma )
       if (!gr_palette_faded_out) {
          gr_palette_load( gr_palette );
       }
-   }  
+   }
 }
 
 int gr_palette_get_gamma()
@@ -330,13 +330,13 @@ void gr_palette_step_up( int r, int g, int b )
    }
 
    if (!PalGDI) {
-      ddresult = IDirectDrawPalette_SetEntries(_lpDDPalActive, 0, 0, 256, PalGDIData.ScratchPal);  
+      ddresult = IDirectDrawPalette_SetEntries(_lpDDPalActive, 0, 0, 256, PalGDIData.ScratchPal);
       Assert(ddresult == DD_OK);
    }
    else {
       HDC hdc;
 
-      hdc = GetDC(GetLibraryWindow());    
+      hdc = GetDC(GetLibraryWindow());
       SetPaletteEntries(hPalGDI, 0, PalGDIData.num, PalGDIData.ScratchPal);
       RealizePalette(hdc);
       ReleaseDC(GetLibraryWindow(), hdc);
@@ -354,8 +354,8 @@ void gr_palette_clear()
 // Zero out Palette
    for (i = 0; i < 256; i++)
    {
-      PalGDIData.ScratchPal[i].peRed = 
-      PalGDIData.ScratchPal[i].peBlue = 
+      PalGDIData.ScratchPal[i].peRed =
+      PalGDIData.ScratchPal[i].peBlue =
       PalGDIData.ScratchPal[i].peGreen = 0;
       PalGDIData.ScratchPal[i].peFlags = 0;
    }
@@ -363,13 +363,13 @@ void gr_palette_clear()
    if (!hPalGDI) {
       ddresult = IDirectDrawPalette_SetEntries(_lpDDPalActive, 0,
                            0, 256,
-                           PalGDIData.ScratchPal);       
+                           PalGDIData.ScratchPal);
       Assert(ddresult == DD_OK);
    }
    else {
       HDC hdc;
 
-      hdc = GetDC(GetLibraryWindow());    
+      hdc = GetDC(GetLibraryWindow());
       SetPaletteEntries(hPalGDI, 0, PalGDIData.num, PalGDIData.ScratchPal);
       RealizePalette(hdc);
       ReleaseDC(GetLibraryWindow(), hdc);
@@ -380,7 +380,7 @@ void gr_palette_clear()
 
 }
 
-void gr_palette_load( ubyte * pal ) 
+void gr_palette_load( ubyte * pal )
 {
    int i;
    ubyte c;
@@ -403,7 +403,7 @@ void gr_palette_load( ubyte * pal )
       gr_current_pal[i*3+2] = pal[i*3+2];
       PalGDIData.ScratchPal[i].peFlags = 0;
    }
-   
+
    if (!hPalGDI) {
       ddresult = IDirectDrawPalette_SetEntries(_lpDDPalActive, 0,
                                  0, 256,
@@ -413,7 +413,7 @@ void gr_palette_load( ubyte * pal )
    else {
       HDC hdc;
 
-      hdc = GetDC(GetLibraryWindow());    
+      hdc = GetDC(GetLibraryWindow());
       SetPaletteEntries(hPalGDI, 0, PalGDIData.num, PalGDIData.ScratchPal);
       RealizePalette(hdc);
       ReleaseDC(GetLibraryWindow(), hdc);
@@ -426,7 +426,7 @@ void gr_palette_load( ubyte * pal )
 
 extern void gr_sync_display(void);
 
-int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )  
+int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
 {
    ubyte c;
    int i,j;
@@ -483,7 +483,7 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
       else {
          HDC hdc;
 
-         hdc = GetDC(GetLibraryWindow());    
+         hdc = GetDC(GetLibraryWindow());
          SetPaletteEntries(hPalGDI, 0, PalGDIData.num, PalGDIData.ScratchPal);
          RealizePalette(hdc);
          ReleaseDC(GetLibraryWindow(), hdc);
@@ -496,7 +496,7 @@ int gr_palette_fade_out(ubyte *pal, int nsteps, int allow_keys )
    return 0;
 }
 
-int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys) 
+int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
 {
    HRESULT ddresult;
    int i,j;
@@ -546,7 +546,7 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
          PalGDIData.ScratchPal[i].peBlue = c << 2;
          PalGDIData.ScratchPal[i].peFlags = 0;
       }
-         
+
       if (!hPalGDI) {
          IDirectDraw_WaitForVerticalBlank(lpDD, DDWAITVB_BLOCKBEGIN, NULL);
          ddresult = IDirectDrawPalette_SetEntries(_lpDDPalActive, 0,
@@ -556,8 +556,8 @@ int gr_palette_fade_in(ubyte *pal, int nsteps, int allow_keys)
       }
       else {
          HDC hdc;
-      
-         hdc = GetDC(GetLibraryWindow());    
+
+         hdc = GetDC(GetLibraryWindow());
          SetPaletteEntries(hPalGDI, 0, PalGDIData.num, PalGDIData.ScratchPal);
          RealizePalette(hdc);
          ReleaseDC(GetLibraryWindow(), hdc);
@@ -588,7 +588,7 @@ void gr_palette_read(ubyte * palette)
 {
    int i;
    HRESULT ddresult;
-   
+
    Assert(_lpDDPalActive!=0);
 
    if (!hPalGDI) {

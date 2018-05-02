@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -155,7 +155,7 @@ WIN(int credinit = 0;)
    );
 
    // Clear out all tex buffer lines.
-   for (i=0; i<NUM_LINES; i++ ) 
+   for (i=0; i<NUM_LINES; i++ )
    {
       buffer[i][0] = 0;
       dirty_box[i].left = dirty_box[i].top = dirty_box[i].width = dirty_box[i].height = 0;
@@ -171,7 +171,7 @@ WIN(int credinit = 0;)
    file = cfopen( filename, "rb" );
    if (file == NULL) {
       char nfile[32];
-      
+
       if (credits_filename)
          return;     //ok to not find special filename
 
@@ -212,7 +212,7 @@ CreditsPaint:
    gr_remap_bitmap_good( &backdrop,backdrop_palette, -1, -1 );
 
 WINDOS(
-   dd_gr_set_current_canvas(NULL),  
+   dd_gr_set_current_canvas(NULL),
    gr_set_current_canvas(NULL)
 );
 WIN(DDGRLOCK(dd_grd_curcanv));
@@ -238,19 +238,19 @@ WIN(DDGRUNLOCK(dd_grd_curcanv));
    }
 #else
    CreditsOffscreenBuf = gr_create_canvas(640,480);
-#endif             
+#endif
 #else
    CreditsOffscreenBuf = gr_create_canvas(640,480);
 #endif
 
-   if (!CreditsOffscreenBuf) 
+   if (!CreditsOffscreenBuf)
       Error("Not enough memory to allocate Credits Buffer.");
 
    //gr_clear_canvas(BM_XRGB(0,0,0));
    key_flush();
 
 #ifdef WINDOWS
-   if (!credinit) 
+   if (!credinit)
 #endif
    {
       last_time = timer_get_fixed_seconds();
@@ -301,7 +301,7 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
          y = first_line_offset - i;
 
          gr_set_current_canvas(CreditsOffscreenBuf);
-      
+
          gr_bitmap(0,0,&backdrop);
 
          for (j=0; j<NUM_LINES; j++ )  {
@@ -342,7 +342,7 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
                dirty_box[j].height = h;
 
                *tempp = '\t';
-      
+
             } else {
             // Wacky Fast Credits thing
                int w, h, aw;
@@ -365,13 +365,13 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
          {  // Wacky Fast Credits Thing
             box   *new_box;
             grs_bitmap *tempbmp;
-            
+
             for (j=0; j<NUM_LINES; j++ )
             {
                new_box = &dirty_box[j];
 
                tempbmp = &(CreditsOffscreenBuf->cv_bitmap);
-           
+
             WIN(DDGRSCREENLOCK);
 #if defined(POLY_ACC)
                if(new_box->width != 0)
@@ -394,7 +394,7 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
 
                tempbmp = &(CreditsOffscreenBuf->cv_bitmap);
 
-               gr_bm_bitblt(   new_box->width 
+               gr_bm_bitblt(   new_box->width
                            ,new_box->height+2
                            ,new_box->left
                            ,new_box->top
@@ -403,9 +403,9 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
                            ,&backdrop
                            ,tempbmp );
             }
-            
+
 #endif
-            
+
          }
 
 //    Wacky Fast Credits thing doesn't need this (it's done above)
@@ -417,7 +417,7 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
 //       mprintf( ( 0, "Fr = %d", (timer_get_fixed_seconds() - last_time) ));
          while( timer_get_fixed_seconds() < last_time+time_delay );
          last_time = timer_get_fixed_seconds();
-      
+
       #ifdef WINDOWS
          {
             MSG msg;
@@ -433,7 +433,7 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
 
                free(backdrop.bm_data);
                gr_free_canvas(CreditsOffscreenBuf);
-      
+
                goto CreditsPaint;
             }
 
@@ -482,13 +482,13 @@ PA_DFX (for (i=0; i<ROW_SPACING; i += (MenuHires?2:1) )  {)
 
             #ifdef WINDOWS
                gr_free_canvas(CreditsOffscreenBuf);
-            #else             
+            #else
                if (CreditsOffscreenBuf != VR_offscreen_buffer)
                   gr_free_canvas(CreditsOffscreenBuf);
             #endif
 
             WIN(DEFINE_SCREEN(Menu_pcx_name));
-         
+
             return;
          }
       }

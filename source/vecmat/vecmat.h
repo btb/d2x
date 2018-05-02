@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -27,7 +27,7 @@ typedef struct vms_vector_array {
    fix xyz[3];
 } vms_vector_array;
 
-//Short vector, used for pre-rotation points. 
+//Short vector, used for pre-rotation points.
 //Access elements by name or position
 typedef struct vms_svec {
    short sv_x,sv_y,sv_z;
@@ -49,7 +49,7 @@ typedef struct vms_matrix {
 //macro to check if vector is zero
 #define IS_VEC_NULL(v) (v->x == 0 && v->y == 0 && v->z == 0)
 
-//macro to set a vector to zero.  we could do this with an in-line assembly 
+//macro to set a vector to zero.  we could do this with an in-line assembly
 //macro, but it's probably better to let the compiler optimize it.
 //Note: NO RETURN VALUE
 #define vm_vec_zero(v) (v)->x=(v)->y=(v)->z=0
@@ -270,19 +270,19 @@ vms_vector *vm_vec_cross(vms_vector *dest,vms_vector *src0,vms_vector *src1);
 //dest CANNOT equal either source
 vms_vector *vm_vec_normal(vms_vector *dest,vms_vector *p0,vms_vector *p1,vms_vector *p2);
 
-//computes non-normalized surface normal from three points. 
+//computes non-normalized surface normal from three points.
 //returns ptr to dest
 //dest CANNOT equal either source
 vms_vector *vm_vec_perp(vms_vector *dest,vms_vector *p0,vms_vector *p1,vms_vector *p2);
 
-//computes the delta angle between two vectors. 
+//computes the delta angle between two vectors.
 //vectors need not be normalized. if they are, call vm_vec_delta_ang_norm()
 //the forward vector (third parameter) can be NULL, in which case the absolute
 //value of the angle in returned.  Otherwise the angle around that vector is
 //returned.
 fixang vm_vec_delta_ang(vms_vector *v0,vms_vector *v1,vms_vector *fvec);
 
-//computes the delta angle between two normalized vectors. 
+//computes the delta angle between two normalized vectors.
 fixang vm_vec_delta_ang_norm(vms_vector *v0,vms_vector *v1,vms_vector *fvec);
 
 //computes a matrix from a set of three angles.  returns ptr to matrix
@@ -319,7 +319,7 @@ vms_matrix *vm_copy_transpose(vms_matrix *dest,vms_matrix *src);
 //dest CANNOT equal either source
 vms_matrix *vm_matrix_x_matrix(vms_matrix *dest,vms_matrix *src0,vms_matrix *src1);
 
-//extract angles from a matrix 
+//extract angles from a matrix
 vms_angvec *vm_extract_angles_matrix(vms_angvec *a,vms_matrix *m);
 
 //extract heading and pitch from a vector, assuming bank==0

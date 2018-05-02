@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -43,7 +43,7 @@ int cfexist( char * filename );  // Returns true if file exists on disk (1) or i
 
 // Allows files to be gotten from an alternate hog file.
 // Passing NULL disables this.
-// Returns 1 if hogfile found (& contains file), else 0.  
+// Returns 1 if hogfile found (& contains file), else 0.
 // If NULL passed, returns 1
 int cfile_use_alternate_hogfile( char * name );
 
@@ -51,7 +51,7 @@ int cfile_use_alternate_hogfile( char * name );
 // in the current directory.
 void cfile_use_alternate_hogdir( char * path );
 
-//tell cfile about your critical error counter 
+//tell cfile about your critical error counter
 void cfile_set_critical_error_counter_ptr(int *ptr);
 
 // prototypes for reading basic types from cfile

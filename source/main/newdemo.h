@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -22,7 +22,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #define ND_STATE_RECORDING       1
 #define ND_STATE_PLAYBACK        2
 #define ND_STATE_PAUSED          3
-#define ND_STATE_REWINDING       4   
+#define ND_STATE_REWINDING       4
 #define ND_STATE_FASTFORWARD     5
 #define ND_STATE_ONEFRAMEFORWARD 6
 #define ND_STATE_ONEFRAMEBACKWARD   7
@@ -101,7 +101,7 @@ extern void newdemo_stop_playback();
 extern void newdemo_start_recording();
 extern void newdemo_stop_recording();
 
-extern newdemo_get_percent_done();        
+extern newdemo_get_percent_done();
 
 extern void newdemo_record_link_sound_to_object3( int soundno, short objnum, fix max_volume, fix  max_distance, int loop_start, int loop_end );
 extern int newdemo_find_object( int signature );

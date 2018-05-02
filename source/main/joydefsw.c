@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -61,7 +61,7 @@ int joydefs_num_joysticks = 0;
 int Joystick_calibrating = 0;
 
 
-extern int WriteConfigFile(); 
+extern int WriteConfigFile();
 extern void kconfig_set_fcs_button(int btn, int button);
 
 
@@ -88,11 +88,11 @@ void win95_autodetect_joystick()
    default_kconfig_settings[CONTROL_WINJOYSTICK][26] = 0xff;
 
    default_kconfig_settings[CONTROL_WINJOYSTICK][0] = 0x0;
-   if (jc.wMaxButtons > 1) 
+   if (jc.wMaxButtons > 1)
       default_kconfig_settings[CONTROL_WINJOYSTICK][1] = 0x1;
-   if (jc.wMaxButtons > 2) 
+   if (jc.wMaxButtons > 2)
       default_kconfig_settings[CONTROL_WINJOYSTICK][4] = 0x2;
-   if (jc.wMaxButtons > 3) 
+   if (jc.wMaxButtons > 3)
       default_kconfig_settings[CONTROL_WINJOYSTICK][26] = 0x3;
 
 // Do Hat!
@@ -106,12 +106,12 @@ void win95_autodetect_joystick()
       default_kconfig_settings[CONTROL_WINJOYSTICK][7] = 0x12;
       default_kconfig_settings[CONTROL_WINJOYSTICK][8] = 0x13;
       default_kconfig_settings[CONTROL_WINJOYSTICK][9] = 0x11;
-   } 
+   }
 
 // Do Z-Axis (Throttle)
 
-// Do rudder? (R-AXIS) 
-      
+// Do rudder? (R-AXIS)
+
 }
 
 
@@ -141,7 +141,7 @@ int win95_controls_init()
 void joy_delay()
 {
    stop_time();
-   WinDelay(250);       
+   WinDelay(250);
    joy_flush();
    start_time();
 }
@@ -170,7 +170,7 @@ void joydefs_calibrate(void)
    char oldname[80];
    int j;
    int old_mode= -1;
-   
+
    Joystick_calibrating = 1;
 
    if (GRMODEINFO(modex)) {
@@ -199,7 +199,7 @@ void joydefs_calibrate(void)
          "rundll32.exe shell32.dll,Control_RunDLL joy.cpl",
          NULL, NULL,
          FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL,
-         &si, &pi);        
+         &si, &pi);
    if (!flag) {
       nm_messagebox( NULL, 1, TXT_OK, "UNABLE TO INITIATE\nJOYSTICK CONTROL PANEL");
    }
@@ -212,7 +212,7 @@ void joydefs_calibrate(void)
       {
          if (multi_menu_poll()==-1) {
             TerminateProcess(pi.hProcess,0);
-            Sleep(100); 
+            Sleep(100);
             CloseHandle(pi.hThread);
             CloseHandle(pi.hProcess);
             break;
@@ -229,7 +229,7 @@ void joydefs_calibrate(void)
 
    if (win95_controls_init())             // Reinitializing joystick polling.
       logentry("Reinitialized joystick with new settings.\n");
-   else 
+   else
       logentry("Failed to reinitialize joystick.\n");
 
 // Set kconfig settings to updated vals.
@@ -244,7 +244,7 @@ void joydefs_calibrate(void)
    }
 
 //@@  joydefs_calibrate2();
-   
+
    reset_cockpit();
 
    palette_restore();
@@ -252,7 +252,7 @@ void joydefs_calibrate(void)
    if (old_mode != -1)  {
       set_screen_mode(old_mode);
    }
-   
+
    Joystick_calibrating = 0;
 }
 
@@ -291,14 +291,14 @@ void joydefs_calibrate(void)
 //@@     nm_messagebox( NULL, 1, TXT_OK, TXT_NO_JOYSTICK );
 //@@     return;
 //@@  }
-//@@  
+//@@
 //@@  masks = joy_get_present_mask();
 //@@
 //@@  nsticks = 1;
 //@@
 //@@  res = joy_calibrate_xy(&axis_min[0], &axis_cen[0], &axis_max[0],
 //@@                          &axis_min[1], &axis_cen[1], &axis_max[1]);
-//@@  
+//@@
 //@@  if (!res) {
 //@@     joy_set_cal_vals(org_axis_min, org_axis_center, org_axis_max);
 //@@     return;
@@ -352,23 +352,23 @@ void joydefs_calibrate(void)
 //@@
 //@@  joy_set_cal_vals(axis_min, axis_cen, axis_max);
 //@@
-//@@  WriteConfigFile();   
+//@@  WriteConfigFile();
 //@@}
 
 
 // Joydefs button detection
 //    This function will do Windows Joystick Button stuff
 //    may emulate Thrustmaster FCS, Flightstick Pro, etc.
-      
+
 int joydefsw_do_button()
 {
-   int axis[7];   
+   int axis[7];
    int code=255;
    int i;
 
-   joystick_read_raw_axis(JOY_ALL_AXIS, axis);  
+   joystick_read_raw_axis(JOY_ALL_AXIS, axis);
 
-   switch (Config_control_type) 
+   switch (Config_control_type)
    {
       case CONTROL_WINJOYSTICK:
          code = joydefsw_do_winjoybutton(axis);
@@ -381,7 +381,7 @@ int joydefsw_do_button()
          code = i;
    }
 
-   return code;           
+   return code;
 }
 
 
@@ -393,7 +393,7 @@ int joydefsw_do_winjoybutton(int *axis)
 // versions.  (19,15,11,7,0)
    int button;
 
-   if (axis[3] == JOY_POVBACKWARD) 
+   if (axis[3] == JOY_POVBACKWARD)
       button = 17;
    else if (axis[3] == JOY_POVFORWARD)
       button = 19;
@@ -401,7 +401,7 @@ int joydefsw_do_winjoybutton(int *axis)
       button = 16;
    else if (axis[3] == JOY_POVRIGHT)
       button = 18;
-   else if (axis[3] == JOY_POVCENTERED) 
+   else if (axis[3] == JOY_POVCENTERED)
       button = 0;
 
    kconfig_set_fcs_button(19,button);
@@ -412,14 +412,14 @@ int joydefsw_do_winjoybutton(int *axis)
    if (button == 0) button = 255;
 
    return button;
-} 
+}
 
 
 
-// Joystick Menu 
+// Joystick Menu
 //    We want to keep the config files the same for the Windows/DOS
 //    versions.  But we also autodetect joystick stuff.
-//    Find some way to keep this easier than the DOS version without screwing 
+//    Find some way to keep this easier than the DOS version without screwing
 //    up configuration files.
 
 void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem )
@@ -429,7 +429,7 @@ void joydef_menuset_1(int nitems, newmenu_item * items, int *last_key, int citem
 
    nitems = nitems;
    last_key = last_key;
-   citem = citem;    
+   citem = citem;
 
    if (items[0].value) Config_control_type = CONTROL_NONE;
    else if (items[1].value) Config_control_type = CONTROL_MOUSE;
@@ -471,12 +471,12 @@ void joydefs_config()
    }
    else no_joystick_option = 0;
    nm_wrap_text(joytext, xtext, 20);
-   
+
    do {
       nitems=10;
       m[0].type = NM_TYPE_RADIO; m[0].text = CONTROL_TEXT(0); m[0].value = 0; m[0].group = 0;
       m[1].type = NM_TYPE_RADIO; m[1].text = CONTROL_TEXT(5); m[1].value = 0; m[1].group = 0;
-   
+
       if (no_joystick_option) {
          m[2].type = NM_TYPE_TEXT; m[2].text = joytext; m[2].value = 0; m[2].group = 0;
       } else {
@@ -494,7 +494,7 @@ void joydefs_config()
       if (Config_control_type == CONTROL_WINJOYSTICK) m[2].value = 1;
       else if (Config_control_type == CONTROL_MOUSE) m[1].value = 1;
       else if (Config_control_type == CONTROL_NONE) m[0].value = 1;
-      else m[0].value = 1;   
+      else m[0].value = 1;
 
       i1 = newmenu_do1( NULL, TXT_CONTROLS, nitems, m, joydef_menuset_1, i1 );
       Config_joystick_sensitivity = m[6].value;
@@ -508,12 +508,12 @@ void joydefs_config()
             }
             if ( Config_control_type==0 )
                Config_control_type=0;
-            else if ( Config_control_type < CONTROL_MOUSE ) 
-               kconfig(1, CONTROL_TEXT(Config_control_type) ); 
-            else if ( Config_control_type == CONTROL_WINJOYSTICK) 
+            else if ( Config_control_type < CONTROL_MOUSE )
+               kconfig(1, CONTROL_TEXT(Config_control_type) );
+            else if ( Config_control_type == CONTROL_WINJOYSTICK)
                kconfig(3, CONTROL_TEXT(Config_control_type) );
-            else 
-               kconfig(2, CONTROL_TEXT(Config_control_type) ); 
+            else
+               kconfig(2, CONTROL_TEXT(Config_control_type) );
 
             masks = 0;
             for (i=0; i<4; i++ )    {
@@ -533,10 +533,10 @@ void joydefs_config()
             //##}
          }
          break;
-      case 9: 
-         kconfig(0, TXT_KEYBOARD); 
+      case 9:
+         kconfig(0, TXT_KEYBOARD);
          break;
-      } 
+      }
 
    } while(i1 > -1);
 
@@ -566,7 +566,7 @@ void joydefsw_win_joyselect(char *title)
          strcpy(title, "Windows 95 Custom");
          return;
       }
-   
+
    // Get Axis support.
       if (!fread(&axis, sizeof(ubyte), 1, fp)) {
          nm_messagebox(TXT_ERROR, 1, TXT_OK, "Illegal or corrupt control file");
@@ -576,15 +576,15 @@ void joydefsw_win_joyselect(char *title)
       }
 
 
-      if (fread(kconfig_settings[CONTROL_WINJOYSTICK], 
-               sizeof(kconfig_settings[CONTROL_WINJOYSTICK]), 
+      if (fread(kconfig_settings[CONTROL_WINJOYSTICK],
+               sizeof(kconfig_settings[CONTROL_WINJOYSTICK]),
             1, fp) != 1) {
          nm_messagebox(TXT_ERROR, 1, TXT_OK, "Illegal or corrupt control file");
          strcpy(title, "Windows 95 Custom");
          fclose(fp);
          return;
-      }        
-      fclose(fp);             
+      }
+      fclose(fp);
 
       token = strtok(filename, ".");
       strcpy(title, token);

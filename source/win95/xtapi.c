@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -33,20 +33,20 @@ static char rcsid[] = "$Id: xtapi.c 1.5 1996/10/04 17:08:45 samir Exp $";
 
 
 /* The TAPI layer will interface between Descent 2 and Win32 TAPI.
-   
+
    The application will go about using XTAPI when wanting to dial out
    to another player (modem) or when listening for a ring in.
 
    First an application will initialize the library.
    Then one needs to find the required device id by enumerating
    the devices and then selecting a device id.
-   
+
    Then we open this device by calling xtapi_lock.  The application
    can only use this device between lock and unlock.  Also all functions
    with the device extension will act upon this locked device.
    When done with a device call xtapi_unlock.
 
-   To dial-out.  Call xtapi_device_dialout.  
+   To dial-out.  Call xtapi_device_dialout.
 
 */
 
@@ -78,17 +78,17 @@ struct tagTapiDev {
    DWORD asyncRequestedID;
    LONG lineReplyResult;
 
-} TapiDev = { FALSE, 0, 0, 0, NULL, NULL, 0, FALSE, FALSE, FALSE, 0, 0 };  
+} TapiDev = { FALSE, 0, 0, 0, NULL, NULL, 0, FALSE, FALSE, FALSE, 0, 0 };
 
 
 
-/* 
- * Local function prototypes 
+/*
+ * Local function prototypes
 */
 
-void CALLBACK        tapi_callback(DWORD hDevice, DWORD dwMsg, DWORD dwCallbackInst, 
-                                    DWORD dw1, 
-                                    DWORD dw2, 
+void CALLBACK        tapi_callback(DWORD hDevice, DWORD dwMsg, DWORD dwCallbackInst,
+                                    DWORD dw1,
+                                    DWORD dw2,
                                     DWORD dw3);
 
 LINEDEVCAPS*         tapi_getdevcaps(uint dev);
@@ -98,7 +98,7 @@ LINECALLSTATUS*      tapi_line_getcallstatus(HCALL hCall);
 LINECALLINFO*        tapi_line_getcallinfo(HCALL hCall);
 
 int                  xtapi_err(LONG val);
-LONG                 xtapi_device_wait_for_reply(LONG reqID); 
+LONG                 xtapi_device_wait_for_reply(LONG reqID);
 
 
 
@@ -125,25 +125,25 @@ int xtapi_init(char *appname, int *numdevs)
    BOOL reinit;
 
    if (TapiObj.hObj) return XTAPI_SUCCESS;
-   
+
    TapiObj.hWnd = GetLibraryWindow();
 
    reinit = TRUE;                      // Allow for reinitialization
 
    while (1)
    {
-      retval = lineInitialize(&TapiObj.hObj, 
+      retval = lineInitialize(&TapiObj.hObj,
                   GetWindowInstance(TapiObj.hWnd),
-                  tapi_callback, 
-                  appname, 
+                  tapi_callback,
+                  appname,
                   &TapiObj.num_devs);
-      
+
       if (!retval) {
          break;
       }
       else if (retval == LINEERR_REINIT) {
          if (reinit)  {
-            timer_delay(0x50000);      // delay 5 seconds 
+            timer_delay(0x50000);      // delay 5 seconds
             reinit = FALSE;
          }
          else {
@@ -157,7 +157,7 @@ int xtapi_init(char *appname, int *numdevs)
    }
 
    *numdevs = (int)TapiObj.num_devs;
-   
+
    TapiDev.valid = FALSE;
 
    return XTAPI_SUCCESS;
@@ -171,7 +171,7 @@ int xtapi_init(char *appname, int *numdevs)
 int xtapi_shutdown()
 {
    LONG retval;
-   
+
    if (!TapiObj.hObj) return 0;
 
 // Close any device that may be open at this point!
@@ -182,7 +182,7 @@ int xtapi_shutdown()
 
    TapiObj.hObj = NULL;
    TapiObj.num_devs = 0;
-   TapiObj.hWnd = NULL; 
+   TapiObj.hWnd = NULL;
 
    return 0;
 }
@@ -200,12 +200,12 @@ int xtapi_enumdevices(TapiDevice *dev, int num)
 
    Assert(TapiObj.hObj != NULL);
    Assert(num <= TapiObj.num_devs);
-                
-   for (i = 0; i < num; i++) 
+
+   for (i = 0; i < num; i++)
    {
       LINEEXTENSIONID extid;
       LINEDEVCAPS *caps;
-   
+
       caps = tapi_getdevcaps(i);
       if (caps == NULL) return XTAPI_OUT_OF_MEMORY;
 
@@ -215,7 +215,7 @@ int xtapi_enumdevices(TapiDevice *dev, int num)
       }
       else dev[i].type = 0;
 
-      retval = lineNegotiateAPIVersion(TapiObj.hObj, 
+      retval = lineNegotiateAPIVersion(TapiObj.hObj,
                         i, TAPI_VERSION, TAPI_VERSION,
                         (DWORD *)&dev[i].apiver, &extid);
 
@@ -228,9 +228,9 @@ int xtapi_enumdevices(TapiDevice *dev, int num)
       dev[i].min_baud = (uint)caps->dwMaxRate;
       dev[i].max_baud = (uint)caps->dwMaxRate;
 
-      free(caps);       
+      free(caps);
    }
-      
+
    return XTAPI_SUCCESS;
 }
 
@@ -243,7 +243,7 @@ int xtapi_enumdevices(TapiDevice *dev, int num)
 int xtapi_lock(TapiDevice *dev)
 {
    if (TapiDev.valid) return XTAPI_BUSY;
-   
+
    TapiDev.id = (DWORD)dev->id;
    TapiDev.apiver = (DWORD)dev->apiver;
    TapiDev.type = (DWORD)dev->type;
@@ -254,8 +254,8 @@ int xtapi_lock(TapiDevice *dev)
    TapiDev.lineReplyReceived = FALSE;
    TapiDev.callStateReceived = FALSE;
    TapiDev.lineReplyResult = 0;
-   TapiDev.valid = TRUE;   
-   
+   TapiDev.valid = TRUE;
+
    return XTAPI_SUCCESS;
 }
 
@@ -269,9 +269,9 @@ int xtapi_unlock(TapiDevice *dev)
 {
    if (!TapiDev.valid) return XTAPI_NOTLOCKED;
 
-   if (TapiDev.hCall || TapiDev.hLine) 
+   if (TapiDev.hCall || TapiDev.hLine)
       xtapi_device_hangup();
-   
+
    TapiDev.id = 0;
    TapiDev.apiver = 0;
    TapiDev.hLine = NULL;
@@ -283,7 +283,7 @@ int xtapi_unlock(TapiDevice *dev)
 }
 
 
-/* device_dial 
+/* device_dial
       this function will dialout a given number through the current
       device.
 */
@@ -310,9 +310,9 @@ int xtapi_device_dialout(char *phonenum)
    }
 
 // open the line!
-   retval = lineOpen(TapiObj.hObj, TapiDev.id, 
+   retval = lineOpen(TapiObj.hObj, TapiDev.id,
                         &TapiDev.hLine,
-                        TapiDev.apiver, 0, 0, 
+                        TapiDev.apiver, 0, 0,
                         LINECALLPRIVILEGE_NONE,
                         LINEMEDIAMODE_DATAMODEM,
                         0);
@@ -321,9 +321,9 @@ int xtapi_device_dialout(char *phonenum)
       goto dialout_exit;
    }
 
-   retval = lineSetStatusMessages(TapiDev.hLine, 
+   retval = lineSetStatusMessages(TapiDev.hLine,
                   LINEDEVSTATE_OTHER |
-                  LINEDEVSTATE_RINGING | LINEDEVSTATE_CONNECTED | 
+                  LINEDEVSTATE_RINGING | LINEDEVSTATE_CONNECTED |
                   LINEDEVSTATE_DISCONNECTED | LINEDEVSTATE_OUTOFSERVICE |
                   LINEDEVSTATE_MAINTENANCE | LINEDEVSTATE_REINIT,
                   LINEADDRESSSTATE_INUSEZERO |
@@ -341,7 +341,7 @@ int xtapi_device_dialout(char *phonenum)
       xtapi_ret = XTAPI_OUT_OF_MEMORY;
       goto dialout_exit;
    }
-   memset(lcallparams, 0, sizeof(LINECALLPARAMS)+strlen(phonenum)+1);                     
+   memset(lcallparams, 0, sizeof(LINECALLPARAMS)+strlen(phonenum)+1);
    lcallparams->dwTotalSize = sizeof(LINECALLPARAMS)+strlen(phonenum)+1;
    lcallparams->dwBearerMode = LINEBEARERMODE_VOICE;
    lcallparams->dwMediaMode = LINEMEDIAMODE_DATAMODEM;
@@ -351,7 +351,7 @@ int xtapi_device_dialout(char *phonenum)
    lcallparams->dwDisplayableAddressOffset = sizeof(LINECALLPARAMS);
    lcallparams->dwDisplayableAddressSize = strlen(phonenum)+1;
    strcpy((LPSTR)lcallparams + sizeof(LINECALLPARAMS), phonenum);
-   
+
 // Dial it!
    mprintf((0, "XTAPI: dialing %s.\n", phonenum));
    retval = xtapi_device_wait_for_reply(
@@ -369,11 +369,11 @@ int xtapi_device_dialout(char *phonenum)
       xtapi_ret = xtapi_err(retval);
       goto dialout_exit;
    }
-   
+
 dialout_exit:
    if (lcallparams) free(lcallparams);
    if (ldevcaps) free(ldevcaps);
-   
+
    return xtapi_ret;
 }
 
@@ -397,9 +397,9 @@ int xtapi_device_dialin()
    }
 
 // open the line!
-   retval = lineOpen(TapiObj.hObj, TapiDev.id, 
+   retval = lineOpen(TapiObj.hObj, TapiDev.id,
                         &TapiDev.hLine,
-                        TapiDev.apiver, 0, 0, 
+                        TapiDev.apiver, 0, 0,
                         LINECALLPRIVILEGE_OWNER,
                         LINEMEDIAMODE_DATAMODEM,
                         0);
@@ -416,7 +416,7 @@ dialin_exit:
 /* device_answer
       the line should be open, and all this function does is grab the call
 */
-      
+
 int xtapi_device_answer()
 {
    LONG retval;
@@ -427,7 +427,7 @@ int xtapi_device_answer()
    retval = xtapi_device_wait_for_reply(
          lineAnswer(TapiDev.hCall, NULL, 0)
    );
-   
+
    if (retval < 0) {
       xtapi_ret = xtapi_err(retval);
    }
@@ -446,7 +446,7 @@ int xtapi_device_poll_callstate(uint *state)
 //  perform translation from TAPI to XTAPI!
 
    if (TapiDev.callStateReceived) {
-      switch (TapiDev.call_state) 
+      switch (TapiDev.call_state)
       {
          case LINECALLSTATE_IDLE: *state = XTAPI_LINE_IDLE; break;
          case LINECALLSTATE_DIALTONE: *state = XTAPI_LINE_DIALTONE; break;
@@ -456,7 +456,7 @@ int xtapi_device_poll_callstate(uint *state)
          case LINECALLSTATE_SPECIALINFO: *state = XTAPI_LINE_FEEDBACK; break;
          case LINECALLSTATE_CONNECTED: *state = XTAPI_LINE_CONNECTED; break;
          case LINECALLSTATE_DISCONNECTED: *state = XTAPI_LINE_DISCONNECTED; break;
-         case LINECALLSTATE_PROCEEDING: *state = XTAPI_LINE_PROCEEDING; break;         
+         case LINECALLSTATE_PROCEEDING: *state = XTAPI_LINE_PROCEEDING; break;
          case LINECALLSTATE_OFFERING: *state = XTAPI_LINE_RINGING; break;
          default:
             mprintf((0, "call_state: %x\n", TapiDev.call_state));
@@ -492,7 +492,7 @@ int xtapi_device_create_comm_object(COMM_OBJ *commobj)
    Assert(TapiDev.connected);
 
    varstrsize = sizeof(VARSTRING) + 1024;
-   
+
    while (1)
    {
       varstr = (VARSTRING *)realloc(varstr, varstrsize);
@@ -506,7 +506,7 @@ int xtapi_device_create_comm_object(COMM_OBJ *commobj)
       retval = lineGetID(0,0,TapiDev.hCall, LINECALLSELECT_CALL, varstr,
                   "comm/datamodem");
       errval = xtapi_err(retval);
-      
+
       if (varstr->dwNeededSize > varstr->dwTotalSize) {
          varstrsize = varstr->dwNeededSize;
       }
@@ -525,18 +525,18 @@ int xtapi_device_create_comm_object(COMM_OBJ *commobj)
 
 
 // Create the COMM compatible COMM_OBJ
-// Most COMM settings will be set by TAPI, so this is less intensive than the 
+// Most COMM settings will be set by TAPI, so this is less intensive than the
 // COMM open connection
    {
       COMMTIMEOUTS ctimeouts;
 
       memset(commobj, 0, sizeof(COMM_OBJ));
-   
+
       if (GetFileType(hCommHandle) != FILE_TYPE_CHAR) {
          errval = XTAPI_GENERAL_ERR;
          goto device_create_comm_exit;
       }
-   
+
       GetCommState(hCommHandle, &commobj->dcb);
       GetCommTimeouts(hCommHandle, &ctimeouts);
 
@@ -601,9 +601,9 @@ device_create_comm_exit:
 
 
 /* device_hangup
-      frees the call and line 
+      frees the call and line
 
-   damn well better assume that the COMM_OBJ allocated (if at all) is 
+   damn well better assume that the COMM_OBJ allocated (if at all) is
    closed via the comm_library.
 */
 
@@ -620,7 +620,7 @@ int xtapi_device_hangup()
    if (TapiDev.hCall) {
       LINECALLSTATUS *lcallstat = NULL;
       MSG msg;
-      DWORD call_state;    
+      DWORD call_state;
 
       lcallstat = tapi_line_getcallstatus(TapiDev.hCall);
       if (!lcallstat) {
@@ -628,7 +628,7 @@ int xtapi_device_hangup()
       }
 
       mprintf((0, "XTAPI: Got linestatus.\n"));
-   
+
       if (!(lcallstat->dwCallState & LINECALLSTATE_IDLE))  {
       // line not IDLE so drop it!
          retval = xtapi_device_wait_for_reply(
@@ -640,7 +640,7 @@ int xtapi_device_hangup()
          }
 
          mprintf((0, "XTAPI: dropped line.\n"));
-                           
+
       // wait for IDLE
          mprintf((0, "XTAPI: Waiting for idle.\n"));
          while (1)
@@ -661,8 +661,8 @@ int xtapi_device_hangup()
          free(lcallstat);
          return XTAPI_GENERAL_ERR;
       }
-      TapiDev.hCall = NULL;      
-      
+      TapiDev.hCall = NULL;
+
       if (lcallstat) free(lcallstat);
    }
 
@@ -672,17 +672,17 @@ int xtapi_device_hangup()
       if (retval != 0) {
          return XTAPI_GENERAL_ERR;
       }
-      TapiDev.hLine = NULL;      
+      TapiDev.hLine = NULL;
    }
 
    mprintf((0, "XTAPI: Closed line.\n"));
 
    TapiDev.connected = FALSE;
-   
+
    return XTAPI_SUCCESS;
 }
 
-      
+
 /* device_wait_for_reply
       once a function is called, we wait until we have been given a reply.
 */
@@ -690,18 +690,18 @@ LONG xtapi_device_wait_for_reply(LONG reqID)
 {
    if (reqID > 0) {                 // A valid ID.  so we shall wait and see
       MSG msg;
-      
+
       TapiDev.lineReplyReceived = FALSE;
       TapiDev.asyncRequestedID = (DWORD)reqID;
       TapiDev.lineReplyResult = LINEERR_OPERATIONFAILED;
 
-      while (!TapiDev.lineReplyReceived) 
+      while (!TapiDev.lineReplyReceived)
       {
          if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
          }
-         
+
       // Insert code to take care of shutting down while wait.
       }
 
@@ -709,7 +709,7 @@ LONG xtapi_device_wait_for_reply(LONG reqID)
    }
 
    return reqID;
-}     
+}
 
 
 /* err
@@ -726,19 +726,19 @@ int xtapi_err(LONG err)
 
       case LINEERR_ALLOCATED:
          return XTAPI_APPCONFLICT;
-   
+
       case LINEERR_NOMEM:
          return XTAPI_OUT_OF_MEMORY;
-      
+
       case LINEERR_INCOMPATIBLEAPIVERSION:
          return XTAPI_INCOMPATIBLE_VERSION;
-      
+
       case LINEERR_NODEVICE:
          return XTAPI_NODEVICES;
 
       case LINEERR_OPERATIONFAILED:
          return XTAPI_FAIL;
-   
+
       case LINEERR_OPERATIONUNAVAIL:
          return XTAPI_NOT_SUPPORTED;
 
@@ -757,36 +757,36 @@ int xtapi_err(LONG err)
       requests are valid and of any changes to the current call_state
 */
 
-void CALLBACK tapi_callback(DWORD hDevice, DWORD dwMsg, DWORD dwCallbackInst, 
-                                    DWORD dw1, 
-                                    DWORD dw2, 
+void CALLBACK tapi_callback(DWORD hDevice, DWORD dwMsg, DWORD dwCallbackInst,
+                                    DWORD dw1,
+                                    DWORD dw2,
                                     DWORD dw3)
 {
    switch(dwMsg)
    {
       case LINE_REPLY:
-         if (dw2 != 0) 
+         if (dw2 != 0)
             mprintf((1, "XTAPI: LINE_REPLY err: %x.\n", dw2));
-         else 
+         else
             mprintf((1, "XTAPI: LINE_REPLY received.\n"));
          if (TapiDev.asyncRequestedID == dw1) {
             TapiDev.lineReplyReceived = TRUE;
             TapiDev.lineReplyResult = (LONG)dw2;
          }
          break;
-      
+
       case LINE_CALLSTATE:
          TapiDev.callStateReceived = TRUE;
          TapiDev.call_state = dw1;
 
-         mprintf((0, "Call_State  = %x\n", dw1));        
+         mprintf((0, "Call_State  = %x\n", dw1));
          switch(TapiDev.call_state)
          {
             case LINECALLSTATE_CONNECTED:
                if (TapiDev.connected) break;
                TapiDev.connected = TRUE;
                break;
-   
+
             case LINECALLSTATE_OFFERING:
                if (TapiDev.connected) {
                   mprintf((1, "TAPI: offering after connected!\n"));
@@ -802,10 +802,10 @@ void CALLBACK tapi_callback(DWORD hDevice, DWORD dwMsg, DWORD dwCallbackInst,
          break;
    }
 }
-            
 
 
-/* 
+
+/*
  * TAPI functions
 */
 
@@ -820,12 +820,12 @@ LINEDEVCAPS *tapi_getdevcaps(uint dev)
    DWORD apiver;
 
    size = sizeof(LINEDEVCAPS) + 256;
-   
+
    while (1)
    {
       LINEEXTENSIONID extid;
 
-      retval = lineNegotiateAPIVersion(TapiObj.hObj, 
+      retval = lineNegotiateAPIVersion(TapiObj.hObj,
                         dev,  TAPI_VERSION, TAPI_VERSION,
                         &apiver, &extid);
 
@@ -834,19 +834,19 @@ LINEDEVCAPS *tapi_getdevcaps(uint dev)
 
       pcaps = (LINEDEVCAPS *)realloc(pcaps, size);
       if (!pcaps) return NULL;
-       
+
       memset(pcaps, 0, size);
       pcaps->dwTotalSize = size;
 
       retval = lineGetDevCaps(TapiObj.hObj, dev,
-                  apiver, 0, 
+                  apiver, 0,
                   pcaps);
 
       if (retval!=0) {
          free(pcaps);
          return NULL;
       }
-      
+
       if (pcaps->dwNeededSize > pcaps->dwTotalSize) {
          size = pcaps->dwNeededSize;
          continue;
@@ -861,7 +861,7 @@ LINEDEVCAPS *tapi_getdevcaps(uint dev)
       retrieves the current status of a given address on the line.
 
    returns:
-      NULL if fail.  
+      NULL if fail.
 */
 
 LINEADDRESSSTATUS *tapi_line_getaddrstatus(HLINE hLine, DWORD dwID)
@@ -876,7 +876,7 @@ LINEADDRESSSTATUS *tapi_line_getaddrstatus(HLINE hLine, DWORD dwID)
    {
       ad = (LINEADDRESSSTATUS *)realloc(ad, size);
       if (!ad) return NULL;
-       
+
       memset(ad, 0, size);
       ad->dwTotalSize = size;
 
@@ -886,7 +886,7 @@ LINEADDRESSSTATUS *tapi_line_getaddrstatus(HLINE hLine, DWORD dwID)
          free(ad);
          return NULL;
       }
-      
+
       if (ad->dwNeededSize > ad->dwTotalSize) {
          size = ad->dwNeededSize;
          continue;
@@ -896,13 +896,13 @@ LINEADDRESSSTATUS *tapi_line_getaddrstatus(HLINE hLine, DWORD dwID)
 
    return ad;
 }
-   
-      
+
+
 /* tapi_line_getaddrcaps
       retrieves the current caps of a given address on the line.
 
    returns:
-      NULL if fail.  
+      NULL if fail.
 */
 
 LINEADDRESSCAPS *tapi_line_getaddrcaps(uint dev, DWORD addrID)
@@ -918,7 +918,7 @@ LINEADDRESSCAPS *tapi_line_getaddrcaps(uint dev, DWORD addrID)
       DWORD apiver;
       LINEEXTENSIONID extid;
 
-      retval = lineNegotiateAPIVersion(TapiObj.hObj, 
+      retval = lineNegotiateAPIVersion(TapiObj.hObj,
                         dev,  TAPI_VERSION, TAPI_VERSION,
                         &apiver, &extid);
 
@@ -927,11 +927,11 @@ LINEADDRESSCAPS *tapi_line_getaddrcaps(uint dev, DWORD addrID)
 
       ad = (LINEADDRESSCAPS *)realloc(ad, size);
       if (!ad) return NULL;
-       
+
       memset(ad, 0, size);
       ad->dwTotalSize = size;
 
-      retval = lineGetAddressCaps(TapiObj.hObj, dev, 
+      retval = lineGetAddressCaps(TapiObj.hObj, dev,
                            addrID, apiver, 0,
                            ad);
 
@@ -939,7 +939,7 @@ LINEADDRESSCAPS *tapi_line_getaddrcaps(uint dev, DWORD addrID)
          free(ad);
          return NULL;
       }
-      
+
       if (ad->dwNeededSize > ad->dwTotalSize) {
          size = ad->dwNeededSize;
          continue;
@@ -955,7 +955,7 @@ LINEADDRESSCAPS *tapi_line_getaddrcaps(uint dev, DWORD addrID)
       retrieves the current status of a given call on the line.
 
    returns:
-      NULL if fail.  
+      NULL if fail.
 */
 
 LINECALLSTATUS *tapi_line_getcallstatus(HCALL hCall)
@@ -970,17 +970,17 @@ LINECALLSTATUS *tapi_line_getcallstatus(HCALL hCall)
    {
       ad = (LINECALLSTATUS *)realloc(ad, size);
       if (!ad) return NULL;
-       
+
       memset(ad, 0, size);
       ad->dwTotalSize = size;
 
-      retval = lineGetCallStatus(hCall,ad); 
+      retval = lineGetCallStatus(hCall,ad);
 
       if (retval!=0) {
          free(ad);
          return NULL;
       }
-      
+
       if (ad->dwNeededSize > ad->dwTotalSize) {
          size = ad->dwNeededSize;
          continue;
@@ -996,7 +996,7 @@ LINECALLSTATUS *tapi_line_getcallstatus(HCALL hCall)
       retrieves the current status of a given call on the line.
 
    returns:
-      NULL if fail.  
+      NULL if fail.
 */
 
 LINECALLINFO *tapi_line_getcallinfo(HCALL hCall)
@@ -1011,17 +1011,17 @@ LINECALLINFO *tapi_line_getcallinfo(HCALL hCall)
    {
       ad = (LINECALLINFO *)realloc(ad, size);
       if (!ad) return NULL;
-       
+
       memset(ad, 0, size);
       ad->dwTotalSize = size;
 
-      retval = lineGetCallInfo(hCall,ad); 
+      retval = lineGetCallInfo(hCall,ad);
 
       if (retval!=0) {
          free(ad);
          return NULL;
       }
-      
+
       if (ad->dwNeededSize > ad->dwTotalSize) {
          size = ad->dwNeededSize;
          continue;

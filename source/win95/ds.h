@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -29,9 +29,9 @@ typedef struct tagSSCaps {
 typedef struct tagSSoundBuffer {
    char *data;
    long length;
-   LPDIRECTSOUNDBUFFER obj; 
+   LPDIRECTSOUNDBUFFER obj;
    LPDIRECTSOUNDBUFFER auxobj;
-   LPDIRECTSOUNDBUFFER auxobj2;  
+   LPDIRECTSOUNDBUFFER auxobj2;
    unsigned vol;
    unsigned rate;
    unsigned short pan;
@@ -49,12 +49,12 @@ BOOL SSInit(HWND hWnd, int channels, unsigned flags);
 void SSDestroy();
 void SSSetVolume(DWORD vol);
 WORD SSGetVolume();
-BOOL SSInitBuffer(SSoundBuffer *sample); 
+BOOL SSInitBuffer(SSoundBuffer *sample);
 void SSDestroyBuffer(SSoundBuffer *sample);
 SSChannel SSInitChannel(SSoundBuffer *sample);
 BOOL SSChannelPlaying(SSChannel channel);
 BOOL SSStopChannel(SSChannel channel);
 BOOL SSSetChannelPan(SSChannel channel, unsigned short pan);
-BOOL SSSetChannelVolume(SSChannel channel, unsigned short vol);   
+BOOL SSSetChannelVolume(SSChannel channel, unsigned short vol);
 
 #endif

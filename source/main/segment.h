@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -62,7 +62,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 // Note that -1 means no connection, -2 means a connection to the outside world.
 #define  IS_CHILD(segnum) (segnum > -1)
 
-//Structure for storing u,v,light values. 
+//Structure for storing u,v,light values.
 //NOTE: this structure should be the same as the one in 3d.h
 typedef struct uvl {
    fix u,v,l;
@@ -105,7 +105,7 @@ typedef struct segment {
    #endif
 
 // -- Moved to segment2 to make this struct 512 bytes long --
-// ubyte    special;                      // what type of center this is 
+// ubyte    special;                      // what type of center this is
 // byte     matcen_num;                   // which center segment is associated with.
 // short    value;
 // fix      static_light;                 //average static light in segment

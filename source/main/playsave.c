@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -90,7 +90,7 @@ hli highest_levels[MAX_MISSIONS];
 //version 18 -> 19: added automap-highres flag
 //version 19 -> 20: added kconfig data for windows joysticks
 //version 20 -> 21: save seperate config types for DOS & Windows
-//version 21 -> 22: save lifetime netstats 
+//version 21 -> 22: save lifetime netstats
 //version 22 -> 23: ??
 //version 23 -> 24: add name of joystick for windows version.
 
@@ -112,12 +112,12 @@ int new_player_config()
    int i,j,control_choice;
    newmenu_item m[8];
    int mct=CONTROL_MAX_TYPES;
- 
+
    #ifndef WINDOWS
     mct--;
    #endif
 
-   InitWeaponOrdering ();     //setup default weapon priorities 
+   InitWeaponOrdering ();     //setup default weapon priorities
 
 #if defined(MACINTOSH) && defined(USE_ISP)
    if (!ISpEnabled())
@@ -140,10 +140,10 @@ RetrySelection:
       m[4].text = "Gravis Firebird/Mousetick II";
       m[3].text = "Thrustmaster";
       #endif
-      
+
       nitems = i;
       m[0].text = TXT_CONTROL_KEYBOARD;
-   
+
       #ifdef WINDOWS
          if (Config_control_type==CONTROL_NONE) control_choice = 0;
          else if (Config_control_type == CONTROL_MOUSE) control_choice = 1;
@@ -152,13 +152,13 @@ RetrySelection:
       #else
          control_choice = Config_control_type;           // Assume keyboard
       #endif
-   
+
       #ifndef APPLE_DEMO
          control_choice = newmenu_do1( NULL, TXT_CHOOSE_INPUT, i, m, NULL, control_choice );
       #else
          control_choice = 0;
       #endif
-      
+
       if ( control_choice < 0 )
          return 0;
 
@@ -181,7 +181,7 @@ RetrySelection:
    if (control_choice == 1) Config_control_type = CONTROL_MOUSE;
    else if (control_choice == 2) Config_control_type = CONTROL_WINJOYSTICK;
 
-// if (Config_control_type == CONTROL_WINJOYSTICK) 
+// if (Config_control_type == CONTROL_WINJOYSTICK)
 //    joydefs_calibrate();
 #else
    #ifndef MACINTOSH
@@ -189,14 +189,14 @@ RetrySelection:
       i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, TXT_FCS );
       if (i==0) goto RetrySelection;
    }
-   
+
    if ( (Config_control_type>0) &&  (Config_control_type<5))   {
       joydefs_calibrate();
    }
    #else    // some macintosh only stuff here
    if ( Config_control_type==CONTROL_THRUSTMASTER_FCS)   {
       extern char *tm_warning;
-      
+
       i = nm_messagebox( TXT_IMPORTANT_NOTE, 2, "Choose another", TXT_OK, tm_warning );
       if (i==0) goto RetrySelection;
    } else   if ( Config_control_type==CONTROL_FLIGHTSTICK_PRO )   {
@@ -226,7 +226,7 @@ RetrySelection:
 
    #endif
 #endif
-   
+
    Player_default_difficulty = 1;
    Auto_leveling_on = Default_leveling_on = 1;
    n_highest_levels = 1;
@@ -242,9 +242,9 @@ RetrySelection:
    strcpy(Network_message_macro[1], "Hey, I got a present for ya");
    strcpy(Network_message_macro[2], "I got a hankerin' for a spankerin'");
    strcpy(Network_message_macro[3], "This one's headed for Uranus");
-   Netlife_kills=0; Netlife_killed=0;  
+   Netlife_kills=0; Netlife_killed=0;
    #endif
-   
+
    #ifdef MACINTOSH
       #ifdef POLY_ACC
          if (PAEnabled)
@@ -411,7 +411,7 @@ int read_player_file()
       }
     #endif
    #endif
- 
+
    Default_display_mode       = read_byte(file);
    Missile_view_enabled       = read_byte(file);
    Headlight_active_default   = read_byte(file);
@@ -419,7 +419,7 @@ int read_player_file()
 
    if (player_file_version >= 19)
       Automap_always_hires       = read_byte(file);
-          
+
    Auto_leveling_on = Default_leveling_on;
 
    //read new highest level info
@@ -460,7 +460,7 @@ int read_player_file()
       #else
       Config_control_type = control_type_dos;
       #endif
-      
+
       #ifdef MACINTOSH
       joydefs_set_type(Config_control_type);
       #endif
@@ -470,14 +470,14 @@ int read_player_file()
          PrimaryOrder[i]=read_byte (file);
          SecondaryOrder[i]=read_byte(file);
        }
-      
+
       if (player_file_version>=16)
        {
         Cockpit_3d_view[0]=read_int(file);
         Cockpit_3d_view[1]=read_int(file);
-       } 
-      
-                  
+       }
+
+
       if (errno_ret==EZERO)   {
          kc_set_controls();
       }
@@ -494,7 +494,7 @@ int read_player_file()
 
    if (player_file_version>=23)
     {
-     i=read_int (file); 
+     i=read_int (file);
      mprintf ((0,"Reading: lifetime checksum is %d\n",i));
      if (i!=get_lifetime_checksum (Netlife_kills,Netlife_killed))
       {
@@ -517,21 +517,21 @@ int read_player_file()
 
    #ifdef WINDOWS
       joy95_get_name(JOYSTICKID1, buf, 127);
-      if (player_file_version >= 24) 
+      if (player_file_version >= 24)
          read_string(win95_current_joyname, file);
       else
          strcpy(win95_current_joyname, "Old Player File");
-      
+
       mprintf((0, "Detected joystick: %s\n", buf));
       mprintf((0, "Player's joystick: %s\n", win95_current_joyname));
 
       if (strcmp(win95_current_joyname, buf)) {
          for (i = 0; i < MAX_CONTROLS; i++)
-            kconfig_settings[CONTROL_WINJOYSTICK][i] = 
+            kconfig_settings[CONTROL_WINJOYSTICK][i] =
                default_kconfig_settings[CONTROL_WINJOYSTICK][i];
-      }   
+      }
    #else
-      if (player_file_version >= 24) 
+      if (player_file_version >= 24)
          read_string(buf, file);       // Just read it in fpr DPS.
    #endif
    }
@@ -547,8 +547,8 @@ int read_player_file()
 }
 
 
-//finds entry for this level in table.  if not found, returns ptr to 
-//empty entry.  If no empty entries, takes over last one 
+//finds entry for this level in table.  if not found, returns ptr to
+//empty entry.  If no empty entries, takes over last one
 int find_hli_entry()
 {
    int i;
@@ -598,7 +598,7 @@ int get_highest_level(void)
    if (strlen(Mission_list[Current_mission_num].filename)==0 ) {
       for (i=0;i<n_highest_levels;i++)
          if (!stricmp(highest_levels[i].shortname, "DESTSAT"))    // Destination Saturn.
-            highest_saturn_level       = highest_levels[i].level_num; 
+            highest_saturn_level       = highest_levels[i].level_num;
    }
 #endif
    i        = highest_levels[find_hli_entry()].level_num;
@@ -781,5 +781,5 @@ int get_lifetime_checksum (int a,int b)
   num*=num>>2;
   return (num);
  }
-  
+
 

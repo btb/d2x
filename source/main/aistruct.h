@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -100,7 +100,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 //} opath;
 //
 //typedef struct oai_state {
-// short       mode;                   // 
+// short       mode;                   //
 // short       counter;                // kind of a hack, frame countdown until switch modes
 // opath       paths[2];
 // vms_vector  movement_vector;        // movement vector for one second
@@ -127,7 +127,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 // This is the stuff that is permanent for an AI object and is therefore saved to disk.
 typedef struct ai_static {
-   ubyte       behavior;               // 
+   ubyte       behavior;               //
    byte        flags[MAX_AI_FLAGS];    // various flags, meaning defined by constants
    short       hide_segment;           // Segment to go to for hiding.
    short       hide_index;             // Index in Path_seg_points
@@ -159,7 +159,7 @@ typedef struct ai_local {
    int         goal_segment;           // goal segment for current path
 
    // -- MK, 10/21/95, unused -- fix         last_see_time, last_attack_time; // For sound effects, time at which player last seen, attacked
-   
+
    fix         next_action_time;       // time in seconds until something happens, mode dependent
    fix         next_fire;              // time in seconds until can fire again
    fix         next_fire2;             // time in seconds until can fire again from second weapon

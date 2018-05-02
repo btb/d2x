@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -48,7 +48,7 @@ int slew_stop(void);
 void slew_init(object *obj)
 {
    slew_obj = obj;
-    
+
    slew_obj->control_type = CT_SLEW;
    slew_obj->movement_type = MT_NONE;
 
@@ -70,7 +70,7 @@ void slew_reset_orient()
 
    slew_obj->orient.rvec.x = slew_obj->orient.uvec.y = slew_obj->orient.fvec.z = f1_0;
 
-   slew_obj->orient.rvec.y = slew_obj->orient.rvec.z = slew_obj->orient.uvec.x = 
+   slew_obj->orient.rvec.y = slew_obj->orient.rvec.z = slew_obj->orient.uvec.x =
    slew_obj->orient.uvec.z = slew_obj->orient.fvec.x = slew_obj->orient.fvec.y = 0;
 
 }
@@ -120,20 +120,20 @@ int do_slew_movement(object *obj, int check_keys, int check_joy )
    if (check_joy && joy_present && (Function_mode == FMODE_EDITOR) ) {
       joy_get_pos(&joy_x,&joy_y);
       btns=joy_get_btns();
-   
+
       joyx_moved = (abs(joy_x - old_joy_x)>JOY_NULL);
       joyy_moved = (abs(joy_y - old_joy_y)>JOY_NULL);
-   
+
       if (abs(joy_x) < JOY_NULL) joy_x = 0;
       if (abs(joy_y) < JOY_NULL) joy_y = 0;
-   
+
       if (btns)
          if (!rotang.p) rotang.p = fixmul(-joy_y * 512,FrameTime); else;
       else
          if (joyy_moved) obj->mtype.phys_info.velocity.z = -joy_y * 8192;
-   
+
       if (!rotang.h) rotang.h = fixmul(joy_x * 512,FrameTime);
-   
+
       if (joyx_moved) old_joy_x = joy_x;
       if (joyy_moved) old_joy_y = joy_y;
    }
@@ -156,7 +156,7 @@ int do_slew_movement(object *obj, int check_keys, int check_joy )
 
    moved |= (movement.x || movement.y || movement.z);
 
-   if (moved) 
+   if (moved)
       update_object_seg(obj); //update segment id
 
    return moved;

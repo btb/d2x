@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -81,7 +81,7 @@ int Platform_system=0;
 extern int Mono_initialized;
 extern int WinEnableInt3;
 extern int DD_Emulation;
-extern int Skip_briefing_screens;      // So we can skip the briefing 
+extern int Skip_briefing_screens;      // So we can skip the briefing
 extern int digi_system_initialized;
 extern int framerate_on;
 extern int Current_display_mode;
@@ -117,7 +117,7 @@ extern void InitData(void);
 extern void InitSound(void);
 extern void InitNetwork(void);
 extern void InitDescent(void);
-extern void InitPilot(void);  
+extern void InitPilot(void);
 
 
 // Function Prototypes --------------------------------------------------------
@@ -185,7 +185,7 @@ BOOL AppInit(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 // Arrgh, make entire code segment writable for now.
 // -codereadonly forces read only code (debug purposes)
 
-   if (!FindArg("-codereadonly")) 
+   if (!FindArg("-codereadonly"))
       MakeCodeWritable();
 
 #ifndef RELEASE
@@ -196,15 +196,15 @@ BOOL AppInit(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 
    _hAppInstance = hInst;
    _hAppWnd = CreateWindowEx(WS_EX_APPWINDOW,
-               "DescentWndClass", 
+               "DescentWndClass",
                WINAPP_NAME,
                WS_POPUP | WS_SYSMENU | WS_BORDER,
                0, 0,
                GetSystemMetrics(SM_CXSCREEN),
                GetSystemMetrics(SM_CYSCREEN),
-               NULL, 
-               NULL, 
-               hInst, 
+               NULL,
+               NULL,
+               hInst,
                NULL);
 
    Assert(_hAppWnd != 0);
@@ -218,10 +218,10 @@ BOOL AppInit(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 // ShowCursorW();
 
 #ifdef RELEASE
-#ifndef NDEBUG 
+#ifndef NDEBUG
    if (FindArg("-monodebug")) Mono_initialized = 1;
    else // link to below line!
-#endif   
+#endif
    Mono_initialized = 0;
 #else
    Mono_initialized = 1;
@@ -243,7 +243,7 @@ BOOL AppInit(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int nCmdShow)
 void AppExit()
 {
 // HACK do this when the application is closing! restore the CD audio volume.
-   if (CD_audio_desktop_dev != -1) 
+   if (CD_audio_desktop_dev != -1)
       auxSetVolume(CD_audio_desktop_dev, CD_audio_desktop_vol);
 
    grwin_cleanup_palette();
@@ -262,7 +262,7 @@ void AppExit()
       cgetch();
    }
    cclose();
-#else 
+#else
    if (WinErrorTrap)
       MessageBox(NULL, WinErrorMessage, "Descent II error", MB_OK);
 #endif
@@ -271,10 +271,10 @@ void AppExit()
    logclose();
 #endif
 
-   if (hDescent2Mutex2) 
+   if (hDescent2Mutex2)
       CloseHandle(hDescent2Mutex2);
 
-   if (hDescent2Mutex) 
+   if (hDescent2Mutex)
       CloseHandle(hDescent2Mutex);     // Destroy Mutex Object!
 }
 
@@ -299,7 +299,7 @@ void DoRegisterCheck()
          NULL,
          filename, NULL, NULL,
          FALSE, NORMAL_PRIORITY_CLASS, NULL, NULL,
-         &si, &pi);        
+         &si, &pi);
    if (flag) {
       DWORD dwval;
       dwval = WaitForInputIdle(pi.hProcess, INFINITE);
@@ -317,7 +317,7 @@ void DoRegisterCheck()
 
 // Game -----------------------------------------------------------------------
 
-char commandline_help[] = 
+char commandline_help[] =
          "Command-line options (case is not significant):\n"
          "\n"
          " General Options:\n"
@@ -367,7 +367,7 @@ int RunGame(int argc, char *argv[])
 
 #ifndef RELEASE
    if (FindArg("-stopwatch"))
-      timer_init(1); 
+      timer_init(1);
    else
       timer_init(0);
 #else
@@ -377,7 +377,7 @@ int RunGame(int argc, char *argv[])
 // InitArgs(argc, argv);
 
    InitCD(argv[0]);
-   
+
 #ifdef RELEASE
    DoRegisterCheck();
 #endif
@@ -393,14 +393,14 @@ int RunGame(int argc, char *argv[])
    if (!FindArg("-noserial"))
       serial_active = 1;
 
-   AllowActivates = TRUE;  
+   AllowActivates = TRUE;
 
    InitDescent();
 
-   InitPilot();   
+   InitPilot();
 
    if (Auto_demo) {
-      newdemo_start_playback("DESCENT.DEM");    
+      newdemo_start_playback("DESCENT.DEM");
       if (Newdemo_state == ND_STATE_PLAYBACK )
          Function_mode = FMODE_GAME;
    }
@@ -415,7 +415,7 @@ int RunGame(int argc, char *argv[])
 
       DDGRRESTORE;
 
-      switch (Function_mode) 
+      switch (Function_mode)
       {
          case FMODE_MENU:
          {
@@ -423,7 +423,7 @@ int RunGame(int argc, char *argv[])
             if (Auto_demo) {
                DEFINE_SCREEN(NULL);
                newdemo_start_playback(NULL);
-               if (Newdemo_state != ND_STATE_PLAYBACK)   
+               if (Newdemo_state != ND_STATE_PLAYBACK)
                   Error("No demo files were found for autodemo mode!");
             }
             else {
@@ -447,7 +447,7 @@ int RunGame(int argc, char *argv[])
          }
       }
 
-   }  
+   }
 
    dd_gr_set_current_canvas(NULL);
    dd_gr_clear_canvas(BM_XRGB(0,0,0));
@@ -458,7 +458,7 @@ int RunGame(int argc, char *argv[])
 }
 
 
-// Window Message Functions 
+// Window Message Functions
 // ----------------------------------------------------------------------------
 
 void AppPaint(HWND hWnd, HDC hdc)
@@ -466,7 +466,7 @@ void AppPaint(HWND hWnd, HDC hdc)
 // grwin_gdi_realizepal(hdc);
 }
 
-            
+
 void AppSize(HWND hWnd)
 {
    if (IsIconic(hWnd)) {
@@ -476,16 +476,16 @@ void AppSize(HWND hWnd)
    else if (GetForegroundWindow() == hWnd) {
       _AppPaused = FALSE;
    }
-     
+
    DDResizeViewport();
-   mprintf((0, "Resized window (%d,%d,%d,%d).\n", ViewportRect.left, ViewportRect.top, ViewportRect.right, ViewportRect.bottom));   
+   mprintf((0, "Resized window (%d,%d,%d,%d).\n", ViewportRect.left, ViewportRect.top, ViewportRect.right, ViewportRect.bottom));
 }
 
 
 void AppActivate(HWND hWnd, UINT wParam)
 {
    _AppActive = (BOOL)(wParam) && GetForegroundWindow()==hWnd && !IsIconic(hWnd);
-         
+
    if (_AppActive) {
       mprintf((0, "Descent II is gaining Window focus.\n"));
       cprintf("Descent II is gaining Window focus.\n");
@@ -498,7 +498,7 @@ void AppActivate(HWND hWnd, UINT wParam)
 // Must now unpause if paused and app is active now.
    mprintf((0, "AppActivate: Active: %d, Paused: %d\n", _AppActive, _AppPaused));
 
-   if (_AppActive && AllowActivates && !_AppPaused) 
+   if (_AppActive && AllowActivates && !_AppPaused)
    {
       D2Restore();
    }
@@ -524,10 +524,10 @@ void AppCreate(HWND hWnd)
 
 // Remove system menu components not good
    hMenu = GetSystemMenu(hWnd, FALSE);
-   
+
    RemoveMenu(hMenu, SC_SIZE, MF_BYCOMMAND);
    RemoveMenu(hMenu, SC_MOVE, MF_BYCOMMAND);
-}  
+}
 
 
 void AppPaletteChange(HWND hWnd, UINT wParam)
@@ -537,20 +537,20 @@ void AppPaletteChange(HWND hWnd, UINT wParam)
          mprintf((0, "Palette changed!\n"));
          _AppPaused = TRUE;
          mprintf((0, "Descent 2 is paused.\n"));
-      }  
+      }
    }
 }
 
 //static LPDIRECTDRAWSURFACE Page0Buffer = 0;
 
 void AppDisplayChange(HWND hWnd, int w, int h, int bpp)
-{    
+{
 // mprintf((0, "Windows feels a display change coming...\n"));
 }
 
 
 BOOL AppHandleSystemKeys(UINT msg, UINT wParam, UINT lParam)
-{      
+{
 // Intercept ALT keystrokes
 
    if (msg == WM_SYSKEYUP) {
@@ -581,7 +581,7 @@ int RestoreGameSurfaces()
 
 
 LRESULT WINAPI _export DescentWndProc(HWND hWnd,
-                        UINT msg, 
+                        UINT msg,
                         UINT wParam,
                         LPARAM lParam)
 {
@@ -636,7 +636,7 @@ LRESULT WINAPI _export DescentWndProc(HWND hWnd,
          if (wParam == VK_SNAPSHOT) {
             mprintf((0, "Capture screen begins...\n"));
             save_screen_shot(0);
-            if (!clipboard_screenshot()) 
+            if (!clipboard_screenshot())
                mprintf((1, "Failed to create clipboard screenshot!\n"));
          }
 //    #ifndef NDEBUG
@@ -645,9 +645,9 @@ LRESULT WINAPI _export DescentWndProc(HWND hWnd,
 //    #endif
          send_key_msg(msg, wParam, lParam);
          break;
-   
+
       case WM_PAINT:
-//       hdc = BeginPaint(hWnd, &ps);        
+//       hdc = BeginPaint(hWnd, &ps);
 //       AppPaint(hWnd, hdc);
 //       EndPaint(hWnd, &ps);
 //       return 0;
@@ -659,7 +659,7 @@ LRESULT WINAPI _export DescentWndProc(HWND hWnd,
          if (!_AppPaused && (_AppActive || !_DDFullScreen)) {
             joy_handler_win(hWnd, msg, wParam, lParam);
          }
-         break;         
+         break;
 
       case WM_DESTROY:
          mprintf((0, "Killing main window...\n"));
@@ -669,7 +669,7 @@ LRESULT WINAPI _export DescentWndProc(HWND hWnd,
 
 // digi_midi_debug();
    mouse_win_callback(msg, wParam, lParam);
-   
+
    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
@@ -679,7 +679,7 @@ static char *WinArgs[64];
 // Main Program
 // ----------------------------------------------------------------------------
 
-int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, 
+int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine,
                    int nCmdShow)
 {
    int retval = 1;
@@ -737,12 +737,12 @@ int ParseArgs(char *argv[], LPSTR lpCmdLine)
       }
    }
 
-   if (!WinEnableMovies) 
+   if (!WinEnableMovies)
       argv[argc++] = NoMovieArg;
 
    return argc;
 }
-               
+
 
 extern void rls_stretch_scanline_asm();
 
@@ -759,7 +759,7 @@ void MakeCodeWritable(void)
    version = GetVersion();
 
 // For Win32s we have to use undocumented features
-   if ((version < 0x80000000) || ((BYTE)version >=0x04)) {  
+   if ((version < 0x80000000) || ((BYTE)version >=0x04)) {
    //  Win NT, Win95.
       pImageBase = (BYTE *)modCode;
    }
@@ -772,8 +772,8 @@ void MakeCodeWritable(void)
    if (pImageBase) {
       DWORD oldRights;
       //char buf[256];
-      IMAGE_OPTIONAL_HEADER *pHeader = 
-         (IMAGE_OPTIONAL_HEADER *)(pImageBase + ((IMAGE_DOS_HEADER *)pImageBase)->e_lfanew + 
+      IMAGE_OPTIONAL_HEADER *pHeader =
+         (IMAGE_OPTIONAL_HEADER *)(pImageBase + ((IMAGE_DOS_HEADER *)pImageBase)->e_lfanew +
                                   sizeof(IMAGE_NT_SIGNATURE) + sizeof(IMAGE_FILE_HEADER));
 
 //@@     if (!VirtualProtect(pImageBase+pHeader->BaseOfCode, pHeader->SizeOfCode,
@@ -802,7 +802,7 @@ void ValidateSystem()
       if ((version < 0x80000000)  && ((BYTE)version >= 0x04)) {
          Platform_system = WINNT_PLATFORM;
          DD_Emulation = 1;
-      }   
+      }
       else Platform_system = WIN95_PLATFORM;
    }
    else {
@@ -827,7 +827,7 @@ void ValidateSystem()
             MessageBox(NULL, "Unable to create second mutex object.", "Descent II error", MB_OK);
             exit(1);
          }
-         MessageBox(NULL, "You may only run one instance of Descent II at a time.", 
+         MessageBox(NULL, "You may only run one instance of Descent II at a time.",
                "Descent II error", MB_OK);
          CloseHandle(hMutex);
          exit(1);
@@ -840,7 +840,7 @@ void ValidateSystem()
    }
 // Do the Version ID thing for Beta testers
 #if defined(RELEASE) && defined(VERSION_NAME) && !defined(NDEBUG)
-   { 
+   {
       char buf[256];
 
       sprintf(buf, "Descent II %s v%d.%d\n%s\n%s %s", VERSION_TYPE, Version_major, Version_minor,
@@ -870,14 +870,14 @@ void ValidateSystem()
       mem_free = memstat.dwTotalPhys;
 //    mem_free=100;
 //    logentry("  mem_free       = %10d\n",mem_free);
-      
+
       if ( mem_free < MIN_PHYSICAL_MEM_FREE) {
          logentry("Using low memory option.\n");
          piggy_low_memory = 1;
       }
 
       if ( memstat.dwAvailPageFile < MIN_VIRTUAL_MEM_FREE) {
-         MessageBox(NULL, "Not enough virtual memory.\n You need at least 16MB of free drive space.\n", 
+         MessageBox(NULL, "Not enough virtual memory.\n You need at least 16MB of free drive space.\n",
                      "Descent II Error", MB_OK);
          exit(1);
       }
@@ -890,7 +890,7 @@ void ValidateSystem()
          digi_sample_rate = SAMPLE_RATE_11K;
       }
    }
-}  
+}
 
 
 int DoMessageStuff(MSG *msg)
@@ -925,7 +925,7 @@ int DoMessageStuff(MSG *msg)
 
                if (GetForegroundWindow() == _hAppWnd) {
                   if (_AppPaused || !_AppActive) {
-                     mprintf((0, "Descent2 Daemon...Pause: %d, Active %d\n",_AppPaused, _AppActive)); 
+                     mprintf((0, "Descent2 Daemon...Pause: %d, Active %d\n",_AppPaused, _AppActive));
                      SetActiveWindow(_hAppWnd);
                      _RedrawScreen = FALSE;
                      break;
@@ -939,12 +939,12 @@ int DoMessageStuff(MSG *msg)
             }
          }
          else {
-            mprintf((0, "Waiting...Pause: %d, Active %d\n",_AppPaused, _AppActive)); 
+            mprintf((0, "Waiting...Pause: %d, Active %d\n",_AppPaused, _AppActive));
             WaitMessage();
          }
       }
    }
-      
+
 
    return MSG_NORMAL;
 }
@@ -1015,34 +1015,34 @@ void LoadCursorWin(int cursor)
       case MOUSE_DEFAULT_CURSOR:
          CursorHandle = LoadCursor(NULL, IDC_ARROW);
          break;
-      
-      case MOUSE_WAIT_CURSOR: 
+
+      case MOUSE_WAIT_CURSOR:
          CursorHandle = LoadCursor(NULL, IDC_WAIT);
          break;
-      
+
       default:
-         CursorHandle = NULL; 
+         CursorHandle = NULL;
    }
 
    SetCursor(CursorHandle);
 }
- 
+
 
 void HideCursorW()
-{               
+{
    while (ShowCursor(FALSE) >=0);
 }
- 
+
 
 void ShowCursorW()
 {
    if (DD_Emulation) return;
-   
+
    if (CursorHandle == NULL)
       LoadCursorWin(MOUSE_DEFAULT_CURSOR);
 
    while (ShowCursor(TRUE) < 0);
-}  
+}
 
 
 
@@ -1086,7 +1086,7 @@ void D2Shutdown()
 
    songs_stop_all();
 
-   if (CD_audio_desktop_dev != -1) 
+   if (CD_audio_desktop_dev != -1)
       auxSetVolume(CD_audio_desktop_dev, CD_audio_desktop_vol);
 
    if (Function_mode == FMODE_GAME && !(Game_mode &GM_MULTI)) {
@@ -1109,12 +1109,12 @@ void D2Shutdown()
 void D2Restore()
 {
    if (!GameShutdown) return;
-   
+
    if (!WMVEPlaying) digi_reset();
    if (WMVEPlaying) {
       MovieRestore();
       key_flush();
-      if (CD_audio_desktop_dev != -1) 
+      if (CD_audio_desktop_dev != -1)
          auxGetVolume(CD_audio_desktop_dev, &CD_audio_desktop_vol);
       _AppPaused = FALSE;
       goto EndD2Restore;
@@ -1125,10 +1125,10 @@ void D2Restore()
       dd_gr_init_screen();
       W95DisplayMode = -1;
 
-      if (SavedScreenMode != -1)  
+      if (SavedScreenMode != -1)
          set_screen_mode(SavedScreenMode);
 
-      if (CD_audio_desktop_dev != -1) 
+      if (CD_audio_desktop_dev != -1)
          auxGetVolume(CD_audio_desktop_dev, &CD_audio_desktop_vol);
       MVE_rmHoldMovie();
       _RedrawScreen = TRUE;
@@ -1138,9 +1138,9 @@ void D2Restore()
    else {
       if (_lpDD) RestoreVideoState();
 
-      if (CD_audio_desktop_dev != -1) 
+      if (CD_audio_desktop_dev != -1)
          auxGetVolume(CD_audio_desktop_dev, &CD_audio_desktop_vol);
-                                                         
+
       if (Function_mode == FMODE_MENU) songs_play_song(SONG_TITLE, 1);
       if (Function_mode == FMODE_GAME) {
          songs_play_level_song(current_song_level);
@@ -1151,14 +1151,14 @@ void D2Restore()
    }
 
    if (Function_mode == FMODE_GAME && !(Game_mode & GM_MULTI)) start_time();
-   else if (Function_mode == FMODE_MENU) 
+   else if (Function_mode == FMODE_MENU)
       keyd_time_when_last_pressed = timer_get_fixed_seconds();
 
 EndD2Restore:
    if (!Joystick_calibrating) joy_start_poll();
    set_redbook_volume(Config_redbook_volume);
    mprintf((0, "...Descent 2 is awake!\n"));
-   
+
    GameShutdown = FALSE;
 }
 
@@ -1170,7 +1170,7 @@ void SaveVideoState()
       Saved_Game_window_w = Game_window_w;
       Saved_Game_window_h = Game_window_h;
 
-   }     
+   }
 
    SavedScreenMode = Screen_mode;
    Screen_mode = -1;
@@ -1185,9 +1185,9 @@ void RestoreVideoState()
 
 
 // If in game mode, then restore window size
-   if (SavedScreenMode != -1)  
+   if (SavedScreenMode != -1)
       set_screen_mode(SavedScreenMode);
-                                                   
+
    if (SavedScreenMode == SCREEN_GAME) {
       Game_window_w = Saved_Game_window_w;
       Game_window_h = Saved_Game_window_h;
@@ -1195,7 +1195,7 @@ void RestoreVideoState()
    }
    if (Function_mode == FMODE_GAME) {
       load_palette(Current_level_palette,1,1);
-   }           
+   }
 
    _RedrawScreen = TRUE;
    RestoreScreenContext();

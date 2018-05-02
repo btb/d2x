@@ -7,7 +7,7 @@ IN USING, DISPLAYING,  AND CREATING DERIVATIVE WORKS THEREOF, SO LONG AS
 SUCH USE, DISPLAY OR CREATION IS FOR NON-COMMERCIAL, ROYALTY OR REVENUE
 FREE PURPOSES.  IN NO EVENT SHALL THE END-USER USE THE COMPUTER CODE
 CONTAINED HEREIN FOR REVENUE-BEARING PURPOSES.  THE END-USER UNDERSTANDS
-AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.  
+AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
@@ -56,7 +56,7 @@ int   Control_center_present;
 vms_vector  Gun_pos[MAX_CONTROLCEN_GUNS], Gun_dir[MAX_CONTROLCEN_GUNS];
 
 // -----------------------------------------------------------------------------
-//return the position & orientation of a gun on the control center object 
+//return the position & orientation of a gun on the control center object
 void calc_controlcen_gun_point(vms_vector *gun_point,vms_vector *gun_dir,object *obj,int gun_num)
 {
    reactor *reactor;
@@ -151,14 +151,14 @@ void do_countdown_frame()
    #if !defined(D2_OEM) && !defined(SHAREWARE)  // get countdown in OEM and SHAREWARE only
    // On last level, we don't want a countdown.
    if ((Current_mission_num == 0) && (Current_level_num == Last_level))
-    {    
+    {
      if (!(Game_mode & GM_MULTI))
       return;
      if (Game_mode & GM_MULTI_ROBOTS)
       return;
-    }  
+    }
    #endif
-   
+
    // Control center destroyed, rock the player's ship.
    fc = Countdown_seconds_left;
    if (fc > 16)
@@ -181,11 +181,11 @@ void do_countdown_frame()
       digi_play_sample( SOUND_COUNTDOWN_13_SECS, F3_0 );
    }
    if ( f2i(old_time + F1_0*7/8) != Countdown_seconds_left )   {
-      if ( (Countdown_seconds_left>=0) && (Countdown_seconds_left<10) ) 
+      if ( (Countdown_seconds_left>=0) && (Countdown_seconds_left<10) )
          digi_play_sample( SOUND_COUNTDOWN_0_SECS+Countdown_seconds_left, F3_0 );
       if ( Countdown_seconds_left==Total_countdown_time-1)
          digi_play_sample( SOUND_COUNTDOWN_29_SECS, F3_0 );
-   }                 
+   }
 
    if (Countdown_timer > 0) {
       fix size,old_size;
@@ -223,7 +223,7 @@ void do_countdown_frame()
          //controlcen->MaxCapacity = Fuelcen_max_amount;
          //gauge_message( "Control Center Reset" );
          DoPlayerDead();      //kill_player();
-      }                                                           
+      }
    }
 }
 
@@ -236,12 +236,12 @@ void do_controlcen_destroyed_stuff(object *objp)
 {
    int   i;
 
-   if ((Game_mode & GM_MULTI_ROBOTS) && Control_center_destroyed) 
+   if ((Game_mode & GM_MULTI_ROBOTS) && Control_center_destroyed)
     return; // Don't allow resetting if control center and boss on same level
 
    // Must toggle walls whether it is a boss or control center.
    for (i=0;i<ControlCenterTriggers.num_links;i++)
-      wall_toggle(&Segments[ControlCenterTriggers.seg[i]], ControlCenterTriggers.side[i]); 
+      wall_toggle(&Segments[ControlCenterTriggers.seg[i]], ControlCenterTriggers.side[i]);
 
    // And start the countdown stuff.
    Control_center_destroyed = 1;
@@ -307,7 +307,7 @@ void do_controlcen_frame(object *obj)
          // the value of Believed_player_position that was set by the last
          // person to go through ai_do_frame.  But since a no-robots game
          // never goes through ai_do_frame, I'm making it so the control
-         // center can spot cloaked dudes.  
+         // center can spot cloaked dudes.
 
          if (Game_mode & GM_MULTI)
             Believed_player_pos = Objects[Players[Player_num].objnum].pos;
@@ -326,7 +326,7 @@ void do_controlcen_frame(object *obj)
             Control_center_player_been_seen = player_is_visible_from_object(obj, &obj->pos, 0, &vec_to_player);
             Control_center_next_fire_time = 0;
          }
-      }        
+      }
 
       return;
    }
@@ -375,10 +375,10 @@ void do_controlcen_frame(object *obj)
             Control_center_player_been_seen = 0;
             return;
          }
-   
+
          #ifdef NETWORK
          if (Game_mode & GM_MULTI)
-            multi_send_controlcen_fire(&vec_to_goal, best_gun_num, obj-Objects); 
+            multi_send_controlcen_fire(&vec_to_goal, best_gun_num, obj-Objects);
          #endif
          Laser_create_new_easy( &vec_to_goal, &Gun_pos[best_gun_num], obj-Objects, CONTROLCEN_WEAPON_NUM, 1);
 
@@ -482,7 +482,7 @@ void init_controlcen_for_level(void)
    Control_center_been_hit = 0;
    Control_center_player_been_seen = 0;
    Control_center_next_fire_time = 0;
-   
+
    Dead_controlcen_object_num = -1;
 }
 
