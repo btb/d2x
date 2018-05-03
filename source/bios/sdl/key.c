@@ -216,8 +216,17 @@ int key_inkey(void)
 
 int key_inkey_time(fix *time)
 {
-   Int3();
-   return 0;
+   int key = 0;
+
+   key_clear_bios_buffer();
+
+   if (key_data.keytail != key_data.keyhead) {
+      key = key_data.keybuffer[key_data.keyhead];
+      *time = key_data.time_pressed[key_data.keyhead];
+      key_data.keyhead = add_one(key_data.keyhead);
+   }
+
+   return key;
 }
 
 int key_peekkey()
@@ -242,18 +251,66 @@ int key_getch(void)
    return key_inkey();
 }
 
+unsigned int key_get_shift_status()
+{
+   unsigned int shift_status = 0;
+
+   key_clear_bios_buffer();
+
+   if ( keyd_pressed[KEY_LSHIFT] || keyd_pressed[KEY_RSHIFT] )
+      shift_status |= KEY_SHIFTED;
+
+   if ( keyd_pressed[KEY_LALT] || keyd_pressed[KEY_RALT] )
+      shift_status |= KEY_ALTED;
+
+   if ( keyd_pressed[KEY_LCTRL] || keyd_pressed[KEY_RCTRL] )
+      shift_status |= KEY_CTRLED;
+
+#ifndef NDEBUG
+   if (keyd_pressed[KEY_DELETE])
+      shift_status |=KEY_DEBUGGED;
+#endif
+
+   return shift_status;
+}
+
 // Returns the number of seconds this key has been down since last call.
 fix key_down_time(int scancode)
 {
-   Int3();
-   return 0;
+   fix time_down, time;
+
+   if ((scancode<0)|| (scancode>255))
+      return 0;
+
+#ifndef NDEBUG
+   if (keyd_editor_mode && key_get_shift_status() )
+      return 0;
+#endif
+
+   if ( !keyd_pressed[scancode] )   {
+      time_down = key_data.TimeKeyHeldDown[scancode];
+      key_data.TimeKeyHeldDown[scancode] = 0;
+   } else   {
+      time = timer_get_fixed_secondsX();
+      time_down =  time - key_data.TimeKeyWentDown[scancode];
+      key_data.TimeKeyWentDown[scancode] = time;
+   }
+
+   return time_down;
 }
 
 // Returns number of times key has went from up to down since last call.
 unsigned int key_down_count(int scancode)
 {
-   Int3();
-   return 0;
+   int n;
+
+   if ((scancode < 0) || (scancode > 255))
+      return 0;
+
+   n = key_data.NumDowns[scancode];
+   key_data.NumDowns[scancode] = 0;
+
+   return n;
 }
 
 void key_handler(SDL_KeyboardEvent *event)

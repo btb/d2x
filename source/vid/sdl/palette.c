@@ -6,6 +6,7 @@
 #include "fix.h"
 #include "minmax.h"
 
+#include "gr.h"
 #include "palette.h"
 
 
@@ -20,9 +21,50 @@ void init_computed_colors(void);
 
 // Functions ------------------------------------------------------------------
 
+static int last_r = 0, last_g = 0, last_b = 0;
+
 void gr_palette_step_up(int r, int g, int b)
 {
-   Int3();
+   int i;
+   ubyte *p = gr_palette;
+   int temp;
+
+   SDL_Palette *palette;
+   SDL_Color colors[256];
+
+   if (gr_palette_faded_out)
+      return;
+
+   if ((r == last_r) && (g == last_g) && (b == last_b))
+      return;
+
+   last_r = r;
+   last_g = g;
+   last_b = b;
+
+   palette = screen->format->palette;
+
+   if (palette == NULL)
+      return; // Display is not palettised
+
+   for (i = 0; i < 256; i++) {
+      temp = (int)(*p++) + r + gr_palette_gamma;
+      if (temp < 0) temp = 0;
+      else if (temp > 63) temp = 63;
+      colors[i].r = temp * 4;
+
+      temp = (int)(*p++) + g + gr_palette_gamma;
+      if (temp < 0) temp = 0;
+      else if (temp > 63) temp = 63;
+      colors[i].g = temp * 4;
+
+      temp = (int)(*p++) + b + gr_palette_gamma;
+      if (temp < 0) temp = 0;
+      else if (temp > 63) temp = 63;
+      colors[i].b = temp * 4;
+   }
+
+   SDL_SetPaletteColors(palette, colors, 0, 256);
 }
 
 void gr_palette_clear(void)
