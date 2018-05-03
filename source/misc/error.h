@@ -58,6 +58,11 @@ void Error(char *fmt, ...) __noreturn;                  // exit with error code=
          "call _Assert";
    #endif
 
+#elif defined(_MSC_VER)
+
+#define Int3() __debugbreak()
+#define Assert(expr) _Assert(expr,#expr,__FILE__,__LINE__)
+
 #elif defined(__clang__)
 
 #define Int3() __builtin_debugtrap()
