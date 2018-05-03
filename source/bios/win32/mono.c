@@ -170,15 +170,17 @@ void scroll( short n )
 
    col = 0;
    for ( row = 0; row < (HEIGHT-1); row++ )
+#ifdef __WATCOMC__
       copy_row( WIDTH, (short *)&XCHAR(row+1,col), (short *)&CHAR(row,col), (short *)&XCHAR(row,col) );
-
-//    for ( col = 0; col < WIDTH; col++ )
-//    {
-//       CHAR( row, col ) = XCHAR( row+1, col );
-//       ATTR( row, col ) = XATTR( row+1, col );
-//       XCHAR( row, col ) = XCHAR( row+1, col );
-//       XATTR( row, col ) = XATTR( row+1, col );
-//    }
+#else
+      for ( col = 0; col < WIDTH; col++ )
+      {
+         CHAR( row, col ) = XCHAR( row+1, col );
+         ATTR( row, col ) = XATTR( row+1, col );
+         XCHAR( row, col ) = XCHAR( row+1, col );
+         XATTR( row, col ) = XATTR( row+1, col );
+      }
+#endif
 
    for ( col = 0; col < WIDTH; col++ )
    {
