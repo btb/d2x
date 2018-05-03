@@ -64,6 +64,8 @@ if(NOT FIX_NO_ASM)
 	add_definitions(-DUSE_INLINE)
 endif()
 
+option(VECMAT_NO_ASM    "Build with only C code?" OFF)
+
 set(SUBSYSTEMS includes misc mem fix cfile 2d bios iff vecmat 3d texmap vid)
 
 set(SUBSYSTEMS_OTHERS div ui win95) # tactile unarj sosdigi sosmidi
