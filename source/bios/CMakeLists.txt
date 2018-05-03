@@ -106,7 +106,7 @@ endif()
 #target_link_libraries(demo io)
 
 add_executable(testk testk.c)
-target_link_libraries(testk io misc)
+target_link_libraries(testk fix io misc)
 
 add_executable(testt testt.c)
-target_link_libraries(testt io)
+target_link_libraries(testt fix io)
