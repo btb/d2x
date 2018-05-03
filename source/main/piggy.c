@@ -135,6 +135,7 @@ int piggy_page_flushed = 0;
 
 #define DBM_FLAG_ABM            64
 
+#pragma pack(push, 1)
 typedef struct DiskBitmapHeader {
    char name[8];
    ubyte dflags;                   //bits 0-5 anim frame num, bit 6 abm flag
@@ -145,6 +146,7 @@ typedef struct DiskBitmapHeader {
    ubyte avg_color;
    int offset;
 } DiskBitmapHeader;
+#pragma pack(pop)
 
 typedef struct DiskSoundHeader {
    char name[8];
