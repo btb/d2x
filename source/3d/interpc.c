@@ -73,6 +73,7 @@ g3s_point *point_list[MAX_POINTS_PER_POLY];
 
 int glow_num = -1;
 
+#ifdef MACINTOSH
 void short_swap(short *s)
 {
    *s = swapshort(*s);
@@ -183,6 +184,7 @@ void swap_polygon_model_data(ubyte *data)
       short_swap(wp(p));
    }
 }
+#endif
 
 //calls the object interpreter to render an object.  The object renderer
 //is really a seperate pipeline. returns true if drew
