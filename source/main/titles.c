@@ -34,6 +34,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "pcx.h"
 #include "mem.h"
 #include "joy.h"
+#include "vga.h"
+
 #include "arcade.h"
 #include "coindev.h"
 #include "mono.h"
@@ -854,6 +856,7 @@ int show_briefing_message(int screen_num, char *message)
                   break;
                }
             #endif
+               vid_update();
 
                while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
                   ;
@@ -951,6 +954,8 @@ int show_briefing_message(int screen_num, char *message)
          key_check = KEY_ESC;
       }
    #endif
+      vid_update();
+
       if ( key_check == KEY_ESC ) {
          rval = 1;
          done = 1;
@@ -993,6 +998,7 @@ int show_briefing_message(int screen_num, char *message)
                break;
             }
          #endif
+            vid_update();
 
             while (timer_get_fixed_seconds() < start_time + KEY_DELAY_DEFAULT/2)
                ;
