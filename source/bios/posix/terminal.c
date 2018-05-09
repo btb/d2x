@@ -16,3 +16,10 @@ int getch(void)
 
    return ch;
 }
+
+int putch(int ch)
+{
+   write(STDOUT_FILENO, &ch, 1);
+
+   return ch;
+}
