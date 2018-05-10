@@ -19,6 +19,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "key.h"
 #include "joy.h"
 #include "mouse.h"
+
+#undef NDEBUG
+#undef NMONO
 #include "mono.h"
 
 int main(void)
