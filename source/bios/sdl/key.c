@@ -10,7 +10,7 @@
 #define KEY_BUFFER_SIZE 16
 
 //-------- Variable accessed by outside functions ---------
-
+char keyd_buffer_type;    // 0=No buffer, 1=buffer ASCII, 2=buffer scans
 char keyd_repeat;
 unsigned char keyd_editor_mode;
 volatile unsigned char keyd_last_pressed;

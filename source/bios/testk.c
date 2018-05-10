@@ -13,8 +13,10 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
 #include <stdio.h>
+#if defined(__DOS__) || defined(WINDOWS)
 #include <conio.h>
 #include <i86.h>
+#endif
 
 #include "key.h"
 #include "error.h"
