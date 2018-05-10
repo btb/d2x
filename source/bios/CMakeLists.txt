@@ -33,7 +33,7 @@ set(io_OTHERS
     stub/mono.c
     stub/rbaudio.c
     swiftcfg.h
-    testj.c             testm.c             testms.c
+    testj.c             testms.c
     timer.h
     win32/findfile.c
     win32/ipx.c
@@ -107,6 +107,9 @@ endif()
 
 add_executable(testk testk.c)
 target_link_libraries(testk fix io misc)
+
+add_executable(testm testm.c)
+target_link_libraries(testm fix io misc)
 
 add_executable(testt testt.c)
 target_link_libraries(testt fix io)

@@ -11,6 +11,11 @@ AND AGREES TO THE TERMS HEREIN AND ACCEPTS THE SAME BY USE OF THIS FILE.
 COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "error.h"
+
 #include "key.h"
 #include "joy.h"
 #include "mouse.h"
@@ -18,9 +23,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 int main(void)
 {
-   int i,c, j, j1;
+   int c, j1;
 
-   short jx, jy, jb;
+   int jx, jy, jb;
 
    key_init();
    keyd_buffer_type = 1;
@@ -32,19 +37,19 @@ int main(void)
    mopen( 3,13,1,37,10, "Mouse" );
    mopen( 4,13,41,37,10,"Instructions" );
 
-   mprintf( 4, "F1 - turn off buffering.\n" );
-   mprintf( 4, "F2 - turn on ASCII buffering.\n" );
-   mprintf( 4, "F3 - turn on scan code buffering.\n" );
-   mprintf( 4, "F4 - flush keyboard.\n" );
-   mprintf( 4, "F5 - turn repeat off.\n");
-   mprintf( 4, "F6 - turn repeat on.\n");
-   mprintf( 4, "F7 - do an INT 3.\n" );
-   mprintf( 4, "F10 - to display some boxes.\n" );
+   mprintf(( 4, "F1 - turn off buffering.\n" ));
+   mprintf(( 4, "F2 - turn on ASCII buffering.\n" ));
+   mprintf(( 4, "F3 - turn on scan code buffering.\n" ));
+   mprintf(( 4, "F4 - flush keyboard.\n" ));
+   mprintf(( 4, "F5 - turn repeat off.\n"));
+   mprintf(( 4, "F6 - turn repeat on.\n"));
+   mprintf(( 4, "F7 - do an INT 3.\n" ));
+   mprintf(( 4, "F10 - to display some boxes.\n" ));
    //mprintf( 4, "Arrows - example unbuffered.\n");
    //mprintf( 4, "ESC - exit program.\n" );
 
    if ( (j1=joy_init())==0 )   {
-      mprintf( 2, "Not installed.\n" );
+      mprintf(( 2, "Not installed.\n" ));
    }
 
 
@@ -53,7 +58,7 @@ int main(void)
       if (j1) {
          joy_get_pos( &jx, &jy );
          jb = joy_get_btns();
-         mprintf( 2,"(%d,%d)\tB1:%d\tB2:%d\n", jx, jy, jb&1, jb&2 );
+         mprintf(( 2,"(%d,%d)\tB1:%d\tB2:%d\n", jx, jy, jb&1, jb&2 ));
       }
 
       //ms_read();
@@ -85,7 +90,7 @@ int main(void)
          keyd_repeat = 1;
 
       if (keyd_pressed[KEY_F7] )
-         key_debug();
+         Int3(); //key_debug();
 
       if (keyd_pressed[KEY_UP])
          mputc( 1, 24 );
@@ -109,7 +114,7 @@ int main(void)
          }
          else
          {
-            mprintf( 1, "[%2X]\n", c );
+            mprintf(( 1, "[%2X]\n", c ));
 
          }
       }

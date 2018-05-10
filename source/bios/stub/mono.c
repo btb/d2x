@@ -9,6 +9,11 @@
 #include <stdarg.h>
 
 
+void mputc(short n, char c)
+{
+   fputc(c, stderr);
+}
+
 void mprintf(short n, char *format, ...)
 {
    va_list args;
