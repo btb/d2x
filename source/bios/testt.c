@@ -14,23 +14,38 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #if defined(__DOS__) || defined(WINDOWS)
 #include <i86.h>
+#else
+#include <SDL.h>
 #endif
 
 #include "timer.h"
 // #include "key.h"
 #include "fix.h"
 
+#if defined(__DOS__) || defined(WINDOWS)
 #define TICKER (*(volatile unsigned int *)0x46C)
+#else
+#define TICKER (SDL_GetPerformanceCounter())
+#endif
 
 int main(void)
 {
    fix MyTimer, t, t1, t2, ot;
+#if defined(__DOS__) || defined(WINDOWS)
    int s;
+#else
+   Uint64 s;
+   Uint64 freq = SDL_GetPerformanceFrequency();
+#endif
 
    // key_init();
 
+#ifdef __DOS__
    //timer_init( 4661, NULL );
    timer_init( 0, NULL );
+#else
+   timer_init();
+#endif
 
    s = TICKER;
    MyTimer = timer_get_fixed_seconds();
@@ -41,7 +56,11 @@ int main(void)
       delay(1);
       ot =t;
       t = timer_get_fixed_seconds();
+#if defined(__DOS__) || defined(WINDOWS)
       t1 = (TICKER - s)*655360/182;
+#else
+      t1 = fl2f((float)(TICKER - s) / (float)freq);
+#endif
       //printf( "%d\t%d\t%u\t%d\t%u\t%u\t%u\n", (TICKER-s)*10000/182, myc, t, (int)t-(int)ot, key_down_time(KEY_G), key_down_count(KEY_G), key_up_count(KEY_G) );
       printf( "%u\t%u\t%d\n", t1, t, (int)t - (int)t1 );
    }
