@@ -165,7 +165,9 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
    int i, id;
    void *ptr;
    char * pc;
+#ifdef __WATCOMC__
    int * data;
+#endif
 
    if (Initialized==0)
       mem_init();
@@ -235,8 +237,10 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
    if ( (base+size) > LargestAddress ) LargestAddress = base+size;
 
    MallocBase[id] = (uintptr_t)ptr;
+#ifdef __WATCOMC__
    data = (int *)((intptr_t)MallocBase[id]-4);
    MallocRealSize[id] = *data;
+#endif
    MallocSize[id] = size;
    Varname[id] = var;
    Filename[id] = filename;
@@ -272,12 +276,15 @@ int mem_find_id( void * buffer )
 
 int mem_check_integrity( int block_number )
 {
+#ifdef __WATCOMC__
    int * data;
+#endif
    int i, ErrorCount;
    ubyte * CheckData;
 
    CheckData = (char *)(MallocBase[block_number] + MallocSize[block_number]);
 
+#ifdef __WATCOMC__
    data = (int *)((intptr_t)MallocBase[block_number]-4);
 
    if ( *data != MallocRealSize[block_number] ) {
@@ -286,6 +293,7 @@ int mem_check_integrity( int block_number )
       //Int3();
       *data = MallocRealSize[block_number];
    }
+#endif
 
    ErrorCount = 0;
 
