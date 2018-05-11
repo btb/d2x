@@ -61,7 +61,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #define MAX_INDEX 10000
 
-static unsigned int MallocBase[MAX_INDEX];
+static uintptr_t MallocBase[MAX_INDEX];
 static unsigned int MallocSize[MAX_INDEX];
 static unsigned int MallocRealSize[MAX_INDEX];
 static unsigned char Present[MAX_INDEX];
@@ -70,8 +70,8 @@ static char * Varname[MAX_INDEX];
 static int LineNum[MAX_INDEX];
 static int BytesMalloced = 0;
 
-static unsigned int SmallestAddress = 0xFFFFFFF;
-static unsigned int LargestAddress = 0x0;
+static uintptr_t SmallestAddress = UINTPTR_MAX;
+static uintptr_t LargestAddress = 0x0;
 
 int show_mem_info = 1;
 
@@ -161,7 +161,7 @@ void PrintInfo( int id )
 
 void * mem_malloc( unsigned int size, char * var, char * filename, int line, int fill_zero )
 {
-   unsigned int base;
+   uintptr_t base;
    int i, id;
    void *ptr;
    char * pc;
@@ -230,12 +230,12 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
       Error( "MEM_OUT_OF_MEMORY" );
    }
 
-   base = (unsigned int)ptr;
+   base = (uintptr_t)ptr;
    if ( base < SmallestAddress ) SmallestAddress = base;
    if ( (base+size) > LargestAddress ) LargestAddress = base+size;
 
-   MallocBase[id] = (unsigned int)ptr;
-   data = (int *)((int)MallocBase[id]-4);
+   MallocBase[id] = (uintptr_t)ptr;
+   data = (int *)((intptr_t)MallocBase[id]-4);
    MallocRealSize[id] = *data;
    MallocSize[id] = size;
    Varname[id] = var;
@@ -263,7 +263,7 @@ int mem_find_id( void * buffer )
 
    for (i=0; i<=LargestIndex; i++ )
       if (Present[i]==1)
-         if (MallocBase[i] == (unsigned int)buffer )
+         if (MallocBase[i] == (uintptr_t)buffer)
             return i;
 
    // Didn't find id.
@@ -278,7 +278,7 @@ int mem_check_integrity( int block_number )
 
    CheckData = (char *)(MallocBase[block_number] + MallocSize[block_number]);
 
-   data = (int *)((int)MallocBase[block_number]-4);
+   data = (int *)((intptr_t)MallocBase[block_number]-4);
 
    if ( *data != MallocRealSize[block_number] ) {
       fprintf( stderr, "\nMEM_BAD_LENGTH: The length field of an allocated block was overwritten.\n" );
@@ -406,10 +406,10 @@ void mem_display_blocks(void)
 
    if (show_mem_info)   {
       fprintf( stderr, "\n\nMEMORY USAGE:\n" );
-      fprintf( stderr, "  %6u Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
-      fprintf( stderr, "  %6u Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
+      fprintf( stderr, "  %6lu Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
+      fprintf( stderr, "  %6lu Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
       fprintf( stderr, "  ---------------------------\n" );
-      fprintf( stderr, "  %6u Kbytes required.\n\n",  (LargestAddress-(4*1024*1024)+512)/1024 );
+      fprintf( stderr, "  %6lu Kbytes required.\n\n", (LargestAddress-(4*1024*1024)+512)/1024 );
    }
 }
 
@@ -442,8 +442,8 @@ void mem_print_all()
 #else
 
 static int Initialized = 0;
-static unsigned int SmallestAddress = 0xFFFFFFF;
-static unsigned int LargestAddress = 0x0;
+static uintptr_t SmallestAddress = UINTPTR_MAX;
+static uintptr_t LargestAddress = 0x0;
 static unsigned int BytesMalloced = 0;
 
 void mem_display_blocks(void);
@@ -457,7 +457,7 @@ void mem_init()
 {
    Initialized = 1;
 
-   SmallestAddress = 0xFFFFFFF;
+   SmallestAddress = UINTPTR_MAX;
    LargestAddress = 0x0;
 
    atexit(mem_display_blocks);
@@ -504,7 +504,7 @@ void mem_init()
 
 void * mem_malloc( unsigned int size, char * var, char * filename, int line, int fill_zero )
 {
-   unsigned int base;
+   uintptr_t base;
    void *ptr;
    int * psize;
 
@@ -547,7 +547,7 @@ void * mem_malloc( unsigned int size, char * var, char * filename, int line, int
       Int3();
    }
 
-   base = (unsigned int)ptr;
+   base = (uintptr_t)ptr;
    if ( base < SmallestAddress ) SmallestAddress = base;
    if ( (base+size) > LargestAddress ) LargestAddress = base+size;
 
@@ -626,10 +626,10 @@ void mem_display_blocks(void)
 
    if (show_mem_info)   {
       fprintf( stderr, "\n\nMEMORY USAGE:\n" );
-      fprintf( stderr, "  %u Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
-      fprintf( stderr, "  %u Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
+      fprintf( stderr, "  %lu Kbytes dynamic data\n", (LargestAddress-SmallestAddress+512)/1024 );
+      fprintf( stderr, "  %lu Kbytes code/static data.\n", (SmallestAddress-(4*1024*1024)+512)/1024 );
       fprintf( stderr, "  ---------------------------\n" );
-      fprintf( stderr, "  %u Kbytes required.\n",  (LargestAddress-(4*1024*1024)+512)/1024 );
+      fprintf( stderr, "  %lu Kbytes required.\n", (LargestAddress-(4*1024*1024)+512)/1024 );
    }
 }
 
