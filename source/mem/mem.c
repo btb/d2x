@@ -282,7 +282,7 @@ int mem_check_integrity( int block_number )
    int i, ErrorCount;
    ubyte * CheckData;
 
-   CheckData = (char *)(MallocBase[block_number] + MallocSize[block_number]);
+   CheckData = (ubyte *)(MallocBase[block_number] + MallocSize[block_number]);
 
 #ifdef __WATCOMC__
    data = (int *)((intptr_t)MallocBase[block_number]-4);
@@ -300,7 +300,7 @@ int mem_check_integrity( int block_number )
    for (i=0; i<CHECKSIZE; i++ )
       if (CheckData[i] != CHECKBYTE ) {
          ErrorCount++;
-         fprintf( stderr, "OA: %x ", &CheckData[i] );
+         fprintf( stderr, "OA: %lx ", (uintptr_t)&CheckData[i] );
       }
 
    if (ErrorCount &&  (!out_of_memory))   {
