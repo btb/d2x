@@ -23,6 +23,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 
 #include "pa_enabl.h"                   //$$POLY_ACC
 #include "minmax.h"
+#include "vga.h"
 
 #include "inferno.h"
 #include "error.h"
@@ -1395,6 +1396,8 @@ void game_render_frame_mono(void)
          #endif
       }
    }
+
+   vid_update();
 
    if (Cockpit_mode==CM_FULL_COCKPIT || Cockpit_mode==CM_STATUS_BAR) {
 
