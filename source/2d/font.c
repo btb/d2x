@@ -139,7 +139,7 @@ int get_centered_x(char *s)
 int gr_internal_string0(int x, int y, char *s )
 {
    unsigned char * fp;
-   char *text_ptr, *next_row, *text_ptr1;
+   ubyte * text_ptr, * next_row, * text_ptr1;
    int r, BitMask, i, bits, width, spacing, letter, underline;
    int   skip_lines = 0;
 
@@ -251,7 +251,7 @@ int gr_internal_string0(int x, int y, char *s )
 int gr_internal_string0m(int x, int y, char *s )
 {
    unsigned char * fp;
-   char *text_ptr, *next_row, *text_ptr1;
+   ubyte * text_ptr, * next_row, * text_ptr1;
    int r, BitMask, i, bits, width, spacing, letter, underline;
    int   skip_lines = 0;
 
@@ -991,7 +991,7 @@ grs_bitmap char_bm = {
 int gr_internal_color_string(int x, int y, char *s )
 {
    unsigned char * fp;
-   char *text_ptr, *next_row, *text_ptr1;
+   ubyte * text_ptr, * next_row, * text_ptr1;
    int width, spacing,letter;
    int xx,yy;
 
