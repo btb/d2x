@@ -147,7 +147,7 @@ int gr_internal_string0(int x, int y, char *s )
 
    VideoOffset1 = y * ROWSIZE + x;
 
-   next_row = s;
+   next_row = (ubyte *)s;
 
    while (next_row != NULL )
    {
@@ -155,7 +155,7 @@ int gr_internal_string0(int x, int y, char *s )
       next_row = NULL;
 
       if (x==0x8000) {        //centered
-         int xx = get_centered_x(text_ptr1);
+         int xx = get_centered_x((char *)text_ptr1);
          VideoOffset1 = y * ROWSIZE + xx;
       }
 
@@ -259,7 +259,7 @@ int gr_internal_string0m(int x, int y, char *s )
 
    VideoOffset1 = y * ROWSIZE + x;
 
-   next_row = s;
+   next_row = (ubyte *)s;
 
    while (next_row != NULL )
    {
@@ -267,7 +267,7 @@ int gr_internal_string0m(int x, int y, char *s )
       next_row = NULL;
 
       if (x==0x8000) {        //centered
-         int xx = get_centered_x(text_ptr1);
+         int xx = get_centered_x((char *)text_ptr1);
          VideoOffset1 = y * ROWSIZE + xx;
       }
 
@@ -997,7 +997,7 @@ int gr_internal_color_string(int x, int y, char *s )
 
    char_bm.bm_h = FHEIGHT;    //set height for chars of this font
 
-   next_row = s;
+   next_row = (ubyte *)s;
 
    yy = y;
 
@@ -1012,7 +1012,7 @@ int gr_internal_color_string(int x, int y, char *s )
       xx = x;
 
       if (xx==0x8000)         //centered
-         xx = get_centered_x(text_ptr);
+         xx = get_centered_x((char *)text_ptr);
 
       while (*text_ptr)
       {
