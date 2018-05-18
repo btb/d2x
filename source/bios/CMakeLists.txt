@@ -110,6 +110,9 @@ target_link_libraries(testk fix io misc)
 
 add_executable(testm testm.c)
 target_link_libraries(testm fix io misc)
+if(TARGSYS MATCHES "^WIN32")
+    target_link_libraries(testm win95)
+endif()
 
 add_executable(testt testt.c)
 target_link_libraries(testt fix io)

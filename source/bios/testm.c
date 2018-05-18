@@ -51,7 +51,12 @@ int main(void)
    //mprintf( 4, "Arrows - example unbuffered.\n");
    //mprintf( 4, "ESC - exit program.\n" );
 
-   if ( (j1=joy_init())==0 )   {
+#ifdef WINDOWS
+   j1 = joy_init(0, 0);
+#else
+   j1 = joy_init();
+#endif
+   if (j1 == 0) {
       mprintf(( 2, "Not installed.\n" ));
    }
 
