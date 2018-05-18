@@ -32,6 +32,22 @@ typedef struct mouse_info {
 static mouse_info Mouse;
 
 static int Mouse_installed = 0;
+static int Mouse_center = 0;
+
+int mouse_set_mode(int i)
+{
+   int old;
+   old = Mouse_center;
+   if (i) Mouse_center = 1;
+   else Mouse_center = 0;
+
+   if (Mouse_center)
+      SDL_SetRelativeMouseMode(SDL_TRUE);
+   else
+      SDL_SetRelativeMouseMode(SDL_FALSE);
+
+   return old;
+}
 
 //--------------------------------------------------------
 // returns 0 if no mouse
@@ -64,15 +80,16 @@ void mouse_get_delta(int *dx, int *dy)
       return;
    }
 
-   Int3();
+   SDL_GetRelativeMouseState(dx, dy);
 }
 
 int mouse_get_btns(void)
 {
-   Int3();
    int i;
    uint flag = 1;
    int status = 0;
+
+   event_poll();
 
    for (i = 0; i < MOUSE_MAX_BUTTONS; i++) {
       if (Mouse.pressed[i])
@@ -86,6 +103,8 @@ void mouse_flush(void)
 {
    int i;
    fix CurTime;
+
+   event_poll();
 
    //Clear the mouse data
    CurTime = timer_get_fixed_secondsX();
@@ -106,6 +125,8 @@ int mouse_button_down_count(int button)
    if (!Mouse_installed)
       return 0;
 
+   event_poll();
+
    count = Mouse.num_downs[button];
    Mouse.num_downs[button] = 0;
 
@@ -115,8 +136,9 @@ int mouse_button_down_count(int button)
 // Returns 1 if this button is currently down
 int mouse_button_state(int button)
 {
-   Int3();
    int state;
+
+   event_poll();
 
    state = Mouse.pressed[button];
 
@@ -126,8 +148,9 @@ int mouse_button_state(int button)
 // Returns how long this button has been down since last call.
 fix mouse_button_down_time(int button)
 {
-   Int3();
    fix time_down, time;
+
+   event_poll();
 
    if (!Mouse.pressed[button]) {
       time_down = Mouse.time_held_down[button];
@@ -145,4 +168,62 @@ void mouse_get_cyberman_pos(int *x, int *y)
 {
    *x = 0;
    *y = 0;
+}
+
+void mouse_button_handler(SDL_MouseButtonEvent *event)
+{
+   Mouse.ctime = timer_get_fixed_secondsX();
+
+   if (event->button == SDL_BUTTON_LEFT &&
+       event->type == SDL_MOUSEBUTTONDOWN) {
+      if (!Mouse.pressed[MB_LEFT]) {
+         Mouse.pressed[MB_LEFT] = 1;
+         Mouse.time_went_down[MB_LEFT] = Mouse.ctime;
+      }
+      Mouse.num_downs[MB_LEFT]++;
+
+   } else if (event->button == SDL_BUTTON_LEFT &&
+              event->type == SDL_MOUSEBUTTONUP) {
+      if (Mouse.pressed[MB_LEFT]) {
+         Mouse.pressed[MB_LEFT] = 0;
+         Mouse.time_held_down[MB_LEFT] +=
+            Mouse.ctime - Mouse.time_went_down[MB_LEFT];
+      }
+      Mouse.num_ups[MB_LEFT]++;
+
+   } else if (event->button == SDL_BUTTON_RIGHT &&
+              event->type == SDL_MOUSEBUTTONDOWN) {
+      if (!Mouse.pressed[MB_RIGHT]) {
+         Mouse.pressed[MB_RIGHT] = 1;
+         Mouse.time_went_down[MB_RIGHT] = Mouse.ctime;
+      }
+      Mouse.num_downs[MB_RIGHT]++;
+
+   } else if (event->button == SDL_BUTTON_RIGHT &&
+              event->type == SDL_MOUSEBUTTONUP) {
+      if (Mouse.pressed[MB_RIGHT])  {
+         Mouse.pressed[MB_RIGHT] = 0;
+         Mouse.time_held_down[MB_RIGHT] +=
+            Mouse.ctime - Mouse.time_went_down[MB_RIGHT];
+      }
+      Mouse.num_ups[MB_RIGHT]++;
+
+   } else if (event->button == SDL_BUTTON_MIDDLE &&
+              event->type == SDL_MOUSEBUTTONDOWN) {
+      if (!Mouse.pressed[MB_MIDDLE])   {
+         Mouse.pressed[MB_MIDDLE] = 1;
+         Mouse.time_went_down[MB_MIDDLE] = Mouse.ctime;
+      }
+      Mouse.num_downs[MB_MIDDLE]++;
+
+   } else if (event->button == SDL_BUTTON_MIDDLE &&
+              event->type == SDL_MOUSEBUTTONUP) {
+      if (Mouse.pressed[MB_MIDDLE]) {
+         Mouse.pressed[MB_MIDDLE] = 0;
+         Mouse.time_held_down[MB_MIDDLE] +=
+            Mouse.ctime - Mouse.time_went_down[MB_MIDDLE];
+      }
+      Mouse.num_ups[MB_MIDDLE]++;
+
+   }
 }

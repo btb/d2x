@@ -396,11 +396,9 @@ void event_poll(void)
             break;
          case SDL_MOUSEBUTTONDOWN:
          case SDL_MOUSEBUTTONUP:
-//            Int3();
-            //            mouse_button_handler((SDL_MouseButtonEvent *)&event);
+            mouse_button_handler((SDL_MouseButtonEvent *)&event);
             break;
          case SDL_MOUSEMOTION:
-//            Int3();
             //            mouse_motion_handler((SDL_MouseMotionEvent *)&event);
             break;
          case SDL_JOYBUTTONDOWN:
