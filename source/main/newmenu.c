@@ -747,7 +747,7 @@ int newmenu_do4( char * title, char * subtitle, int nitems, newmenu_item * item,
       return -1;
     }
 
-   WIN(mouse_set_mode(0));    //disable centering mode
+   mouse_set_mode(0);            // disable centering mode
 
         MaxDisplayable=nitems;
 
@@ -1899,7 +1899,7 @@ RePaintNewmenu4:
    if ( sound_stopped )
       digi_resume_digi_sounds();
 
-   WIN(mouse_set_mode(1));          //re-enable centering mode
+   mouse_set_mode(1);            // re-enable centering mode
 
    return choice;
 
@@ -2038,7 +2038,7 @@ WIN(int win_redraw=0);
    citem = 0;
    keyd_repeat = 1;
 
-   WIN(mouse_set_mode(0));          //disable centering mode
+   mouse_set_mode(0);            // disable centering mode
 
    if (strstr( filespec, "*.plr" ))
       player_mode = 1;
@@ -2298,8 +2298,8 @@ RePaintNewmenuFile:
          if ( ((player_mode)&&(citem>0)) || ((demo_mode)&&(citem>=0)) ) {
             int x = 1;
             MAC(hide_cursor());
+            mouse_set_mode(1);   // re-enable centering mode
             #ifdef WINDOWS
-            mouse_set_mode(1);            //re-enable centering mode
             HideCursorW();
             #endif
             if (player_mode)
@@ -2307,8 +2307,8 @@ RePaintNewmenuFile:
             else if (demo_mode)
                x = nm_messagebox( NULL, 2, TXT_YES, TXT_NO, "%s %s?", TXT_DELETE_DEMO, &filenames[citem*14]+((demo_mode && filenames[citem*14]=='$')?1:0) );
             MAC(show_cursor());
+            mouse_set_mode(0);   // disenable centering mode
             #ifdef WINDOWS
-            mouse_set_mode(0);            //disenable centering mode
             ShowCursorW();
             #endif
             if (x==0)   {
@@ -2676,7 +2676,7 @@ ExitFileMenu:
    if ( filenames )
       free(filenames);
 
-   WIN(mouse_set_mode(1));          //re-enable centering mode
+   mouse_set_mode(1);            // re-enable centering mode
    WIN(HideCursorW());
 
    return exit_value;
@@ -2731,7 +2731,7 @@ WIN(int win_redraw=0);
 
    PA_DFX (pa_set_frontbuffer_current());
    PA_DFX (pa_set_front_to_read());
-   WIN(mouse_set_mode(0));          //disable centering mode
+   mouse_set_mode(0);            // disable centering mode
 
 // set_screen_mode(SCREEN_MENU);
    set_popup_screen();
@@ -3185,7 +3185,7 @@ RePaintNewmenuListbox:
 
    WIN(DDGRRESTORE);
 
-   WIN(mouse_set_mode(1));          //re-enable centering mode
+   mouse_set_mode(1);            // re-enable centering mode
 
    return citem;
 }

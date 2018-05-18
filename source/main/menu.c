@@ -226,16 +226,16 @@ try_again:;
          if ((d_rand() % (n_demos+1)) == 0)
          {
             #ifndef SHAREWARE
-               #ifdef WINDOWS
                mouse_set_mode(1);            //re-enable centering mode
+               #ifdef WINDOWS
                HideCursorW();
                #endif
                PlayMovie("intro.mve",0);
                songs_play_song(SONG_TITLE,1);
                *last_key = -3; //exit menu to force redraw even if not going to game mode. -3 tells menu system not to restore
                set_screen_mode(SCREEN_MENU);
-               #ifdef WINDOWS
                mouse_set_mode(0);            //disenable centering mode
+               #ifdef WINDOWS
                ShowCursorW();
                #endif
             #endif // end of ifndef shareware

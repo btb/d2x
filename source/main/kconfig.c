@@ -1708,7 +1708,7 @@ void kconfig(int n, char * title)
    kc_set_controls();
 
    //save screen
-   WIN(mouse_set_mode(0));
+   mouse_set_mode(0);
    WIN(dd_gr_set_current_canvas(NULL));
 
 #if defined(POLY_ACC)
@@ -1734,7 +1734,7 @@ void kconfig(int n, char * title)
    }
 
    //restore screen
-   WIN(mouse_set_mode(1));
+   mouse_set_mode(1);
    WIN(dd_gr_set_current_canvas(NULL));
    WIN(DDGRLOCK(dd_grd_curcanv));
       gr_bitmap(0, 0, save_bm);

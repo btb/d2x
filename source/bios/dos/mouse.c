@@ -247,6 +247,11 @@ void mouse_handler_end (void)  // dummy functions
 }
 #pragma on (check_stack)
 
+int mouse_set_mode(int i)
+{
+   return 0;
+}
+
 //--------------------------------------------------------
 // returns 0 if no mouse
 //           else number of buttons

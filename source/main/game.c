@@ -875,8 +875,8 @@ WIN(static int saved_window_h);
    switch( Screen_mode )
    {
       case SCREEN_MENU:
-      #ifdef WINDOWS
          //mouse_set_mode(0);
+      #ifdef WINDOWS
          //ShowCursorW();
          if (!(VR_screen_flags & VRF_COMPATIBLE_MENUS)) {
          // HACK!!!  Meant to save window size when switching from
@@ -946,8 +946,8 @@ WIN(static int saved_window_h);
       break;
 
    case SCREEN_GAME:
-   #ifdef WINDOWS
       //mouse_set_mode(1);
+   #ifdef WINDOWS
       HideCursorW();
       if (force_mode_change || (W95DisplayMode != VR_screen_mode)) {
 
@@ -2232,12 +2232,12 @@ void game()
          if (Config_menu_flag)   {
             int double_save = Scanline_double;
 
-            //WIN(mouse_set_mode(0));
+            //mouse_set_mode(0);
             if (!(Game_mode&GM_MULTI)) {palette_save(); reset_palette_add();  apply_modified_palette(); gr_palette_load( gr_palette ); }
             do_options_menu();
             if (Scanline_double != double_save) init_cockpit();
             if (!(Game_mode&GM_MULTI)) palette_restore();
-            //WIN(mouse_set_mode(1));
+            //mouse_set_mode(1);
          }
 
          if (Automap_flag) {
