@@ -389,7 +389,7 @@ if (Dont_move_ai_objects)
    }
 
    //check for correct object segment
-   if(!get_seg_masks(&obj->pos,obj->segnum,0).centermask==0) {
+   if (get_seg_masks(&obj->pos, obj->segnum, 0).centermask != 0) {
       #ifndef NDEBUG
       mprintf((0,"Warning: object %d not in given seg!\n",objnum));
       #endif
@@ -579,7 +579,7 @@ save_p1 = *fq.p1;
 
       Assert(!((fate==HIT_WALL) && ((WallHitSeg == -1) || (WallHitSeg > Highest_segment_index))));
 
-      //if(!get_seg_masks(&hit_info.hit_pnt,hit_info.hit_seg,0).centermask==0)
+      //if (get_seg_masks(&hit_info.hit_pnt, hit_info.hit_seg, 0).centermask != 0)
       // Int3();
 
       save_pos = obj->pos;       //save the object's position
