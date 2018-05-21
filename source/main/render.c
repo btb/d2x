@@ -974,7 +974,8 @@ void draw_window_box(int color,short left,short top,short right,short bot)
 
    l=left; t=top; r=right; b=bot;
 
-   if ( r<0 || b<0 || l>=grd_curcanv->cv_bitmap.bm_w || t>=grd_curcanv->cv_bitmap.bm_h && b>=grd_curcanv->cv_bitmap.bm_h)
+   if (r < 0 || b < 0 || l >= grd_curcanv->cv_bitmap.bm_w ||
+       (t >= grd_curcanv->cv_bitmap.bm_h && b >= grd_curcanv->cv_bitmap.bm_h))
       return;
 
    if (l<0) l=0;
