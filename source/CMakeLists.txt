@@ -27,6 +27,8 @@ if(WATCOM)
     endif()
 elseif(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+else()
+    add_definitions(-Wno-char-subscripts)
 endif()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 4)
