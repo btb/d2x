@@ -834,7 +834,7 @@ void network_welcome_player(sequence_packet *their)
 
    if (FindArg("-NoMatrixCheat"))
    {
-      if (their->player.version_minor & 0x0F<3)
+      if ((their->player.version_minor & 0x0F) < 3)
       {
          network_dump_player(their->player.network.ipx.server, their->player.network.ipx.node, DUMP_DORK);
          return;
