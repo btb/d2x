@@ -1071,7 +1071,7 @@ int read_sndfile()
 //    cfread( &sndh, sizeof(DiskSoundHeader), 1, snd_fp );
       //size -= sizeof(DiskSoundHeader);
       temp_sound.length = sndh.length;
-      temp_sound.data = (ubyte *)(sndh.offset + header_size + sound_start);
+      temp_sound.data = (ubyte *)(uintptr_t)(sndh.offset + header_size + sound_start);
       SoundOffset[Num_sound_files] = sndh.offset + header_size + sound_start;
       memcpy( temp_name_read, sndh.name, 8 );
       temp_name_read[8] = 0;
