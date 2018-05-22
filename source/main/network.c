@@ -6192,8 +6192,10 @@ int network_choose_connect ()
 #else
 int network_choose_connect ()
 {
+#ifdef MACINTOSH
    newmenu_item m[16];
    int choice,opt=0;
+#endif
 
    if (Network_game_type == IPX_GAME) {
       #if 0
