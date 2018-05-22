@@ -26,6 +26,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 
 #include "d_rand.h"
+#include "timer.h"
 
 #include "inferno.h"
 #include "game.h"
