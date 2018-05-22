@@ -4522,7 +4522,7 @@ void multi_send_active_door (char i)
    multibuf[2]=Num_open_doors;
    count = 3;
 #ifndef MACINTOSH
-   memcpy ((char *)(multibuf[3]),&ActiveDoors[i],sizeof(struct active_door));
+   memcpy((char *)&multibuf[3], &ActiveDoors[i], sizeof(struct active_door));
    count += sizeof(active_door);
 #else
    *(int *)(multibuf + count) = INTEL_INT(ActiveDoors[i].n_parts);               count += 4;
