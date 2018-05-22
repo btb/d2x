@@ -384,6 +384,8 @@ void key_handler(SDL_KeyboardEvent *event)
    }
 }
 
+void mouse_button_handler(SDL_MouseButtonEvent *event);
+
 void event_poll(void)
 {
    SDL_Event event;

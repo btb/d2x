@@ -83,6 +83,8 @@ void mouse_get_delta(int *dx, int *dy)
    SDL_GetRelativeMouseState(dx, dy);
 }
 
+void event_poll(void);
+
 int mouse_get_btns(void)
 {
    int i;
