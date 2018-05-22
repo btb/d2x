@@ -974,7 +974,7 @@ multi_send_data(char *buf, int len, int repeat)
    else
 #endif
    if (Game_mode & GM_NETWORK)
-      network_send_data(buf, len, repeat);
+      network_send_data((ubyte *)buf, len, repeat);
 }
 
 extern void AdjustMineSpawn();
@@ -2354,7 +2354,7 @@ void multi_do_req_player(char *buf)
       extract_netplayer_stats( &ps, &Players[Player_num] );
       ps.Player_num = Player_num;
       ps.message_type = MULTI_SEND_PLAYER;            // SET
-      multi_send_data((ubyte*)&ps, sizeof(netplayer_stats), 0);
+      multi_send_data((char *)&ps, sizeof(netplayer_stats), 0);
    }
 }
 

@@ -1311,7 +1311,10 @@ void network_send_objects(void)
          Assert(loc <= IPX_MAX_DATA_SIZE);
 
          if (Network_game_type == IPX_GAME)
-            ipx_send_internetwork_packet_data( object_buffer, loc, Network_player_rejoining.player.network.ipx.server, Network_player_rejoining.player.network.ipx.node );
+            ipx_send_internetwork_packet_data(
+               (ubyte *)object_buffer, loc,
+               Network_player_rejoining.player.network.ipx.server,
+               Network_player_rejoining.player.network.ipx.node);
          #ifdef MACINTOSH
          else
             appletalk_send_packet_data( object_buffer, loc, Network_player_rejoining.player.network.appletalk.node,
@@ -1344,7 +1347,10 @@ void network_send_objects(void)
             *(short *)(object_buffer+6) = INTEL_SHORT(obj_count);
             //OLD ipx_send_packet_data(object_buffer, 8, &Network_player_rejoining.player.node);
             if (Network_game_type == IPX_GAME)
-               ipx_send_internetwork_packet_data(object_buffer, 8, Network_player_rejoining.player.network.ipx.server, Network_player_rejoining.player.network.ipx.node);
+               ipx_send_internetwork_packet_data(
+                  (ubyte *)object_buffer, 8,
+                  Network_player_rejoining.player.network.ipx.server,
+                  Network_player_rejoining.player.network.ipx.node);
             #ifdef MACINTOSH
             else
                appletalk_send_packet_data( object_buffer, 8, Network_player_rejoining.player.network.appletalk.node,
@@ -2549,7 +2555,7 @@ void network_process_packet(ubyte *data, int length )
       break;
    case PID_NAMES_RETURN:
       if (Network_status==NETSTAT_BROWSING && NamesInfoSecurity!=-1)
-         network_process_names_return (data);
+         network_process_names_return((char *)data);
       break;
    case PID_GAME_PLAYERS:
       // Someone wants a list of players in this game
@@ -5332,7 +5338,7 @@ void network_read_pdata_packet(frame_info *pd )
       Endlevel_sequence = 1;
       if ( pd->data_size>0 )  {
          // pass pd->data to some parser function....
-         multi_process_bigdata( pd->data, pd->data_size );
+         multi_process_bigdata((char *)pd->data, pd->data_size);
       }
       Endlevel_sequence = old_Endlevel_sequence;
       return;
@@ -5429,7 +5435,7 @@ void network_read_pdata_packet(frame_info *pd )
 
    if ( pd->data_size>0 )  {
       // pass pd->data to some parser function....
-      multi_process_bigdata( pd->data, pd->data_size );
+      multi_process_bigdata((char *)pd->data, pd->data_size);
    }
 
 }
@@ -5517,7 +5523,7 @@ void network_read_pdata_short_packet(short_frame_info *pd )
       Endlevel_sequence = 1;
       if ( new_pd.data_size>0 )       {
          // pass pd->data to some parser function....
-         multi_process_bigdata( new_pd.data, new_pd.data_size );
+         multi_process_bigdata((char *)new_pd.data, new_pd.data_size);
       }
       Endlevel_sequence = old_Endlevel_sequence;
       return;
@@ -5589,7 +5595,7 @@ void network_read_pdata_short_packet(short_frame_info *pd )
 
    if ( new_pd.data_size>0 )       {
       // pass pd->data to some parser function....
-      multi_process_bigdata( new_pd.data, new_pd.data_size );
+      multi_process_bigdata((char *)new_pd.data, new_pd.data_size);
    }
 
 }
