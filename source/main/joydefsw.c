@@ -30,7 +30,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "game.h"
 #include "object.h"
 #include "player.h"
-
+#include "multi.h"
 #include "controls.h"
 #include "joydefs.h"
 #include "render.h"
@@ -59,6 +59,9 @@ int Joystick_calibrating = 0;
 
 extern int WriteConfigFile();
 extern void kconfig_set_fcs_button(int btn, int button);
+extern LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam);
+extern void WinDelayIdle(void);
+extern void nm_wrap_text(char *dbuf, char *sbuf, int line_length);
 
 
 WinJoystickDesc WinJoyDesc;
@@ -68,6 +71,10 @@ WinJoystickDesc WinJoyDesc;
 //    and 6 axis' (XYZ-RUV)
 
 extern ubyte default_kconfig_settings[][MAX_CONTROLS];
+
+
+// Internal prototypes
+int joydefsw_do_winjoybutton(int *axis);
 
 
 void win95_autodetect_joystick()

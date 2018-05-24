@@ -20,6 +20,8 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <direct.h>
 
 #include "gr.h"
+#include "mouse.h"
+
 #include "gamepal.h"
 #include "palette.h"
 #include "key.h"
@@ -54,6 +56,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "ipx.h"
 #include "modem.h"
 #include "joy.h"
+#include "joydefs.h"
 #include "movie.h"
 #include "strutil.h"
 
@@ -165,6 +168,8 @@ void InitCD(char *arg)
 }
 
 
+BOOL gfxInit(int hw_acc);
+
 void InitVideo()
 {
    int flag;
@@ -181,6 +186,8 @@ void InitVideo()
 //@@   _3dfx_available = _3dfx_Init();
 //@@   #endif
 }
+
+void mouse_set_window(HWND wnd);
 
 void InitIO()
 {

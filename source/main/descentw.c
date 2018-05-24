@@ -20,12 +20,15 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <string.h>
 #include <stdio.h>
 
-
+#include "args.h"
 #include "winapp.h"
 #include "error.h"
 #include "gr.h"
 #include "digi.h"
+#include "palette.h"
 #include "key.h"
+#include "timer.h"
+
 #include "inferno.h"
 #include "gamepal.h"
 #include "game.h"
@@ -42,6 +45,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #endif
 #include "modem.h"
 #include "cntrlcen.h"
+#include "multi.h"
 
 #define D2_ICON 50
 
@@ -104,9 +108,12 @@ extern void grwin_cleanup_palette();
 
 extern void GameLoop(int, int);
 extern void game_setup(void);
+extern void nm_draw_background1(char *filename);
+extern void set_redbook_volume(int volume);
 extern void check_joystick_calibration();
 extern void DDResizeViewport(void);
 extern void SetWinMonoInfo(HWND hWnd, HINSTANCE hInstance);
+extern BOOL clipboard_screenshot(void);
 
 extern void InitCD(char *arg);
 extern void InitVideo(void);
@@ -116,6 +123,12 @@ extern void InitSound(void);
 extern void InitNetwork(void);
 extern void InitDescent(void);
 extern void InitPilot(void);
+
+extern void send_key_msg(UINT msg, WPARAM vkeycode, LPARAM keypack);
+extern LRESULT joy_handler_win(HWND hWnd, UINT joymsg, UINT wParam, LPARAM lParam);
+extern void joy_stop_poll(void);
+extern void joy_start_poll(void);
+extern void mouse_win_callback(UINT msg, UINT wParam, UINT lParam);
 
 
 // Function Prototypes --------------------------------------------------------
@@ -142,7 +155,9 @@ BOOL GameCheckMultiReactor();
 
 LRESULT WINAPI _export DescentWndProc(HWND hWnd,UINT msg,UINT wParam,
                                         LPARAM lParam);
-
+void WinDelayIdle(void);
+void D2Shutdown(void);
+void D2Restore(void);
 
 
 // Initialization and Destruction
@@ -349,7 +364,7 @@ char commandline_help[] =
          "  -emul    Certain video cards need this option in order to run game.\n"
          "  -ddemul     If -emul doesn't work, use this option.\n";
 
-print_commandline_help()
+void print_commandline_help(void)
 {
    ShowCursorW();
    MessageBox(NULL, commandline_help, "Descent II Command-line Options", MB_OK);

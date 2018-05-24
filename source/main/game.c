@@ -148,6 +148,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 extern void ReadControls(void);     // located in gamecntl.c
 extern int Current_display_mode;
 extern void do_final_boss_frame(void);
+#ifdef WINDOWS
+extern void win95_save_pcx_shot(void);
+#endif
 
 int   Speedtest_on = 0;
 

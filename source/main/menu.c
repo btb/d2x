@@ -1205,6 +1205,8 @@ void do_options_menu()
 
 extern int Redbook_playing;
 void set_redbook_volume(int volume);
+void digi_midi_wait(void);
+int wmidi_support_volchange(void);
 
 WIN(extern int RBCDROM_State);
 WIN(static BOOL windigi_driver_off=FALSE);

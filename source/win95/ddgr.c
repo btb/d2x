@@ -281,6 +281,8 @@ void dd_gr_close(void)
 }
 
 
+void grwin_set_winpalette(LPDIRECTDRAW lpdd, LPDIRECTDRAWPALETTE lpDDPal);
+
 // dd_gr_init_screen
 // ----------------------------------------------------------------------------
 void dd_gr_init_screen()
