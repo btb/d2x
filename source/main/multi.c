@@ -5252,12 +5252,14 @@ void multi_send_play_by_play (int num,int spnum,int dpnum)
       return;
 
    return;
+#if 0
    multibuf[0]=MULTI_PLAY_BY_PLAY;
    multibuf[1]=(char)num;
    multibuf[2]=(char)spnum;
    multibuf[3]=(char)dpnum;
    multi_send_data (multibuf,4,1);
    multi_do_play_by_play (multibuf);
+#endif
 }
 void multi_do_play_by_play (char *buf)
 {

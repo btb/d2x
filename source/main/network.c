@@ -6457,7 +6457,7 @@ int HoardEquipped ()
 
    #ifdef WINDOWS
    return 0;
-   #endif
+   #else
 
    if (checked==-1)
    {
@@ -6467,4 +6467,5 @@ int HoardEquipped ()
          checked=0;
    }
    return (checked);
+   #endif
 }
