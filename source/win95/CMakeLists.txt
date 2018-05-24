@@ -43,4 +43,6 @@ set_source_files_properties(${win95_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 add_library(win95 ${win95_SRCS} ${win95_OTHERS})
 
+target_link_libraries(win95 PUBLIC gr ddraw)
+
 include_directories(${DIRECTX_INCLUDE_DIR})

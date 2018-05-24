@@ -52,6 +52,8 @@ endif()
 list(REMOVE_ITEM gr_OTHERS ${gr_SRCS})
 set_source_files_properties(${gr_OTHERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
+target_link_libraries(gr PUBLIC cfile)
+
 #add_executable(testg testg.c tmapbits.c)
 #target_link_libraries(testg io gr misc mem iff cfile)
 
