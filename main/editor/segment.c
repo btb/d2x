@@ -1932,7 +1932,7 @@ void find_concave_segs()
 // -----------------------------------------------------------------------------
 void warn_if_concave_segments(void)
 {
-	char temp[1];
+	char temp[8];
 
 	find_concave_segs();
 
@@ -1946,7 +1946,7 @@ void warn_if_concave_segments(void)
 //	Check segment s, if concave, warn
 void warn_if_concave_segment(segment *s)
 {
-    char temp[1];
+	char temp[8];
 	int	result;
 
 	result = check_seg_concavity(s);
