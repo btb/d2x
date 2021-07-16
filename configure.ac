@@ -81,6 +81,7 @@ AX_CHECK_COMPILE_FLAG([-Wno-ignored-attributes], [CFLAGS="$CFLAGS -Wno-ignored-a
 AX_CHECK_COMPILE_FLAG([-Wno-unused-but-set-variable], [CFLAGS="$CFLAGS -Wno-unused-but-set-variable"])
 AX_CHECK_COMPILE_FLAG([-Wno-address-of-packed-member], [CFLAGS="$CFLAGS -Wno-address-of-packed-member"])
 AX_CHECK_COMPILE_FLAG([-Wno-stringop-truncation], [CFLAGS="$CFLAGS -Wno-stringop-truncation"])
+AX_CHECK_COMPILE_FLAG([-Wno-format-truncation], [CFLAGS="$CFLAGS -Wno-format-truncation"])
 
 dnl Enable editor build?
 AC_ARG_ENABLE(editor,
