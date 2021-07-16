@@ -962,12 +962,13 @@ int load_game_data(CFILE *LoadFile)
 		}
 		else
 			matcen_info_read(&RobotCenters[i], LoadFile);
-			//	Set links in RobotCenters to Station array
-			for (j = 0; j <= Highest_segment_index; j++)
-			if (Segment2s[j].special == SEGMENT_IS_ROBOTMAKER)
-				if (Segment2s[j].matcen_num == i)
-					RobotCenters[i].fuelcen_num = Segment2s[j].value;
-			// mprintf((0, "   %i: flags = %08x\n", i, RobotCenters[i].robot_flags));
+
+		//	Set links in RobotCenters to Station array
+		for (j = 0; j <= Highest_segment_index; j++)
+		if (Segment2s[j].special == SEGMENT_IS_ROBOTMAKER)
+			if (Segment2s[j].matcen_num == i)
+				RobotCenters[i].fuelcen_num = Segment2s[j].value;
+		// mprintf((0, "   %i: flags = %08x\n", i, RobotCenters[i].robot_flags));
 	}
 
 	//================ READ DL_INDICES INFO ===============

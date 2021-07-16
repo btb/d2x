@@ -829,8 +829,8 @@ void render_segment(int segnum, int window_num)
 
 		// set_segment_local_light_value(segnum,INITIAL_LOCAL_LIGHT);
 
-      if (Viewer->type!=OBJ_ROBOT)
-  	   	Automap_visited[segnum]=1;
+		if (Viewer->type!=OBJ_ROBOT)
+			Automap_visited[segnum]=1;
 
 		for (sn=0; sn<MAX_SIDES_PER_SEGMENT; sn++)
 			render_side(seg, sn);

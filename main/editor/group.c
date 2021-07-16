@@ -1321,15 +1321,15 @@ int med_load_group( char *filename, short *vertex_ids, short *segment_ids, int *
 		if (cfseek( LoadFile,group_fileinfo.vertex_offset, SEEK_SET ))
 			Error( "Error seeking to vertex_offset in group.c" );
 
-			for (i=0;i<group_header.num_vertices;i++) {
+		for (i=0;i<group_header.num_vertices;i++) {
 
-				if (cfread( &tvert, sizeof(tvert),1,LoadFile )!=1)
-					Error( "Error reading tvert in group.c" );
-				vertex_ids[i] = med_create_duplicate_vertex( &tvert ); 
-				//mprintf((0, "vertex %d created from original %d\n", vertex_ids[i], i));
-			}
-
+			if (cfread( &tvert, sizeof(tvert),1,LoadFile )!=1)
+				Error( "Error reading tvert in group.c" );
+			vertex_ids[i] = med_create_duplicate_vertex( &tvert );
+			//mprintf((0, "vertex %d created from original %d\n", vertex_ids[i], i));
 		}
+
+	}
 
 	//==================== READ SEGMENT INFO ===========================
 

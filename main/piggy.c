@@ -372,13 +372,13 @@ void piggy_init_pigfile(char *filename)
 	if (stricmp(DEFAULT_PIGFILE, DEFAULT_PIGFILE_SHAREWARE) == 0 && !cfexist(filename))
 		filename = DEFAULT_PIGFILE_SHAREWARE;
 
-		Piggy_fp = cfopen( filename, "rb" );
+	Piggy_fp = cfopen( filename, "rb" );
 
 #if defined(MACINTOSH) && defined(SHAREWARE) // if we are in the shareware version, we must have the pig by now.
-			if (Piggy_fp == NULL)
-			{
-				Error("Cannot load required file <%s>",name);
-			}
+	if (Piggy_fp == NULL)
+	{
+		Error("Cannot load required file <%s>",name);
+	}
 #endif	// end of if def shareware
 
 	if (!Piggy_fp) {
@@ -983,9 +983,9 @@ int piggy_init(void)
 	if (piggy_low_memory)
 		digi_lomem = 1;
 
-		gr_set_curfont( SMALL_FONT );
-		gr_set_fontcolor(gr_find_closest_color_current( 20, 20, 20 ),-1 );
-		gr_printf( 0x8000, grd_curcanv->cv_h-20, "%s...", TXT_LOADING_DATA );
+	gr_set_curfont( SMALL_FONT );
+	gr_set_fontcolor(gr_find_closest_color_current( 20, 20, 20 ),-1 );
+	gr_printf( 0x8000, grd_curcanv->cv_h-20, "%s...", TXT_LOADING_DATA );
 
 #if 1 //def EDITOR //need for d1 mission briefings
 	piggy_init_pigfile(DEFAULT_PIGFILE);

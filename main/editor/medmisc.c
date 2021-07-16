@@ -271,12 +271,12 @@ int medlisp_update_screen()
 {
 	int vn;
 
-if (!render_3d_in_big_window)
-	for (vn=0;vn<N_views;vn++)
-		if (Views[vn]->ev_changed || (Update_flags & (UF_WORLD_CHANGED|UF_VIEWPOINT_MOVED|UF_ED_STATE_CHANGED))) {
-			draw_world(Views[vn]->ev_canv,Views[vn],Cursegp,Big_depth);
-			Views[vn]->ev_changed = 0;
-		}
+	if (!render_3d_in_big_window)
+		for (vn=0;vn<N_views;vn++)
+			if (Views[vn]->ev_changed || (Update_flags & (UF_WORLD_CHANGED|UF_VIEWPOINT_MOVED|UF_ED_STATE_CHANGED))) {
+				draw_world(Views[vn]->ev_canv,Views[vn],Cursegp,Big_depth);
+				Views[vn]->ev_changed = 0;
+			}
 
 	if (Update_flags & (UF_WORLD_CHANGED|UF_GAME_VIEW_CHANGED|UF_ED_STATE_CHANGED)) {
 		grs_canvas temp_canvas;

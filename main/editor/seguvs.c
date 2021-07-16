@@ -237,26 +237,26 @@ void set_average_light_on_all_fast(void)
 					if (segp->verts[relvnum] == v)
 						break;
 
-					if (relvnum != MAX_VERTICES_PER_SEGMENT) {
-						int		si;
+				if (relvnum != MAX_VERTICES_PER_SEGMENT) {
+					int		si;
 
-						*segptr++ = s;			// Note this segment in list, so we can process it below.
-						Assert(segptr - seglist < MAX_LIGHT_SEGS);
+					*segptr++ = s;	// Note this segment in list, so we can process it below.
+					Assert(segptr - seglist < MAX_LIGHT_SEGS);
 
-						for (si=0; si<MAX_SIDES_PER_SEGMENT; si++) {
-							if (!IS_CHILD(segp->children[si])) {
-								side	*sidep = &segp->sides[si];
-								sbyte	*vp = Side_to_verts[si];
-								int	vv;
+					for (si=0; si<MAX_SIDES_PER_SEGMENT; si++) {
+						if (!IS_CHILD(segp->children[si])) {
+							side	*sidep = &segp->sides[si];
+							sbyte	*vp = Side_to_verts[si];
+							int	vv;
 
-								for (vv=0; vv<4; vv++)
-									if (*vp++ == relvnum) {
-										al += sidep->uvls[vv].l;
-										alc++;
-									}
-							}	// if (segp->children[si == -1) {
-						}	// for (si=0...
-					}	// if (relvnum != ...
+							for (vv=0; vv<4; vv++)
+								if (*vp++ == relvnum) {
+									al += sidep->uvls[vv].l;
+									alc++;
+								}
+						}	// if (segp->children[si == -1) {
+					}	// for (si=0...
+				}	// if (relvnum != ...
 			}	// for (s=0; ...
 
 			*segptr = -1;

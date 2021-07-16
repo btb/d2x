@@ -1572,12 +1572,12 @@ void dead_player_frame(void)
 		if (time_dead > DEATH_SEQUENCE_EXPLODE_TIME) {
 			if (!Player_exploded) {
 
-			if (Players[Player_num].hostages_on_board > 1)
-				HUD_init_message(TXT_SHIP_DESTROYED_2, Players[Player_num].hostages_on_board);
-			else if (Players[Player_num].hostages_on_board == 1)
-				HUD_init_message(TXT_SHIP_DESTROYED_1);
-			else
-				HUD_init_message(TXT_SHIP_DESTROYED_0);
+				if (Players[Player_num].hostages_on_board > 1)
+					HUD_init_message(TXT_SHIP_DESTROYED_2, Players[Player_num].hostages_on_board);
+				else if (Players[Player_num].hostages_on_board == 1)
+					HUD_init_message(TXT_SHIP_DESTROYED_1);
+				else
+					HUD_init_message(TXT_SHIP_DESTROYED_0);
 
 				#ifdef TACTILE
 					if (TactileStick)

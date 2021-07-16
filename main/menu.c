@@ -829,8 +829,8 @@ void do_new_game_menu()
 {
 	int new_level_num;
 
-    if (!select_mission(0, "New Game\n\nSelect mission"))
-        return;
+	if (!select_mission(0, "New Game\n\nSelect mission"))
+		return;
     
 	new_level_num = 1;
 

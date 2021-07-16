@@ -2955,9 +2955,9 @@ int network_get_game_params( char * game_name, int *mode, int *game_flags, int *
 	Netgame.Allow_marker_view=1;
 	netgame_difficulty = Player_default_difficulty.intval;
 
-    ExtGameStatus=GAMESTAT_START_MULTIPLAYER_MISSION;
-    if (!select_mission(1, TXT_MULTI_MISSION))
-        return -1;
+	ExtGameStatus=GAMESTAT_START_MULTIPLAYER_MISSION;
+	if (!select_mission(1, TXT_MULTI_MISSION))
+		return -1;
 
 	if (!(FindArg ("-packets") && FindArg ("-shortpackets")))
 		if (!network_choose_connect ())
@@ -3698,8 +3698,8 @@ network_start_game()
 
 	if (i<0) return;
 
-    if (is_D2_OEM)
-        My_Seq.player.version_minor|=NETWORK_OEM;
+	if (is_D2_OEM)
+		My_Seq.player.version_minor|=NETWORK_OEM;
     
 	N_players = 0;
 
@@ -5314,10 +5314,10 @@ void network_read_pdata_packet(frame_info *pd )
 		if ((pd->numpackets-Players[TheirPlayernum].n_packets_got)>0)
 			TotalMissedPackets += pd->numpackets-Players[TheirPlayernum].n_packets_got;
 
-			if ( missed_packets > 0 )       
-				mprintf(( 0, "Missed %d packets from player #%d (%d total)\n", pd->numpackets-Players[TheirPlayernum].n_packets_got, TheirPlayernum, missed_packets ));
-			else
-				mprintf( (0, "Got %d late packets from player #%d (%d total)\n", Players[TheirPlayernum].n_packets_got-pd->numpackets, TheirPlayernum, missed_packets ));
+		if ( missed_packets > 0 )
+			mprintf(( 0, "Missed %d packets from player #%d (%d total)\n", pd->numpackets-Players[TheirPlayernum].n_packets_got, TheirPlayernum, missed_packets ));
+		else
+			mprintf( (0, "Got %d late packets from player #%d (%d total)\n", Players[TheirPlayernum].n_packets_got-pd->numpackets, TheirPlayernum, missed_packets ));
 
 		#ifdef MACINTOSH
 		#ifdef APPLETALK_DEBUG
