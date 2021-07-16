@@ -355,7 +355,7 @@ void format_time(char *str, int secs_int)
 	s = secs_int%3600;
 	m = s / 60;
 	s = s % 60;
-	sprintf(str, "%1d:%02d:%02d", h, m, s );
+	snprintf(str, 8, "%1d:%02d:%02d", h, m, s );
 }
 
 extern int Redbook_playing;

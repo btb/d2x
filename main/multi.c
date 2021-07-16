@@ -1265,7 +1265,7 @@ void multi_send_message_end()
 							multi_reset_object_texture (&Objects[Players[t].objnum]);
 
 					network_send_netgame_update ();
-					sprintf (Network_message,"%s has changed teams!",Players[i].callsign);
+					sprintf(Network_message, "%.7s has changed teams!", Players[i].callsign);
 					if (i==Player_num)
 					{
 						HUD_init_message ("You have changed teams!");

@@ -1305,7 +1305,7 @@ void show_bomb_count(int x,int y,int bg_color,int always_show)
 	else
 		gr_set_fontcolor(bg_color,bg_color);	//erase by drawing in background color
 
-	sprintf(txt,"B:%02d",count);
+	snprintf(txt, sizeof(txt)-1, "B:%02d", count);
 
 	while ((t=strchr(txt,'1')) != NULL)
 		*t = '\x84';	//convert to wide '1'
@@ -2784,7 +2784,7 @@ void show_HUD_names()
 			
 						color_num = (Game_mode & GM_TEAM)?get_team(p):p;
 
-						sprintf(s, "%s", Players[p].callsign);
+						sprintf(s, "%.7s", Players[p].callsign);
 						gr_get_string_size(s, &w, &h, &aw);
 						gr_set_fontcolor(gr_getcolor(player_rgb[color_num].r,player_rgb[color_num].g,player_rgb[color_num].b),-1 );
 						x1 = f2i(x)-w/2;

@@ -145,7 +145,7 @@ void credits_show(char *credits_filename)
 
 		tempp = strchr(filename, '.');
 		*tempp = '\0';
-		sprintf(nfile, "%s.txb", filename);
+		sprintf(nfile, "%.27s.txb", filename);
 		file = cfopen(nfile, "rb");
 		if (file == NULL)
 			Error("Missing CREDITS.TEX and CREDITS.TXB file\n");

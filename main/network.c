@@ -3904,9 +3904,9 @@ void network_join_poll( int nitems, newmenu_item * menus, int * key, int citem )
 		nplayers=Active_games[i].numconnected;
 
 		if (Active_games[i].levelnum < 0)
-			sprintf(levelname, "S%d", -Active_games[i].levelnum);
+			snprintf(levelname, sizeof(levelname)-1, "S%d", -Active_games[i].levelnum);
 		else
-			sprintf(levelname, "%d", Active_games[i].levelnum);
+			snprintf(levelname, sizeof(levelname)-1, "%d", Active_games[i].levelnum);
 
 		if (game_status == NETSTAT_STARTING)
 		{
@@ -5654,7 +5654,7 @@ void network_more_game_options ()
   newmenu_item m[21];
 
   sprintf (socket_string,"%d",Network_socket);
-  sprintf (packstring,"%d",Netgame.PacketsPerSec);
+  snprintf(packstring, sizeof(packstring)-1, "%d", Netgame.PacketsPerSec);
 
   opt_difficulty = opt;
   m[opt].type = NM_TYPE_SLIDER; m[opt].value=netgame_difficulty; m[opt].text=TXT_DIFFICULTY; m[opt].min_value=0; m[opt].max_value=(NDL-1); opt++;

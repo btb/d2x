@@ -693,7 +693,7 @@ void menubar_init( char * file )
 
 		if (buf1[0] != '-' )
 		{
-			sprintf( buf2, " %s ", buf1 );
+			sprintf( buf2, " %.197s ", buf1 );
 			Menu[menu].Item[item].Text = d_strdup(buf2);
 		} else 
 			Menu[menu].Item[item].Text = d_strdup(buf1);

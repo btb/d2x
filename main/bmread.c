@@ -234,7 +234,7 @@ void ab_load( char * filename, bitmap_index bmp[], int *nframes )
 	_splitpath( filename, NULL, NULL, fname, NULL );
 	
 	for (i=0; i<MAX_BITMAPS_PER_BRUSH; i++ )	{
-		sprintf( tempname, "%s#%d", fname, i );
+		sprintf( tempname, "%.8s#%d", fname, i );
 		bi = piggy_find_bitmap( tempname );
 		if ( !bi.index )	
 			break;
@@ -259,7 +259,7 @@ void ab_load( char * filename, bitmap_index bmp[], int *nframes )
 
 	for (i=0;i< *nframes; i++)	{
 		bitmap_index new_bmp;
-		sprintf( tempname, "%s#%d", fname, i );
+		sprintf( tempname, "%.8s#%d", fname, i );
 		if ( iff_has_transparency )
 			gr_remap_bitmap_good( bm[i], newpal, iff_transparent_color, SuperX );
 		else
