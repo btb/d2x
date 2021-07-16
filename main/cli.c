@@ -256,7 +256,7 @@ void cli_cursor_home(void)
 	CursorPos = 0;
 	strcpy(temp, RCommand);
 	strcpy(RCommand, LCommand);
-	strncat(RCommand, temp, strlen(temp));
+	strncat(RCommand, temp, sizeof(RCommand) - strlen(RCommand) - 1);
 	memset(LCommand, 0, sizeof(LCommand));
 }
 
@@ -264,7 +264,7 @@ void cli_cursor_home(void)
 void cli_cursor_end(void)
 {
 	CursorPos = strlen(Command);
-	strncat(LCommand, RCommand, strlen(RCommand));
+	strncat(LCommand, RCommand, sizeof(LCommand) - strlen(LCommand) - 1);
 	memset(RCommand, 0, sizeof(RCommand));
 }
 
