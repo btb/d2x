@@ -291,7 +291,9 @@ void game_cmd_say(int argc, char **argv)
 	}
 
 	for (i = 2; i < argc; i++) {
-		ret = snprintf(Network_message, MAX_MESSAGE_LEN, "%s %s", Network_message, argv[i]);
+		strncat(Network_message, " ", sizeof(Network_message)-strlen(Network_message)-1);
+		strncat(Network_message, argv[i], sizeof(Network_message)-strlen(Network_message)-1);
+		ret = strlen(Network_message);
 		if (ret >= MAX_MESSAGE_LEN) {
 			con_printf(CON_CRITICAL, "say: message too long (max %d characters)\n", MAX_MESSAGE_LEN);
 			return;

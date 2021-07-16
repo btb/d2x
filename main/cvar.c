@@ -61,8 +61,9 @@ void cvar_cmd_set(int argc, char **argv)
 	}
 
 	for (i = 3; i < argc; i++) {
-		ret = snprintf(buf, CVAR_MAX_LENGTH, "%s %s", buf, argv[i]);
-		if (ret >= CVAR_MAX_LENGTH) {
+		strncat(buf, " ", sizeof(buf) - strlen(buf) - 1);
+		strncat(buf, argv[i], sizeof(buf) - strlen(buf) - 1);
+		if (strlen(buf) >= CVAR_MAX_LENGTH) {
 			con_printf(CON_CRITICAL, "set: value too long (max %d characters)\n", CVAR_MAX_LENGTH);
 			return;
 		}
