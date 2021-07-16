@@ -198,9 +198,11 @@ else
     AM_CONDITIONAL(USE_LIBPNG, test x$have_libpng = xyes)
 
   # Check for PhysicsFS
+    PKG_CHECK_MODULES(PHYSFS, physfs, CFLAGS="$CFLAGS -D__EXPORT__=PHYSFS_DECL",
     AC_CHECK_HEADERS(physfs.h, , [AC_MSG_ERROR([physfs.h required])])
     AC_CHECK_LIB(physfs, PHYSFS_init, PHYSFS_LIBS="-lphysfs",
                  [AC_MSG_ERROR([physfs library required])])
+    )
     AC_SUBST(PHYSFS_LIBS)
 
   # Check for OpenGL
