@@ -53,7 +53,7 @@ case $host_os in
         ;;
     darwin*)
         MACOSX=yes
-        CFLAGS="-no-cpp-precomp $CFLAGS"
+        AX_CHECK_COMPILE_FLAG([-no-cpp-precomp], [CFLAGS="$CFLAGS -no-cpp-precomp"])
         ;;
     msdos*)
         MSDOS=yes
