@@ -192,13 +192,13 @@ int joy_init()
 
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_axes; j++)
 			{
-				sprintf(temp, "J%d A%d", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%d A%d", i + 1, j + 1);
 				joyaxis_text[Joystick.n_axes] = d_strdup(temp);
 				SDL_Joysticks[num_joysticks].axis_map[j] = Joystick.n_axes++;
 			}
 			for (j=0; j < SDL_Joysticks[num_joysticks].n_buttons; j++)
 			{
-				sprintf(temp, "J%dB%d", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%dB%d", i + 1, j + 1);
 				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				SDL_Joysticks[num_joysticks].button_map[j] = Joystick.n_buttons++;
 			}
@@ -207,19 +207,19 @@ int joy_init()
 				SDL_Joysticks[num_joysticks].hat_map[j] = Joystick.n_buttons;
 				//a hat counts as four buttons
 
-				sprintf(temp, "J%dH%dUP", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%dH%dUP", i + 1, j + 1);
 				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
-				sprintf(temp, "J%dH%dRIGHT", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%dH%dRIGHT", i + 1, j + 1);
 				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
-				sprintf(temp, "J%dH%dDOWN", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%dH%dDOWN", i + 1, j + 1);
 				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 
-				sprintf(temp, "J%dH%dLEFT", i + 1, j + 1);
+				snprintf(temp, sizeof(temp)-1, "J%dH%dLEFT", i + 1, j + 1);
 				key_text[KEY_JB1 + Joystick.n_buttons] = d_strdup(temp);
 				Joystick.n_buttons++;
 			}

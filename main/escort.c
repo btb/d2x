@@ -1820,7 +1820,7 @@ void do_escort_menu(void)
 		sprintf(tstr, "Enable");
 
 	sprintf(msg,	"Select Guide-Bot Command:\n\n"
-						"0.  Next Goal: %s" CC_LSPACING_S "3\n"
+						"0.  Next Goal: %.26s" CC_LSPACING_S "3\n"
 						"\x84.  Find Energy Powerup" CC_LSPACING_S "3\n"
 						"2.  Find Energy Center" CC_LSPACING_S "3\n"
 						"3.  Find Shield Powerup" CC_LSPACING_S "3\n"
@@ -1830,7 +1830,7 @@ void do_escort_menu(void)
 						"7.  Stay Away From Me" CC_LSPACING_S "3\n"
 						"8.  Find My Powerups" CC_LSPACING_S "3\n"
 						"9.  Find the exit\n\n"
-						"T.  %s Messages\n"
+						"T.  %.8s Messages\n"
 						// -- "9.	Find the exit" CC_LSPACING_S "3\n"
 				, goal_str, tstr);
 

@@ -736,8 +736,8 @@ int pick_up_primary(int weapon_index)
 	PALETTE_FLASH_ADD(7,14,21);
 	mprintf ((0,"Weapon index: %d\n",weapon_index));
 	
-   if (weapon_index!=LASER_INDEX)
-   	HUD_init_message("%s!",PRIMARY_WEAPON_NAMES(weapon_index));
+	if (weapon_index!=LASER_INDEX)
+		HUD_init_message("%s!",PRIMARY_WEAPON_NAMES(weapon_index));
 
 	return 1;
 }

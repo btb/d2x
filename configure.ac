@@ -53,7 +53,7 @@ case $host_os in
         ;;
     darwin*)
         MACOSX=yes
-        CFLAGS="-no-cpp-precomp $CFLAGS"
+        AX_CHECK_COMPILE_FLAG([-no-cpp-precomp], [CFLAGS="$CFLAGS -no-cpp-precomp"])
         ;;
     msdos*)
         MSDOS=yes
@@ -80,6 +80,8 @@ CFLAGS="-Wall -Werror -Wno-deprecated-declarations -Wno-int-to-pointer-cast -Wno
 AX_CHECK_COMPILE_FLAG([-Wno-ignored-attributes], [CFLAGS="$CFLAGS -Wno-ignored-attributes"])
 AX_CHECK_COMPILE_FLAG([-Wno-unused-but-set-variable], [CFLAGS="$CFLAGS -Wno-unused-but-set-variable"])
 AX_CHECK_COMPILE_FLAG([-Wno-address-of-packed-member], [CFLAGS="$CFLAGS -Wno-address-of-packed-member"])
+AX_CHECK_COMPILE_FLAG([-Wno-stringop-truncation], [CFLAGS="$CFLAGS -Wno-stringop-truncation"])
+AX_CHECK_COMPILE_FLAG([-Wno-format-truncation], [CFLAGS="$CFLAGS -Wno-format-truncation"])
 
 dnl Enable editor build?
 AC_ARG_ENABLE(editor,
@@ -198,9 +200,12 @@ else
     AM_CONDITIONAL(USE_LIBPNG, test x$have_libpng = xyes)
 
   # Check for PhysicsFS
+    PKG_CHECK_MODULES(PHYSFS, physfs, CFLAGS="$CFLAGS -D__EXPORT__=PHYSFS_DECL",
     AC_CHECK_HEADERS(physfs.h, , [AC_MSG_ERROR([physfs.h required])])
     AC_CHECK_LIB(physfs, PHYSFS_init, PHYSFS_LIBS="-lphysfs",
                  [AC_MSG_ERROR([physfs library required])])
+    )
+    AC_SUBST(PHYSFS_CFLAGS)
     AC_SUBST(PHYSFS_LIBS)
 
   # Check for OpenGL

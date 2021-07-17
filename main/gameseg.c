@@ -776,14 +776,14 @@ int trace_segs(vms_vector *p0, int oldsegnum, int recursion_count)
 				biggest_side = sidenum;
 			}
 
-			if (biggest_side == -1)
-				break;
+		if (biggest_side == -1)
+			break;
 
-			side_dists[biggest_side] = 0;
-			// trace into adjacent segment:
-			check = trace_segs(p0, seg->children[biggest_side], recursion_count + 1);
-			if (check >= 0)		//we've found a segment
-				return check;
+		side_dists[biggest_side] = 0;
+		// trace into adjacent segment:
+		check = trace_segs(p0, seg->children[biggest_side], recursion_count + 1);
+		if (check >= 0)		//we've found a segment
+			return check;
 	}
 	return -1;		//we haven't found a segment
 }

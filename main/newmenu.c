@@ -522,8 +522,8 @@ void draw_item( bkg *b, newmenu_item *item, int is_current, int tiny )
 		if (item->value > item->max_value) item->value = item->max_value;
 		sprintf( item->saved_text, "%s\t%s", item->text, SLIDER_LEFT );
 		for (j = 0; j < (item->max_value-item->min_value+1); j++ )
-			sprintf( item->saved_text, "%s%s", item->saved_text, SLIDER_MIDDLE );
-		sprintf( item->saved_text, "%s%s", item->saved_text, SLIDER_RIGHT );
+			strncat( item->saved_text, SLIDER_MIDDLE, sizeof(item->saved_text)-strlen(item->saved_text)-1 );
+		strncat( item->saved_text, SLIDER_RIGHT, sizeof(item->saved_text)-strlen(item->saved_text)-1 );
 
 		item->saved_text[item->value+1+strlen(item->text)+1] = SLIDER_MARKER[0];
 
@@ -816,8 +816,8 @@ int newmenu_do4( char *title, char *subtitle, int nitems, newmenu_item *item, vo
 			nothers++;
 			sprintf( item[i].saved_text, "%s", SLIDER_LEFT );
 			for (j = 0; j < (item[i].max_value-item[i].min_value+1); j++ )
-				sprintf( item[i].saved_text, "%s%s", item[i].saved_text, SLIDER_MIDDLE );
-			sprintf( item[i].saved_text, "%s%s", item[i].saved_text, SLIDER_RIGHT );
+				strncat( item[i].saved_text, SLIDER_MIDDLE, sizeof(item[i].saved_text)-strlen(item[i].saved_text)-1 );
+			strncat( item[i].saved_text, SLIDER_RIGHT, sizeof(item[i].saved_text)-strlen(item[i].saved_text)-1 );
 			gr_get_string_size( item[i].saved_text, &w1, &h1, &aw1 );
 			string_width += w1 + aw;
 		}
@@ -3092,10 +3092,9 @@ void nm_wrap_text(char *dbuf, char *sbuf, int line_length)
 		col = col + (int)strlen(wordptr) + 1;
 		if (col >=line_length) {
 			col = 0;
-			sprintf(dbuf, "%s\n%s ", dbuf, wordptr);
-		} else {
-			sprintf(dbuf, "%s%s ", dbuf, wordptr);
+			strncat(dbuf, "\n", sizeof(dbuf)-strlen(dbuf)-1);
 		}
+		strncat(dbuf, wordptr, sizeof(dbuf)-strlen(dbuf)-1);
 		wordptr = strtok(NULL, " ");
 	}
 

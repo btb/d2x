@@ -1342,52 +1342,52 @@ int apply_damage_to_robot(object *robot, fix damage, int killer_objnum)
 	if (Robot_info[robot->id].boss_flag)
 		if (PLAYING_BUILTIN_MISSION && Current_level_num == Last_level)
 			if (robot->shields < 0)
-			 {
+			{
 #ifdef NETWORK
 				if (Game_mode & GM_MULTI)
-				  {
-					 if (!multi_all_players_alive()) // everyones gotta be alive
+				{
+					if (!multi_all_players_alive()) // everyones gotta be alive
 					   robot->shields=1;
-					 else
-					  {
-					    multi_send_finish_game();
-					    do_final_boss_hacks();
-					  }		
-				  
-					}		
+					else
+					{
+						multi_send_finish_game();
+						do_final_boss_hacks();
+					}
+
+				}
 				else
 #endif
-				  {	// NOTE LINK TO ABOVE!!!
+				{ // NOTE LINK TO ABOVE!!!
 					if ((Players[Player_num].shields < 0) || Player_is_dead)
 						robot->shields = 1;		//	Sorry, we can't allow you to kill the final boss after you've died.  Rough luck.
 					else
 						do_final_boss_hacks();
-				  }
-			  }
+				}
+			}
 
 	if (robot->shields < 0) {
 #ifdef NETWORK
 		if (Game_mode & GM_MULTI) {
-		 if (Robot_info[robot->id].thief)	
-			isthief=1;
-		 else
-			isthief=0;
+			if (Robot_info[robot->id].thief)
+				isthief=1;
+			else
+				isthief=0;
 
-		 if (isthief)
-			for (i=0;i<MAX_STOLEN_ITEMS;i++)
-			 temp_stolen[(int)i]=Stolen_items[(int)i];
-		  		
+			if (isthief)
+				for (i=0;i<MAX_STOLEN_ITEMS;i++)
+					temp_stolen[(int)i]=Stolen_items[(int)i];
+
 			if (multi_explode_robot_sub(OBJECT_NUMBER(robot), killer_objnum,Robot_info[robot->id].thief))
 			{
-			 if (isthief)	
-   			for (i=0;i<MAX_STOLEN_ITEMS;i++)
-				  Stolen_items[(int)i]=temp_stolen[(int)i];
-					
+				if (isthief)
+					for (i=0;i<MAX_STOLEN_ITEMS;i++)
+						Stolen_items[(int)i]=temp_stolen[(int)i];
+
 				multi_send_robot_explode(OBJECT_NUMBER(robot), killer_objnum,Robot_info[robot->id].thief);
 
-	     	   if (isthief)	
-   				for (i=0;i<MAX_STOLEN_ITEMS;i++)
-					  Stolen_items[(int)i]=255;
+				if (isthief)
+					for (i=0;i<MAX_STOLEN_ITEMS;i++)
+						Stolen_items[(int)i]=255;
 
 				return 1;
 			}

@@ -319,8 +319,9 @@ void ui_pad_read( int n, char * filename )
 					  
 	MALLOC( KeyPad[n], UI_KEYPAD, 1 );
 			
+#define BUTTONTEXT_SIZE 100
 	for (i=0; i < 17; i++ ) {
-		MALLOC( KeyPad[n]->buttontext[i], char, 100 );
+		MALLOC( KeyPad[n]->buttontext[i], char, BUTTONTEXT_SIZE );
 	}
 
 	KeyPad[n]->numkeys = 0;
@@ -353,23 +354,27 @@ void ui_pad_read( int n, char * filename )
 			break;
 		case 4:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[0], "%s%s\n", KeyPad[n]->buttontext[0],text );
+			strncat( KeyPad[n]->buttontext[0], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[0])-1 );
+			strncat( KeyPad[n]->buttontext[0], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[0])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[1], "%s%s\n", KeyPad[n]->buttontext[1],text );
+			strncat( KeyPad[n]->buttontext[1], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[1])-1 );
+			strncat( KeyPad[n]->buttontext[1], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[1])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[2], "%s%s\n", KeyPad[n]->buttontext[2],text );
+			strncat( KeyPad[n]->buttontext[2], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[2])-1 );
+			strncat( KeyPad[n]->buttontext[2], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[2])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[3], "%s%s\n", KeyPad[n]->buttontext[3],text );
+			strncat( KeyPad[n]->buttontext[3], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[3])-1 );
+			strncat( KeyPad[n]->buttontext[3], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[3])-1 );
 			break;
 		case 5:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[0], "%s%s", KeyPad[n]->buttontext[0],text );
+			strncat( KeyPad[n]->buttontext[0], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[0])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[1], "%s%s", KeyPad[n]->buttontext[1],text );
+			strncat( KeyPad[n]->buttontext[1], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[1])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[2], "%s%s", KeyPad[n]->buttontext[2],text );
+			strncat( KeyPad[n]->buttontext[2], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[2])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[3], "%s%s", KeyPad[n]->buttontext[3],text );
+			strncat( KeyPad[n]->buttontext[3], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[3])-1 );
 			break;
 		//===================== ROW 1 ==============================
 		case 7:
@@ -384,29 +389,34 @@ void ui_pad_read( int n, char * filename )
 			break;
 		case 8:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[4], "%s%s\n", KeyPad[n]->buttontext[4],text );
+			strncat( KeyPad[n]->buttontext[4], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[4])-1 );
+			strncat( KeyPad[n]->buttontext[4], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[4])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[5], "%s%s\n", KeyPad[n]->buttontext[5],text );
+			strncat( KeyPad[n]->buttontext[5], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[5])-1 );
+			strncat( KeyPad[n]->buttontext[5], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[5])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[6], "%s%s\n", KeyPad[n]->buttontext[6],text );
+			strncat( KeyPad[n]->buttontext[6], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[6])-1 );
+			strncat( KeyPad[n]->buttontext[6], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[6])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[7], "%s%s\n", KeyPad[n]->buttontext[7],text );
+			strncat( KeyPad[n]->buttontext[7], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
+			strncat( KeyPad[n]->buttontext[7], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		case 9:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[4], "%s%s", KeyPad[n]->buttontext[4],text );
+			strncat( KeyPad[n]->buttontext[4], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[4])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[5], "%s%s", KeyPad[n]->buttontext[5],text );
+			strncat( KeyPad[n]->buttontext[5], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[5])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[6], "%s%s", KeyPad[n]->buttontext[6],text );
+			strncat( KeyPad[n]->buttontext[6], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[6])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[7], "%s%s\n", KeyPad[n]->buttontext[7],text );
+			strncat( KeyPad[n]->buttontext[7], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		case 10:
 			ptr = strrchr( buffer, (char) 179 );
 			*ptr = 0;
 			ptr = strrchr( buffer, (char) 180 );	ptr++;
-			sprintf( KeyPad[n]->buttontext[7], "%s%s\n", KeyPad[n]->buttontext[7],ptr );
+			strncat( KeyPad[n]->buttontext[7], ptr, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
+			strncat( KeyPad[n]->buttontext[7], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		//======================= ROW 2 ==============================
 		case 11:
@@ -417,27 +427,32 @@ void ui_pad_read( int n, char * filename )
 			LineParse( 3, text, buffer);	   
 			sprintf( KeyPad[n]->buttontext[10], "%s\n", text );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[7], "%s%s\n", KeyPad[n]->buttontext[7],text );
+			strncat( KeyPad[n]->buttontext[7], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
+			strncat( KeyPad[n]->buttontext[7], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		case 12:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[8], "%s%s\n", KeyPad[n]->buttontext[8],text );
+			strncat( KeyPad[n]->buttontext[8], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[8])-1 );
+			strncat( KeyPad[n]->buttontext[8], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[8])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[9], "%s%s\n", KeyPad[n]->buttontext[9],text );
+			strncat( KeyPad[n]->buttontext[9], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[9])-1 );
+			strncat( KeyPad[n]->buttontext[9], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[9])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[10], "%s%s\n", KeyPad[n]->buttontext[10],text );
+			strncat( KeyPad[n]->buttontext[10], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[10])-1 );
+			strncat( KeyPad[n]->buttontext[10], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[10])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[7], "%s%s\n", KeyPad[n]->buttontext[7],text );
+			strncat( KeyPad[n]->buttontext[7], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
+			strncat( KeyPad[n]->buttontext[7], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		case 13:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[8], "%s%s", KeyPad[n]->buttontext[8],text );
+			strncat( KeyPad[n]->buttontext[8], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[8])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[9], "%s%s", KeyPad[n]->buttontext[9],text );
+			strncat( KeyPad[n]->buttontext[9], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[9])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[10], "%s%s", KeyPad[n]->buttontext[10],text );
+			strncat( KeyPad[n]->buttontext[10], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[10])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[7], "%s%s", KeyPad[n]->buttontext[7],text );
+			strncat( KeyPad[n]->buttontext[7], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[7])-1 );
 			break;
 		// ====================== ROW 3 =========================
 		case 15:
@@ -452,29 +467,34 @@ void ui_pad_read( int n, char * filename )
 			break;
 		case 16:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[11], "%s%s\n", KeyPad[n]->buttontext[11],text );
+			strncat( KeyPad[n]->buttontext[11], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[11])-1 );
+			strncat( KeyPad[n]->buttontext[11], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[11])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[12], "%s%s\n", KeyPad[n]->buttontext[12],text );
+			strncat( KeyPad[n]->buttontext[12], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[12])-1 );
+			strncat( KeyPad[n]->buttontext[12], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[12])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[13], "%s%s\n", KeyPad[n]->buttontext[13],text );
+			strncat( KeyPad[n]->buttontext[13], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[13])-1 );
+			strncat( KeyPad[n]->buttontext[13], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[13])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[14], "%s%s\n", KeyPad[n]->buttontext[14],text );
+			strncat( KeyPad[n]->buttontext[14], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
+			strncat( KeyPad[n]->buttontext[14], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		case 17:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[11], "%s%s", KeyPad[n]->buttontext[11],text );
+			strncat( KeyPad[n]->buttontext[11], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[11])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[12], "%s%s", KeyPad[n]->buttontext[12],text );
+			strncat( KeyPad[n]->buttontext[12], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[12])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[13], "%s%s", KeyPad[n]->buttontext[13],text );
+			strncat( KeyPad[n]->buttontext[13], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[13])-1 );
 			LineParse( 4, text, buffer );
-			sprintf( KeyPad[n]->buttontext[14], "%s%s\n", KeyPad[n]->buttontext[14],text );
+			strncat( KeyPad[n]->buttontext[14], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		case 18:
 			ptr = strrchr( buffer, (char) 179 );
 			*ptr = 0;
 			ptr = strrchr( buffer, (char) 180 ); ptr++;
-			sprintf( KeyPad[n]->buttontext[14], "%s%s\n", KeyPad[n]->buttontext[14], ptr );
+			strncat( KeyPad[n]->buttontext[14], ptr, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
+			strncat( KeyPad[n]->buttontext[14], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		//======================= ROW 4 =========================
 		case 19:
@@ -483,23 +503,27 @@ void ui_pad_read( int n, char * filename )
 			LineParse( 2, text, buffer );	 
 			sprintf( KeyPad[n]->buttontext[16], "%s\n", text );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[14], "%s%s\n", KeyPad[n]->buttontext[14],text );
+			strncat( KeyPad[n]->buttontext[14], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
+			strncat( KeyPad[n]->buttontext[14], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		case 20:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[15], "%s%s\n", KeyPad[n]->buttontext[15],text );
+			strncat( KeyPad[n]->buttontext[15], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[15])-1 );
+			strncat( KeyPad[n]->buttontext[15], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[15])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[16], "%s%s\n", KeyPad[n]->buttontext[16],text );
+			strncat( KeyPad[n]->buttontext[16], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[16])-1 );
+			strncat( KeyPad[n]->buttontext[16], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[16])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[14], "%s%s\n", KeyPad[n]->buttontext[14],text );
+			strncat( KeyPad[n]->buttontext[14], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
+			strncat( KeyPad[n]->buttontext[14], "\n", BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		case 21:
 			LineParse( 1, text, buffer );
-			sprintf( KeyPad[n]->buttontext[15], "%s%s", KeyPad[n]->buttontext[15],text );
+			strncat( KeyPad[n]->buttontext[15], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[15])-1 );
 			LineParse( 2, text, buffer );	 
-			sprintf( KeyPad[n]->buttontext[16], "%s%s", KeyPad[n]->buttontext[16],text );
+			strncat( KeyPad[n]->buttontext[16], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[16])-1 );
 			LineParse( 3, text, buffer );
-			sprintf( KeyPad[n]->buttontext[14], "%s%s", KeyPad[n]->buttontext[14],text );
+			strncat( KeyPad[n]->buttontext[14], text, BUTTONTEXT_SIZE-strlen(KeyPad[n]->buttontext[14])-1 );
 			break;
 		}
 										

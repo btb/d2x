@@ -962,12 +962,13 @@ int load_game_data(CFILE *LoadFile)
 		}
 		else
 			matcen_info_read(&RobotCenters[i], LoadFile);
-			//	Set links in RobotCenters to Station array
-			for (j = 0; j <= Highest_segment_index; j++)
-			if (Segment2s[j].special == SEGMENT_IS_ROBOTMAKER)
-				if (Segment2s[j].matcen_num == i)
-					RobotCenters[i].fuelcen_num = Segment2s[j].value;
-			// mprintf((0, "   %i: flags = %08x\n", i, RobotCenters[i].robot_flags));
+
+		//	Set links in RobotCenters to Station array
+		for (j = 0; j <= Highest_segment_index; j++)
+		if (Segment2s[j].special == SEGMENT_IS_ROBOTMAKER)
+			if (Segment2s[j].matcen_num == i)
+				RobotCenters[i].fuelcen_num = Segment2s[j].value;
+		// mprintf((0, "   %i: flags = %08x\n", i, RobotCenters[i].robot_flags));
 	}
 
 	//================ READ DL_INDICES INFO ===============
@@ -1638,7 +1639,7 @@ int save_level_sub(char * filename, int compiled_version)
 		_splitpath( temp_filename, NULL, NULL, fname, NULL );
 
 		sprintf( ErrorMessage, \
-			"ERROR: Cannot write to '%s'.\nYou probably need to check out a locked\nversion of the file. You should save\nthis under a different filename, and then\ncheck out a locked copy by typing\n\'co -l %s.lvl'\nat the DOS prompt.\n" 
+			"ERROR: Cannot write to '%.19s'.\nYou probably need to check out a locked\nversion of the file. You should save\nthis under a different filename, and then\ncheck out a locked copy by typing\n\'co -l %.19s.lvl'\nat the DOS prompt.\n" 
 			, temp_filename, fname );
 		stop_time();
 		gr_palette_load(gr_palette);

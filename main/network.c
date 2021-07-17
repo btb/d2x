@@ -2955,9 +2955,9 @@ int network_get_game_params( char * game_name, int *mode, int *game_flags, int *
 	Netgame.Allow_marker_view=1;
 	netgame_difficulty = Player_default_difficulty.intval;
 
-    ExtGameStatus=GAMESTAT_START_MULTIPLAYER_MISSION;
-    if (!select_mission(1, TXT_MULTI_MISSION))
-        return -1;
+	ExtGameStatus=GAMESTAT_START_MULTIPLAYER_MISSION;
+	if (!select_mission(1, TXT_MULTI_MISSION))
+		return -1;
 
 	if (!(FindArg ("-packets") && FindArg ("-shortpackets")))
 		if (!network_choose_connect ())
@@ -3698,8 +3698,8 @@ network_start_game()
 
 	if (i<0) return;
 
-    if (is_D2_OEM)
-        My_Seq.player.version_minor|=NETWORK_OEM;
+	if (is_D2_OEM)
+		My_Seq.player.version_minor|=NETWORK_OEM;
     
 	N_players = 0;
 
@@ -3904,9 +3904,9 @@ void network_join_poll( int nitems, newmenu_item * menus, int * key, int citem )
 		nplayers=Active_games[i].numconnected;
 
 		if (Active_games[i].levelnum < 0)
-			sprintf(levelname, "S%d", -Active_games[i].levelnum);
+			snprintf(levelname, sizeof(levelname)-1, "S%d", -Active_games[i].levelnum);
 		else
-			sprintf(levelname, "%d", Active_games[i].levelnum);
+			snprintf(levelname, sizeof(levelname)-1, "%d", Active_games[i].levelnum);
 
 		if (game_status == NETSTAT_STARTING)
 		{
@@ -5314,10 +5314,10 @@ void network_read_pdata_packet(frame_info *pd )
 		if ((pd->numpackets-Players[TheirPlayernum].n_packets_got)>0)
 			TotalMissedPackets += pd->numpackets-Players[TheirPlayernum].n_packets_got;
 
-			if ( missed_packets > 0 )       
-				mprintf(( 0, "Missed %d packets from player #%d (%d total)\n", pd->numpackets-Players[TheirPlayernum].n_packets_got, TheirPlayernum, missed_packets ));
-			else
-				mprintf( (0, "Got %d late packets from player #%d (%d total)\n", Players[TheirPlayernum].n_packets_got-pd->numpackets, TheirPlayernum, missed_packets ));
+		if ( missed_packets > 0 )
+			mprintf(( 0, "Missed %d packets from player #%d (%d total)\n", pd->numpackets-Players[TheirPlayernum].n_packets_got, TheirPlayernum, missed_packets ));
+		else
+			mprintf( (0, "Got %d late packets from player #%d (%d total)\n", Players[TheirPlayernum].n_packets_got-pd->numpackets, TheirPlayernum, missed_packets ));
 
 		#ifdef MACINTOSH
 		#ifdef APPLETALK_DEBUG
@@ -5654,7 +5654,7 @@ void network_more_game_options ()
   newmenu_item m[21];
 
   sprintf (socket_string,"%d",Network_socket);
-  sprintf (packstring,"%d",Netgame.PacketsPerSec);
+  snprintf(packstring, sizeof(packstring)-1, "%d", Netgame.PacketsPerSec);
 
   opt_difficulty = opt;
   m[opt].type = NM_TYPE_SLIDER; m[opt].value=netgame_difficulty; m[opt].text=TXT_DIFFICULTY; m[opt].min_value=0; m[opt].max_value=(NDL-1); opt++;

@@ -355,7 +355,7 @@ void format_time(char *str, int secs_int)
 	s = secs_int%3600;
 	m = s / 60;
 	s = s % 60;
-	sprintf(str, "%1d:%02d:%02d", h, m, s );
+	snprintf(str, 8, "%1d:%02d:%02d", h, m, s );
 }
 
 extern int Redbook_playing;
@@ -1681,7 +1681,7 @@ void HandleTestKey(int key)
 			mprintf((0, "Variable at %08x set to %i\n", Toggle_var, *Toggle_var));
 			break;
 		case KEY_DEBUGGED + KEY_L:
-			if (++Lighting_on >= 2) Lighting_on = 0; break;
+			if (++Lighting_on >= 2) { Lighting_on = 0; } break;
 		case KEY_DEBUGGED + KEY_SHIFTED + KEY_L:
 			Beam_brightness=0x38000-Beam_brightness; break;
 		case KEY_PAD5: slew_stop(); break;

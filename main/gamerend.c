@@ -964,7 +964,7 @@ void show_extra_views()
 					cvar_setint(&Cockpit_3d_view[w], CV_NONE);
 					break;
 				}
-				sprintf(label, "Marker %d", Marker_viewer_num[w] + 1);
+				snprintf(label, sizeof(label)-1, "Marker %d", Marker_viewer_num[w] + 1);
 				do_cockpit_window_view(w, &Objects[MarkerObject[Marker_viewer_num[w]]], 0, WBU_MARKER, label);
 				break;
 			}

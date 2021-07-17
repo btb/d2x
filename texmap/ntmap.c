@@ -646,79 +646,79 @@ void ntmap_scanline_lighted_linear(grs_bitmap *srcb, int y, fix xleft, fix xrigh
 	if ((dx < 0) || (xright < 0) || (xleft > xright))		// the (xleft > xright) term is not redundant with (dx < 0) because dx is computed using integers
 		return;
 
-		// setup to call assembler scanline renderer
-		if (dx < FIX_RECIP_TABLE_SIZE)
-			recip_dx = fix_recip[dx];
-		else
-			recip_dx = F1_0/dx;
+	// setup to call assembler scanline renderer
+	if (dx < FIX_RECIP_TABLE_SIZE)
+		recip_dx = fix_recip[dx];
+	else
+		recip_dx = F1_0/dx;
 
-		du_dx = fixmul(uright - uleft,recip_dx);
-		dv_dx = fixmul(vright - vleft,recip_dx);
+	du_dx = fixmul(uright - uleft,recip_dx);
+	dv_dx = fixmul(vright - vleft,recip_dx);
 
-		fx_u = uleft;
-		fx_v = vleft;
-		fx_du_dx = du_dx;
-		fx_dv_dx = dv_dx;
-		fx_y = y;
-		fx_xright = f2i(xright);
-		fx_xleft = f2i(xleft);
-		pixptr = srcb->bm_data;
+	fx_u = uleft;
+	fx_v = vleft;
+	fx_du_dx = du_dx;
+	fx_dv_dx = dv_dx;
+	fx_y = y;
+	fx_xright = f2i(xright);
+	fx_xleft = f2i(xleft);
+	pixptr = srcb->bm_data;
 
-		switch (Lighting_enabled) {
-			case 0:
-				//added 07/11/99 adb - prevent writing before the buffer
-				if (fx_xleft < 0)
-					fx_xleft = 0;
-				//end addition -adb
-				
-				cur_tmap_scanline_lin_nolight();
-				break;
-			case 1:
-				if (lleft < F1_0/2)
-					lleft = F1_0/2;
-				if (lright < F1_0/2)
-					lright = F1_0/2;
+	switch (Lighting_enabled) {
+		case 0:
+			//added 07/11/99 adb - prevent writing before the buffer
+			if (fx_xleft < 0)
+				fx_xleft = 0;
+			//end addition -adb
 
-				if (lleft > MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS)
-					lleft = MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS;
-				if (lright > MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS)
-					lright = MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS;
+			cur_tmap_scanline_lin_nolight();
+			break;
+		case 1:
+			if (lleft < F1_0/2)
+				lleft = F1_0/2;
+			if (lright < F1_0/2)
+				lright = F1_0/2;
 
-				//added 07/11/99 adb - prevent writing before the buffer
-				if (fx_xleft < 0)
-					fx_xleft = 0;
-				//end addition -adb
+			if (lleft > MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS)
+				lleft = MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS;
+			if (lright > MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS)
+				lright = MAX_LIGHTING_VALUE*NUM_LIGHTING_LEVELS;
 
-{
-			fix mul_thing;
+			//added 07/11/99 adb - prevent writing before the buffer
+			if (fx_xleft < 0)
+				fx_xleft = 0;
+			//end addition -adb
 
-			fx_l = lleft;
-			fx_dl_dx = fixmul(lright - lleft,recip_dx);
-
-			//	This is a pretty ugly hack to prevent lighting overflows.
-			mul_thing = dx * fx_dl_dx;
-			if (lleft + mul_thing < 0)
-				fx_dl_dx += 12;
-			else if (lleft + mul_thing > (NUM_LIGHTING_LEVELS*F1_0-F1_0/2))
-				fx_dl_dx -= 12;
-}
+			{
+				fix mul_thing;
 
 				fx_l = lleft;
-				dl_dx = fixmul(lright - lleft,recip_dx);
-				fx_dl_dx = dl_dx;
-				cur_tmap_scanline_lin();
-				break;
-			case 2:
+				fx_dl_dx = fixmul(lright - lleft,recip_dx);
+
+				//	This is a pretty ugly hack to prevent lighting overflows.
+				mul_thing = dx * fx_dl_dx;
+				if (lleft + mul_thing < 0)
+					fx_dl_dx += 12;
+				else if (lleft + mul_thing > (NUM_LIGHTING_LEVELS*F1_0-F1_0/2))
+					fx_dl_dx -= 12;
+			}
+
+			fx_l = lleft;
+			dl_dx = fixmul(lright - lleft,recip_dx);
+			fx_dl_dx = dl_dx;
+			cur_tmap_scanline_lin();
+			break;
+		case 2:
 #ifdef EDITOR_TMAP
-				fx_xright = f2i(xright);
-				fx_xleft = f2i(xleft);
-				tmap_flat_color = 1;
-				cur_tmap_scanline_flat();
+			fx_xright = f2i(xright);
+			fx_xleft = f2i(xleft);
+			tmap_flat_color = 1;
+			cur_tmap_scanline_flat();
 #else
-				Int3();	//	Illegal, called an editor only routine!
+			Int3();	//	Illegal, called an editor only routine!
 #endif
-				break;
-		}
+			break;
+	}
 }
 
 // -------------------------------------------------------------------------------------

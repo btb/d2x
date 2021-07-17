@@ -3,7 +3,8 @@ EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga
 
 # Common to all d2x platforms/options
 
-d2x_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
+d2x_CPPFLAGS = $(PHYSFS_CFLAGS) \
+-I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
 
 d2x_SOURCES = \
 2d/2dsline.c  2d/box.c      2d/disc.c     2d/ibitblt.c  2d/pcx.c      2d/rect.c     2d/scalec.c   \
@@ -212,6 +213,55 @@ txb2tex_MANS = utilities/txb2tex.1
 tex2txb_SOURCES = utilities/tex2txb.c
 tex2txb_MANS = utilities/tex2txb.1
 
+_unused = \
+2d/poly.c 2d/scale.c \
+arch/carbon arch/cocoa arch/win64 \
+arch/dos/allg_snd arch/dos/bak arch/dos/comm arch/dos/mm_snd \
+arch/dos/bcd.c arch/dos/digiallg.c arch/dos/digimm.c arch/dos/disk.c arch/dos/midiallg.c \
+arch/dos/mono.c arch/dos/serial.c \
+arch/linux/alsadigi.c arch/linux/hmiplay.c  arch/linux/mono.c     arch/linux/serial.c   \
+arch/linux/timer.c \
+arch/ogl/glx.c arch/ogl/wgl.c \
+arch/win32/digi.c       arch/win32/joydefs.c    arch/win32/serial.c     arch/win32/glinit.c     \
+arch/win32/joyhh.c      arch/win32/mono.c       arch/win32/timer.c      arch/win32/init.c       \
+arch/win32/key.c        arch/win32/mouse.c      arch/win32/vid.c        arch/win32/midi.c       \
+arch/win32/palw32.c     arch/win32/win32.c      \
+main/joydefs.c \
+misc/byteswap.c misc/errtest.c misc/parsarg.c misc/parstest.c \
+ui/func.c ui/harderr.c ui/medfunc.c \
+iff/archive \
+main/old \
+unused \
+VisualC
+
+EXTRA_DIST = $(_unused) \
+arch/dos/include arch/include arch/linux/include arch/win32/include include \
+2d/bitmap.h 2d/clip.h   2d/scalea.h \
+3d/clipper.h  3d/globvars.h \
+arch/dos/ipx.h  arch/dos/mono.h \
+arch/ogl/internal.h \
+libmve/decoders.h  libmve/mve_audio.h libmve/mvelib.h \
+main/ai.h       main/collide.h  main/effects.h  main/game.h     main/gauges.h   main/lighting.h \
+main/netmisc.h  main/player.h   main/segment.h  main/texmerge.h main/aistruct.h main/config.h   \
+main/endlevel.h main/gamefont.h main/hostage.h  main/menu.h     main/network.h  main/polyobj.h  \
+main/segpoint.h main/text.h     main/automap.h  main/controls.h main/entity.h   main/gamemine.h \
+main/hudmsg.h   main/mission.h  main/newdemo.h  main/powerup.h  main/slew.h     main/textures.h \
+main/bm.h       main/credits.h  main/escort.h   main/gamepal.h  main/inferno.h  main/modem.h    \
+main/newmenu.h  main/render.h   main/songs.h    main/titles.h   main/bmread.h   main/cvar.h     \
+main/fireball.h main/gamesave.h main/joydefs.h  main/morph.h    main/object.h   main/reorder.h  \
+main/sounds.h   main/vclip.h    main/cli.h      main/desc_id.h  main/fuelcen.h  main/gameseg.h  \
+main/kconfig.h  main/movie.h    main/paging.h   main/robot.h    main/state.h    main/vers_id.h  \
+main/cmd.h      main/desw.h     main/fvi.h      main/gameseq.h  main/kmatrix.h  main/multi.h    \
+main/physics.h  main/scores.h   main/switch.h   main/wall.h     main/cntrlcen.h main/digi.h     \
+main/fvi_a.h    main/gamestat.h main/laser.h    main/multibot.h main/piggy.h    main/screens.h  \
+main/terrain.h  main/weapon.h \
+main/editor/centers.h  main/editor/eobject.h  main/editor/kdefs.h    main/editor/meddraw.h  \
+main/editor/medrobot.h main/editor/objpage.h  main/editor/editor.h   main/editor/eswitch.h  \
+main/editor/kfuncs.h   main/editor/medlisp.h  main/editor/medsel.h   main/editor/seguvs.h   \
+main/editor/ehostage.h main/editor/info.h     main/editor/macro.h    main/editor/medmisc.h  \
+main/editor/medwall.h  main/editor/texpage.h \
+misc/dos_disk.h misc/parsarg.h \
+texmap/scanline.h texmap/texmapl.h
 
 pkgdatadir = @sharepath@
 missiondir = ${pkgdatadir}/missions

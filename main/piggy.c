@@ -372,13 +372,13 @@ void piggy_init_pigfile(char *filename)
 	if (stricmp(DEFAULT_PIGFILE, DEFAULT_PIGFILE_SHAREWARE) == 0 && !cfexist(filename))
 		filename = DEFAULT_PIGFILE_SHAREWARE;
 
-		Piggy_fp = cfopen( filename, "rb" );
+	Piggy_fp = cfopen( filename, "rb" );
 
 #if defined(MACINTOSH) && defined(SHAREWARE) // if we are in the shareware version, we must have the pig by now.
-			if (Piggy_fp == NULL)
-			{
-				Error("Cannot load required file <%s>",name);
-			}
+	if (Piggy_fp == NULL)
+	{
+		Error("Cannot load required file <%s>",name);
+	}
 #endif	// end of if def shareware
 
 	if (!Piggy_fp) {
@@ -430,7 +430,7 @@ void piggy_init_pigfile(char *filename)
 		memcpy( temp_name_read, bmh.name, 8 );
 		temp_name_read[8] = 0;
 		if ( bmh.dflags & DBM_FLAG_ABM )        
-			sprintf( temp_name, "%s#%d", temp_name_read, bmh.dflags & DBM_NUM_FRAMES );
+			sprintf( temp_name, "%.8s#%d", temp_name_read, bmh.dflags & DBM_NUM_FRAMES );
 		else
 			strcpy( temp_name, temp_name_read );
 		width = bmh.width + ((short) (bmh.wh_extra & 0x0f) << 8);
@@ -558,7 +558,7 @@ void piggy_new_pigfile(char *pigname)
 			temp_name_read[8] = 0;
 	
 			if ( bmh.dflags & DBM_FLAG_ABM )        
-				sprintf( temp_name, "%s#%d", temp_name_read, bmh.dflags & DBM_NUM_FRAMES );
+				sprintf( temp_name, "%.8s#%d", temp_name_read, bmh.dflags & DBM_NUM_FRAMES );
 			else
 				strcpy( temp_name, temp_name_read );
 	
@@ -612,7 +612,7 @@ void piggy_new_pigfile(char *pigname)
 				strcpy(basename,AllBitmaps[i].name);
 				basename[p-AllBitmaps[i].name] = 0;  //cut off "#nn" part
 				
-				sprintf( abmname, "%s.abm", basename );
+				sprintf( abmname, "%.8s.abm", basename );
 
 				iff_error = iff_read_animbrush(abmname,bm,MAX_BITMAPS_PER_BRUSH,&nframes,newpal);
 
@@ -672,7 +672,7 @@ void piggy_new_pigfile(char *pigname)
 
 				MALLOC( new, grs_bitmap, 1 );
 
-				sprintf( bbmname, "%s.bbm", AllBitmaps[i].name );
+				sprintf( bbmname, "%.8s.bbm", AllBitmaps[i].name );
 				iff_error = iff_read_bitmap(bbmname,new,BM_LINEAR,newpal);
 
 				new->bm_handle=0;
@@ -983,9 +983,9 @@ int piggy_init(void)
 	if (piggy_low_memory)
 		digi_lomem = 1;
 
-		gr_set_curfont( SMALL_FONT );
-		gr_set_fontcolor(gr_find_closest_color_current( 20, 20, 20 ),-1 );
-		gr_printf( 0x8000, grd_curcanv->cv_h-20, "%s...", TXT_LOADING_DATA );
+	gr_set_curfont( SMALL_FONT );
+	gr_set_fontcolor(gr_find_closest_color_current( 20, 20, 20 ),-1 );
+	gr_printf( 0x8000, grd_curcanv->cv_h-20, "%s...", TXT_LOADING_DATA );
 
 #if 1 //def EDITOR //need for d1 mission briefings
 	piggy_init_pigfile(DEFAULT_PIGFILE);

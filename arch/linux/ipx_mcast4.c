@@ -279,7 +279,7 @@ static void ipx_mcast4_InitNetgameAuxData(ipx_socket_t *sk, u_char buf[NETGAME_A
 
 	// Generate a random session
 //	game_addr = inet_makeaddr(239*256 + 255, d_rand() % 0xFFFF);
-	sprintf(addr, "%i.%i.%i.%i", 239, 255, d_rand() % 0xFF, d_rand() % 0xFF);
+	snprintf(addr, sizeof(addr)-1, "%i.%i.%i.%i", 239, 255, d_rand() % 0xFF, d_rand() % 0xFF);
 	game_addr.s_addr = inet_addr(addr);
 	memcpy(buf + 1, &game_addr, sizeof(game_addr));
 

@@ -3088,7 +3088,7 @@ void newdemo_stop_recording()
 		num = atoi(&(filename[i]));
 		num++;
 		filename[i] = '\0';
-		sprintf (newfile, "%s%d", filename, num);
+		snprintf(newfile, sizeof(newfile)-1, "%.13s%d", filename, num);
 		strncpy(filename, newfile, 8);
 		filename[8] = '\0';
 	}
