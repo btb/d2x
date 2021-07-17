@@ -17,7 +17,7 @@ jobs:
         release: [enable-release, disable-release]
         macdata: [enable-macdata, disable-macdata]
         network: [enable-network, disable-network]
-        network: [enable-assembler, disable-assembler]
+        assembler: [enable-assembler, disable-assembler]
 
     steps:
     - uses: actions/checkout@v2
