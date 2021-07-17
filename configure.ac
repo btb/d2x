@@ -205,6 +205,7 @@ else
     AC_CHECK_LIB(physfs, PHYSFS_init, PHYSFS_LIBS="-lphysfs",
                  [AC_MSG_ERROR([physfs library required])])
     )
+    AC_SUBST(PHYSFS_CFLAGS)
     AC_SUBST(PHYSFS_LIBS)
 
   # Check for OpenGL

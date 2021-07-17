@@ -3,7 +3,8 @@ EXTRA_PROGRAMS = d2x d2x-sdl d2x-gl d2x-svga miner miner-sdl miner-gl miner-svga
 
 # Common to all d2x platforms/options
 
-d2x_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
+d2x_CPPFLAGS = $(PHYSFS_CFLAGS) \
+-I$(top_srcdir)/include -I$(top_srcdir)/main -I$(top_srcdir)/arch/include
 
 d2x_SOURCES = \
 2d/2dsline.c  2d/box.c      2d/disc.c     2d/ibitblt.c  2d/pcx.c      2d/rect.c     2d/scalec.c   \
