@@ -16,12 +16,11 @@ jobs:
         debug: [enable-debug, disable-debug]
         release: [enable-release, disable-release]
         network: [enable-network, disable-network]
-        assembler: [enable-assembler, disable-assembler]
 
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
-      run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev nasm
+      run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
     - name: autogen
       run: ./autogen.sh
     - name: configure
@@ -29,8 +28,7 @@ jobs:
         ./configure --with-opengl --enable-editor \
           --${{ matrix.debug }} \
           --${{ matrix.release }} \
-          --${{ matrix.network }} \
-          --${{ matrix.assembler }}
+          --${{ matrix.network }}
 
     - name: make
       run: make
