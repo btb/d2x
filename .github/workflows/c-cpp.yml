@@ -15,7 +15,6 @@ jobs:
       matrix:
         debug: [enable-debug, disable-debug]
         release: [enable-release, disable-release]
-        macdata: [enable-macdata, disable-macdata]
         network: [enable-network, disable-network]
         assembler: [enable-assembler, disable-assembler]
 
@@ -30,7 +29,6 @@ jobs:
         ./configure --with-opengl --enable-editor \
           --${{ matrix.debug }} \
           --${{ matrix.release }} \
-          --${{ matrix.macdata }} \
           --${{ matrix.network }} \
           --${{ matrix.assembler }}
 
