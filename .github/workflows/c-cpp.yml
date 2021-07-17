@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
-      run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
+      run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev nasm
     - name: autogen
       run: ./autogen.sh
     - name: configure
