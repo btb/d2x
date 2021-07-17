@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  linux:
+  build:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -20,10 +20,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: linux dependencies
-      if: ${{ env.RUNNER_OS == 'Linux' }}
+      if: ${{ runner.os == 'Linux' }}
       run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
     - name: macos dependencies
-      if: ${{ env.RUNNER_OS == 'macOS' }}
+      if: ${{ runner.os == 'macOS' }}
       run: brew install physfs sdl sdl_mixer sdl_image
     - name: autogen
       run: ./autogen.sh
