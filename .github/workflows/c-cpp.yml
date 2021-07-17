@@ -13,9 +13,11 @@ jobs:
 
     strategy:
       matrix:
-        editor: [enable-editor, disable-editor]
         debug: [enable-debug, disable-debug]
         release: [enable-release, disable-release]
+        macdata: [enable-macdata, disable-macdata]
+        network: [enable-network, disable-network]
+        network: [enable-assembler, disable-assembler]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,7 +26,13 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure --with-opengl --${{ matrix.editor }} --${{ matrix.debug }} --${{ matrix.release }}
+      run: |
+        ./configure --with-opengl --enable-editor \
+          --${{ matrix.debug }} \
+          --${{ matrix.release }} \
+          --${{ matrix.macdata }} \
+          --${{ matrix.network }} \
+          --${{ matrix.assembler }}
 
     - name: make
       run: make
