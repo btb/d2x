@@ -25,8 +25,6 @@ jobs:
     - name: macos dependencies
       if: ${{ runner.os == 'macOS' }}
       run: brew install physfs sdl sdl_mixer sdl_image
-    - name: autogen
-      run: ./autogen.sh
     - name: configure
       run: |
         ./configure --with-opengl --enable-editor \
@@ -38,5 +36,3 @@ jobs:
       run: make
     - name: make check
       run: make check
-    - name: make distcheck
-      run: make distcheck
