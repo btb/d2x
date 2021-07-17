@@ -24,10 +24,7 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure --with-opengl \
-        --${{ matrix.editor }} \
-        --${{ matrix.debug }} \
-        --${{ matrix.release }}
+      run: ./configure --with-opengl --${{ matrix.editor }} --${{ matrix.debug }} --${{ matrix.release }}
 
     - name: make
       run: make
