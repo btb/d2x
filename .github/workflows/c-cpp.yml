@@ -11,6 +11,19 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        editor: [enable, disable]
+        macdata: [enable, disable]
+        debug: [enable, disable]
+        release: [enable, disable]
+        linuxjoy: [enable, disable]
+        fastfileio: [enable, disable]
+        kalinix: [enable, disable]
+        assembler: [enable, disable]
+        opengl: [with, without]
+        svga: [with, without] 
+
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
@@ -18,7 +31,18 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure --enable-release --disable-debug  --enable-editor --with-opengl
+      run: ./configure \
+        --${{ matrix.editor }}-editor \
+        --${{ matrix.macdata }}-macdata \
+        --${{ matrix.debug }}-debug \
+        --${{ matrix.release }}-release \
+        --${{ matrix.release }}-linuxjoy \
+        --${{ matrix.release }}-fastfileio \
+        --${{ matrix.release }}-kalinix \
+        --${{ matrix.release }}-assembler \
+        --${{ matrix.release }}-opengl \
+        --${{ matrix.release }}-svga
+
     - name: make
       run: make
     - name: make check
