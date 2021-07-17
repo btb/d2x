@@ -1,15 +1,8 @@
 Makefile
-Makefile.in
-aclocal.m4
 autom4te.cache
-compile
 conf.h
-conf.h.in
-config.guess
 config.log
 config.status
-config.sub
-configure
 
 d2x-ggi
 d2x-gl
@@ -22,9 +15,6 @@ mvlcreate
 mvlextract
 tex2txb
 txb2tex
-depcomp
-install-sh
-missing
 mkinstalldirs
 stamp-h.in
 stamp-h1
