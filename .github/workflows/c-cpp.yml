@@ -11,6 +11,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        debug: [enable-debug, disable-debug]
+        release: [enable-release, disable-release]
+        network: [enable-network, disable-network]
+
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
@@ -18,7 +24,12 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure --enable-release --disable-debug  --enable-editor --with-opengl
+      run: |
+        ./configure --with-opengl --enable-editor \
+          --${{ matrix.debug }} \
+          --${{ matrix.release }} \
+          --${{ matrix.network }}
+
     - name: make
       run: make
     - name: make check
