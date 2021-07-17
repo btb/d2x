@@ -27,7 +27,7 @@ jobs:
       run: ./configure --with-opengl \
         --${{ matrix.editor }} \
         --${{ matrix.debug }} \
-        --${{ matrix.release }} \
+        --${{ matrix.release }}
 
     - name: make
       run: make
