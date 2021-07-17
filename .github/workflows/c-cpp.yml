@@ -14,15 +14,9 @@ jobs:
     strategy:
       matrix:
         editor: [enable, disable]
-        macdata: [enable, disable]
         debug: [enable, disable]
         release: [enable, disable]
-        linuxjoy: [enable, disable]
-        fastfileio: [enable, disable]
-        kalinix: [enable, disable]
-        assembler: [enable, disable]
         opengl: [with, without]
-        svga: [with, without] 
 
     steps:
     - uses: actions/checkout@v2
