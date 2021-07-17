@@ -13,10 +13,9 @@ jobs:
 
     strategy:
       matrix:
-        editor: [enable, disable]
-        debug: [enable, disable]
-        release: [enable, disable]
-        opengl: [with, without]
+        editor: [enable-editor, disable-editor]
+        debug: [enable-debug, disable-debug]
+        release: [enable-release, disable-release]
 
     steps:
     - uses: actions/checkout@v2
@@ -25,17 +24,10 @@ jobs:
     - name: autogen
       run: ./autogen.sh
     - name: configure
-      run: ./configure \
-        --${{ matrix.editor }}-editor \
-        --${{ matrix.macdata }}-macdata \
-        --${{ matrix.debug }}-debug \
-        --${{ matrix.release }}-release \
-        --${{ matrix.release }}-linuxjoy \
-        --${{ matrix.release }}-fastfileio \
-        --${{ matrix.release }}-kalinix \
-        --${{ matrix.release }}-assembler \
-        --${{ matrix.release }}-opengl \
-        --${{ matrix.release }}-svga
+      run: ./configure --with-opengl \
+        --${{ matrix.editor }} \
+        --${{ matrix.debug }} \
+        --${{ matrix.release }} \
 
     - name: make
       run: make
