@@ -1,6 +1,5 @@
 Makefile
 autom4te.cache
-compile
 conf.h
 config.log
 config.status
