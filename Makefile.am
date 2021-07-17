@@ -212,6 +212,7 @@ txb2tex_MANS = utilities/txb2tex.1
 tex2txb_SOURCES = utilities/tex2txb.c
 tex2txb_MANS = utilities/tex2txb.1
 
+EXTRA_DIST = include
 
 pkgdatadir = @sharepath@
 missiondir = ${pkgdatadir}/missions
