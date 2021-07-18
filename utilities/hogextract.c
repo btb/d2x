@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 	free(buf);
 	while(ftell(hogfile)<statbuf.st_size) {
 		if ( fread(filename, 13, 1, hogfile) != 1 ||
-			 fread(&len, 1, 4, hogfile) != 1 ) {
+			 fread(&len, 1, 4, hogfile) != 4 ) {
 			printf("Error reading %s\n", argv[1]);
 			fclose(hogfile);
 			exit(EXIT_FAILURE);
