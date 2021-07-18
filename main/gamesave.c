@@ -36,6 +36,7 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "cfile.h"
 #include "byteswap.h"
 #include "makesig.h"
+#include "ignorecase.h"
 
 
 char Gamesave_current_filename[PATH_MAX];
@@ -1203,6 +1204,8 @@ int load_level(const char * filename_passed)
 	#endif
 
 	strcpy(filename,filename_passed);
+
+	PHYSFSEXT_locateCorrectCase(filename);
 
 	#ifdef EDITOR
 		//if we have the editor, try the LVL first, no matter what was passed.
