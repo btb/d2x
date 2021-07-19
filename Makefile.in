@@ -88,12 +88,11 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-bin_PROGRAMS = @TARGETS@ hogcreate$(EXEEXT) hogextract$(EXEEXT) \
-	mveplayer$(EXEEXT) mvlcreate$(EXEEXT) mvlextract$(EXEEXT) \
-	txb2tex$(EXEEXT) tex2txb$(EXEEXT)
-EXTRA_PROGRAMS = d2x$(EXEEXT) d2x-sdl$(EXEEXT) d2x-gl$(EXEEXT) \
+bin_PROGRAMS = d2x$(EXEEXT) d2x-sdl$(EXEEXT) d2x-gl$(EXEEXT) \
 	d2x-svga$(EXEEXT) miner$(EXEEXT) miner-sdl$(EXEEXT) \
-	miner-gl$(EXEEXT) miner-svga$(EXEEXT)
+	miner-gl$(EXEEXT) miner-svga$(EXEEXT) hogcreate$(EXEEXT) \
+	hogextract$(EXEEXT) mveplayer$(EXEEXT) mvlcreate$(EXEEXT) \
+	mvlextract$(EXEEXT) txb2tex$(EXEEXT) tex2txb$(EXEEXT)
 @USE_ASM_TRUE@am__append_1 = texmap/tmappent.S texmap/tmapppro.S
 @USE_ASM_TRUE@am__append_2 = 2d/linear.o 2d/tmerge_a.o maths/vecmata.o maths/fix.o \
 @USE_ASM_TRUE@texmap/tmap_flt.o texmap/tmap_lin.o texmap/tmap_ll.o  texmap/tmap_per.o texmap/tmapfade.o
@@ -628,7 +627,8 @@ am__d2x_svga_SOURCES_DIST = 2d/2dsline.c 2d/box.c 2d/disc.c \
 	arch/dos/ipx.c arch/dos/joyc.c arch/dos/joydefs.c \
 	arch/dos/key.c arch/dos/mouse.c arch/dos/rbaudio.c \
 	arch/dos/vesa.c arch/svgalib/event.c arch/svgalib/vid.c \
-	arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
+	arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c \
+	texmap/tmapflat.c
 @USE_ASM_TRUE@am__objects_36 = texmap/d2x_svga-tmappent.$(OBJEXT) \
 @USE_ASM_TRUE@	texmap/d2x_svga-tmapppro.$(OBJEXT)
 @USE_ASM_FALSE@am__objects_37 = 2d/d2x_svga-tmerge.$(OBJEXT) \
@@ -733,9 +733,11 @@ am_d2x_svga_OBJECTS = $(am__objects_41) \
 	arch/svgalib/d2x_svga-vid.$(OBJEXT) \
 	arch/svgalib/d2x_svga-key.$(OBJEXT) \
 	arch/svgalib/d2x_svga-mouse.$(OBJEXT) \
-	arch/svgalib/d2x_svga-init.$(OBJEXT)
+	arch/svgalib/d2x_svga-init.$(OBJEXT) \
+	texmap/d2x_svga-tmapflat.$(OBJEXT)
 d2x_svga_OBJECTS = $(am_d2x_svga_OBJECTS)
-d2x_svga_DEPENDENCIES = $(am__DEPENDENCIES_2)
+d2x_svga_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 d2x_svga_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(d2x_svga_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am_hogcreate_OBJECTS = utilities/hogcreate.$(OBJEXT)
@@ -1480,26 +1482,27 @@ am__miner_svga_SOURCES_DIST = 2d/2dsline.c 2d/box.c 2d/disc.c \
 	arch/dos/key.c arch/dos/mouse.c arch/dos/rbaudio.c \
 	arch/dos/vesa.c arch/svgalib/event.c arch/svgalib/vid.c \
 	arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c \
-	main/bmread.c main/dumpmine.c main/editor/autosave.c \
-	main/editor/centers.c main/editor/curves.c \
-	main/editor/eglobal.c main/editor/ehostage.c \
-	main/editor/elight.c main/editor/eobject.c \
-	main/editor/eswitch.c main/editor/fixseg.c main/editor/func.c \
-	main/editor/group.c main/editor/info.c main/editor/kbuild.c \
-	main/editor/kcurve.c main/editor/kfuncs.c main/editor/kgame.c \
-	main/editor/kgroup.c main/editor/khelp.c main/editor/kmine.c \
-	main/editor/ksegmove.c main/editor/ksegsel.c \
-	main/editor/ksegsize.c main/editor/ktmap.c main/editor/kview.c \
-	main/editor/macro.c main/editor/med.c main/editor/meddraw.c \
-	main/editor/medmisc.c main/editor/medrobot.c \
-	main/editor/medsel.c main/editor/medwall.c main/editor/mine.c \
-	main/editor/objpage.c main/editor/segment.c \
-	main/editor/seguvs.c main/editor/texpage.c \
-	main/editor/texture.c ui/barbox.c ui/button.c ui/checkbox.c \
-	ui/file.c ui/gadget.c ui/icon.c ui/inputbox.c ui/keypad.c \
-	ui/keypress.c ui/keytrap.c ui/listbox.c ui/menu.c ui/menubar.c \
-	ui/message.c ui/mouse.c ui/number.c ui/popup.c ui/radio.c \
-	ui/scroll.c ui/ui.c ui/uidraw.c ui/userbox.c ui/window.c
+	texmap/tmapflat.c main/bmread.c main/dumpmine.c \
+	main/editor/autosave.c main/editor/centers.c \
+	main/editor/curves.c main/editor/eglobal.c \
+	main/editor/ehostage.c main/editor/elight.c \
+	main/editor/eobject.c main/editor/eswitch.c \
+	main/editor/fixseg.c main/editor/func.c main/editor/group.c \
+	main/editor/info.c main/editor/kbuild.c main/editor/kcurve.c \
+	main/editor/kfuncs.c main/editor/kgame.c main/editor/kgroup.c \
+	main/editor/khelp.c main/editor/kmine.c main/editor/ksegmove.c \
+	main/editor/ksegsel.c main/editor/ksegsize.c \
+	main/editor/ktmap.c main/editor/kview.c main/editor/macro.c \
+	main/editor/med.c main/editor/meddraw.c main/editor/medmisc.c \
+	main/editor/medrobot.c main/editor/medsel.c \
+	main/editor/medwall.c main/editor/mine.c main/editor/objpage.c \
+	main/editor/segment.c main/editor/seguvs.c \
+	main/editor/texpage.c main/editor/texture.c ui/barbox.c \
+	ui/button.c ui/checkbox.c ui/file.c ui/gadget.c ui/icon.c \
+	ui/inputbox.c ui/keypad.c ui/keypress.c ui/keytrap.c \
+	ui/listbox.c ui/menu.c ui/menubar.c ui/message.c ui/mouse.c \
+	ui/number.c ui/popup.c ui/radio.c ui/scroll.c ui/ui.c \
+	ui/uidraw.c ui/userbox.c ui/window.c
 @USE_ASM_TRUE@am__objects_83 = texmap/miner_svga-tmappent.$(OBJEXT) \
 @USE_ASM_TRUE@	texmap/miner_svga-tmapppro.$(OBJEXT)
 @USE_ASM_FALSE@am__objects_84 = 2d/miner_svga-tmerge.$(OBJEXT) \
@@ -1629,7 +1632,8 @@ am__objects_89 = $(am__objects_88) \
 	arch/svgalib/miner_svga-vid.$(OBJEXT) \
 	arch/svgalib/miner_svga-key.$(OBJEXT) \
 	arch/svgalib/miner_svga-mouse.$(OBJEXT) \
-	arch/svgalib/miner_svga-init.$(OBJEXT)
+	arch/svgalib/miner_svga-init.$(OBJEXT) \
+	texmap/miner_svga-tmapflat.$(OBJEXT)
 am__objects_90 = main/miner_svga-bmread.$(OBJEXT) \
 	main/miner_svga-dumpmine.$(OBJEXT) \
 	main/editor/miner_svga-autosave.$(OBJEXT) \
@@ -1685,7 +1689,8 @@ am__objects_90 = main/miner_svga-bmread.$(OBJEXT) \
 	ui/miner_svga-userbox.$(OBJEXT) ui/miner_svga-window.$(OBJEXT)
 am_miner_svga_OBJECTS = $(am__objects_89) $(am__objects_90)
 miner_svga_OBJECTS = $(am_miner_svga_OBJECTS)
-am__DEPENDENCIES_5 = $(am__DEPENDENCIES_2)
+am__DEPENDENCIES_5 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 miner_svga_DEPENDENCIES = $(am__DEPENDENCIES_5)
 miner_svga_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(miner_svga_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -2884,6 +2889,7 @@ am__depfiles_remade = 2d/$(DEPDIR)/d2x-2dsline.Po \
 	texmap/$(DEPDIR)/d2x_sdl-tmapppro.Po \
 	texmap/$(DEPDIR)/d2x_svga-ntmap.Po \
 	texmap/$(DEPDIR)/d2x_svga-scanline.Po \
+	texmap/$(DEPDIR)/d2x_svga-tmapflat.Po \
 	texmap/$(DEPDIR)/d2x_svga-tmappent.Po \
 	texmap/$(DEPDIR)/d2x_svga-tmapppro.Po \
 	texmap/$(DEPDIR)/miner-ntmap.Po \
@@ -2901,6 +2907,7 @@ am__depfiles_remade = 2d/$(DEPDIR)/d2x-2dsline.Po \
 	texmap/$(DEPDIR)/miner_sdl-tmapppro.Po \
 	texmap/$(DEPDIR)/miner_svga-ntmap.Po \
 	texmap/$(DEPDIR)/miner_svga-scanline.Po \
+	texmap/$(DEPDIR)/miner_svga-tmapflat.Po \
 	texmap/$(DEPDIR)/miner_svga-tmappent.Po \
 	texmap/$(DEPDIR)/miner_svga-tmapppro.Po \
 	ui/$(DEPDIR)/miner-barbox.Po ui/$(DEPDIR)/miner-button.Po \
@@ -3131,7 +3138,6 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 SVGA_LIBS = @SVGA_LIBS@
-TARGETS = @TARGETS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -3253,15 +3259,15 @@ miner_LDFLAGS = $(d2x_LDFLAGS)
 miner_LDADD = $(d2x_LDADD)
 
 # Remaining targets are based on d2x_*
-d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) -DSVGALIB_INPUT
-d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c
+d2x_svga_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include -DSDL_AUDIO -DSVGALIB_INPUT
+d2x_svga_SOURCES = $(d2x_SOURCES) arch/svgalib/event.c arch/svgalib/vid.c arch/svgalib/key.c arch/svgalib/mouse.c arch/svgalib/init.c texmap/tmapflat.c
 d2x_svga_LDFLAGS = $(d2x_LDFLAGS)
-d2x_svga_LDADD = $(d2x_LDADD) -lvga -lvgagl
+d2x_svga_LDADD = $(d2x_LDADD) $(SDL_LIBS) $(SDLMIXER_LIBS) -lvga -lvgagl
 miner_svga_CPPFLAGS = $(d2x_svga_CPPFLAGS) $(_miner_CPPFLAGS)
 miner_svga_SOURCES = $(d2x_svga_SOURCES) $(_miner_SOURCES)
 miner_svga_LDFLAGS = $(d2x_svga_LDFLAGS)
 miner_svga_LDADD = $(d2x_svga_LDADD)
-_d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include -DSDL_INPUT
+_d2x_sdl_CPPFLAGS = $(d2x_CPPFLAGS) $(SDL_CFLAGS) $(SDLMIXER_CFLAGS) -I$(top_srcdir)/arch/linux/include -DSDL_AUDIO -DSDL_INPUT
 _d2x_sdl_SOURCES = $(d2x_SOURCES) arch/sdl/event.c arch/sdl/key.c \
 	arch/sdl/mouse.c $(am__append_9) $(am__append_10) \
 	$(am__append_11) $(am__append_12) $(am__append_14) \
@@ -4769,6 +4775,8 @@ arch/svgalib/d2x_svga-mouse.$(OBJEXT): arch/svgalib/$(am__dirstamp) \
 	arch/svgalib/$(DEPDIR)/$(am__dirstamp)
 arch/svgalib/d2x_svga-init.$(OBJEXT): arch/svgalib/$(am__dirstamp) \
 	arch/svgalib/$(DEPDIR)/$(am__dirstamp)
+texmap/d2x_svga-tmapflat.$(OBJEXT): texmap/$(am__dirstamp) \
+	texmap/$(DEPDIR)/$(am__dirstamp)
 
 d2x-svga$(EXEEXT): $(d2x_svga_OBJECTS) $(d2x_svga_DEPENDENCIES) $(EXTRA_d2x_svga_DEPENDENCIES) 
 	@rm -f d2x-svga$(EXEEXT)
@@ -6405,6 +6413,8 @@ arch/svgalib/miner_svga-mouse.$(OBJEXT): arch/svgalib/$(am__dirstamp) \
 	arch/svgalib/$(DEPDIR)/$(am__dirstamp)
 arch/svgalib/miner_svga-init.$(OBJEXT): arch/svgalib/$(am__dirstamp) \
 	arch/svgalib/$(DEPDIR)/$(am__dirstamp)
+texmap/miner_svga-tmapflat.$(OBJEXT): texmap/$(am__dirstamp) \
+	texmap/$(DEPDIR)/$(am__dirstamp)
 main/miner_svga-bmread.$(OBJEXT): main/$(am__dirstamp) \
 	main/$(DEPDIR)/$(am__dirstamp)
 main/miner_svga-dumpmine.$(OBJEXT): main/$(am__dirstamp) \
@@ -7966,6 +7976,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_sdl-tmapppro.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_svga-ntmap.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_svga-scanline.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_svga-tmapflat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_svga-tmappent.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/d2x_svga-tmapppro.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner-ntmap.Po@am__quote@ # am--include-marker
@@ -7983,6 +7994,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_sdl-tmapppro.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_svga-ntmap.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_svga-scanline.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_svga-tmapflat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_svga-tmappent.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@texmap/$(DEPDIR)/miner_svga-tmapppro.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@ui/$(DEPDIR)/miner-barbox.Po@am__quote@ # am--include-marker
@@ -16773,6 +16785,20 @@ arch/svgalib/d2x_svga-init.obj: arch/svgalib/init.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='arch/svgalib/init.c' object='arch/svgalib/d2x_svga-init.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(d2x_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o arch/svgalib/d2x_svga-init.obj `if test -f 'arch/svgalib/init.c'; then $(CYGPATH_W) 'arch/svgalib/init.c'; else $(CYGPATH_W) '$(srcdir)/arch/svgalib/init.c'; fi`
+
+texmap/d2x_svga-tmapflat.o: texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(d2x_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT texmap/d2x_svga-tmapflat.o -MD -MP -MF texmap/$(DEPDIR)/d2x_svga-tmapflat.Tpo -c -o texmap/d2x_svga-tmapflat.o `test -f 'texmap/tmapflat.c' || echo '$(srcdir)/'`texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) texmap/$(DEPDIR)/d2x_svga-tmapflat.Tpo texmap/$(DEPDIR)/d2x_svga-tmapflat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='texmap/tmapflat.c' object='texmap/d2x_svga-tmapflat.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(d2x_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o texmap/d2x_svga-tmapflat.o `test -f 'texmap/tmapflat.c' || echo '$(srcdir)/'`texmap/tmapflat.c
+
+texmap/d2x_svga-tmapflat.obj: texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(d2x_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT texmap/d2x_svga-tmapflat.obj -MD -MP -MF texmap/$(DEPDIR)/d2x_svga-tmapflat.Tpo -c -o texmap/d2x_svga-tmapflat.obj `if test -f 'texmap/tmapflat.c'; then $(CYGPATH_W) 'texmap/tmapflat.c'; else $(CYGPATH_W) '$(srcdir)/texmap/tmapflat.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) texmap/$(DEPDIR)/d2x_svga-tmapflat.Tpo texmap/$(DEPDIR)/d2x_svga-tmapflat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='texmap/tmapflat.c' object='texmap/d2x_svga-tmapflat.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(d2x_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o texmap/d2x_svga-tmapflat.obj `if test -f 'texmap/tmapflat.c'; then $(CYGPATH_W) 'texmap/tmapflat.c'; else $(CYGPATH_W) '$(srcdir)/texmap/tmapflat.c'; fi`
 
 2d/miner-2dsline.o: 2d/2dsline.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT 2d/miner-2dsline.o -MD -MP -MF 2d/$(DEPDIR)/miner-2dsline.Tpo -c -o 2d/miner-2dsline.o `test -f '2d/2dsline.c' || echo '$(srcdir)/'`2d/2dsline.c
@@ -27806,6 +27832,20 @@ arch/svgalib/miner_svga-init.obj: arch/svgalib/init.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o arch/svgalib/miner_svga-init.obj `if test -f 'arch/svgalib/init.c'; then $(CYGPATH_W) 'arch/svgalib/init.c'; else $(CYGPATH_W) '$(srcdir)/arch/svgalib/init.c'; fi`
 
+texmap/miner_svga-tmapflat.o: texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT texmap/miner_svga-tmapflat.o -MD -MP -MF texmap/$(DEPDIR)/miner_svga-tmapflat.Tpo -c -o texmap/miner_svga-tmapflat.o `test -f 'texmap/tmapflat.c' || echo '$(srcdir)/'`texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) texmap/$(DEPDIR)/miner_svga-tmapflat.Tpo texmap/$(DEPDIR)/miner_svga-tmapflat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='texmap/tmapflat.c' object='texmap/miner_svga-tmapflat.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o texmap/miner_svga-tmapflat.o `test -f 'texmap/tmapflat.c' || echo '$(srcdir)/'`texmap/tmapflat.c
+
+texmap/miner_svga-tmapflat.obj: texmap/tmapflat.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT texmap/miner_svga-tmapflat.obj -MD -MP -MF texmap/$(DEPDIR)/miner_svga-tmapflat.Tpo -c -o texmap/miner_svga-tmapflat.obj `if test -f 'texmap/tmapflat.c'; then $(CYGPATH_W) 'texmap/tmapflat.c'; else $(CYGPATH_W) '$(srcdir)/texmap/tmapflat.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) texmap/$(DEPDIR)/miner_svga-tmapflat.Tpo texmap/$(DEPDIR)/miner_svga-tmapflat.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='texmap/tmapflat.c' object='texmap/miner_svga-tmapflat.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o texmap/miner_svga-tmapflat.obj `if test -f 'texmap/tmapflat.c'; then $(CYGPATH_W) 'texmap/tmapflat.c'; else $(CYGPATH_W) '$(srcdir)/texmap/tmapflat.c'; fi`
+
 main/miner_svga-bmread.o: main/bmread.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(miner_svga_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT main/miner_svga-bmread.o -MD -MP -MF main/$(DEPDIR)/miner_svga-bmread.Tpo -c -o main/miner_svga-bmread.o `test -f 'main/bmread.c' || echo '$(srcdir)/'`main/bmread.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) main/$(DEPDIR)/miner_svga-bmread.Tpo main/$(DEPDIR)/miner_svga-bmread.Po
@@ -30432,6 +30472,7 @@ distclean: distclean-am
 	-rm -f texmap/$(DEPDIR)/d2x_sdl-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-ntmap.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-scanline.Po
+	-rm -f texmap/$(DEPDIR)/d2x_svga-tmapflat.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-tmappent.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/miner-ntmap.Po
@@ -30449,6 +30490,7 @@ distclean: distclean-am
 	-rm -f texmap/$(DEPDIR)/miner_sdl-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-ntmap.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-scanline.Po
+	-rm -f texmap/$(DEPDIR)/miner_svga-tmapflat.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-tmappent.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-tmapppro.Po
 	-rm -f ui/$(DEPDIR)/miner-barbox.Po
@@ -31959,6 +32001,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f texmap/$(DEPDIR)/d2x_sdl-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-ntmap.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-scanline.Po
+	-rm -f texmap/$(DEPDIR)/d2x_svga-tmapflat.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-tmappent.Po
 	-rm -f texmap/$(DEPDIR)/d2x_svga-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/miner-ntmap.Po
@@ -31976,6 +32019,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f texmap/$(DEPDIR)/miner_sdl-tmapppro.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-ntmap.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-scanline.Po
+	-rm -f texmap/$(DEPDIR)/miner_svga-tmapflat.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-tmappent.Po
 	-rm -f texmap/$(DEPDIR)/miner_svga-tmapppro.Po
 	-rm -f ui/$(DEPDIR)/miner-barbox.Po
