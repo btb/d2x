@@ -88,11 +88,12 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-bin_PROGRAMS = d2x$(EXEEXT) d2x-sdl$(EXEEXT) d2x-gl$(EXEEXT) \
+bin_PROGRAMS = @TARGETS@ hogcreate$(EXEEXT) hogextract$(EXEEXT) \
+	mveplayer$(EXEEXT) mvlcreate$(EXEEXT) mvlextract$(EXEEXT) \
+	txb2tex$(EXEEXT) tex2txb$(EXEEXT)
+EXTRA_PROGRAMS = d2x$(EXEEXT) d2x-sdl$(EXEEXT) d2x-gl$(EXEEXT) \
 	d2x-svga$(EXEEXT) miner$(EXEEXT) miner-sdl$(EXEEXT) \
-	miner-gl$(EXEEXT) miner-svga$(EXEEXT) hogcreate$(EXEEXT) \
-	hogextract$(EXEEXT) mveplayer$(EXEEXT) mvlcreate$(EXEEXT) \
-	mvlextract$(EXEEXT) txb2tex$(EXEEXT) tex2txb$(EXEEXT)
+	miner-gl$(EXEEXT) miner-svga$(EXEEXT)
 @USE_ASM_TRUE@am__append_1 = texmap/tmappent.S texmap/tmapppro.S
 @USE_ASM_TRUE@am__append_2 = 2d/linear.o 2d/tmerge_a.o maths/vecmata.o maths/fix.o \
 @USE_ASM_TRUE@texmap/tmap_flt.o texmap/tmap_lin.o texmap/tmap_ll.o  texmap/tmap_per.o texmap/tmapfade.o
@@ -3138,6 +3139,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 SVGA_LIBS = @SVGA_LIBS@
+TARGETS = @TARGETS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@

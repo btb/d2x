@@ -153,8 +153,15 @@ eval sharepath=$sharepath
 eval sharepath=$sharepath
 AC_DEFINE_UNQUOTED(SHAREPATH, "$sharepath",[Define this to be the shared game directory root])
 
+TARGETS=
+
 # Test for MSDOS
-if test x$MSDOS != xyes; then
+if test x$MSDOS = xyes; then
+    TARGETS="d2x$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner$ac_cv_exeext $TARGETS"
+	fi
+else
 
     CFLAGS="-pipe $CFLAGS"
 
@@ -163,6 +170,11 @@ if test x$MSDOS != xyes; then
         :,
         AC_MSG_ERROR(SDL not found. Make sure sdl-config is in your PATH, or specify with --with-sdl-prefix)
     )
+
+    TARGETS="d2x-sdl$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner-sdl$ac_cv_exeext $TARGETS"
+	fi
 
     AC_CHECK_HEADERS(netipx/ipx.h)
 
@@ -199,10 +211,22 @@ if test x$MSDOS != xyes; then
   # Check for OpenGL
     AC_ARG_WITH(opengl,
         [  --with-opengl           Build OpenGL support ],,)
+    if test x$with_opengl = xyes; then
+        TARGETS="d2x-gl$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-gl$ac_cv_exeext $TARGETS"
+		fi
+    fi
 
   # Check for SVGALib
     AC_ARG_WITH(svga,
         [  --with-svga             Build SVGALib support ],,)
+    if test x$with_svga = xyes; then
+        TARGETS="d2x-svga$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-svga$ac_cv_exeext $TARGETS"
+		fi
+    fi
     AC_SUBST(SVGA_LIBS)
 fi
 
@@ -306,6 +330,8 @@ AH_BOTTOM([
 
 AM_PROG_AS
 
+AC_SUBST(TARGETS)
+
 AC_SUBST(NASMFLAGS)
 
 AC_SUBST(CFLAGS)
@@ -319,6 +345,7 @@ AC_OUTPUT
 AC_MSG_RESULT([
         d2x has been configured successfully.
 
+        Targets: $TARGETS
         Features: $D2X_FEATURES
 
         Shared game data directory (unix only): $sharepath

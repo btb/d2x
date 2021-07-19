@@ -653,6 +653,7 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
 NASMFLAGS
+TARGETS
 am__fastdepCCAS_FALSE
 am__fastdepCCAS_TRUE
 CCASDEPMODE
@@ -7131,8 +7132,15 @@ eval sharepath=$sharepath
 printf "%s\n" "#define SHAREPATH \"$sharepath\"" >>confdefs.h
 
 
+TARGETS=
+
 # Test for MSDOS
-if test x$MSDOS != xyes; then
+if test x$MSDOS = xyes; then
+    TARGETS="d2x$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner$ac_cv_exeext $TARGETS"
+	fi
+else
 
     CFLAGS="-pipe $CFLAGS"
 
@@ -7403,6 +7411,11 @@ rm -f core conftest.err conftest.$ac_objext conftest.beam \
 
   rm -f conf.sdltest
 
+
+    TARGETS="d2x-sdl$ac_cv_exeext $TARGETS"
+	if test x$enable_editor = xyes; then
+		TARGETS="miner-sdl$ac_cv_exeext $TARGETS"
+	fi
 
     ac_fn_c_check_header_compile "$LINENO" "netipx/ipx.h" "ac_cv_header_netipx_ipx_h" "$ac_includes_default"
 if test "x$ac_cv_header_netipx_ipx_h" = xyes
@@ -7891,6 +7904,12 @@ then :
   withval=$with_opengl;
 fi
 
+    if test x$with_opengl = xyes; then
+        TARGETS="d2x-gl$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-gl$ac_cv_exeext $TARGETS"
+		fi
+    fi
 
   # Check for SVGALib
 
@@ -7900,6 +7919,12 @@ then :
   withval=$with_svga;
 fi
 
+    if test x$with_svga = xyes; then
+        TARGETS="d2x-svga$ac_cv_exeext $TARGETS"
+		if test x$enable_editor = xyes; then
+			TARGETS="miner-svga$ac_cv_exeext $TARGETS"
+		fi
+    fi
 
 fi
 
@@ -8250,6 +8275,8 @@ else
   am__fastdepCCAS_TRUE='#'
   am__fastdepCCAS_FALSE=
 fi
+
+
 
 
 
@@ -9770,6 +9797,7 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result:
         d2x has been configured successfully.
 
+        Targets: $TARGETS
         Features: $D2X_FEATURES
 
         Shared game data directory (unix only): $sharepath
@@ -9777,6 +9805,7 @@ fi
 printf "%s\n" "
         d2x has been configured successfully.
 
+        Targets: $TARGETS
         Features: $D2X_FEATURES
 
         Shared game data directory (unix only): $sharepath
