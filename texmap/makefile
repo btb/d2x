@@ -49,79 +49,79 @@ texmap.lib: $(TEXMAP_OBJS)
 	wlib texmap.lib $(TEXMAP_OBJS)
 	copy *.lib $(LIBDIR)
 lightabs.obj: lightabs.asm
-	masm lightabs.asm
+ 	masm /Ml lightabs.asm
 
 ntmap.obj: ntmap.c
 	wcc386 $(CCFLAGS) ntmap.c
 scanline.obj: scanline.c
 	wcc386 $(CCFLAGS) scanline.c
 tmap_16.obj: tmap_16.asm
-	masm tmap_16.asm
+ 	masm /Ml tmap_16.asm
 tmap_16g.obj: tmap_16g.asm
-	masm tmap_16g.asm
+ 	masm /Ml tmap_16g.asm
 tmap_16l.obj: tmap_16l.asm
-	masm tmap_16l.asm
+ 	masm /Ml tmap_16l.asm
 
 tmap_16p.obj: tmap_16p.asm
-	masm tmap_16p.asm
+ 	masm /Ml tmap_16p.asm
 	
 tmap_16r.obj: tmap_16r.asm
-	masm tmap_16r.asm
+ 	masm /Ml tmap_16r.asm
 
 tmap_aa.obj: tmap_aa.asm
-	masm tmap_aa.asm
+ 	masm /Ml tmap_aa.asm
 
 tmap_fl1.obj: tmap_fl1.asm
-	masm tmap_fl1.asm
+ 	masm /Ml tmap_fl1.asm
 
 tmap_flt.obj: tmap_flt.asm
-	masm tmap_flt.asm
+ 	masm /Ml tmap_flt.asm
 
 tmap_kl.obj: tmap_kl.asm
-	masm tmap_kl.asm
+ 	masm /Ml tmap_kl.asm
 tmap_ld.obj: tmap_ld.asm
-	masm tmap_ld.asm
+ 	masm /Ml tmap_ld.asm
 
 tmap_lin.obj: tmap_lin.asm
-	masm tmap_lin.asm
+ 	masm /Ml tmap_lin.asm
 
 tmap_ll.obj: tmap_ll.asm
-	masm tmap_ll.asm
+ 	masm /Ml tmap_ll.asm
 
 tmap_mul.obj: tmap_mul.asm
-	masm tmap_mul.asm
+ 	masm /Ml tmap_mul.asm
 
 tmap_p2.obj: tmap_p2.asm
-	masm tmap_p2.asm
+ 	masm /Ml tmap_p2.asm
 
 tmap_per.obj: tmap_per.asm
-	masm tmap_per.asm
+ 	masm /Ml tmap_per.asm
 
 tmap_rgb.obj: tmap_rgb.asm
-	masm tmap_rgb.asm
+ 	masm /Ml tmap_rgb.asm
 
 tmap_skv.obj: tmap_skv.asm
-	masm tmap_skv.asm
+ 	masm /Ml tmap_skv.asm
 
 tmap_sky.obj: tmap_sky.asm
-	masm tmap_sky.asm
+ 	masm /Ml tmap_sky.asm
 tmap_z.obj: tmap_z.asm
-	masm tmap_z.asm
+ 	masm /Ml tmap_z.asm
 
 tmapdith.obj: tmapdith.asm
-	masm tmapdith.asm
+ 	masm /Ml tmapdith.asm
 
 tmapfade.obj: tmapfade.asm
-	masm tmapfade.asm
+ 	masm /Ml tmapfade.asm
 
 tmapflat.obj: tmapflat.c
 	wcc386 $(CCFLAGS) tmapflat.c
 
 tmapsky.obj: tmapsky.asm
-	masm tmapsky.asm
+ 	masm /Ml tmapsky.asm
 
 tmapv.obj: tmapv.asm
-	masm tmapv.asm
+ 	masm /Ml tmapv.asm
 tmapz.obj: tmapz.asm
-	masm tmapz.asm
+ 	masm /Ml tmapz.asm
 

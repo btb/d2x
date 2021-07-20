@@ -35,6 +35,6 @@ div0.lib: $(DIV0_OBJS)
 	wlib div0.lib $(DIV0_OBJS)
 	copy *.lib $(LIBDIR)
 div0.obj: div0.asm
-	masm div0.asm
+ 	masm /Ml div0.asm
 
 testd.obj: 

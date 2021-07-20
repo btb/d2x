@@ -34,6 +34,6 @@ vecmat.lib: $(VECMAT_OBJS)
 	wlib vecmat.lib $(VECMAT_OBJS)
 	copy *.lib $(LIBDIR)
 vecmat.obj: vecmat.inc vecmat.asm
-	masm vecmat.asm;
+ 	masm /Ml vecmat.asm;
 
 vectest.obj: fix.h stdio.h types.h vecmat.h

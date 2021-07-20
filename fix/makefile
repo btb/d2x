@@ -37,7 +37,7 @@ fix.lib: $(FIX_OBJS)
 asingen.obj: math.h stdio.h
 
 fix.obj: fix.inc fix.asm
-	masm fix.asm
+ 	masm /Ml fix.asm
 
 fixtest.obj: conio.h fix.h graph.h stdio.h stdlib.h types.h
 
