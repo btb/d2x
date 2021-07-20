@@ -192,7 +192,7 @@ dith_1:	mov	_fx_dl_dx2,eax
 ; get the integer by reading %bh
 	sar	ebx,8
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	jne	do_transparency_ll
 
 ;; esi, ecx should be free

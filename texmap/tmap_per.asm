@@ -569,7 +569,7 @@ TopOfLoop4:
 	mov	ebx, _fx_l
 	mov	ebp, _fx_dl_dx
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans1
 
     REPT (1 SHL (NBITS-2))
@@ -893,7 +893,7 @@ skip5:	dec	ecx
 ; --BUGGY NEW--	mov	ebx, _fx_l
 ; --BUGGY NEW--	mov	ebp, _fx_dl_dx
 ; --BUGGY NEW--
-; --BUGGY NEW--;**	test	_transparency_on,-1
+; --BUGGY NEW--;**	test	_Transparency_on,-1
 ; --BUGGY NEW--;**	je	NDEP_no_trans1
 ; --BUGGY NEW--
 ; --BUGGY NEW--        REPT 2
@@ -1213,7 +1213,7 @@ TopOfLoop4_nolight:
 	add	esi, edx	; inc u,v
 	ror	ecx, 16 ;-- can get rid of this, just write in different order below -- 	; move to next dest pixel
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans2
 	cmp	ecx,-1
 	je	skip7

@@ -52,7 +52,7 @@
 	extrn	_x:dword
 	extrn	_loop_count:dword
 	extern	_pixel_data_selector:word, _gr_fade_table_selector:word
-	extern	_transparency_on:dword
+	extern	_Transparency_on:dword
 	extern	_fx_l:dword
 	extern 	_fx_dl_dx:dword
 	extern	_dither_intensity_lighting:dword
@@ -503,7 +503,7 @@ TopOfLoop4:
 	mov	ebx, _fx_l
 	mov	ebp, _fx_dl_dx
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans1
 
     REPT (1 SHL (NBITS-2))
@@ -837,7 +837,7 @@ TopOfLoop4_nolight:
 
         ENDM
 		
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans2
 	cmp	ecx,-1
 	je	skip7

@@ -109,7 +109,7 @@ num_iters = num_iters + 1
 	extern _tmap_flat_shade_value:byte
 	extern _dither_intensity_lighting:dword
 	extern _Lighting_on:dword
-	extern _pixel_data_selector:word, _gr_fade_table_selector:word, _transparency_on:dword
+	extern _pixel_data_selector:word, _gr_fade_table_selector:word, _Transparency_on:dword
 	extern _fx_u:dword
 	extern _fx_v:dword
 	extern _fx_z:dword

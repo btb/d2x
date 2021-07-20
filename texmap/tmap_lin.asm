@@ -162,7 +162,7 @@ _ok_to_do:
 ; esi	read address
 ; edi	write address
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	jne	transparent_texture
 
 _size = (_end1 - _start1)/num_iters
