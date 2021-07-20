@@ -414,7 +414,7 @@ int print_object_info = 0;
 //--unused-- int Player_controller_type = 0;
 
 //	List of objects rendered last frame in order.  Created at render time, used by homing missiles in laser.c
-short ordered_rendered_object_list[MAX_RENDERED_OBJECTS];
+short Ordered_rendered_object_list[MAX_RENDERED_OBJECTS];
 int	Num_rendered_objects = 0;
 
 #ifndef NDEBUG

@@ -429,7 +429,7 @@ TopOfLoop4:
 	mov	ebx, _fx_l
 	mov	ebp, _fx_dl_dx
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans1
 
     REPT (1 SHL (NBITS-2))
@@ -757,7 +757,7 @@ TopOfLoop4_nolight:
 
         ENDM
 		
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans2
 	cmp	ecx,-1
 	je	skip7

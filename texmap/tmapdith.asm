@@ -96,7 +96,7 @@
 	extern 	_fx_dl_dx:dword
 	extern	_dither_intensity_lighting:dword
 	extern	_Lighting_on:dword
-	extern	_pixel_data_selector:word, _gr_fade_table_selector:word, _transparency_on:dword
+	extern	_pixel_data_selector:word, _gr_fade_table_selector:word, _Transparency_on:dword
 
 _DATA	SEGMENT DWORD PUBLIC USE32 'DATA'
 	align	4
@@ -572,7 +572,7 @@ TopOfLoop4:
 	mov	ebx, _fx_l
 	mov	ebp, _fx_dl_dx
 
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans1
 
     REPT (1 SHL (NBITS-2))
@@ -900,7 +900,7 @@ TopOfLoop4_nolight:
 
         ENDM
 		
-	test	_transparency_on,-1
+	test	_Transparency_on,-1
 	je	no_trans2
 	cmp	ecx,-1
 	je	skip7

@@ -312,10 +312,10 @@ calc_rod_corners:
 
 ;unscale for aspect
 	mov	eax,delta_vec.x
-	fixdiv	matrix_scale.x
+	fixdiv	Matrix_scale.x
 	mov	delta_vec.x,eax
 	mov	eax,delta_vec.y
-	fixdiv	matrix_scale.y
+	fixdiv	Matrix_scale.y
 	mov	delta_vec.y,eax
 
 
@@ -342,10 +342,10 @@ calc_rod_corners:
 ;scale for aspect
 
 	mov	eax,rod_norm.x
-	fixmul	matrix_scale.x
+	fixmul	Matrix_scale.x
 	mov	rod_norm.x,eax
 	mov	eax,rod_norm.y
-	fixmul	matrix_scale.y
+	fixmul	Matrix_scale.y
 	mov	rod_norm.y,eax
 
 
