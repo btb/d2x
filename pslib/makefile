@@ -49,9 +49,7 @@ CFTEST2_LIBS = cflib.lib misc.lib mem.lib io.lib
 bitio.obj: bitio.c
 	wcc386 $(CCFLAGS) bitio.c
 
-cf.obj:	 cflib.h conio.h ctype.h dos.h errno.h error.h fcntl.h i86.h io.h \
-	 library.h mem.h stat.h stdarg.h stdio.h stdlib.h string.h time.h \
-	 types.h
+cf.obj:	 cflib.h conio.h ctype.h dos.h errno.h error.h fcntl.h i86.h io.h library.h mem.h stat.h stdarg.h stdio.h stdlib.h string.h time.h lypes.h
 
 cftest.obj: cflib.h error.h mem.h readfile.h stdio.h stdlib.h types.h
 
@@ -63,9 +61,7 @@ library.obj: library.c
 lzw.obj: lzw.c
 	wcc386 $(CCFLAGS) lzw.c	
 
-pslib.obj: cflib.h conio.h ctype.h dos.h fcntl.h i86.h library.h mem.h \
-	 parsarg.h stdarg.h stdio.h stdlib.h string.h time.h types.h
+pslib.obj: cflib.h conio.h ctype.h dos.h fcntl.h i86.h library.h mem.h parsarg.h stdarg.h stdio.h stdlib.h string.h time.h types.h
 
-readfile.obj: errno.h error.h fcntl.h io.h mem.h readfile.h stat.h stdio.h \
-	 stdlib.h string.h types.h
+readfile.obj: errno.h error.h fcntl.h io.h mem.h readfile.h stat.h stdio.h stdlib.h string.h types.h
 

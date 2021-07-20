@@ -26,11 +26,7 @@ LIBS = ui
 TEST_PROGS = testg
 
 # What object files for the lib
-UI_OBJS = ui.obj mouse.obj window.obj uidraw.obj button.obj \
-		  gadget.obj listbox.obj message.obj popup.obj scroll.obj \
-		  radio.obj checkbox.obj inputbox.obj userbox.obj menu.obj \
-		  harderr.obj file.obj keytrap.obj icon.obj keypress.obj \
-		  menubar.obj keypad.obj 
+UI_OBJS = ui.obj mouse.obj window.obj uidraw.obj button.obj gadget.obj listbox.obj message.obj popup.obj scroll.obj radio.obj checkbox.obj inputbox.obj userbox.obj menu.obj harderr.obj file.obj keytrap.obj icon.obj keypress.obj menubar.obj keypad.obj 
 #func.obj #Couldn't find func.c - where are the functions??
 
 # What object files and libs for the test programs
