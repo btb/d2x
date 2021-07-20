@@ -47,7 +47,7 @@ ipx.obj: ipx.c
 joyc.obj: joyc.c
 	wcc386 $(CCFLAGS) joyc.c
 joy.obj: joy.asm
-	masm joy.asm
+ 	masm /Ml joy.asm
 key.obj: key.c
 	wcc386 $(CCFLAGS) key.c
 mono.obj: mono.c
@@ -67,5 +67,5 @@ testms.obj: testms.c
 testt.obj: testt.c
 	wcc386 $(CCFLAGS) testt.c
 timer.obj: timer.asm
-	masm timer.asm
+ 	masm /Ml timer.asm
 
