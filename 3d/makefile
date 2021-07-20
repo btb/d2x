@@ -20,8 +20,7 @@ INSTALL_TARGS = 3d.lib 3d.h 3d.inc
 LIBS = 3d
 
 # What objs in the lib
-3D_OBJS = globvars.obj setup.obj matrix.obj points.obj draw.obj clipper.obj \
-	horizon.obj instance.obj rod.obj interp.obj
+3D_OBJS = globvars.obj setup.obj matrix.obj points.obj draw.obj clipper.obj horizon.obj instance.obj rod.obj interp.obj
 
 # What test programs to make
 TEST_PROGS = 3dtest

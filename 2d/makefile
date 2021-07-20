@@ -27,10 +27,7 @@ LIBS = gr
 PROGS = testg
 
 # What object files for the lib
-GR_OBJS = linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
-	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
+GR_OBJS = linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj gpixel.obj palette.obj line.obj lbitblt.obj scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
 #effects.obj roller.obj 
 
 # What object files and libs for the test programs
@@ -43,15 +40,9 @@ TESTG_LIBS = io.lib gr.lib misc.lib mem.lib iff.lib  cfile.lib
 #VESATEST_OBJS = vesatest.obj
 #VESATEST_LIBS = io.lib gr.lib misc.lib mem.lib cflib.lib 
 
-gr.lib: linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-	bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-	gpixel.obj palette.obj line.obj lbitblt.obj        \
-	scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
+gr.lib: linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj gpixel.obj palette.obj line.obj lbitblt.obj scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
 
-	wlib gr.lib linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj \
-		bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj  \
-		gpixel.obj palette.obj line.obj lbitblt.obj        \
-		scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
+	wlib gr.lib linear.obj vesa.obj modex.obj canvas.obj bitmap.obj gr.obj font.obj bitblt.obj scanline.obj pixel.obj poly.obj disc.obj rect.obj box.obj gpixel.obj palette.obj line.obj lbitblt.obj scale.obj scalea.obj circle.obj ibitblt.obj rle.obj pcx.obj
 	copy *.lib $(LIBDIR)
 
 bitblt.obj: bitblt.c

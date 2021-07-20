@@ -11,20 +11,14 @@ LIBDIR = ..\main
 #
 
 CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
-EDITOR_OBJS = med.obj einit.obj eglobal.obj mine.obj curves.obj kcurve.obj \
-	khelp.obj ksegsel.obj kbuild.obj kview.obj kmine.obj seguvs.obj ksegsize.obj \
-	ksegmove.obj ktmap.obj kfuncs.obj autosave.obj group.obj texture.obj \
-	fixseg.obj eobject.obj elight.obj texpage.obj objpage.obj medmisc.obj \
-	medsel.obj kgame.obj info.obj medwall.obj eswitch.obj medrobot.obj meddraw.obj \
-	segment.obj ehostage.obj centers.obj func.obj
+EDITOR_OBJS = med.obj einit.obj eglobal.obj mine.obj curves.obj kcurve.obj khelp.obj ksegsel.obj kbuild.obj kview.obj kmine.obj seguvs.obj ksegsize.obj ksegmove.obj ktmap.obj kfuncs.obj autosave.obj group.obj texture.obj kixseg.obj eobject.obj elight.obj texpage.obj objpage.obj medmisc.obj kedsel.obj kgame.obj info.obj medwall.obj eswitch.obj medrobot.obj meddraw.obj kegment.obj ehostage.obj centers.obj func.obj
 
 EDITOR: $(EDITOR_OBJS)
 	wlib editor.lib $(EDITOR_OBJS)
 	copy *.lib ..
 	
 # Editor data files to check out with source
-#EDITOR_DATA = segmove.pad segsize.pad texture.pad object.pad curve.pad \
-#	      group.pad objmov.pad lighting.pad test.pad med.mnu global.key
+#EDITOR_DATA = segmove.pad segsize.pad texture.pad object.pad curve.pad group.pad objmov.pad lighting.pad test.pad med.mnu global.key
 
 ai.obj:	 ai.c ai.h
 	wcc386 $(CCFLAGS) ai.c
