@@ -332,23 +332,23 @@ grs_canvas *gr_create_sub_canvas(grs_canvas *canv,int x,int y,int w, int h);
 // Initialize the specified canvas. the raw pixel data buffer is passed as
 // a parameter. no memory allocation is performed.
 
-gr_init_canvas(grs_canvas *canv,unsigned char *pixdata,int pixtype, int w,int h);
+void gr_init_canvas(grs_canvas *canv,unsigned char *pixdata,int pixtype, int w,int h);
 
 // Initialize the specified sub canvas. no memory allocation is performed.
 
-gr_init_sub_canvas(grs_canvas *new,grs_canvas *src,int x,int y,int w, int h);
+void gr_init_sub_canvas(grs_canvas *new,grs_canvas *src,int x,int y,int w, int h);
 
 // Free up the canvas and its pixel data.
 
-gr_free_canvas(grs_canvas *canv);
+void gr_free_canvas(grs_canvas *canv);
 
 // Free up the canvas. do not free the pixel data, which belongs to the
 // parent canvas.
 
-gr_free_sub_canvas(grs_canvas *canv);
+void gr_free_sub_canvas(grs_canvas *canv);
 
 // Clear the current canvas to the specified color
-gr_clear_canvas(int color);
+void gr_clear_canvas(int color);
 
 //=========================================================================
 // Bitmap functions:
@@ -404,8 +404,8 @@ gr_upoly(int nverts,int *verts);
 
 
 // Draws a point into the current canvas in the current color and drawmode.
-gr_pixel(int x,int y);
-gr_upixel(int x,int y);
+void gr_pixel(int x,int y);
+void gr_upixel(int x,int y);
 
 // Gets a pixel;
 unsigned char gr_gpixel( grs_bitmap * bitmap, int x, int y );
@@ -420,15 +420,15 @@ int gr_aaline(fix x0,fix y0,fix x1,fix y1);
 int gr_uaaline(fix x0,fix y0,fix x1,fix y1);
 
 // Draw the bitmap into the current canvas at the specified location.
-gr_bitmap(int x,int y,grs_bitmap *bm);
-gr_ubitmap(int x,int y,grs_bitmap *bm);
+void gr_bitmap(int x,int y,grs_bitmap *bm);
+void gr_ubitmap(int x,int y,grs_bitmap *bm);
 // bitmap function with transparency
-gr_bitmapm( int x, int y, grs_bitmap *bm );
-gr_ubitmapm( int x, int y, grs_bitmap *bm );
+void gr_bitmapm( int x, int y, grs_bitmap *bm );
+void gr_ubitmapm( int x, int y, grs_bitmap *bm );
 
 // Draw a rectangle into the current canvas.
-gr_rect(int left,int top,int right,int bot);
-gr_urect(int left,int top,int right,int bot);
+void gr_rect(int left,int top,int right,int bot);
+void gr_urect(int left,int top,int right,int bot);
 
 // Draw a filled circle
 int gr_disk(fix x,fix y,fix r);
@@ -439,8 +439,8 @@ gr_circle(fix x,fix y,fix r);
 gr_ucircle(fix x,fix y,fix r);
 
 // Draw an unfilled rectangle into the current canvas
-gr_box(int left,int top,int right,int bot);
-gr_ubox(int left,int top,int right,int bot);
+void gr_box(int left,int top,int right,int bot);
+void gr_ubox(int left,int top,int right,int bot);
 
 void gr_scanline( int x1, int x2, int y );
 void gr_uscanline( int x1, int x2, int y );

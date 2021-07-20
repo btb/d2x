@@ -70,7 +70,7 @@ extern void gr_vesa_pixel( unsigned char color, unsigned int offset );
 
 void gr_linear_movsb( void * source, void * dest, unsigned short nbytes);
 void gr_linear_movsw( void * source, void * dest, unsigned short nbytes);
-void gr_linear_movsd( void * source, void * dest, unsigned short nbytes);
+void gr_linear_movsd( unsigned char * source, unsigned char * dest, int nbytes);
 void gr_linear_stosd( void * source, unsigned char color, unsigned short nbytes);
 extern unsigned int gr_var_color;
 extern unsigned int gr_var_bwidth;

@@ -215,7 +215,7 @@ StartNewLevel(int level_num);
 StartNewLevelSub(int level_num, int page_in_textures);
 
 InitPlayerObject();				//make sure player's object set up
-init_player_stats_game();		//clear all stats
+void init_player_stats_game();		//clear all stats
 
 //starts a resumed game loaded from disk
 ResumeSavedGame(int start_level);
@@ -243,7 +243,7 @@ extern void draw_high_scores( int place );
 extern int add_player_to_high_scores(player *pp);
 extern void input_name ( int place );
 extern int reset_high_scores();
-extern init_player_stats_level();
+extern void init_player_stats_level();
 
 void open_message_window(void);
 void close_message_window(void);

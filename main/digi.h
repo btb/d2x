@@ -180,7 +180,7 @@ extern void digi_pause_all();
 extern void digi_resume_all();
 extern void digi_stop_all();
 
-extern digi_set_max_channels(int n);
+extern void digi_set_max_channels(int n);
 extern int digi_get_max_channels();
 
 extern int digi_lomem;
