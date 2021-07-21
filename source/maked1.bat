@@ -1,6 +1,6 @@
 rem d1vars sets up compiler variables
 call d1vars.bat
-set LIBDIR = y:\dev\d1\main
+set LIBDIR = y:\dev\d1\source\main
 set CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
 cd misc
 wmake
