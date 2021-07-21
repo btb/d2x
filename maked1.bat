@@ -43,7 +43,7 @@ wmake
 cd ..
 cd main
 cd editor
-wmake
+rem wmake
 cd ..
 wmake
 cd ..

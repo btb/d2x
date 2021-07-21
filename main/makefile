@@ -10,8 +10,8 @@ CCFLAGS = /dNETWORK /dRELEASE /dNDEBUG
 #
 
 
-DESCENT_LIBS =	3d.lib gr.lib fix.lib io.lib iff.lib vecmat.lib cfile.lib mem.lib ui.lib div0.lib misc.lib texmap.lib editor.lib
-
+DESCENT_LIBS =	3d.lib gr.lib fix.lib io.lib iff.lib vecmat.lib cfile.lib mem.lib ui.lib div0.lib misc.lib texmap.lib
+#		editor.lib
 #		sosdigi.lib #sosmidi.lib 
 		#iglasses.lib gclfr32.lib loadpats.lib
 		#lzw.lib sosdwxcr.lib sosmwxcr.lib 
