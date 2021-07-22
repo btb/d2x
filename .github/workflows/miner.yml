@@ -28,7 +28,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          curl -O ftp://ftp.openwatcom.org/install/open-watcom-c-win32-1.9.exe
-          open-watcom-c-win32-1.9.exe -i
+          curl -OL https://sourceforge.net/projects/openwatcom/files/open-watcom-1.9/open-watcom-c-win32-1.9.exe/download
+          .\open-watcom-c-win32-1.9.exe -i
           c:\watcom\owsetenv.bat
           set
