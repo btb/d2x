@@ -31,7 +31,7 @@ jobs:
         shell: powershell
 
       - name: install watcom
-        run: .\open-watcom-c-win32-1.9.exe -i
+        run: .\OW19.exe -i
         shell: cmd
       
       - name: set env
