@@ -29,9 +29,9 @@ COPYRIGHT 1993-1999 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include "vecmat.h"
 #include "physfsx.h"
 #include "strutil.h"
+#include "ignorecase.h"
 
 #define CFILE            PHYSFS_file
-#define cfopen(f,m)      PHYSFSX_openReadBuffered(f)
 #define cfread(p,s,n,fp) ((int)PHYSFS_read(fp,p,s,n))
 #define cfclose          PHYSFS_close
 #define cftell(f)        ((int)PHYSFS_tell(f))
@@ -72,6 +72,17 @@ static inline int cfile_size(char *hogname)
 	cfclose(fp);
 
 	return size;
+}
+
+
+static inline CFILE *cfopen(const char *filename, char *mode)
+{
+	char filename2[PATH_MAX];
+
+	strcpy(filename2, filename);
+	PHYSFSEXT_locateCorrectCase(filename2);
+
+	return PHYSFSX_openReadBuffered(filename2);
 }
 
 static inline int cfgetc(PHYSFS_file *const fp)
