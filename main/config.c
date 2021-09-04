@@ -101,6 +101,7 @@ cvar_t Config_lifetime_killed   = { "LifetimeKilled",    "0", CVAR_ARCHIVE };
 cvar_t Config_lifetime_checksum = { "LifetimeChecksum",  "0", CVAR_ARCHIVE };
 cvar_t Config_resolution_x      = { "ResolutionX",     "640", CVAR_ARCHIVE };
 cvar_t Config_resolution_y      = { "ResolutionY",     "480", CVAR_ARCHIVE };
+cvar_t Config_closed_captions   = { "closecaption",      "0", CVAR_ARCHIVE };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
@@ -236,6 +237,7 @@ static void config_init(void)
 	cvar_registervariable(&Automap_always_hires);
 	cvar_registervariable(&automap_use_game_res);
 	cvar_registervariable(&menu_use_game_res);
+	cvar_registervariable(&Config_closed_captions);
 
 	config_initialized = 1;
 }

@@ -379,6 +379,9 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 			vid_toggle_fullscreen();
 #endif
 
+		if (key == KEY_C)
+			cvar_toggle(&Config_closed_captions);
+
 		frame_num++;
 	}
 
@@ -648,8 +651,8 @@ int init_subtitles(char *filename)
 
 	Num_subtitles = 0;
 
-	if (! FindArg("-subtitles"))
-		return 0;
+	if (FindArg("-subtitles"))
+		cvar_setint(&Config_closed_captions, 1);
 
 	ifile = cfopen(filename,"rb");		//try text version
 
@@ -740,7 +743,8 @@ void draw_subtitles(int frame_num)
 
 	//get rid of any subtitles that have expired
 	for (t=0;t<num_active_subtitles;)
-		if (frame_num > Subtitles[active_subtitles[t]].last_frame) {
+		if (!Config_closed_captions.intval ||
+			 frame_num > Subtitles[active_subtitles[t]].last_frame) {
 			int t2;
 			for (t2=t;t2<num_active_subtitles-1;t2++)
 				active_subtitles[t2] = active_subtitles[t2+1];
@@ -766,6 +770,9 @@ void draw_subtitles(int frame_num)
 		gr_setcolor(0);
 		gr_rect(0,y,grd_curcanv->cv_bitmap.bm_w-1,grd_curcanv->cv_bitmap.bm_h-1);
 	}
+
+	if (!Config_closed_captions.intval)
+		return;
 
 	//now draw the current subtitles
 	for (t=0;t<num_active_subtitles;t++)

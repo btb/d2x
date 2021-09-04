@@ -57,5 +57,6 @@ extern cvar_t Config_channels_reversed;
 extern cvar_t Config_joystick_sensitivity[];
 extern cvar_t Config_joystick_deadzone[];
 extern cvar_t Config_mouse_sensitivity[];
+extern cvar_t Config_closed_captions;
 
 #endif
