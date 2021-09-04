@@ -76,6 +76,7 @@ char movielib_files[4][FILENAME_LEN] = {"intro","other","robots"};
 #define EXTRA_ROBOT_LIB N_BUILTIN_MOVIE_LIBS
 
 cvar_t MovieHires = { "MovieHires", "1", CVAR_ARCHIVE }; // default is highres
+int MovieZoom = 1; // expand to remove letterboxing, if possible
 
 #ifdef BUFFER_MOVIE
 char *RoboBuffer[50];
@@ -202,9 +203,19 @@ void MovieShowFrame(ubyte *buf, uint bufw, uint bufh, uint sx, uint sy,
 			dstx = dstx * GWIDTH / MVESpec.screenWidth;
 			dsty = dsty * GHEIGHT / MVESpec.screenHeight;
 		} else {
-			w = w * GWIDTH / MVESpec.screenWidth;
-			h = w / aspect;
-			dstx = dstx * GWIDTH / MVESpec.screenWidth;
+			float screenaspect = (float)GWIDTH / (float)GHEIGHT;
+			float scale = 1;
+			if (!MovieZoom)
+				aspect = (float)MVESpec.screenWidth / (float)MVESpec.screenHeight;
+			if (screenaspect > aspect) { // more wide
+				scale = (float)GHEIGHT / (float)(MovieZoom?h:MVESpec.screenHeight);
+			} else if (screenaspect < aspect) { // more tall
+				scale = (float)GWIDTH / (float)(MovieZoom?w:MVESpec.screenWidth);
+			}
+			scale *= (float)w / (float)MVESpec.screenWidth; // keep that little bit of border
+			w = (int)((float)w * scale + 0.5); // scale and round
+			h = (int)((float)h * scale + 0.5); // scale and round
+			dstx = GWIDTH / 2 - w / 2;
 			dsty = GHEIGHT / 2 - h / 2;
 		}
 		dest_canv = gr_create_sub_canvas(grd_curcanv, dstx, dsty, w, h);
@@ -381,6 +392,12 @@ int RunMovie(char *filename, int hires_flag, int must_have,int dx,int dy)
 
 		if (key == KEY_C)
 			cvar_toggle(&Config_closed_captions);
+
+		if (key == KEY_Z) {
+			if (MovieZoom)
+				gr_clear_canvas(BM_XRGB(0,0,0));
+			MovieZoom = !MovieZoom;
+		}
 
 		frame_num++;
 	}
