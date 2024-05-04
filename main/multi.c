@@ -1082,7 +1082,7 @@ multi_message_feedback(void)
 				found++;
 				if (!(found % 4))
 					strcat(feedback_result, "\n");
-				sprintf(feedback_result+strlen(feedback_result), "%s", Players[i].callsign);
+				snprintf(feedback_result+strlen(feedback_result), sizeof(feedback_result)-strlen(feedback_result), "%s", Players[i].callsign);
 			}
 		}
 		if (!found)
