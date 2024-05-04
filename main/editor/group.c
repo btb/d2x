@@ -24,9 +24,9 @@ COPYRIGHT 1993-1998 PARALLAX SOFTWARE CORPORATION.  ALL RIGHTS RESERVED.
 #include <stdio.h>
 #include <string.h>
 
+#include "nocfile.h"
 #include "mono.h"
 #include "gr.h"
-#include "nocfile.h"
 #include "ui.h"
 #include "inferno.h"
 #include "editor.h"
