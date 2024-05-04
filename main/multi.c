@@ -1414,7 +1414,9 @@ void multi_message_input_sub( int key )
 						if ( pcolon )
 							strcpy( pcolon+1, ptext );
 						else
-							strcpy( Network_message, ptext );
+							for (char *ptr = Network_message; *ptr; ptr++, ptext++) {
+								*ptr = *ptext;
+							}
 						multi_message_index = (int)strlen( Network_message );
 					}
 				}
