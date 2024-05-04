@@ -785,7 +785,6 @@ void do_screen_res_menu()
 #ifdef VID_SUPPORTS_FULLSCREEN_TOGGLE
 	if (m[fullscreenc].value != vid_check_fullscreen()) {
 		vid_toggle_fullscreen();
-		Current_display_mode = 0xffffffff;
 	}
 #endif
 
