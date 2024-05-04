@@ -24,7 +24,10 @@ jobs:
       run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
     - name: macos dependencies
       if: ${{ runner.os == 'macOS' }}
-      run: brew install physfs sdl sdl_mixer sdl_image
+      run: |
+        sed -i '.orig' '/^  disable\!/d' `brew edit --print-path sdl_image`
+        sed -i '.orig' '/^  disable\!/d' `brew edit --print-path sdl_mixer`
+        HOMEBREW_NO_INSTALL_FROM_API=1 brew install physfs sdl sdl_mixer sdl_image
     - name: configure
       run: |
         ./configure --with-opengl --enable-editor \
