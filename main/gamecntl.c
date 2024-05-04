@@ -535,14 +535,14 @@ void do_show_netgame_help()
       if (!FindArg ("-norankings"))
 		 {
 			if (i==Player_num)
-				sprintf (mtext[num],"%s%s (%d/%d)",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,Netlife_kills,Netlife_killed); 
+				snprintf (mtext[num], sizeof(mtext[num]), "%s%s (%d/%d)",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,Netlife_kills,Netlife_killed); 
 			else
-				sprintf (mtext[num],"%s%s %d/%d",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,kill_matrix[Player_num][i],
+				snprintf (mtext[num], sizeof(mtext[num]), "%s%s %d/%d",RankStrings[NetPlayers.players[i].rank],Players[i].callsign,kill_matrix[Player_num][i],
 							kill_matrix[i][Player_num]); 
 			num++;
 		 }
 	   else
-  		 sprintf (mtext[num++],"%s",Players[i].callsign); 
+  		 snprintf (mtext[num++], sizeof(mtext[num]), "%s",Players[i].callsign); 
 	  }
 
 	
