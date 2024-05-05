@@ -898,7 +898,7 @@ int Movie_fixed_frametime;
 #endif
 
 //added on 8/18/98 by Victor Rachels to add maximum framerate
-int maxfps = MAX_FPS;
+cvar_t maxfps = { "maxfps", "80", CVAR_ARCHIVE };
 //end this section
 
 void calc_frame_time()
@@ -912,9 +912,9 @@ void calc_frame_time()
 	timer_value = timer_get_fixed_seconds();
 	FrameTime = timer_value - last_timer_value;
 
-	while (FrameTime < f1_0 / maxfps)
+	while (FrameTime < f1_0 / maxfps.intval)
 	{
-		timer_delay(f1_0 / maxfps - FrameTime);
+		timer_delay(f1_0 / maxfps.intval - FrameTime);
 		timer_value = timer_get_fixed_seconds();
 		FrameTime = timer_value - last_timer_value;
 	}

@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
 	if ((t = FindArg( "-maxfps" ))) {
 		t=atoi(Args[t+1]);
 		if (t > 0 && t <= MAX_FPS)
-			maxfps=t;
+			cvar_setint(&maxfps, t);
 	}
 	//end addition - Victor Rachels
 

@@ -242,7 +242,7 @@ void flickering_light_read(flickering_light *fl, CFILE *fp);
 void flickering_light_write(flickering_light *fl, PHYSFS_file *fp);
 
 #define MAX_FPS 80
-extern int maxfps;
+extern cvar_t maxfps;
 
 void gamecntl_init(void);
 

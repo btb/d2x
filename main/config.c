@@ -238,6 +238,7 @@ static void config_init(void)
 	cvar_registervariable(&automap_use_game_res);
 	cvar_registervariable(&menu_use_game_res);
 	cvar_registervariable(&Config_closed_captions);
+	cvar_registervariable(&maxfps);
 
 	config_initialized = 1;
 }

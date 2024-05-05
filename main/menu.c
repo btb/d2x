@@ -926,7 +926,7 @@ void d2x_options_menu()
 
 	sprintf(thogdir,AltHogDir);
 #endif
-	sprintf(smaxfps,"%d",maxfps);
+	sprintf(smaxfps, "%d", maxfps.intval);
 #if 0
 	sprintf(shudmaxnumdisp,"%d",HUD_max_num_disp);
 #endif
@@ -991,11 +991,11 @@ void d2x_options_menu()
 
             if(i == inputs+0)
 			{
-				maxfps = atoi(smaxfps);
-				if(maxfps < 1 || maxfps > MAX_FPS)
+				cvar_setint(&maxfps, atoi(smaxfps));
+				if (maxfps.intval < 1 || maxfps.intval > MAX_FPS)
 				{
 					nm_messagebox(TXT_ERROR, 1, TXT_OK, "Invalid value for maximum framerate");
-					maxfps = MAX_FPS;
+					cvar_setint(&maxfps, MAX_FPS);
 					i = (inputs+0);
 				}
 			}
@@ -1016,7 +1016,7 @@ void d2x_options_menu()
 
 			sprintf(shudmaxnumdisp,"%d",HUD_max_num_disp);
 #endif // 0
-			sprintf(smaxfps,"%d",maxfps);
+			sprintf(smaxfps, "%d", maxfps.intval);
 			//           m[inputs+0].text=smaxfps;//redundant.. its not going anywhere
 #if 0
 			sprintf(thogdir,AltHogDir);
