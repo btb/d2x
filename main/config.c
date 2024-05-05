@@ -101,7 +101,7 @@ cvar_t Config_lifetime_killed   = { "LifetimeKilled",    "0", CVAR_ARCHIVE };
 cvar_t Config_lifetime_checksum = { "LifetimeChecksum",  "0", CVAR_ARCHIVE };
 cvar_t Config_resolution_x      = { "ResolutionX",     "640", CVAR_ARCHIVE };
 cvar_t Config_resolution_y      = { "ResolutionY",     "480", CVAR_ARCHIVE };
-cvar_t Config_closed_captions   = { "closecaption",      "0", CVAR_ARCHIVE };
+cvar_t Config_closed_captions   = { "closedcaptions",    "0", CVAR_ARCHIVE };
 
 
 #define _CRYSTAL_LAKE_8_ST		0xe201
