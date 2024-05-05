@@ -49,6 +49,11 @@ main(int argc, char *argv[])
 		fclose(hogfile);
 		exit(EXIT_FAILURE);
 	}
+	if (memcmp(buf, "DHF", 3) != 0) {
+		printf("Error: Hog file signature not found\n");
+		fclose(hogfile);
+		exit(EXIT_FAILURE);
+	}
 	printf("Extracting from: %s\n", argv[1]);
 	free(buf);
 	while(ftell(hogfile)<statbuf.st_size) {
