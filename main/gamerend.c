@@ -1330,7 +1330,7 @@ void shrink_window(void)
 		return;
 	}
 
-	if (Cockpit_mode.intval == CM_FULL_SCREEN && (VR_screen_flags & VRF_ALLOW_COCKPIT))
+	if (Cockpit_mode.intval == CM_FULL_SCREEN)
 	{
 		//cvar_setint(&Game_window_w, max_window_w);
 		//cvar_setint(&Game_window_h, max_window_h);
@@ -1376,19 +1376,27 @@ extern void ogl_loadbmtexture(grs_bitmap *bm);
 // This actually renders the new cockpit onto the screen.
 void update_cockpits(int force_redraw)
 {
-	//int x, y, w, h;
+	int x; //y, w, h;
+	bitmap_index bm_idx;
+	grs_bitmap *bm;
 
 	// Redraw the on-screen cockpit bitmaps
 	if (VR_render_mode != VR_NONE )
 		return;
+
+	if (Cockpit_mode.intval != last_drawn_cockpit[VR_current_page])
+		init_cockpit();
+
+	bm_idx = cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)];
+	bm = &GameBitmaps[bm_idx.index];
 
 	switch( Cockpit_mode.intval )
 	{
 	case CM_FULL_COCKPIT:
 	case CM_REAR_VIEW:
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0, 0, &GameBitmaps[cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)].index]);
+		PIGGY_PAGE_IN(bm_idx);
+		gr_ubitmapm(0, 0, bm);
 		break;
 
 	case CM_FULL_SCREEN:
@@ -1401,9 +1409,14 @@ void update_cockpits(int force_redraw)
 
 		gr_set_current_canvas(&VR_screen_pages[VR_current_page]);
 
-		PIGGY_PAGE_IN(cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)]);
-		gr_ubitmapm(0, max_window_h, &GameBitmaps[cockpit_bitmap[Cockpit_mode.intval + (SM_HIRES?(Num_cockpits/2):0)].index]);
-	
+		PIGGY_PAGE_IN(bm_idx);
+		x = (max_window_w - bm->bm_w) / 2;
+		gr_ubitmapm(x, max_window_h, bm);
+
+		// fill in sides
+		copy_background_rect(0, max_window_h, x-1, grd_curscreen->sc_h-1);
+		copy_background_rect(x+bm->bm_w, max_window_h, max_window_w-1, grd_curscreen->sc_h-1);
+
 		Game_window_x = (max_window_w - Game_window_w.intval) / 2;
 		Game_window_y = (max_window_h - Game_window_h.intval) / 2;
 		fill_background();
