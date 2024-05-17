@@ -25,8 +25,8 @@ jobs:
     - name: macos dependencies
       if: ${{ runner.os == 'macOS' }}
       run: |
-        sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_image)
-        sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_mixer)
+        echo sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_image)
+        echo sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_mixer)
         HOMEBREW_NO_INSTALL_FROM_API=1 brew install physfs sdl sdl_mixer sdl_image
     - name: configure
       run: |
