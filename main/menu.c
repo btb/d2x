@@ -108,7 +108,7 @@ cvar_t Player_default_difficulty = { "skill", "1", CVAR_ARCHIVE }; // Last diffi
 cvar_t Auto_leveling_on = { "AutoLeveling", "1", CVAR_ARCHIVE };
 cvar_t Guided_in_big_window = { "GuidedBig", "0", CVAR_ARCHIVE };
 int Menu_draw_copyright = 0;
-int EscortHotKeys=1;
+cvar_t EscortHotKeys = { "EscortHotKeys", "1", CVAR_ARCHIVE };
 
 // Function Prototypes added after LINTING
 void do_option(int select);
@@ -1283,7 +1283,7 @@ void do_toggles_menu()
 		ADD_CHECK(2, "Missile view", Missile_view_enabled.intval);
 		ADD_CHECK(3, "Headlight on when picked up", Headlight_active_default.intval);
 		ADD_CHECK(4, "Show guided missile in main display", Guided_in_big_window.intval);
-		ADD_CHECK(5, "Escort robot hot keys",EscortHotKeys);
+		ADD_CHECK(5, "Escort robot hot keys", EscortHotKeys.intval);
 		//ADD_CHECK(6, "Always use 640x480 or greater automap", Automap_always_hires.intval);
 		//when adding more options, change N_TOGGLE_ITEMS above
 
@@ -1294,7 +1294,7 @@ void do_toggles_menu()
 		cvar_setint(&Missile_view_enabled,      m[2].value);
 		cvar_setint(&Headlight_active_default,  m[3].value);
 		cvar_setint(&Guided_in_big_window,      m[4].value);
-		EscortHotKeys				= m[5].value;
+		cvar_setint(&EscortHotKeys,             m[5].value);
 
 #if 0
 		if (MenuHiresAvailable)

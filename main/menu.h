@@ -52,6 +52,7 @@ extern cvar_t Player_default_difficulty;
 extern int Max_debris_objects;
 extern cvar_t Auto_leveling_on;
 extern cvar_t Guided_in_big_window;
+extern cvar_t EscortHotKeys;
 extern int Escort_view_enabled;
 extern int Cockpit_rear_view;
 

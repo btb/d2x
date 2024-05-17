@@ -93,7 +93,6 @@ extern int	Speedtest_count;
 extern int	Global_missile_firing_count;
 extern int	Automap_flag;
 extern int	Config_menu_flag;
-extern int  EscortHotKeys;
 
 
 extern int	Game_aborted;
@@ -1349,7 +1348,7 @@ void HandleGameKey(int key)
 		case KEY_8 + KEY_SHIFTED:
 		case KEY_9 + KEY_SHIFTED:
 		case KEY_0 + KEY_SHIFTED:
-		if (EscortHotKeys)
+		if (EscortHotKeys.intval)
 		{
 			if (!(Game_mode & GM_MULTI))
 				set_escort_special_goal(key);

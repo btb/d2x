@@ -234,6 +234,7 @@ static void config_init(void)
 	cvar_registervariable(&Missile_view_enabled);
 	cvar_registervariable(&Headlight_active_default);
 	cvar_registervariable(&Guided_in_big_window);
+	cvar_registervariable(&EscortHotKeys);
 	cvar_registervariable(&Automap_always_hires);
 	cvar_registervariable(&automap_use_game_res);
 	cvar_registervariable(&menu_use_game_res);
