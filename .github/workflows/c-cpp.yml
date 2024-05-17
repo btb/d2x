@@ -27,6 +27,8 @@ jobs:
       run: |
         sdl_image_formula=$(brew edit --print-path sdl_image)
         sdl_mixer_formula=$(brew edit --print-path sdl_mixer)
+        echo sdl_image_formula: $sdl_image_formula
+        echo sdl_mixer_formula: $sdl_mixer_formula
         echo sed -i '.orig' '/^  disable\!/d' $sdl_image_formula
         echo sed -i '.orig' '/^  disable\!/d' $sdl_mixer_formula
         HOMEBREW_NO_INSTALL_FROM_API=1 brew install physfs sdl sdl_mixer sdl_image
