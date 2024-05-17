@@ -1,0 +1,41 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-11]
+        debug: [enable-debug, disable-debug]
+        release: [enable-release, disable-release]
+        network: [enable-network, disable-network]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: linux dependencies
+      if: ${{ runner.os == 'Linux' }}
+      run: sudo apt-get install -y libphysfs-dev libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev
+    - name: macos dependencies
+      if: ${{ runner.os == 'macOS' }}
+      run: |
+        sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_image)
+        sed -i '.orig' '/^  disable\!/d' $(brew edit --print-path sdl_mixer)
+        HOMEBREW_NO_INSTALL_FROM_API=1 brew install physfs sdl sdl_mixer sdl_image
+    - name: configure
+      run: |
+        ./configure --with-opengl --enable-editor \
+          --${{ matrix.debug }} \
+          --${{ matrix.release }} \
+          --${{ matrix.network }}
+
+    - name: make
+      run: make
+    - name: make check
+      run: make check
